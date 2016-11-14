@@ -1,0 +1,27 @@
+The files
+	./scnd_genesis/images/login.png
+	./scnd_genesis/images/ach/blue.png
+	./scnd_genesis/images/ach/red.png
+	./scnd_genesis/images/ach/green.png
+	./scnd_genesis/images/ach/mus.png
+
+Were obtained from the Tango Desktop Project
+http://tango.freedesktop.org/Tango_Desktop_Project
+
+Please note that all the artwork and images in the ./scnd_genesis/images/ folder, apart from those listed
+above, are under the Creative Commons Attribution-NonCommercial 3.0 Unported license
+
+http://creativecommons.org/licenses/by-nc/3.0/
+
+This means that you are free to
+	-To copy, distribute and transmitt the work
+	-To adapt the work
+
+Under the following conditions
+	-You must attribute the work in the manner specified by the author or licensor(but not in any way that suggests that they endorse you or your use of the work)
+	-You may not use this work for commercial purposes
+
+Attribute the work in the following manner:
+	-"based on the webcomic THE SCND GENESIS created by Ifunga Ndana"
+	OR
+	-"originally created by Ifunga Ndana"

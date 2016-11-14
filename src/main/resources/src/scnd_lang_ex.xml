@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scnd_lang>
+    
+    <!-- The number of lines of dialog, ie, last sentence+1 -->
+    <lines>418</lines>
+
+    <!-- put the number of fully implemented languages here-->    
+    <langz>2</langz>
+    
+    
+    <!-- 
+    Add fully implemented language names here.
+    Make sure the numbers following 'lang' are in sequence
+    -->    
+    <lang0>Engilsh</lang0>
+    <lang1>ExampleLang</lang1>
+
+<!--
+Yeah, this implementation is crude but it works.
+Please use this template to translate.
+The language precedes the digit, and must be the same way it appears
+above in the <langX></langX> block or else the system wont recognize it.
+-->
+    <Engilsh0>Hello</Engilsh0>
+    <ExampleLang0>Tyani</ExampleLang0>
+    <Spanish0>Hola</Spanish0>
+    <Engilsh1>Off</Engilsh1>
+    <ExampleLang1>Zimya</ExampleLang1>
+    <Engilsh2>High</Engilsh2>
+    <ExampleLang2>Cha Mutengo</ExampleLang2>
+    <Engilsh3>Medium</Engilsh3>
+    <Engilsh4>Low</Engilsh4>
+    <Engilsh5>Rate this game: </Engilsh5>
+    <Engilsh6>Difficulty Setting: </Engilsh6>
+    <Engilsh7>Dialogue speed: </Engilsh7>
+    <Engilsh8>Graphics: </Engilsh8>
+    <Engilsh9>High Quality: caches images and enables animations. 
+                + \nLow Quality: Streams images, disables animations, 
+                + \nuses less memory. May cause graphical corruption. 
+                + \nUse low quality if the game hangs while loading
+    </Engilsh9>
+    <Engilsh10>Frame Rate: </Engilsh10>
+    <Engilsh11>Sound: </Engilsh11>
+    <Engilsh12>ON</Engilsh12>
+    <Engilsh13>OFF</Engilsh13>
+    <Engilsh14>Time Duration: </Engilsh14>
+    <Engilsh15>Auto-check for updates: </Engilsh15>
+    <Engilsh16>Download Audio</Engilsh16>
+    <Engilsh17>Comic book text occurrence: </Engilsh17>
+    <Engilsh18>Use game pad if available ?</Engilsh18>
+    <Engilsh19>Selected Language</Engilsh19>
+    <Engilsh20>Save</Engilsh20>
+    <Engilsh21></Engilsh21>
+    <Engilsh22>insane</Engilsh22>
+    <Engilsh23>fast</Engilsh23>
+    <Engilsh24>normal</Engilsh24>
+    <Engilsh25>slow</Engilsh25>
+    <Engilsh26>Are you insane?</Engilsh26>
+    <Engilsh27>Hard</Engilsh27>
+    <Engilsh28>Medium</Engilsh28>
+    <Engilsh29>Easy</Engilsh29>
+    <Engilsh30>You Suck</Engilsh30>
+    <Engilsh31>Reset</Engilsh31>
+    <Engilsh32>High</Engilsh32>
+    <Engilsh33>Low</Engilsh33>
+    <Engilsh34>Game Options</Engilsh34>
+    <Engilsh35>Rate this game: </Engilsh35>
+    <Engilsh36>OK</Engilsh36>
+    <Engilsh37>KEYBOARD</Engilsh37>
+    <Engilsh38>Select</Engilsh38>
+    <Engilsh39>Cancel Selection</Engilsh39>
+    <Engilsh40>ENTER</Engilsh40>
+    <Engilsh41>Backspace</Engilsh41>
+    <Engilsh42>Screen shot</Engilsh42>
+    <Engilsh43>Pause/Resume</Engilsh43>
+    <Engilsh44>Trigger Fury (requires full Fury bar)</Engilsh44>
+    <Engilsh45>Left/Previous</Engilsh45>
+    <Engilsh46>Right/Next</Engilsh46>
+    <Engilsh47>Up</Engilsh47>
+    <Engilsh48>Down</Engilsh48>
+    <Engilsh49>if you can't figure this out you're dumb :/</Engilsh49>
+    <Engilsh50>Exit game</Engilsh50>
+    <Engilsh51>MOUSE</Engilsh51>
+    <Engilsh52>Scroll Up</Engilsh52>
+    <Engilsh53>Scroll Down</Engilsh53>
+    <Engilsh54>Left Click/1st Mouse Button</Engilsh54>
+    <Engilsh55>Middle Click/2nd Mouse Button</Engilsh55>
+    <Engilsh56>Right Click/3rd Mouse Button</Engilsh56>
+    <Engilsh57>Controls</Engilsh57>
+    <Engilsh58>is available at</Engilsh58>
+    <Engilsh59>It has the following updates</Engilsh59>
+    <Engilsh60>Update available</Engilsh60>
+    <Engilsh61>Upper Hand</Engilsh61>
+    <Engilsh62>Beat the odds</Engilsh62>
+    <Engilsh63>Ownage</Engilsh63>
+    <Engilsh64>Heartless</Engilsh64>
+    <Engilsh65>Meanie</Engilsh65>
+    <Engilsh66>Rage</Engilsh66>
+    <Engilsh67>Winner</Engilsh67>
+    <Engilsh68>Buzz Kill</Engilsh68>
+    <Engilsh69>Close Call</Engilsh69>
+    <Engilsh70>On a Roll!!!!</Engilsh70>
+    <Engilsh71>Half Way through</Engilsh71>
+    <Engilsh72>You were sustaining damage, but made a quick comeback </Engilsh72>
+    <Engilsh73>Your stamina was below 30%, but you made it back to 50%</Engilsh73>
+    <Engilsh74>You beat down your opponent and kept your HP above 50%</Engilsh74>
+    <Engilsh75>You beat down your opponent and kept your HP above 40%</Engilsh75>
+    <Engilsh76>You beat down your opponent and kept your HP above 30%</Engilsh76>
+    <Engilsh77>You wasted your opponent with a Rage Combo</Engilsh77>
+    <Engilsh78>You won!!!!!</Engilsh78>
+    <Engilsh79>You wasted your opponent while they were in Rage, nice</Engilsh79>
+    <Engilsh80>You BARELY defeated your opponent</Engilsh80>
+    <Engilsh81>You've had 5 wins in a row</Engilsh81>
+    <Engilsh82>You made it half way through story mode</Engilsh82>
+    <Engilsh83>UNLOCKED</Engilsh83>
+    <Engilsh84>Game on!!</Engilsh84>
+    <Engilsh85>Oh yeah!!</Engilsh85>
+    <Engilsh86>Sweet!!</Engilsh86>
+    <Engilsh87>Good to go!!</Engilsh87>
+    <Engilsh88>Lets finish this!!</Engilsh88>
+    <Engilsh89>Ownage time!!</Engilsh89>
+    <Engilsh90>*Yawn* Lets end this fast!!</Engilsh90>
+    <Engilsh91>I shall destroy you!!</Engilsh91>
+    <Engilsh92>You  stand no chance!!!!</Engilsh92>
+    <Engilsh93>Prepare for a beating !!</Engilsh93>
+    <Engilsh94>Behold my awesomeness!!!</Engilsh94>
+    <Engilsh95>Close</Engilsh95>
+    <Engilsh96>View global leader boards</Engilsh96>
+    <Engilsh97>Upload your stats</Engilsh97>
+    <Engilsh98>On-line Leader Boards</Engilsh98>
+    <Engilsh99>Epic! Uploaded your stats</Engilsh99>
+    <Engilsh100>Failed to upload your stats</Engilsh100>
+    <Engilsh101>Fail</Engilsh101>
+    <Engilsh102>Success</Engilsh102>
+    <Engilsh103>Controller found</Engilsh103>
+    <Engilsh104>No controllers found. Make sure its connected AND jInput is installed</Engilsh104>
+    <Engilsh105>No JInput / Controller installed</Engilsh105>
+    <Engilsh106>JInput is NOT installed. No game-pad support</Engilsh106>
+    <Engilsh107>Waiting for players</Engilsh107>
+    <Engilsh108>Select your character</Engilsh108>
+    <Engilsh109>Select your character</Engilsh109>
+    <Engilsh110>Are you sure you want to leave?</Engilsh110>
+    <Engilsh111>SERIOUSLY DUDE! You wanna quit?</Engilsh111>
+    <Engilsh112>*sigh* Okay, bye ^_^</Engilsh112>
+    <Engilsh113>Continue from last time</Engilsh113>
+    <Engilsh114>Back</Engilsh114>
+    <Engilsh115>EPIC!!! You completed story mode :D</Engilsh115>
+    <Engilsh116>Proceed to scene</Engilsh116>
+    <Engilsh117>Proceed</Engilsh117>
+    <Engilsh118>Name</Engilsh118>
+    <Engilsh119>Points</Engilsh119>
+    <Engilsh120>Play Time</Engilsh120>
+    <Engilsh121>Achievements Unlocked</Engilsh121>
+    <Engilsh122>Achievements Triggered</Engilsh122>
+    <Engilsh123>Match Count</Engilsh123>
+    <Engilsh124>Avrg. points per match</Engilsh124>
+    <Engilsh125>Wins</Engilsh125>
+    <Engilsh126>Losses</Engilsh126>
+    <Engilsh127>Player style</Engilsh127>
+    <Engilsh128>Favorite character</Engilsh128>
+    <Engilsh129>Story Progress</Engilsh129>
+    <Engilsh130>total game completion</Engilsh130>
+    <Engilsh131>Press ENTER to exit</Engilsh131>
+    <Engilsh132>complete</Engilsh132>
+    <Engilsh133>activated</Engilsh133>
+    <Engilsh134>Raila - a fighter specialized in celestia combat</Engilsh134>
+    <Engilsh135>Subiya - a fighter specialized in melee combat</Engilsh135>
+    <Engilsh136>Lynx - a fighter specialized in dual blade combat</Engilsh136>
+    <Engilsh137>Aisha - a fighter specialized in sword combat</Engilsh137>
+    <Engilsh138>Ravage - a fighter specialized in brute force via the Earth element</Engilsh138>
+    <Engilsh139>Ade - a fighter utilizing the air element</Engilsh139>
+    <Engilsh140>Jonah - a fighter specialized in Force combat</Engilsh140>
+    <Engilsh141>Adam - a Celestia Being specialized in celestia combat</Engilsh141>
+    <Engilsh142>NOVA Adam - an awakened Celestia Being specialized in celestia combat</Engilsh142>
+    <Engilsh143>Azaria - Specialized in general combat and the water element</Engilsh143>
+    <Engilsh144>Sorrowe - Specialized in celestia combat and the flame element</Engilsh144>
+    <Engilsh145>The Thing - Origins unknown</Engilsh145>
+    <Engilsh146>PRESS ENTER TO PROCEED</Engilsh146>
+    <Engilsh147>BACKSPACE TO CANCEL SELECTIONS</Engilsh147>
+    <Engilsh148>Paused</Engilsh148>
+    <Engilsh149>F5 - Cancel Match</Engilsh149>
+    <Engilsh150>ESC - Resume</Engilsh150>
+    <Engilsh151>Press 'd' to toggle debug</Engilsh151>
+    <Engilsh152>Ibex Hill - Day</Engilsh152>
+    <Engilsh153>Cheston City - Docks</Engilsh153>
+    <Engilsh154>The Ruined Hall</Engilsh154>
+    <Engilsh155>Cheston City - Streets</Engilsh155>
+    <Engilsh156>Ibex Hill - Night</Engilsh156>
+    <Engilsh157>Scorched Ruins</Engilsh157>
+    <Engilsh158>Frozen Wilderness</Engilsh158>
+    <Engilsh159>Hidden Cave</Engilsh159>
+    <Engilsh160>African Village</Engilsh160>
+    <Engilsh161>The Apocalypse</Engilsh161>
+    <Engilsh162>Distant Ilse</Engilsh162>
+    <Engilsh163>Moonlit Shore</Engilsh163>
+    <Engilsh164>Random Stage!!!</Engilsh164>
+    <Engilsh165>LOADING</Engilsh165>
+    <Engilsh166>Please wait while your opponent selects a stage</Engilsh166>
+    <Engilsh167>Your machines name is:</Engilsh167>
+    <Engilsh168>your partner has to enter you're name to fight you</Engilsh168>
+    <Engilsh169>Press 'M' to pass time on a world map</Engilsh169>
+    <Engilsh170>Screen-shot taken</Engilsh170>    
+    <Engilsh171>Yes</Engilsh171>    
+    <Engilsh172>No</Engilsh172>    
+    <Engilsh173>Are you left handed?</Engilsh173>    
+    <Engilsh174>It's been two weeks since the killings began</Engilsh174>    
+    <Engilsh175>At first the authorities thought a serial killer was behind it</Engilsh175>   
+    <Engilsh176>But the state of the bodies and the number of casualties said otherwise</Engilsh176>   
+    <Engilsh177>And then came the darkness...</Engilsh177>   
+    <Engilsh178>Murderer. I'm taking you in</Engilsh178>   
+    <Engilsh179>I'm impressed. You were able to track me.</Engilsh179>
+    <Engilsh372>However, you're not taking me anywhere</Engilsh372>
+    <Engilsh180>You don't have a choice.</Engilsh180>   
+    <Engilsh181>Hmph, is that so?</Engilsh181>   
+    <Engilsh182>.........</Engilsh182>   
+    <Engilsh183>Shortly after picking up his cousin</Engilsh183>   
+    <Engilsh184>His home was attacked and wrecked by a member of a cult</Engilsh184>   
+    <Engilsh185>His cousin, Raila, and his friend, Subiya, were badly hurt</Engilsh185>  
+    <Engilsh186>After they recovered, he decided it would be best to train them in order for them to defend themselves</Engilsh186>   
+    <Engilsh187>They retired to a secluded location to train, away from the ensuing chaos</Engilsh187>   
+    <Engilsh188>You did well</Engilsh188>   
+    <Engilsh189>*gasp* *gasp* Doesn't feel like it</Engilsh189>   
+    <Engilsh190>*ring* *ring*</Engilsh190>   
+    <Engilsh191>Hey, its me</Engilsh191>   
+    <Engilsh192>To what do I owe this pleasure?</Engilsh192>   
+    <Engilsh193>The Royal Court, has decided to go after the criminals</Engilsh193>   
+    <Engilsh194>Really?</Engilsh194>   
+    <Engilsh195>Yes, we'd need as many able bodied Saints as possible, care to join the cause?</Engilsh195>   
+    <Engilsh196>Well...</Engilsh196>   
+    <Engilsh197>Go ahead</Engilsh197>   
+    <Engilsh198>Yeah, we aren't babies we can take care of ourselves. The Kingdom needs you more than we do</Engilsh198>   
+    <Engilsh199>Lynx, proceeded to return to Acacia. Leaving his two students to train in his absence.</Engilsh199>   
+    <Engilsh200>Welcome back</Engilsh200>   
+    <Engilsh201>Thanks</Engilsh201>   
+    <Engilsh202>Yo, not so fast. We gotta make sure you're fit for duty</Engilsh202>   
+    <Engilsh203>Seriously?</Engilsh203>   
+    <Engilsh204>Yup</Engilsh204>   
+    <Engilsh205>fine, lets do this</Engilsh205>   
+    <Engilsh206>Finally</Engilsh206>   
+    <Engilsh207>Looks like its just you and me huh</Engilsh207>   
+    <Engilsh208>I think we should head back to the mainland?</Engilsh208>   
+    <Engilsh209>What?</Engilsh209>   
+    <Engilsh210>Hiding out on this island doesn't feel right, we should be out there</Engilsh210>   
+    <Engilsh211>In case you hadn't noticed, we haven't even passed the physical exam</Engilsh211>   
+    <Engilsh212>And we totally got wrecked by that psycho dude</Engilsh212>   
+    <Engilsh213>We aren't trained Saints, rushing to battle in this state - </Engilsh213>   
+    <Engilsh214>OW</Engilsh214>   
+    <Engilsh215>What was that?</Engilsh215>   
+    <Engilsh216>I think you've underestimated our growth</Engilsh216>
+    <Engilsh217>Come, I'll show you how far we've grown.</Engilsh217>    
+    <Engilsh218>Somewhere</Engilsh218>    
+    <Engilsh219>An argument breaks out between two allies</Engilsh219>    
+    <Engilsh220>Listen, I'll be the one leading the assault tomorrow</Engilsh220>    
+    <Engilsh221>Adam, already agreed to it</Engilsh221>    
+    <Engilsh222>Exactly</Engilsh222>    
+    <Engilsh223>This is lame, how come I never get to be in charge?</Engilsh223>    
+    <Engilsh224>because you are immature, childish, reckless, stupid</Engilsh224>    
+    <Engilsh225>you'd jeopardize the mission</Engilsh225>    
+    <Engilsh226>Indeed, I don't even know why we kept you to begin with</Engilsh226>    
+    <Engilsh227>Harsh</Engilsh227>    
+    <Engilsh228>I've had enough of this. You punk!!!</Engilsh228>    
+    <Engilsh229>Lets see if you can back up your talk</Engilsh229>    
+    <Engilsh230>Hmph</Engilsh230>    
+    <Engilsh231>Ugh</Engilsh231>    
+    <Engilsh232>Satisfied?</Engilsh232>    
+    <Engilsh233>You son of a</Engilsh233>    
+    <Engilsh234>Shut up Rav. You're being childish</Engilsh234>    
+    <Engilsh235>Indeed, that was fairly ridiculous</Engilsh235>    
+    <Engilsh236>Adam? When did you get here???</Engilsh236>    
+    <Engilsh237>Just five seconds ago</Engilsh237>    
+    <Engilsh238>Cocky as always....</Engilsh238>    
+    <Engilsh239>Indeed, I hope you've made some progress</Engilsh239>    
+    <Engilsh240>Yes, we invade tomorrow</Engilsh240>    
+    <Engilsh241>And are you prepared?</Engilsh241>    
+    <Engilsh242>We've gathered enough souls to power the device</Engilsh242>    
+    <Engilsh243>Excellent</Engilsh243>    
+    <Engilsh244>We've also been training like crazy, they wont stand a chance against all 5 of us</Engilsh244>    
+    <Engilsh245>Of course, I can beat you down to prove it</Engilsh245>    
+    <Engilsh246>Um that’s not a good idea</Engilsh246> 
+    <Engilsh247>Actually, it is. I'm in the mood for a sparring match. Come with all youve got</Engilsh247>    
+    <Engilsh248>I'll put in half the effort</Engilsh248>    
+    <Engilsh249>Cocky!</Engilsh249>    
+    <Engilsh250>heh heh heh</Engilsh250>    
+    <Engilsh251>The following day....</Engilsh251>    
+    <Engilsh252>Adam and his men stormed the Academy</Engilsh252>    
+    <Engilsh253>The lower rank Saints were no match for them</Engilsh253>    
+    <Engilsh254>During the ensuing chaos. Two fates, crossed paths yet again</Engilsh254>    
+    <Engilsh255>So you're back, how long has it been</Engilsh255>    
+    <Engilsh256>200 years, give or take</Engilsh256> 
+    <Engilsh257>What do you want Adam?</Engilsh257>    
+    <Engilsh258>Don't play dumb! You know what I want</Engilsh258>    
+    <Engilsh259>The Artifact, "The Crest of Hope"</Engilsh259>    
+    <Engilsh260>The council will never allow that</Engilsh260>    
+    <Engilsh261>*Hmph* I'm not asking</Engilsh261>    
+    <Engilsh262>PREPARE TO DIE!!!</Engilsh262>    
+    <Engilsh263>Maaaaaaan, looks like were missing an epic party</Engilsh263>    
+    <Engilsh264>This is gonna be bad</Engilsh264>    
+    <Engilsh265>Well, what do we have here?</Engilsh265>    
+    <Engilsh266>YOU!!!</Engilsh266>    
+    <Engilsh267>Yeah, me</Engilsh267>    
+    <Engilsh268>Rai, get out of here, I'll handle this guy</Engilsh268>    
+    <Engilsh269>Good luck</Engilsh269>    
+    <Engilsh270>Inside the academy</Engilsh270>    
+    <Engilsh271>Argh, you injured me</Engilsh271>    
+    <Engilsh272>Whatever, I still got what I want</Engilsh272>    
+    <Engilsh273>Stop!</Engilsh273>    
+    <Engilsh274>Hmph, you're too weak to stop me now</Engilsh274>    
+    <Engilsh275>Not so fast</Engilsh275>    
+    <Engilsh276>Lynx?</Engilsh276>    
+    <Engilsh277>Fool, you don't stand a</Engilsh277>    
+    <Engilsh278>Shut up, I'll end this once and for all</Engilsh278>    
+    <Engilsh279>You</Engilsh279>    
+    <Engilsh280>Lady Azaria</Engilsh280>    
+    <Engilsh281>Raila? What are you doing here?</Engilsh281>    
+    <Engilsh282>Duh, I'm here to help. You look injured</Engilsh282>    
+    <Engilsh283>I'm fine</Engilsh283>    
+    <Engilsh284>Yeah right, I can see Lynx is busy with the ring leader.</Engilsh284>    
+    <Engilsh285>I'll try and stop his henchmen</Engilsh285>    
+    <Engilsh286>Be careful</Engilsh286>    
+    <Engilsh287>Nearby</Engilsh287>
+    <Engilsh288>Our plans are getting messed up</Engilsh288>    
+    <Engilsh289>Hey</Engilsh289>    
+    <Engilsh290>Great</Engilsh290>    
+    <Engilsh291>As you can tell, this silly game is over.</Engilsh291>    
+    <Engilsh292>Give up now</Engilsh292>    
+    <Engilsh293>Shut up boy! You're a fool to think you can stop me</Engilsh293>    
+    <Engilsh294>Dammit</Engilsh294>    
+    <Engilsh295>Rai!!! You're a mess!!</Engilsh295>    
+    <Engilsh296>I stopped the girl, but that punk is getting away</Engilsh296>    
+    <Engilsh297>I...I stopped you first</Engilsh297>    
+    <Engilsh298>Shut up, its a draw dammit</Engilsh298>    
+    <Engilsh299>Loser</Engilsh299>
+    <Engilsh300>RAAAAAAAAAAAAAGH</Engilsh300>
+    <Engilsh301>The hell</Engilsh301>    
+    <Engilsh302>DIE</Engilsh302>    
+    <Engilsh303>Lynx</Engilsh303>    
+    <Engilsh304>Darn, hes too....... strong</Engilsh304>    
+    <Engilsh305>I'll end this</Engilsh305>    
+    <Engilsh306>Ha ha ha! You have a death wish, boy??</Engilsh306>    
+    <Engilsh307>Story Mode</Engilsh307>    
+    <Engilsh308>Quick Match</Engilsh308>    
+    <Engilsh309>Host a LAN match</Engilsh309>    
+    <Engilsh310>Join a LAN match</Engilsh310>    
+    <Engilsh311>Your stats</Engilsh311>    
+    <Engilsh312>Options</Engilsh312>    
+    <Engilsh313>View Controls</Engilsh313>    
+    <Engilsh314>About</Engilsh314>    
+    <Engilsh315>Exit</Engilsh315>    
+    <Engilsh316>Achievement Locker</Engilsh316>    
+    <Engilsh317>On-line Leader Boards</Engilsh317>
+    <Engilsh318>Log Out</Engilsh318>
+    <Engilsh319>Tutorial</Engilsh319>    
+    <Engilsh320>Hi, welcome to the tutorial.</Engilsh320>
+    <Engilsh321>This will teach you how to play..... obviously.</Engilsh321>
+    <Engilsh322>First up, the Heads-Up display (HUD ).</Engilsh322>
+    <Engilsh323>This, my friends, is your characters Heath Bar.</Engilsh323>
+    <Engilsh324>It displays your characters Health Points (HP) as both digits and a percentage.</Engilsh324>
+    <Engilsh325>Once your HP goes below zero, or is less than your opponents at the end of a match....</Engilsh325>
+    <Engilsh326>You're dead, shocker.</Engilsh326>
+    <Engilsh327>Same principle applies to your opponent.</Engilsh327>
+    <Engilsh328>Next, your Command Menu (CM), which houses your Move-set.</Engilsh328>
+    <Engilsh329>All your characters moves are shown in the Command Menu.</Engilsh329>
+    <Engilsh330>Moves are split into 3 categories: Physical, Celestia and Items.</Engilsh330>
+    <Engilsh331>Physical moves rely on raw brute force to inflict damage.</Engilsh331>
+    <Engilsh332>Celestia moves use Celestia Powers to enhance attacks or activate special abilities.</Engilsh332>
+    <Engilsh333>And Items, tend to augment your character or sabotage your opponent.</Engilsh333>
+    <Engilsh334>You can navigate through these sections using RIGHT/LEFT, A/D or Scroll Up/Down.</Engilsh334>
+    <Engilsh335>All you have to do is select a a single move to Que it up.</Engilsh335>
+    <Engilsh336>More on that later</Engilsh336>
+    <Engilsh337>The Activity Bar (AB) is directly linked to your Command Menu (CM).</Engilsh337>
+    <Engilsh338>It fills up over time and automatically governs your Turn.</Engilsh338>
+    <Engilsh339>You cant do anything unless your AB is fully charged.</Engilsh339>
+    <Engilsh340>As you can see, your CM is disabled while your AB is not fully charged.</Engilsh340>
+    <Engilsh341>When your AB is fully activated, your CM is enabled, magic!!!</Engilsh341>
+    <Engilsh342>You can now proceed to Que up attacks.</Engilsh342>    
+    <Engilsh343>Press ENTER to Skip</Engilsh343>
+    <Engilsh344>This is the Time Counter, here set to infinite</Engilsh344>
+    <Engilsh345>Some rounds have a time limit, and you will see the countdown here.</Engilsh345>
+    <Engilsh346>And now for the fun part!</Engilsh346>
+    <Engilsh347>As you can see, you initially have 4 empty slots.</Engilsh347>
+    <Engilsh348>You can select any move from any section.</Engilsh348>
+    <Engilsh349>And your slots will fill up.</Engilsh349>
+    <Engilsh350>Once all four have filled up, your attacks will be executed in sequence.</Engilsh350>
+    <Engilsh367>After execution, your slots will become free yet again</Engilsh367>
+    <Engilsh351>The same applies to your opponent.</Engilsh351>
+    <Engilsh352>This is the fury bar.</Engilsh352>
+    <Engilsh353>It fills up as both characters attack.</Engilsh353>
+    <Engilsh354>When full, you can pull off a rage/fury combo.</Engilsh354>
+    <Engilsh355>Command Menu (CM)</Engilsh355>
+    <Engilsh356>Introduction</Engilsh356>
+    <Engilsh357>Activity Bar (AB)</Engilsh357>
+    <Engilsh358>Fury Bar (FB)</Engilsh358>
+    <Engilsh359>Selecting Attacks</Engilsh359>
+    <Engilsh360>HUD Basics</Engilsh360>
+    <Engilsh361>You trigger Fury/Rage by pressing 'L' or clicking on the Flashing Fury Icon.</Engilsh361>
+    <Engilsh362>Note, only one player can activate Fury at a time.</Engilsh362>
+    <Engilsh363>If your opponent triggers it first, you are in TROUBLE.</Engilsh363>
+    <Engilsh364>Tips and Tricks</Engilsh364>
+    <Engilsh365>slide</Engilsh365>
+    <Engilsh366>Key Board shortcuts</Engilsh366>
+    <Engilsh368>Press ESCAPE to go back</Engilsh368>
+    <Engilsh369>The Ruined Hall - Night</Engilsh369>
+    <Engilsh370>Scorched Ruins - Night</Engilsh370>
+    <Engilsh371>Hidden Cave - Night</Engilsh371>
+    <Engilsh373>Stupid boy, this isn't over!! </Engilsh373>
+    <Engilsh374>*SMASH*</Engilsh374>
+    <Engilsh375>He blew a hole into the ground... hes escaping</Engilsh375>
+    <Engilsh376>No, hes heading for the Hidden Chamber</Engilsh376>
+    <Engilsh377>What?</Engilsh377>
+    <Engilsh378>*Down in the Hidden Chamber*</Engilsh378>
+    <Engilsh379>Crap, lets get out of here!</Engilsh379>
+    <Engilsh380>Adam, we have to go</Engilsh380>
+    <Engilsh381>We cant contain the Saints any longer</Engilsh381>
+    <Engilsh382></Engilsh382>
+    <Engilsh383>There it is, I finally found the Crest</Engilsh383>
+    <Engilsh384>*GRRRRRRRRR*</Engilsh384>
+    <Engilsh385>What the hell was that?</Engilsh385>
+    <Engilsh386>Did you think we would leave the Crest of Hope unprotected?</Engilsh386>
+    <Engilsh387>Ive seriously had enough of you for one day</Engilsh387>
+    <Engilsh388>No kidding</Engilsh388>
+    <Engilsh389>Its, some kind of a guardian!</Engilsh389>
+    <Engilsh390>Ive come too far, I wont lose now.....</Engilsh390>
+    <Engilsh391>I WONT LOSE EVER!!!</Engilsh391>
+    <Engilsh392>Uh, now would be a good time to stand back</Engilsh392>
+    <Engilsh393>Thats it, enjoy the game!!!</Engilsh393>
+    <Engilsh394>DONE!!!</Engilsh394>
+    <Engilsh395>Take Your Time</Engilsh395>
+    <Engilsh396>Jack of all Trades</Engilsh396>
+    <Engilsh397>Angry Soul</Engilsh397>
+    <Engilsh398>Tank</Engilsh398>
+    <Engilsh399>Soldier</Engilsh399>
+    <Engilsh400>Mage</Engilsh400>
+    <Engilsh401>Rookie</Engilsh401>
+    <Engilsh402>Champion</Engilsh402>
+    <Engilsh403>Ultimate</Engilsh403>
+    <Engilsh404>Mega</Engilsh404>
+    <Engilsh405>You completed story mode</Engilsh405>
+    <Engilsh406>Took you five minutes to win</Engilsh406>
+    <Engilsh407>You used your entire move-list</Engilsh407>
+    <Engilsh408>You used rage 3 times in one match</Engilsh408>
+    <Engilsh409>You endured 2 rage combos</Engilsh409>
+    <Engilsh410>You only used Physical moves to defeat your opponent</Engilsh410>
+    <Engilsh411>You only used Celestia to defeat your opponent</Engilsh411>
+    <Engilsh412>You're getting the hang of this</Engilsh412>
+    <Engilsh413>You're no pushover</Engilsh413>
+    <Engilsh414>Welcome to the big league</Engilsh414>
+    <Engilsh415>You are a master of this game</Engilsh415>
+    <Engilsh416>Get Update</Engilsh416>
+    <Engilsh417>Maybe Later</Engilsh417>
+</scnd_lang>
