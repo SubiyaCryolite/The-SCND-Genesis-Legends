@@ -1,1 +1,11 @@
-The SCND Genesis: Legends is a fighting game based on my web-comic The SCND Genesis. The battle system is a hybrid of turn based RPG's and conventional 2D Fighters. The game has a hand-drawn comic book graphical style and has other anime style effects. This was my first big Java project that I created while in college and it shows. Please use this only as a reference and not groundwork for new projects ^_^
+The SCND Genesis: Legends is a fighting game based on my web-comic The SCND Genesis. 
+The battle system is a hybrid of turn based RPG's and conventional 2D Fighters. 
+The game has a hand-drawn comic book graphical style and has other anime style effects. 
+This was my first big Java project that I created while in college and it shows. 
+Please use this only as a reference and not groundwork for new projects ^_^
+
+![ScreenShot](http://www.scndgen.com/game/Screenshot-12.jpg "Screenshot")
+
+![ScreenShot](http://www.scndgen.com/game/Screenshot-13.jpg "Screenshot")
+
+![ScreenShot](http://www.scndgen.com/game/Screenshot-18.jpg "Screenshot")
