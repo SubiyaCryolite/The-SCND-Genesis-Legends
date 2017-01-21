@@ -355,14 +355,14 @@ public abstract class DrawStorySel extends JenesisMenu {
      *
      * @return hIndex
      */
-    public int getHindex() {
+    public final int getHindex() {
         return hIndex;
     }
 
     /**
      * Set horizontal index
      */
-    public void setHindex(int value) {
+    public final void setHindex(int value) {
         hIndex = value;
     }
 
@@ -371,14 +371,14 @@ public abstract class DrawStorySel extends JenesisMenu {
      *
      * @return vIndex
      */
-    public int getVindex() {
+    public final int getVindex() {
         return vIndex;
     }
 
     /**
      * Set vertical index
      */
-    public void setVindex(int value) {
+    public final void setVindex(int value) {
         vIndex = value;
     }
 

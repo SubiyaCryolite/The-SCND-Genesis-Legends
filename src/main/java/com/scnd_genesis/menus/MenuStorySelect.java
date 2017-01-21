@@ -143,14 +143,6 @@ public class MenuStorySelect extends DrawStorySel {
         captureScreenShot();
     }
 
-    /**
-     * Used by mouse motion listener to set the position of hIndex
-     *
-     * @param val
-     */
-    public void setHindex(int val) {
-        setHindex(val);
-    }
 
     /**
      * Animates caption
@@ -159,14 +151,6 @@ public class MenuStorySelect extends DrawStorySel {
         capAnim();
     }
 
-    /**
-     * Used by mouse motion listener to set the position of vIndex
-     *
-     * @param val
-     */
-    public void setVindex(int val) {
-        setVindex(val);
-    }
 
     protected void initializePanel() {
         storyInstance = new StoryMode();
