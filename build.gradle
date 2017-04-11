@@ -3,13 +3,13 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'idea' //run idea to resolve dependancies in intellij
+apply plugin: 'idea' //run idea to resolve dependencies in intellij
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-project.ext.$jarDir = 'libs'
-project.ext.mainClass = 'com.scnd_genesis.loginScreen'
+project.ext.jarDir = 'libs'
+project.ext.mainClass = 'com.scndgen.legends.LoginScreen'
 repositories {
     mavenCentral()
 }
@@ -19,10 +19,10 @@ dependencies {
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-lang:commons-lang:2.6'
     runtime 'net.java.jinput:jinput-platform:2.0.6'
-    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
-    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
-    compile group: 'net.java.jinput', name: 'jinput', version: '2.0.6'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'javazoom:jlayer:1.0.1'
+    compile 'org.xerial:sqlite-jdbc:3.7.2'
+    compile 'net.java.jinput:jinput:2.0.6'
+    testCompile 'junit:junit:4.11'
 }
 
 jar {
@@ -30,14 +30,14 @@ jar {
         attributes (
                 "Implementation-Title": "The SCND Genesis: Legacy",
                 "Implementation-Version": "1.0",
-                "Main-Class": "com.scndgen.legacy.ScndGen",
+                "Main-Class": project.ext.mainClass,
                 "Class-Path": configurations.compile.collect { "libs/$it.name"}.join(' '),
         )
     }
 }
 
 task copyToLib(type: Copy) {
-    into "$buildDir/libs"
+    into "$buildDir/libs/libs"
     from configurations.runtime
 }
 

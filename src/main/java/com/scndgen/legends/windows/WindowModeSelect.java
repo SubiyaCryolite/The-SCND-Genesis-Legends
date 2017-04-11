@@ -1,0 +1,644 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+
+ The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+
+ **************************************************************************/
+package com.scndgen.legends.windows;
+
+import com.scndgen.legends.GamePadController;
+import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.drawing.SpecialDrawModeMenu;
+import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.menus.MenuGameRender;
+import com.scndgen.legends.menus.MenuLeaderBoard;
+import com.scndgen.legends.network.NetworkScanLan;
+import com.scndgen.legends.threads.ThreadMP3;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+/**
+ * @author Ndana
+ */
+public class WindowModeSelect extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+
+    public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
+    public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
+    private static LoginScreen p;
+    public int[] ach = new int[5];
+    public int[] classArr = new int[5];
+    private JFrame window;
+    private JenesisLanguage lang;
+    private WindowMain startApp;
+    private String[] mode = {WindowMain.singlePlayer, WindowMain.lanHost, WindowMain.lanClient, WindowMain.storyMode, WindowMain.singlePlayer2};
+    private SpecialDrawModeMenu draw;
+    private WindowControls controls;
+    private WindowOptions options;
+    private WindowAbout about;
+    private NetworkScanLan scan;
+    private WindowModeSelect mainMenu;
+    private MenuLeaderBoard board;
+    private GamePadController gpController;
+    private ThreadMP3 startup;
+    private boolean[] buttonz;
+    private Desktop desktop;
+    private int compassDir, compassDir2, last = 13;
+
+    @SuppressWarnings("LeakingThisInConstructor")
+    public WindowModeSelect(String dude, LoginScreen px) {
+        p = px;
+        lang = p.getLangInst();
+        startup = new ThreadMP3(ThreadMP3.startUpSound(), false);
+        startup.play();
+        strUser = dude;
+        window = new JFrame();
+        window.setUndecorated(true);
+        draw = new SpecialDrawModeMenu();
+        window.setLayout(new BorderLayout());
+        window.setContentPane(draw);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setTitle("The SCND Genesis: Legends" + MenuGameRender.getVersionStr());
+        window.addMouseMotionListener(this);
+        window.addMouseListener(this);
+        window.addMouseWheelListener(this);
+        window.requestFocusInWindow();
+        window.setFocusable(true);
+        window.addKeyListener(this);
+        window.pack();
+        window.setLocationRelativeTo(null); // Centers JFrame on screen //
+        window.setResizable(false);
+        window.setVisible(true);
+        try {
+            gpController = new GamePadController();
+            if (gpController.controllerFound) {
+                controller = true;
+                buttonz = new boolean[gpController.NUM_BUTTONS];
+                pollController();
+            }
+            if (this.p.controller) {
+
+                if (gpController.statusInt == 1) {
+                    sytemNotice(gpController.controllerName + " " + lang.getLine(103));
+                } else if (gpController.statusInt == 0) {
+                    sytemNotice(lang.getLine(104));
+                } else if (gpController.statusInt == 2) {
+                    sytemNotice(lang.getLine(105));
+                }
+            }
+        } catch (Error ex) {
+            sytemNotice(lang.getLine(106));
+        }
+        refreshWindow();
+    }
+
+    public static WindowModeSelect getMenu() {
+        return p.getMenu();
+    }
+
+    /**
+     * Returns the username
+     *
+     * @return username
+     */
+    public static String getUserName() {
+        return strUser;
+    }
+
+    public void logOut() {
+        window.dispose();
+        p.showWindow();
+    }
+
+    public GamePadController getController() {
+        return gpController;
+    }
+
+    public final void sytemNotice(String moi) {
+        draw.systemNotice(moi);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+    }
+
+    /**
+     * Select option in menu
+     */
+    private void select() {
+        //if viewing stats, go back to menu
+        if (draw.getPlace() == 1 || draw.getPlace() == 2 || draw.getPlace() == 3) {
+            if (draw.getPlace() == 3) {
+                draw.stopTut();
+            }
+            draw.setPlace(0);
+        } else {
+            String destination = draw.getMenuModeStr();
+
+            if (destination.equalsIgnoreCase(WindowMain.lanClient)) {
+                scan = new NetworkScanLan();
+            } else if (destination.equalsIgnoreCase(WindowMain.lanHost)) {
+                terminateThis();
+                draw.systemNotice(lang.getLine(107));
+                startApp = new WindowMain(strUser, mode[1]);
+            } else if (destination.equalsIgnoreCase("vs1")) {
+                terminateThis();
+                draw.systemNotice(lang.getLine(108));
+                startApp = new WindowMain(strUser, mode[0]);
+            } else if (destination.equalsIgnoreCase("vs2")) {
+                terminateThis();
+                draw.systemNotice(lang.getLine(109));
+                startApp = new WindowMain(strUser, mode[4]);
+            } else if (destination.equalsIgnoreCase(WindowMain.storyMode)) {
+
+                terminateThis();
+                startApp = new WindowMain(strUser, WindowMain.storyMode);
+            } else if (destination.equalsIgnoreCase("options")) {
+                options = new WindowOptions();
+            } else if (destination.equalsIgnoreCase("stats")) {
+                draw.setPlace(1);
+            } else if (destination.equalsIgnoreCase("ach")) {
+                draw.refreshStats();
+                draw.setPlace(2);
+            } else if (destination.equalsIgnoreCase("about")) {
+                about = new WindowAbout();
+            } else if (destination.equalsIgnoreCase("controls")) {
+                controls = new WindowControls();
+            } else if (destination.equalsIgnoreCase("tutorial")) {
+                draw.setPlace(3);
+                draw.startTut();
+            } else if (destination.equalsIgnoreCase("logout")) {
+                logOut();
+            } else if (destination.equalsIgnoreCase("leaders")) {
+                if (boardNotUp) {
+                    board = new MenuLeaderBoard();
+                    boardNotUp = false;
+                } else {
+                    board.reappear();
+                }
+            }
+
+            if (destination.equalsIgnoreCase("exit")) {
+                exit();
+            }
+        }
+    }
+
+    public WindowMain getMain() {
+        return startApp;
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent mwe) {
+        {
+            int count = mwe.getWheelRotation();
+
+            //down - positive values
+            if (count >= 0) {
+                draw.goDown();
+            }
+            //up -negative values
+            if (count < 0) {
+                draw.goUp();
+            }
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent m) {
+        int x = draw.getXMenu();
+        int y = draw.getYMenu() - 14;
+        int space = draw.getSpacer();
+        if (draw.getPlace() == 3) {
+            if (m.getX() >= 425) {
+                draw.forwarTut();
+            } else {
+                draw.backTut();
+            }
+        } else if ((m.getY() > y) && (m.getY() < (y + (space * last))) && m.getX() > x) {
+            if (m.getButton() == MouseEvent.BUTTON1) {
+                select();
+            }
+
+            //middle mouse
+            if (m.getButton() == MouseEvent.BUTTON2) {
+            }
+
+            //middle mouse
+            if (m.getButton() == MouseEvent.BUTTON3) {
+            }
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent m) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent m) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent m) {
+        int x = draw.getXMenu();
+        int y = draw.getYMenu() - 14;
+        int space = draw.getSpacer() - 2;
+        //menu space
+        if ((m.getX() > x) && (m.getX() < x + 200)) {
+            if ((m.getY() > space) && (m.getY() < (y + space))) {
+                draw.setMenuPos(0);
+            }
+
+            if ((m.getY() > (y + space)) && (m.getY() < (y + (space * 2)))) {
+                draw.setMenuPos(1);
+            }
+
+            if ((m.getY() > (y + (space * 2))) && (m.getY() < (y + (space * 3)))) {
+                draw.setMenuPos(2);
+            }
+
+            if ((m.getY() > (y + (space * 3))) && (m.getY() < (y + (space * 4)))) {
+                draw.setMenuPos(3);
+            }
+
+            if ((m.getY() > (y + (space * 4))) && (m.getY() < (y + (space * 5)))) {
+                draw.setMenuPos(4);
+            }
+
+            if ((m.getY() > (y + (space * 5))) && (m.getY() < (y + (space * 6)))) {
+                draw.setMenuPos(5);
+            }
+
+            if ((m.getY() > (y + (space * 7))) && (m.getY() < (y + (space * 8)))) {
+                draw.setMenuPos(6);
+            }
+
+            if ((m.getY() > (y + (space * 8))) && (m.getY() < (y + (space * 9)))) {
+                draw.setMenuPos(7);
+            }
+
+            if ((m.getY() > (y + (space * 9))) && (m.getY() < (y + (space * 10)))) {
+                draw.setMenuPos(8);
+            }
+
+            if ((m.getY() > (y + (space * 10))) && (m.getY() < (y + (space * 11)))) {
+                draw.setMenuPos(9);
+            }
+
+            if ((m.getY() > (y + (space * 11))) && (m.getY() < (y + (space * 12)))) {
+                draw.setMenuPos(10);
+            }
+
+            if ((m.getY() > (y + (space * 12))) && (m.getY() < (y + (space * last)))) {
+                draw.setMenuPos(11);
+            }
+
+            if ((m.getY() > (y + (space * 13))) && (m.getY() < (y + (space * last)))) {
+                draw.setMenuPos(12);
+            }
+        }
+        //System.out.print("Mouse X:"+m.getX());
+        //System.out.println("Mouse y:"+m.getY());
+    }
+
+    @Override
+    public void mouseExited(MouseEvent m) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent m) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent m) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+
+        if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
+            draw.goDown();
+        }
+
+        if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
+            draw.goUp();
+        }
+
+        if (keyCode == KeyEvent.VK_F) {
+            provideFeedback('f');
+        }
+
+        if (keyCode == KeyEvent.VK_B) {
+            provideFeedback('b');
+        }
+
+        if (keyCode == KeyEvent.VK_L) {
+            provideFeedback('l');
+        }
+
+        if (keyCode == KeyEvent.VK_RIGHT) {
+            if (draw.getPlace() == 3) {
+                draw.forwarTut();
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_LEFT) {
+            if (draw.getPlace() == 3) {
+                draw.backTut();
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_1) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(0);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_2) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(3);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_3) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(11);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_4) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(20);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_5) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(27);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_6) {
+            if (draw.getPlace() == 3) {
+                draw.sktpToTut(32);
+            }
+        }
+
+        if (keyCode == KeyEvent.VK_F12) {
+            draw.captureScreenShot();
+        }
+
+        if (keyCode == KeyEvent.VK_ENTER) {
+            select();
+        }
+    }
+
+    private void provideFeedback(char code) {
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                URI uri = null;
+                try {
+                    switch (code) {
+                        case 'f': {
+                            uri = new URI("https://docs.google.com/spreadsheet/viewform?formkey=dGppbVViZHE5QWxZYkRBazZNcUtTRHc6MQ");
+                        }
+                        break;
+                        case 'b': {
+                            uri = new URI("http://scndgen.sf.net/blog.php");
+                        }
+                        break;
+                        case 'l': {
+                            uri = new URI("http://www.facebook.com/pages/THE-SCND-GENESIS/111839318834780");
+                        }
+                        break;
+
+                        default: {
+                            uri = new URI("http://scndgen.sf.net");
+                        }
+                    }
+
+                    desktop.browse(uri);
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                } catch (URISyntaxException use) {
+                    use.printStackTrace();
+
+                }
+            }
+        }
+        p.trayMessage("Thanks", "Thank you for your support!!");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    /**
+     * Exit game
+     */
+    public void exit() {
+        int x = JOptionPane.showConfirmDialog(null, lang.getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
+        if (x == JOptionPane.YES_OPTION) {
+            int b = JOptionPane.showConfirmDialog(null, lang.getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
+            if (b == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, lang.getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
+        }
+    }
+
+    /**
+     * Repaints GUI
+     */
+    public void refresh() {
+        draw.repaint();
+    }
+
+    /**
+     * Stops repainting GUI
+     */
+    public void stopPaint() {
+        draw.StopRepaint();
+    }
+
+    /**
+     * Gets rid of main menu (minimise)
+     */
+    public void terminateThis() {
+        draw.StopRepaint();
+        isActive = false;
+        window.dispose();
+    }
+
+    /**
+     * Show menu (maximise)
+     */
+    public void showModes() {
+        isActive = true;
+        try {
+            if (gpController.controllerFound) {
+                pollController();
+            }
+        } catch (Exception e) {
+        }
+        window.setVisible(true);
+    }
+
+    /**
+     * Create a client game
+     */
+    public void hostGame() {
+        startApp = new WindowMain(WindowModeSelect.getUserName(), WindowMain.lanClient);
+    }
+
+    private void refreshWindow() {
+        new Thread() {
+
+            @Override
+            @SuppressWarnings({"static-access", "SleepWhileHoldingLock"})
+            public void run() {
+                while (true) {
+                    try {
+                        this.sleep(16);
+                        window.repaint();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void pollController() {
+        new Thread() {
+
+            @Override
+            @SuppressWarnings({"static-access", "SleepWhileHoldingLock"})
+            public void run() {
+                try {
+                    do {
+                        gpController.poll();
+
+                        compassDir2 = gpController.getXYStickDir();
+                        if (compassDir2 == gpController.NORTH) {
+                            draw.goUp();
+                        } else if (compassDir2 == gpController.SOUTH) {
+                            draw.goDown();
+                        }
+
+                        //update bottons
+                        buttonz = gpController.getButtons();
+
+
+                        // get POV hat compass direction
+                        compassDir = gpController.getHatDir();
+                        {
+                            if (compassDir == gpController.SOUTH) {
+                                if (doneChilling) {
+                                    draw.goDown();
+                                }
+                                menuLatency();
+                            }
+
+                            if (compassDir == gpController.NORTH) {
+                                if (doneChilling) {
+                                    draw.goUp();
+                                }
+                                menuLatency();
+                            }
+                        }
+
+                        if (buttonz[2]) {
+                            if (doneChilling) {
+                                quickVibrate(0.4f, 1000);
+                                select();
+                            }
+                            menuLatency();
+                        }
+
+                        if (buttonz[3]) {
+                            if (doneChilling) {
+                                quickVibrate(0.8f, 1000);
+                                exit();
+                            }
+                            menuLatency();
+                        }
+
+                        // get compass direction for the two analog sticks
+                        compassDir = gpController.getXYStickDir();
+
+                        compassDir = gpController.getZRZStickDir();
+
+
+                        this.sleep(66);
+                    } while (isActive);
+                } catch (Exception e) {
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Responsible for latency in game menus(controller)
+     */
+    private void menuLatency() {
+        new Thread() {
+
+            @Override
+            @SuppressWarnings("static-access")
+            public void run() {
+                try {
+                    doneChilling = false;
+                    this.sleep(166);
+                    doneChilling = true;
+                } catch (Exception e) {
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Vibrate
+     */
+    private void quickVibrate(float strength, int length) {
+        final float power = strength;
+        final int time = length;
+        new Thread() {
+
+            @SuppressWarnings("static-access")
+            @Override
+            public void run() {
+                try {
+                    gpController.setRumbler(true, power);
+                    this.sleep(time);
+                    gpController.setRumbler(false, 0.0f);
+                } catch (Exception e) {
+                }
+            }
+        }.start();
+    }
+}
