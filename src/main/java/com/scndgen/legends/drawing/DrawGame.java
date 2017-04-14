@@ -177,7 +177,6 @@ public abstract class DrawGame extends JenesisRender {
     public DrawGame() {
         lang = LoginScreen.getInstance().getLangInst();
         pix = new JenesisImage();
-        over1 = new JenesisGlassPane();
         newInstance();
     }
 
@@ -568,11 +567,6 @@ public abstract class DrawGame extends JenesisRender {
     }
 
     @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(getGameWidth(), getGameHeight()); //16:9
-    }
-
-    @Override
     public Dimension getSize() {
         return new Dimension(getGameWidth(), getGameHeight()); //16:9
     }
@@ -936,7 +930,7 @@ public abstract class DrawGame extends JenesisRender {
         }
 
         //global overlay
-        over1.overlay(g2d, this);
+        JenesisGlassPane.getInstance().overlay(g2d, this);
 
         g.drawImage(volatileImg, 0, 0, this);
     }

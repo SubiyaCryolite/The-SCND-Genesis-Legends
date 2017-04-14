@@ -39,7 +39,6 @@ import java.io.File;
  */
 public abstract class JenesisRender extends JPanel {
 
-    public JenesisGlassPane over1;
     protected VolatileImage volatileImg;
     protected JenesisLanguage langz;
     protected GraphicsEnvironment ge;
@@ -47,7 +46,6 @@ public abstract class JenesisRender extends JPanel {
     protected Graphics2D g2d;
     protected int screenWidth;
     protected int screenHeight;
-    protected int valCode;
     protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
 
     public abstract void paintComponent(Graphics g);
@@ -58,7 +56,7 @@ public abstract class JenesisRender extends JPanel {
      * @param message - the message to display
      */
     public final void systemNotice(String message) {
-        over1.systemNotice(message);
+        JenesisGlassPane.getInstance().systemNotice(message);
     }
 
     /**
@@ -67,7 +65,7 @@ public abstract class JenesisRender extends JPanel {
      * @param message - the message to display
      */
     public final void systemNotice2(String message) {
-        over1.systemNotice2(message);
+        JenesisGlassPane.getInstance().systemNotice2(message);
     }
 
     /**
@@ -107,19 +105,21 @@ public abstract class JenesisRender extends JPanel {
      */
     public final void captureScreenShot() {
         try {
-            BufferedImage dudeC = volatileImg.getSnapshot();
-
+            BufferedImage bufferedImage = volatileImg.getSnapshot();
             File file;
-
             if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
             }
             file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
-            ImageIO.write(dudeC, "png", file);
-            systemNotice(langz.getLine(170));
+            if (ImageIO.write(bufferedImage, "png", file))
+                systemNotice(langz.getLine(170));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    @Override
+    public final Dimension getPreferredSize() {
+        return new Dimension(screenWidth, screenHeight); //480p, 16:9 widescreen enhanced definition, max resolution of Nintendo Wii too :D
     }
 }

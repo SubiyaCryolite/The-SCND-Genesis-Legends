@@ -39,8 +39,15 @@ public class JenesisGlassPane {
     private int gameWidth = 0;
     private float opacShow, opacShow2;
     private boolean opacUpb, opacShowb, opacUpb2, opacShowb2;
+    private static JenesisGlassPane instance;
 
-    public JenesisGlassPane() {
+    public static synchronized JenesisGlassPane getInstance() {
+        if (instance == null)
+            instance = new JenesisGlassPane();
+        return instance;
+    }
+
+    private JenesisGlassPane() {
         gameWidth = LoginScreen.getGameWidth();
     }
 

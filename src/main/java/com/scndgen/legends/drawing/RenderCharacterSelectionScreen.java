@@ -69,7 +69,6 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         loadDesc();
         opacInc = 0.025f;
         pix = new JenesisImage();
-        over1 = new JenesisGlassPane();
         loadCaps();
         setBorder(BorderFactory.createEmptyBorder());
     }
@@ -100,11 +99,6 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         statsChar[9] = lang.getLine(143);
         statsChar[10] = lang.getLine(144);
         statsChar[11] = lang.getLine(145);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(852, 480);
     }
 
     public Dimension setPreferredSize() {
@@ -287,13 +281,10 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         }
         g2d.drawImage(p1, 0, 180, this);
         g2d.drawImage(p2, 812, 180, this);
-
         if (x < 0) {
             x = x + 2;
         }
-
-        over1.overlay(g2d, this);
-
+        JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }
 

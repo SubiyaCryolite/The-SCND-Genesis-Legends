@@ -88,10 +88,7 @@ public abstract class RenderStoryMenu extends JenesisRender {
                 hiddenStage[u] = false;
             }
         }
-
-
         pix = new JenesisImage();
-        over1 = new JenesisGlassPane();
         loadCaps();
         setBorder(BorderFactory.createEmptyBorder());
     }
@@ -109,11 +106,6 @@ public abstract class RenderStoryMenu extends JenesisRender {
         }
 
         return answer;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(852, 480);
     }
 
     public Dimension setPreferredSize() {
@@ -238,7 +230,7 @@ public abstract class RenderStoryMenu extends JenesisRender {
 
             }
         }
-        over1.overlay(g2d, this);
+        JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }
 

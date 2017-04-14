@@ -112,7 +112,6 @@ public class DrawOverworld extends JenesisRender {
     @SuppressWarnings("LeakingThisInConstructor")
     public DrawOverworld(OverWorld p) {
         runNew = true;
-        over1 = new JenesisGlassPane();
         parentx = p;
         lang = LoginScreen.getInstance().getLangInst();
         charSpr2 = loadIcon("images/RailaSmall.png");
@@ -124,11 +123,6 @@ public class DrawOverworld extends JenesisRender {
         charBoxR = new Rectangle(xCordChar + picWidth, yCordChar, 2, picHeight);
         charBoxL = new Rectangle(xCordChar, yCordChar, 2, picHeight);
         animCloud();
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(screenWidth, screenHeight); //480p, 16:9 widescreen enhanced definition, max resolution of Nintendo Wii too :D
     }
 
     @Override
@@ -169,7 +163,7 @@ public class DrawOverworld extends JenesisRender {
             g2d.setComposite(makeComposite(10 * 0.1F));
             //this code was used in my collision detection tests
         }
-        over1.overlay(g2d, this);
+        JenesisGlassPane.getInstance().overlay(g2d, this);
     }
 
     private Image loadIcon(String imageName) {

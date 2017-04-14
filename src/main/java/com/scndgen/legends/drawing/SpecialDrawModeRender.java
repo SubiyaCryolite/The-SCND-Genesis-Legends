@@ -22,7 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.*;
+import com.scndgen.legends.engine.JenesisTutorial;
 import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
@@ -33,7 +33,6 @@ import io.github.subiyacryolite.enginev1.JenesisRender;
 import java.awt.*;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.awt.image.VolatileImage;
 import java.util.Calendar;
 
 /**
@@ -97,7 +96,6 @@ public class SpecialDrawModeRender extends JenesisRender {
         fadeOutFeedback = false;
 
         langz = LoginScreen.getInstance().getLangInst();
-        over1 = new JenesisGlassPane();
         itemz = new String[(menuEntries + 2) * 2];
         achDraw = new SpecialDrawAchievementLocker();
         cal = Calendar.getInstance();
@@ -206,11 +204,6 @@ public class SpecialDrawModeRender extends JenesisRender {
         return new Image[]{pic1, foreGroundA, foreGroundB, fg};
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(screenWidth, screenHeight); //480p, 16:9 widescreen enhanced definition, max resolution of Nintendo Wii too :D
-    }
-
     /**
      * Refresh achievement stats
      */
@@ -221,63 +214,45 @@ public class SpecialDrawModeRender extends JenesisRender {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        //Check if Image is valid
-        valCode = volatileImg.validate(gc);
-        //if not create new vi, only affects windows apparently
-        if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-            createBackBuffer();
-        }
-
-        /*
-        if (openOpac > 0.0f) {
         g2d.setComposite(makeComposite(1));
+        if (fadeOutFeedback && (feedBackOpac > 0.0f)) {
+            feedBackOpac = feedBackOpac - 0.025f;
+        }
+        g2d.drawImage(pic1, 0, 0, this);
+        g2d.drawImage(fg, 0, 0, this);
+        g2d.drawImage(foreGroundB, xCordCloud, yCordCloud, this);
+        g2d.drawImage(foreGroundA, xCordCloud2, yCordCloud2, this);
+
+        g2d.setColor(Color.BLACK);
+        g2d.setComposite(makeComposite(0.50f));
+        g2d.fillRect(0, 0, 853, 480);
+        g2d.setComposite(makeComposite(1.0f));
+        g2d.drawImage(sgLogo, 0, 0, this);
+
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(txt);
 
 
-        //-----
+        if (place == 0) {
 
-        } else */
-        {
-            g2d.setComposite(makeComposite(1));
-            if (fadeOutFeedback && (feedBackOpac > 0.0f)) {
-                feedBackOpac = feedBackOpac - 0.025f;
+            menuItem = 0;
+            if (menuIndex == menuItem) {
+                menuItmStr = WindowMain.storyMode;
+                g2d.drawImage(pointer, xMenu - 18, yMenu - 15, this);
+                g2d.drawString(itemz[1], xMenu, yMenu);
+            } else {
+                g2d.drawString(itemz[0], xMenu, yMenu);
             }
-            g2d.drawImage(pic1, 0, 0, this);
-            g2d.drawImage(fg, 0, 0, this);
-            g2d.drawImage(foreGroundB, xCordCloud, yCordCloud, this);
-            g2d.drawImage(foreGroundA, xCordCloud2, yCordCloud2, this);
+            menuItem++;
 
-            g2d.setColor(Color.BLACK);
-            g2d.setComposite(makeComposite(0.50f));
-            g2d.fillRect(0, 0, 853, 480);
-            g2d.setComposite(makeComposite(1.0f));
-
-
-            g2d.drawImage(sgLogo, 0, 0, this);
-
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(txt);
-
-
-            if (place == 0) {
-
-                menuItem = 0;
-                if (menuIndex == menuItem) {
-                    menuItmStr = WindowMain.storyMode;
-                    g2d.drawImage(pointer, xMenu - 18, yMenu - 15, this);
-                    g2d.drawString(itemz[1], xMenu, yMenu);
-                } else {
-                    g2d.drawString(itemz[0], xMenu, yMenu);
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "vs1";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[3], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[2], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
+            if (menuIndex == menuItem) {
+                menuItmStr = "vs1";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[3], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[2], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
 
                 /*
                 if (menuIndex == menuItem) {
@@ -290,23 +265,23 @@ public class SpecialDrawModeRender extends JenesisRender {
                 menuItem++;
                  */
 
-                if (menuIndex == menuItem) {
-                    menuItmStr = WindowMain.lanHost;
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[7], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[6], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
+            if (menuIndex == menuItem) {
+                menuItmStr = WindowMain.lanHost;
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[7], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[6], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
 
-                if (menuIndex == menuItem) {
-                    menuItmStr = WindowMain.lanClient;
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[9], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[8], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
+            if (menuIndex == menuItem) {
+                menuItmStr = WindowMain.lanClient;
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[9], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[8], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
 
                 /*
                 if (menuIndex == menuItem) {
@@ -319,128 +294,127 @@ public class SpecialDrawModeRender extends JenesisRender {
                 menuItem++;
                  */
 
-                if (menuIndex == menuItem) {
-                    menuItmStr = "stats";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[11], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[10], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "ach";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[21], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[20], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "tutorial";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[25], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[24], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "options";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[13], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[12], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "controls";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[15], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[14], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "logout";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[23], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[22], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "about";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[17], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[16], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-
-                if (menuIndex == menuItem) {
-                    menuItmStr = "exit";
-                    g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                    g2d.drawString(itemz[19], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                    g2d.drawString(itemz[18], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-            }
-
-            over1.overlay(g2d, this);
-
-            g2d.drawString("The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
-            g2d.setComposite(makeComposite(feedBackOpac));
-            mess = "Press 'F' to provide Feedback";
-            g2d.drawString(mess, 590, 14);
-
-            mess = "Press 'B' to visit our Blog";
-            g2d.drawString(mess, 590, 30);
-
-            mess = "Press 'L' to like us on Facebook";
-            g2d.drawString(mess, 590, 46);
-
-            g2d.drawLine(590 - 5, 0, 590 - 5, 46);
-            g2d.setComposite(makeComposite(1.0f));
-
-            g2d.setColor(Color.WHITE);
-
-            if (place == 1) {
-                achDraw.drawStats(g2d, this);
-            }
-
-            if (place == 2) {
-                achDraw.drawAch(g2d, this);
-            }
-
-            if (place == 3) {
-                tut.draw(g2d, this);
-            }
-
-
-            if (xCordCloud < -960) {
-                xCordCloud = screenWidth;
+            if (menuIndex == menuItem) {
+                menuItmStr = "stats";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[11], xMenu, yMenu + (fontSize * menuItem));
             } else {
-                xCordCloud = xCordCloud - 1;
+                g2d.drawString(itemz[10], xMenu, yMenu + (fontSize * menuItem));
             }
+            menuItem++;
 
-            if (xCordCloud2 < -960) {
-                xCordCloud2 = screenWidth;
+            if (menuIndex == menuItem) {
+                menuItmStr = "ach";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[21], xMenu, yMenu + (fontSize * menuItem));
             } else {
-                xCordCloud2 = xCordCloud2 - 2;
+                g2d.drawString(itemz[20], xMenu, yMenu + (fontSize * menuItem));
             }
+            menuItem++;
 
-            if (xCordCloud3 < -960) {
-                xCordCloud3 = screenWidth;
+            if (menuIndex == menuItem) {
+                menuItmStr = "tutorial";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[25], xMenu, yMenu + (fontSize * menuItem));
             } else {
-                xCordCloud3 = xCordCloud3 - 3;
+                g2d.drawString(itemz[24], xMenu, yMenu + (fontSize * menuItem));
             }
+            menuItem++;
+
+            if (menuIndex == menuItem) {
+                menuItmStr = "options";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[13], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[12], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
+
+
+            if (menuIndex == menuItem) {
+                menuItmStr = "controls";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[15], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[14], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
+
+            if (menuIndex == menuItem) {
+                menuItmStr = "logout";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[23], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[22], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
+
+            if (menuIndex == menuItem) {
+                menuItmStr = "about";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[17], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[16], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
+
+            if (menuIndex == menuItem) {
+                menuItmStr = "exit";
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
+                g2d.drawString(itemz[19], xMenu, yMenu + (fontSize * menuItem));
+            } else {
+                g2d.drawString(itemz[18], xMenu, yMenu + (fontSize * menuItem));
+            }
+            menuItem++;
+        }
+
+        JenesisGlassPane.getInstance().overlay(g2d, this);
+
+        g2d.drawString("The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        g2d.setComposite(makeComposite(feedBackOpac));
+        mess = "Press 'F' to provide Feedback";
+        g2d.drawString(mess, 590, 14);
+
+        mess = "Press 'B' to visit our Blog";
+        g2d.drawString(mess, 590, 30);
+
+        mess = "Press 'L' to like us on Facebook";
+        g2d.drawString(mess, 590, 46);
+
+        g2d.drawLine(590 - 5, 0, 590 - 5, 46);
+        g2d.setComposite(makeComposite(1.0f));
+
+        g2d.setColor(Color.WHITE);
+
+        if (place == 1) {
+            achDraw.drawStats(g2d, this);
+        }
+
+        if (place == 2) {
+            achDraw.drawAch(g2d, this);
+        }
+
+        if (place == 3) {
+            tut.draw(g2d, this);
+        }
+
+
+        if (xCordCloud < -960) {
+            xCordCloud = screenWidth;
+        } else {
+            xCordCloud = xCordCloud - 1;
+        }
+
+        if (xCordCloud2 < -960) {
+            xCordCloud2 = screenWidth;
+        } else {
+            xCordCloud2 = xCordCloud2 - 2;
+        }
+
+        if (xCordCloud3 < -960) {
+            xCordCloud3 = screenWidth;
+        } else {
+            xCordCloud3 = xCordCloud3 - 3;
         }
         if (openOpac > 0.0f) {
             if (openOpac <= 1.0f) {

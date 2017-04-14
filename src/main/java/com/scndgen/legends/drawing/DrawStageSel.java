@@ -90,7 +90,6 @@ public abstract class DrawStageSel extends JenesisRender {
         stagePrev = new Image[numberOfStages];
 
         pix = new JenesisImage();
-        over1 = new JenesisGlassPane();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         loadCaps();
         setBorder(BorderFactory.createEmptyBorder());
@@ -125,15 +124,6 @@ public abstract class DrawStageSel extends JenesisRender {
      */
     public static void setStage(int where) {
         stageSelIndex = where;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(852, 480);
-    }
-
-    public Dimension setPreferredSize() {
-        return new Dimension(852, 480);
     }
 
     @Override
@@ -225,7 +215,7 @@ public abstract class DrawStageSel extends JenesisRender {
                 }
             }
         }
-        over1.overlay(g2d, this);
+        JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }
 

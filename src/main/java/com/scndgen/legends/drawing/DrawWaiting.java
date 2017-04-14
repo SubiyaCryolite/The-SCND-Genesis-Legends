@@ -1,7 +1,7 @@
 /**************************************************************************
 
- The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ The SCND Genesis: Legends is enumeration1 fighting game based on THE SCND GENESIS,
+ enumeration1 webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
 
  The SCND Genesis: Legends  © 2011 Ifunga Ndana.
 
@@ -15,16 +15,16 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
+ You should have received enumeration1 copy of the GNU General Public License
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
@@ -56,28 +56,25 @@ public class DrawWaiting extends JenesisRender {
     private InetAddress ia;
     private JenesisImage pix2;
     private Font normalFont;
-    private Enumeration e;
-    private NetworkInterface ni;
-    private Enumeration a;
-    private boolean runNew;
+    private Enumeration enumeration;
+    private NetworkInterface networkInterface;
+    private Enumeration enumeration1;
 
     @SuppressWarnings("static-access")
     public DrawWaiting() {
-        runNew = true;
         renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         lang = LoginScreen.getInstance().getLangInst();
         pix2 = new JenesisImage();
-        over1 = new JenesisGlassPane();
         try {
-            e = NetworkInterface.getNetworkInterfaces();
-            while (e.hasMoreElements()) {
-                ni = (NetworkInterface) e.nextElement();
-                //System.out.println(ni.toString());
+            enumeration = NetworkInterface.getNetworkInterfaces();
+            while (enumeration.hasMoreElements()) {
+                networkInterface = (NetworkInterface) enumeration.nextElement();
+                //System.out.println(networkInterface.toString());
 
-                a = ni.getInetAddresses();
-                while (a.hasMoreElements()) {
-                    ia = (InetAddress) a.nextElement();
+                enumeration1 = networkInterface.getInetAddresses();
+                while (enumeration1.hasMoreElements()) {
+                    ia = (InetAddress) enumeration1.nextElement();
                     name = ia.getLocalHost().getHostName();
                     ip = ia.getLocalHost().getHostAddress();
                 }
@@ -89,11 +86,6 @@ public class DrawWaiting extends JenesisRender {
         pic1 = pix2.loadImageFromToolkitNoScale("images/menus/waiting.jpg");
         pic2 = pix2.loadImageFromToolkitNoScale("images/menus/loading.gif");
         setBorder(BorderFactory.createEmptyBorder());
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(screenWidth, screenHeight); //480p, 16:9 widescreen enhanced definition, max resolution of Nintendo Wii too :D
     }
 
     @Override
@@ -118,8 +110,7 @@ public class DrawWaiting extends JenesisRender {
         g2d.drawString(lang.getLine(168), 20, 360);
         g2d.drawString(lang.getLine(169), 20, 376);
         g2d.drawString(lang.getLine(131), 20, 390);
-        over1.overlay(g2d, this);
-
+        JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }
 
