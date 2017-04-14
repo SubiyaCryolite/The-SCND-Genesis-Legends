@@ -22,7 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.awt.image.VolatileImage;
 public class SpecialDrawMenuBGs extends JPanel {
 
     public static Graphics2D g2d;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private BufferedImage pic;
     private GraphicsEnvironment ge;
     private GraphicsConfiguration gc;
@@ -48,7 +48,7 @@ public class SpecialDrawMenuBGs extends JPanel {
 
     public SpecialDrawMenuBGs() {
         runNew = true;
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         int x = (int) (Math.random() * 5);
         switch (x) {
             case 0: {

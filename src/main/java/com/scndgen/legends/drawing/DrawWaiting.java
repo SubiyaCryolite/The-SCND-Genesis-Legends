@@ -24,7 +24,7 @@ package com.scndgen.legends.drawing;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ public class DrawWaiting extends JenesisMode {
     private GraphicsConfiguration gc;
     private GraphicsEnvironment ge;
     private InetAddress ia;
-    private JenesisImage pix2;
+    private JenesisImageLoader pix2;
     private Font normalFont;
     private Enumeration enumeration;
     private NetworkInterface networkInterface;
@@ -63,7 +63,7 @@ public class DrawWaiting extends JenesisMode {
     public DrawWaiting() {
         renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        pix2 = new JenesisImage();
+        pix2 = new JenesisImageLoader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
             while (enumeration.hasMoreElements()) {

@@ -26,7 +26,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.mode.StoryMode;
 import com.scndgen.legends.engine.JenesisLanguage;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -48,14 +48,14 @@ public class SpecialDrawAchievementLocker {
     private int perc = 0;
     private Image no;
     private Image[] achCap;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private float gWin, gLoss, denom, progression;
     private boolean[] activated;
     private float total = 0.0f, triggeredCount = 0.0f;
     private Achievements ach;
 
     public SpecialDrawAchievementLocker() {
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         loadPix();
         refreshStats();
         ach = LoginScreen.getInstance().getAch();
@@ -212,7 +212,7 @@ public class SpecialDrawAchievementLocker {
     }
 
     /**
-     * Load my pix
+     * Load my imageLoader
      */
     private void loadPix() {
         total = (float) LoginScreen.getInstance().ach.length;

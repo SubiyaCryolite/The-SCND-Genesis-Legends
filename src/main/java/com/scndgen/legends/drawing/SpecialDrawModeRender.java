@@ -28,7 +28,7 @@ import com.scndgen.legends.engine.JenesisTutorial;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import java.awt.*;
@@ -63,7 +63,7 @@ public class SpecialDrawModeRender extends JenesisMode {
     private String mess;
     private boolean fadeOutFeedback;
     private float feedBackOpac = 1.0f;
-    private JenesisImage pix = new JenesisImage();
+    private JenesisImageLoader pix = new JenesisImageLoader();
     private Image sgLogo, ndanaSol;
     private Image pointer;
     private String[] itemz;

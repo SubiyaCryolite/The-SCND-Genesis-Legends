@@ -8,7 +8,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
@@ -20,10 +20,10 @@ import java.awt.event.ActionListener;
  * Created by ifung on 14/04/2017.
  */
 public abstract class CharacterSelectionScreen extends JenesisMode implements ActionListener {
-    protected static String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
+    protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected int numOfCharacters = CharacterEnum.values().length;
     protected int col, currentSlot = 0, lastRow, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
-    protected JenesisImage pix;
+    protected JenesisImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
 

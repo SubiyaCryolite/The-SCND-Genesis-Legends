@@ -29,7 +29,7 @@ import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,7 +91,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private JComboBox users;
     private JLabel userName, countryCode;
     private JTextField login;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private Box box = new Box(BoxLayout.Y_AXIS);
     private WindowUpdate newy = null;
     private RandomAccessFile rand;
@@ -1351,9 +1351,9 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private void loadTray() {
         /*
         if (SystemTray.isSupported()) {
-        pix = new JenesisImage();
+        imageLoader = new JenesisImageLoader();
         tray = SystemTray.getSystemTray();
-        image = pix.loadBufferedImageFromToolkit("images/GameIco16.png");
+        image = imageLoader.loadBufferedImageFromToolkit("images/GameIco16.png");
         
         popup = new PopupMenu();
         trayIcon = new TrayIcon(image, "The SCND Genesis: Legends", null);

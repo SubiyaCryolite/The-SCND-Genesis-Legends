@@ -41,7 +41,7 @@ import com.scndgen.legends.menus.StoryMode;
 import com.scndgen.legends.threads.ThreadClashSystem;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,7 +97,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private String gameIp = "";
     private String userName;
     private DrawWaiting drawWait;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private ArrayList imageList;
     private Image ico16, ico22, ico24, ico32, ico48, ico72, ico96, ico128, ico256;
     private WindowMain gameWindow;
@@ -115,7 +115,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
         bgMus = new ThreadMP3(ThreadMP3.menuMus(), false);
         bgMus.play();
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         gameMode = mode;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;

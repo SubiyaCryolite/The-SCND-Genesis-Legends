@@ -26,7 +26,7 @@ import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.threads.ThreadMP3;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -51,7 +51,7 @@ public abstract class JenesisCharacter {
     //imgs
     private VolatileImage[] spr;
     private Image[] spr2;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     //string
     private String[] charSpritesStr;
     private boolean isMale;
@@ -76,7 +76,7 @@ public abstract class JenesisCharacter {
     }
 
     private void sortQue() {
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         charSpritesStr = new String[12];
         charSpritesStr[0] = "images/" + characterEnum.data() + "/D.png";  //1
         charSpritesStr[1] = "images/" + characterEnum.data() + "/M1.png"; //2

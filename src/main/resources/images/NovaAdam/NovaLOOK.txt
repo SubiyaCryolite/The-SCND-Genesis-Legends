@@ -1,0 +1,7 @@
+Invert normal sprites
+Apply B&W sketch GMIc
+Colorise GMIc layer (gets all blueish)
+Guassian Blur GMIc layer (10,10)
+Set GMIc layer to subtract
+save
+Add red supernpvas for glowing eyes

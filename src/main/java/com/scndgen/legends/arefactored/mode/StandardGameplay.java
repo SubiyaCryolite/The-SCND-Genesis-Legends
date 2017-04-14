@@ -33,7 +33,7 @@ import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
@@ -169,12 +169,12 @@ public abstract class StandardGameplay extends JenesisMode {
     private int oppBarYOffset, leftyXOffset, y = 0;
     private Graphics g;
     private GraphicsConfiguration gc;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private float angleRaw, charPointInc;
     private int result;
 
     public StandardGameplay() {
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         newInstance();
     }
 
@@ -859,7 +859,7 @@ public abstract class StandardGameplay extends JenesisMode {
             //damage digits
             {
                 g2d.setComposite(makeComposite(opponentDamageOpacity));
-                //opp damage pix
+                //opp damage imageLoader
                 g2d.drawImage(figGuiSrc1, playerDamageXLoc + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
                 g2d.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
                 g2d.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
@@ -874,7 +874,7 @@ public abstract class StandardGameplay extends JenesisMode {
 
 
                 g2d.setComposite(makeComposite(playerDamageOpacity));
-                //char damage pix
+                //char damage imageLoader
                 g2d.drawImage(figGuiSrc10, opponentDamageXLoc + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
                 g2d.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
                 g2d.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
@@ -1075,7 +1075,7 @@ public abstract class StandardGameplay extends JenesisMode {
             num9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
             numInfinite = pix.loadImageFromToolkitNoScale("images/fig/infinite.png");
             numNull = pix.loadImageFromToolkitNoScale("images/trans.png");
-            //flashy=pix.loadBImage2("images/flash.gif",40,40);
+            //flashy=imageLoader.loadBImage2("images/flash.gif",40,40);
             flashy = null;
             numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
 
@@ -1091,7 +1091,7 @@ public abstract class StandardGameplay extends JenesisMode {
             statsPicOpp[3] = pix.loadImageFromToolkitNoScale("images/stats/stat3.png");
             statsPicOpp[4] = pix.loadImageFromToolkitNoScale("images/stats/stat4.png");
 
-            System.out.println("loaded all pix");
+            System.out.println("loaded all imageLoader");
             imagesNumChached = true;
             //ensures method is only run once
         }
@@ -1199,7 +1199,7 @@ public abstract class StandardGameplay extends JenesisMode {
                 lose = pix.loadImageFromToolkitNoScale("images/lose.png");
                 status = transBuf;
 
-                System.out.println("loaded all char sprites pix");
+                System.out.println("loaded all char sprites imageLoader");
                 imagesCharChached = true;
                 //ensures method is only run once
             } catch (Exception e) {
@@ -1318,7 +1318,7 @@ public abstract class StandardGameplay extends JenesisMode {
                 lose = pix.loadImageFromToolkitNoScale("images/lose.png");
                 status = transBuf;
 
-                System.out.println("loaded all char sprites pix");
+                System.out.println("loaded all char sprites imageLoader");
                 imagesCharChached = true;
                 //ensures method is only run once
             } catch (Exception e) {

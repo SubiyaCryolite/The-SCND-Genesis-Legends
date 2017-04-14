@@ -26,7 +26,7 @@ import com.scndgen.legends.arefactored.mode.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.engine.JenesisLanguage;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.util.ArrayList;
 
@@ -41,7 +41,7 @@ public class Achievements {
     private static ArrayList points = new ArrayList();
     public String[] achDesc;
     public String[] achFull;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private LoginScreen parent;
     private int[] pointsArr = {102, 198, 300};//50,33,17
     //private String[] catType = {"★", "★★★", "★★★★★"};

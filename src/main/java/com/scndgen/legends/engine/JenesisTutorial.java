@@ -23,7 +23,7 @@ package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.threads.ThreadMP3;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -36,7 +36,7 @@ public class JenesisTutorial implements Runnable {
     private Image[] pix, arrows;
     private Image forward, back;
     private Thread t;
-    private JenesisImage pixfac;
+    private JenesisImageLoader pixfac;
     private boolean globalBreak, isShowing, skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
@@ -45,7 +45,7 @@ public class JenesisTutorial implements Runnable {
     private ThreadMP3 bgSound, nextSound, backSound;
 
     public JenesisTutorial() {
-        pixfac = new JenesisImage();
+        pixfac = new JenesisImageLoader();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
         sec = 0;

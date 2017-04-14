@@ -26,7 +26,7 @@ import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public abstract class DrawStageSel extends JenesisMode {
     private String[] stageNameStr;
     private int oldId = -1;
     private Image charBack, loading;
-    private JenesisImage pix;
+    private JenesisImageLoader pix;
     private Image[] stageCap = new Image[numberOfStages];
     private Image[] stagePrev = new Image[numberOfStages];
     private Font normalFont, bigFont;
@@ -82,7 +82,7 @@ public abstract class DrawStageSel extends JenesisMode {
         stageCap = new Image[numberOfStages];
         stagePrev = new Image[numberOfStages];
 
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         loadCaps();
         setBorder(BorderFactory.createEmptyBorder());

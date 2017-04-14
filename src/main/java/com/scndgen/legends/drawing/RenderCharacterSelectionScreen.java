@@ -28,7 +28,7 @@ import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,12 +41,12 @@ import java.awt.*;
 public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
     private Font bigFont, normalFont;
-    private String[] charDesc = new String[numOfCharacters];
-    private Image[] charNorm = new Image[numOfCharacters];
-    private Image[] charBlur = new Image[numOfCharacters];
-    private Image[] charPrev = new Image[numOfCharacters];
-    private Image[] oppPrev = new Image[numOfCharacters];
-    private Image[] charNames = new Image[numOfCharacters];
+    private final String[] charDesc = new String[numOfCharacters];
+    private final Image[] thumbnailNormal = new Image[numOfCharacters];
+    private final Image[] thumbnailBlurred = new Image[numOfCharacters];
+    private final Image[] portrait = new Image[numOfCharacters];
+    private final Image[] portraitFlipped = new Image[numOfCharacters];
+    private final Image[] caption = new Image[numOfCharacters];
     private Image fg1, fg2, fg3, bg3;
     private boolean loadResources;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
@@ -67,7 +67,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
     private void loadResources() {
         if (loadResources) {
-            pix = new JenesisImage();
+            imageLoader = new JenesisImageLoader();
             loadCaps();
             loadDesc();
             loadResources = false;
@@ -138,30 +138,30 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         //character preview DYNAMIC change
         if (characterSelected != true) {
             g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(charPrev[charPrevLoicIndex], charXcap + x, charYcap, this);
+            g2d.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(charNames[charPrevLoicIndex], 40 - x, 400, this);
+            g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, this);
         }
 
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
         if (characterSelected && opponentSelected != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
             g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(oppPrev[charPrevLoicIndex], 512 - x, charYcap, this);
+            g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(charNames[charPrevLoicIndex], 553 + x, 400, this);
+            g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, this);
         }
 
 
         //if character selected draw FIXED prev
         if (characterSelected) {
-            g2d.drawImage(charPrev[charPrevLoc], charXcap, charYcap, this);
-            g2d.drawImage(charNames[selectedCharIndex], 40, 380, this);
+            g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, this);
+            g2d.drawImage(caption[selectedCharIndex], 40, 380, this);
         }
 
         //if opp selected, draw FIXED prev
         if (opponentSelected) {
-            g2d.drawImage(oppPrev[oppPrevLoc], 512, charYcap, this);
-            g2d.drawImage(charNames[selectedOppIndex], 553, 380, this);
+            g2d.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap, this);
+            g2d.drawImage(caption[selectedOppIndex], 553, 380, this);
         }
 
         //all char caps in this segment
@@ -180,14 +180,14 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
             }
 
             col = 0;
-            for (int i = 0; i < (charNorm.length / 3); i++) {
+            for (int i = 0; i < (thumbnailNormal.length / 3); i++) {
                 {
-                    g2d.drawImage(charBlur[col], hPos, firstLine + (vSpacer * i), this);
+                    g2d.drawImage(thumbnailBlurred[col], hPos, firstLine + (vSpacer * i), this);
                     //normal
                     if (bothArentSelected() && hIndex == 1 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(charNorm[col], hPos, firstLine + (vSpacer * i), this);
+                        g2d.drawImage(thumbnailNormal[col], hPos, firstLine + (vSpacer * i), this);
                         charPrevLoicIndex = col;
                         g2d.setComposite(makeComposite(1.0f));
                     }
@@ -195,12 +195,12 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 }
 
                 {
-                    g2d.drawImage(charBlur[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
+                    g2d.drawImage(thumbnailBlurred[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
                     //normal
                     if (bothArentSelected() && hIndex == 2 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(charNorm[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
+                        g2d.drawImage(thumbnailNormal[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
                         charPrevLoicIndex = col;
                         g2d.setComposite(makeComposite(1.0f));
                     }
@@ -208,12 +208,12 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 }
 
                 {
-                    g2d.drawImage(charBlur[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
+                    g2d.drawImage(thumbnailBlurred[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
                     //normal
                     if (bothArentSelected() && hIndex == 3 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(charNorm[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
+                        g2d.drawImage(thumbnailNormal[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
                         charPrevLoicIndex = col;
                         g2d.setComposite(makeComposite(1.0f));
                     }
@@ -222,26 +222,26 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 lastRow = i;
             }
 
-            int rem = charBlur.length % 3;
+            int rem = thumbnailBlurred.length % 3;
 
             if (rem == 1) {
-                g2d.drawImage(charBlur[col], hPos, firstLine, this);
+                g2d.drawImage(thumbnailBlurred[col], hPos, firstLine, this);
                 //normal
                 if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                 {
                     g2d.setComposite(makeComposite(opacChar));
-                    g2d.drawImage(charNorm[col], hPos, firstLine, this);
+                    g2d.drawImage(thumbnailNormal[col], hPos, firstLine, this);
                     charPrevLoicIndex = col;
                     g2d.setComposite(makeComposite(1.0f));
                 }
             } else if (rem == 2) {
                 {
-                    g2d.drawImage(charBlur[col], hPos, firstLine, this);
+                    g2d.drawImage(thumbnailBlurred[col], hPos, firstLine, this);
                     //normal
                     if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(charNorm[col], hPos, firstLine, this);
+                        g2d.drawImage(thumbnailNormal[col], hPos, firstLine, this);
                         charPrevLoicIndex = col;
                         g2d.setComposite(makeComposite(1.0f));
                     }
@@ -249,12 +249,12 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 }
 
                 {
-                    g2d.drawImage(charBlur[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
+                    g2d.drawImage(thumbnailBlurred[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
                     //normal
                     if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(charNorm[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
+                        g2d.drawImage(thumbnailNormal[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
                         charPrevLoicIndex = col + 1;
                         g2d.setComposite(makeComposite(1.0f));
                     }
@@ -292,8 +292,8 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     private void loadCaps() {
         bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        oppDescPic = pix.loadImageFromToolkitNoScale("images/charInfoO.png");
-        charDescPic = pix.loadImageFromToolkitNoScale("images/charInfoC.png");
+        oppDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoO.png");
+        charDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoC.png");
         setMenuContent(CharacterEnum.RAILA);
         setMenuContent(CharacterEnum.SUBIYA);
         setMenuContent(CharacterEnum.LYNX);
@@ -306,25 +306,25 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         setMenuContent(CharacterEnum.AZARIA);
         setMenuContent(CharacterEnum.SORROWE);
         setMenuContent(CharacterEnum.THING);
-        charBack = pix.loadImageFromToolkitNoScale("images/selChar.png");
-        oppBack = pix.loadImageFromToolkitNoScale("images/selOpp.png");
-        charHold = pix.loadImageFromToolkitNoScale("images/charHold.png");
+        charBack = imageLoader.loadImageFromToolkitNoScale("images/selChar.png");
+        oppBack = imageLoader.loadImageFromToolkitNoScale("images/selOpp.png");
+        charHold = imageLoader.loadImageFromToolkitNoScale("images/charHold.png");
         Image[] tmp = SpecialDrawModeRender.getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
         fg3 = tmp[3];
-        p1 = pix.loadImageFromToolkitNoScale("images/player1.png");
-        p2 = pix.loadImageFromToolkitNoScale("images/player2.png");
-        fight = pix.loadImageFromToolkitNoScale("images/fight.png");
+        p1 = imageLoader.loadImageFromToolkitNoScale("images/player1.png");
+        p2 = imageLoader.loadImageFromToolkitNoScale("images/player2.png");
+        fight = imageLoader.loadImageFromToolkitNoScale("images/fight.png");
         charDesc[0] = Raila.class.getName();
     }
 
     public void setMenuContent(CharacterEnum characterEnum) {
-        charNorm[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/cap.png");
-        charBlur[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/capB.png");
-        charNames[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/name.png");
-        charPrev[characterEnum.index()]  = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/Prev.png");
-        oppPrev[characterEnum.index()]  = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/PrevO.png");
+        thumbnailNormal[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/PrevO.png");
     }
 }

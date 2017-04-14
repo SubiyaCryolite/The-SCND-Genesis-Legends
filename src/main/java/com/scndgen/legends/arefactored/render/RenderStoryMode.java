@@ -27,7 +27,7 @@ import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.menus.StoryMode;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ import java.awt.*;
 public class RenderStoryMode extends StoryMode {
 
     private final Font headerFont, normalFont;
-    private final JenesisImage pix;
+    private final JenesisImageLoader pix;
     private Image charBack, loading;
     private Image[] storyCap, storyCapUn, storyCapBlur;
     private Image storyPrev;
@@ -66,7 +66,7 @@ public class RenderStoryMode extends StoryMode {
                 hiddenStage[u] = false;
             }
         }
-        pix = new JenesisImage();
+        pix = new JenesisImageLoader();
         loadCaps();
         setBorder(BorderFactory.createEmptyBorder());
     }
@@ -205,7 +205,7 @@ public class RenderStoryMode extends StoryMode {
             System.err.println(e);
         }
 
-        //charBack = pix.loadImageFromToolkitNoScale("images/selstory.png");
+        //charBack = imageLoader.loadImageFromToolkitNoScale("images/selstory.png");
         loading = pix.loadImageFromToolkitNoScale("images/appletprogress.gif");
         charBack = pix.loadImageFromToolkitNoScale("images/Story/frame.png");
         int x = (int) (Math.random() * 4);

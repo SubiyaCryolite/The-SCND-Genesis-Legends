@@ -37,11 +37,11 @@ import java.net.URL;
  *
  * @author ndana 16-Apr-2011
  */
-public class JenesisImage {
+public class JenesisImageLoader {
 
     private int imageQual = Image.SCALE_SMOOTH;
 
-    public JenesisImage() {
+    public JenesisImageLoader() {
     }
 
     /**
@@ -78,7 +78,7 @@ public class JenesisImage {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
             if (url != null) {
-                System.out.println("Processing pix........" + imageName);
+                System.out.println("Processing imageLoader........" + imageName);
                 int picWidth = (int) (LoginScreen.getInstance().getGameXScale() * widthB);
                 int picHeight = (int) (LoginScreen.getInstance().getGameYScale() * heightB);
                 return Toolkit.getDefaultToolkit().createImage(url).getScaledInstance(picWidth, picHeight, imageQual);
@@ -100,7 +100,7 @@ public class JenesisImage {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
             if (url != null) {
-                System.out.println("Processing pix........" + imageName);
+                System.out.println("Processing imageLoader........" + imageName);
                 return ImageIO.read(url);
             }
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class JenesisImage {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
             if (url != null) {
-                System.out.println("Processing pix........" + imageName);
+                System.out.println("Processing imageLoader........" + imageName);
                 return Toolkit.getDefaultToolkit().createImage(url);
             }
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class JenesisImage {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
             if (url != null) {
-                System.out.println("Processing pix........" + imageName);
+                System.out.println("Processing imageLoader........" + imageName);
                 RenderStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
@@ -199,7 +199,7 @@ public class JenesisImage {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
             if (url != null) {
-                System.out.println("Processing pix........" + imageName);
+                System.out.println("Processing imageLoader........" + imageName);
                 RenderStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
