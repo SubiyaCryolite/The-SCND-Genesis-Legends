@@ -21,17 +21,25 @@
  **************************************************************************/
 package com.scndgen.legends.engine;
 
+import com.scndgen.legends.drawing.DrawGame;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
+import java.io.File;
 
 /**
  * Genesis engine - basic menu operations
  *
  * @author ndana
  */
-public class JenesisMenu extends JPanel {
+public class JenesisCanvas extends JPanel {
 
     public JenesisGlassPane over1;
+    protected VolatileImage volatileImg;
+    protected JenesisLanguage langz;
 
     /**
      * System notice in overlay
@@ -66,5 +74,26 @@ public class JenesisMenu extends JPanel {
             alpha = 0.0f;
         }
         return (AlphaComposite.getInstance(type, alpha));
+    }
+
+    /**
+     * Gets screenshot
+     */
+    public void captureScreenShot() {
+        try {
+            BufferedImage dudeC = volatileImg.getSnapshot();
+
+            File file;
+
+            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
+                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
+            }
+            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
+            ImageIO.write(dudeC, "png", file);
+            systemNotice(langz.getLine(170));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }

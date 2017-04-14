@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.MenuCharSelect;
+import com.scndgen.legends.menus.CanvasCharSelect;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -68,7 +68,7 @@ public class ExecuterMovesOpp implements Runnable {
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = MenuCharSelect.getAISlot();
+        aiMoves = CanvasCharSelect.getAISlot();
         range = aiMoves.length - 1;
 
         if (ThreadGameInstance.isGameOver == false) {

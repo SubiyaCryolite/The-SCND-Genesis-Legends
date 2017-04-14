@@ -25,7 +25,7 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
 import com.scndgen.legends.engine.JenesisCharacter;
-import com.scndgen.legends.menus.MenuGameRender;
+import com.scndgen.legends.menus.CanvasGameRender;
 
 import java.lang.annotation.Documented;
 
@@ -368,14 +368,14 @@ public class Characters {
         activityRecoverRateChar = dudeP.getRecovSpeed();
         healthRecoveryRateChar = dudeP.getHPRecovRate();
         setPoints(dudeP.getPoints());
-        MenuGameRender.setLife(dudeP.getLife());
-        MenuGameRender.setMaxLife(dudeP.getLife());
+        CanvasGameRender.setLife(dudeP.getLife());
+        CanvasGameRender.setMaxLife(dudeP.getLife());
 
 
         activityRecoveryRateChar2 = dudeP2.getRecovSpeed();
         healthRecoveryRateChar2 = dudeP2.getHPRecovRate();
-        MenuGameRender.setCharLife3(dudeP2.getLife());
-        MenuGameRender.setCharMaxLife3(dudeP2.getLife());
+        CanvasGameRender.setCharLife3(dudeP2.getLife());
+        CanvasGameRender.setCharMaxLife3(dudeP2.getLife());
         dudeP2.setAiProf3();
     }
 
@@ -494,15 +494,15 @@ public class Characters {
 
         activityRecoveryRateOpp = dudeO.getRecovSpeed();
         healthRecoveryRateOpp = dudeO.getHPRecovRate();
-        MenuGameRender.setOppLife(dudeO.getLife());
-        MenuGameRender.setOppMaxLife(dudeO.getLife());
+        CanvasGameRender.setOppLife(dudeO.getLife());
+        CanvasGameRender.setOppMaxLife(dudeO.getLife());
         dudeO.setAiProf();
 
 
         activityRecoveryRateOpp2 = dudeO2.getRecovSpeed();
         healthRecoveryRateOpp2 = dudeO2.getHPRecovRate();
-        MenuGameRender.setOppLife2(dudeO2.getLife());
-        MenuGameRender.setOppMaxLife2(dudeO2.getLife());
+        CanvasGameRender.setOppLife2(dudeO2.getLife());
+        CanvasGameRender.setOppMaxLife2(dudeO2.getLife());
         dudeO2.setAiProf2();
     }
 

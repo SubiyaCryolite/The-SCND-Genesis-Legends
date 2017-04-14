@@ -22,7 +22,7 @@
 package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.menus.CanvasStageSelect;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -144,7 +144,7 @@ public class JenesisImage {
             URL url = cl.getResource(imageName);
             if (url != null) {
                 System.out.println("Processing pix........" + imageName);
-                MenuStageSelect.loadTxt("caching :: " + imageName);
+                CanvasStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -200,7 +200,7 @@ public class JenesisImage {
             URL url = cl.getResource(imageName);
             if (url != null) {
                 System.out.println("Processing pix........" + imageName);
-                MenuStageSelect.loadTxt("caching :: " + imageName);
+                CanvasStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

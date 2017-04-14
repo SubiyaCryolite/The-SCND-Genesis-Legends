@@ -34,7 +34,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuCharSelect extends DrawCharSel implements ActionListener {
+public class CanvasCharSelect extends DrawCharSel implements ActionListener {
 
     public static int characterSel, opponentSel;
     public static String charDesc = "";
@@ -57,7 +57,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
     /**
      * Initialises the character select panel
      */
-    public MenuCharSelect() {
+    public CanvasCharSelect() {
         initializePanel();
     }
 
@@ -187,7 +187,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             array = arr2;
         } //when doing well, 4 attacks + 2 buffs
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() < 0.75) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -195,7 +195,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //when doing well, 4 buffs + 2 moves
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() < 0.50) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -203,7 +203,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -230,7 +230,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() < 0.75) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -238,7 +238,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //when doing well, 4 buffs + 2 moves
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() < 0.50) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -246,7 +246,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -273,7 +273,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() < 0.75) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -281,7 +281,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //when doing well, 4 buffs + 2 moves
         else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() < 0.50) {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -289,7 +289,7 @@ public class MenuCharSelect extends DrawCharSel implements ActionListener {
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (MenuGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
                 LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {

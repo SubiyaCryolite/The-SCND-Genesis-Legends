@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.MenuCharSelect;
+import com.scndgen.legends.menus.CanvasCharSelect;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -75,7 +75,7 @@ public class ExecuterMovesOpp2 implements Runnable {
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = MenuCharSelect.getAISlot2();
+        aiMoves = CanvasCharSelect.getAISlot2();
         range = aiMoves.length - 1;
 
         int randomNumber = (int) (Math.random() * 12);

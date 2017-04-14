@@ -23,10 +23,10 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
+import com.scndgen.legends.engine.JenesisCanvas;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
 import com.scndgen.legends.engine.JenesisImage;
-import com.scndgen.legends.engine.JenesisMenu;
 import com.scndgen.legends.windows.WindowMain;
 
 import javax.imageio.ImageIO;
@@ -41,7 +41,7 @@ import java.io.File;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawCharSel extends JenesisMenu {
+public abstract class DrawCharSel extends JenesisCanvas {
 
     private static String[] statsChar = new String[LoginScreen.getLoginScreen().charNames.length];
     public int col, currentSlot = 0, lastRow, numOfCharacters = 12, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
@@ -350,7 +350,7 @@ public abstract class DrawCharSel extends JenesisMenu {
         oppBack = pix.loadImageFromToolkitNoScale("images/selOpp.png");
         charHold = pix.loadImageFromToolkitNoScale("images/charHold.png");
 
-        Image[] tmp = SpecialDrawModeMenu.getPics();
+        Image[] tmp = SpecialDrawModeCanvas.getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];

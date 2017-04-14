@@ -23,7 +23,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowOptions;
@@ -70,7 +70,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('o');
-            MenuStageSelect.stage1();
+            CanvasStageSelect.stage1();
         }
 
         if (stage == 1) {
@@ -79,7 +79,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('o');
-            MenuStageSelect.stage100();
+            CanvasStageSelect.stage100();
         }
 
         if (stage == 2) {
@@ -88,7 +88,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAisha('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('o');
-            MenuStageSelect.stage5();
+            CanvasStageSelect.stage5();
         }
 
 
@@ -98,7 +98,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('o');
-            MenuStageSelect.stage4();
+            CanvasStageSelect.stage4();
         }
 
         if (stage == 4) {
@@ -107,7 +107,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAde('o');
-            MenuStageSelect.stage7();
+            CanvasStageSelect.stage7();
         }
 
         if (stage == 5) {
@@ -117,7 +117,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selJon('o');
-            MenuStageSelect.stage7();
+            CanvasStageSelect.stage7();
         }
 
         if (stage == 6) {
@@ -126,7 +126,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAza('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selNOVAAdam('o');
-            MenuStageSelect.stage10();
+            CanvasStageSelect.stage10();
         }
 
         if (stage == 7) {
@@ -135,7 +135,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('o');
-            MenuStageSelect.stage2();
+            CanvasStageSelect.stage2();
         }
 
         if (stage == 8) {
@@ -144,7 +144,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('o');
-            MenuStageSelect.stage10();
+            CanvasStageSelect.stage10();
         }
 
         if (stage == 9) {
@@ -153,7 +153,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSorr('o');
-            MenuStageSelect.stage10();
+            CanvasStageSelect.stage10();
         }
 
         if (stage == 10) {
@@ -162,7 +162,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selNOVAAdam('o');
-            MenuStageSelect.stage11();
+            CanvasStageSelect.stage11();
         }
 
         if (stage == 11) {
@@ -171,7 +171,7 @@ public class StoryMode implements Runnable {
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('c');
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
             LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selThing('x');
-            MenuStageSelect.stage13();
+            CanvasStageSelect.stage13();
         }
 
         if (start) {

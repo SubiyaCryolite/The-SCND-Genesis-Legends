@@ -32,10 +32,9 @@ import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.engine.JenesisImage;
 import com.scndgen.legends.executers.ExecuterMovesCharOnline;
 import com.scndgen.legends.executers.ExecuterMovesOppOnline;
-import com.scndgen.legends.menus.MenuGameRender;
-import com.scndgen.legends.menus.MenuCharSelect;
-import com.scndgen.legends.menus.MenuStageSelect;
-import com.scndgen.legends.menus.MenuStorySelect;
+import com.scndgen.legends.menus.*;
+import com.scndgen.legends.menus.CanvasCharSelect;
+import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
@@ -88,10 +87,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private String ServerName;
     private String last, UserName;
     private OverWorld world;
-    private MenuGameRender newGame;
-    private MenuCharSelect charPan;
-    private MenuStorySelect storyPane;
-    private MenuStageSelect stage;
+    private CanvasGameRender newGame;
+    private CanvasCharSelect charPan;
+    private CanvasStorySelect storyPane;
+    private CanvasStageSelect stage;
     private int mouseYoffset = 0;
     private String gameMode;
     //offline, host, client
@@ -163,13 +162,13 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         daWindow.setIconImages(imageList);
         //daWindow.seti(loadIconImage("images/GameIco.ico"));
 
-        charPan = new MenuCharSelect();
-        stage = new MenuStageSelect();
+        charPan = new CanvasCharSelect();
+        stage = new CanvasStageSelect();
         if (mode.equals(lanHost)) {
             isWaiting = true;
             drawWait = new DrawWaiting();
         } else if (mode.equals(storyMode)) {
-            storyPane = new MenuStorySelect();
+            storyPane = new CanvasStorySelect();
             inStoryPane = true;
             currentScreen = "storySelectScreen";
         } else {
@@ -316,11 +315,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }.start();
     }
 
-    public MenuStorySelect getStory() {
+    public CanvasStorySelect getStory() {
         return storyPane;
     }
 
-    public MenuCharSelect getCharSelect() {
+    public CanvasCharSelect getCharSelect() {
         return charPan;
     }
 
@@ -407,7 +406,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             oppenentEntity2 = new AttacksOpp2();
             characterEntity2 = new AttacksPlyr2();
         }
-        newGame = new MenuGameRender();
+        newGame = new CanvasGameRender();
         stopMus();
         daWindow.setContentPane(newGame);
         newGame.startFight();
@@ -432,7 +431,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         daWindow.setLocationRelativeTo(null);
     }
 
-    public MenuGameRender getGame() {
+    public CanvasGameRender getGame() {
         return newGame;
     }
 
@@ -448,7 +447,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             characterEntity2 = new AttacksPlyr2();
         }
         characterEntity = new AttacksPlyr1();
-        newGame = new MenuGameRender();
+        newGame = new CanvasGameRender();
         currentScreen = "newGame";
         stopMus();
         daWindow.setContentPane(newGame);
@@ -477,7 +476,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         //bgMusclose();
         oppenentEntity = new AttacksOpp1();
         characterEntity = new AttacksPlyr1();
-        newGame = new MenuGameRender();
+        newGame = new CanvasGameRender();
         currentScreen = "newGame";
         stopMus();
         daWindow.setContentPane(newGame);

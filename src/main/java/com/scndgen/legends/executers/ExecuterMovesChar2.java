@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.MenuCharSelect;
+import com.scndgen.legends.menus.CanvasCharSelect;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +72,7 @@ public class ExecuterMovesChar2 implements Runnable {
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = MenuCharSelect.getAISlot3();
+        aiMoves = CanvasCharSelect.getAISlot3();
         range = aiMoves.length - 1;
 
         if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {

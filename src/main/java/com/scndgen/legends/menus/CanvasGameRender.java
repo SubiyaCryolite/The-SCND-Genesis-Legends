@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author Ifunga Ndana
  */
-public class MenuGameRender extends DrawGame implements ActionListener {
+public class CanvasGameRender extends DrawGame implements ActionListener {
 
     public static String attackPicSrc;
     public static String attackPicOppSrc;
@@ -125,7 +125,7 @@ public class MenuGameRender extends DrawGame implements ActionListener {
     /**
      * Create the panel
      */
-    public MenuGameRender() {
+    public CanvasGameRender() {
         initializePanel();
     }
 
@@ -275,7 +275,7 @@ public class MenuGameRender extends DrawGame implements ActionListener {
                             limitBreak = limitBreak + 1;
                             this.sleep(15);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(MenuGameRender.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(CanvasGameRender.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }

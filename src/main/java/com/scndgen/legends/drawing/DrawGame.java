@@ -23,12 +23,12 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.engine.JenesisCanvas;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
 import com.scndgen.legends.engine.JenesisImage;
-import com.scndgen.legends.engine.JenesisMenu;
-import com.scndgen.legends.menus.MenuGameRender;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.menus.CanvasStageSelect;
+import com.scndgen.legends.menus.CanvasGameRender;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * @Author: Ifunga Ndana
  * @Class: DrawGame
  */
-public abstract class DrawGame extends JenesisMenu {
+public abstract class DrawGame extends JenesisCanvas {
     //mp3 wav
 
     private final static float inc = 0.05f;
@@ -520,7 +520,7 @@ public abstract class DrawGame extends JenesisMenu {
             LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("clashing^T&T^&T&^");
         }
 
-        if (MenuGameRender.getBreak() == 1000 && safeToSelect && clasherOn == false) {
+        if (CanvasGameRender.getBreak() == 1000 && safeToSelect && clasherOn == false) {
             clasher = new ThreadClashSystem(dude, homie);
             clasherOn = true;
 
@@ -848,7 +848,7 @@ public abstract class DrawGame extends JenesisMenu {
             g2d.drawImage(fury, 20 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 190 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
             g2d.drawImage(furyBar, 10 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), furyBarY - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
             g2d.setColor(Color.RED);
-            g2d.fillRoundRect(12 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 132 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 12, MenuGameRender.getBreak() / 5, 12, 12);
+            g2d.fillRoundRect(12 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 132 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 12, CanvasGameRender.getBreak() / 5, 12, 12);
             //COMBO
 
             if (furyComboOpacity > 0.01f) {
@@ -983,7 +983,7 @@ public abstract class DrawGame extends JenesisMenu {
     }
 
     private void checkFuryStatus() {
-        if (MenuGameRender.getBreak() == 1000) {
+        if (CanvasGameRender.getBreak() == 1000) {
             fury = fury1;
         } else {
             fury = fury2;
@@ -1621,7 +1621,7 @@ public abstract class DrawGame extends JenesisMenu {
 
             @Override
             public void run() {
-                if (MenuGameRender.getBreak() == 1000) {
+                if (CanvasGameRender.getBreak() == 1000) {
                     //&& LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar()>289
                     //runs on local
                     if (dude == 'c' && limitRunning && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar() > 289) {
@@ -1862,7 +1862,7 @@ public abstract class DrawGame extends JenesisMenu {
         itemX = 215;
         itemY = (int) (360);
         dnladng = true;
-        fightMus = new ThreadMP3("audio/" + MenuStageSelect.musFiles[MenuStageSelect.musicInt] + ".mp3", true);
+        fightMus = new ThreadMP3("audio/" + CanvasStageSelect.musFiles[CanvasStageSelect.musicInt] + ".mp3", true);
         //setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
     }
 

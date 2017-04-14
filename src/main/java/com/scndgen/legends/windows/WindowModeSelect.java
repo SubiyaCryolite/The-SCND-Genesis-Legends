@@ -23,9 +23,9 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.SpecialDrawModeMenu;
+import com.scndgen.legends.drawing.SpecialDrawModeCanvas;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.MenuGameRender;
+import com.scndgen.legends.menus.CanvasGameRender;
 import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.threads.ThreadMP3;
@@ -51,7 +51,7 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     private JenesisLanguage lang;
     private WindowMain startApp;
     private String[] mode = {WindowMain.singlePlayer, WindowMain.lanHost, WindowMain.lanClient, WindowMain.storyMode, WindowMain.singlePlayer2};
-    private SpecialDrawModeMenu draw;
+    private SpecialDrawModeCanvas draw;
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;
@@ -73,11 +73,11 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
         strUser = dude;
         window = new JFrame();
         window.setUndecorated(true);
-        draw = new SpecialDrawModeMenu();
+        draw = new SpecialDrawModeCanvas();
         window.setLayout(new BorderLayout());
         window.setContentPane(draw);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + MenuGameRender.getVersionStr());
+        window.setTitle("The SCND Genesis: Legends" + CanvasGameRender.getVersionStr());
         window.addMouseMotionListener(this);
         window.addMouseListener(this);
         window.addMouseWheelListener(this);

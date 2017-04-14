@@ -28,8 +28,8 @@ import com.scndgen.legends.executers.ExecuterMovesChar;
 import com.scndgen.legends.executers.ExecuterMovesChar2;
 import com.scndgen.legends.executers.ExecuterMovesOpp;
 import com.scndgen.legends.executers.ExecuterMovesOpp2;
-import com.scndgen.legends.menus.MenuGameRender;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.StoryMode;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
@@ -90,12 +90,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private ExecuterMovesChar executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
-    private MenuGameRender parentx;
+    private CanvasGameRender parentx;
 
     //indicates if game is running, controls game over screen and Achievements which require wins
-    public ThreadGameInstance(int forWho, MenuGameRender parentx) {
+    public ThreadGameInstance(int forWho, CanvasGameRender parentx) {
         this.parentx = parentx;
-        musicStr = MenuStageSelect.getTrack();
+        musicStr = CanvasStageSelect.getTrack();
         newInstance();
     }
 
@@ -360,7 +360,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             DrawGame.losePic();
             loseMus.play();
         }
-        MenuStageSelect.selectedStage = false;
+        CanvasStageSelect.selectedStage = false;
         LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().resetCharacters();
         DrawGame.drawAchievements();
     }
@@ -604,7 +604,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     }
 
     public void musNotice() {
-        LoginScreen.getLoginScreen().getMenu().getMain().systemNotice2(MenuStageSelect.trax[MenuStageSelect.musicInt]);
+        LoginScreen.getLoginScreen().getMenu().getMain().systemNotice2(CanvasStageSelect.trax[CanvasStageSelect.musicInt]);
     }
 
     /**

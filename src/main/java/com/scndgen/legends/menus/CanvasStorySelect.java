@@ -30,7 +30,7 @@ import com.scndgen.legends.threads.ThreadMP3;
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuStorySelect extends DrawStorySel {
+public class CanvasStorySelect extends DrawStorySel {
 
     public int characterSel, opponentSel;
     public String charDesc = "";
@@ -40,7 +40,7 @@ public class MenuStorySelect extends DrawStorySel {
     private int mode, currMode = LoginScreen.getLoginScreen().stage;
     private ThreadMP3 yay;
 
-    public MenuStorySelect() {
+    public CanvasStorySelect() {
         initializePanel();
     }
 

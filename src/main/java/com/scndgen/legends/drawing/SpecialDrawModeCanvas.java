@@ -23,17 +23,14 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.*;
-import com.scndgen.legends.menus.MenuGameRender;
+import com.scndgen.legends.menus.CanvasGameRender;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.VolatileImage;
-import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -41,12 +38,11 @@ import java.util.Calendar;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class SpecialDrawModeMenu extends JenesisMenu {
+public class SpecialDrawModeCanvas extends JenesisCanvas {
 
     private static final int fontSize = 16;
     public static Graphics2D g2d;
     private static boolean animThread = true;
-    private static VolatileImage volatileImg;
     private static float opac = 10;
     private static Font font;
     private static int menuIndex = 0;
@@ -79,7 +75,6 @@ public class SpecialDrawModeMenu extends JenesisMenu {
     private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private Image[] achs;
     private float gWin, gLoss, denom, progression;
-    private JenesisLanguage langz;
     private JenesisTutorial tut;
     //---blur op
     private int size;
@@ -92,7 +87,7 @@ public class SpecialDrawModeMenu extends JenesisMenu {
     //---blur op
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    public SpecialDrawModeMenu() {
+    public SpecialDrawModeCanvas() {
         screenWidth = 852;
         screenHeight = 480;
         openOpac = 3.0f;
@@ -402,7 +397,7 @@ public class SpecialDrawModeMenu extends JenesisMenu {
 
             over1.overlay(g2d, this);
 
-            g2d.drawString("The SCND Genesis: Legends " + MenuGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+            g2d.drawString("The SCND Genesis: Legends " + CanvasGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
             g2d.setComposite(makeComposite(feedBackOpac));
             mess = "Press 'F' to provide Feedback";
             g2d.drawString(mess, 590, 14);
@@ -604,26 +599,5 @@ public class SpecialDrawModeMenu extends JenesisMenu {
             kernel = new Kernel(1, size, data);
         }
         return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-    }
-
-    /**
-     * Gets screenshot
-     */
-    public void captureScreenShot() {
-        try {
-            BufferedImage dudeC = volatileImg.getSnapshot();
-
-            File file;
-
-            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
-                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
-            }
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
-            ImageIO.write(dudeC, "png", file);
-            systemNotice(langz.getLine(170));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
     }
 }

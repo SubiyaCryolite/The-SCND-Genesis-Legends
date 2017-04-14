@@ -25,7 +25,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisMenu;
+import com.scndgen.legends.engine.JenesisCanvas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawWaiting extends JenesisMenu {
+public class DrawWaiting extends JenesisCanvas {
 
     private static Image pic1, pic2;
     private static VolatileImage volatileImg;

@@ -25,8 +25,8 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisMenu;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.engine.JenesisCanvas;
+import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.StoryMode;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
@@ -43,7 +43,7 @@ import java.io.File;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawStorySel extends JenesisMenu {
+public abstract class DrawStorySel extends JenesisCanvas {
 
     public int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
     public String loadTxt = "";
@@ -253,7 +253,7 @@ public abstract class DrawStorySel extends JenesisMenu {
     }
 
     private void loadCaps() {
-        MenuStageSelect.selectedStage = false;
+        CanvasStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < numberOfstorys; i++) {
                 storyCap[i] = pix.loadImageFromToolkitNoScale("images/Story/locked/x" + (i + 1) + ".png");

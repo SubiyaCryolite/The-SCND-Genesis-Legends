@@ -29,7 +29,7 @@ import com.scndgen.legends.windows.WindowMain;
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuStageSelect extends DrawStageSel {
+public class CanvasStageSelect extends DrawStageSel {
 
     //♩♪♬♫
     public static String[] trax = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
@@ -51,7 +51,7 @@ public class MenuStageSelect extends DrawStageSel {
     public static boolean selectedStage = false;
     private static int source;
 
-    public MenuStageSelect() {
+    public CanvasStageSelect() {
         initializePanel();
     }
 

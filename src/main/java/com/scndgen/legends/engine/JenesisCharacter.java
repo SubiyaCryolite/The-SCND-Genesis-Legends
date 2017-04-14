@@ -23,7 +23,7 @@ package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.menus.MenuCharSelect;
+import com.scndgen.legends.menus.CanvasCharSelect;
 import com.scndgen.legends.threads.ThreadMP3;
 
 import java.awt.*;
@@ -236,33 +236,33 @@ public abstract class JenesisCharacter {
      * Set Characters AI, opponent 1
      */
     public void setAiProf() {
-        MenuCharSelect.setAISlot(arr1, 1);
-        MenuCharSelect.setAISlot(arr2, 2);
-        MenuCharSelect.setAISlot(arr3, 3);
-        MenuCharSelect.setAISlot(arr4, 4);
-        MenuCharSelect.setAISlot(arr5, 5);
+        CanvasCharSelect.setAISlot(arr1, 1);
+        CanvasCharSelect.setAISlot(arr2, 2);
+        CanvasCharSelect.setAISlot(arr3, 3);
+        CanvasCharSelect.setAISlot(arr4, 4);
+        CanvasCharSelect.setAISlot(arr5, 5);
     }
 
     /**
      * Set Characters AI, opponent 2
      */
     public void setAiProf2() {
-        MenuCharSelect.setAISlot2(arr1, 1);
-        MenuCharSelect.setAISlot2(arr2, 2);
-        MenuCharSelect.setAISlot2(arr3, 3);
-        MenuCharSelect.setAISlot2(arr4, 4);
-        MenuCharSelect.setAISlot2(arr5, 5);
+        CanvasCharSelect.setAISlot2(arr1, 1);
+        CanvasCharSelect.setAISlot2(arr2, 2);
+        CanvasCharSelect.setAISlot2(arr3, 3);
+        CanvasCharSelect.setAISlot2(arr4, 4);
+        CanvasCharSelect.setAISlot2(arr5, 5);
     }
 
     /**
      * Set Characters AI, player 2
      */
     public void setAiProf3() {
-        MenuCharSelect.setAISlot3(arr1, 1);
-        MenuCharSelect.setAISlot3(arr2, 2);
-        MenuCharSelect.setAISlot3(arr3, 3);
-        MenuCharSelect.setAISlot3(arr4, 4);
-        MenuCharSelect.setAISlot3(arr5, 5);
+        CanvasCharSelect.setAISlot3(arr1, 1);
+        CanvasCharSelect.setAISlot3(arr2, 2);
+        CanvasCharSelect.setAISlot3(arr3, 3);
+        CanvasCharSelect.setAISlot3(arr4, 4);
+        CanvasCharSelect.setAISlot3(arr5, 5);
     }
 
     public int getPoints() {

@@ -24,7 +24,7 @@ package com.scndgen.legends.drawing;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisMenu;
+import com.scndgen.legends.engine.JenesisCanvas;
 import com.scndgen.legends.OverWorld;
 
 import java.awt.*;
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawOverworld extends JenesisMenu {
+public class DrawOverworld extends JenesisCanvas {
 
     public Graphics2D g2d;
     RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies

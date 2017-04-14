@@ -22,11 +22,11 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.engine.JenesisCanvas;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisGlassPane;
 import com.scndgen.legends.engine.JenesisImage;
-import com.scndgen.legends.engine.JenesisMenu;
-import com.scndgen.legends.menus.MenuStageSelect;
+import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.windows.WindowMain;
 
 import javax.imageio.ImageIO;
@@ -41,7 +41,7 @@ import java.io.File;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawStageSel extends JenesisMenu {
+public abstract class DrawStageSel extends JenesisCanvas {
 
     public static int valCode, lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
     public static String loadTxt = "";
@@ -148,7 +148,7 @@ public abstract class DrawStageSel extends JenesisMenu {
         if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
             createBackBuffer();
         }
-        if (MenuStageSelect.selectedStage) {
+        if (CanvasStageSelect.selectedStage) {
 
             g2d.setColor(Color.BLACK);
 
@@ -165,7 +165,7 @@ public abstract class DrawStageSel extends JenesisMenu {
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
             g2d.drawString(lang.getLine(165), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(165))) / 2, 200);
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && MenuStageSelect.selectedStage == false) {
+        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && CanvasStageSelect.selectedStage == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
@@ -248,7 +248,7 @@ public abstract class DrawStageSel extends JenesisMenu {
     }
 
     private void loadCaps() {
-        MenuStageSelect.selectedStage = false;
+        CanvasStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < stagePrevLox.length; i++) {
                 stageCap[i] = pix.loadImageFromToolkitNoScale("images/t_" + stagePrevLox[i] + ".png");
