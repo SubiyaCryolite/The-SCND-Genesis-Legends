@@ -22,7 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -60,15 +61,15 @@ public class ExecuterMovesOpp implements Runnable {
 
             executingTheCommandsAI();
 
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().aiRunning = false;
+            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
+            RenderStandardGameplay.getInstance().getGameInstance().aiRunning = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = CharacterSelectionScreen.getAISlot();
+        aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot();
         range = aiMoves.length - 1;
 
         if (ThreadGameInstance.isGameOver == false) {
@@ -77,8 +78,8 @@ public class ExecuterMovesOpp implements Runnable {
                 if (ThreadGameInstance.story == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
-                    LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('o');
+                    RenderStandardGameplay.getInstance().shakeCharLB();
+                    RenderStandardGameplay.getInstance().AnimatePhyAttax('o');
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }

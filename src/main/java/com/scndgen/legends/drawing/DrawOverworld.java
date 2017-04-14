@@ -21,11 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisRender;
-import com.scndgen.legends.OverWorld;
+import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -41,14 +40,13 @@ import java.util.logging.Logger;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawOverworld extends JenesisRender {
+public class DrawOverworld extends JenesisMode {
 
     public Graphics2D g2d;
     RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
     private ClassLoader classloader;
     private GraphicsEnvironment ge;
     private URL url;
-    private JenesisLanguage lang;
     private Color bg = new Color(214, 217, 223);
     private Image userPic = loadIcon("images/clouds.png");
     private boolean status = true;
@@ -113,7 +111,6 @@ public class DrawOverworld extends JenesisRender {
     public DrawOverworld(OverWorld p) {
         runNew = true;
         parentx = p;
-        lang = LoginScreen.getInstance().getLangInst();
         charSpr2 = loadIcon("images/RailaSmall.png");
         drawSpr = charSpr2;
         picWidth = 33;
@@ -141,7 +138,7 @@ public class DrawOverworld extends JenesisRender {
         g2d.setColor(Color.BLACK);
         g2d.drawString("X: " + (xCord), 700, 24);
         g2d.drawString("Y: " + (yCord), 700, 38);
-        g2d.drawString(lang.getLine(151), 700, 48);
+        g2d.drawString(JenesisLanguage.getInstance().getLine(151), 700, 48);
         g2d.drawString("CharX: " + (xCordChar), 750, 24);
         g2d.drawString("CharY: " + (yCordChar), 750, 38);
 

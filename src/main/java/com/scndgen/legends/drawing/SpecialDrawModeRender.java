@@ -22,13 +22,14 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.engine.JenesisTutorial;
-import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImage;
-import io.github.subiyacryolite.enginev1.JenesisRender;
+import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import java.awt.*;
 import java.awt.image.ConvolveOp;
@@ -40,7 +41,7 @@ import java.util.Calendar;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class SpecialDrawModeRender extends JenesisRender {
+public class SpecialDrawModeRender extends JenesisMode {
 
     private static final int fontSize = 16;
     private static boolean animThread = true;
@@ -94,8 +95,6 @@ public class SpecialDrawModeRender extends JenesisRender {
 
         feedBackOpac = 1.0f;
         fadeOutFeedback = false;
-
-        langz = LoginScreen.getInstance().getLangInst();
         itemz = new String[(menuEntries + 2) * 2];
         achDraw = new SpecialDrawAchievementLocker();
         cal = Calendar.getInstance();
@@ -129,33 +128,33 @@ public class SpecialDrawModeRender extends JenesisRender {
             foreGroundB = pix.loadImageFromToolkitNoScale("images/blur/bgBG5b.png");
         }
 
-        itemz[0] = langz.getLine(307);
+        itemz[0] = JenesisLanguage.getInstance().getLine(307);
         itemz[1] = "STORY MODE";
-        itemz[2] = langz.getLine(308);
+        itemz[2] = JenesisLanguage.getInstance().getLine(308);
         itemz[3] = "QUICK MATCH";
         itemz[4] = "Quick Match (2 vs 2)";
         itemz[5] = "QUICK MATCH (2 vs 2)";
-        itemz[6] = langz.getLine(309);
+        itemz[6] = JenesisLanguage.getInstance().getLine(309);
         itemz[7] = "HOST A LAN MATCH";
-        itemz[8] = langz.getLine(310);
+        itemz[8] = JenesisLanguage.getInstance().getLine(310);
         itemz[9] = "JOIN A LAN MATCH";
-        itemz[10] = langz.getLine(311);
+        itemz[10] = JenesisLanguage.getInstance().getLine(311);
         itemz[11] = "YOUR STATS";
-        itemz[12] = langz.getLine(312);
+        itemz[12] = JenesisLanguage.getInstance().getLine(312);
         itemz[13] = "OPTIONS";
-        itemz[14] = langz.getLine(313);
+        itemz[14] = JenesisLanguage.getInstance().getLine(313);
         itemz[15] = "VIEW CONTROLS";
-        itemz[16] = langz.getLine(314);
+        itemz[16] = JenesisLanguage.getInstance().getLine(314);
         itemz[17] = "ABOUT";
-        itemz[18] = langz.getLine(315);
+        itemz[18] = JenesisLanguage.getInstance().getLine(315);
         itemz[19] = "EXIT";
-        itemz[20] = langz.getLine(316);
+        itemz[20] = JenesisLanguage.getInstance().getLine(316);
         itemz[21] = "ACHIEVEMENT LOCKER";
-        itemz[22] = langz.getLine(317);
+        itemz[22] = JenesisLanguage.getInstance().getLine(317);
         itemz[23] = "ONLINE LEADER BOARDS";
-        itemz[22] = langz.getLine(318);
+        itemz[22] = JenesisLanguage.getInstance().getLine(318);
         itemz[23] = "LOG OUT";
-        itemz[24] = langz.getLine(319);
+        itemz[24] = JenesisLanguage.getInstance().getLine(319);
         itemz[25] = "TUTORIAL";
 
         new Thread() {
@@ -370,7 +369,7 @@ public class SpecialDrawModeRender extends JenesisRender {
 
         JenesisGlassPane.getInstance().overlay(g2d, this);
 
-        g2d.drawString("The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        g2d.drawString("The SCND Genesis: Legends " + RenderStandardGameplay.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         g2d.setComposite(makeComposite(feedBackOpac));
         mess = "Press 'F' to provide Feedback";
         g2d.drawString(mess, 590, 14);

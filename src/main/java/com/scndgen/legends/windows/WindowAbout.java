@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.RenderGameRender;
+import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
     private SpecialDrawMenuBGs logoPic;
     private JPanel box;
     private Font normalFont;
-    private String text = "The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
+    private String text = "The SCND Genesis: Legends " + RenderStandardGameplay.getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
             + "\n\nSpecial Thanks:"
             + "\n   -God"
             + "\n   -Jesus"
@@ -89,7 +89,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
             + "\n28/01/11 - Game automatically checks for new updates and downloads audio files"
             + "\n30/01/11 - Completed new character select screen"
             + "\n03/02/11 - Added a new character, \"Jonah\""
-            + "\n05/02/11 - Added 2 new Characters, \"NovaAdam\" and \"NOVA NovaAdam\""
+            + "\n05/02/11 - Added 2 new Character, \"NovaAdam\" and \"NOVA NovaAdam\""
             + "\n05/02/11 - Added a new stage, \"The Apocalypse\""
             + "\n\nAlpha 11.02_15 >>>>"
             + "\n15/02/11 - Game logs character usage (favourite/least favourite)"
@@ -104,7 +104,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
             + "\n26/03/11 - Epic code surgery"
             + "\n27/03/11 - Comic book text effect, enhanced Frozen Wilderness stage"
             + "\n04/04/11 - New 2 vs 2 battle mode. Early form but playable. Testing and feedback phase"
-            + "\n10/04/11 - Characters taunt each other at the start of each battle"
+            + "\n10/04/11 - Character taunt each other at the start of each battle"
             + "\n16/04/11 - More epic code surgery, new GLOBAL overlay/menu"
             + "\n21/04/11 - Controller support, including force feedback via jInput. Thanks to Andrew Davison's tutorial"
             + "\n27/04/11 - Added a new character, Sorrowe"
@@ -114,7 +114,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
             + "\n\nAlpha 11.07_01 >>>>"
             + "\n16/05/11 - Added scalabe images, resolutions can be altered"
             + "\n16/05/11 - Supported resolutions 720x405, 852x480 (native), 1024x576, 1280x720, 1680x1050, 1920x1080"
-            + "\n24/06/11 - Rebalanced overpowered Characters *cough* The Thing *cough*"
+            + "\n24/06/11 - Rebalanced overpowered Character *cough* The Thing *cough*"
             + "\n30/06/11 - *NOTE* If window doesn't scale up or down properly in Linux press 'X'"
             + "\n05/07/11 - Added user locale, sorting out online leaderboards"
             + "\n05/07/11 - Added testing \'Rate this game\' feature."

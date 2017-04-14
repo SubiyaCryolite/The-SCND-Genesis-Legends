@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,11 +44,11 @@ public class ThreadClashingOpponent implements Runnable {
 
     @Override
     public void run() {
-        while (DrawGame.clasherOn) {
+        while (StandardGameplay.clasherOn) {
             try {
                 int delay = 360;
                 //int delay=WindowOptions.Arr[WindowOptions.whichOne()];
-                DrawGame.opponetClashing();
+                StandardGameplay.opponetClashing();
                 //JOptionPane.showMessageDialog(null,"Opponent clashing");
                 t.sleep((int) (delay * Math.random()));
             } catch (InterruptedException ex) {

@@ -22,8 +22,9 @@
 package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.menus.CharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.threads.ThreadMP3;
 import io.github.subiyacryolite.enginev1.JenesisImage;
 
@@ -42,7 +43,7 @@ public abstract class JenesisCharacter {
     public String[] physical, celestia, status, bragRights;
     //ints
     public int points, life, hitPoints, damage;
-    public int[] arr1, arr2, arr3, arr4, arr5, limit;
+    public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     //floats
     public float[] weakness;
     public float actionRecoverRate, hpRecovRate;
@@ -54,6 +55,7 @@ public abstract class JenesisCharacter {
     //string
     private String[] charSpritesStr;
     private boolean isMale;
+    protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
 
     public JenesisCharacter() {
         bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
@@ -69,22 +71,26 @@ public abstract class JenesisCharacter {
         return isMale;
     }
 
+    public CharacterEnum getEnum() {
+        return characterEnum;
+    }
+
     private void sortQue() {
         pix = new JenesisImage();
         charSpritesStr = new String[12];
-        charSpritesStr[0] = "images/" + name + "/D.png";  //1
-        charSpritesStr[1] = "images/" + name + "/M1.png"; //2
-        charSpritesStr[2] = "images/" + name + "/M2.png"; //3
-        charSpritesStr[3] = "images/" + name + "/M3.png"; //4
-        charSpritesStr[4] = "images/" + name + "/M4.png"; //5
-        charSpritesStr[5] = "images/" + name + "/M5.png"; //6
-        charSpritesStr[6] = "images/" + name + "/M6.png"; //7
-        charSpritesStr[7] = "images/" + name + "/M7.png"; //8
-        charSpritesStr[8] = "images/" + name + "/M8.png"; //9
-        charSpritesStr[9] = "images/" + name + "/N.png"; //10
-        charSpritesStr[10] = "images/" + name + "/P.png"; //11
+        charSpritesStr[0] = "images/" + characterEnum.data() + "/D.png";  //1
+        charSpritesStr[1] = "images/" + characterEnum.data() + "/M1.png"; //2
+        charSpritesStr[2] = "images/" + characterEnum.data() + "/M2.png"; //3
+        charSpritesStr[3] = "images/" + characterEnum.data() + "/M3.png"; //4
+        charSpritesStr[4] = "images/" + characterEnum.data() + "/M4.png"; //5
+        charSpritesStr[5] = "images/" + characterEnum.data() + "/M5.png"; //6
+        charSpritesStr[6] = "images/" + characterEnum.data() + "/M6.png"; //7
+        charSpritesStr[7] = "images/" + characterEnum.data() + "/M7.png"; //8
+        charSpritesStr[8] = "images/" + characterEnum.data() + "/M8.png"; //9
+        charSpritesStr[9] = "images/" + characterEnum.data() + "/N.png"; //10
+        charSpritesStr[10] = "images/" + characterEnum.data() + "/P.png"; //11
         charSpritesStr[11] = "images/trans.png"; //12
-        System.out.println("FROM CHARACTER CLASS " + name);
+        System.out.println("FROM CHARACTER CLASS " + characterEnum.data());
     }
 
     public int getNumberOfSprites() {
@@ -141,7 +147,7 @@ public abstract class JenesisCharacter {
      * @return array of physical attacks
      */
     public void setCharMoveset() {
-        DrawGame.setStats(physical, celestia, status);
+        RenderStandardGameplay.getInstance().setStats(physical, celestia, status);
     }
 
     /**
@@ -170,9 +176,9 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Returns the Characters description. Used in menus
+     * Returns the Character description. Used in menus
      *
-     * @return The Characters description
+     * @return The Character description
      */
     public String getDescSmall() {
         return descSmall;
@@ -189,7 +195,7 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Shall return the Characters life
+     * Shall return the Character life
      *
      * @return character life
      */
@@ -198,7 +204,7 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Get the Characters recovery rate
+     * Get the Character recovery rate
      *
      * @return activity recovery rate
      */
@@ -207,7 +213,7 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Get the Characters hp recover rate
+     * Get the Character hp recover rate
      *
      * @return hp recovery rate
      */
@@ -225,7 +231,7 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Get the Characters hit points
+     * Get the Character hit points
      *
      * @return Hit Points
      */
@@ -234,36 +240,36 @@ public abstract class JenesisCharacter {
     }
 
     /**
-     * Set Characters AI, opponent 1
+     * Set Character AI, opponent 1
      */
     public void setAiProf() {
-        CharacterSelectionScreen.setAISlot(arr1, 1);
-        CharacterSelectionScreen.setAISlot(arr2, 2);
-        CharacterSelectionScreen.setAISlot(arr3, 3);
-        CharacterSelectionScreen.setAISlot(arr4, 4);
-        CharacterSelectionScreen.setAISlot(arr5, 5);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours5, 5);
     }
 
     /**
-     * Set Characters AI, opponent 2
+     * Set Character AI, opponent 2
      */
     public void setAiProf2() {
-        CharacterSelectionScreen.setAISlot2(arr1, 1);
-        CharacterSelectionScreen.setAISlot2(arr2, 2);
-        CharacterSelectionScreen.setAISlot2(arr3, 3);
-        CharacterSelectionScreen.setAISlot2(arr4, 4);
-        CharacterSelectionScreen.setAISlot2(arr5, 5);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours5, 5);
     }
 
     /**
-     * Set Characters AI, player 2
+     * Set Character AI, player 2
      */
     public void setAiProf3() {
-        CharacterSelectionScreen.setAISlot3(arr1, 1);
-        CharacterSelectionScreen.setAISlot3(arr2, 2);
-        CharacterSelectionScreen.setAISlot3(arr3, 3);
-        CharacterSelectionScreen.setAISlot3(arr4, 4);
-        CharacterSelectionScreen.setAISlot3(arr5, 5);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours5, 5);
     }
 
     public int getPoints() {
@@ -272,7 +278,7 @@ public abstract class JenesisCharacter {
 
     /**
      * Added 19/January/2011 by SubiyaCryolite
-     * resets the Characters limits after each fight
+     * resets the Character limits after each fight
      */
     public void resetLimits() {
         for (int index = 0; index < limit.length; index++) {

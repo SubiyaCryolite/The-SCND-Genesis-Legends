@@ -26,57 +26,60 @@ import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisCharacter;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.threads.ThreadMP3;
 
 /**
+ * Sorrowe's class
+ *
  * @author ndana
  */
-public class Ravage extends JenesisCharacter {
+public class Sorrowe extends JenesisCharacter {
 
-    public Ravage() {
-        //strings
-        descSmall = "Ravage - a fighter specialised in brute force via the Earth element";
-        name = "Ravage";
-        characterEnum = CharacterEnum.RAVAGE;
-        //ints
-        life = 32000;
-        hitPoints = 60;
-        limit = new int[]{0, 0, 0, 0, 0};
-        bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold back NovaAdam", "Goodie, no holding back, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
-        physical = new String[]{"Strike", "Impale", "Stone Summon", "Deadly Snare"};
-        celestia = new String[]{"Siezmic Slam", "Fist-Full", "Quake", "Boulder Rush"};
-        status = new String[]{"Heal Plus", "Heal EX", "Energy Juice", "Weaken Opponent"};
+    /**
+     * Constructor
+     */
+    public Sorrowe() {
+        descSmall = "Sorrowe - Specialised in celestia combat and the flame element";
+        name = "Sorrowe";
+        characterEnum = CharacterEnum.SORROWE;
+        isNotMale();
+        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout time", "Weakling !!", "You're incredibly annoying", "Don't go easy on me", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare me", "Let's do this", "Ugh, disgusting"};
+        physical = new String[]{"Lashing", "Whip-nado", "Lash assault", "Snared"};
+        celestia = new String[]{"Hell Falme", "Hell Judgement", "Hell Blast", "Hell Blade"};
+        status = new String[]{"Heal", "Cura EX", "Health ++", "E-Juice"};
         behaviours1 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
         behaviours2 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11};
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        //ints
+        points = 1800;
+        life = 31360;
+        hitPoints = 100;
+        limit = new int[]{0, 0, 0, 0, 0};
         //doubles
-        actionRecoverRate = 1.70f;//1.5;
-        hpRecovRate = 0.000150f;
-        sound3 = new ThreadMP3(ThreadMP3.itemSound1(), false);
+        actionRecoverRate = 2.02f;//2.10;
+        hpRecovRate = 0.0002f;
     }
 
     @Override
     public void attack(String attack, int forWho) {
         if (attack.equalsIgnoreCase("01")) {
             attackStr = physical[0];
-            damage = 108;
+            damage = 102;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("02")) {
             attackStr = physical[1];
-            damage = 102;
+            damage = 105;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-            //StandardGameplay.specialEffect(2,true);
         }
 
         if (attack.equalsIgnoreCase("03")) {
             attackStr = physical[2];
-            damage = 103;
+            damage = 102;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -90,28 +93,28 @@ public class Ravage extends JenesisCharacter {
 
         if (attack.equalsIgnoreCase("05")) {
             attackStr = celestia[0];
-            damage = 101;
+            damage = 102;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("06")) {
             attackStr = celestia[1];
-            damage = 107;
+            damage = 101;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("07")) {
             attackStr = celestia[2];
-            damage = 103;
+            damage = 108;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("08")) {
             attackStr = celestia[3];
-            damage = 102;
+            damage = 105;
             RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -119,7 +122,8 @@ public class Ravage extends JenesisCharacter {
         if (attack.equalsIgnoreCase("09")) {
             sound3.play();
             attackStr = status[0];
-            damage = 82;
+            //girls have a healing bonus of 5 XD
+            damage = 78;
             StandardGameplay.setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
@@ -134,7 +138,7 @@ public class Ravage extends JenesisCharacter {
         if (attack.equalsIgnoreCase("10")) {
             sound3.play();
             attackStr = status[1];
-            damage = 99;
+            damage = 80;
             StandardGameplay.setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
@@ -147,46 +151,33 @@ public class Ravage extends JenesisCharacter {
         }
 
         if (attack.equalsIgnoreCase("11")) {
-
-            limit[1] = limit[1] + 1;
-            if (limit[1] <= 4) {
-                sound3.play();
-                attackStr = status[2];
-                StandardGameplay.setStatIndex(3);
-                if (forWho == 2) {
-                    StandardGameplay.setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('o', +1);
-                } else {
-                    StandardGameplay.setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('c', +1);
-                }
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
+            sound3.play();
+            attackStr = status[2];
+            damage = 84;
+            StandardGameplay.setStatIndex(1);
+            if (forWho == 2) {
+                RenderStandardGameplay.getInstance().updateLife(damage);
+                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                // disble this move
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
+            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("12")) {
-
-            limit[0] = limit[0] + 1;
-            if (limit[0] <= 4) {
-                sound3.play();
-                attackStr = status[3];
-                StandardGameplay.setStatIndex(4);
-                if (forWho == 2) {
-                    //as a player(2) yo8u attack the opponent(1)
-                    StandardGameplay.setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('c', -1);
-                } else {
-                    StandardGameplay.setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('o', -1);
-                }
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");
+            sound3.play();
+            attackStr = status[3];
+            damage = 76;
+            StandardGameplay.setStatIndex(1);
+            if (forWho == 2) {
+                RenderStandardGameplay.getInstance().updateLife(damage);
+                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                // disble this move
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
+            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
 
         //dummy, do nothing

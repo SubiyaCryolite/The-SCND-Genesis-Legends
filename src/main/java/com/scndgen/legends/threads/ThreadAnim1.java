@@ -21,9 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.menus.RenderGameRender;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -40,9 +39,9 @@ public class ThreadAnim1 implements Runnable {
     public ThreadAnim1() {
         if (t != null) {
             t.resume();
-        } else if (DrawGame.threadsNotRunningYet) {
+        } else if (StandardGameplay.threadsNotRunningYet) {
             t = new Thread(this);
-            t.setName("Animator thread 1 - Characters");
+            t.setName("Animator thread 1 - Character");
             t.setPriority(1);
             t.start();
         }
@@ -55,23 +54,23 @@ public class ThreadAnim1 implements Runnable {
     public void run() {
         do {
             try {
-                if (RenderGameRender.getBreak() > 5 && RenderGameRender.getBreak() < 999) {
-                    LoginScreen.getInstance().getMenu().getMain().getGame().setBreak(-fac);
+                if (RenderStandardGameplay.getBreak() > 5 && RenderStandardGameplay.getBreak() < 999) {
+                    RenderStandardGameplay.getInstance().setBreak(-fac);
                 }
 
                 for (int o = 0; o <= 10; o++) {
-                    DrawGame.charYcord = DrawGame.charYcord + 1;
-                    DrawGame.oppYcord = DrawGame.oppYcord + 1;
+                    StandardGameplay.charYcord = StandardGameplay.charYcord + 1;
+                    StandardGameplay.oppYcord = StandardGameplay.oppYcord + 1;
                     t.sleep(66);
                 }
 
                 for (int o = 0; o <= 10; o++) {
-                    DrawGame.charYcord = DrawGame.charYcord - 1;
-                    DrawGame.oppYcord = DrawGame.oppYcord - 1;
+                    StandardGameplay.charYcord = StandardGameplay.charYcord - 1;
+                    StandardGameplay.oppYcord = StandardGameplay.oppYcord - 1;
                     t.sleep(66);
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(DrawGame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (1 != 0);
     }

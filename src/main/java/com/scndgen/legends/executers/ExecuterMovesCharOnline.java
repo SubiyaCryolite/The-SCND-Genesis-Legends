@@ -22,6 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 
 public class ExecuterMovesCharOnline implements Runnable {
 
@@ -55,21 +56,21 @@ public class ExecuterMovesCharOnline implements Runnable {
         //normal attack
         if (well == 'n') {
 
-            LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
+            RenderStandardGameplay.getInstance().comboCounter = 0;
             //clear active combos
 
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('c', 9, 11);
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('o', 9, 11);
-            //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+            RenderStandardGameplay.getInstance().setSprites('c', 9, 11);
+            RenderStandardGameplay.getInstance().setSprites('o', 9, 11);
+            //RenderStandardGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
 
             executingTheCommands();
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
         }
 
         //limit break
         if (well == 'l') {
-            LoginScreen.getInstance().getMenu().getMain().getGame().Clash(1, 'c');
+            RenderStandardGameplay.getInstance().Clash(1, 'c');
         }
     }
 
@@ -79,8 +80,8 @@ public class ExecuterMovesCharOnline implements Runnable {
         for (int o = 0; o < 4; o++) {
             LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
             LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(moveBuff[o], 2, 'c', 'o');
-            LoginScreen.getInstance().getMenu().getMain().getGame().shakeOppCharLB();
-            LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('c');
+            RenderStandardGameplay.getInstance().shakeOppCharLB();
+            RenderStandardGameplay.getInstance().AnimatePhyAttax('c');
             LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
         }
     }

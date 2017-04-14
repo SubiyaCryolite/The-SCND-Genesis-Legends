@@ -22,7 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -54,9 +55,9 @@ public class ExecuterMovesOpp2 implements Runnable {
     @Override
     public void run() {
         do {
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('c', 9, 11);
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('o', 9, 11);
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('b', 9, 11);
+            RenderStandardGameplay.getInstance().setSprites('c', 9, 11);
+            RenderStandardGameplay.getInstance().setSprites('o', 9, 11);
+            RenderStandardGameplay.getInstance().setSprites('b', 9, 11);
 
             try {
                 int time = LoginScreen.getInstance().difficultyDyn;
@@ -67,26 +68,26 @@ public class ExecuterMovesOpp2 implements Runnable {
 
             executingTheCommandsAI();
 
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp2(0);
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().aiRunning2 = false;
+            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp2(0);
+            RenderStandardGameplay.getInstance().getGameInstance().aiRunning2 = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = CharacterSelectionScreen.getAISlot2();
+        aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot2();
         range = aiMoves.length - 1;
 
         int randomNumber = (int) (Math.random() * 12);
         if (randomNumber >= 7) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent3a >= 0) {
+            if (RenderStandardGameplay.getInstance().perCent3a >= 0) {
                 whoToAttack = 3;
             } else {
                 whoToAttack = 1;
             }
         } else if (randomNumber <= 6) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent >= 0) {
+            if (RenderStandardGameplay.getInstance().perCent >= 0) {
                 whoToAttack = 1;
             } else {
                 whoToAttack = 3;
@@ -99,8 +100,8 @@ public class ExecuterMovesOpp2 implements Runnable {
                 if (ThreadGameInstance.story == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
-                    LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('o');
+                    RenderStandardGameplay.getInstance().shakeCharLB();
+                    RenderStandardGameplay.getInstance().AnimatePhyAttax('o');
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }

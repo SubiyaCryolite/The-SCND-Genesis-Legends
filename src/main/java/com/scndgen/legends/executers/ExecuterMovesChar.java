@@ -22,6 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.windows.WindowMain;
 
 public class ExecuterMovesChar implements Runnable {
@@ -40,34 +41,34 @@ public class ExecuterMovesChar implements Runnable {
     @Override
     public void run() {
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-            //LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('a',9,11);
-            //LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('b',9,11);
+            //RenderStandardGameplay.getInstance().setSprites('a',9,11);
+            //RenderStandardGameplay.getInstance().setSprites('b',9,11);
         }
-        //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+        //RenderStandardGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
         // each Mattack will check if they are in the battle que.... if they are they execute
-        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
-        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+        RenderStandardGameplay.getInstance().getGameInstance().pauseActivityRegen();
+        RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
 
-        if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
+        if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false) {
             for (int o = 0; o < 4; o++) {
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(Integer.parseInt(LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[o]), 2, 'c', 'o');
-                LoginScreen.getInstance().getMenu().getMain().getGame().shakeOppCharLB();
-                LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('c');
-                if ((o + 1) == LoginScreen.getInstance().getMenu().getMain().getGame().numOfAttacks) {
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(Integer.parseInt(RenderStandardGameplay.getInstance().attackArray[o]), 2, 'c', 'o');
+                RenderStandardGameplay.getInstance().shakeOppCharLB();
+                RenderStandardGameplay.getInstance().AnimatePhyAttax('c');
+                if ((o + 1) == RenderStandardGameplay.getInstance().numOfAttacks) {
                     break;
                 }
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
             }
         }
 
-        if (LoginScreen.getInstance().getMenu().getMain().getGame().done != 1)// if game still running enable menus
+        if (RenderStandardGameplay.getInstance().done != 1)// if game still running enable menus
         {
-            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
+            RenderStandardGameplay.getInstance().getGameInstance().resumeActivityRegen();
         }
 
-        LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
-        LoginScreen.getInstance().getMenu().getMain().getGame().numOfAttacks = 0;
+        RenderStandardGameplay.getInstance().comboCounter = 0;
+        RenderStandardGameplay.getInstance().numOfAttacks = 0;
     }
 
     public void pause() {

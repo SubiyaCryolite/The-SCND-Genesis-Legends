@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 
 public class AttacksPlyr1 extends AttacksBasic {
 
@@ -29,6 +29,6 @@ public class AttacksPlyr1 extends AttacksBasic {
      * Constructor
      */
     public AttacksPlyr1() {
-        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar();
+        dude = RenderCharacterSelectionScreen.getInstance().getPayers().getCharacter();
     }
 }

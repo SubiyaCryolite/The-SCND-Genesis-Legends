@@ -21,10 +21,11 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisCharacter;
+import com.scndgen.legends.enums.CharacterEnum;
 
 /**
  * @author ndana
@@ -38,17 +39,16 @@ public class Thing extends JenesisCharacter {
         attackStr = "";
         descSmall = "The Thing - Origins unknown";
         name = "The Thing";
-        //this guy is over powered
         //string arrays
         bragRights = new String[]{"....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....."};
         physical = new String[]{"Dash Strike", "Violent Thrust", "Epic Piercing", "Solar Flare"};
         celestia = new String[]{"Frost Bite", "Rock Rush", "Land Slide", "Solar Storm"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
-        arr1 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
-        arr2 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11};
-        arr3 = new int[]{0, 1, 7, 8, 10, 11};
-        arr4 = new int[]{0, 1, 9, 12, 10, 11};
-        arr5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        behaviours1 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+        behaviours2 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11};
+        behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
+        behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
+        behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         weakness = new float[8];
         weakness[0] = 0.66f;    //light
         weakness[1] = 0.66f;    //dark
@@ -63,9 +63,11 @@ public class Thing extends JenesisCharacter {
         points = 1800;
         damage = 0;
         if (y == 0) {
+            characterEnum = CharacterEnum.THING;
             life = 40000;
             bonus = 0;
         } else {
+            characterEnum = CharacterEnum.THING;
             life = 60000;
             bonus = 5;
         }
@@ -79,124 +81,111 @@ public class Thing extends JenesisCharacter {
 
     @Override
     public void attack(String attack, int forWho) {
-        if (attack.equalsIgnoreCase("01")) {
-            attackStr = physical[0];
-            damage = bonus + 130;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("02")) {
-            attackStr = physical[1];
-            damage = bonus + 129;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("03")) {
-            attackStr = physical[2];
-            damage = bonus + 128;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("04")) {
-            attackStr = physical[3];
-            damage = bonus + 127;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("05")) {
-            attackStr = celestia[0];
-            damage = bonus + 130;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("06")) {
-            attackStr = celestia[1];
-            damage = bonus + 129;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("07")) {
-            attackStr = celestia[2];
-            damage = bonus + 128;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("08")) {
-            attackStr = celestia[3];
-            damage = bonus + 127;
-            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("09")) {
-            sound3.play();
-            attackStr = status[0];
-            damage = bonus + 106;
-            DrawGame.setStatIndex(1);
-            if (forWho == 2) {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
-                DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
-                DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("10")) {
-            sound3.play();
-            attackStr = status[1];
-            damage = bonus + 100;
-            DrawGame.setStatIndex(1);
-            if (forWho == 2) {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
-                DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
-                DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("11")) {
-            sound3.play();
-            attackStr = status[2];
-            damage = bonus + 108;
-            DrawGame.setStatIndex(1);
-            if (forWho == 2) {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
-                DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
-                DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("12")) {
-            sound3.play();
-            attackStr = status[3];
-            damage = bonus + 102;
-            DrawGame.setStatIndex(1);
-            if (forWho == 2) {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
-                DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
-                DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
-        }
-
-        //dummy, do nothing
-        if (attack.equalsIgnoreCase("99")) {
+        switch (attack) {
+            case "01":
+                attackStr = physical[0];
+                damage = bonus + 130;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "02":
+                attackStr = physical[1];
+                damage = bonus + 129;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "03":
+                attackStr = physical[2];
+                damage = bonus + 128;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "04":
+                attackStr = physical[3];
+                damage = bonus + 127;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "05":
+                attackStr = celestia[0];
+                damage = bonus + 130;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "06":
+                attackStr = celestia[1];
+                damage = bonus + 129;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "07":
+                attackStr = celestia[2];
+                damage = bonus + 128;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "08":
+                attackStr = celestia[3];
+                damage = bonus + 127;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "09":
+                sound3.play();
+                attackStr = status[0];
+                damage = bonus + 106;
+                StandardGameplay.setStatIndex(1);
+                if (forWho == 2) {
+                    RenderStandardGameplay.getInstance().updateLife(damage);
+                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                } else {
+                    RenderStandardGameplay.getInstance().updateOppLife(damage);
+                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                }
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "10":
+                sound3.play();
+                attackStr = status[1];
+                damage = bonus + 100;
+                StandardGameplay.setStatIndex(1);
+                if (forWho == 2) {
+                    RenderStandardGameplay.getInstance().updateLife(damage);
+                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                } else {
+                    RenderStandardGameplay.getInstance().updateOppLife(damage);
+                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                }
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "11":
+                sound3.play();
+                attackStr = status[2];
+                damage = bonus + 108;
+                StandardGameplay.setStatIndex(1);
+                if (forWho == 2) {
+                    RenderStandardGameplay.getInstance().updateLife(damage);
+                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                } else {
+                    RenderStandardGameplay.getInstance().updateOppLife(damage);
+                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                }
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "12":
+                sound3.play();
+                attackStr = status[3];
+                damage = bonus + 102;
+                StandardGameplay.setStatIndex(1);
+                if (forWho == 2) {
+                    RenderStandardGameplay.getInstance().updateLife(damage);
+                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                } else {
+                    RenderStandardGameplay.getInstance().updateOppLife(damage);
+                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                }
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
         }
     }
 }

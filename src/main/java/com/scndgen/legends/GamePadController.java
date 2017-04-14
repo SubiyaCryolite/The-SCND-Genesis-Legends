@@ -41,6 +41,7 @@ public class GamePadController {
     public static final int SW = 6;
     public static final int SOUTH = 7;
     public static final int SE = 8;
+    private static GamePadController instance;
     public boolean rumblerOn = false, controllerFound = false;   // whether rumbler is on or off
     public int statusInt = 0;
     public String controllerName = "Basic";
@@ -55,13 +56,6 @@ public class GamePadController {
     private int rumblerIdx;      // index for the rumbler being used
     private ControllerEnvironment ce;
     private Controller[] cs;
-    private static GamePadController instance;
-
-    public static synchronized GamePadController getInstance() {
-        if (instance == null)
-            instance = new GamePadController();
-        return instance;
-    }
 
     private GamePadController() {
         try {
@@ -96,6 +90,12 @@ public class GamePadController {
             controllerFound = false;
         }
     } // end of GamePadController()
+
+    public static synchronized GamePadController getInstance() {
+        if (instance == null)
+            instance = new GamePadController();
+        return instance;
+    }
 
     /**
      * Search the array of controllers until a suitable game pad

@@ -22,35 +22,24 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.mode.CharacterSelectionScreen;
 import com.scndgen.legends.characters.Raila;
+import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImage;
-import com.scndgen.legends.engine.JenesisLanguage;
-import io.github.subiyacryolite.enginev1.JenesisRender;
-import com.scndgen.legends.windows.WindowMain;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.VolatileImage;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class RenderCharacterSelectionScreen extends JenesisRender {
+public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
-    private static String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
-    public int col, currentSlot = 0, lastRow, numOfCharacters = 12, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
-    private GraphicsEnvironment ge;
-    private JenesisLanguage lang;
-    private GraphicsConfiguration gc;
-    private boolean alreadyRunnging = false, runNew = true;
-    private VolatileImage volatileImg;
-    private Graphics2D g2d;
-    private JenesisImage pix;
-    private int charDescIndex = 0;
-    private float opacInc, p1Opac, opacChar;
     private Font bigFont, normalFont;
     private String[] charDesc = new String[numOfCharacters];
     private Image[] charNorm = new Image[numOfCharacters];
@@ -59,46 +48,58 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
     private Image[] oppPrev = new Image[numOfCharacters];
     private Image[] charNames = new Image[numOfCharacters];
     private Image fg1, fg2, fg3, bg3;
+    private boolean loadResources;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
-    private String[] charPrevLox = {"images/Raila/RailaPrev.png", "images/Subiya/SubiyaPrev.png", "images/Lynx/LynxPrev.png", "images/Aisha/Prev.png", "images/Ravage/Prev.png", "images/Ade/Prev.png", "images/Jonah/Prev.png", "images/Adam/Prev.png", "images/NOVA Adam/Prev.png", "images/Azaria/Prev.png", "images/Sorrowe/Prev.png", "images/The Thing/Prev.png"};
-    private String[] oppPrevLox = {"images/Raila/RailaPrevO.png", "images/Subiya/SubiyaPrevO.png", "images/Lynx/LynxPrevO.png", "images/Aisha/PrevO.png", "images/Ravage/PrevO.png", "images/Ade/PrevO.png", "images/Jonah/PrevO.png", "images/Adam/PrevO.png", "images/NOVA Adam/PrevO.png", "images/Azaria/PrevO.png", "images/Sorrowe/PrevO.png", "images/The Thing/PrevO.png"};
-    private RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
+    private static RenderCharacterSelectionScreen instance;
 
-    public RenderCharacterSelectionScreen() {
-        lang = LoginScreen.getInstance().getLangInst();
-        loadDesc();
+    public static synchronized RenderCharacterSelectionScreen getInstance() {
+        if (instance == null) {
+            instance = new RenderCharacterSelectionScreen();
+        }
+        return instance;
+    }
+
+    private RenderCharacterSelectionScreen() {
         opacInc = 0.025f;
-        pix = new JenesisImage();
-        loadCaps();
+        loadResources = true;
         setBorder(BorderFactory.createEmptyBorder());
+    }
+
+    private void loadResources() {
+        if (loadResources) {
+            pix = new JenesisImage();
+            loadCaps();
+            loadDesc();
+            loadResources = false;
+        }
     }
 
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Characters have been selected, true if only one is selected
+     * @return false if both Character have been selected, true if only one is selected
      */
-    public static boolean bothArentSelected() {
+    public boolean bothArentSelected() {
         boolean answer = true;
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
+        if (characterSelected && opponentSelected) {
             answer = false;
         }
         return answer;
     }
 
     private void loadDesc() {
-        statsChar[0] = lang.getLine(134);
-        statsChar[1] = lang.getLine(135);
-        statsChar[2] = lang.getLine(136);
-        statsChar[3] = lang.getLine(137);
-        statsChar[4] = lang.getLine(138);
-        statsChar[5] = lang.getLine(139);
-        statsChar[6] = lang.getLine(140);
-        statsChar[7] = lang.getLine(141);
-        statsChar[8] = lang.getLine(142);
-        statsChar[9] = lang.getLine(143);
-        statsChar[10] = lang.getLine(144);
-        statsChar[11] = lang.getLine(145);
+        statsChar[0] = JenesisLanguage.getInstance().getLine(134);
+        statsChar[1] = JenesisLanguage.getInstance().getLine(135);
+        statsChar[2] = JenesisLanguage.getInstance().getLine(136);
+        statsChar[3] = JenesisLanguage.getInstance().getLine(137);
+        statsChar[4] = JenesisLanguage.getInstance().getLine(138);
+        statsChar[5] = JenesisLanguage.getInstance().getLine(139);
+        statsChar[6] = JenesisLanguage.getInstance().getLine(140);
+        statsChar[7] = JenesisLanguage.getInstance().getLine(141);
+        statsChar[8] = JenesisLanguage.getInstance().getLine(142);
+        statsChar[9] = JenesisLanguage.getInstance().getLine(143);
+        statsChar[10] = JenesisLanguage.getInstance().getLine(144);
+        statsChar[11] = JenesisLanguage.getInstance().getLine(145);
     }
 
     public Dimension setPreferredSize() {
@@ -108,7 +109,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-
+        loadResources();
         g2d.setFont(normalFont);
 
         g2d.setColor(Color.white);
@@ -135,7 +136,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         g2d.setComposite(makeComposite(1.0f));
 
         //character preview DYNAMIC change
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 != true) {
+        if (characterSelected != true) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(charPrev[charPrevLoicIndex], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -143,7 +144,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         }
 
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+        if (characterSelected && opponentSelected != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(oppPrev[charPrevLoicIndex], 512 - x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -152,15 +153,15 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
 
 
         //if character selected draw FIXED prev
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1) {
-            g2d.drawImage(charPrev[LoginScreen.getInstance().getMenu().getMain().getCharSelect().charPrevLoc], charXcap, charYcap, this);
-            g2d.drawImage(charNames[LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex], 40, 380, this);
+        if (characterSelected) {
+            g2d.drawImage(charPrev[charPrevLoc], charXcap, charYcap, this);
+            g2d.drawImage(charNames[selectedCharIndex], 40, 380, this);
         }
 
         //if opp selected, draw FIXED prev
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
-            g2d.drawImage(oppPrev[LoginScreen.getInstance().getMenu().getMain().getCharSelect().oppPrevLoc], 512, charYcap, this);
-            g2d.drawImage(charNames[LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex], 553, 380, this);
+        if (opponentSelected) {
+            g2d.drawImage(oppPrev[oppPrevLoc], 512, charYcap, this);
+            g2d.drawImage(charNames[selectedOppIndex], 553, 380, this);
         }
 
         //all char caps in this segment
@@ -169,11 +170,11 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
             g2d.drawImage(charHold, 311, 0, this);
 
             if (well()) {
-                if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 != true) {
+                if (characterSelected != true) {
                     g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
 
-                if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+                if (characterSelected && opponentSelected != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
                     g2d.drawImage(oppBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
             }
@@ -183,7 +184,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 {
                     g2d.drawImage(charBlur[col], hPos, firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 1 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos, firstLine + (vSpacer * i), this);
@@ -196,7 +197,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 {
                     g2d.drawImage(charBlur[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 2 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
@@ -209,7 +210,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 {
                     g2d.drawImage(charBlur[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 3 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 3 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
@@ -226,7 +227,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
             if (rem == 1) {
                 g2d.drawImage(charBlur[col], hPos, firstLine, this);
                 //normal
-                if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                 {
                     g2d.setComposite(makeComposite(opacChar));
                     g2d.drawImage(charNorm[col], hPos, firstLine, this);
@@ -237,7 +238,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 {
                     g2d.drawImage(charBlur[col], hPos, firstLine, this);
                     //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos, firstLine, this);
@@ -250,7 +251,7 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 {
                     g2d.drawImage(charBlur[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
                     //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
@@ -261,21 +262,21 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
                 }
             }
 
-            if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
+            if (characterSelected && opponentSelected) {
                 g2d.drawImage(fight, 0, 0, this);
                 g2d.setFont(bigFont);
                 g2d.setColor(Color.WHITE);
-                g2d.drawString("<< " + lang.getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + lang.getLine(146) + " >>")) / 2, 360);
-                g2d.drawString("<< " + lang.getLine(147) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + lang.getLine(147) + " >>")) / 2, 390);
+                g2d.drawString("<< " + JenesisLanguage.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + JenesisLanguage.getInstance().getLine(146) + " >>")) / 2, 360);
+                g2d.drawString("<< " + JenesisLanguage.getInstance().getLine(147) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + JenesisLanguage.getInstance().getLine(147) + " >>")) / 2, 390);
             }
         }
         g2d.setFont(normalFont);
         g2d.setColor(Color.white);
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 == false) {
+        if (characterSelected == false) {
             g2d.drawImage(charDescPic, 0, 0, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 4 + x, 18);
         }
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 == false) {
+        if (characterSelected && opponentSelected == false) {
             g2d.drawImage(oppDescPic, 452, 450, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 852 - g2d.getFontMetrics(normalFont).stringWidth(statsChar[charPrevLoicIndex]) + x, 468);
         }
@@ -293,179 +294,37 @@ public abstract class RenderCharacterSelectionScreen extends JenesisRender {
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = pix.loadImageFromToolkitNoScale("images/charInfoO.png");
         charDescPic = pix.loadImageFromToolkitNoScale("images/charInfoC.png");
-
-        charNorm[0] = pix.loadImageFromToolkitNoScale("images/Raila/cap.png");
-        charNorm[1] = pix.loadImageFromToolkitNoScale("images/Subiya/cap.png");
-        charNorm[2] = pix.loadImageFromToolkitNoScale("images/Lynx/cap.png");
-        charNorm[3] = pix.loadImageFromToolkitNoScale("images/Aisha/cap.png");
-        charNorm[4] = pix.loadImageFromToolkitNoScale("images/Ravage/cap.png");
-        charNorm[5] = pix.loadImageFromToolkitNoScale("images/Ade/cap.png");
-        charNorm[6] = pix.loadImageFromToolkitNoScale("images/Jonah/cap.png");
-        charNorm[7] = pix.loadImageFromToolkitNoScale("images/Adam/cap.png");
-        charNorm[8] = pix.loadImageFromToolkitNoScale("images/NOVA Adam/cap.png");
-        charNorm[9] = pix.loadImageFromToolkitNoScale("images/Azaria/cap.png");
-        charNorm[10] = pix.loadImageFromToolkitNoScale("images/Sorrowe/cap.png");
-        charNorm[11] = pix.loadImageFromToolkitNoScale("images/The Thing/cap.png");
-
-        charBlur[0] = pix.loadImageFromToolkitNoScale("images/Raila/capB.png");
-        charBlur[1] = pix.loadImageFromToolkitNoScale("images/Subiya/capB.png");
-        charBlur[2] = pix.loadImageFromToolkitNoScale("images/Lynx/capB.png");
-        charBlur[3] = pix.loadImageFromToolkitNoScale("images/Aisha/capB.png");
-        charBlur[4] = pix.loadImageFromToolkitNoScale("images/Ravage/capB.png");
-        charBlur[5] = pix.loadImageFromToolkitNoScale("images/Ade/capB.png");
-        charBlur[6] = pix.loadImageFromToolkitNoScale("images/Jonah/capB.png");
-        charBlur[7] = pix.loadImageFromToolkitNoScale("images/Adam/capB.png");
-        charBlur[8] = pix.loadImageFromToolkitNoScale("images/NOVA Adam/capB.png");
-        charBlur[9] = pix.loadImageFromToolkitNoScale("images/Azaria/capB.png");
-        charBlur[10] = pix.loadImageFromToolkitNoScale("images/Sorrowe/capB.png");
-        charBlur[11] = pix.loadImageFromToolkitNoScale("images/The Thing/capB.png");
-
-        charNames[0] = pix.loadImageFromToolkitNoScale("images/Raila/name.png");
-        charNames[1] = pix.loadImageFromToolkitNoScale("images/Subiya/name.png");
-        charNames[2] = pix.loadImageFromToolkitNoScale("images/Lynx/name.png");
-        charNames[3] = pix.loadImageFromToolkitNoScale("images/Aisha/name.png");
-        charNames[4] = pix.loadImageFromToolkitNoScale("images/Ravage/name.png");
-        charNames[5] = pix.loadImageFromToolkitNoScale("images/Ade/name.png");
-        charNames[6] = pix.loadImageFromToolkitNoScale("images/Jonah/name.png");
-        charNames[7] = pix.loadImageFromToolkitNoScale("images/Adam/name.png");
-        charNames[8] = pix.loadImageFromToolkitNoScale("images/NOVA Adam/name.png");
-        charNames[9] = pix.loadImageFromToolkitNoScale("images/Azaria/name.png");
-        charNames[10] = pix.loadImageFromToolkitNoScale("images/Sorrowe/name.png");
-        charNames[11] = pix.loadImageFromToolkitNoScale("images/The Thing/name.png");
-
-
+        setMenuContent(CharacterEnum.RAILA);
+        setMenuContent(CharacterEnum.SUBIYA);
+        setMenuContent(CharacterEnum.LYNX);
+        setMenuContent(CharacterEnum.AISHA);
+        setMenuContent(CharacterEnum.RAVAGE);
+        setMenuContent(CharacterEnum.ADE);
+        setMenuContent(CharacterEnum.JONAH);
+        setMenuContent(CharacterEnum.NOVA_ADAM);
+        setMenuContent(CharacterEnum.ADAM);
+        setMenuContent(CharacterEnum.AZARIA);
+        setMenuContent(CharacterEnum.SORROWE);
+        setMenuContent(CharacterEnum.THING);
         charBack = pix.loadImageFromToolkitNoScale("images/selChar.png");
         oppBack = pix.loadImageFromToolkitNoScale("images/selOpp.png");
         charHold = pix.loadImageFromToolkitNoScale("images/charHold.png");
-
         Image[] tmp = SpecialDrawModeRender.getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
         fg3 = tmp[3];
-
         p1 = pix.loadImageFromToolkitNoScale("images/player1.png");
         p2 = pix.loadImageFromToolkitNoScale("images/player2.png");
-
         fight = pix.loadImageFromToolkitNoScale("images/fight.png");
-
         charDesc[0] = Raila.class.getName();
-
-
-        for (int vd = 0; vd < charPrevLox.length; vd++) {
-            charPrev[vd] = pix.loadImageFromToolkitNoScale(charPrevLox[vd]);
-        }
-
-        for (int c = 0; c < oppPrevLox.length; c++) {
-            oppPrev[c] = pix.loadImageFromToolkitNoScale(oppPrevLox[c]);
-        }
     }
 
-    /**
-     * Move up
-     */
-    public void upMove() {
-        if (vIndex > 0) {
-            vIndex = vIndex - 1;
-        } else {
-            vIndex = verticalRows;
-        }
-
-        capAnim();
+    public void setMenuContent(CharacterEnum characterEnum) {
+        charNorm[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/cap.png");
+        charBlur[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/capB.png");
+        charNames[characterEnum.index()] = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/name.png");
+        charPrev[characterEnum.index()]  = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/Prev.png");
+        oppPrev[characterEnum.index()]  = pix.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/PrevO.png");
     }
-
-    /**
-     * Move down
-     */
-    public void downMove() {
-        if (vIndex < verticalRows) {
-            vIndex = vIndex + 1;
-        } else {
-            vIndex = 0;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move right
-     */
-    public void rightMove() {
-        if (hIndex < horizColumns) {
-            hIndex = hIndex + 1;
-        } else {
-            hIndex = 1;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move left
-     */
-    public void leftMove() {
-        if (hIndex > 1) {
-            hIndex = hIndex - 1;
-        } else {
-            hIndex = horizColumns;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Horizontal index
-     *
-     * @return hIndex
-     */
-    public int getHindex() {
-        return hIndex;
-    }
-
-    /**
-     * Set horizontal index
-     */
-    public void setHindex(int value) {
-        hIndex = value;
-    }
-
-    /**
-     * Vertical index
-     *
-     * @return vIndex
-     */
-    public int getVindex() {
-        return vIndex;
-    }
-
-    /**
-     * Set vertical index
-     */
-    public void setVindex(int value) {
-        vIndex = value;
-    }
-
-    /**
-     * Animates captions
-     */
-    public void capAnim() {
-        x = -100;
-        p1Opac = 0.0f;
-        opacChar = 0.0f;
-    }
-
-    /**
-     * Checks if within number of Characters
-     */
-    public boolean well() {
-        boolean ans = false;
-        int whichChar = ((vIndex * 3) + hIndex) - 1;
-        if (whichChar <= numOfCharacters) {
-            ans = true;
-            //System.out.println("Dude: "+whichChar);
-        }
-
-        return ans;
-    }
-
 }

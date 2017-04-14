@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 
 public class AttacksOpp1 extends AttacksBasic {
 
@@ -29,6 +29,6 @@ public class AttacksOpp1 extends AttacksBasic {
      * Creates an opponent object
      */
     public AttacksOpp1() {
-        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
+        dude = RenderCharacterSelectionScreen.getInstance().getPayers().getOpponent();
     }
 }

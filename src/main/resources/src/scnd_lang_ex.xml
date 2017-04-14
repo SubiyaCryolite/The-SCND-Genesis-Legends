@@ -353,13 +353,13 @@ above in the <langX></langX> block or else the system wont recognize it.
     <Engilsh320>Hi, welcome to the tutorial.</Engilsh320>
     <Engilsh321>This will teach you how to play..... obviously.</Engilsh321>
     <Engilsh322>First up, the Heads-Up display (HUD ).</Engilsh322>
-    <Engilsh323>This, my friends, is your characters Heath Bar.</Engilsh323>
-    <Engilsh324>It displays your characters Health Points (HP) as both digits and a percentage.</Engilsh324>
+    <Engilsh323>This, my friends, is your characterEnum Heath Bar.</Engilsh323>
+    <Engilsh324>It displays your characterEnum Health Points (HP) as both digits and a percentage.</Engilsh324>
     <Engilsh325>Once your HP goes below zero, or is less than your opponents at the end of a match....</Engilsh325>
     <Engilsh326>You're dead, shocker.</Engilsh326>
     <Engilsh327>Same principle applies to your opponent.</Engilsh327>
     <Engilsh328>Next, your Command Menu (CM), which houses your Move-set.</Engilsh328>
-    <Engilsh329>All your characters moves are shown in the Command Menu.</Engilsh329>
+    <Engilsh329>All your characterEnum moves are shown in the Command Menu.</Engilsh329>
     <Engilsh330>Moves are split into 3 categories: Physical, Celestia and Items.</Engilsh330>
     <Engilsh331>Physical moves rely on raw brute force to inflict damage.</Engilsh331>
     <Engilsh332>Celestia moves use Celestia Powers to enhance attacks or activate special abilities.</Engilsh332>
@@ -384,7 +384,7 @@ above in the <langX></langX> block or else the system wont recognize it.
     <Engilsh367>After execution, your slots will become free yet again</Engilsh367>
     <Engilsh351>The same applies to your opponent.</Engilsh351>
     <Engilsh352>This is the fury bar.</Engilsh352>
-    <Engilsh353>It fills up as both characters attack.</Engilsh353>
+    <Engilsh353>It fills up as both characterEnum attack.</Engilsh353>
     <Engilsh354>When full, you can pull off a rage/fury combo.</Engilsh354>
     <Engilsh355>Command Menu (CM)</Engilsh355>
     <Engilsh356>Introduction</Engilsh356>

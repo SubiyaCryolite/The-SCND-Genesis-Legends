@@ -19,66 +19,44 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.drawing;
+package com.scndgen.legends.arefactored.render;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.StoryMode;
-import io.github.subiyacryolite.enginev1.JenesisRender;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.threads.ThreadMP3;
+import com.scndgen.legends.menus.StoryMode;
 import com.scndgen.legends.windows.WindowMain;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.VolatileImage;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class RenderStoryMenu extends JenesisRender {
+public class RenderStoryMode extends StoryMode {
 
-    public int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
-    public String loadTxt = "";
-    public int mode, numberOfstorys,
-            horizColumns = 3, verticalRows;
-    protected boolean[] hiddenStage;
-    protected boolean loadingNow;
-    private GraphicsEnvironment ge;
-    private JenesisLanguage lang;
-    private GraphicsConfiguration gc;
-    private boolean alreadyRunnging = false, runNew = true;
-    private VolatileImage volatileImg;
-    private Graphics2D g2d;
-    private Font headerFont, normalFont;
-    private float opacity = 1.0f;
-    private int valCode, oldId = -1;
+    private final Font headerFont, normalFont;
+    private final JenesisImage pix;
     private Image charBack, loading;
-    private JenesisImage pix;
     private Image[] storyCap, storyCapUn, storyCapBlur;
     private Image storyPrev;
-    private ThreadMP3 menuSound;
-    private RenderingHints renderHints;
 
     /**
      * Teh constructorz XD
      */
-    public RenderStoryMenu() {
-        lang = LoginScreen.getInstance().getLangInst();
-        numberOfstorys = 12;
-        renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
+    public RenderStoryMode() {
+        scenes = 12;
         headerFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        menuSound = new ThreadMP3("audio/menu-select.mp3", true);
-        verticalRows = (numberOfstorys / 3);
-        storyCapBlur = new Image[numberOfstorys];
-        storyCap = new Image[numberOfstorys];
-        storyCapUn = new Image[numberOfstorys];
-        hiddenStage = new boolean[numberOfstorys];
+        rows = (scenes / 3);
+        storyCapBlur = new Image[scenes];
+        storyCap = new Image[scenes];
+        storyCapUn = new Image[scenes];
+        hiddenStage = new boolean[scenes];
         mode = LoginScreen.getInstance().stage;
         for (int u = 0; u < hiddenStage.length; u++) {
             if (u <= mode)//if you are higher stage enable
@@ -93,35 +71,10 @@ public abstract class RenderStoryMenu extends JenesisRender {
         setBorder(BorderFactory.createEmptyBorder());
     }
 
-    /**
-     * When both playes are selected, this prevents movement.
-     *
-     * @return false if both Characters have been selected, true if only one is selected
-     */
-    public static boolean bothArentSelected() {
-        boolean answer = true;
-
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
-            answer = false;
-        }
-
-        return answer;
-    }
-
-    public Dimension setPreferredSize() {
-        return new Dimension(852, 480);
-    }
 
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        //Check if Image is valid
-        valCode = volatileImg.validate(gc);
-        //if not create new vi, only affects windows apparently
-        if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-            createBackBuffer();
-        }
-
         if (loadingNow) {
             g2d.setColor(Color.BLACK);
 
@@ -212,9 +165,9 @@ public abstract class RenderStoryMenu extends JenesisRender {
 
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(headerFont);
-                g2d.drawString(lang.getLine(307), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(307))) / 2, 80);
+                g2d.drawString(JenesisLanguage.getInstance().getLine(307), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(307))) / 2, 80);
                 g2d.setFont(normalFont);
-                g2d.drawString(lang.getLine(368), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(368))) / 2, 380);
+                g2d.drawString(JenesisLanguage.getInstance().getLine(368), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(368))) / 2, 380);
                 showstoryName(storySelIndex);
                 if (well() && hiddenStage[storySelIndex]) {
                     {
@@ -234,25 +187,18 @@ public abstract class RenderStoryMenu extends JenesisRender {
         g.drawImage(volatileImg, 0, 0, this);
     }
 
-    private void showstoryName(int id) {
-        if (id != oldId) {
-            systemNotice("Scene " + (id + 1));
-            oldId = id;
-        }
-    }
-
     private void loadCaps() {
         RenderStageSelect.selectedStage = false;
         try {
-            for (int i = 0; i < numberOfstorys; i++) {
+            for (int i = 0; i < scenes; i++) {
                 storyCap[i] = pix.loadImageFromToolkitNoScale("images/Story/locked/x" + (i + 1) + ".png");
             }
 
-            for (int i = 0; i < numberOfstorys; i++) {
+            for (int i = 0; i < scenes; i++) {
                 storyCapUn[i] = pix.loadImageFromToolkitNoScale("images/Story/x" + (i + 1) + ".png");
             }
 
-            for (int i = 0; i < numberOfstorys; i++) {
+            for (int i = 0; i < scenes; i++) {
                 storyCapBlur[i] = pix.loadImageFromToolkitNoScale("images/Story/blur/t_" + i + ".png");
             }
         } catch (Exception e) {
@@ -286,134 +232,5 @@ public abstract class RenderStoryMenu extends JenesisRender {
             }
             break;
         }
-
     }
-
-    /**
-     * Move up
-     */
-    public void upMove() {
-        if (vIndex > 0) {
-            vIndex = vIndex - 1;
-        } else {
-            vIndex = verticalRows;
-        }
-        capAnim();
-    }
-
-    /**
-     * Move down
-     */
-    public void downMove() {
-        if (vIndex < verticalRows - 1) {
-            vIndex = vIndex + 1;
-        } else {
-            vIndex = 0;
-        }
-        capAnim();
-    }
-
-    /**
-     * Move right
-     */
-    public void rightMove() {
-        if (hIndex < horizColumns) {
-            hIndex = hIndex + 1;
-        } else {
-            hIndex = 1;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move left
-     */
-    public void leftMove() {
-        if (hIndex > 1) {
-            hIndex = hIndex - 1;
-        } else {
-            hIndex = horizColumns;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Horizontal index
-     *
-     * @return hIndex
-     */
-    public final int getHindex() {
-        return hIndex;
-    }
-
-    /**
-     * Set horizontal index
-     */
-    public final void setHindex(int value) {
-        hIndex = value;
-    }
-
-    /**
-     * Vertical index
-     *
-     * @return vIndex
-     */
-    public final int getVindex() {
-        return vIndex;
-    }
-
-    /**
-     * Set vertical index
-     */
-    public final void setVindex(int value) {
-        vIndex = value;
-    }
-
-    /**
-     * Animates captions
-     */
-    public void capAnim() {
-        opacity = 0.0f;
-    }
-
-    public void animCloud() {
-    }
-
-    /**
-     * Checks if within number of Characters
-     */
-    public boolean well() {
-        boolean ans = false;
-        int xV = (vIndex * 3) + hIndex;
-        if (xV <= numberOfstorys) {
-            ans = true;
-            storySelIndex = xV - 1;
-        }
-
-        return ans;
-    }
-
-    /**
-     * Sets the story
-     *
-     * @param where
-     */
-    public void setstory(int where) {
-        storySelIndex = where;
-    }
-
-
-    public void prepareStory() {
-        for (int i = 0; i <= StoryMode.max; i++) {
-            if (storySelIndex == i) {
-                startGame(i);
-                menuSound.play();
-                break;
-            }
-        }
-    }
-
-    public abstract void startGame(int mode);
 }

@@ -25,8 +25,8 @@ import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.menus.MenuLeaderBoard;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.threads.ThreadMP3;
 
@@ -40,15 +40,13 @@ import java.net.URISyntaxException;
 /**
  * @author Ndana
  */
-public class WindowModeSelect extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class MainMenu extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
     public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
     private static LoginScreen p;
     public int[] ach = new int[5];
     public int[] classArr = new int[5];
-    private JFrame window;
-    private JenesisLanguage lang;
     private WindowMain startApp;
     private String[] mode = {WindowMain.singlePlayer, WindowMain.lanHost, WindowMain.lanClient, WindowMain.storyMode, WindowMain.singlePlayer2};
     private SpecialDrawModeRender draw;
@@ -56,7 +54,6 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     private WindowOptions options;
     private WindowAbout about;
     private NetworkScanLan scan;
-    private WindowModeSelect mainMenu;
     private MenuLeaderBoard board;
     private ThreadMP3 startup;
     private boolean[] buttonz;
@@ -64,29 +61,27 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     private int compassDir, compassDir2, last = 13;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public WindowModeSelect(String dude, LoginScreen px) {
+    public MainMenu(String dude, LoginScreen px) {
         p = px;
-        lang = p.getLangInst();
         startup = new ThreadMP3(ThreadMP3.startUpSound(), false);
         startup.play();
         strUser = dude;
-        window = new JFrame();
-        window.setUndecorated(true);
+        setUndecorated(true);
         draw = new SpecialDrawModeRender();
-        window.setLayout(new BorderLayout());
-        window.setContentPane(draw);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
-        window.addMouseMotionListener(this);
-        window.addMouseListener(this);
-        window.addMouseWheelListener(this);
-        window.requestFocusInWindow();
-        window.setFocusable(true);
-        window.addKeyListener(this);
-        window.pack();
-        window.setLocationRelativeTo(null); // Centers JFrame on screen //
-        window.setResizable(false);
-        window.setVisible(true);
+        setLayout(new BorderLayout());
+        setContentPane(draw);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
+        addMouseMotionListener(this);
+        addMouseListener(this);
+        addMouseWheelListener(this);
+        requestFocusInWindow();
+        setFocusable(true);
+        addKeyListener(this);
+        pack();
+        setLocationRelativeTo(null); // Centers JFrame on screen //
+        setResizable(false);
+        setVisible(true);
         try {
             if (GamePadController.getInstance().controllerFound) {
                 controller = true;
@@ -96,20 +91,20 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
             if (this.p.controller) {
 
                 if (GamePadController.getInstance().statusInt == 1) {
-                    sytemNotice(GamePadController.getInstance().controllerName + " " + lang.getLine(103));
+                    sytemNotice(GamePadController.getInstance().controllerName + " " + JenesisLanguage.getInstance().getLine(103));
                 } else if (GamePadController.getInstance().statusInt == 0) {
-                    sytemNotice(lang.getLine(104));
+                    sytemNotice(JenesisLanguage.getInstance().getLine(104));
                 } else if (GamePadController.getInstance().statusInt == 2) {
-                    sytemNotice(lang.getLine(105));
+                    sytemNotice(JenesisLanguage.getInstance().getLine(105));
                 }
             }
         } catch (Error ex) {
-            sytemNotice(lang.getLine(106));
+            sytemNotice(JenesisLanguage.getInstance().getLine(106));
         }
         refreshWindow();
     }
 
-    public static WindowModeSelect getMenu() {
+    public static MainMenu getMenu() {
         return p.getMenu();
     }
 
@@ -123,7 +118,7 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     }
 
     public void logOut() {
-        window.dispose();
+        dispose();
         p.showWindow();
     }
 
@@ -152,15 +147,15 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
                 scan = new NetworkScanLan();
             } else if (destination.equalsIgnoreCase(WindowMain.lanHost)) {
                 terminateThis();
-                draw.systemNotice(lang.getLine(107));
+                draw.systemNotice(JenesisLanguage.getInstance().getLine(107));
                 startApp = new WindowMain(strUser, mode[1]);
             } else if (destination.equalsIgnoreCase("vs1")) {
                 terminateThis();
-                draw.systemNotice(lang.getLine(108));
+                draw.systemNotice(JenesisLanguage.getInstance().getLine(108));
                 startApp = new WindowMain(strUser, mode[0]);
             } else if (destination.equalsIgnoreCase("vs2")) {
                 terminateThis();
-                draw.systemNotice(lang.getLine(109));
+                draw.systemNotice(JenesisLanguage.getInstance().getLine(109));
                 startApp = new WindowMain(strUser, mode[4]);
             } else if (destination.equalsIgnoreCase(WindowMain.storyMode)) {
 
@@ -456,11 +451,11 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
      * Exit game
      */
     public void exit() {
-        int x = JOptionPane.showConfirmDialog(null, lang.getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
+        int x = JOptionPane.showConfirmDialog(null, JenesisLanguage.getInstance().getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
         if (x == JOptionPane.YES_OPTION) {
-            int b = JOptionPane.showConfirmDialog(null, lang.getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
+            int b = JOptionPane.showConfirmDialog(null, JenesisLanguage.getInstance().getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
             if (b == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, lang.getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
         }
@@ -486,7 +481,7 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     public void terminateThis() {
         draw.StopRepaint();
         isActive = false;
-        window.dispose();
+        dispose();
     }
 
     /**
@@ -500,14 +495,14 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
             }
         } catch (Exception e) {
         }
-        window.setVisible(true);
+        setVisible(true);
     }
 
     /**
      * Create a client game
      */
     public void hostGame() {
-        startApp = new WindowMain(WindowModeSelect.getUserName(), WindowMain.lanClient);
+        startApp = new WindowMain(MainMenu.getUserName(), WindowMain.lanClient);
     }
 
     private void refreshWindow() {
@@ -519,7 +514,7 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
                 while (true) {
                     try {
                         this.sleep(16);
-                        window.repaint();
+                        repaint();
                     } catch (Exception e) {
                     }
                 }

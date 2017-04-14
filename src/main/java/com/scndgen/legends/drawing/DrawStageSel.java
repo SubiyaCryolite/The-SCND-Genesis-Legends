@@ -27,31 +27,24 @@ import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImage;
-import io.github.subiyacryolite.enginev1.JenesisRender;
+import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.VolatileImage;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawStageSel extends JenesisRender {
+public abstract class DrawStageSel extends JenesisMode {
 
-    public static int valCode, lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
+    public static int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
     public static String loadTxt = "";
     public static int mode = 1, numberOfStages;
     private static float opacity = 1.0f;
     private static String[] stagePrevLox;
     public int horizColumns = 3, verticalRows;
-    private GraphicsEnvironment ge;
-    private JenesisLanguage lang;
-    private GraphicsConfiguration gc;
-    private boolean alreadyRunnging = false, runNew = true;
-    private VolatileImage volatileImg;
-    private Graphics2D g2d;
     private String[] stageNameStr;
     private int oldId = -1;
     private Image charBack, loading;
@@ -65,7 +58,7 @@ public abstract class DrawStageSel extends JenesisRender {
      * Teh constructorz XD
      */
     public DrawStageSel() {
-        lang = LoginScreen.getInstance().getLangInst();
+        JenesisLanguage lang = JenesisLanguage.getInstance();
         stagePrevLox = new String[]{"bgBG1", "bgBG2", "bgBG3", "bgBG4", "bgBG5", "bgBG6", "bgBG7", "bgBG8", "bgBG9", "bgBG10", "bgBG100", "bgBG11", "bgBG13", "bgBG14", "bgBG15", "bgBG12"};
         stageNameStr = new String[]{lang.getLine(152),
                 lang.getLine(153),
@@ -98,12 +91,12 @@ public abstract class DrawStageSel extends JenesisRender {
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Characters have been selected, true if only one is selected
+     * @return false if both Character have been selected, true if only one is selected
      */
     public static boolean bothArentSelected() {
         boolean answer = true;
 
-        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
+        if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected) {
             answer = false;
         }
 
@@ -129,12 +122,6 @@ public abstract class DrawStageSel extends JenesisRender {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        //Check if Image is valid
-        valCode = volatileImg.validate(gc);
-        //if not create new vi, only affects windows apparently
-        if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-            createBackBuffer();
-        }
         if (RenderStageSelect.selectedStage) {
 
             g2d.setColor(Color.BLACK);
@@ -151,13 +138,13 @@ public abstract class DrawStageSel extends JenesisRender {
 
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-            g2d.drawString(lang.getLine(165), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(165))) / 2, 200);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(165))) / 2, 200);
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && RenderStageSelect.selectedStage == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.setColor(Color.WHITE);
-            g2d.drawString(">> " + lang.getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + lang.getLine(166) + " <<")) / 2, 300);
+            g2d.drawString(">> " + JenesisLanguage.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + JenesisLanguage.getInstance().getLine(166) + " <<")) / 2, 300);
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
@@ -347,7 +334,7 @@ public abstract class DrawStageSel extends JenesisRender {
     }
 
     /**
-     * Checks if within number of Characters
+     * Checks if within number of Character
      */
     public boolean well() {
         boolean ans = false;

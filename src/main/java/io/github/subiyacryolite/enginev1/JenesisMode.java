@@ -1,28 +1,7 @@
-/**************************************************************************
-
- The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
-
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
-
- The SCND Genesis: Legends is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- The SCND Genesis: Legends is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
-
- **************************************************************************/
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
 
 import javax.imageio.ImageIO;
@@ -33,22 +12,18 @@ import java.awt.image.VolatileImage;
 import java.io.File;
 
 /**
- * Genesis engine - basic menu operations
- *
- * @author ndana
+ * Created by ifung on 14/04/2017.
  */
-public abstract class JenesisRender extends JPanel {
+public abstract class JenesisMode extends JPanel {
 
+    protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
     protected VolatileImage volatileImg;
-    protected JenesisLanguage langz;
     protected GraphicsEnvironment ge;
     protected GraphicsConfiguration gc;
     protected Graphics2D g2d;
-    protected int screenWidth;
-    protected int screenHeight;
-    protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-
-    public abstract void paintComponent(Graphics g);
+    protected int screenWidth = 852;
+    protected int screenHeight = 480;
+    protected float opacity;
 
     /**
      * System notice in overlay
@@ -110,9 +85,9 @@ public abstract class JenesisRender extends JPanel {
             if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
             }
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
+            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + StandardGameplay.generateUID() + ".png");
             if (ImageIO.write(bufferedImage, "png", file))
-                systemNotice(langz.getLine(170));
+                systemNotice(JenesisLanguage.getInstance().getLine(170));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -121,5 +96,17 @@ public abstract class JenesisRender extends JPanel {
     @Override
     public final Dimension getPreferredSize() {
         return new Dimension(screenWidth, screenHeight); //480p, 16:9 widescreen enhanced definition, max resolution of Nintendo Wii too :D
+    }
+
+    public void moveLeft() {
+    }
+
+    public void moveRight() {
+    }
+
+    public void moveUp() {
+    }
+
+    public void moveDown() {
     }
 }

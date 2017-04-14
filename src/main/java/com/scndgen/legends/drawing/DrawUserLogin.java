@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.engine.JenesisLanguage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,13 +40,11 @@ public class DrawUserLogin extends JPanel {
     private static int timeInt = 0;
     RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
     Calendar cal;
-    private JenesisLanguage lang;
     private int offset = 10;
     private Font font;
 
     public DrawUserLogin(LoginScreen p) {
         font = p.getMyFont(LoginScreen.normalTxtSize);
-        lang = p.getLangInst();
         cal = Calendar.getInstance();
         setBorder(BorderFactory.createEmptyBorder());
     }
@@ -68,10 +66,10 @@ public class DrawUserLogin extends JPanel {
         g2d.setColor(Color.black);
         g2d.fillRoundRect(0, 0, 310, 82, 15, 10); //54+lines x 14
 
-        stat1 = lang.getLine(118) + ": " + shortStr(LoginScreen.getInstance().strUser);
-        stat2 = lang.getLine(119) + ": " + shortStr(LoginScreen.getInstance().strPoint);
+        stat1 = JenesisLanguage.getInstance().getLine(118) + ": " + shortStr(LoginScreen.getInstance().strUser);
+        stat2 = JenesisLanguage.getInstance().getLine(119) + ": " + shortStr(LoginScreen.getInstance().strPoint);
         cal.setTimeInMillis(Integer.parseInt(LoginScreen.getInstance().strPlayTime) * 1000);
-        stat3 = lang.getLine(120) + ": " + timeCal(LoginScreen.getInstance().strPlayTime);
+        stat3 = JenesisLanguage.getInstance().getLine(120) + ": " + timeCal(LoginScreen.getInstance().strPlayTime);
 
 
         g2d.setColor(Color.WHITE);

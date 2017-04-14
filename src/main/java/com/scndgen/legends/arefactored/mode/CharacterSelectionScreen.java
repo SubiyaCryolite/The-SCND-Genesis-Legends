@@ -1,70 +1,63 @@
-/**************************************************************************
-
- The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
-
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
-
- The SCND Genesis: Legends is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- The SCND Genesis: Legends is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
-
- **************************************************************************/
-package com.scndgen.legends.menus;
+package com.scndgen.legends.arefactored.mode;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
+import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CharacterSelectionScreen extends RenderCharacterSelectionScreen implements ActionListener {
+/**
+ * Created by ifung on 14/04/2017.
+ */
+public abstract class CharacterSelectionScreen extends JenesisMode implements ActionListener {
+    protected static String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
+    protected int numOfCharacters = CharacterEnum.values().length;
+    protected int col, currentSlot = 0, lastRow, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
+    protected JenesisImage pix;
+    protected int charDescIndex = 0;
+    protected float opacInc, p1Opac, opacChar;
 
     public static int characterSel, opponentSel;
     public static String charDesc = "";
-    public static String oppName, charName;
-    public static int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
-    public static int oppPrevLoc, charPrevLoc;
-    private static JenesisLanguage lang;
+    public CharacterEnum opponent, character;
+    public int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
+    public int oppPrevLoc, charPrevLoc;
     private static int[] arr1, arr2, arr3, arr4, arr5;
     private static int[] arr1a, arr2a, arr3a, arr4a, arr5a;
     private static int[] arr1b, arr2b, arr3b, arr4b, arr5b;
     private static int[] attacks;
     private static int storyBoards;
-    public boolean proceed1 = false, proceed2 = false, isAnimatorNotRuning = true;
+    public boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
     public int selectedCharIndex = 0, selectedOppIndex = 0;
     private Object source;
     //private static DrawStageSel charVisual;
     private ThreadMP3 sound, sound2, error;
-    private Characters players;
+    private final Character players = new Character();
+
 
     /**
      * Initialises the character select panel
      */
     public CharacterSelectionScreen() {
-        initializePanel();
+        setLayout(new BorderLayout());
+        attacks = new int[4];
+        setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
     /**
      * Disables all buttons, used in online and story modes
      */
-    public static void disableAll() {
+    public void disableAll() {
         for (int u = 0; u < allPlayers.length; u++) {
             allPlayers[u] = 1;
         }
@@ -180,22 +173,22 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
     public static int[] getAISlot() {
         int[] array = {};
         //when doing well, all attacks
-        if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 1.00) {
+        if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 1.00) {
             array = arr1;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 1.00) {
+        else if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 0.75 && RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() < 1.00) {
             array = arr2;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 0.75) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() < 0.75) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 0.50) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() < 0.50) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -203,7 +196,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -223,22 +216,22 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         int[] array = {};
 
         //when doing well, all attacks
-        if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 1.00) {
+        if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 1.00) {
             array = arr1a;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 1.00) {
+        else if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 0.75 && RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() < 1.00) {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 0.75) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 0.50 && RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() < 0.75) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 0.50) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 0.25 && RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() < 0.50) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -246,7 +239,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -266,22 +259,22 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         int[] array = {};
 
         //when doing well, all attacks
-        if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 1.00) {
+        if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 1.00) {
             array = arr1a;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 1.00) {
+        else if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 0.75 && RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() < 1.00) {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 0.75) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 0.50 && RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() < 0.75) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 0.50) {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+        else if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 0.25 && RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() < 0.50) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -289,7 +282,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -340,20 +333,8 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         }
     }
 
-    public Characters getPayers() {
+    public Character getPayers() {
         return players;
-    }
-
-    /**
-     * Build the panel
-     */
-    protected void initializePanel() {
-        setLayout(new BorderLayout());
-        //add(charSelect(), BorderLayout.CENTER);
-        players = new Characters();
-        lang = LoginScreen.getInstance().getLangInst();
-        attacks = new int[4];
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
     @Override
@@ -375,9 +356,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             LoginScreen.getInstance().getMenu().getMain().getStory().getStoryInstance().skipDialogue();
         }
         LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
-        if (LoginScreen.getInstance().getMenu().getMain().isGameInstanciated()) {
-            LoginScreen.getInstance().getMenu().getMain().getGame().closeAudio();
-        }
+        RenderStandardGameplay.getInstance().closeAudio();
     }
 
     /**
@@ -404,8 +383,8 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         for (int u = 0; u < allPlayers.length; u++) {
             allPlayers[u] = 0; // 0 means free, 1 means selected
         }
-        proceed1 = false;
-        proceed2 = false;
+        characterSelected = false;
+        opponentSelected = false;
         //selectedCharIndex=0;
         //selectedOppIndex=0;
         LoginScreen.getInstance().getMenu().getMain().storedX = 99;
@@ -413,12 +392,12 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
     }
 
     /**
-     * Get the Characters name
+     * Get the Character name
      *
      * @return character name
      */
-    public String getCharName() {
-        return charName;
+    public CharacterEnum getCharName() {
+        return character;
     }
 
     /**
@@ -426,8 +405,8 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      *
      * @return opponent name
      */
-    public String getOppName() {
-        return oppName;
+    public CharacterEnum getOppName() {
+        return opponent;
     }
 
     /**
@@ -443,19 +422,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selRaila(char type) {
-        systemNotice(lang.getLine(84));
+        systemNotice(JenesisLanguage.getInstance().getLine(84));
         if (type == 'c') //when selecting char
         {
             {
                 sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
                 sound.play();
-                proceed1 = true;
-                charPrevLoc = 0;
-                charName = "Raila";
-                getPayers().prepare(2);
-                selectedCharIndex = 0;
-                //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-                allPlayers[0] = 1;
+                characterSelected = true;
+                character = CharacterEnum.RAILA;
+                getPayers().prepare(character);
+                allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                     LoginScreen.getInstance().getMenu().getMain().sendToClient("selRai_jkxc");
                     disableAll();
@@ -465,18 +441,15 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
                     disableAll();
                 }
             }
-        } else if (type == 'o' && proceed2 == false) {
+        } else if (type == 'o' && opponentSelected == false) {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
             }
-            proceed2 = true;
-            oppName = "Raila";
-            selectedOppIndex = 0;
-            getPayers().prepareO(2);
-            oppPrevLoc = 0;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[0] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.RAILA;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -488,18 +461,15 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
     public void selSubiya(char type) {
         if (type == 'c') //when selecting char
         {
-            systemNotice(lang.getLine(85));
+            systemNotice(JenesisLanguage.getInstance().getLine(85));
             {
                 sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
                 sound.play();
-                proceed1 = true;
-                charPrevLoc = 1;
-                charName = "Subiya";
-                selectedCharIndex = 1;
-                getPayers().prepare(1);
-                charDesc = getPayers().getDudeChar().getDescSmall();
-                //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-                allPlayers[1] = 1;
+                characterSelected = true;
+                character = CharacterEnum.SUBIYA;
+                getPayers().prepare(character);
+                allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+                charDesc = getPayers().getCharacter().getDescSmall();
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                     LoginScreen.getInstance().getMenu().getMain().sendToClient("selSub_jkxc");
                     disableAll();
@@ -511,17 +481,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Subiya";
-            selectedOppIndex = 1;
-            getPayers().prepareO(1);
-            oppPrevLoc = 1;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[1] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.SUBIYA;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -531,19 +498,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selLynx(char type) {
-        systemNotice(lang.getLine(86));
+        systemNotice(JenesisLanguage.getInstance().getLine(86));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 2;
-            charName = "Lynx";
-            selectedCharIndex = 2;
-            getPayers().prepare(3);
-            charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[2] = 1;
+            characterSelected = true;
+            character = CharacterEnum.LYNX;
+            getPayers().prepare(character);
+            allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selLyn_jkxc");
                 disableAll();
@@ -552,27 +516,15 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
                 LoginScreen.getInstance().getMenu().getMain().sendToServer("selLyn_jkxc");
                 disableAll();
             }
-
-            //if(LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.StoryMode))
-            //{
-            //   Lynx.story(1,false);
-            //   disableAll();
-            //   {/*confirm.setEnabled(true)*/;}
-            //}
-
         }
-
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Lynx";
-            selectedOppIndex = 2;
-            getPayers().prepareO(3);
-            oppPrevLoc = 2;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[2] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.LYNX;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -582,19 +534,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selAisha(char type) {
-        systemNotice(lang.getLine(87));
+        systemNotice(JenesisLanguage.getInstance().getLine(87));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 3;
-            charName = "Aisha";
-            selectedCharIndex = 3;
-            getPayers().prepare(4);
-            charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[3] = 1;
+            characterSelected = true;
+            character = CharacterEnum.AISHA;
+            getPayers().prepare(character);
+            allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAlx_jkxc");
                 disableAll();
@@ -605,17 +554,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Aisha";
-            selectedOppIndex = 3;
-            getPayers().prepareO(4);
-            oppPrevLoc = 3;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[3] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.AISHA;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -625,19 +571,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selAde(char type) {
-        systemNotice(lang.getLine(88));
+        systemNotice(JenesisLanguage.getInstance().getLine(88));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 5;
-            charName = "Ade";
-            selectedCharIndex = 5;
-            getPayers().prepare(6);
-            charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[5] = 1;
+            characterSelected = true;
+            character = CharacterEnum.ADE;
+            getPayers().prepare(character);
+            allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAde_jkxc");
                 disableAll();
@@ -648,17 +591,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Ade";
-            selectedOppIndex = 5;
-            getPayers().prepareO(6);
-            oppPrevLoc = 5;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[5] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.ADE;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -668,19 +608,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selRav(char type) {
-        systemNotice(lang.getLine(89));
+        systemNotice(JenesisLanguage.getInstance().getLine(89));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 4;
-            charName = "Ravage";
-            selectedCharIndex = 4;
-            getPayers().prepare(5);
-            charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[4] = 0;
+            characterSelected = true;
+            character = CharacterEnum.RAVAGE;
+            getPayers().prepare(character);
+            allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selRav_jkxc");
                 disableAll();
@@ -691,17 +628,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Ravage";
-            selectedOppIndex = 4;
-            getPayers().prepareO(5);
-            oppPrevLoc = 4;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[4] = 0;
+            opponentSelected = true;
+            opponent = CharacterEnum.RAVAGE;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -711,17 +645,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selJon(char type) {
-        systemNotice(lang.getLine(90));
+        systemNotice(JenesisLanguage.getInstance().getLine(90));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 6;
-            charName = "Jonah";
-            selectedCharIndex = 6;
-            getPayers().prepare(7);
-            charDesc = getPayers().getDudeChar().getDescSmall();
+            characterSelected = true;
+            character = CharacterEnum.JONAH;
+            getPayers().prepare(character);
+            charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             allPlayers[6] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selJon_jkxc");
@@ -733,17 +666,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Jonah";
-            selectedOppIndex = 6;
-            getPayers().prepareO(7);
-            oppPrevLoc = 6;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[6] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.JONAH;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -753,19 +683,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selAdam(char type) {
-        systemNotice(lang.getLine(91));
+        systemNotice(JenesisLanguage.getInstance().getLine(91));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 7;
-            charName = "NovaAdam";
-            selectedCharIndex = 7;
-            getPayers().prepare(8);
-            charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[7] = 1;
+            characterSelected = true;
+            character = CharacterEnum.ADAM;
+            getPayers().prepare(character);
+            allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAdam_jkxc");
                 disableAll();
@@ -776,16 +703,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "NovaAdam";
-            selectedOppIndex = 7;
-            getPayers().prepareO(8);
-            oppPrevLoc = 7;
-            allPlayers[7] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.NOVA_ADAM;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -795,17 +720,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selNOVAAdam(char type) {
-        systemNotice(lang.getLine(92));
+        systemNotice(JenesisLanguage.getInstance().getLine(92));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 8;
-            charName = "NOVA NovaAdam";
-            selectedCharIndex = 8;
-            getPayers().prepare(9);
-            charDesc = getPayers().getDudeChar().getDescSmall();
+            characterSelected = true;
+            character = CharacterEnum.NOVA_ADAM;
+            getPayers().prepare(character);
+            charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[8] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -818,17 +742,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "NOVA NovaAdam";
-            selectedOppIndex = 8;
-            getPayers().prepareO(9);
-            oppPrevLoc = 8;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[8] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.NOVA_ADAM;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -838,17 +759,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selAza(char type) {
-        systemNotice(lang.getLine(93));
+        systemNotice(JenesisLanguage.getInstance().getLine(93));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 9;
-            charName = "Azaria";
-            selectedCharIndex = 9;
-            getPayers().prepare(10);
-            charDesc = getPayers().getDudeChar().getDescSmall();
+            characterSelected = true;
+            character = CharacterEnum.AZARIA;
+            getPayers().prepare(character);
+            charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[9] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -861,17 +781,14 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Azaria";
-            selectedOppIndex = 9;
-            getPayers().prepareO(10);
-            oppPrevLoc = 9;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[9] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.AZARIA;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -881,17 +798,16 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
      * @param type - opponent ('o') or character ('c')
      */
     public void selSorr(char type) {
-        systemNotice(lang.getLine(94));
+        systemNotice(JenesisLanguage.getInstance().getLine(94));
         if (type == 'c') //when selecting char
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 10;
-            charName = "Sorrowe";
-            selectedCharIndex = 10;
-            getPayers().prepare(11);
-            charDesc = getPayers().getDudeChar().getDescSmall();
+            characterSelected = true;
+            character = CharacterEnum.SORROWE;
+            getPayers().prepare(character);
+            charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[10] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -904,17 +820,13 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "Sorrowe";
-            selectedOppIndex = 10;
-            getPayers().prepareO(11);
-            oppPrevLoc = 10;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[10] = 1;
+            opponentSelected = true;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
@@ -929,12 +841,11 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         {
             sound = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound.play();
-            proceed1 = true;
-            charPrevLoc = 11;
-            charName = "The Thing";
-            selectedCharIndex = 11;
-            getPayers().prepare(12);
-            charDesc = getPayers().getDudeChar().getDescSmall();
+            characterSelected = true;
+            character = CharacterEnum.THING;
+            getPayers().prepare(character);
+            charPrevLoc = selectedCharIndex = character.index();
+            charDesc = getPayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[11] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -947,35 +858,29 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
             }
         }
 
-        if (type == 'o' && proceed2 == false) // when selecting opponent
+        if (type == 'o' && opponentSelected == false) // when selecting opponent
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "The Thing";
-            selectedOppIndex = 11;
-            getPayers().prepareO(12);
-            oppPrevLoc = 11;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[11] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.THING;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
 
-        if (type == 'x' && proceed2 == false) // when selecting opponent as boss
+        if (type == 'x' && opponentSelected == false) // when selecting opponent as boss
         {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            proceed2 = true;
-            oppName = "The Thing";
-            selectedOppIndex = 11;
-            getPayers().prepareO(13);
-            oppPrevLoc = 11;
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
-            allPlayers[11] = 1;
+            opponentSelected = true;
+            opponent = CharacterEnum.THING;
+            getPayers().prepareO(opponent);
+            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
 
     public void proceed2False() {
-        proceed2 = false;
+        opponentSelected = false;
     }
 
     public void animateCharSelect() {
@@ -1007,7 +912,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
                             e.printStackTrace();
                         }
                     }
-                    while (LoginScreen.getInstance().getMenu().getMain().currentScreen.equalsIgnoreCase("charSelectScreen"));
+                    while (LoginScreen.getInstance().getMenu().getMain().currentScreen == ModeEnum.charSelectScreen);
                 }
 
             }
@@ -1117,7 +1022,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 1 && vert == 0) {
             if (allPlayers[0] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selRaila('c');
                 } else {
                     selRaila('o');
@@ -1129,7 +1034,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 2 && vert == 0) {
             if (allPlayers[1] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selSubiya('c');
                 } else {
                     selSubiya('o');
@@ -1141,7 +1046,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 3 && vert == 0) {
             if (allPlayers[2] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selLynx('c');
                 } else {
                     selLynx('o');
@@ -1153,7 +1058,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 1 && vert == 1) {
             if (allPlayers[3] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selAisha('c');
                 } else {
                     selAisha('o');
@@ -1165,7 +1070,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 2 && vert == 1) {
             if (allPlayers[4] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selRav('c');
                 } else {
                     selRav('o');
@@ -1177,7 +1082,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 3 && vert == 1) {
             if (allPlayers[5] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selAde('c');
                 } else {
                     selAde('o');
@@ -1189,7 +1094,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 1 && vert == 2) {
             if (allPlayers[6] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selJon('c');
                 } else {
                     selJon('o');
@@ -1201,7 +1106,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 2 && vert == 2) {
             if (allPlayers[7] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selAdam('c');
                 } else {
                     selAdam('o');
@@ -1213,7 +1118,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 3 && vert == 2) {
             if (allPlayers[8] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selNOVAAdam('c');
                 } else {
                     selNOVAAdam('o');
@@ -1225,7 +1130,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 1 && vert == 3) {
             if (allPlayers[9] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selAza('c');
                 } else {
                     selAza('o');
@@ -1237,7 +1142,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 2 && vert == 3) {
             if (allPlayers[10] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selSorr('c');
                 } else {
                     selSorr('o');
@@ -1249,7 +1154,7 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
 
         if (horz == 3 && vert == 3) {
             if (allPlayers[11] == 0) {
-                if (proceed1 == false) {
+                if (characterSelected == false) {
                     selThing('c');
                 } else {
                     selThing('o');
@@ -1267,5 +1172,113 @@ public class CharacterSelectionScreen extends RenderCharacterSelectionScreen imp
         error = new ThreadMP3("audio/error.mp3", false);
         error.play();
         System.out.println("Error sound");
+    }
+
+
+    /**
+     * Move up
+     */
+    public void upMove() {
+        if (vIndex > 0) {
+            vIndex = vIndex - 1;
+        } else {
+            vIndex = verticalRows;
+        }
+
+        capAnim();
+    }
+
+    /**
+     * Move down
+     */
+    public void downMove() {
+        if (vIndex < verticalRows) {
+            vIndex = vIndex + 1;
+        } else {
+            vIndex = 0;
+        }
+
+        capAnim();
+    }
+
+    /**
+     * Move right
+     */
+    public void rightMove() {
+        if (hIndex < horizColumns) {
+            hIndex = hIndex + 1;
+        } else {
+            hIndex = 1;
+        }
+
+        capAnim();
+    }
+
+    /**
+     * Move left
+     */
+    public void leftMove() {
+        if (hIndex > 1) {
+            hIndex = hIndex - 1;
+        } else {
+            hIndex = horizColumns;
+        }
+
+        capAnim();
+    }
+
+    /**
+     * Horizontal index
+     *
+     * @return hIndex
+     */
+    public int getHindex() {
+        return hIndex;
+    }
+
+    /**
+     * Set horizontal index
+     */
+    public void setHindex(int value) {
+        hIndex = value;
+    }
+
+    /**
+     * Vertical index
+     *
+     * @return vIndex
+     */
+    public int getVindex() {
+        return vIndex;
+    }
+
+    /**
+     * Set vertical index
+     */
+    public void setVindex(int value) {
+        vIndex = value;
+    }
+
+    /**
+     * Animates captions
+     */
+    public void capAnim() {
+        x = -100;
+        p1Opac = 0.0f;
+        opacChar = 0.0f;
+    }
+
+    /**
+     * Checks if within number of Character
+     */
+    public boolean well() {
+        boolean ans = false;
+        int whichChar = ((vIndex * 3) + hIndex) - 1;
+        if (whichChar <= numOfCharacters) {
+            ans = true;
+            //System.out.println("Dude: "+whichChar);
+        }
+
+        return ans;
     }
 }

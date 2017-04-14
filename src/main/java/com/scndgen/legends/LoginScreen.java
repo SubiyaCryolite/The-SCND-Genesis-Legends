@@ -22,13 +22,14 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.drawing.DrawUserLogin;
-import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.RenderGameRender;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.windows.WindowMain;
-import com.scndgen.legends.windows.WindowModeSelect;
+import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,23 +50,11 @@ import java.util.logging.Logger;
 
 public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
-    public static final String[] charNames = {"Raila", //0
-            "Subiya", //1
-            "Lynx", //2
-            "Aisha", //3
-            "Ravage", //4
-            "Ade", //5
-            "Jonah", //6
-            "NovaAdam", //7
-            "NOVA NovaAdam", //8
-            "Azaria", //9
-            "Sorrowe", //10
-            "The Thing"}; //11
+    public static final CharacterEnum[] charNames = CharacterEnum.values();
     public static int difficultyBase = 8000, difficultyScale = 1333;
     public static String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
     private static LoginScreen instance;
-    public final int numberOfCharacters = charNames.length;
     public int frames, activLang;
     public boolean ans, newGame = true;
     public int comicPicOcc, difficultyStat, difficultyDyn, stage;
@@ -104,10 +93,9 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private JTextField login;
     private JenesisImage pix;
     private Box box = new Box(BoxLayout.Y_AXIS);
-    private JenesisLanguage langs;
     private WindowUpdate newy = null;
     private RandomAccessFile rand;
-    private WindowModeSelect startApp;
+    private MainMenu startApp;
     private String IPAdd;
     private Image image;
     private SystemTray tray;
@@ -145,7 +133,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         createDBStructure();
 
         activLang = 0;
-        langs = new JenesisLanguage();
         consecWinsTmp = 0;
         consecWins = 0;
         scalePos = 2;
@@ -165,7 +152,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         countries = Locale.getISOCountries();
 
         loadTray();
-        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
+        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
         pan1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -234,7 +221,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         pan1.add(thisPic);
 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
+        window.setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
         window.pack();
         window.addKeyListener(this);
         window.setLocationRelativeTo(null);
@@ -303,8 +290,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     /**
      * Set the game rating
-     *
-     * @param rating
      */
     public void setGameRating(int num) {
         gameRating = num * 20;
@@ -529,8 +514,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         charUsage[uB] = 0;
                     }
                 }
-
-
                 ach[8] = Integer.parseInt(scndDecipher(rs.getString("ach9")));
                 jenesisLog(ach[8]);
 
@@ -544,8 +527,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 jenesisLog(comicPicOcc);
 
                 activLang = Integer.parseInt(scndDecipher(rs.getString("lang")));
-                langs.setLanguage(activLang);
-
                 scalePos = Integer.parseInt(scndDecipher(rs.getString("rez")));
 
                 countryStr = rs.getString("countryStr");
@@ -630,17 +611,8 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      *
      * @return
      */
-    public WindowModeSelect getMenu() {
+    public MainMenu getMenu() {
         return startApp;
-    }
-
-    /**
-     * Get instance of our language handler
-     *
-     * @return
-     */
-    public JenesisLanguage getLangInst() {
-        return langs;
     }
 
     public int getSelLang() {
@@ -661,7 +633,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         if (source == enter) {
             closeWindow();
-            startApp = new WindowModeSelect(strUser, this);
+            startApp = new MainMenu(strUser, this);
         }
 
         if (source == newAccount) {
@@ -670,7 +642,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 if (login.getText().length() >= 1 && login.getText().length() <= 24) {
                     createConfigFile(login.getText());
                 } else {
-                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Characters long");
+                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Character long");
                 }
             } else if (numberOfAccounts > 0) {
                 //extra account
@@ -678,20 +650,20 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 if (newAcc.length() >= 1 && newAcc.length() <= 24) {
                     createConfigFile(newAcc);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Characters long");
+                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Character long");
                 }
             }
         }
 
         if (source == userAccount) {
             closeWindow();
-            startApp = new WindowModeSelect(strUser, this);
+            startApp = new MainMenu(strUser, this);
         }
     }
 
     /**
      * @author Java2s
-     * @see http://www.java2s.com/Code/Java/Swing-JFC/HowtochangethelookandfeelofSwingapplications.htm
+     * @see {http://www.java2s.com/Code/Java/Swing-JFC/HowtochangethelookandfeelofSwingapplications.htm}
      * Changes the look and feel. It requires the
      * Java Runtime Environment version 6 update 18
      * or higher to work. If the JRE is below update 18
@@ -789,7 +761,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         } catch (Exception e) {
                             System.err.println(e.toString());
                         } //if latest version, just try and download music
-                        if (webVersion.equalsIgnoreCase(RenderGameRender.getVersionStr())) {
+                        if (webVersion.equalsIgnoreCase(RenderStandardGameplay.getVersionStr())) {
                             ans = false;
                             if (whoCalled.equalsIgnoreCase("default")) {
                                 System.out.println("You are up to date");
@@ -858,7 +830,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     public void setActivLang(int x) {
         activLang = x;
-        langs.setLanguage(activLang);
+        JenesisLanguage.getInstance().setLanguage(activLang);
     }
 
     /**
@@ -1097,7 +1069,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             int y = Integer.parseInt(matchCountStr) + 1;
             matchCountStr = "" + y;
             newGame = false;
-            if (getMenu().getMain().getGame().getCharLife() < getMenu().getMain().getGame().getOppLife()) {
+            if (RenderStandardGameplay.getInstance().getCharLife() < RenderStandardGameplay.getInstance().getOppLife()) {
                 loss = loss + 1;
                 consecWins = 0;
                 consecWinsTmp = 0;
@@ -1349,7 +1321,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         if (keyCode == KeyEvent.VK_ENTER) {
             closeWindow();
-            startApp = new WindowModeSelect(strUser, this);
+            startApp = new MainMenu(strUser, this);
         }
     }
 

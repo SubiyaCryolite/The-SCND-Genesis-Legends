@@ -36,7 +36,6 @@ public class JenesisTutorial implements Runnable {
     private Image[] pix, arrows;
     private Image forward, back;
     private Thread t;
-    private JenesisLanguage lang;
     private JenesisImage pixfac;
     private boolean globalBreak, isShowing, skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
@@ -46,7 +45,6 @@ public class JenesisTutorial implements Runnable {
     private ThreadMP3 bgSound, nextSound, backSound;
 
     public JenesisTutorial() {
-        lang = LoginScreen.getInstance().getLangInst();
         pixfac = new JenesisImage();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
@@ -145,16 +143,16 @@ public class JenesisTutorial implements Runnable {
         screen.drawString(tutText, ((852 - screen.getFontMetrics().stringWidth(tutText)) / 2), 233);
         screen.setComposite(makeComposite(1.0f));
 
-        screen.drawString(":: " + topText + " - " + lang.getLine(365) + " " + sec + " ::", ((852 - screen.getFontMetrics().stringWidth(":: " + topText + " - " + lang.getLine(365) + " " + sec + " ::")) / 2), 253);
+        screen.drawString(":: " + topText + " - " + JenesisLanguage.getInstance().getLine(365) + " " + sec + " ::", ((852 - screen.getFontMetrics().stringWidth(":: " + topText + " - " + JenesisLanguage.getInstance().getLine(365) + " " + sec + " ::")) / 2), 253);
 
-        screen.drawString(lang.getLine(366) + ":", 10, cord);
-        screen.drawString("1 - " + lang.getLine(356), 20, (cord + (1 * 14)));
-        screen.drawString("2 - " + lang.getLine(360), 20, (cord + (2 * 14)));
-        screen.drawString("3 - " + lang.getLine(355), 20, (cord + (3 * 14)));
-        screen.drawString("4 - " + lang.getLine(358), 20, (cord + (4 * 14)));
-        screen.drawString("5 - " + lang.getLine(357), 20, (cord + (5 * 14)));
-        screen.drawString("6 - " + lang.getLine(359), 20, (cord + (6 * 14)));
-        screen.drawString(lang.getLine(343), 20, (cord + (7 * 14)));
+        screen.drawString(JenesisLanguage.getInstance().getLine(366) + ":", 10, cord);
+        screen.drawString("1 - " + JenesisLanguage.getInstance().getLine(356), 20, (cord + (1 * 14)));
+        screen.drawString("2 - " + JenesisLanguage.getInstance().getLine(360), 20, (cord + (2 * 14)));
+        screen.drawString("3 - " + JenesisLanguage.getInstance().getLine(355), 20, (cord + (3 * 14)));
+        screen.drawString("4 - " + JenesisLanguage.getInstance().getLine(358), 20, (cord + (4 * 14)));
+        screen.drawString("5 - " + JenesisLanguage.getInstance().getLine(357), 20, (cord + (5 * 14)));
+        screen.drawString("6 - " + JenesisLanguage.getInstance().getLine(359), 20, (cord + (6 * 14)));
+        screen.drawString(JenesisLanguage.getInstance().getLine(343), 20, (cord + (7 * 14)));
 
     }
 
@@ -229,8 +227,8 @@ public class JenesisTutorial implements Runnable {
                     sec = slide + 1;
                     setPic(0);
                     setArr(0);
-                    setTop(lang.getLine(356)); //intro
-                    setTxt(lang.getLine(320));
+                    setTop(JenesisLanguage.getInstance().getLine(356)); //intro
+                    setTxt(JenesisLanguage.getInstance().getLine(320));
                     sec3:
                     for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
                         if (skipSec) {
@@ -244,8 +242,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(356)); //intro
-                    setTxt(lang.getLine(321));
+                    setTop(JenesisLanguage.getInstance().getLine(356)); //intro
+                    setTxt(JenesisLanguage.getInstance().getLine(321));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -261,8 +259,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(322));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(322));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -278,8 +276,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(344));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(344));
                     setPic(0);
                     setArr(6);
                     sec3:
@@ -295,8 +293,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(345));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(345));
                     setPic(0);
                     setArr(6);
                     sec3:
@@ -312,8 +310,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(323));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(323));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -329,8 +327,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(324));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(324));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -345,8 +343,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(325));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(325));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -361,8 +359,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(326));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(326));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -378,8 +376,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(360)); //basics
-                    setTxt(lang.getLine(327));
+                    setTop(JenesisLanguage.getInstance().getLine(360)); //basics
+                    setTxt(JenesisLanguage.getInstance().getLine(327));
                     setPic(0);
                     setArr(2);
                     sec3:
@@ -395,8 +393,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(328));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(328));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -412,8 +410,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(329));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(329));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -429,8 +427,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(330));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(330));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -446,8 +444,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(331));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(331));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -463,8 +461,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(332));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(332));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -480,8 +478,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(333));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(333));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -497,8 +495,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(334));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(334));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -514,8 +512,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(335));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(335));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -531,8 +529,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(355)); //CM
-                    setTxt(lang.getLine(336));
+                    setTop(JenesisLanguage.getInstance().getLine(355)); //CM
+                    setTxt(JenesisLanguage.getInstance().getLine(336));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -548,8 +546,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(352));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(352));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -565,8 +563,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(353));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(353));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -582,8 +580,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(354));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(354));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -599,8 +597,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(361));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(361));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -616,8 +614,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(362));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(362));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -633,8 +631,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(363));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(363));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -650,8 +648,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(358)); //FB
-                    setTxt(lang.getLine(336));
+                    setTop(JenesisLanguage.getInstance().getLine(358)); //FB
+                    setTxt(JenesisLanguage.getInstance().getLine(336));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -667,8 +665,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(357)); //AB
-                    setTxt(lang.getLine(337));
+                    setTop(JenesisLanguage.getInstance().getLine(357)); //AB
+                    setTxt(JenesisLanguage.getInstance().getLine(337));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -684,8 +682,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(357)); //AB
-                    setTxt(lang.getLine(338));
+                    setTop(JenesisLanguage.getInstance().getLine(357)); //AB
+                    setTxt(JenesisLanguage.getInstance().getLine(338));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -701,8 +699,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(357)); //AB
-                    setTxt(lang.getLine(339));
+                    setTop(JenesisLanguage.getInstance().getLine(357)); //AB
+                    setTxt(JenesisLanguage.getInstance().getLine(339));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -718,8 +716,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(357)); //AB
-                    setTxt(lang.getLine(340));
+                    setTop(JenesisLanguage.getInstance().getLine(357)); //AB
+                    setTxt(JenesisLanguage.getInstance().getLine(340));
                     setPic(4);
                     setArr(4);
                     sec3:
@@ -735,8 +733,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(357)); //AB
-                    setTxt(lang.getLine(341));
+                    setTop(JenesisLanguage.getInstance().getLine(357)); //AB
+                    setTxt(JenesisLanguage.getInstance().getLine(341));
                     setPic(0);
                     setArr(4);
                     sec3:
@@ -752,8 +750,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(346));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(346));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -769,8 +767,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(347));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(347));
                     setPic(4);
                     setArr(7);
                     sec3:
@@ -786,8 +784,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(348));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(348));
                     setPic(1);
                     setArr(7);
                     sec3:
@@ -803,8 +801,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(349));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(349));
                     setPic(2);
                     setArr(7);
                     sec3:
@@ -820,8 +818,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(350));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(350));
                     setPic(3);
                     setArr(0);
                     sec3:
@@ -837,8 +835,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(367));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(367));
                     setPic(3);
                     setArr(0);
                     sec3:
@@ -854,8 +852,8 @@ public class JenesisTutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(lang.getLine(359)); //MoveSel
-                    setTxt(lang.getLine(351));
+                    setTop(JenesisLanguage.getInstance().getLine(359)); //MoveSel
+                    setTxt(JenesisLanguage.getInstance().getLine(351));
                     setArr(0);
                     setPic(3);
                     sec3:
@@ -871,7 +869,7 @@ public class JenesisTutorial implements Runnable {
 
                 slide++;
                 if (sec == slide) {
-                    setTxt(lang.getLine(393));
+                    setTxt(JenesisLanguage.getInstance().getLine(393));
                     setPic(0);
                     setArr(0);
                     sec3:

@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.drawing.DrawOverworld;
 import com.scndgen.legends.windows.WindowOptions;
 
@@ -51,27 +51,27 @@ public class ThreadAnim3 implements Runnable {
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             do {
                 try {
-                    if (DrawGame.verticalMove.equalsIgnoreCase("no")) {
+                    if (StandardGameplay.verticalMove.equalsIgnoreCase("no")) {
                         t.sleep(0016);
-                        DrawGame.amb1x = DrawGame.amb1x - DrawGame.ambSpeed1;
-                        DrawGame.amb2x = DrawGame.amb2x - DrawGame.ambSpeed2;
+                        StandardGameplay.amb1x = StandardGameplay.amb1x - StandardGameplay.ambSpeed1;
+                        StandardGameplay.amb2x = StandardGameplay.amb2x - StandardGameplay.ambSpeed2;
 
-                        if (DrawGame.amb1x < (-960)) {
-                            DrawGame.amb1x = 852;
+                        if (StandardGameplay.amb1x < (-960)) {
+                            StandardGameplay.amb1x = 852;
                         }
-                        if (DrawGame.amb2x < (-960)) {
-                            DrawGame.amb2x = 852;
+                        if (StandardGameplay.amb2x < (-960)) {
+                            StandardGameplay.amb2x = 852;
                         }
                     } else {
                         t.sleep(0016);
-                        DrawGame.amb1y = DrawGame.amb1y + DrawGame.ambSpeed1;
-                        DrawGame.amb2y = DrawGame.amb2y + DrawGame.ambSpeed2;
+                        StandardGameplay.amb1y = StandardGameplay.amb1y + StandardGameplay.ambSpeed1;
+                        StandardGameplay.amb2y = StandardGameplay.amb2y + StandardGameplay.ambSpeed2;
 
-                        if (DrawGame.amb1y > 480) {
-                            DrawGame.amb1y = -480;
+                        if (StandardGameplay.amb1y > 480) {
+                            StandardGameplay.amb1y = -480;
                         }
-                        if (DrawGame.amb2y > 480) {
-                            DrawGame.amb2y = -480;
+                        if (StandardGameplay.amb2y > 480) {
+                            StandardGameplay.amb2y = -480;
                         }
                     }
 

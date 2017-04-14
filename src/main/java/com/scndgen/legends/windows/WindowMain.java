@@ -23,22 +23,25 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.OverWorld;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStoryMode;
 import com.scndgen.legends.attacks.AttacksOpp1;
 import com.scndgen.legends.attacks.AttacksOpp2;
 import com.scndgen.legends.attacks.AttacksPlyr1;
 import com.scndgen.legends.attacks.AttacksPlyr2;
-import com.scndgen.legends.drawing.DrawGame;
 import com.scndgen.legends.drawing.DrawWaiting;
-import io.github.subiyacryolite.enginev1.JenesisImage;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.executers.ExecuterMovesCharOnline;
 import com.scndgen.legends.executers.ExecuterMovesOppOnline;
-import com.scndgen.legends.menus.*;
-import com.scndgen.legends.menus.CharacterSelectionScreen;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.OverWorld;
+import com.scndgen.legends.menus.StoryMode;
+import com.scndgen.legends.threads.ThreadClashSystem;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
-import com.scndgen.legends.threads.ThreadClashSystem;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,11 +62,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public static int tTime;
     private final int PORT = 5555;
     public int hostTime;
-    public JFrame daWindow;
     public boolean inStoryPane;
     public boolean isGameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
     public int item = 0, storedX = 99, storedY = 99, compassDir2;
-    public String currentScreen = "";
+    public ModeEnum currentScreen = ModeEnum.EMPTY;
     RandomAccessFile rand;
     private AttacksOpp1 oppenentEntity;
     private AttacksOpp2 oppenentEntity2;
@@ -87,12 +89,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private String ServerName;
     private String last, UserName;
     private OverWorld world;
-    private RenderGameRender newGame;
-    private CharacterSelectionScreen charPan;
-    private StoryMenu storyPane;
+    private RenderStoryMode storyPane;
     private RenderStageSelect stage;
     private int mouseYoffset = 0;
-    private String gameMode;
+    private String gameMode="";
     //offline, host, client
     private String gameIp = "";
     private String userName;
@@ -135,9 +135,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         if (getGameMode().equalsIgnoreCase(lanClient)) {
             client = new jenesisClient(LoginScreen.getInstance().getIP());
         }
-        daWindow = new JFrame();
-        daWindow.setUndecorated(true);
-        daWindow.setTitle("The SCND Genesis: Legends" + newGame.getVersionStr());
+        setUndecorated(true);
+        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
         ico16 = pix.loadImageFromToolkitNoScale("images/GameIco16.png");
         ico22 = pix.loadImageFromToolkitNoScale("images/GameIco22.png");
         ico24 = pix.loadImageFromToolkitNoScale("images/GameIco24.png");
@@ -157,45 +156,44 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         imageList.add(ico96);
         imageList.add(ico128);
         imageList.add(ico256);
-        daWindow.setIconImages(imageList);
-        //daWindow.seti(loadIconImage("images/GameIco.ico"));
+        setIconImages(imageList);
+        //seti(loadIconImage("images/GameIco.ico"));
 
-        charPan = new CharacterSelectionScreen();
         stage = new RenderStageSelect();
         if (mode.equals(lanHost)) {
             isWaiting = true;
             drawWait = new DrawWaiting();
         } else if (mode.equals(storyMode)) {
-            storyPane = new StoryMenu();
+            storyPane = new RenderStoryMode();
             inStoryPane = true;
-            currentScreen = "storySelectScreen";
+            currentScreen = ModeEnum.storySelectScreen;
         } else {
-            currentScreen = "charSelectScreen";
-            charPan.animateCharSelect();
+            currentScreen = ModeEnum.charSelectScreen;
+            RenderCharacterSelectionScreen.getInstance().animateCharSelect();
         }
 
         //------------ JFrame properties
 
         if (mode.equals(lanHost)) {
-            daWindow.setContentPane(drawWait);
+            setContentPane(drawWait);
         } else if (mode.equals(storyMode)) {
-            daWindow.setContentPane(storyPane);
+            setContentPane(storyPane);
         } else {
-            daWindow.setContentPane(charPan);
+            setContentPane(RenderCharacterSelectionScreen.getInstance());
         }
 
-        daWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        daWindow.addWindowListener(this);
-        daWindow.addMouseMotionListener(this);
-        daWindow.addMouseListener(this);
-        daWindow.addMouseWheelListener(this);
-        daWindow.requestFocusInWindow();
-        daWindow.setFocusable(true);
-        daWindow.addKeyListener(this);
-        daWindow.pack();
-        daWindow.setLocationRelativeTo(null); // Centers JFrame on screen //
-        daWindow.setResizable(false);
-        daWindow.setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(this);
+        addMouseMotionListener(this);
+        addMouseListener(this);
+        addMouseWheelListener(this);
+        requestFocusInWindow();
+        setFocusable(true);
+        addKeyListener(this);
+        pack();
+        setLocationRelativeTo(null); // Centers JFrame on screen //
+        setResizable(false);
+        setVisible(true);
         if (gameMode.equalsIgnoreCase(lanClient)) {
             client.sendData("player_QSLV");
         }
@@ -213,7 +211,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private void menuLatency() {
         /*
         new Thread() {
-        
+
         public void run() {
         try {
         doneChilling = false;
@@ -226,7 +224,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void packWindow() {
-        daWindow.pack();
+        pack();
     }
 
     /**
@@ -313,12 +311,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }.start();
     }
 
-    public StoryMenu getStory() {
+    public StoryMode getStory() {
         return storyPane;
-    }
-
-    public CharacterSelectionScreen getCharSelect() {
-        return charPan;
     }
 
     public WindowMain getMain() {
@@ -330,11 +324,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void getRidOfTitleBar() {
-        daWindow.setUndecorated(true);
+        setUndecorated(true);
     }
 
     public void getBackTitleBar() {
-        daWindow.setUndecorated(false);
+        setUndecorated(false);
     }
 
     @Override
@@ -387,7 +381,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void newGame() {
-        currentScreen = "newGame";
+        currentScreen = ModeEnum.newGame;
         //bgMusclose();
         oppenentEntity = new AttacksOpp1();
         characterEntity = new AttacksPlyr1();
@@ -395,10 +389,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             oppenentEntity2 = new AttacksOpp2();
             characterEntity2 = new AttacksPlyr2();
         }
-        newGame = new RenderGameRender();
         stopMus();
-        daWindow.setContentPane(newGame);
-        newGame.startFight();
+        RenderStandardGameplay.getInstance().newInstance();
+        setContentPane(RenderStandardGameplay.getInstance());
+        RenderStandardGameplay.getInstance().startFight();
         reSize("game");
 
     }
@@ -409,23 +403,15 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public void reSize(String mode) {
 
         if (mode.equalsIgnoreCase("game")) {
-            daWindow.resize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
-            //daWindow.setSize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            resize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            //setSize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
         } else {
-            daWindow.resize(852, 480);
-            //daWindow.setSize(852, 480);
+            resize(852, 480);
+            //setSize(852, 480);
         }
 
-        daWindow.pack();
-        daWindow.setLocationRelativeTo(null);
-    }
-
-    public RenderGameRender getGame() {
-        return newGame;
-    }
-
-    public boolean isGameInstanciated() {
-        return newGame != null;
+        pack();
+        setLocationRelativeTo(null);
     }
 
     public void storyGame() {
@@ -436,11 +422,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             characterEntity2 = new AttacksPlyr2();
         }
         characterEntity = new AttacksPlyr1();
-        newGame = new RenderGameRender();
-        currentScreen = "newGame";
+        currentScreen = ModeEnum.newGame;
         stopMus();
-        daWindow.setContentPane(newGame);
-        newGame.startFight();
+        setContentPane(RenderStandardGameplay.getInstance());
+        RenderStandardGameplay.getInstance().startFight();
         reSize("game");
     }
 
@@ -448,13 +433,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Goes back to main menu
      */
     public void backToMenuScreen() {
-        WindowModeSelect.getMenu().showModes();
+        MainMenu.getMenu().showModes();
         bgMus.stop();
         bgMus.close();
-        daWindow.dispose();
-        if (newGame != null) {
-            newGame.killGameInstance();
-        }
+        dispose();
+        RenderStandardGameplay.getInstance().killGameInstance();
         focus();
     }
 
@@ -465,11 +448,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         //bgMusclose();
         oppenentEntity = new AttacksOpp1();
         characterEntity = new AttacksPlyr1();
-        newGame = new RenderGameRender();
-        currentScreen = "newGame";
+        currentScreen = ModeEnum.newGame;
         stopMus();
-        daWindow.setContentPane(newGame);
-        newGame.startFight();
+        setContentPane(RenderStandardGameplay.getInstance());
+        RenderStandardGameplay.getInstance().startFight();
         reSize("game");
 
     }
@@ -497,7 +479,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         try {
             for (int nm = 0; nm < possibilities.length; nm++) {
                 if (s.equals(possibilities[nm])) {
-                    newGame.bgLocation = "images/bgBG" + (nm + 1) + ".png"; //Assign arena
+                    RenderStandardGameplay.getInstance().bgLocation = "images/bgBG" + (nm + 1) + ".png"; //Assign arena
                 }
             }
         } catch (Exception e) {
@@ -510,7 +492,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * @return status of match
      */
     public boolean getIsGameRunning() {
-        return currentScreen.equalsIgnoreCase("newGame");
+        return currentScreen == ModeEnum.newGame;
     }
 
     /**
@@ -531,10 +513,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Enables player to select a stage
      */
     public void selectStage() {
-        daWindow.setContentPane(stage);
-        currentScreen = "stageSelectScreen";
-        daWindow.pack();
-        daWindow.setLocationRelativeTo(null);
+        setContentPane(stage);
+        currentScreen = ModeEnum.stageSelectScreen;
+        pack();
+        setLocationRelativeTo(null);
         focus();
     }
 
@@ -543,11 +525,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     public void backToCharSelect() {
         isGameRunning = false;
-        daWindow.setContentPane(charPan);
-        currentScreen = "charSelectScreen";
-        newGame.killGameInstance();
-        charPan.animateCharSelect();
-        charPan.refreshSelections();
+        setContentPane(RenderCharacterSelectionScreen.getInstance());
+        currentScreen = ModeEnum.charSelectScreen;
+        RenderStandardGameplay.getInstance().killGameInstance();
+        RenderCharacterSelectionScreen.getInstance().animateCharSelect();
+        RenderCharacterSelectionScreen.getInstance().refreshSelections();
         bgMus = new ThreadMP3(ThreadMP3.menuMus(), true);
         bgMus.play();
         reSize("menu");
@@ -559,21 +541,21 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     public void backToCharSelect2() {
         isGameRunning = false;
-        getGame().getGameInstance().isPaused = false;
-        getGame().getGameInstance().terminateThread();
-        charPan.animateCharSelect();
-        charPan.refreshSelections();
-        daWindow.setContentPane(charPan);
-        newGame.killGameInstance();
-        charPan.systemNotice("Canceled Match");
-        currentScreen = "charSelectScreen";
+        RenderStandardGameplay.getInstance().getGameInstance().isPaused = false;
+        RenderStandardGameplay.getInstance().getGameInstance().terminateThread();
+        RenderCharacterSelectionScreen.getInstance().animateCharSelect();
+        RenderCharacterSelectionScreen.getInstance().refreshSelections();
+        setContentPane(RenderCharacterSelectionScreen.getInstance());
+        RenderStandardGameplay.getInstance().killGameInstance();
+        RenderCharacterSelectionScreen.getInstance().systemNotice("Canceled Match");
+        currentScreen =  ModeEnum.charSelectScreen;
         bgMus = new ThreadMP3(ThreadMP3.menuMus(), true);
         bgMus.play();
         reSize("menu");
         focus();
         stage.defValue();
         if (getGameMode().equalsIgnoreCase(storyMode)) {
-            charPan.backToMenu();
+            RenderCharacterSelectionScreen.getInstance().backToMenu();
 
         }
     }
@@ -602,7 +584,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * @param mess - the message to display
      */
     public void systemNotice(String mess) {
-        newGame.systemNotice(mess);
+        RenderStandardGameplay.getInstance().systemNotice(mess);
     }
 
     /**
@@ -611,7 +593,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * @param mess - the message to display
      */
     public void systemNotice2(String mess) {
-        newGame.systemNotice2(mess);
+        RenderStandardGameplay.getInstance().systemNotice2(mess);
     }
 
     /**
@@ -624,7 +606,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 getStory().getStoryInstance().firstRun = true;
             }
             //unpause if match was paused
-            if (getGame().getGameInstance().isPaused) {
+            if (RenderStandardGameplay.getInstance().getGameInstance().isPaused) {
                 pause();
             }
             stage.selectedStage = false;
@@ -634,10 +616,6 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
     public String getGameMode() {
         return gameMode;
-    }
-
-    public void setGameMode(String newMode) {
-        gameMode = newMode;
     }
 
     /**
@@ -665,17 +643,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     private void up() {
         if (doneChilling) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                charPan.moveUp();
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
+                RenderCharacterSelectionScreen.getInstance().moveUp();
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.moveUp();
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                     stage.moveUp();
                 }
             } else if (getIsGameRunning()) {
-                newGame.upItem();
+                RenderStandardGameplay.getInstance().upItem();
             }
         }
         menuLatency();
@@ -686,17 +664,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     private void down() {
         if (doneChilling) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                charPan.moveDown();
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
+                RenderCharacterSelectionScreen.getInstance().moveDown();
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.moveDown();
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should not be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                     stage.moveDown();
                 }
             } else if (getIsGameRunning()) {
-                newGame.downItem();
+                RenderStandardGameplay.getInstance().downItem();
             }
         }
         menuLatency();
@@ -707,17 +685,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     private void left() {
         if (doneChilling) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                charPan.moveLeft();
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
+                RenderCharacterSelectionScreen.getInstance().moveLeft();
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.moveLeft();
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                     stage.moveLeft();
                 }
             } else if (getIsGameRunning()) {
-                newGame.prevAnim();
+                RenderStandardGameplay.getInstance().prevAnim();
             }
         }
         menuLatency();
@@ -728,14 +706,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     private void right() {
         if (doneChilling) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                charPan.moveRight();
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
+                RenderCharacterSelectionScreen.getInstance().moveRight();
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.moveRight();
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 stage.moveRight();
             } else if (getIsGameRunning()) {
-                newGame.nextAnim();
+                RenderStandardGameplay.getInstance().nextAnim();
             }
         }
         menuLatency();
@@ -750,7 +728,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 if (ThreadGameInstance.isPaused == false) {
                     //in game, no story sequence
                     if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false) {
-                        newGame.moveSelected();
+                        RenderStandardGameplay.getInstance().moveSelected();
                     } //in game, during story sequence
                     else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == true) {
                         getStory().getStoryInstance().skipDialogue();
@@ -767,9 +745,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                             if (getGameMode().equalsIgnoreCase(singlePlayer)
                                     || getGameMode().equalsIgnoreCase(lanClient)
                                     || getGameMode().equalsIgnoreCase(lanHost)) {
-                                getGame().getGameInstance().closingThread(1);
+                                RenderStandardGameplay.getInstance().getGameInstance().closingThread(1);
                             } else {
-                                getGame().getGameInstance().closingThread(0);
+                                RenderStandardGameplay.getInstance().getGameInstance().closingThread(0);
                             }
                         }
                     }
@@ -777,24 +755,24 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } //cancel hosting
             else if (isWaiting && gameMode.equals(lanHost)) {
                 closeTheServer();
-            } else if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                //if both Characters are selected
-                if (charPan.proceed1 && charPan.proceed2) {
+            } else if (currentScreen == ModeEnum.charSelectScreen) {
+                //if both Character are selected
+                if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected) {
                     if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.6f, 1000);
-                        charPan.beginGame();
+                        RenderCharacterSelectionScreen.getInstance().beginGame();
                     }
                 } else {
                     quickVibrate(0.4f, 1000);
-                    charPan.selectChar();
+                    RenderCharacterSelectionScreen.getInstance().selectChar();
                 }
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.selectStage();
                 quickVibrate(0.4f, 1000);
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    if (charPan.proceed1 && charPan.proceed2 && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
+                    if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.66f, 1000);
                         stage.SelectStageNow();
                     }
@@ -808,17 +786,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Handles universal UI escape
      */
     private void escape() {
-        if (currentScreen.equalsIgnoreCase("charSelectScreen") || currentScreen.equalsIgnoreCase("storySelectScreen")) {
+        if (currentScreen == ModeEnum.charSelectScreen || currentScreen == ModeEnum.storySelectScreen) {
             if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2)) {
                 {
-                    charPan.refreshSelections();
-                    charPan.backToMenu();
+                    RenderCharacterSelectionScreen.getInstance().refreshSelections();
+                    RenderCharacterSelectionScreen.getInstance().backToMenu();
                 }
             }
         }
         if (getIsGameRunning()) {
             pause();
-        } else if (currentScreen.equalsIgnoreCase("storySelectScreen") && !getIsGameRunning()) {
+        } else if (currentScreen == ModeEnum.storySelectScreen && !getIsGameRunning()) {
             storyPane.backToMainMenu();
         }
         menuLatency();
@@ -829,19 +807,19 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     private void back() {
         if (doneChilling) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
                 if (getGameMode().equalsIgnoreCase(singlePlayer)) {
-                    charPan.refreshSelections();
+                    RenderCharacterSelectionScreen.getInstance().refreshSelections();
                 }
             } else if (getIsGameRunning()) {
-                newGame.unQueMove();
+                RenderStandardGameplay.getInstance().unQueMove();
             }
         }
         menuLatency();
     }
 
     public void triggerFury(char who) {
-        newGame.triggerFury(who);
+        RenderStandardGameplay.getInstance().triggerFury(who);
     }
 
     /**
@@ -850,7 +828,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private void trigger() {
         if (doneChilling) {
             if (getIsGameRunning()) {
-                newGame.attack();
+                RenderStandardGameplay.getInstance().attack();
             }
         }
         menuLatency();
@@ -908,19 +886,19 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             }
         }
         if (keyCode == KeyEvent.VK_F12) {
-            if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
-                charPan.getScreeny();
-            } else if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+            if (currentScreen == ModeEnum.charSelectScreen) {
+                RenderCharacterSelectionScreen.getInstance().getScreeny();
+            } else if (currentScreen == ModeEnum.storySelectScreen) {
                 storyPane.takeScreenshotX();
-            } else if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+            } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 stage.screenShot();
             } else if (getIsGameRunning()) {
-                newGame.takeScreenShot();
+                RenderStandardGameplay.getInstance().takeScreenShot();
             }
         } else if (getIsGameRunning()) {
             //use T for testing stuff
             if (keyCode == KeyEvent.VK_T) {
-                //newGame.systemNotice("Testing");
+                //RenderStandardGameplay.getInstance().systemNotice("Testing");
             }
 
             if (keyCode == KeyEvent.VK_L) {
@@ -937,16 +915,16 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         //when fighting
         if (isGameRunning) {
-            if (getGame().getGameInstance().isGameOver == false && ThreadGameInstance.story == false) {
+            if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.story == false) {
                 int count = mwe.getWheelRotation();
 
                 //down - positive values
                 if (count >= 0) {
-                    newGame.prevAnim();
+                    RenderStandardGameplay.getInstance().prevAnim();
                 }
                 //up -negative values
                 if (count < 0) {
-                    newGame.nextAnim();
+                    RenderStandardGameplay.getInstance().nextAnim();
                 }
             }
         }
@@ -954,21 +932,21 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
     @Override
     public void mouseClicked(MouseEvent m) {
-        if (currentScreen.equalsIgnoreCase("charSelectScreen") && withinCharPanel) {
-            //if both Characters are selected
-            if (charPan.proceed1 && charPan.proceed2) {
+        if (currentScreen == ModeEnum.charSelectScreen && withinCharPanel) {
+            //if both Character are selected
+            if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected) {
                 if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
                     quickVibrate(0.6f, 1000);
-                    charPan.beginGame();
+                    RenderCharacterSelectionScreen.getInstance().beginGame();
                 }
             } else {
-                charPan.selectChar();
+                RenderCharacterSelectionScreen.getInstance().selectChar();
             }
         }
-        if (currentScreen.equalsIgnoreCase("storySelectScreen") && withinMenuPanel) {
+        if (currentScreen == ModeEnum.storySelectScreen && withinMenuPanel) {
             storyPane.selectStage();
         }
-        if (currentScreen.equalsIgnoreCase("stageSelectScreen") && withinCharPanel) {
+        if (currentScreen == ModeEnum.stageSelectScreen && withinCharPanel) {
             stage.SelectStageNow();
         } else if (getIsGameRunning()) {
             //when fighting
@@ -976,17 +954,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 if (m.getButton() == MouseEvent.BUTTON1) {
                     //selecting move
                     if (m.getX() > (29 + leftyXOffset) && m.getX() < (220 + leftyXOffset) && (m.getY() > 358)) {
-                        newGame.moveSelected();
+                        RenderStandardGameplay.getInstance().moveSelected();
                     }
 
                     //prev
                     if (m.getX() < (29 + leftyXOffset)) {
-                        newGame.prevAnim();
+                        RenderStandardGameplay.getInstance().prevAnim();
                     }
 
                     //next
                     if (m.getX() > (220 + leftyXOffset) && m.getX() < (305 + leftyXOffset)) {
-                        newGame.nextAnim();
+                        RenderStandardGameplay.getInstance().nextAnim();
                     } else if ((m.getX() > 25 && m.getX() < 46) && (m.getY() > 190 && m.getY() < 270)) {
                         //activate fury via click
                         triggerFury('c');
@@ -1000,7 +978,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
                 //right click
                 if (m.getButton() == MouseEvent.BUTTON3) {
-                    newGame.unQueMove();
+                    RenderStandardGameplay.getInstance().unQueMove();
                 }
             }
         }
@@ -1032,7 +1010,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         } else {
             storedX = tmpx;
             storedY = tmpy;
-            charPan.animateCaption();
+            RenderCharacterSelectionScreen.getInstance().animateCaption();
         }
     }
 
@@ -1052,7 +1030,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         } else {
             storedX = tmpx;
             storedY = tmpy;
-            charPan.animateCaption();
+            RenderCharacterSelectionScreen.getInstance().animateCaption();
         }
     }
 
@@ -1077,8 +1055,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void superRepaint() {
-        daWindow.repaint();
-        //daWindow.getGlassPane().repaint();
+        repaint();
+        //getGlassPane().repaint();
     }
 
     private void superRepaintThread() {
@@ -1109,23 +1087,23 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Attempts to map selected character using mouse
      */
     private void sortCharPosLoc(int xPos, int yPos) {
-        topY = charPan.getStartY() + mouseYoffset;
-        topX = charPan.getStartX();
-        columns = charPan.getNumberOfCharColumns();
-        vspacer = charPan.getCharHSpacer();
-        hspacer = charPan.getCharVSpacer();
-        rows = charPan.getCharRows();
+        topY = RenderCharacterSelectionScreen.getInstance().getStartY() + mouseYoffset;
+        topX = RenderCharacterSelectionScreen.getInstance().getStartX();
+        columns = RenderCharacterSelectionScreen.getInstance().getNumberOfCharColumns();
+        vspacer = RenderCharacterSelectionScreen.getInstance().getCharHSpacer();
+        hspacer = RenderCharacterSelectionScreen.getInstance().getCharVSpacer();
+        rows = RenderCharacterSelectionScreen.getInstance().getCharRows();
 
         if (xPos > topX && xPos < (topX + (hspacer * columns)) && (yPos > topY) && (yPos < topY + (vspacer * (rows + 1)))) {
             int vIndex = (yPos - topY) / vspacer;
             int hIndex = (((xPos - topX) / hspacer) + 1);
-            charPan.setHindex(hIndex);
-            charPan.setVindex(vIndex);
+            RenderCharacterSelectionScreen.getInstance().setHindex(hIndex);
+            RenderCharacterSelectionScreen.getInstance().setVindex(vIndex);
             animateCap(hIndex, vIndex);
             withinCharPanel = true;
         } else {
-            charPan.setHindex(99);
-            charPan.setVindex(99);
+            RenderCharacterSelectionScreen.getInstance().setHindex(99);
+            RenderCharacterSelectionScreen.getInstance().setVindex(99);
             withinCharPanel = false;
         }
     }
@@ -1175,54 +1153,54 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             //System.out.println("Column "+hIndex);
             stage.setHindex(hIndex);
             stage.setVindex(vIndex);
-            //charPan.setItem();
+            //RenderCharacterSelectionScreen.getInstance().setItem();
             animateCap2(hIndex, vIndex);
             withinCharPanel = true;
         } else {
             //System.out.println("Outa char pan dog");
-            charPan.setHindex(99);
-            charPan.setVindex(99);
+            RenderCharacterSelectionScreen.getInstance().setHindex(99);
+            RenderCharacterSelectionScreen.getInstance().setVindex(99);
             withinCharPanel = false;
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent m) {
-        if (currentScreen.equalsIgnoreCase("charSelectScreen")) {
+        if (currentScreen == ModeEnum.charSelectScreen) {
             sortCharPosLoc(m.getX(), m.getY());
         }
 
-        if (currentScreen.equalsIgnoreCase("storySelectScreen")) {
+        if (currentScreen == ModeEnum.storySelectScreen) {
             sortStagePosLoc(m.getX(), m.getY());
         }
 
-        if (currentScreen.equalsIgnoreCase("stageSelectScreen")) {
+        if (currentScreen == ModeEnum.stageSelectScreen) {
             //if you're a client stay still
             if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                 sortCharPosLoc2(m.getX(), m.getY());
             }
         } else if (getIsGameRunning()) {
             //when fighting
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false && DrawGame.dnladng) {
+            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false && StandardGameplay.dnladng) {
                 //browse moves
                 if (m.getX() > (29 + leftyXOffset) && m.getX() < (436 + leftyXOffset)) {
-                    if (m.getY() > (int) (373 * newGame.getscaleY()) + mouseYoffset && m.getY() < (int) (390 * newGame.getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (373 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (390 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 0;
                     }
 
-                    if (m.getY() > (int) (390 * newGame.getscaleY()) + mouseYoffset && m.getY() < (int) (407 * newGame.getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (390 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (407 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 1;
                     }
 
-                    if (m.getY() > (int) (407 * newGame.getscaleY()) + mouseYoffset && m.getY() < (int) (420 * newGame.getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (407 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (420 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 2;
                     }
 
-                    if (m.getY() > (int) (420 * newGame.getscaleY()) + mouseYoffset && m.getY() < (int) (435 * newGame.getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (420 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (435 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 3;
                     }
 
-                    newGame.thisItem(item);
+                    RenderStandardGameplay.getInstance().thisItem(item);
                 }
             }
         }
@@ -1261,14 +1239,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private void pause() {
         if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(storyMode) || getGameMode().equalsIgnoreCase(singlePlayer2)) {
             if (ThreadGameInstance.isPaused == false) {
-                getGame().getGameInstance().pauseGame();
-                newGame.pauseThreads();
+                RenderStandardGameplay.getInstance().getGameInstance().pauseGame();
+                RenderStandardGameplay.getInstance().pauseThreads();
                 if (ThreadGameInstance.story == true) {
                     getStory().getStoryInstance().pauseDialogue();
                 }
             } else {
-                newGame.start();
-                newGame.resumeThreads();
+                RenderStandardGameplay.getInstance().start();
+                RenderStandardGameplay.getInstance().resumeThreads();
                 if (ThreadGameInstance.story == true) {
                     getStory().getStoryInstance().resumeDialogue();
                 }
@@ -1293,8 +1271,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void focus() {
-        daWindow.requestFocusInWindow();
-        daWindow.setFocusable(true);
+        requestFocusInWindow();
+        setFocusable(true);
         //System.out.println("Window focused");
     }
 
@@ -1311,11 +1289,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 sendToClient("as1wds2_" + LoginScreen.getInstance().timePref);
                 isWaiting = false;
                 drawWait.stopRepaint();
-                daWindow.setContentPane(charPan);
-                currentScreen = "charSelectScreen";//charPan.animCloud();
-                charPan.animateCharSelect();
-                daWindow.pack();
-                daWindow.setLocationRelativeTo(null); // Centers JFrame on screen //
+                setContentPane(RenderCharacterSelectionScreen.getInstance());
+                currentScreen = ModeEnum.charSelectScreen;//RenderCharacterSelectionScreen.getInstance().animCloud();
+                RenderCharacterSelectionScreen.getInstance().animateCharSelect();
+                pack();
+                setLocationRelativeTo(null); // Centers JFrame on screen //
                 break;
             }
 
@@ -1471,44 +1449,44 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     //pauseMethod();
                 } else if (line.endsWith(" xc_97_mb")) {
                     systemNotice(line.replaceAll(" xc_97_mb", ""));
-                } //Characters
+                } //Character
                 else if (line.endsWith("_jkxc")) {
                     System.out.println("Server mess: " + line);
                     if (line.contains("selSub")) {
-                        charPan.selSubiya('o');
+                        RenderCharacterSelectionScreen.getInstance().selSubiya('o');
                     }
                     if (line.contains("selRai")) {
-                        charPan.selRaila('o');
+                        RenderCharacterSelectionScreen.getInstance().selRaila('o');
                     }
                     if (line.contains("selAlx")) {
-                        charPan.selAisha('o');
+                        RenderCharacterSelectionScreen.getInstance().selAisha('o');
                     }
                     if (line.contains("selLyn")) {
-                        charPan.selLynx('o');
+                        RenderCharacterSelectionScreen.getInstance().selLynx('o');
                     }
                     if (line.contains("selRav")) {
-                        charPan.selRav('o');
+                        RenderCharacterSelectionScreen.getInstance().selRav('o');
                     }
                     if (line.contains("selAde")) {
-                        charPan.selAde('o');
+                        RenderCharacterSelectionScreen.getInstance().selAde('o');
                     }
                     if (line.contains("selJon")) {
-                        charPan.selJon('o');
+                        RenderCharacterSelectionScreen.getInstance().selJon('o');
                     }
                     if (line.contains("selAdam")) {
-                        charPan.selAdam('o');
+                        RenderCharacterSelectionScreen.getInstance().selAdam('o');
                     }
                     if (line.contains("selNOVAAdam")) {
-                        charPan.selNOVAAdam('o');
+                        RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
                     }
                     if (line.contains("selAzaria")) {
-                        charPan.selAza('o');
+                        RenderCharacterSelectionScreen.getInstance().selAza('o');
                     }
                     if (line.contains("selSorr")) {
-                        charPan.selSorr('o');
+                        RenderCharacterSelectionScreen.getInstance().selSorr('o');
                     }
                     if (line.contains("selThi")) {
-                        charPan.selThing('o');
+                        RenderCharacterSelectionScreen.getInstance().selThing('o');
                     }
                 } else if (line.equalsIgnoreCase("lastMess")) {
                     sendData(last);
@@ -1644,43 +1622,43 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     //pauseMethod();
                 } else if (line.endsWith(" xc_97_mb")) {
                     systemNotice(line.replaceAll(" xc_97_mb", ""));
-                } //Characters
+                } //Character
                 else if (line.endsWith("_jkxc")) {
                     if (line.contains("selSub")) {
-                        charPan.selSubiya('o');
+                        RenderCharacterSelectionScreen.getInstance().selSubiya('o');
                     }
                     if (line.contains("selRai")) {
-                        charPan.selRaila('o');
+                        RenderCharacterSelectionScreen.getInstance().selRaila('o');
                     }
                     if (line.contains("selAlx")) {
-                        charPan.selAisha('o');
+                        RenderCharacterSelectionScreen.getInstance().selAisha('o');
                     }
                     if (line.contains("selLyn")) {
-                        charPan.selLynx('o');
+                        RenderCharacterSelectionScreen.getInstance().selLynx('o');
                     }
                     if (line.contains("selRav")) {
-                        charPan.selRav('o');
+                        RenderCharacterSelectionScreen.getInstance().selRav('o');
                     }
                     if (line.contains("selAde")) {
-                        charPan.selAde('o');
+                        RenderCharacterSelectionScreen.getInstance().selAde('o');
                     }
                     if (line.contains("selJon")) {
-                        charPan.selJon('o');
+                        RenderCharacterSelectionScreen.getInstance().selJon('o');
                     }
                     if (line.contains("selAdam")) {
-                        charPan.selAdam('o');
+                        RenderCharacterSelectionScreen.getInstance().selAdam('o');
                     }
                     if (line.contains("selNOVAAdam")) {
-                        charPan.selNOVAAdam('o');
+                        RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
                     }
                     if (line.contains("selAzaria")) {
-                        charPan.selAza('o');
+                        RenderCharacterSelectionScreen.getInstance().selAza('o');
                     }
                     if (line.contains("selSorr")) {
-                        charPan.selSorr('o');
+                        RenderCharacterSelectionScreen.getInstance().selSorr('o');
                     }
                     if (line.contains("selThi")) {
-                        charPan.selThing('o');
+                        RenderCharacterSelectionScreen.getInstance().selThing('o');
                     }
                 } else if (line.endsWith("watchStageSel_xcbD")) {
                     selectStage();

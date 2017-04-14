@@ -25,7 +25,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImage;
-import io.github.subiyacryolite.enginev1.JenesisRender;
+import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawWaiting extends JenesisRender {
+public class DrawWaiting extends JenesisMode {
 
     private static Image pic1, pic2;
     private static VolatileImage volatileImg;
@@ -48,7 +48,6 @@ public class DrawWaiting extends JenesisRender {
     private static boolean alive = true;
     private static String name, ip;
     public Graphics2D g2d;
-    private JenesisLanguage lang;
     private RenderingHints renderHints; //anti aliasing, kill jaggies
     private int valCode = 0, screenWidth = 852, screenHeight = 480;
     private GraphicsConfiguration gc;
@@ -64,7 +63,6 @@ public class DrawWaiting extends JenesisRender {
     public DrawWaiting() {
         renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        lang = LoginScreen.getInstance().getLangInst();
         pix2 = new JenesisImage();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
@@ -104,12 +102,12 @@ public class DrawWaiting extends JenesisRender {
         g2d.drawImage(pic1, 0, 0, this);
         g2d.drawImage(pic2, 100, 100, this);
         g2d.setColor(Color.WHITE);
-        g2d.drawString(lang.getLine(167), 20, 300);
+        g2d.drawString(JenesisLanguage.getInstance().getLine(167), 20, 300);
         g2d.drawString("\'" + name + "\',", 20, 314);
         g2d.drawString("Or use \'" + ip + "\',", 20, 328);
-        g2d.drawString(lang.getLine(168), 20, 360);
-        g2d.drawString(lang.getLine(169), 20, 376);
-        g2d.drawString(lang.getLine(131), 20, 390);
+        g2d.drawString(JenesisLanguage.getInstance().getLine(168), 20, 360);
+        g2d.drawString(JenesisLanguage.getInstance().getLine(169), 20, 376);
+        g2d.drawString(JenesisLanguage.getInstance().getLine(131), 20, 390);
         JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }

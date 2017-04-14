@@ -21,7 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.engine.JenesisCharacter;
 
 public class AttacksBasic {
@@ -41,7 +42,7 @@ public class AttacksBasic {
      * Creates an opponent object
      */
     public AttacksBasic() {
-        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
+        dude = RenderCharacterSelectionScreen.getInstance().getPayers().getOpponent();
     }
 
     /**
@@ -58,9 +59,9 @@ public class AttacksBasic {
             forWho = 999; //override for pose
         }
         if (thisMove == 0) {
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attacker, 9, 11);
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attackee, 9, 11);
-            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage("");
+            RenderStandardGameplay.getInstance().setSprites(attacker, 9, 11);
+            RenderStandardGameplay.getInstance().setSprites(attackee, 9, 11);
+            RenderStandardGameplay.getInstance().showBattleMessage("");
         }
 
         if (thisMove == 1) {
@@ -129,15 +130,15 @@ public class AttacksBasic {
         }
 
         if (whoDoneIt == 999) {
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attack, 10, 11); //USE ITEM
+            RenderStandardGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)
             if (move > 9) {
                 move = 10;
             }
 
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attack, move, 11); //attack
-            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(target, 0, 11); //defend
+            RenderStandardGameplay.getInstance().setSprites(attack, move, 11); //attack
+            RenderStandardGameplay.getInstance().setSprites(target, 0, 11); //defend
         }
     }
 

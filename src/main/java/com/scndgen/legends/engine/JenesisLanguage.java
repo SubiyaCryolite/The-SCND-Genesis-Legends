@@ -13,6 +13,7 @@ import java.io.*;
  */
 public final class JenesisLanguage {
 
+    private static JenesisLanguage instance;
     private int lines, langz;
     private String langStr, start, stop, infile, s, t;
     private String[] text;
@@ -29,19 +30,22 @@ public final class JenesisLanguage {
      *
      * @param lang
      */
-    public JenesisLanguage(int lang) {
+    private JenesisLanguage(int lang) {
         writeLanguageFile();
         setLanguage(lang);
         prepLanguageList();
     }
 
-    /**
-     * No argument constructor
-     */
-    public JenesisLanguage() {
-        writeLanguageFile();
-        setLanguage(0);
-        prepLanguageList();
+    public synchronized static JenesisLanguage getInstance() {
+        if (instance == null)
+            instance = new JenesisLanguage(0);
+        return instance;
+    }
+
+    public synchronized static JenesisLanguage getInstance(int lang) {
+        if (instance == null)
+            instance = new JenesisLanguage(lang);
+        return instance;
     }
 
     /**
@@ -65,7 +69,6 @@ public final class JenesisLanguage {
      */
     public void setLanguage(int l) {
         infile = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "scnd_lang_ex.xml";
-
         s = t = "";
         try {
             inR = new BufferedReader(new InputStreamReader(new FileInputStream(infile), "UTF8"));

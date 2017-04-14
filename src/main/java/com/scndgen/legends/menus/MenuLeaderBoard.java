@@ -22,6 +22,7 @@
 package com.scndgen.legends.menus;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.network.SqlQuery;
 
@@ -40,7 +41,6 @@ import java.sql.Statement;
 public class MenuLeaderBoard implements ActionListener {
 
     private JFrame frame;
-    private JenesisLanguage lang;
     private JPanel line1, line2, line3;
     private JButton upload, view, close;
     private String dbName = "sql09.freemysql.net/scndrating";
@@ -57,13 +57,11 @@ public class MenuLeaderBoard implements ActionListener {
 
     public MenuLeaderBoard() {
         if (notLoaded) {
-            lang = LoginScreen.getInstance().getInstance().getLangInst();
-
-            upload = new JButton(lang.getLine(97));
+            upload = new JButton(JenesisLanguage.getInstance().getLine(97));
             upload.addActionListener(this);
-            view = new JButton(lang.getLine(96));
+            view = new JButton(JenesisLanguage.getInstance().getLine(96));
             view.addActionListener(this);
-            close = new JButton(lang.getLine(95));
+            close = new JButton(JenesisLanguage.getInstance().getLine(95));
             close.addActionListener(this);
 
             line1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -78,7 +76,7 @@ public class MenuLeaderBoard implements ActionListener {
             box.add(line2);
             box.add(line3);
 
-            frame = new JFrame(lang.getLine(98));
+            frame = new JFrame(JenesisLanguage.getInstance().getLine(98));
             frame.add(box);
             frame.pack();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -134,24 +132,24 @@ public class MenuLeaderBoard implements ActionListener {
                 try {
                     //if exists error shall be thrown
                     System.out.println("Brand new");
-                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCCode() + "', '" + RenderGameRender.getVersionStr() + "', " + RenderGameRender.getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", " + LoginScreen.getInstance().getInstance().win + ", " + LoginScreen.getInstance().getInstance().loss + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
+                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCCode() + "', '" + RenderStandardGameplay.getVersionStr() + "', " + RenderStandardGameplay.getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", " + LoginScreen.getInstance().getInstance().win + ", " + LoginScreen.getInstance().getInstance().loss + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
                 } catch (Exception e) {
                     System.out.println("Override old record");
-                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCCode() + "', gameVersion='" + RenderGameRender.getVersionStr() + "', versionInt=" + RenderGameRender.getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", userWin=" + LoginScreen.getInstance().getInstance().win + ", userLoss=" + LoginScreen.getInstance().getInstance().loss + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
+                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCCode() + "', gameVersion='" + RenderStandardGameplay.getVersionStr() + "', versionInt=" + RenderStandardGameplay.getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", userWin=" + LoginScreen.getInstance().getInstance().win + ", userLoss=" + LoginScreen.getInstance().getInstance().loss + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
 
                 }
 
 
                 LoginScreen.getInstance().getInstance().saveConfigFile();
-                JOptionPane.showMessageDialog(null, lang.getLine(99), lang.getLine(102), JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(99), JenesisLanguage.getInstance().getLine(102), JOptionPane.PLAIN_MESSAGE);
             } catch (Exception e) {
                 System.err.println(e);
                 notInitislied = true;
-                JOptionPane.showMessageDialog(null, lang.getLine(100), lang.getLine(101), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(100), JenesisLanguage.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             System.err.println(e);
-            JOptionPane.showMessageDialog(null, lang.getLine(100), lang.getLine(101), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(100), JenesisLanguage.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
             notInitislied = true;
         }
     }

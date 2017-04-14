@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -50,71 +50,71 @@ public class ThreadAnim2 implements Runnable {
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             do {
                 //if rotating
-                if (DrawGame.animDirection.equalsIgnoreCase("rot")) {
+                if (StandardGameplay.animDirection.equalsIgnoreCase("rot")) {
                     try {
                         //loop1
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            DrawGame.fgx = DrawGame.fgx + DrawGame.fgxInc;
-                            DrawGame.fgy = DrawGame.fgy + DrawGame.fgyInc;
-                            t.sleep(DrawGame.delay);
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
+                            StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
+                            t.sleep(StandardGameplay.delay);
                         }
 
                         //loop2
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            DrawGame.fgx = DrawGame.fgx - DrawGame.fgxInc;
-                            DrawGame.fgy = DrawGame.fgy + DrawGame.fgyInc;
-                            t.sleep(DrawGame.delay);
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
+                            StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
+                            t.sleep(StandardGameplay.delay);
                         }
 
                         //loop3
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            DrawGame.fgx = DrawGame.fgx - DrawGame.fgxInc;
-                            DrawGame.fgy = DrawGame.fgy - DrawGame.fgyInc;
-                            t.sleep(DrawGame.delay);
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
+                            StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
+                            t.sleep(StandardGameplay.delay);
                         }
 
                         //loop4
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            DrawGame.fgx = DrawGame.fgx + DrawGame.fgxInc;
-                            DrawGame.fgy = DrawGame.fgy - DrawGame.fgyInc;
-                            t.sleep(DrawGame.delay);
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
+                            StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
+                            t.sleep(StandardGameplay.delay);
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(DrawGame.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } //if NOT rotating
                 else {
-                    DrawGame.fgx = 0;
-                    DrawGame.fgy = 0;
+                    StandardGameplay.fgx = 0;
+                    StandardGameplay.fgy = 0;
 
                     try {
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            if (DrawGame.animDirection.equalsIgnoreCase("both")) {
-                                DrawGame.fgx = DrawGame.fgx + DrawGame.fgxInc;
-                                DrawGame.fgy = DrawGame.fgy + DrawGame.fgyInc;
-                            } else if (DrawGame.animDirection.equalsIgnoreCase("horiz")) {
-                                DrawGame.fgx = DrawGame.fgx + DrawGame.fgxInc;
-                            } else if (DrawGame.animDirection.equalsIgnoreCase("vert")) {
-                                DrawGame.fgy = DrawGame.fgy + DrawGame.fgyInc;
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            if (StandardGameplay.animDirection.equalsIgnoreCase("both")) {
+                                StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
+                                StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
+                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("horiz")) {
+                                StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
+                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("vert")) {
+                                StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
                             }
 
-                            t.sleep(DrawGame.delay);
+                            t.sleep(StandardGameplay.delay);
                         }
 
-                        for (int o = 0; o <= DrawGame.animLoops; o++) {
-                            if (DrawGame.animDirection.equalsIgnoreCase("both")) {
-                                DrawGame.fgx = DrawGame.fgx - DrawGame.fgxInc;
-                                DrawGame.fgy = DrawGame.fgy - DrawGame.fgyInc;
-                            } else if (DrawGame.animDirection.equalsIgnoreCase("horiz")) {
-                                DrawGame.fgx = DrawGame.fgx - DrawGame.fgxInc;
-                            } else if (DrawGame.animDirection.equalsIgnoreCase("vert")) {
-                                DrawGame.fgy = DrawGame.fgy - DrawGame.fgyInc;
+                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
+                            if (StandardGameplay.animDirection.equalsIgnoreCase("both")) {
+                                StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
+                                StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
+                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("horiz")) {
+                                StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
+                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("vert")) {
+                                StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
                             }
 
-                            t.sleep(DrawGame.delay);
+                            t.sleep(StandardGameplay.delay);
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(DrawGame.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             } while (1 != 0);

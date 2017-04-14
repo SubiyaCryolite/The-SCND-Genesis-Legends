@@ -34,21 +34,21 @@ import java.awt.image.ImageObserver;
 // Second technique: JPanel
 public class JenesisGlassPane {
 
+    private static JenesisGlassPane instance;
     private String sysNot = "", sysNot2 = "";
     private float sysNotOpac = 0.0f, sysNotOpac2 = 0.0f;
     private int gameWidth = 0;
     private float opacShow, opacShow2;
     private boolean opacUpb, opacShowb, opacUpb2, opacShowb2;
-    private static JenesisGlassPane instance;
+
+    private JenesisGlassPane() {
+        gameWidth = LoginScreen.getGameWidth();
+    }
 
     public static synchronized JenesisGlassPane getInstance() {
         if (instance == null)
             instance = new JenesisGlassPane();
         return instance;
-    }
-
-    private JenesisGlassPane() {
-        gameWidth = LoginScreen.getGameWidth();
     }
 
     /**
