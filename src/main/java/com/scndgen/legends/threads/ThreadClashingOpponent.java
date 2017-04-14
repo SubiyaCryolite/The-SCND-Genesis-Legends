@@ -32,14 +32,14 @@ import java.util.logging.Logger;
 public class ThreadClashingOpponent implements Runnable {
 
     public static int sleepTime = 0, plyrClash, person, oppClash, plyClashPerc, oppClashPerc;
-    private static Thread t;
+    private Thread thread;
     private static boolean isClashOn = false;
     private static char personChar;
 
     public ThreadClashingOpponent() {
-        t = new Thread(this);
-        t.setPriority(1);
-        t.start();
+        thread = new Thread(this);
+        thread.setPriority(1);
+        thread.start();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ThreadClashingOpponent implements Runnable {
                 //int delay=WindowOptions.Arr[WindowOptions.whichOne()];
                 RenderStandardGameplay.getInstance().opponetClashing();
                 //JOptionPane.showMessageDialog(null,"Opponent clashing");
-                t.sleep((int) (delay * Math.random()));
+                thread.sleep((int) (delay * Math.random()));
             } catch (InterruptedException ex) {
                 Logger.getLogger(ThreadClashingOpponent.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -58,15 +58,15 @@ public class ThreadClashingOpponent implements Runnable {
     }
 
     public void stop() {
-        t = null;
-        //t.destroy();
+        thread = null;
+        //thread.destroy();
     }
 
     public void pauseThread() {
-        t.suspend();
+        thread.suspend();
     }
 
     public void resumeThread() {
-        t.resume();
+        thread.resume();
     }
 }

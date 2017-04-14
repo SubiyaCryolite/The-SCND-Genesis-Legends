@@ -33,16 +33,15 @@ import java.util.logging.Logger;
  */
 public class ThreadAnim3 implements Runnable {
 
-    static Thread t;
+    private Thread thread;
 
     public ThreadAnim3() {
-        if (t != null) {
-            t.resume();
+        if (thread != null) {
+            thread.resume();
         } else {
-            t = new Thread(this);
-            t.setPriority(1);
-            t.setName("Animator thread 3 - Background and Foreground");
-            t.start();
+            thread = new Thread(this);
+            thread.setName("Animator thread 3 - Background and Foreground");
+            thread.start();
         }
     }
 
@@ -52,7 +51,7 @@ public class ThreadAnim3 implements Runnable {
             do {
                 try {
                     if (RenderStandardGameplay.getInstance().verticalMove.equalsIgnoreCase("no")) {
-                        t.sleep(0016);
+                        thread.sleep(0016);
                         RenderStandardGameplay.getInstance().amb1x = RenderStandardGameplay.getInstance().amb1x - RenderStandardGameplay.getInstance().ambSpeed1;
                         RenderStandardGameplay.getInstance().amb2x = RenderStandardGameplay.getInstance().amb2x - RenderStandardGameplay.getInstance().ambSpeed2;
 
@@ -63,7 +62,7 @@ public class ThreadAnim3 implements Runnable {
                             RenderStandardGameplay.getInstance().amb2x = 852;
                         }
                     } else {
-                        t.sleep(0016);
+                        thread.sleep(0016);
                         RenderStandardGameplay.getInstance().amb1y = RenderStandardGameplay.getInstance().amb1y + RenderStandardGameplay.getInstance().ambSpeed1;
                         RenderStandardGameplay.getInstance().amb2y = RenderStandardGameplay.getInstance().amb2y + RenderStandardGameplay.getInstance().ambSpeed2;
 
@@ -83,15 +82,15 @@ public class ThreadAnim3 implements Runnable {
     }
 
     public void stop() {
-        t = null;
-        //t.destroy();
+        thread = null;
+        //thread.destroy();
     }
 
     public void pauseThread() {
-        t.suspend();
+        thread.suspend();
     }
 
     public void resumeThread() {
-        t.resume();
+        thread.resume();
     }
 }

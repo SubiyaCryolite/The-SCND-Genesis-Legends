@@ -19,9 +19,10 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.engine;
+package com.scndgen.legends.arefactored.controller;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.threads.ThreadMP3;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
@@ -31,7 +32,7 @@ import java.awt.image.ImageObserver;
 /**
  * @author ndana
  */
-public class JenesisTutorial implements Runnable {
+public class Tutorial implements Runnable {
 
     private Image[] pix, arrows;
     private Image forward, back;
@@ -44,7 +45,7 @@ public class JenesisTutorial implements Runnable {
     private Font normalFont;
     private ThreadMP3 bgSound, nextSound, backSound;
 
-    public JenesisTutorial() {
+    public Tutorial() {
         pixfac = new JenesisImageLoader();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;

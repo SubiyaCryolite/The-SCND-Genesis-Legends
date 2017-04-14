@@ -24,7 +24,7 @@ package com.scndgen.legends.drawing;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisTutorial;
+import com.scndgen.legends.arefactored.controller.Tutorial;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -73,7 +73,7 @@ public class SpecialDrawModeRender extends JenesisMode {
     private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private Image[] achs;
     private float gWin, gLoss, denom, progression;
-    private JenesisTutorial tut;
+    private Tutorial tut;
     //---blur op
     private int size;
     private float[] data;
@@ -512,7 +512,7 @@ public class SpecialDrawModeRender extends JenesisMode {
 
     public void setPlace(int here) {
         if (here == 3) {
-            tut = new JenesisTutorial();
+            tut = new Tutorial();
         }
         place = here;
     }

@@ -36,16 +36,15 @@ public class ThreadClashSystem implements Runnable {
 
     public static int sleepTime = 0, person;
     public static float plyrClash, oppClash, plyClashPerc, oppClashPerc;
-    private static Thread t;
-    private static boolean isClashOn = false;
-    private static char personChar;
+    private Thread thread;
+    private boolean isClashOn = false;
+    private char personChar;
 
     public ThreadClashSystem(int who, char homie) {
         person = who;
         personChar = homie;
-        t = new Thread(this);
-        t.setPriority(1);
-        t.start();
+        thread = new Thread(this);
+        thread.start();
     }
 
     public static void oppClashing() {
@@ -66,11 +65,10 @@ public class ThreadClashSystem implements Runnable {
         oppClashPerc = 50;
         plyrClash = 1;
         oppClash = 1;
-
         isClashOn = true;
         for (int u = 0; u < 5; u++) {
             try {
-                t.sleep(1000);
+                thread.sleep(1000);
                 sleepTime = sleepTime - 1;
             } catch (InterruptedException ex) {
                 Logger.getLogger(ThreadClashSystem.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,16 +80,16 @@ public class ThreadClashSystem implements Runnable {
     }
 
     public void stop() {
-        t = null;
-        //t.destroy();
+        thread = null;
+        //thread.destroy();
     }
 
     public void pauseThread() {
-        t.suspend();
+        thread.suspend();
     }
 
     public void resumeThread() {
-        t.resume();
+        thread.resume();
     }
 
     private void clashWinner(int caller) {
@@ -105,7 +103,7 @@ public class ThreadClashSystem implements Runnable {
                 RenderStandardGameplay.getInstance().setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
                 RenderStandardGameplay.getInstance().updatePlayerLife(200);
-                //player didn't trigger clash but won, they arent attacked
+                //player didn'thread trigger clash but won, they arent attacked
             }
 
         } else //opponent wins
@@ -119,7 +117,7 @@ public class ThreadClashSystem implements Runnable {
                 RenderStandardGameplay.getInstance().setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
                 RenderStandardGameplay.getInstance().updateOpponentLife(200);
-                //opponent didn't trigger clash but won, they arent attacked
+                //opponent didn'thread trigger clash but won, they arent attacked
             }
         }
     }
@@ -130,7 +128,6 @@ public class ThreadClashSystem implements Runnable {
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
             LoginScreen.getInstance().getMenu().getMain().sendToClient("oppClsh" + plyClashPerc);
         }
-
         plyrClash = plyrClash + 1;
         plyClashPerc = (plyrClash / (plyrClash + oppClash)) * 100;
         oppClashPerc = (oppClash / (plyrClash + oppClash)) * 100;

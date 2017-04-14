@@ -29,16 +29,15 @@ import com.scndgen.legends.windows.WindowOptions;
  */
 public class ThreadAnim2 implements Runnable {
 
-    private static Thread t;
+    private Thread thread;
 
     public ThreadAnim2() {
-        if (t != null) {
-            t.resume();
+        if (thread != null) {
+            thread.resume();
         } else {
-            t = new Thread(this);
-            t.setPriority(1);
-            t.setName("Animator thread 2 - Foreground");
-            t.start();
+            thread = new Thread(this);
+            thread.setName("Animator thread 2 - Foreground");
+            thread.start();
         }
     }
 
@@ -53,28 +52,28 @@ public class ThreadAnim2 implements Runnable {
                         for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
                             RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
                             RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop2
                         for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
                             RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
                             RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop3
                         for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
                             RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
                             RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop4
                         for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
                             RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
                             RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace(System.err);
@@ -95,7 +94,7 @@ public class ThreadAnim2 implements Runnable {
                                 RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
                             }
 
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
@@ -108,7 +107,7 @@ public class ThreadAnim2 implements Runnable {
                                 RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
                             }
 
-                            t.sleep(RenderStandardGameplay.getInstance().delay);
+                            thread.sleep(RenderStandardGameplay.getInstance().delay);
                         }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace(System.err);
@@ -119,15 +118,15 @@ public class ThreadAnim2 implements Runnable {
     }
 
     public void stop() {
-        t = null;
-        //t.destroy();
+        thread = null;
+        //thread.destroy();
     }
 
     public void pauseThread() {
-        t.suspend();
+        thread.suspend();
     }
 
     public void resumeThread() {
-        t.resume();
+        thread.resume();
     }
 }

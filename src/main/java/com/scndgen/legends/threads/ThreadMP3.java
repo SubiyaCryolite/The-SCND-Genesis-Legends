@@ -52,7 +52,7 @@ public class ThreadMP3 implements Runnable {
     private String filenameM;
     private ClassLoader classloader = getClass().getClassLoader();
     private Player player;
-    private Thread t;
+    private Thread thread;
     private InputStream fin;
 
     public ThreadMP3() {
@@ -152,9 +152,9 @@ public class ThreadMP3 implements Runnable {
     }
 
     public void close() {
-        if (t != null) {
-            t.stop();
-            t = null;
+        if (thread != null) {
+            thread.stop();
+            thread = null;
         }
     }
 
@@ -178,10 +178,10 @@ public class ThreadMP3 implements Runnable {
                 player = new Player(fin);
 
                 // run in new thread to play in background
-                t = new Thread(this);
-                t.setPriority(1);
-                t.setName("Music Thread");
-                t.start();
+                thread = new Thread(this);
+                thread.setPriority(1);
+                thread.setName("Music Thread");
+                thread.start();
             }
         } catch (Exception e) {
             System.out.println("Problem playing file " + filenameM);
@@ -203,7 +203,7 @@ public class ThreadMP3 implements Runnable {
 
     public void pause() {
         try {
-            t.suspend();
+            thread.suspend();
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -211,7 +211,7 @@ public class ThreadMP3 implements Runnable {
 
     public void stop() {
         try {
-            t.stop();
+            thread.stop();
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -219,7 +219,7 @@ public class ThreadMP3 implements Runnable {
 
     public void resume() {
         try {
-            t.resume();
+            thread.resume();
         } catch (Exception e) {
             System.err.println(e);
         }

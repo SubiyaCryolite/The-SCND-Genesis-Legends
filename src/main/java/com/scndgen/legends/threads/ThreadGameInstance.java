@@ -65,7 +65,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public boolean aiAttack = false, aiRunning = false, aiRunning2 = false, aiRunning3 = false;
     public Achievements ach;
     public ThreadMP3 loseMus, winMus;
-    private Thread t;
+    private Thread thread;
     private Timer timer;
     //recov char HP
     private float hpChar, hpChar2;
@@ -111,7 +111,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         do {
             instance = true;
             try {
-                t.sleep(33); // fps
+                thread.sleep(33); // fps
                 standardGameplay.matchStatus();
                 ach.scan();
             } catch (InterruptedException ex) {
@@ -318,7 +318,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
 
             isPaused = true;
             RenderStandardGameplay.getInstance().pauseThreads();
-            t.suspend();
+            thread.suspend();
             executorAI.pause();
             executorPlyr.pause();
         } catch (Exception e) {
@@ -333,7 +333,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         try {
             isPaused = false;
             RenderStandardGameplay.getInstance().resumeThreads();
-            t.resume();
+            thread.resume();
             executorAI.resume();
             executorPlyr.resume();
         } catch (Exception e) {
@@ -375,7 +375,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     @SuppressWarnings("static-access")
     public void sleepy(int thisTime) {
         try {
-            t.sleep(thisTime);
+            thread.sleep(thisTime);
         } catch (InterruptedException ex) {
             Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -455,7 +455,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         //save profile
         LoginScreen.getInstance().saveConfigFile();
         LoginScreen.getInstance().getMenu().getMain().systemNotice("Saved File");
-        t.stop(); //stop this thread
+        thread.stop(); //stop this thread
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (standardGameplay.hasWon()) {
@@ -592,10 +592,10 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         }
 
-        t = new Thread(this);
-        t.setName("MAIN GAME LOGIC THREAD");
-        t.setPriority(5);
-        t.start();
+        thread = new Thread(this);
+        thread.setName("MAIN GAME LOGIC THREAD");
+        thread.setPriority(5);
+        thread.start();
         LoginScreen.getInstance().getMenu().getMain().reSize("menu");
         count2 = 0;
     }

@@ -39,7 +39,7 @@ public class ThreadAnim1 implements Runnable {
     public ThreadAnim1() {
         if (thread != null) {
             thread.resume();
-        } else if (RenderStandardGameplay.getInstance().threadsNotRunningYet) {
+        } else  {
             thread = new Thread(this);
             thread.setName("Animator thread 1 - Character");
             thread.start();
