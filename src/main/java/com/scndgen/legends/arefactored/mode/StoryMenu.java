@@ -22,6 +22,7 @@
 package com.scndgen.legends.arefactored.mode;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.controller.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -30,11 +31,7 @@ import java.awt.*;
 
 public abstract class StoryMenu extends JenesisMode {
 
-    public int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
-    public int characterSel, opponentSel;
-    public String charDesc = "";
-    public String oppName, charName;
-    public String loadTxt = "";
+    public int lastRow, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
     public int mode, scenes, columns = 3, rows;
     protected int oldId = -1;
     protected boolean[] hiddenStage;

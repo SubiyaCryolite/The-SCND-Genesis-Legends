@@ -24,7 +24,7 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.StandardGameplay;
-import com.scndgen.legends.arefactored.mode.StoryMode;
+import com.scndgen.legends.arefactored.controller.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStoryMenu;
@@ -485,8 +485,6 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         isGameOver = true;
         instance = false;
         RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
-
-        //kill threads
         RenderStandardGameplay.getInstance().closeAudio();
     }
 

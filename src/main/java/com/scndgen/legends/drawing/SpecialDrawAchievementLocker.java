@@ -23,7 +23,7 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StoryMode;
+import com.scndgen.legends.arefactored.controller.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;

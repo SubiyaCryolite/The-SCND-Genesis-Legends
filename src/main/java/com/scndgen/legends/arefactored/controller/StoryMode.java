@@ -19,7 +19,7 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.arefactored.mode;
+package com.scndgen.legends.arefactored.controller;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
@@ -43,7 +43,6 @@ public class StoryMode implements Runnable {
     public boolean notAsked, firstRun = true, doneShowingText = false;
     public String stat = "";
     public int max = 11;
-    ; // starts from 0, max = last stage or scene-1, scene=max+1
     public int time;
     private ThreadMP3 storyMus;
     private String storyText;
@@ -78,117 +77,105 @@ public class StoryMode implements Runnable {
         tlkSpeed = WindowOptions.txtSpeed;
         notAsked = true;
         opt = -1;
-
-        if (stage == 0) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selRaila('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selRav('o');
-            RenderStageSelect.stage1();
+        switch (stage) {
+            case 0:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selRav('o');
+                RenderStageSelect.stage1();
+                break;
+            case 1:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selLynx('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selRaila('o');
+                RenderStageSelect.stage100();
+                break;
+            case 2:
+                time = 30;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selAisha('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selLynx('o');
+                RenderStageSelect.stage5();
+                break;
+            case 3:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selSubiya('o');
+                RenderStageSelect.stage4();
+                break;
+            case 4:
+                time = 45;
+                stat = "half way";
+                RenderCharacterSelectionScreen.getInstance().selRav('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selAde('o');
+                RenderStageSelect.stage7();
+                break;
+            case 5:
+                time = 45;
+                stat = "nrml";
+                RenderStandardGameplay.getInstance().setNumOfBoards(2);
+                RenderCharacterSelectionScreen.getInstance().selAdam('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selJon('o');
+                RenderStageSelect.stage7();
+                break;
+            case 6:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selAza('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                RenderStageSelect.stage10();
+                break;
+            case 7:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selSubiya('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selRav('o');
+                RenderStageSelect.stage2();
+                break;
+            case 8:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selLynx('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selAdam('o');
+                RenderStageSelect.stage10();
+                break;
+            case 9:
+                time = 60;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selSorr('o');
+                RenderStageSelect.stage10();
+                break;
+            case 10:
+                time = 90;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selSubiya('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                RenderStageSelect.stage11();
+                break;
+            case 11:
+                time = 181;
+                stat = "nrml";
+                RenderCharacterSelectionScreen.getInstance().selAdam('c');
+                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().selThing('x');
+                RenderStageSelect.stage13();
+                break;
         }
-
-        if (stage == 1) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selLynx('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selRaila('o');
-            RenderStageSelect.stage100();
-        }
-
-        if (stage == 2) {
-            time = 30;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selAisha('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selLynx('o');
-            RenderStageSelect.stage5();
-        }
-
-
-        if (stage == 3) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selRaila('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selSubiya('o');
-            RenderStageSelect.stage4();
-        }
-
-        if (stage == 4) {
-            time = 45;
-            stat = "half way";
-            RenderCharacterSelectionScreen.getInstance().selRav('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selAde('o');
-            RenderStageSelect.stage7();
-        }
-
-        if (stage == 5) {
-            time = 45;
-            stat = "nrml";
-            RenderStandardGameplay.getInstance().setNumOfBoards(2);
-            RenderCharacterSelectionScreen.getInstance().selAdam('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selJon('o');
-            RenderStageSelect.stage7();
-        }
-
-        if (stage == 6) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selAza('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-            RenderStageSelect.stage10();
-        }
-
-        if (stage == 7) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selSubiya('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selRav('o');
-            RenderStageSelect.stage2();
-        }
-
-        if (stage == 8) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selLynx('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selAdam('o');
-            RenderStageSelect.stage10();
-        }
-
-        if (stage == 9) {
-            time = 60;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selRaila('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selSorr('o');
-            RenderStageSelect.stage10();
-        }
-
-        if (stage == 10) {
-            time = 90;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selSubiya('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-            RenderStageSelect.stage11();
-        }
-
-        if (stage == 11) {
-            time = 181;
-            stat = "nrml";
-            RenderCharacterSelectionScreen.getInstance().selAdam('c');
-            RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
-            RenderCharacterSelectionScreen.getInstance().selThing('x');
-            RenderStageSelect.stage13();
-        }
-
         if (start) {
             startStoryMode(stage);
         }

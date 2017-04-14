@@ -58,138 +58,123 @@ public class Ravage extends JenesisCharacter {
 
     @Override
     public void attack(String attack, int forWho) {
-        if (attack.equalsIgnoreCase("01")) {
-            attackStr = physical[0];
-            damage = 108;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("02")) {
-            attackStr = physical[1];
-            damage = 102;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-            //StandardGameplay.specialEffect(2,true);
-        }
-
-        if (attack.equalsIgnoreCase("03")) {
-            attackStr = physical[2];
-            damage = 103;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("04")) {
-            attackStr = physical[3];
-            damage = 103;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("05")) {
-            attackStr = celestia[0];
-            damage = 101;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("06")) {
-            attackStr = celestia[1];
-            damage = 107;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("07")) {
-            attackStr = celestia[2];
-            damage = 103;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("08")) {
-            attackStr = celestia[3];
-            damage = 102;
-            RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("09")) {
-            sound3.play();
-            attackStr = status[0];
-            damage = 82;
-            RenderStandardGameplay.getInstance().setStatIndex(1);
-            if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
-                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
-                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("10")) {
-            sound3.play();
-            attackStr = status[1];
-            damage = 99;
-            RenderStandardGameplay.getInstance().setStatIndex(1);
-            if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
-                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
-            } else {
-                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
-                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
-            }
-            RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
-        }
-
-        if (attack.equalsIgnoreCase("11")) {
-
-            limit[1] = limit[1] + 1;
-            if (limit[1] <= 4) {
+        switch (attack) {
+            case "01":
+                attackStr = physical[0];
+                damage = 108;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "02":
+                attackStr = physical[1];
+                damage = 102;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                //StandardGameplay.specialEffect(2,true);
+                break;
+            case "03":
+                attackStr = physical[2];
+                damage = 103;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "04":
+                attackStr = physical[3];
+                damage = 103;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "05":
+                attackStr = celestia[0];
+                damage = 101;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "06":
+                attackStr = celestia[1];
+                damage = 107;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "07":
+                attackStr = celestia[2];
+                damage = 103;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "08":
+                attackStr = celestia[3];
+                damage = 102;
+                RenderStandardGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "09":
                 sound3.play();
-                attackStr = status[2];
-                RenderStandardGameplay.getInstance().setStatIndex(3);
+                attackStr = status[0];
+                damage = 82;
+                RenderStandardGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
-                    RenderStandardGameplay.getInstance().setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('o', +1);
+                    RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                    RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
-                    RenderStandardGameplay.getInstance().setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('c', +1);
+                    RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                    RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
                 }
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
-            } else {
-                // disble this move
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
-            }
-        }
-
-        if (attack.equalsIgnoreCase("12")) {
-
-            limit[0] = limit[0] + 1;
-            if (limit[0] <= 4) {
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "10":
                 sound3.play();
-                attackStr = status[3];
-                RenderStandardGameplay.getInstance().setStatIndex(4);
+                attackStr = status[1];
+                damage = 99;
+                RenderStandardGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
-                    //as a player(2) yo8u attack the opponent(1)
-                    RenderStandardGameplay.getInstance().setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('c', -1);
+                    RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                    RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
-                    RenderStandardGameplay.getInstance().setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
-                    RenderStandardGameplay.getInstance().alterDamageCounter('o', -1);
+                    RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                    RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
                 }
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");
-            } else {
-                // disble this move
-                RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
-            }
-        }
-
-        //dummy, do nothing
-        if (attack.equalsIgnoreCase("99")) {
+                RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                break;
+            case "11":
+                limit[1] = limit[1] + 1;
+                if (limit[1] <= 4) {
+                    sound3.play();
+                    attackStr = status[2];
+                    RenderStandardGameplay.getInstance().setStatIndex(3);
+                    if (forWho == 2) {
+                        RenderStandardGameplay.getInstance().setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
+                        RenderStandardGameplay.getInstance().alterDamageCounter('o', +1);
+                    } else {
+                        RenderStandardGameplay.getInstance().setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
+                        RenderStandardGameplay.getInstance().alterDamageCounter('c', +1);
+                    }
+                    RenderStandardGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
+                } else {
+                    // disble this move
+                    RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                }
+                break;
+            case "12":
+                limit[0] = limit[0] + 1;
+                if (limit[0] <= 4) {
+                    sound3.play();
+                    attackStr = status[3];
+                    RenderStandardGameplay.getInstance().setStatIndex(4);
+                    if (forWho == 2) {
+                        //as a player(2) yo8u attack the opponent(1)
+                        RenderStandardGameplay.getInstance().setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
+                        RenderStandardGameplay.getInstance().alterDamageCounter('c', -1);
+                    } else {
+                        RenderStandardGameplay.getInstance().setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
+                        RenderStandardGameplay.getInstance().alterDamageCounter('o', -1);
+                    }
+                    RenderStandardGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");
+                } else {
+                    // disble this move
+                    RenderStandardGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                }
+                break;
         }
     }
 }

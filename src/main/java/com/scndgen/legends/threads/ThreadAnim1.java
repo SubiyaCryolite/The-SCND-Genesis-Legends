@@ -33,20 +33,19 @@ import java.util.logging.Logger;
  */
 public class ThreadAnim1 implements Runnable {
 
-    private static Thread t;
-    private int fac;
+    private Thread thread;
+    private int factor;
 
     public ThreadAnim1() {
-        if (t != null) {
-            t.resume();
+        if (thread != null) {
+            thread.resume();
         } else if (RenderStandardGameplay.getInstance().threadsNotRunningYet) {
-            t = new Thread(this);
-            t.setName("Animator thread 1 - Character");
-            t.setPriority(1);
-            t.start();
+            thread = new Thread(this);
+            thread.setName("Animator thread 1 - Character");
+            thread.start();
         }
-        fac = 30 - (8 + (WindowOptions.whichOne() * 2));
-        System.out.println("Fury factor: " + fac);
+        factor = 30 - (8 + (WindowOptions.whichOne() * 2));
+        System.out.println("Fury factor: " + factor);
     }
 
     @Override
@@ -55,19 +54,19 @@ public class ThreadAnim1 implements Runnable {
         do {
             try {
                 if (RenderStandardGameplay.getInstance().getBreak() > 5 && RenderStandardGameplay.getInstance().getBreak() < 999) {
-                    RenderStandardGameplay.getInstance().setBreak(-fac);
+                    RenderStandardGameplay.getInstance().setBreak(-factor);
                 }
 
                 for (int o = 0; o <= 10; o++) {
                     RenderStandardGameplay.getInstance().charYcord = RenderStandardGameplay.getInstance().charYcord + 1;
                     RenderStandardGameplay.getInstance().oppYcord = RenderStandardGameplay.getInstance().oppYcord + 1;
-                    t.sleep(66);
+                    thread.sleep(66);
                 }
 
                 for (int o = 0; o <= 10; o++) {
                     RenderStandardGameplay.getInstance().charYcord = RenderStandardGameplay.getInstance().charYcord - 1;
                     RenderStandardGameplay.getInstance().oppYcord = RenderStandardGameplay.getInstance().oppYcord - 1;
-                    t.sleep(66);
+                    thread.sleep(66);
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,14 +75,14 @@ public class ThreadAnim1 implements Runnable {
     }
 
     public void stop() {
-        t = null;
+        thread = null;
     }
 
     public void pauseThread() {
-        t.suspend();
+        thread.suspend();
     }
 
     public void resumeThread() {
-        t.resume();
+        thread.resume();
     }
 }

@@ -22,10 +22,10 @@
 package com.scndgen.legends.arefactored.render;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StoryMode;
+import com.scndgen.legends.arefactored.mode.StoryMenu;
+import com.scndgen.legends.arefactored.controller.StoryMode;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.arefactored.mode.StoryMenu;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -42,8 +42,7 @@ import java.awt.*;
  */
 public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 
-
-    private ThreadMP3 yay;
+    private ThreadMP3 victorySound;
     private ThreadMP3 menuSound;
     private Font headerFont, normalFont;
     private Image charBack, loading;
@@ -57,9 +56,6 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         return instance;
     }
 
-    /**
-     * Teh constructorz XD
-     */
     private RenderStoryMenu() {
         scenes = 12;
         headerFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
@@ -81,117 +77,77 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         setBorder(BorderFactory.createEmptyBorder());
     }
 
-
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
         loadAssets();
         if (loadingNow) {
             g2d.setColor(Color.BLACK);
-
             g2d.drawImage(storyPrev, charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(0.7f));
             g2d.fillRect(0, 0, 852, 480);
             g2d.setComposite(makeComposite(1.0f));
-
-
             g2d.setComposite(makeComposite(0.5f));
             g2d.fillRect(200, 0, 452, 480);
             g2d.setComposite(makeComposite(1.0f));
-
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-            //g2d.drawString(lang.getLine(165), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(165))) / 2, 200);
-
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
-
             g2d.drawImage(storyPrev, charXcap + x, charYcap, this);
-
             lastRow = 0;
-            //all char caps in this segment
-            {
-                g2d.setComposite(makeComposite(0.7f));
-                g2d.fillRect(0, 0, 852, 480);
+            g2d.setComposite(makeComposite(0.7f));
+            g2d.fillRect(0, 0, 852, 480);
+            g2d.setComposite(makeComposite(1.0f));
+            g2d.setComposite(makeComposite(0.5f));
+            g2d.fillRect(200, 0, 452, 480);
+            g2d.setComposite(makeComposite(1.0f));
+            int col = 0;
+            for (int i = 0; i < (storyCap.length / 3); i++) {
+                g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * i), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * i), this);
+                col++;
+                g2d.drawImage(storyCap[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
+                col++;
+                g2d.drawImage(storyCap[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
+                col++;
+                lastRow = i;
+            }
+            int rem = storyCap.length % 3;
+            if (rem == 1) {
+                g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+
+            } else if (rem == 2) {
+                g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+                col++;
+                g2d.drawImage(storyCap[col], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
+                if (!hiddenStage[col])
+                    g2d.drawImage(storyCapBlur[col], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
+                col++;
+            }
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(headerFont);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(307), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(307))) / 2, 80);
+            g2d.setFont(normalFont);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(368), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(368))) / 2, 380);
+            showstoryName(storySelIndex);
+            if (well() && hiddenStage[storySelIndex]) {
+                if (opacity < 0.98f)
+                    opacity = opacity + 0.02f;
+                g2d.setComposite(makeComposite(opacity));
+                g2d.drawImage(storyCapUn[storySelIndex], (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 g2d.setComposite(makeComposite(1.0f));
-
-
-                g2d.setComposite(makeComposite(0.5f));
-                g2d.fillRect(200, 0, 452, 480);
-                g2d.setComposite(makeComposite(1.0f));
-
-                int col = 0;
-                for (int i = 0; i < (storyCap.length / 3); i++) {
-                    {
-                        g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * i), this);
-                        if (!hiddenStage[col]) {
-                            g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * i), this);
-                        }
-                        col++;
-                    }
-
-                    {
-                        g2d.drawImage(storyCap[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
-                        if (!hiddenStage[col]) {
-                            g2d.drawImage(storyCapBlur[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
-                        }
-                        col++;
-                    }
-
-                    {
-                        g2d.drawImage(storyCap[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
-                        if (!hiddenStage[col]) {
-                            g2d.drawImage(storyCapBlur[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
-                        }
-                        col++;
-                    }
-                    lastRow = i;
-                }
-
-                int rem = storyCap.length % 3;
-
-                if (rem == 1) {
-                    g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                    if (!hiddenStage[col]) {
-                        g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                    }
-                } else if (rem == 2) {
-                    {
-                        g2d.drawImage(storyCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                        if (!hiddenStage[col]) {
-                            g2d.drawImage(storyCapBlur[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                        }
-                        col++;
-                    }
-
-                    {
-                        g2d.drawImage(storyCap[col], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
-                        if (!hiddenStage[col]) {
-                            g2d.drawImage(storyCapBlur[col], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
-                        }
-                        col++;
-                    }
-                }
-
-                g2d.setColor(Color.WHITE);
-                g2d.setFont(headerFont);
-                g2d.drawString(JenesisLanguage.getInstance().getLine(307), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(307))) / 2, 80);
-                g2d.setFont(normalFont);
-                g2d.drawString(JenesisLanguage.getInstance().getLine(368), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(368))) / 2, 380);
-                showstoryName(storySelIndex);
-                if (well() && hiddenStage[storySelIndex]) {
-                    {
-                        if (opacity < 0.98f) {
-                            opacity = opacity + 0.02f;
-                        }
-                        g2d.setComposite(makeComposite(opacity));
-                        g2d.drawImage(storyCapUn[storySelIndex], (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
-                        g2d.setComposite(makeComposite(1.0f));
-                        g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
-                    }
-                }
-
+                g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
             }
         }
         JenesisGlassPane.getInstance().overlay(g2d, this);
@@ -200,6 +156,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 
     public void loadAssets() {
         if (!loadAssets) return;
+        victorySound = new ThreadMP3(ThreadMP3.soundGameOver(), true);
         menuSound = new ThreadMP3("audio/menu-select.mp3", true);
         JenesisImageLoader pix = new JenesisImageLoader();
         RenderStageSelect.selectedStage = false;
@@ -288,8 +245,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
             //incrementMode();
             //go back to user difficulty
             LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficultyStat;
-            yay = new ThreadMP3(ThreadMP3.soundGameOver(), true);
-            yay.play();
+            victorySound.play();
             JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
             answer = false;
         }

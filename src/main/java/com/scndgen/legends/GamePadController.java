@@ -28,9 +28,7 @@ import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.Rumbler;
 
 public class GamePadController {
-
     public static final int NUM_BUTTONS = 12;
-    // public stick and hat compass positions
     public static final int NUM_COMPASS_DIRS = 9;
     public static final int NW = 0;
     public static final int NORTH = 1;
@@ -41,45 +39,37 @@ public class GamePadController {
     public static final int SW = 6;
     public static final int SOUTH = 7;
     public static final int SE = 8;
-    private static GamePadController instance;
     public boolean rumblerOn = false, controllerFound = false;   // whether rumbler is on or off
     public int statusInt = 0;
+    private int xAxis, yAxis, zAxis, rzAxis;
+    private int povId;         // index for the POV hat
     public String controllerName = "Basic";
     private Controller controller;
-    private Component[] comps;  // holds the components
-    // comps[] indices for specific components
-    private int xAxisIdx, yAxisIdx, zAxisIdx, rzAxisIdx;
-    // indices for the analog sticks axes
-    private int povIdx;         // index for the POV hat
-    private int buttonsIdx[];   // indices for the buttons
+    private Component[] components;  // holds the components
     private Rumbler[] rumblers;
     private int rumblerIdx;      // index for the rumbler being used
-    private ControllerEnvironment ce;
-    private Controller[] cs;
+    private int buttons[];   // indices for the buttons
+    private ControllerEnvironment controllerEnvironment;
+    private Controller[] controllers;
+    private static GamePadController instance;
 
     private GamePadController() {
         try {
             if (LoginScreen.getInstance().controller) {
-                ce = ControllerEnvironment.getDefaultEnvironment();
-                cs = ce.getControllers();
-                if (cs.length == 0) {
+                controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
+                controllers = controllerEnvironment.getControllers();
+                if (controllers.length == 0) {
                     statusInt = 0;
                     controllerFound = false;
                 } else {
                     controllerFound = true;
                     statusInt = 1;
-                    System.out.println("Num. controllers: " + cs.length);
+                    System.out.printf("Num. controllers: %s\n", controllers.length);
                 }
-
                 if (controllerFound) {
-
-                    // get the game pad controller
-                    controller = findGamePad(cs);
+                    controller = findGamePad(controllers);
                     controllerName = controller.getName();
-                    System.out.println("Game controller: "
-                            + controllerName + ", "
-                            + controller.getType());
-                    // collect indices for the required game pad components
+                    System.out.printf("Game controller: %s, %s\n", controllerName, controller.getType());
                     findCompIndices(controller);
                     findRumblers(controller);
                 }
@@ -103,24 +93,23 @@ public class GamePadController {
      *
      * @author Andrew Davison
      */
-    private Controller findGamePad(Controller[] cs) {
+    private Controller findGamePad(Controller[] controllers) {
         Controller.Type type;
         int i = 0;
-        while (i < cs.length) {
-            type = cs[i].getType();
+        while (i < controllers.length) {
+            type = controllers[i].getType();
             if ((type == Controller.Type.GAMEPAD) || (type == Controller.Type.STICK)) {
                 break;
             }
             i++;
         }
-
-        if (i == cs.length) {
+        if (i == controllers.length) {
             System.out.println("No game pad found");
             //System.exit(0);
         } else {
             System.out.println("Game pad index: " + i);
         }
-        return cs[i];
+        return controllers[i];
     }
 
     /**
@@ -131,27 +120,22 @@ public class GamePadController {
      * @author Andrew Davison
      */
     private void findCompIndices(Controller controller) {
-        comps = controller.getComponents();
-        if (comps.length == 0) {
+        components = controller.getComponents();
+        if (components.length == 0) {
             System.out.println("No Components found");
-            //System.exit(0);
         } else {
-            System.out.println("Num. Components: " + comps.length);
+            System.out.println("Num. Components: " + components.length);
         }
-
-        // get the indices for the axes of the analog sticks: (x,y) and (z,rz)
-        xAxisIdx = findCompIndex(comps, Component.Identifier.Axis.X, "x-axis");
-        yAxisIdx = findCompIndex(comps, Component.Identifier.Axis.Y, "y-axis");
-        zAxisIdx = findCompIndex(comps, Component.Identifier.Axis.Z, "z-axis");
-        rzAxisIdx = findCompIndex(comps, Component.Identifier.Axis.RZ, "rz-axis");
-
-        // get POV hat index
-        povIdx = findCompIndex(comps, Component.Identifier.Axis.POV, "POV hat");
-        findButtons(comps);
-    }  // end of findCompIndices()
+        xAxis = findCompIndex(components, Component.Identifier.Axis.X, "x-axis");
+        yAxis = findCompIndex(components, Component.Identifier.Axis.Y, "y-axis");
+        zAxis = findCompIndex(components, Component.Identifier.Axis.Z, "z-axis");
+        rzAxis = findCompIndex(components, Component.Identifier.Axis.RZ, "rz-axis");
+        povId = findCompIndex(components, Component.Identifier.Axis.POV, "POV hat");
+        findButtons(components);
+    }
 
     /**
-     * Search through comps[] for id, returning the corresponding
+     * Search through components[] for id, returning the corresponding
      * array index, or -1
      *
      * @author Andrew Davison
@@ -170,35 +154,34 @@ public class GamePadController {
     }
 
     /**
-     * Search through comps[] for NUM_BUTTONS buttons, storing
-     * their indices in buttonsIdx[]. Ignore excessive buttons.
+     * Search through components[] for NUM_BUTTONS buttons, storing
+     * their indices in buttons[]. Ignore excessive buttons.
      * If there aren't enough buttons, then fill the empty spots in
-     * buttonsIdx[] with -1's.
+     * buttons[] with -1's.
      */
-    private void findButtons(Component[] comps) {
-        buttonsIdx = new int[NUM_BUTTONS];
+    private void findButtons(Component[] components) {
+        buttons = new int[NUM_BUTTONS];
         int numButtons = 0;
-        Component c;
-
-        for (int i = 0; i < comps.length; i++) {
-            c = comps[i];
-            if (isButton(c)) {    // deal with a button
+        Component component;
+        for (int i = 0; i < components.length; i++) {
+            component = components[i];
+            if (isButton(component)) {    // deal with a button
                 if (numButtons == NUM_BUTTONS) // already enough buttons
                 {
                     System.out.println("Found an extra button; index: " + i + ". Ignoring it");
                 } else {
-                    buttonsIdx[numButtons] = i;  // store button index
-                    System.out.println("Found " + c.getName() + "; index: " + i);
+                    buttons[numButtons] = i;  // store button index
+                    System.out.println("Found " + component.getName() + "; index: " + i);
                     numButtons++;
                 }
             }
         }
 
-        // fill empty spots in buttonsIdx[] with -1's
+        // fill empty spots in buttons[] with -1's
         if (numButtons < NUM_BUTTONS) {
             System.out.println("Too few buttons (" + numButtons + "); expecting " + NUM_BUTTONS);
             while (numButtons < NUM_BUTTONS) {
-                buttonsIdx[numButtons] = -1;
+                buttons[numButtons] = -1;
                 numButtons++;
             }
         }
@@ -251,28 +234,28 @@ public class GamePadController {
      * @return
      */
     public int getXYStickDir() {
-        if ((xAxisIdx == -1) || (yAxisIdx == -1)) {
+        if ((xAxis == -1) || (yAxis == -1)) {
             System.out.println("(x,y) axis data unavailable");
             return NONE;
         } else {
-            return getCompassDir(xAxisIdx, yAxisIdx);
+            return getCompassDir(xAxis, yAxis);
         }
     } // end of getXYStickDir()
 
     public int getZRZStickDir() // return the (z,rz) analog stick compass direction
     {
-        if ((zAxisIdx == -1) || (rzAxisIdx == -1)) {
+        if ((zAxis == -1) || (rzAxis == -1)) {
             System.out.println("(z,rz) axis data unavailable");
             return NONE;
         } else {
-            return getCompassDir(zAxisIdx, rzAxisIdx);
+            return getCompassDir(zAxis, rzAxis);
         }
     } // end of getXYStickDir()
 
     private int getCompassDir(int xA, int yA) // Return the axes as a single compass value
     {
-        float xCoord = comps[xA].getPollData();
-        float yCoord = comps[yA].getPollData();
+        float xCoord = components[xA].getPollData();
+        float yCoord = components[yA].getPollData();
         // System.out.println("(x,y): (" + xCoord + "," + yCoord + ")");
 
         int xc = Math.round(xCoord);
@@ -305,11 +288,11 @@ public class GamePadController {
 
     public int getHatDir() // Return the POV hat's direction as a compass direction
     {
-        if (povIdx == -1) {
+        if (povId == -1) {
             System.out.println("POV hat data unavailable");
             return NONE;
         } else {
-            float povDir = comps[povIdx].getPollData();
+            float povDir = components[povId].getPollData();
             if (povDir == POV.CENTER) //	0.0f
             {
                 return NONE;
@@ -349,7 +332,7 @@ public class GamePadController {
         boolean[] buttons = new boolean[NUM_BUTTONS];
         float value;
         for (int i = 0; i < NUM_BUTTONS; i++) {
-            value = comps[buttonsIdx[i]].getPollData();
+            value = components[this.buttons[i]].getPollData();
             buttons[i] = ((value == 0.0f) ? false : true);
         }
         return buttons;
@@ -365,12 +348,12 @@ public class GamePadController {
             return false;
         }
 
-        if (buttonsIdx[pos - 1] == -1) // no button found at that pos
+        if (buttons[pos - 1] == -1) // no button found at that pos
         {
             return false;
         }
 
-        float value = comps[buttonsIdx[pos - 1]].getPollData();
+        float value = components[buttons[pos - 1]].getPollData();
         // array range is 0-NUM_BUTTONS-1
         return ((value == 0.0f) ? false : true);
     } // end of isButtonPressed()

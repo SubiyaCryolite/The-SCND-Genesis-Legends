@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import com.scndgen.legends.arefactored.mode.StoryMode;
+import com.scndgen.legends.arefactored.controller.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.engine.JenesisLanguage;
