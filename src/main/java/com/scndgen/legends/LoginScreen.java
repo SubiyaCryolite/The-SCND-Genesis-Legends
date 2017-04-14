@@ -21,12 +21,12 @@
  **************************************************************************/
 package com.scndgen.legends;
 
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.MainMenu;
+import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -45,6 +45,58 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This is a fighting game based on my webcomic THE SCND GENESIS
+ * http://www.scndgenesis.50webs.com
+ * The battle system is inspired by Final Fantasy XIII and conventional 2D Fighters
+ * The game has a handdrawn comic book graphical style similar to the comic and has other anime style effects
+ * Feel free to tell me what you think about the game and comic ifungandana(at)gmail.com
+ * Year - Month - date
+ * for every enhancement add 0.0.0.1
+ * for every milestone and 0.0.0.3
+ * 18/06/10 - Added Shakey digits 0.0.2.8
+ * 17/07/10 - Added Difficulty Settings 0.0.2.9
+ * 17/07/10 - Embedded attacks into main screen 0.0.3.0
+ * 30/07/10 - Grouped all attacks into single class 0.0.3.1
+ * 30/07/10 - Drastic architectural changes 0.0.3.2
+ * 31/07/10 - Cool motif look and feel 0.0.3.3
+ * 02/08/10 - Added game menu, ATB Bar, Tabbed Pane for different move type 0.0.3.6
+ * 05/08/10 - Added regenerating HP 0.0.3.7
+ * 05/08/10 - Attacks now execute in sequence they were added 0.0.3.8
+ * 05/08/10 - All menus and panels under one roof 0.0.3.9
+ * 09/08/10 - fixed MP3 plug-in 0.0.4.0
+ * 15/08/10 - Added match timer and options 0.0.4.1
+ * 11/08/10 - Converted timertasks to threads, added arena select, fixed relative sound path 0.0.4.4
+ * 19/09/10 - caches all sprites, Serious thread optimizations, AI rewrites, SIGNIFICANT performance improvements 0.0.5.5
+ * 22/09/10 - implemented LAN play!!!! Game chat, lobby system needed 0.0.6.5
+ * 22/09/10 - implemented login screen, ciphering 0.0.6.7
+ * 18/10/10 - implemented in-game chat, utf8 encoding, stats screen, achievement structure, game/profile save 0.0.7.3
+ * 21/10/10 - added overworld map, began navigation and screen control 0.0.7.7
+ * 23/10/10 - added collision detection algorythm for overworld 0.0.8.0
+ * 27/10/10 - added new menu, transition, character classess, remved command panel 0.0.8.4
+ * 30/10/10 -added mode menu, server-client embeddedin menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
+ * 03/11/10 -24- added new Character, Aisha 0.0.8.8
+ * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
+ * 17/11/10 -26- better about screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
+ * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, options and stats integrated into menu
+ * 23/11/10 -30- fixed story mode and added pause, skip, resume :D
+ * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
+ * 04/12/10 -32- One story mode to rule them all, bwa ha ha, added scene select as well :)
+ * 07/12/10 -33- Added background animation thread
+ * 10/12/10 -34- Added Ravage, implemented character balance scheme, fixed bug in story mode thread
+ * Sidenote 14/12/10: Joined Twitter ^_^
+ * 15/12/10 -35- Added character Ade, Added quit game, resume, exit to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
+ * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
+ * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
+ * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
+ * 01/1/11 -38- Thread optimisations. wee
+ * 04/1/11 -39- Fixed story mode bugs, adding GPL headerz gon opensource
+ * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
+ * 14/1/11 -41- Integrated stats into main menu, pending for connections can be cancelled
+ * 15/1/11 -42- Backwards compatibility for new save items, fixed time
+ * 15/1/11 -43- Changelog moved to WindowAbout.java in text3
+ * 13/2/11 -44- I'm baaaaack, changelog in WindowAbout is clientSide only, codies go here
+ * 13/2/11 -44- Fixed bug, reset move to physical at new match
+ *
  * @author Ndana
  */
 
@@ -84,7 +136,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private Connection conn;
     private PreparedStatement prep;
     private Object source;
-    private JFrame window;
     private JPanel pan1, pan2, pan4;
     private DrawUserLogin thisPic;
     private JButton enter, quit, newAccount, userAccount;
@@ -168,21 +219,13 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         quit.addActionListener(this);
         newAccount = new JButton("Create a New Account");
         newAccount.addActionListener(this);
-
         pan4.add(newAccount);
-
-        window = new JFrame();
-
         box.add(pan1);
         box.add(pan2);
         box.add(pan4);
-
-        window.add(box);
-
-
+        add(box);
         createUserCombo();
         thisPic = new DrawUserLogin(this);
-
         {
             achObj = new Achievements(this);
             ach = new int[achObj.achDesc.length];
@@ -220,13 +263,13 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         readDB(users.getSelectedItem() + "");
         pan1.add(thisPic);
 
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
-        window.pack();
-        window.addKeyListener(this);
-        window.setLocationRelativeTo(null);
-        window.setResizable(false);
-        window.setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
+        pack();
+        addKeyListener(this);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
 
         newVersionOutThere("");
     }
@@ -761,7 +804,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         } catch (Exception e) {
                             System.err.println(e.toString());
                         } //if latest version, just try and download music
-                        if (webVersion.equalsIgnoreCase(RenderStandardGameplay.getVersionStr())) {
+                        if (webVersion.equalsIgnoreCase(RenderStandardGameplay.getInstance().getVersionStr())) {
                             ans = false;
                             if (whoCalled.equalsIgnoreCase("default")) {
                                 System.out.println("You are up to date");
@@ -1032,11 +1075,11 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     }
 
     private void closeWindow() {
-        window.dispose();
+        dispose();
     }
 
     public void showWindow() {
-        window.setVisible(true);
+        setVisible(true);
     }
 
     public Achievements getAch() {

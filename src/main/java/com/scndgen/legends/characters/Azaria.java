@@ -22,7 +22,6 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisCharacter;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -119,13 +118,13 @@ public class Azaria extends JenesisCharacter {
             attackStr = status[0];
             //girls have a healing bonus of 5 XD
             damage = 78;
-            StandardGameplay.setStatIndex(1);
+            RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
-                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
                 RenderStandardGameplay.getInstance().updateOppLife(damage);
-                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -134,13 +133,13 @@ public class Azaria extends JenesisCharacter {
             sound3.play();
             attackStr = status[1];
             damage = 80;
-            StandardGameplay.setStatIndex(1);
+            RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
-                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
                 RenderStandardGameplay.getInstance().updateOppLife(damage);
-                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -149,13 +148,13 @@ public class Azaria extends JenesisCharacter {
             sound3.play();
             attackStr = status[2];
             damage = 84;
-            StandardGameplay.setStatIndex(1);
+            RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
-                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
                 RenderStandardGameplay.getInstance().updateOppLife(damage);
-                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -164,13 +163,13 @@ public class Azaria extends JenesisCharacter {
             sound3.play();
             attackStr = status[3];
             damage = 76;
-            StandardGameplay.setStatIndex(1);
+            RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
                 RenderStandardGameplay.getInstance().updateLife(damage);
-                StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
                 RenderStandardGameplay.getInstance().updateOppLife(damage);
-                StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }

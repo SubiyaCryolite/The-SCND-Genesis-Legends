@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.drawing.DrawOverworld;
 import com.scndgen.legends.windows.WindowOptions;
 
@@ -51,27 +51,27 @@ public class ThreadAnim3 implements Runnable {
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             do {
                 try {
-                    if (StandardGameplay.verticalMove.equalsIgnoreCase("no")) {
+                    if (RenderStandardGameplay.getInstance().verticalMove.equalsIgnoreCase("no")) {
                         t.sleep(0016);
-                        StandardGameplay.amb1x = StandardGameplay.amb1x - StandardGameplay.ambSpeed1;
-                        StandardGameplay.amb2x = StandardGameplay.amb2x - StandardGameplay.ambSpeed2;
+                        RenderStandardGameplay.getInstance().amb1x = RenderStandardGameplay.getInstance().amb1x - RenderStandardGameplay.getInstance().ambSpeed1;
+                        RenderStandardGameplay.getInstance().amb2x = RenderStandardGameplay.getInstance().amb2x - RenderStandardGameplay.getInstance().ambSpeed2;
 
-                        if (StandardGameplay.amb1x < (-960)) {
-                            StandardGameplay.amb1x = 852;
+                        if (RenderStandardGameplay.getInstance().amb1x < (-960)) {
+                            RenderStandardGameplay.getInstance().amb1x = 852;
                         }
-                        if (StandardGameplay.amb2x < (-960)) {
-                            StandardGameplay.amb2x = 852;
+                        if (RenderStandardGameplay.getInstance().amb2x < (-960)) {
+                            RenderStandardGameplay.getInstance().amb2x = 852;
                         }
                     } else {
                         t.sleep(0016);
-                        StandardGameplay.amb1y = StandardGameplay.amb1y + StandardGameplay.ambSpeed1;
-                        StandardGameplay.amb2y = StandardGameplay.amb2y + StandardGameplay.ambSpeed2;
+                        RenderStandardGameplay.getInstance().amb1y = RenderStandardGameplay.getInstance().amb1y + RenderStandardGameplay.getInstance().ambSpeed1;
+                        RenderStandardGameplay.getInstance().amb2y = RenderStandardGameplay.getInstance().amb2y + RenderStandardGameplay.getInstance().ambSpeed2;
 
-                        if (StandardGameplay.amb1y > 480) {
-                            StandardGameplay.amb1y = -480;
+                        if (RenderStandardGameplay.getInstance().amb1y > 480) {
+                            RenderStandardGameplay.getInstance().amb1y = -480;
                         }
-                        if (StandardGameplay.amb2y > 480) {
-                            StandardGameplay.amb2y = -480;
+                        if (RenderStandardGameplay.getInstance().amb2y > 480) {
+                            RenderStandardGameplay.getInstance().amb2y = -480;
                         }
                     }
 

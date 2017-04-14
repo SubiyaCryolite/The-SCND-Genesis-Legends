@@ -22,9 +22,8 @@
 package com.scndgen.legends.characters;
 
 
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.engine.JenesisCharacter;
 import com.scndgen.legends.enums.CharacterEnum;
 
@@ -186,8 +185,8 @@ public class Character {
      *
      */
     public static void alterPoints2(int index) {
-        if (StandardGameplay.numOfAttacks > 1) {
-            StandardGameplay.numOfAttacks = StandardGameplay.numOfAttacks = 1;
+        if (RenderStandardGameplay.getInstance().numOfAttacks > 1) {
+            RenderStandardGameplay.getInstance().numOfAttacks = RenderStandardGameplay.getInstance().numOfAttacks = 1;
             points = points + pointsArr[index];
         }
     }
@@ -302,14 +301,14 @@ public class Character {
         activityRecoverRateChar = character.getRecovSpeed();
         healthRecoveryRateChar = character.getHPRecovRate();
         setPoints(character.getPoints());
-        RenderStandardGameplay.setLife(character.getLife());
-        RenderStandardGameplay.setMaxLife(character.getLife());
+        RenderStandardGameplay.getInstance().setLife(character.getLife());
+        RenderStandardGameplay.getInstance().setMaxLife(character.getLife());
 
 
         activityRecoveryRateChar2 = assistCharacter.getRecovSpeed();
         healthRecoveryRateChar2 = assistCharacter.getHPRecovRate();
-        RenderStandardGameplay.setCharLife3(assistCharacter.getLife());
-        RenderStandardGameplay.setCharMaxLife3(assistCharacter.getLife());
+        RenderStandardGameplay.getInstance().setCharLife3(assistCharacter.getLife());
+        RenderStandardGameplay.getInstance().setCharMaxLife3(assistCharacter.getLife());
         assistCharacter.setAiProf3();
     }
 
@@ -375,14 +374,14 @@ public class Character {
 
         activityRecoveryRateOpp = opponent.getRecovSpeed();
         healthRecoveryRateOpp = opponent.getHPRecovRate();
-        RenderStandardGameplay.setOppLife(opponent.getLife());
-        RenderStandardGameplay.setOppMaxLife(opponent.getLife());
+        RenderStandardGameplay.getInstance().setOppLife(opponent.getLife());
+        RenderStandardGameplay.getInstance().setOppMaxLife(opponent.getLife());
         opponent.setAiProf();
 
         activityRecoveryRateOpp2 = opponentAssistant.getRecovSpeed();
         healthRecoveryRateOpp2 = opponentAssistant.getHPRecovRate();
-        RenderStandardGameplay.setOppLife2(opponentAssistant.getLife());
-        RenderStandardGameplay.setOppMaxLife2(opponentAssistant.getLife());
+        RenderStandardGameplay.getInstance().setOppLife2(opponentAssistant.getLife());
+        RenderStandardGameplay.getInstance().setOppMaxLife2(opponentAssistant.getLife());
         opponentAssistant.setAiProf2();
     }
 

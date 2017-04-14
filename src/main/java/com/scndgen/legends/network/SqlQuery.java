@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -176,7 +176,7 @@ public class SqlQuery implements ActionListener {
                             results[currentIndex][7] = (rs.getInt("userWin"));
                             results[currentIndex][8] = (rs.getInt("userLoss"));
                             results[currentIndex][6] = (Integer.parseInt("" + results[currentIndex][8]) + Integer.parseInt("" + results[currentIndex][7]));
-                            results[currentIndex][9] = StandardGameplay.getFavChar(rs.getInt("favCharacter"));
+                            results[currentIndex][9] = RenderStandardGameplay.getInstance().getFavChar(rs.getInt("favCharacter"));
                             results[currentIndex][10] = (rs.getInt("userPoints"));
                             currentIndex++;
                         }

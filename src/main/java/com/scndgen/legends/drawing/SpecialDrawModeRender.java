@@ -369,7 +369,7 @@ public class SpecialDrawModeRender extends JenesisMode {
 
         JenesisGlassPane.getInstance().overlay(g2d, this);
 
-        g2d.drawString("The SCND Genesis: Legends " + RenderStandardGameplay.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        g2d.drawString("The SCND Genesis: Legends " + RenderStandardGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         g2d.setComposite(makeComposite(feedBackOpac));
         mess = "Press 'F' to provide Feedback";
         g2d.drawString(mess, 590, 14);

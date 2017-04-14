@@ -23,7 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,7 +99,7 @@ public class ExecuterMovesChar2 implements Runnable {
             for (int o = 0; o < 4; o++) {
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 //fix story mode bug
-                if (RenderStandardGameplay.getInstance().getGameInstance().story == false) {
+                if (RenderStandardGameplay.getInstance().getGameInstance().storySequence == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
                     RenderStandardGameplay.getInstance().shakeCharLB();
                     RenderStandardGameplay.getInstance().AnimatePhyAttax('a');

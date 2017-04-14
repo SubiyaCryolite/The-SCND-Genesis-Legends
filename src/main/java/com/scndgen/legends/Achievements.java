@@ -21,7 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.mode.StoryMode;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.characters.Character;
@@ -152,7 +151,7 @@ public class Achievements {
      */
     public void scan() {
         if (Character.getCharMinLife() <= 79 && RenderStandardGameplay.getInstance().perCent >= 82 && isLocked[0]) {
-            StandardGameplay.setNotifiationPic(1); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(1); //cat + 1
             name.add(achDesc[0]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[0]);
             desc.add(achFull[0]);
@@ -164,7 +163,7 @@ public class Achievements {
         }
 
         if (Character.getCharMinLife() <= 30 && RenderStandardGameplay.getInstance().perCent >= 50 && isLocked[1]) {
-            StandardGameplay.setNotifiationPic(3); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[1]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[1]);
             desc.add(achFull[1]);
@@ -176,7 +175,7 @@ public class Achievements {
         }
 
         if (((RenderStandardGameplay.getInstance().perCent - RenderStandardGameplay.getInstance().perCent2) >= 50) && isLocked[4]) {
-            StandardGameplay.setNotifiationPic(3); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[2]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[2]);
             desc.add(achFull[2]);
@@ -190,7 +189,7 @@ public class Achievements {
         }
 
         if (((RenderStandardGameplay.getInstance().perCent - RenderStandardGameplay.getInstance().perCent2) >= 40) && isLocked[3]) {
-            StandardGameplay.setNotifiationPic(2); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[3]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[3]);
             desc.add(achFull[3]);
@@ -203,7 +202,7 @@ public class Achievements {
         }
 
         if (((RenderStandardGameplay.getInstance().perCent - RenderStandardGameplay.getInstance().perCent2) >= 30) && isLocked[2]) {
-            StandardGameplay.setNotifiationPic(1); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(1); //cat + 1
             name.add(achDesc[4]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[4]);
             desc.add(achFull[4]);
@@ -214,8 +213,8 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (StandardGameplay.getAttackType('c').equalsIgnoreCase("fury") && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && RenderStandardGameplay.getInstance().hasWon() && isLocked[5]) {
-            StandardGameplay.setNotifiationPic(3); //cat + 1
+        if (RenderStandardGameplay.getInstance().getAttackType('c').equalsIgnoreCase("fury") && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && RenderStandardGameplay.getInstance().hasWon() && isLocked[5]) {
+            RenderStandardGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[5]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[5]);
             desc.add(achFull[5]);
@@ -227,7 +226,7 @@ public class Achievements {
         }
 
         if (RenderStandardGameplay.getInstance().hasWon() && RenderStandardGameplay.getInstance().getGameInstance().isGameOver) {
-            StandardGameplay.setNotifiationPic(2); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[6]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[6]);
             desc.add(achFull[6]);
@@ -237,8 +236,8 @@ public class Achievements {
             currentPoints = currentPoints + pointsArr[0] + bonus;
         }
 
-        if (StandardGameplay.getAttackType('o').equalsIgnoreCase("fury") && RenderStandardGameplay.getInstance().hasWon() && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
-            StandardGameplay.setNotifiationPic(3); //cat + 1
+        if (RenderStandardGameplay.getInstance().getAttackType('o').equalsIgnoreCase("fury") && RenderStandardGameplay.getInstance().hasWon() && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
+            RenderStandardGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[7]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[7]);
             desc.add(achFull[7]);
@@ -250,7 +249,7 @@ public class Achievements {
         }
 
         if (RenderStandardGameplay.getInstance().hasWon() && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && (RenderStandardGameplay.getInstance().perCent - RenderStandardGameplay.getInstance().perCent2 <= 30) && isLocked[7]) {
-            StandardGameplay.setNotifiationPic(2); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[8]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[8]);
             desc.add(achFull[8]);
@@ -262,7 +261,7 @@ public class Achievements {
         }
 
         if (RenderStandardGameplay.getInstance().hasWon() && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && parent.consecWins >= 5 && isLocked[8]) {
-            StandardGameplay.setNotifiationPic(2); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[9]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[9]);
             desc.add(achFull[9]);
@@ -275,7 +274,7 @@ public class Achievements {
         }
 
         if (RenderStandardGameplay.getInstance().hasWon() && StoryMode.stat.equalsIgnoreCase("half way") && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && isLocked[9]) {
-            StandardGameplay.setNotifiationPic(2); //cat + 1
+            RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[10]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[10]);
             desc.add(achFull[10]);

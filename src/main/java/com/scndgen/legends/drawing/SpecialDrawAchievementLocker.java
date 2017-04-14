@@ -23,8 +23,8 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.mode.StoryMode;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
@@ -118,7 +118,7 @@ public class SpecialDrawAchievementLocker {
             stat16 = JenesisLanguage.getInstance().getLine(126) + ": " + LoginScreen.getInstance().loss;
 
             stat13 = JenesisLanguage.getInstance().getLine(127) + ": " + style[LoginScreen.getInstance().userAwesomeness()];
-            stat17 = JenesisLanguage.getInstance().getLine(128) + ": " + StandardGameplay.charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
+            stat17 = JenesisLanguage.getInstance().getLine(128) + ": " + RenderStandardGameplay.getInstance().charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
         }
 
         screen.setColor(Color.WHITE);

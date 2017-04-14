@@ -39,7 +39,7 @@ public class ThreadAnim1 implements Runnable {
     public ThreadAnim1() {
         if (t != null) {
             t.resume();
-        } else if (StandardGameplay.threadsNotRunningYet) {
+        } else if (RenderStandardGameplay.getInstance().threadsNotRunningYet) {
             t = new Thread(this);
             t.setName("Animator thread 1 - Character");
             t.setPriority(1);
@@ -54,19 +54,19 @@ public class ThreadAnim1 implements Runnable {
     public void run() {
         do {
             try {
-                if (RenderStandardGameplay.getBreak() > 5 && RenderStandardGameplay.getBreak() < 999) {
+                if (RenderStandardGameplay.getInstance().getBreak() > 5 && RenderStandardGameplay.getInstance().getBreak() < 999) {
                     RenderStandardGameplay.getInstance().setBreak(-fac);
                 }
 
                 for (int o = 0; o <= 10; o++) {
-                    StandardGameplay.charYcord = StandardGameplay.charYcord + 1;
-                    StandardGameplay.oppYcord = StandardGameplay.oppYcord + 1;
+                    RenderStandardGameplay.getInstance().charYcord = RenderStandardGameplay.getInstance().charYcord + 1;
+                    RenderStandardGameplay.getInstance().oppYcord = RenderStandardGameplay.getInstance().oppYcord + 1;
                     t.sleep(66);
                 }
 
                 for (int o = 0; o <= 10; o++) {
-                    StandardGameplay.charYcord = StandardGameplay.charYcord - 1;
-                    StandardGameplay.oppYcord = StandardGameplay.oppYcord - 1;
+                    RenderStandardGameplay.getInstance().charYcord = RenderStandardGameplay.getInstance().charYcord - 1;
+                    RenderStandardGameplay.getInstance().oppYcord = RenderStandardGameplay.getInstance().oppYcord - 1;
                     t.sleep(66);
                 }
             } catch (InterruptedException ex) {

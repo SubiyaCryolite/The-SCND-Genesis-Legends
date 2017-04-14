@@ -24,7 +24,7 @@ package com.scndgen.legends.windows;
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStoryMode;
 import com.scndgen.legends.attacks.AttacksOpp1;
@@ -32,7 +32,6 @@ import com.scndgen.legends.attacks.AttacksOpp2;
 import com.scndgen.legends.attacks.AttacksPlyr1;
 import com.scndgen.legends.attacks.AttacksPlyr2;
 import com.scndgen.legends.drawing.DrawWaiting;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.executers.ExecuterMovesCharOnline;
 import com.scndgen.legends.executers.ExecuterMovesOppOnline;
@@ -727,10 +726,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             if (getIsGameRunning()) {
                 if (ThreadGameInstance.isPaused == false) {
                     //in game, no story sequence
-                    if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false) {
+                    if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
                         RenderStandardGameplay.getInstance().moveSelected();
                     } //in game, during story sequence
-                    else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == true) {
+                    else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == true) {
                         getStory().getStoryInstance().skipDialogue();
                     } //story mode -- after text
                     else if (ThreadGameInstance.isGameOver == false && getStory().getStoryInstance().doneShowingText) {
@@ -915,7 +914,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         //when fighting
         if (isGameRunning) {
-            if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.story == false) {
+            if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.storySequence == false) {
                 int count = mwe.getWheelRotation();
 
                 //down - positive values
@@ -950,7 +949,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             stage.SelectStageNow();
         } else if (getIsGameRunning()) {
             //when fighting
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false) {
+            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
                 if (m.getButton() == MouseEvent.BUTTON1) {
                     //selecting move
                     if (m.getX() > (29 + leftyXOffset) && m.getX() < (220 + leftyXOffset) && (m.getY() > 358)) {
@@ -1181,7 +1180,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             }
         } else if (getIsGameRunning()) {
             //when fighting
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false && StandardGameplay.dnladng) {
+            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false && RenderStandardGameplay.getInstance().dnladng) {
                 //browse moves
                 if (m.getX() > (29 + leftyXOffset) && m.getX() < (436 + leftyXOffset)) {
                     if (m.getY() > (int) (373 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (390 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
@@ -1241,13 +1240,13 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             if (ThreadGameInstance.isPaused == false) {
                 RenderStandardGameplay.getInstance().getGameInstance().pauseGame();
                 RenderStandardGameplay.getInstance().pauseThreads();
-                if (ThreadGameInstance.story == true) {
+                if (ThreadGameInstance.storySequence == true) {
                     getStory().getStoryInstance().pauseDialogue();
                 }
             } else {
                 RenderStandardGameplay.getInstance().start();
                 RenderStandardGameplay.getInstance().resumeThreads();
-                if (ThreadGameInstance.story == true) {
+                if (ThreadGameInstance.storySequence == true) {
                     getStory().getStoryInstance().resumeDialogue();
                 }
             }

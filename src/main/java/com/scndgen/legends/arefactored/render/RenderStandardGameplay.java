@@ -21,103 +21,71 @@
  **************************************************************************/
 package com.scndgen.legends.arefactored.render;
 
+import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.StandardGameplay;
-import com.scndgen.legends.characters.Character;
-import com.scndgen.legends.threads.ThreadGameInstance;
+import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.menus.RenderStageSelect;
+import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.WindowOptions;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.VolatileImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is a fighting game based on my webcomic THE SCND GENESIS
- * http://www.scndgenesis.50webs.com
- * The battle system is inspired by Final Fantasy XIII and conventional 2D Fighters
- * The game has a handdrawn comic book graphical style similar to the comic and has other anime style effects
- * Feel free to tell me what you think about the game and comic ifungandana(at)gmail.com
- * Year - Month - date
- * for every enhancement add 0.0.0.1
- * for every milestone and 0.0.0.3
- * 18/06/10 - Added Shakey digits 0.0.2.8
- * 17/07/10 - Added Difficulty Settings 0.0.2.9
- * 17/07/10 - Embedded attacks into main screen 0.0.3.0
- * 30/07/10 - Grouped all attacks into single class 0.0.3.1
- * 30/07/10 - Drastic architectural changes 0.0.3.2
- * 31/07/10 - Cool motif look and feel 0.0.3.3
- * 02/08/10 - Added game menu, ATB Bar, Tabbed Pane for different move type 0.0.3.6
- * 05/08/10 - Added regenerating HP 0.0.3.7
- * 05/08/10 - Attacks now execute in sequence they were added 0.0.3.8
- * 05/08/10 - All menus and panels under one roof 0.0.3.9
- * 09/08/10 - fixed MP3 plug-in 0.0.4.0
- * 15/08/10 - Added match timer and options 0.0.4.1
- * 11/08/10 - Converted timertasks to threads, added arena select, fixed relative sound path 0.0.4.4
- * 19/09/10 - caches all sprites, Serious thread optimizations, AI rewrites, SIGNIFICANT performance improvements 0.0.5.5
- * 22/09/10 - implemented LAN play!!!! Game chat, lobby system needed 0.0.6.5
- * 22/09/10 - implemented login screen, ciphering 0.0.6.7
- * 18/10/10 - implemented in-game chat, utf8 encoding, stats screen, achievement structure, game/profile save 0.0.7.3
- * 21/10/10 - added overworld map, began navigation and screen control 0.0.7.7
- * 23/10/10 - added collision detection algorythm for overworld 0.0.8.0
- * 27/10/10 - added new menu, transition, character classess, remved command panel 0.0.8.4
- * 30/10/10 -added mode menu, server-client embeddedin menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
- * 03/11/10 -24- added new Character, Aisha 0.0.8.8
- * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
- * 17/11/10 -26- better about screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
- * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, options and stats integrated into menu
- * 23/11/10 -30- fixed story mode and added pause, skip, resume :D
- * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
- * 04/12/10 -32- One story mode to rule them all, bwa ha ha, added scene select as well :)
- * 07/12/10 -33- Added background animation thread
- * 10/12/10 -34- Added Ravage, implemented character balance scheme, fixed bug in story mode thread
- * Sidenote 14/12/10: Joined Twitter ^_^
- * 15/12/10 -35- Added character Ade, Added quit game, resume, exit to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
- * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
- * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
- * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
- * 01/1/11 -38- Thread optimisations. wee
- * 04/1/11 -39- Fixed story mode bugs, adding GPL headerz gon opensource
- * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
- * 14/1/11 -41- Integrated stats into main menu, pending for connections can be cancelled
- * 15/1/11 -42- Backwards compatibility for new save items, fixed time
- * 15/1/11 -43- Changelog moved to WindowAbout.java in text3
- * 13/2/11 -44- I'm baaaaack, changelog in WindowAbout is clientSide only, codies go here
- * 13/2/11 -44- Fixed bug, reset move to physical at new match
- *
  * @author Ifunga Ndana
  */
-public class RenderStandardGameplay extends StandardGameplay {
+public class RenderStandardGameplay extends StandardGameplay implements JenesisRender {
+    public ThreadAnim1 upDown;
+    public ThreadAnim2 upDown2;
+    public ThreadAnim3 upDown3;
+    private VolatileImage infoPic, stat1, stat2, stat3, stat4;
+    private VolatileImage ambient1, ambient2, foreGround;
+    private int limitBreak;
+    private GradientPaint queBar = new GradientPaint(0, 0, Color.YELLOW, 255, 10, Color.RED, false);
+    private GradientPaint gradient1 = new GradientPaint(xLocal, 10, Color.YELLOW, 255, 10, Color.RED, true);
+    private GradientPaint gradient2 = new GradientPaint(xLocal, 10, Color.white, 255, 10, Color.blue, true);
+    private float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
+    private int comboPicArrayPosOpp = 8;
+    private String manipulateThis;
+    protected Font bigFont, normalFont;
+    protected Font notSelected;
+    protected Font statusFont;
+    private int one, two, three, four, oneO, twoO, threeO, fourO;
+    private int comicY, opponentDamageYLoc, playerDamageYLoc, yTEST = 25, yTESTinit = 25;
+    public boolean limitRunning = true, animCharFree = true;
+    private float opac = 1.0f;
+    private float damOpInc;
+    private boolean nextEnabled = true, backEnabled = true;
+    //good guys
+    private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
+    private VolatileImage flashy;
+    private Image[] moveCat, numberPix;
+    private VolatileImage[] charCaption;
+    private ThreadMP3 sound, fightMus, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
+    private Image[] comboPicArray, comicPicArray, times, statsPicChar = new Image[5], statsPicOpp = new Image[5];
+    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, bgPic, damLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
+    //UI images
+    private VolatileImage opp11, assSprite, assOppSprite;
+    private VolatileImage charPort, storyPic;
+    private int charOp = 10, comicPicArrayPos = 0;
+    private VolatileImage charMeleeSprite, charCelestiaSprite, tmpIm, oppMeleeSprite, oppCelestiaSprite;
+    //numbers are arrays
+    private Image[] charSprites, oppSprites;
+    private VolatileImage[] attackAnim2, attackAnim1;
+    private VolatileImage[] storyPicArr, stats;
+    private Color CurrentColor = (Color.RED);
+    private float opacityTxt = 10, opacityPic = 0.0f;
 
-    public static String attackPicSrc;
-    public static String attackPicOppSrc;
-    public static String ActivePerson; // person who performed an attack, name shall show in battle info status area
-    public static int Win = 0;
-    public static int waitAnim = 0;
-    public static int damageMultiplierChar, damageMultiplierOpp, celestiaMultiplierChar, celestiaMultiplierOpp;
-    private static float daNum, daNum2, daNum2a, daNum3a;
-    private static long lifePlain, lifeTotalPlain, lifePlain2, lifePlain2a, lifePlain3a, lifeTotalPlain2, lifeTotalPlain2a, lifeTotalPlain3a;
-    private static int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
-    private static boolean fancyBWAnimeEffectEnabled;
-    private static String manipulateThis;
-    private static ThreadGameInstance fpsGen;
-    private static boolean isMoveQued, gameOver;
-    private static int thisInt; //max damage that can be dealt by Celestia Physics
-    private static int counter1, damageC, damageO;
-    private static int life, maXlife, oppLife, oppMaxLife, oppLife2, oppMaxLife2, charLife3, charMaxLife3;
-    ;
-    private static int damageChar, damageOpp, damageChar2, damageOpp2;
-    private static int limitBreak, limitTop = 1000;
-    private static String versionString = " 2K17 RMX";
-    private static int versioInt = 20120630; // yyyy-mm-dd
-    private static float finalOppLife, finalCharLife;
-    public int perCent = 100, perCent2 = 100, perCent2a = 100, perCent3a = 100;
-    public Character selectedChar, selectedOpp;
-    public int done = 0; // if gameover
-    public String[] attackArray = new String[8];//up to 8 moves can be qued
-    public int comboCounter = 0; //must be negative one to reach index 0, app wide counter, enable you to que attacks of different kinds
-    private Object source;
-
+    protected float angleRaw, charPointInc;
+    protected int result;
     private static RenderStandardGameplay instance;
 
     public static synchronized RenderStandardGameplay getInstance() {
@@ -126,235 +94,911 @@ public class RenderStandardGameplay extends StandardGameplay {
         return instance;
     }
 
-    /**
-     * Create the panel
-     */
     private RenderStandardGameplay() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
-    /**
-     * Legacy code
-     *
-     * @param message to display
-     * @return integer
-     */
-    public static int showConfirmMessage(String message) {
-        return JOptionPane.showConfirmDialog(null, message, "Hey There", JOptionPane.YES_NO_CANCEL_OPTION);
-    }
-
-    /**
-     * Gets the damage multiplier
-     *
-     * @param who - which character
-     * @return damage multiplier
-     */
-    public static int getDamageDealt(char who) {
-
-        if (who == 'c') {
-            thisInt = damageC;
+    public void loadAssets() {
+        if (!loadAssets) return;
+        notSelected = LoginScreen.getInstance().getMyFont(12);
+        statusFont = LoginScreen.getInstance().getMyFont(28);
+        bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.bigTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        getCharMoveset();
+        LoginScreen.getInstance().defHeight = LoginScreen.getInstance().getGameHeight();
+        cacheNumPix();
+        if (WindowOptions.graphics.equalsIgnoreCase("High")) {
+            loadCharSpritesHigh();
+        } else {
+            loadCharSpritesLow();
+        }
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            server = LoginScreen.getInstance().getMenu().getMain().getServer();
+        }
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            //get ip from game
+            client = LoginScreen.getInstance().getMenu().getMain().getClient();
         }
 
-        if (who == 'o') {
-            thisInt = damageO;
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+            charAssSpriteStatus = 9;
+            oppAssSpriteStatus = 9;
+        } else {
+            charAssSpriteStatus = 11;
+            oppAssSpriteStatus = 11;
         }
-
-        return thisInt;
+        charPointInc = RenderCharacterSelectionScreen.getInstance().getPlayers().getPoints();
+        loadAssets = false;
     }
 
-    /**
-     * Set player 1 life
-     *
-     * @param Life - value
-     */
-    public static void setLife(int Life) {
-        life = Life;
+    public void cleanAssets() {
+        loadAssets = true;
     }
 
-    /**
-     * Set player 1 maximum life
-     *
-     * @param Life - value
-     */
-    public static void setMaxLife(int Life) {
-        maXlife = Life;
-    }
+    @Override
+    public void paintComponent(Graphics g) {
+        /* Fixed performance issues, got rid off geometry and replaced with static VolatileImage s -----facepalm*/
+        createBackBuffer();
+        loadAssets();
+        if (imagesCharChached != true) {
+            g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
+        } else if (ThreadGameInstance.storySequence) {
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
-    public static boolean isGameRunning() {
-        return fpsGen != null;
-    }
-    //------------- end action listers -------------
-    //------------- start methods ------------------
+            if (opacityPic < 0.98f) {
+                opacityPic = opacityPic + 0.02f;
+            }
+            g2d.setComposite(makeComposite(opacityPic));
+            g2d.drawImage(storyPic, 0, 0, this);
+            g2d.setComposite(makeComposite(10 * 0.1f));
 
-    /**
-     * Gets the games current version
-     *
-     * @return version
-     */
-    public static String getVersionStr() {
-        return versionString;
-    }
+            g2d.setComposite(makeComposite(0.5f));
+            g2d.fillRoundRect(0, 424, LoginScreen.getInstance().getdefSpriteWidth(), 48, 48, 48); //mid minus half the font size (430-6)
+            g2d.setComposite(makeComposite(10 * 0.1f));
 
-    /**
-     * Gets the games current version
-     *
-     * @return version
-     */
-    public static int getVersionInt() {
-        return versioInt;
-    }
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(normalFont);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(146) + " >>")), 462);
 
-    /**
-     * Legacy awesomeness
-     *
-     * @return is effect on?
-     */
-    public static boolean isFancyEffect() {
-        {
-            if (fancyBWAnimeEffect == 1) {
-                fancyBWAnimeEffectEnabled = true;
+
+            if (opacityTxt < 0.98f) {
+                opacityTxt = opacityTxt + 0.02f;
+            }
+            g2d.setComposite(makeComposite(opacityTxt));
+            g2d.drawImage(charPort, ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2) - 50, 424, this);
+            g2d.drawString(battleInf.toString(), ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2), 450);
+            g2d.setComposite(makeComposite(10 * 0.1f));
+
+        } else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
+            g2d.drawImage(bgPic, 0, 0, this);
+            g2d.setFont(notSelected);
+            if (RenderStandardGameplay.getInstance().getCharLife() >= 0) {
+                if (animLayer.equalsIgnoreCase("both")) {
+                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                } else if (animLayer.equalsIgnoreCase("back")) {
+                    g2d.drawImage(ambient1, amb1x, amb1y, this);
+                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                }
+
+                if (LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
+                }
+
+                g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), this);
+
+
+                if (!LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
+                }
+
+                if (animLayer.equalsIgnoreCase("both")) {
+                    g2d.drawImage(ambient1, amb1x, amb1y, this);
+                } else if (animLayer.equalsIgnoreCase("forg")) {
+                    g2d.drawImage(ambient1, amb1x, amb1y, this);
+                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                }
+
+                /** character sprite on below, opponent on top
+                 * "Java Tip 32: You'll flip over Java images -- literally! - JavaWorld"
+                 * http://www.javaworld.com/javaworld/javatips/jw-javatip32.html?page=2
+                 */
+                if ((RenderStandardGameplay.getInstance().getCharLife() / RenderStandardGameplay.getInstance().getCharMaxLife()) < 0.66f) {
+                    damOpInc = 6.66f - ((RenderStandardGameplay.getInstance().getCharLife() / RenderStandardGameplay.getInstance().getCharMaxLife()) * 10);
+                    //BACK to transparency
+                }
+
+                if (specialEffect) {
+                    g2d.drawImage(foreGround, fgx, fgy, this);
+                }
+
+                g2d.setComposite(makeComposite((float) damOpInc * 0.1f));
+                g2d.drawImage(damLayer, 0, 0, this);
+                g2d.setComposite(makeComposite(1.0f));
+
+                g2d.drawImage(menuHold, leftyXOffset, menuBarY, this);
+
+
+                for (int xB = 0; xB < 4; xB++) {
+                    g2d.drawImage(quePic1, (xB * 70 + 5 + leftyXOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
+                }
+
+                if (RenderStandardGameplay.getInstance().comboCounter >= 1) {
+                    for (int xV = 0; xV < RenderStandardGameplay.getInstance().comboCounter; xV++) {
+                        g2d.drawImage(quePic2, (xV * 70 + 5 + leftyXOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
+                    }
+                }
+
+
+                if (comicBookTextOpacity >= 0.0f) {
+                    comicBookTextOpacity = comicBookTextOpacity - 0.0125f;
+                }
+                g2d.setComposite(makeComposite(comicBookTextOpacity));
+                g2d.drawImage(comicPicArray[comicPicArrayPos], 170 + basicX, 112 + basicY + comicY, this);
+                g2d.setComposite(makeComposite(1.0f));
+                comicY = comicY + 3;
+
+                if (opacityTxt < 0.98f) {
+                    opacityTxt = opacityTxt + 0.02f;
+                }
+                g2d.setComposite(makeComposite(opacityTxt));
+                g2d.setColor(Color.WHITE);
+                g2d.drawString(battleInf.toString(), 32 + leftyXOffset, 470);
+                g2d.setComposite(makeComposite(1.0f));
+
+                //-----------draws battle info messages--------------
+
+
+                //stats
+
+                if (statusOpChar > 0.02f) {
+                    statusOpChar = statusOpChar - 0.02f;
+                }
+                g2d.setComposite(makeComposite(statusOpChar));
+                g2d.drawImage(statsPicChar[statIndexChar], 150 + basicX + shakeyOffsetChar, 100 + basicY - shakeyOffsetChar + statsPosYChar, this);
+                g2d.setComposite(makeComposite(1.0f));
+                statsPosYChar = statsPosYChar + 1;
+
+
+                if (statusOpOpp > 0.02f) {
+                    statusOpOpp = statusOpOpp - 0.02f;
+                }
+                g2d.setComposite(makeComposite(statusOpOpp));
+                g2d.drawImage(statsPicOpp[statIndexOpp], 602 + basicX + shakeyOffsetOpp, 100 + basicY - shakeyOffsetOpp + statsPosYOpp, this);
+                g2d.setComposite(makeComposite(1.0f));
+                statsPosYOpp = statsPosYOpp + 1;
+
+                //---opponrnt activity bar + text
+
+                g2d.drawImage(hpHolder, (45 + 62 + x2) + shakeyOffsetOpp, (y + 4 + y2 - oppBarYOffset) - shakeyOffsetOpp, this);
+                g2d.setColor(Color.WHITE);
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                    g2d.drawString("HP: " + Math.round((RenderStandardGameplay.getInstance().getOppLife2() + RenderStandardGameplay.getInstance().getOppLife())) + " : " + ((RenderStandardGameplay.getInstance().perCent2a + RenderStandardGameplay.getInstance().perCent2) / 2) + "%", (int) ((55 + 64 + x2)), (int) ((18 + y2 - oppBarYOffset)));
+                } else {
+                    g2d.drawString("HP: " + Math.round(RenderStandardGameplay.getInstance().getOppLife()) + " : " + RenderStandardGameplay.getInstance().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
+                }
+
+                g2d.setColor(Color.BLACK);
+                g2d.drawImage(oppBar, (x2 - 20) + shakeyOffsetOpp, (y2 + 18 - oppBarYOffset) - shakeyOffsetOpp, this);
+                g2d.setPaint(gradient1);
+                g2d.fillRoundRect((x2 - 17) + shakeyOffsetOpp, (y2 + 22 - oppBarYOffset) - shakeyOffsetOpp, RenderStandardGameplay.getInstance().getGameInstance().getRecoveryUnitsOpp(), 6, 6, 6);
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                    g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 40), this);
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawString("HP: " + Math.round((RenderStandardGameplay.getInstance().getOppLife2() + RenderStandardGameplay.getInstance().getOppLife())) + " : " + ((RenderStandardGameplay.getInstance().perCent2a + RenderStandardGameplay.getInstance().perCent2) / 2) + "%", 55 + 64 + x2, 18 + y2 - 40);
+                    g2d.setColor(Color.BLACK);
+                    g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 40, this);
+                    g2d.setPaint(gradient1);
+                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 40, RenderStandardGameplay.getInstance().getGameInstance().getRecoveryUnitsOpp2(), 6, 6, 6);
+
+                    g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 80), this);
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawString("HP: " + ((Math.round(RenderStandardGameplay.getInstance().getCharLife3()) + Math.round(RenderStandardGameplay.getInstance().getCharLife()))) + " : " + ((RenderStandardGameplay.getInstance().perCent3a + RenderStandardGameplay.getInstance().perCent) / 2) + "%", 55 + 64 + x2, 18 + y2 - 80);
+                    g2d.setColor(Color.BLACK);
+                    g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 80, this);
+                    g2d.setPaint(gradient2);
+                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 80, RenderStandardGameplay.getInstance().getGameInstance().getRecoveryUnitsChar2(), 6, 6, 6);
+                }
+
+                //------------player 1 HUD---------------------//
+                g2d.drawImage(hpHolder, (lbx2 - 438) + shakeyOffsetChar, (lby2 - 410) - shakeyOffsetChar, this); // HOLDS hp
+                //outline
+                g2d.drawImage(hud1, (lbx2 - 498) + shakeyOffsetChar, (lby2 - 417) - shakeyOffsetChar, this);
+                //inner
+                //g2d.setColor(Color.RED);
+                g2d.setPaint(gradient3);
+                g2d.fillArc(lbx2 - 493 + shakeyOffsetChar, lby2 - 412 - shakeyOffsetChar, 90, 90, 0, phyAngle());
+                //inner loop
+                g2d.setColor(Color.BLACK);
+                g2d.drawImage(hud2, lbx2 - 488 + shakeyOffsetChar, lby2 - 407 - shakeyOffsetChar, this);
+
+                {
+                    g2d.setColor(Color.WHITE);
+
+                    if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                        g2d.drawString("HP: " + ((Math.round(RenderStandardGameplay.getInstance().getCharLife3()) + Math.round(RenderStandardGameplay.getInstance().getCharLife()))) + " : " + ((RenderStandardGameplay.getInstance().perCent3a + RenderStandardGameplay.getInstance().perCent) / 2) + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
+                    } else {
+                        g2d.drawString("HP: " + Math.round(RenderStandardGameplay.getInstance().getCharLife()) + " : " + RenderStandardGameplay.getInstance().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
+                    }
+                    g2d.setComposite(makeComposite(10 * 0.1f)); //op back to normal for other drawings
+                }
             }
 
-            if (fancyBWAnimeEffect != 1) {
-                fancyBWAnimeEffectEnabled = false;
+            g2d.drawImage(counterPane, paneCord, 0, this);
+
+            if (RenderStandardGameplay.getInstance().getGameInstance().time > 180) {
+                g2d.drawImage(numberPix[11], (int) (386), 0, this);
+            } else {
+
+                g2d.drawImage(times[RenderStandardGameplay.getInstance().getGameInstance().time1], (int) (356), 0, this);
+                g2d.drawImage(times[RenderStandardGameplay.getInstance().getGameInstance().time2], (int) ((356) + 40), 0, this);
+                g2d.drawImage(times[RenderStandardGameplay.getInstance().getGameInstance().time3], (int) ((356) + 80), 0, this);
             }
+
+
+            {
+                if (opac < 0.95f) {
+                    opac = opac + 0.05f;
+                }
+                g2d.setComposite(makeComposite(opac));
+                g2d.setColor(CurrentColor);
+                g2d.drawImage(curr, itemX + leftyXOffset, itemY, this);
+
+                if (fontSizes[0] == LoginScreen.bigTxtSize) {
+                    g2d.setFont(bigFont);
+                } else {
+                    g2d.setFont(normalFont);
+                }
+                g2d.drawString(currentColumn[0], (yTEST + leftyXOffset), ((366) + fontSizes[0]));
+
+
+                if (fontSizes[1] == LoginScreen.bigTxtSize) {
+                    g2d.setFont(bigFont);
+                } else {
+                    g2d.setFont(normalFont);
+                }
+                g2d.drawString(currentColumn[1], (yTEST + leftyXOffset), ((366) + fontSizes[0] + 2 + fontSizes[1]));
+
+                if (fontSizes[2] == LoginScreen.bigTxtSize) {
+                    g2d.setFont(bigFont);
+                } else {
+                    g2d.setFont(normalFont);
+                }
+                g2d.drawString(currentColumn[2], (yTEST + leftyXOffset), ((366) + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2]));
+
+                if (fontSizes[3] == LoginScreen.bigTxtSize) {
+                    g2d.setFont(bigFont);
+                } else {
+                    g2d.setFont(normalFont);
+                }
+                g2d.drawString(currentColumn[3], (yTEST + leftyXOffset), ((366) + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3]));
+
+                g2d.setComposite(makeComposite(1.0f));
+            }
+
+            //limit break stuff
+            g2d.drawImage(fury, 20 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 190 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
+            g2d.drawImage(furyBar, 10 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), furyBarY - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
+            g2d.setColor(Color.RED);
+            g2d.fillRoundRect(12 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 132 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 12, getBreak() / 5, 12, 12);
+            //COMBO
+
+            if (furyComboOpacity > 0.01f) {
+                furyComboOpacity = furyComboOpacity - 0.01f;
+            }
+            g2d.setComposite(makeComposite(furyComboOpacity));
+            g2d.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), comY - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
+            g2d.setComposite(makeComposite(1.0f));
+            g2d.setFont(notSelected);
+
+
+            //clash area
+            if (clasherOn) {
+                g2d.setColor(Color.BLACK);
+                g2d.fillRoundRect(221, 395, 410, 20, 10, 10);
+                g2d.drawImage(flashy, (int) (ThreadClashSystem.plyClashPerc * 4) + 226, 385, this);
+                g2d.setColor(Color.RED);
+                g2d.fillRect((int) (626 - (ThreadClashSystem.oppClashPerc * 4)), 400, (int) ThreadClashSystem.oppClashPerc * 4, 10);
+                g2d.setColor(Color.YELLOW);
+                g2d.fillRect(226, 400, (int) (ThreadClashSystem.plyClashPerc * 4), 10);
+            }
+
+            //damage digits
+            {
+                g2d.setComposite(makeComposite(opponentDamageOpacity));
+                //opp damage imageLoader
+                g2d.drawImage(figGuiSrc1, playerDamageXLoc + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
+                g2d.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
+                g2d.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
+                g2d.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + shakeyOffsetChar, opponentDamageYLoc - shakeyOffsetChar, this);
+                g2d.setComposite(makeComposite(1.0f));
+                if (opponentDamageOpacity >= 0.0f) {
+                    opponentDamageOpacity = opponentDamageOpacity - 0.0125f;
+                }
+                if (opponentDamageOpacity < 0.8f) {
+                    opponentDamageYLoc = opponentDamageYLoc - 3;
+                }
+
+
+                g2d.setComposite(makeComposite(playerDamageOpacity));
+                //char damage imageLoader
+                g2d.drawImage(figGuiSrc10, opponentDamageXLoc + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
+                g2d.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
+                g2d.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
+                g2d.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + shakeyOffsetOpp, playerDamageYLoc - shakeyOffsetOpp, this);
+                g2d.setComposite(makeComposite(1.0f));
+                if (playerDamageOpacity >= 0.0f) {
+                    playerDamageOpacity = playerDamageOpacity - 0.0125f;
+                }
+                if (playerDamageOpacity < 0.8f) {
+                    playerDamageYLoc = playerDamageYLoc - 3;
+                }
+            }
+            checkFuryStatus();
         }
 
-        return fancyBWAnimeEffectEnabled;
+        //-----------ENDS ATTACKS QUEING UP--------------
+
+        //when paused
+        if (ThreadGameInstance.isPaused == true) {
+            g2d.setColor(Color.BLACK);
+            g2d.setComposite(makeComposite(5 * 0.1f));//initial val between 1 and 10
+            g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
+            g2d.setComposite(makeComposite(10 * 0.1f));
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(148), 400, 240);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(149), 400, 260);
+            g2d.drawString(JenesisLanguage.getInstance().getLine(150), 400, 280);
+        }
+
+        //when gameover
+        if (ThreadGameInstance.isGameOver == true) {
+            g2d.setColor(Color.WHITE);
+            g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
+            g2d.setColor(Color.BLACK);
+            g2d.setComposite(makeComposite(8 * 0.1f));//initial val between 1 and 10
+            g2d.fillRect(0, 210, getGameWidth(), 121);
+            g2d.setComposite(makeComposite(10 * 0.1f));
+            g2d.drawImage(status, 0, 210, this);
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(notSelected);
+            g2d.drawString(ach1, 400, 240); //+14
+            g2d.drawString(ach2, 400, 254);
+            g2d.drawString(ach3, 400, 268);
+            g2d.drawString(ach4, 400, 282);
+            g2d.drawString("<< " + JenesisLanguage.getInstance().getLine(146) + " >>", 400, 296);
+        }
+
+        //global overlay
+        JenesisGlassPane.getInstance().overlay(g2d, this);
+
+        g.drawImage(volatileImg, 0, 0, this);
     }
 
     /**
-     * Get the character multiplier
+     * Show win pic
+     */
+    public void showWinLabel() {
+        status = win;
+    }
+
+    /**
+     * Show loose pic
+     */
+    public void showLoseLabel() {
+        status = lose;
+    }
+
+    /**
+     * Change storyboard pic
+     */
+    public void changeStoryBoard(int here2) {
+        try {
+            storyPic = storyPicArr[here2 + 1];
+            opacityPic = 0.0f;
+        } catch (Exception e) {
+            storyPic = storyPicArr[1];
+        }
+    }
+
+    /**
+     * Playing around with animate sprites
      *
-     * @return the damage multiplier
+     * @param whichOne move
+     * @param loop     loop animation or not
      */
-    public static int getDamageMultiplierChar() {
-        return damageMultiplierChar;
-    }
+    public void specialEffect(int whichOne, boolean loop) {
+        final int thisOne = whichOne;
+        final boolean isLoop = loop;
 
-    /**
-     * Get the opponent multiplier
-     *
-     * @return the damage multiplier
-     */
-    public static int getDamageMultiplierOpp() {
-        return damageMultiplierOpp;
-    }
-
-    /**
-     * Get the break status
-     *
-     * @return break status
-     */
-    public static int getBreak() {
-        return limitBreak;
-    }
-
-    /**
-     * set the break status
-     */
-    public static void setBreak(int change) {
-        limitBreak = limitBreak + change;
-    }
-
-    /**
-     * Increment limit
-     */
-    private static void incLImit(int ThisMuch) {
-        final int inc = ThisMuch;
         new Thread() {
-            //add one, make sure we dont go over 2000
 
-            @SuppressWarnings("static-access")
+            @SuppressWarnings({"static-access", "static-access", "SleepWhileHoldingLock"})
             @Override
             public void run() {
-                int icrement = inc;
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-                    icrement = icrement / 2;
-                }
-                this.setName("Fury bar increment stage");
-                for (int o = 0; o < icrement; o++) {
-                    if (limitBreak < limitTop) {
-                        try {
-                            limitBreak = limitBreak + 1;
-                            this.sleep(15);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(RenderStandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
+                if (animCharFree) {
+                    try {
+                        animCharFree = false;
+
+
+                        //anim1
+                        if (thisOne == 1) {
+                            for (int u = 0; u < attackAnim1.length; u++) {
+                                charSpec = attackAnim1[u];
+                                if (isLoop) {
+                                    this.sleep(animTime / (attackAnim1.length * 2));
+                                } else {
+                                    this.sleep(animTime / attackAnim1.length);
+                                }
+                            }
+
+                            if (isLoop) {
+                                for (int u = attackAnim1.length - 1; u > -1; u--) {
+                                    charSpec = attackAnim1[u];
+                                    this.sleep(animTime / (attackAnim1.length * 2));
+                                }
+                            }
                         }
+
+                        //anim1
+                        if (thisOne == 2) {
+                            for (int u = 0; u < attackAnim2.length; u++) {
+                                charSpec = attackAnim2[u];
+                                if (isLoop) {
+                                    this.sleep(animTime / (attackAnim2.length * 2));
+                                } else {
+                                    this.sleep(animTime / attackAnim2.length);
+                                }
+                            }
+
+                            if (isLoop) {
+                                for (int u = attackAnim2.length - 1; u > -1; u--) {
+                                    charSpec = attackAnim2[u];
+                                    this.sleep(animTime / (attackAnim2.length * 2));
+                                }
+                            }
+                        }
+
+
+                        charSpec = opp11;
+                        animCharFree = true;
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         }.start();
     }
 
-    /**
-     * 13 / Sept /2010
-     * 16:24
-     * <p>
-     * be strong
-     * love what you do
-     * passion
-     * expertice
-     * ============Ultra High Definition=====================
-     * 1980x1080 standard HD
-     * UHD developed by NHK
-     * 8000x4360, 24GiB/s compressed to 1.GiBs, encoded 350MiB/s
-     */
-    public void killGameInstance() {
-        //fpsGen=null;
+    private void checkFuryStatus() {
+        if (RenderStandardGameplay.getInstance().getBreak() == 1000) {
+            fury = fury1;
+        } else {
+            fury = fury2;
+        }
+
+        if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == true) {
+            //slow mo!!!!
+        }
     }
 
-    public void triggerFury(char who) {
-        limitBreak(who);
+    public void setP2Damage(int oneA, int twoA, int threeA, int fourA) {
+        comicText();
+
+        nrmlDamageSound();
+        attackSoundOpp();
+        hurtSoundOpp();
+
+
+        playerDamageYLoc = 160 + (int) (Math.random() * 100);
+        playerDamageXLoc = 575 + (int) (Math.random() * 100);
+        playerDamageOpacity = 1.0f;
+
+        oneO = oneA;
+        twoO = twoA;
+        threeO = threeA;
+        fourO = fourA;
+
+        figGuiSrc10 = numberPix[oneO];
+        figGuiSrc20 = numberPix[twoO];
+        figGuiSrc30 = numberPix[threeO];
+        figGuiSrc40 = numberPix[fourO];
+    }
+
+
+    public void setP1Damage(int oneA, int twoA, int threeA, int fourA) {
+        comicText();
+
+        nrmlDamageSound();
+        attackSoundChar();
+        hurtSoundChar();
+
+        opponentDamageYLoc = 160 + (int) (Math.random() * 100);
+        opponentDamageXLoc = 150 + (int) (Math.random() * 100);
+        opponentDamageOpacity = 1.0f;
+
+        one = oneA;
+        two = twoA;
+        three = threeA;
+        four = fourA;
+
+        figGuiSrc1 = numberPix[one];
+        figGuiSrc2 = numberPix[two];
+        figGuiSrc3 = numberPix[three];
+        figGuiSrc4 = numberPix[four];
     }
 
     /**
-     * Get scale Y
-     *
-     * @return Y's scale
+     * Caches number
      */
-    public float getscaleY() {
-        return LoginScreen.getInstance().getGameYScale();
+    private void cacheNumPix() {
+        if (LoginScreen.getInstance().isLefty().equalsIgnoreCase("no")) {
+            leftyXOffset = 548;
+        } else {
+            leftyXOffset = 0;
+        }
+        if (imagesNumChached == false) {
+            JenesisImageLoader pix = new JenesisImageLoader();
+            counterPane = pix.loadImageFromToolkitNoScale("images/countPane.png");
+            if (activeStage != 100) {
+                foreGround = pix.loadBImage2(fgLocation, 852, 480, this);
+            } else {
+                foreGround = pix.loadBImage2(fgLocation, 960, 480, this);
+            }
+            num0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
+            num1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
+            num2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
+            num3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
+            num4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
+            num5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
+            num6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
+            num7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
+            num8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
+            num9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
+            numInfinite = pix.loadImageFromToolkitNoScale("images/fig/infinite.png");
+            numNull = pix.loadImageFromToolkitNoScale("images/trans.png");
+            //flashy=imageLoader.loadBImage2("images/flash.gif",40,40);
+            flashy = null;
+            numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
+
+            statsPicChar[0] = pix.loadImageFromToolkitNoScale("images/trans.png");
+            statsPicChar[1] = pix.loadImageFromToolkitNoScale("images/stats/stat1.png");
+            statsPicChar[2] = pix.loadImageFromToolkitNoScale("images/stats/stat2.png");
+            statsPicChar[3] = pix.loadImageFromToolkitNoScale("images/stats/stat3.png");
+            statsPicChar[4] = pix.loadImageFromToolkitNoScale("images/stats/stat4.png");
+
+            statsPicOpp[0] = pix.loadImageFromToolkitNoScale("images/trans.png");
+            statsPicOpp[1] = pix.loadImageFromToolkitNoScale("images/stats/stat1.png");
+            statsPicOpp[2] = pix.loadImageFromToolkitNoScale("images/stats/stat2.png");
+            statsPicOpp[3] = pix.loadImageFromToolkitNoScale("images/stats/stat3.png");
+            statsPicOpp[4] = pix.loadImageFromToolkitNoScale("images/stats/stat4.png");
+
+            System.out.println("loaded all imageLoader");
+            imagesNumChached = true;
+            //ensures method is only run once
+        }
     }
 
     /**
-     * Get scale Y
-     *
-     * @return Y's scale
+     * EPIC!!!! Loads har sprites
      */
-    public float getscaleX() {
-        return LoginScreen.getInstance().getGameXScale();
-    }
+    private void loadCharSpritesHigh() {
+        if (imagesCharChached == false) {
+            try {
+                JenesisImageLoader pix = new JenesisImageLoader();
+                RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().loadMeHigh(this);
+                RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().loadMeHigh(this);
 
-    /**
-     * Takes a screen shot
-     */
-    public void takeScreenShot() {
-        captureScreenShot();
-        systemNotice("Screenshot taken");
-    }
+                charSprites = new VolatileImage[12];
+                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
+                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(i);
+                }
 
-    /**
-     * Determines if match has reached game over state
-     */
-    public void matchStatus() {
-        if (gameOver == false) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-                if ((oppLife + oppLife2) < 0 || (life + charLife3) < 0 || (getGameInstance().time <= 0 && getGameInstance().time <= 180)) {
-                    if ((float) (oppLife + oppLife2) / (float) (oppMaxLife + oppMaxLife2) > (float) (life + charLife3) / (float) (maXlife + charMaxLife3) || (float) (oppLife + oppLife2) / (float) (oppMaxLife + oppMaxLife2) < (float) (life + charLife3) / (float) (charMaxLife3 + maXlife)) {
-                        getGameInstance().gameOver();
+                oppSprites = new VolatileImage[12];
+                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
+                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getMeHigh(i);
+                }
+
+                comboPicArray = new Image[9];
+                for (int u = 0; u < 6; u++) {
+                    comboPicArray[u] = pix.loadImageFromToolkitNoScale("images/screenTxt/" + u + ".png");
+                }
+                comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
+                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+
+                comicPicArray = new Image[10];
+                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                for (int bx = 1; bx < numOfComicPics + 1; bx++) {
+                    comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
+                }
+
+                menuHold = pix.loadImageFromToolkitNoScale("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getEnum().data() + "/menu.png");
+                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
+
+                time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
+                time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
+                time2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
+                time3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
+                time4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
+                time5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
+                time6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
+                time7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
+                time8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
+                time9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
+                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9, opp11};
+
+                charCaption = new VolatileImage[charNames.length];
+
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                    for (int p = 0; p < charNames.length; p++) {
+                        charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
+                    }
+                } else {
+                    for (int p = 0; p < charNames.length; p++) {
+                        charCaption[p] = null;
                     }
                 }
-            } else if (oppLife < 0 || life < 0 || (ThreadGameInstance.time <= 0 && ThreadGameInstance.time <= 180)) {
-                if ((float) oppLife / (float) oppMaxLife > (float) life / (float) maXlife || (float) oppLife / (float) oppMaxLife < (float) life / (float) maXlife) {
-                    getGameInstance().gameOver();
+                charPort = opp11;
+                Image transBuf = pix.loadImageFromToolkit("images/trans.png", 5, 5);
+                hpHolder = pix.loadImageFromToolkitNoScale("images/hpHolder.png");
 
+                bgPic = pix.loadImageFromToolkit(bgLocation, 852, 480);
+                phys = pix.loadImageFromToolkitNoScale("images/t_physical.png");
+                cel = pix.loadImageFromToolkitNoScale("images/t_celestia.png");
+                itm = pix.loadImageFromToolkitNoScale("images/t_item.png");
+                fury1 = pix.loadImageFromToolkitNoScale("images/fury.gif");
+                fury2 = pix.loadImageFromToolkitNoScale("images/furyo.png");
+                fury = fury2;
+
+                ambient1 = pix.loadBImage2("images/bgBG" + activeStage + "a.png", 852, 480, this);
+                ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
+
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                    storyPicArr = new VolatileImage[13];
+                    for (int u = 0; u < 11; u++) {
+                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                    }
+                    storyPic = storyPicArr[0];
                 }
+
+                furyBar = pix.loadImageFromToolkitNoScale("images/furyBar.png");
+                quePic1 = pix.loadImageFromToolkitNoScale("images/queB.png");
+                quePic2 = pix.loadImageFromToolkitNoScale("images/que.gif");
+                oppBar = pix.loadImageFromToolkitNoScale("images/oppBar.png");
+
+                moveCat = new Image[]{phys, cel, itm};
+                curr = moveCat[0];
+
+                stat1 = pix.loadBImage2("images/stats/stat1.png", 90, 24, this);
+                stat2 = pix.loadBImage2("images/stats/stat2.png", 90, 24, this);
+                stat3 = pix.loadBImage2("images/stats/stat3.png", 90, 24, this);
+                stat4 = pix.loadBImage2("images/stats/stat4.png", 90, 24, this);
+                stats = new VolatileImage[]{stat1, stat2, stat3, stat4};
+
+                hud1 = pix.loadImageFromToolkitNoScale("images/hud1.png");
+                hud2 = pix.loadImageFromToolkitNoScale("images/hud2.png");
+
+                win = pix.loadImageFromToolkitNoScale("images/win.png");
+                lose = pix.loadImageFromToolkitNoScale("images/lose.png");
+                status = transBuf;
+
+                System.out.println("loaded all char sprites imageLoader");
+                imagesCharChached = true;
+                //ensures method is only run once
+            } catch (Exception e) {
+                imagesCharChached = false;
+                JOptionPane.showMessageDialog(null, e);
             }
-            //save life at gameover
-            finalOppLife = (float) oppLife / (float) oppMaxLife;
-            finalCharLife = (float) life / (float) maXlife;
+        }
+    }
+
+    /**
+     * EPIC!!!! Loads char sprite
+     * Uses toolkit images and less RAM
+     */
+    private void loadCharSpritesLow() {
+        if (imagesCharChached == false) {
+            try {
+                JenesisImageLoader pix = new JenesisImageLoader();
+                RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().loadMeLow();
+                RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().loadMeLow();
+                charSprites = new Image[12];
+                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
+                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeLow(i);
+                }
+                oppSprites = new Image[12];
+                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
+                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getMeLow(i);
+                }
+                comboPicArray = new Image[9];
+                for (int u = 0; u < 6; u++) {
+                    comboPicArray[u] = pix.loadImageFromToolkitNoScale("images/screenTxt/" + u + ".png");
+                }
+                comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
+                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                comicPicArray = new Image[10];
+                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                for (int bx = 1; bx < numOfComicPics + 1; bx++) {
+                    comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
+                }
+                menuHold = pix.loadImageFromToolkitNoScale("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharName() + "/menu.png");
+                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
+                time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
+                time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
+                time2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
+                time3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
+                time4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
+                time5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
+                time6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
+                time7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
+                time8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
+                time9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
+                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9, opp11};
+                charCaption = new VolatileImage[charNames.length];
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                    for (int p = 0; p < charNames.length; p++) {
+                        charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
+                    }
+                } else {
+                    for (int p = 0; p < charNames.length; p++) {
+                        charCaption[p] = null;
+                    }
+                }
+                charPort = opp11;
+                Image transBuf = pix.loadImageFromToolkit("images/trans.png", 5, 5);
+                hpHolder = pix.loadImageFromToolkitNoScale("images/hpHolder.png");
+                bgPic = pix.loadImageFromToolkit(bgLocation, 852, 480);
+                phys = pix.loadImageFromToolkitNoScale("images/t_physical.png");
+                cel = pix.loadImageFromToolkitNoScale("images/t_celestia.png");
+                itm = pix.loadImageFromToolkitNoScale("images/t_item.png");
+                fury1 = pix.loadImageFromToolkitNoScale("images/fury.gif");
+                fury2 = pix.loadImageFromToolkitNoScale("images/furyo.png");
+                fury = fury2;
+                {
+                    ambient1 = pix.loadBImage2("images/bgBG" + activeStage + "a.png", 852, 480, this);
+                    ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
+                }
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                    storyPicArr = new VolatileImage[11];
+                    for (int u = 0; u < 11; u++) {
+                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                    }
+                    storyPic = storyPicArr[0];
+                }
+                furyBar = pix.loadImageFromToolkitNoScale("images/furyBar.png");
+                quePic1 = pix.loadImageFromToolkitNoScale("images/queB.png");
+                quePic2 = pix.loadImageFromToolkitNoScale("images/que.gif");
+                oppBar = pix.loadImageFromToolkitNoScale("images/oppBar.png");
+                moveCat = new Image[]{phys, cel, itm};
+                curr = moveCat[0];
+                stat1 = pix.loadBImage2("images/stats/stat1.png", 90, 24, this);
+                stat2 = pix.loadBImage2("images/stats/stat2.png", 90, 24, this);
+                stat3 = pix.loadBImage2("images/stats/stat3.png", 90, 24, this);
+                stat4 = pix.loadBImage2("images/stats/stat4.png", 90, 24, this);
+                stats = new VolatileImage[]{stat1, stat2, stat3, stat4};
+                hud1 = pix.loadImageFromToolkitNoScale("images/hud1.png");
+                hud2 = pix.loadImageFromToolkitNoScale("images/hud2.png");
+                win = pix.loadImageFromToolkitNoScale("images/win.png");
+                lose = pix.loadImageFromToolkitNoScale("images/lose.png");
+                status = transBuf;
+                System.out.println("loaded all char sprites imageLoader");
+                imagesCharChached = true;
+                //ensures method is only run once
+            } catch (Exception e) {
+                imagesCharChached = true;
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+
+    /**
+     * Flashy text at bottom of screen
+     *
+     * @param thisMessage
+     */
+    public void flashyText(String thisMessage) {
+        opacityTxt = 0.0f;
+        battleInf = new StringBuilder(thisMessage);
+    }
+
+    /**
+     * Go to next command menu column
+     */
+    public void nextAnim() {
+        if (nextEnabled && backEnabled) {
+            backEnabled = false;
+            yTEST = yTESTinit;
+            if (currentCols < moveCat.length - 1) {
+                currentCols++;
+            } else {
+                currentCols = 0;
+            }
+            curr = moveCat[currentCols];
+            resolveText();
+            opac = 0.0f;
+            backEnabled = true;
+        }
+    }
+
+    /**
+     * Go to previous command menu column
+     */
+    public void prevAnim() {
+        if (backEnabled && nextEnabled) {
+            nextEnabled = false;
+            yTEST = yTESTinit;
+            opac = 0.0f;
+            if (currentCols > 0) {
+                currentCols = currentCols - 1;
+            } else {
+                currentCols = moveCat.length - 1;
+            }
+            curr = moveCat[currentCols];
+            resolveText();
+            opac = 0.0f;
+            nextEnabled = true;
+        }
+    }
+
+    public void newInstance() {
+        super.newInstance();
+        damOpInc = 0;
+        one = 10;
+        two = 10;
+        three = 10;
+        four = 10;
+        oneO = 10;
+        twoO = 10;
+        threeO = 10;
+        fourO = 10;
+        opponentDamageYLoc = 400;
+        playerDamageYLoc = 400;
+        upDown = new ThreadAnim1();
+        if (WindowOptions.graphics.equalsIgnoreCase("High")) {
+            upDown2 = new ThreadAnim2();
+            upDown3 = new ThreadAnim3();
+            loadedUpdaters = true;
+        }
+        System.out.println("Char inc: " + charPointInc);
+    }
+
+    /**
+     * displays damage graphically
+     *
+     * @param damageAmount - damage dealt
+     * @param who          - who dealt the damage
+     */
+    public void guiScreenChaos(float damageAmount, char who) {
+        manipulateThis = "" + Math.round(damageAmount);
+        if (who == 'c') {
+            if (manipulateThis.length() == 1) {
+                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+            }
+            if (manipulateThis.length() == 2) {
+                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+            }
+            if (manipulateThis.length() == 3) {
+                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+            }
+            if (manipulateThis.length() == 4) {
+                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+            }
+        }
+
+        if (who == 'o') {
+            if (manipulateThis.length() == 1) {
+                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+            }
+            if (manipulateThis.length() == 2) {
+                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+            }
+            if (manipulateThis.length() == 3) {
+                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+            }
+            if (manipulateThis.length() == 4) {
+                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+            }
         }
     }
 
@@ -446,111 +1090,280 @@ public class RenderStandardGameplay extends StandardGameplay {
     }
 
     /**
-     * Get opponent 1 life
-     *
-     * @return value
+     * Attack sounds
      */
-    public float getOppLife() {
-        return (float) oppLife;
+    private void attackSoundChar() {
+        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
+            randSoundIntChar = (int) (Math.random() * ThreadMP3.maleHurt.length * 2);
+            if (randSoundIntChar < ThreadMP3.maleHurt.length) {
+                attackChar = new ThreadMP3(ThreadMP3.maleAttack(randSoundIntChar), false);
+                attackChar.play();
+            }
+        } else {
+            randSoundIntChar = (int) (Math.random() * ThreadMP3.femaleHurt.length * 2);
+            if (randSoundIntChar < ThreadMP3.femaleHurt.length) {
+                attackChar = new ThreadMP3(ThreadMP3.femaleAttack(randSoundIntChar), false);
+                attackChar.play();
+            }
+        }
+    }
+
+    private void attackSoundOpp() {
+        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
+            randSoundIntOpp = (int) (Math.random() * ThreadMP3.maleHurt.length * 2);
+            if (randSoundIntOpp < ThreadMP3.maleHurt.length) {
+                attackOpp = new ThreadMP3(ThreadMP3.maleAttack(randSoundIntOpp), false);
+                attackOpp.play();
+            }
+        } else {
+            randSoundIntOpp = (int) (Math.random() * ThreadMP3.femaleHurt.length * 2);
+            if (randSoundIntOpp < ThreadMP3.femaleHurt.length) {
+                attackOpp = new ThreadMP3(ThreadMP3.femaleAttack(randSoundIntOpp), false);
+                attackOpp.play();
+            }
+        }
+    }
+
+    private void hurtSoundChar() {
+        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
+            randSoundIntCharHurt = (int) (Math.random() * ThreadMP3.maleAttacks.length * 2);
+            if (randSoundIntCharHurt < ThreadMP3.maleAttacks.length) {
+                hurtChar = new ThreadMP3(ThreadMP3.maleHurt(randSoundIntCharHurt), false);
+                hurtChar.play();
+            }
+        } else {
+            randSoundIntCharHurt = (int) (Math.random() * ThreadMP3.femaleAttacks.length * 2);
+            if (randSoundIntCharHurt < ThreadMP3.femaleAttacks.length) {
+                hurtChar = new ThreadMP3(ThreadMP3.femaleHurt(randSoundIntCharHurt), false);
+                hurtChar.play();
+            }
+        }
+    }
+
+    private void hurtSoundOpp() {
+        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
+            randSoundIntOppHurt = (int) (Math.random() * ThreadMP3.maleAttacks.length * 2);
+            if (randSoundIntOppHurt < ThreadMP3.maleAttacks.length) {
+                hurtOpp = new ThreadMP3(ThreadMP3.maleHurt(randSoundIntOppHurt), false);
+                hurtOpp.play();
+            }
+        } else {
+            randSoundIntOppHurt = (int) (Math.random() * ThreadMP3.femaleAttacks.length * 2);
+            if (randSoundIntOppHurt < ThreadMP3.femaleAttacks.length) {
+                hurtOpp = new ThreadMP3(ThreadMP3.femaleHurt(randSoundIntOppHurt), false);
+                hurtOpp.play();
+            }
+        }
+    }
+
+    private void furySound() {
+        furySound = new ThreadMP3(ThreadMP3.furyAttck(), false);
+        furySound.play();
+    }
+
+    private void nrmlDamageSound() {
+        damageSound = new ThreadMP3(ThreadMP3.playerAttack(), false);
+        damageSound.play();
+    }
+
+
+    private void setRandomPic() {
+        comicPicArrayPos = Math.round((float) (numOfComicPics * Math.random()));
+        comicBookTextOpacity = 1.0f;
+        comicY = 0;
+    }
+
+    public void resetComicTxt() {
+        comicPicArrayPos = 0;
+    }
+
+    public void comicText() {
+        if (LoginScreen.getInstance().comicPicOcc > 0) {
+            int well = Math.round((float) (Math.random() * LoginScreen.getInstance().comicPicOcc));
+
+            if (well == 1) {
+                setRandomPic();
+            }
+        }
     }
 
     /**
-     * Set opponent 1 life
-     *
-     * @param Life - value
+     * Selecting a move
      */
-    public static void setOppLife(int Life) {
-        oppLife = Life;
+    public void moveSelected() {
+        if (clasherOn) {
+            clasher.plrClashing();
+            System.out.println("Playr clashin");
+        } else if (safeToSelect) {
+            numOfAttacks = numOfAttacks + 1;
+            sound = new ThreadMP3(ThreadMP3.selectSound(), false);
+            sound.play();
+            move = (currentCols * 4) + itemindex + 1;
+            attackArray[comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0
+            incrimentComboCounter();
+            checkStatus();
+            showBattleMessage("Qued up " + getSelMove(move));
+        } else {
+            RenderCharacterSelectionScreen.getInstance().errorSound();
+        }
+    }
+
+    public synchronized void playBGSound() {
+        if (fightMus == null)
+            fightMus = new ThreadMP3("audio/" + RenderStageSelect.musFiles[RenderStageSelect.musicInt] + ".mp3", true);
+        fightMus.play();
     }
 
     /**
-     * Get opponent 1's maximum life
-     *
-     * @return value
+     * pause threads
      */
-    public float getOppMaxLife() {
-        return (float) oppMaxLife;
+    public void pauseThreads() {
+        try {
+            fightMus.pause();
+            if (WindowOptions.graphics.equalsIgnoreCase("High")) {
+                upDown.pauseThread();
+                upDown2.pauseThread();
+                upDown3.pauseThread();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public void closeAudio() {
+        try {
+            fightMus.stop();
+            //fightMus.close();
+        } catch (Exception e) {
+        }
     }
 
     /**
-     * Set opponent 1's maximum life
-     *
-     * @param Life
+     * resume threads
      */
-    public static void setOppMaxLife(int Life) {
-        oppMaxLife = Life;
+    public void resumeThreads() {
+        try {
+            fightMus.resume();
+            if (WindowOptions.graphics.equalsIgnoreCase("High")) {
+                upDown.resumeThread();
+                upDown2.resumeThread();
+                upDown3.resumeThread();
+            }
+        } catch (Exception e) {
+        }
     }
 
     /**
-     * Get opponent 2's current life
-     *
-     * @return value
+     * Clear char port
      */
-    public float getOppLife2() {
-        return (float) oppLife2;
+    public void charPortBlank() {
+        charPort = opp1;
     }
 
     /**
-     * Set opponent 2's current life
+     * Change port pic
      *
-     * @param Life
+     * @param here - index of pic
      */
-    public static void setOppLife2(int Life) {
-        oppLife2 = Life;
+    public void charPortSet(int here) {
+        charPort = charCaption[here];
     }
 
-    /**
-     * Get opponent 2's maximum life
-     *
-     * @return value
-     */
-    public float getOppMaxLife2() {
-        return (float) oppMaxLife2;
-    }
 
     /**
-     * Set opponent 2's maximum life
-     *
-     * @param Life
+     * limit break, wee!!!
      */
-    public static void setOppMaxLife2(int Life) {
-        oppMaxLife2 = Life;
-    }
+    public void limitBreak(char who) {
+        dude = who;
+        new Thread() {
 
-    /**
-     * Get player 2's current life
-     *
-     * @return value
-     */
-    public float getCharLife3() {
-        return (float) charLife3;
-    }
+            @Override
+            public void run() {
+                if (getBreak() == 1000) {
+                    //&& getGameInstance().getRecoveryUnitsChar()>289
+                    //runs on local
+                    if (dude == 'c' && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
+                        limitRunning = false;
 
-    /**
-     * Set player 2's current life
-     *
-     * @param Life
-     */
-    public static void setCharLife3(int Life) {
-        charLife3 = Life;
-    }
-
-    /**
-     * Get player 2's maximum life
-     *
-     * @return value
-     */
-    public float getCharMaxLife3() {
-        return (float) charMaxLife3;
-    }
-
-    /**
-     * Set player 2's maximum life
-     *
-     * @param Life
-     */
-    public static void setCharMaxLife3(int Life) {
-        charMaxLife3 = Life;
+                        //broadcast on net
+                        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                            LoginScreen.getInstance().getMenu().getMain().sendToServer("limt_Break_Oxodia_Ownz");
+                        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                            LoginScreen.getInstance().getMenu().getMain().sendToClient("limt_Break_Oxodia_Ownz");
+                        }
+                        setAttackType("fury", 'c');
+                        comboCounter = 0;
+                        getGameInstance().pauseActivityRegen();
+                        getGameInstance().setRecoveryUnitsChar(0);
+                        try {
+                            GamePadController.getInstance().setRumbler(true, 0.8f);
+                        } catch (Exception e) {
+                        }
+                        for (int i = 1; i < 9; i++) {
+                            //stop attacking when game over
+                            if (getGameInstance().isGameOver == false) {
+                                furySound();
+                                hurtSoundOpp();
+                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                                setSprites('c', i, 11);
+                                setSprites('a', i, 11);
+                                setSprites('o', 0, 11);
+                                shakeOppCharLB();
+                                comboPicArrayPosOpp = i;
+                                furyComboOpacity = 1.0f;
+                                lifePhysUpdateSimple(2, 100, "");
+                            }
+                        }
+                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                        try {
+                            GamePadController.getInstance().setRumbler(false, 0.0f);
+                        } catch (Exception e) {
+                        }
+                        comboPicArrayPosOpp = 8;
+                        getGameInstance().resumeActivityRegen();
+                        setSprites('c', 9, 11);
+                        setSprites('o', 9, 11);
+                        setSprites('a', 11, 11);
+                        limitRunning = true;
+                        resetBreak();
+                        setAttackType("normal", 'c');
+                    } else if (dude == 'o' && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
+                        setAttackType("fury", 'o');
+                        limitRunning = false;
+                        try {
+                            GamePadController.getInstance().setRumbler(true, 0.8f);
+                        } catch (Exception e) {
+                        }
+                        for (int i = 1; i < 9; i++) {
+                            if (getGameInstance().isGameOver == false) {
+                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                                furySound();
+                                hurtSoundChar();
+                                getGameInstance().setRecoveryUnitsOpp(0);
+                                setSprites('o', i, 11);
+                                setSprites('b', i, 11);
+                                setSprites('c', 0, 11);
+                                shakeCharLB();
+                                comboPicArrayPosOpp = i;
+                                lifePhysUpdateSimple(1, 100, "");
+                            }
+                        }
+                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                        try {
+                            GamePadController.getInstance().setRumbler(false, 0.0f);
+                        } catch (Exception e) {
+                        }
+                        comboPicArrayPosOpp = 8;
+                        setSprites('o', 9, 11);
+                        setSprites('c', 9, 11);
+                        setSprites('b', 11, 11);
+                        limitRunning = true;
+                        resetBreak();
+                        setAttackType("normal", 'o');
+                    }
+                }
+            }
+        }.start();
     }
 
     /**
@@ -572,258 +1385,75 @@ public class RenderStandardGameplay extends StandardGameplay {
     }
 
     /**
-     * Resets the game after a match is done or cancelled
+     * Get the break status
+     *
+     * @return break status
      */
+    public int getBreak() {
+        return limitBreak;
+    }
+
+    /**
+     * set the break status
+     */
+    public void setBreak(int change) {
+        limitBreak = limitBreak + change;
+    }
+
     public void resetGame() {
-        life = maXlife;
-        oppLife = oppMaxLife;
-        damageMultiplierChar = Character.getDamageMultiplier('c');
-        damageMultiplierOpp = Character.getDamageMultiplier('o');
-        celestiaMultiplierChar = 10;
-        celestiaMultiplierOpp = 10;
+        super.resetGame();
         limitBreak = 5;
-        showBattleMessage("");
     }
 
     /**
-     * Slow down game
-     *
-     * @param amount - time duration
+     * Increment limit
      */
-    public void slowDown(int amount) {
-        getGameInstance().sleepy(amount);
-    }
+    private void incLImit(int ThisMuch) {
+        final int inc = ThisMuch;
+        new Thread() {
+            //add one, make sure we dont go over 2000
 
-    /**
-     * Starts an actual fight
-     */
-    public void startFight() {
-        resetGame();
-        fpsGen = new ThreadGameInstance(1, this);
-        startDrawing = 1;
-        comboCounter = 0;
-        LoginScreen.getInstance().getMenu().getMain().setGameRunning();
-        perCent = 100;
-        perCent2 = 100;
-        LoginScreen.getInstance().getMenu().getMain().reSize("game");
-    }
-
-    public ThreadGameInstance getGameInstance() {
-        return fpsGen;
-    }
-
-    /**
-     * displays damage graphically
-     *
-     * @param damageAmount - damage dealt
-     * @param who          - who dealt the damage
-     */
-    public void guiScreenChaos(float damageAmount, char who) {
-        manipulateThis = "" + Math.round(damageAmount);
-        //System.out.println("Damage in percentage "+Math.round(damageAmount));
-        if (who == 'c') {
-            if (manipulateThis.length() == 1) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+            @SuppressWarnings("static-access")
+            @Override
+            public void run() {
+                int icrement = inc;
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                    icrement = icrement / 2;
+                }
+                this.setName("Fury bar increment stage");
+                for (int o = 0; o < icrement; o++) {
+                    if (limitBreak < limitTop) {
+                        try {
+                            limitBreak = limitBreak + 1;
+                            this.sleep(15);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(RenderStandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
             }
+        }.start();
+    }
 
-            if (manipulateThis.length() == 2) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
-            }
+    public void triggerFury(char who) {
+        limitBreak(who);
+    }
 
-            if (manipulateThis.length() == 3) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
-            }
 
-            if (manipulateThis.length() == 4) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
-            }
-        }
-
-        if (who == 'o') {
-            if (manipulateThis.length() == 1) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
-            }
-
-            if (manipulateThis.length() == 2) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
-            }
-
-            if (manipulateThis.length() == 3) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
-            }
-
-            if (manipulateThis.length() == 4) {
-                RenderStandardGameplay.getInstance().setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
-            }
-        }
+    /**
+     * Makes text white, meaning its OK to select a move
+     */
+    public void enableSelection() {
+        CurrentColor = Color.WHITE;
+        safeToSelect = true;
     }
 
     /**
-     * Increment combo count
+     * Makes text red, meaning its NOT OK to select a move
      */
-    public void incrimentComboCounter() {
-        comboCounter = comboCounter + 1;
-        //System.out.println("DUDE :: "+comboCounter);
-    }
-
-    /**
-     * Remove move from que
-     */
-    public void unQueMove() {
-        if (comboCounter >= 1 && safeToSelect) {
-            //change curent index
-            comboCounter = comboCounter - 1;
-
-            //ADD points at index
-            int moi = Integer.parseInt(attackArray[comboCounter]);
-            Character.alterPoints2(moi);
-            System.out.println("UNQUED " + moi);
-
-            //numOfAttacks=numOfAttacks-1;
-        }
-    }
-
-    /**
-     * Scan que for desired attacks
-     *
-     * @param desiredAttack - id
-     * @return status
-     */
-    public boolean scanPhyQue(int desiredAttack) {
-        isMoveQued = false;
-
-        for (int x = 0; x <= 3; x++) //loops 4 times
-        {
-            if (Integer.parseInt(attackArray[x]) == desiredAttack) {
-                isMoveQued = true;
-            }
-        }
-
-        return isMoveQued;
-    }
-
-    /**
-     * update Player 1 life
-     *
-     * @param thisMuch - value
-     */
-    public void updateLife(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierChar * thisMuch;
-        life = life + thisMuch2;
-        daNum = ((getCharLife() / getCharMaxLife()) * 100); //perc life x life bar length
-        lifePlain = Math.round(daNum); // round off
-        lifeTotalPlain = Math.round(getCharLife()); // for text
-        perCent = Math.round(lifePlain);
-        Character.setCurrLifeOpp(perCent2);
-        Character.setCurrLifeChar(perCent);
-    }
-
-    /**
-     * update opponent 1 life
-     *
-     * @param thisMuch - value
-     */
-    public void updateOppLife(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
-        oppLife = oppLife + thisMuch2;
-        daNum2 = ((getOppLife() / getOppMaxLife()) * 100); //perc life x life bar length
-        lifePlain2 = Math.round(daNum2); // round off
-        lifeTotalPlain2 = Math.round(getOppLife()); // for text
-        perCent2 = Math.round(lifePlain2);
-        Character.setCurrLifeOpp(perCent2);
-        Character.setCurrLifeChar(perCent);
-    }
-
-    /**
-     * update opponent 2 life
-     *
-     * @param thisMuch - value
-     */
-    public void updateOppLife2(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
-        oppLife2 = oppLife2 + thisMuch2;
-        daNum2a = ((getOppLife2() / getOppMaxLife2()) * 100); //perc life x life bar length
-        lifePlain2a = Math.round(daNum2a); // round off
-        lifeTotalPlain2a = Math.round(getOppLife2()); // for text
-        Character.setCurrLifeChar2(perCent3a);
-        Character.setCurrLifeChar(perCent);
-        Character.setCurrLifeOpp2(perCent2a);
-        Character.setCurrLifeOpp(perCent2);
-    }
-
-    /**
-     * update Player 2 life
-     *
-     * @param thisMuch - value
-     */
-    public void updateOppLife3(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
-        charLife3 = charLife3 + thisMuch2;
-        daNum3a = ((getCharLife3() / getCharMaxLife3()) * 100); //perc life x life bar length
-        lifePlain2a = Math.round(daNum3a); // round off
-        lifeTotalPlain2a = Math.round(getCharLife3()); // for text
-        perCent3a = Math.round(lifePlain3a);
-        Character.setCurrLifeChar2(perCent3a);
-        Character.setCurrLifeChar(perCent);
-        Character.setCurrLifeOpp2(perCent2a);
-        Character.setCurrLifeOpp(perCent2);
-    }
-
-    /**
-     * Get the Character life, these methods should be float as they are used in divisions
-     *
-     * @return Character life
-     */
-    public float getCharLife() {
-        return (float) life;
-    }
-
-    /**
-     * Get the Character max life, these methods should be float as they are used in divisions
-     *
-     * @return Character maximum life
-     */
-    public float getCharMaxLife() {
-        return (float) maXlife;
-    }
-
-    /**
-     * Resume paused game
-     */
-    public void start() {
-        fpsGen.resumeGame();
-    }
-
-    /**
-     * Alter damage multipliers, used to strengthen/weaken attacks
-     *
-     * @param per      the person calling the method
-     * @param thisMuch the number to alter by
-     */
-    public void alterDamageCounter(char per, int thisMuch) {
-        if (per == 'c' && damageMultiplierOpp > 0 && damageMultiplierOpp < 20) {
-            damageMultiplierOpp = damageMultiplierOpp + thisMuch;
-        }
-
-        if (per == 'o' && damageMultiplierChar > 0 && damageMultiplierChar < 20) {
-            damageMultiplierChar = damageMultiplierChar + thisMuch;
-        }
-    }
-
-    /**
-     * Alter celestia multipliers, used to strengthen/weaken celestia attacks
-     *
-     * @param per      the person calling the method
-     * @param thisMuch the number to alter by
-     */
-    public void alterCelestiaCounter(char per, int thisMuch) {
-        if (per == 'c' && celestiaMultiplierOpp > 0 && celestiaMultiplierOpp < 16) {
-            celestiaMultiplierOpp = celestiaMultiplierOpp + thisMuch;
-        }
-
-        if (per == 'o' && celestiaMultiplierChar > 0 && celestiaMultiplierChar < 16) {
-            celestiaMultiplierChar = celestiaMultiplierChar + thisMuch;
-        }
+    public void disableSelection() {
+        CurrentColor = Color.RED;
+        safeToSelect = false;
     }
 
     /**
@@ -834,11 +1464,21 @@ public class RenderStandardGameplay extends StandardGameplay {
     }
 
     /**
-     * Determines if the player has won
+     * Calculates angle of circle
      *
-     * @return match status
+     * @return circel angle
      */
-    public boolean hasWon() {
-        return finalCharLife > finalOppLife;
+    protected int phyAngle() {
+        float start = RenderStandardGameplay.getInstance().getGameInstance().getRecoveryUnitsChar() / 290.0f;
+        angleRaw = start * 360;
+        result = Integer.parseInt("" + Math.round(angleRaw));
+        if (result >= 360) {
+            enableSelection();
+        } else {
+            disableSelection();
+        }
+
+        return result;
     }
+
 }

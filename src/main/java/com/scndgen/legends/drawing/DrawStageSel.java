@@ -22,6 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.windows.WindowMain;

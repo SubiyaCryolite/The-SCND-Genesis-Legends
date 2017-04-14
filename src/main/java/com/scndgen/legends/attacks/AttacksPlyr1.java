@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 
 public class AttacksPlyr1 extends AttacksBasic {
 
@@ -29,6 +29,6 @@ public class AttacksPlyr1 extends AttacksBasic {
      * Constructor
      */
     public AttacksPlyr1() {
-        dude = RenderCharacterSelectionScreen.getInstance().getPayers().getCharacter();
+        dude = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter();
     }
 }

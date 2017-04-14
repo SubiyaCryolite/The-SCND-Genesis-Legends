@@ -28,6 +28,7 @@ import com.scndgen.legends.menus.StoryMode;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,10 +38,9 @@ import java.awt.*;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public class RenderStoryMode extends StoryMode {
+public class RenderStoryMode extends StoryMode implements JenesisRender {
 
-    private final Font headerFont, normalFont;
-    private final JenesisImageLoader pix;
+    private Font headerFont, normalFont;
     private Image charBack, loading;
     private Image[] storyCap, storyCapUn, storyCapBlur;
     private Image storyPrev;
@@ -66,8 +66,6 @@ public class RenderStoryMode extends StoryMode {
                 hiddenStage[u] = false;
             }
         }
-        pix = new JenesisImageLoader();
-        loadCaps();
         setBorder(BorderFactory.createEmptyBorder());
     }
 
@@ -75,6 +73,7 @@ public class RenderStoryMode extends StoryMode {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
+        loadAssets();
         if (loadingNow) {
             g2d.setColor(Color.BLACK);
 
@@ -187,7 +186,9 @@ public class RenderStoryMode extends StoryMode {
         g.drawImage(volatileImg, 0, 0, this);
     }
 
-    private void loadCaps() {
+    public void loadAssets() {
+        if (!loadAssets) return;
+        JenesisImageLoader pix = new JenesisImageLoader();
         RenderStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < scenes; i++) {
@@ -232,5 +233,24 @@ public class RenderStoryMode extends StoryMode {
             }
             break;
         }
+        loadAssets = false;
+    }
+
+    public void cleanAssets() {
+        headerFont = null;
+        normalFont = null;
+        charBack.flush();
+        loading.flush();
+        for (Image image : storyCap) {
+            image.flush();
+        }
+        for (Image image : storyCapUn) {
+            image.flush();
+        }
+        for (Image image : storyCapBlur) {
+            image.flush();
+        }
+        storyPrev.flush();
+        loadAssets = true;
     }
 }

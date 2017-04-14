@@ -71,7 +71,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         setLayout(new BorderLayout());
         setContentPane(draw);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
+        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
         addMouseMotionListener(this);
         addMouseListener(this);
         addMouseWheelListener(this);

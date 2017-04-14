@@ -22,7 +22,7 @@
 package com.scndgen.legends.attacks;
 
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.engine.JenesisCharacter;
 
 public class AttacksBasic {
@@ -42,7 +42,7 @@ public class AttacksBasic {
      * Creates an opponent object
      */
     public AttacksBasic() {
-        dude = RenderCharacterSelectionScreen.getInstance().getPayers().getOpponent();
+        dude = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent();
     }
 
     /**

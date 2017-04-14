@@ -23,7 +23,6 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.windows.WindowMain;
 
@@ -78,7 +77,7 @@ public class ThreadClashSystem implements Runnable {
             }
         }
         isClashOn = false;
-        StandardGameplay.clasherOn = false;
+        RenderStandardGameplay.getInstance().clasherOn = false;
         clashWinner(person);
     }
 
@@ -100,10 +99,10 @@ public class ThreadClashSystem implements Runnable {
         {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
-                StandardGameplay.setStatusPic('c', "GOT EM !!!", Colors.getColor("blue"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "GOT EM !!!", Colors.getColor("blue"));
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('c');
             } else {
-                StandardGameplay.setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
                 RenderStandardGameplay.getInstance().updateLife(200);
                 //player didn't trigger clash but won, they arent attacked
@@ -113,11 +112,11 @@ public class ThreadClashSystem implements Runnable {
         {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
-                StandardGameplay.setStatusPic('o', "GOT YA !!!", Colors.getColor("blue"));
+                RenderStandardGameplay.getInstance().setStatusPic('o', "GOT YA !!!", Colors.getColor("blue"));
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
 
             } else {
-                StandardGameplay.setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
+                RenderStandardGameplay.getInstance().setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
                 RenderStandardGameplay.getInstance().updateOppLife(200);
                 //opponent didn't trigger clash but won, they arent attacked

@@ -23,7 +23,7 @@ package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.threads.ThreadMP3;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;

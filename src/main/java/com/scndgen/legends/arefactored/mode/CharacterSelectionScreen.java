@@ -180,7 +180,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             array = arr2;
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() < 0.75) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -188,7 +188,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //when doing well, 4 buffs + 2 moves
         else if (RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderStandardGameplay.getInstance().getOppLife() / RenderStandardGameplay.getInstance().getOppMaxLife() < 0.50) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -196,7 +196,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -223,7 +223,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 0.50 && RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() < 0.75) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -231,7 +231,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //when doing well, 4 buffs + 2 moves
         else if (RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() >= 0.25 && RenderStandardGameplay.getInstance().getOppLife2() / RenderStandardGameplay.getInstance().getOppMaxLife2() < 0.50) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -239,7 +239,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -266,7 +266,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 0.50 && RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() < 0.75) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -274,7 +274,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //when doing well, 4 buffs + 2 moves
         else if (RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() >= 0.25 && RenderStandardGameplay.getInstance().getCharLife3() / RenderStandardGameplay.getInstance().getCharMaxLife3() < 0.50) {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -282,7 +282,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (RenderStandardGameplay.getBreak() == 1000 && StandardGameplay.limitRunning) {
+            if (RenderStandardGameplay.getInstance().getBreak() == 1000 && RenderStandardGameplay.getInstance().limitRunning) {
                 LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
@@ -333,7 +333,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         }
     }
 
-    public Character getPayers() {
+    public Character getPlayers() {
         return players;
     }
 
@@ -430,7 +430,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 sound.play();
                 characterSelected = true;
                 character = CharacterEnum.RAILA;
-                getPayers().prepare(character);
+                getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                     LoginScreen.getInstance().getMenu().getMain().sendToClient("selRai_jkxc");
@@ -448,7 +448,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
             opponentSelected = true;
             opponent = CharacterEnum.RAILA;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -467,9 +467,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 sound.play();
                 characterSelected = true;
                 character = CharacterEnum.SUBIYA;
-                getPayers().prepare(character);
+                getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-                charDesc = getPayers().getCharacter().getDescSmall();
+                charDesc = getPlayers().getCharacter().getDescSmall();
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                     LoginScreen.getInstance().getMenu().getMain().sendToClient("selSub_jkxc");
                     disableAll();
@@ -487,7 +487,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.SUBIYA;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -505,9 +505,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.LYNX;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selLyn_jkxc");
                 disableAll();
@@ -523,7 +523,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.LYNX;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -541,9 +541,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.AISHA;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAlx_jkxc");
                 disableAll();
@@ -560,7 +560,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.AISHA;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -578,9 +578,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.ADE;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAde_jkxc");
                 disableAll();
@@ -597,7 +597,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.ADE;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -615,9 +615,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.RAVAGE;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selRav_jkxc");
                 disableAll();
@@ -634,7 +634,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.RAVAGE;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -652,9 +652,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.JONAH;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             allPlayers[6] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selJon_jkxc");
@@ -672,7 +672,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.JONAH;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -690,9 +690,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.ADAM;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
                 LoginScreen.getInstance().getMenu().getMain().sendToClient("selAdam_jkxc");
                 disableAll();
@@ -709,7 +709,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.NOVA_ADAM;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -727,9 +727,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.NOVA_ADAM;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[8] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -748,7 +748,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.NOVA_ADAM;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -766,9 +766,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.AZARIA;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[9] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -787,7 +787,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.AZARIA;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -805,9 +805,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.SORROWE;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[10] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -825,7 +825,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -843,9 +843,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound.play();
             characterSelected = true;
             character = CharacterEnum.THING;
-            getPayers().prepare(character);
+            getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
-            charDesc = getPayers().getCharacter().getDescSmall();
+            charDesc = getPlayers().getCharacter().getDescSmall();
             //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[11] = 1;
             if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
@@ -864,7 +864,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.THING;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
 
@@ -874,7 +874,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             opponent = CharacterEnum.THING;
-            getPayers().prepareO(opponent);
+            getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
     }
@@ -1280,5 +1280,18 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         }
 
         return ans;
+    }
+
+    /**
+     * When both playes are selected, this prevents movement.
+     *
+     * @return false if both Character have been selected, true if only one is selected
+     */
+    public boolean bothArentSelected() {
+        boolean answer = true;
+        if (characterSelected && opponentSelected) {
+            answer = false;
+        }
+        return answer;
     }
 }

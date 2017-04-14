@@ -55,7 +55,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
     private SpecialDrawMenuBGs logoPic;
     private JPanel box;
     private Font normalFont;
-    private String text = "The SCND Genesis: Legends " + RenderStandardGameplay.getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
+    private String text = "The SCND Genesis: Legends " + RenderStandardGameplay.getInstance().getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
             + "\n\nSpecial Thanks:"
             + "\n   -God"
             + "\n   -Jesus"

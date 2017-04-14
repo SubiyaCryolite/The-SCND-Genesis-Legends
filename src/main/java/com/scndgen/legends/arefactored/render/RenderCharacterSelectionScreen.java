@@ -19,16 +19,18 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.drawing;
+package com.scndgen.legends.arefactored.render;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.CharacterSelectionScreen;
 import com.scndgen.legends.characters.Raila;
+import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +40,7 @@ import java.awt.*;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
+public class RenderCharacterSelectionScreen extends CharacterSelectionScreen implements JenesisRender {
 
     private Font bigFont, normalFont;
     private final String[] charDesc = new String[numOfCharacters];
@@ -48,7 +50,6 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     private final Image[] portraitFlipped = new Image[numOfCharacters];
     private final Image[] caption = new Image[numOfCharacters];
     private Image fg1, fg2, fg3, bg3;
-    private boolean loadResources;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private static RenderCharacterSelectionScreen instance;
 
@@ -61,30 +62,16 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
     private RenderCharacterSelectionScreen() {
         opacInc = 0.025f;
-        loadResources = true;
+        loadAssets = true;
         setBorder(BorderFactory.createEmptyBorder());
     }
 
-    private void loadResources() {
-        if (loadResources) {
-            imageLoader = new JenesisImageLoader();
-            loadCaps();
-            loadDesc();
-            loadResources = false;
-        }
-    }
-
-    /**
-     * When both playes are selected, this prevents movement.
-     *
-     * @return false if both Character have been selected, true if only one is selected
-     */
-    public boolean bothArentSelected() {
-        boolean answer = true;
-        if (characterSelected && opponentSelected) {
-            answer = false;
-        }
-        return answer;
+    public void loadAssets() {
+        if (!loadAssets) return;
+        imageLoader = new JenesisImageLoader();
+        loadCaps();
+        loadDesc();
+        loadAssets = false;
     }
 
     private void loadDesc() {
@@ -102,14 +89,10 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         statsChar[11] = JenesisLanguage.getInstance().getLine(145);
     }
 
-    public Dimension setPreferredSize() {
-        return new Dimension(852, 480);
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        loadResources();
+        loadAssets();
         g2d.setFont(normalFont);
 
         g2d.setColor(Color.white);
@@ -294,18 +277,18 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoO.png");
         charDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoC.png");
-        setMenuContent(CharacterEnum.RAILA);
-        setMenuContent(CharacterEnum.SUBIYA);
-        setMenuContent(CharacterEnum.LYNX);
-        setMenuContent(CharacterEnum.AISHA);
-        setMenuContent(CharacterEnum.RAVAGE);
-        setMenuContent(CharacterEnum.ADE);
-        setMenuContent(CharacterEnum.JONAH);
-        setMenuContent(CharacterEnum.NOVA_ADAM);
-        setMenuContent(CharacterEnum.ADAM);
-        setMenuContent(CharacterEnum.AZARIA);
-        setMenuContent(CharacterEnum.SORROWE);
-        setMenuContent(CharacterEnum.THING);
+        loadUiContent(CharacterEnum.RAILA);
+        loadUiContent(CharacterEnum.SUBIYA);
+        loadUiContent(CharacterEnum.LYNX);
+        loadUiContent(CharacterEnum.AISHA);
+        loadUiContent(CharacterEnum.RAVAGE);
+        loadUiContent(CharacterEnum.ADE);
+        loadUiContent(CharacterEnum.JONAH);
+        loadUiContent(CharacterEnum.NOVA_ADAM);
+        loadUiContent(CharacterEnum.ADAM);
+        loadUiContent(CharacterEnum.AZARIA);
+        loadUiContent(CharacterEnum.SORROWE);
+        loadUiContent(CharacterEnum.THING);
         charBack = imageLoader.loadImageFromToolkitNoScale("images/selChar.png");
         oppBack = imageLoader.loadImageFromToolkitNoScale("images/selOpp.png");
         charHold = imageLoader.loadImageFromToolkitNoScale("images/charHold.png");
@@ -320,11 +303,15 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         charDesc[0] = Raila.class.getName();
     }
 
-    public void setMenuContent(CharacterEnum characterEnum) {
+    public void loadUiContent(CharacterEnum characterEnum) {
         thumbnailNormal[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/cap.png");
         thumbnailBlurred[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/capB.png");
         caption[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/name.png");
         portrait[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/Prev.png");
         portraitFlipped[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/PrevO.png");
+    }
+
+    public void cleanAssets() {
+        loadAssets = true;
     }
 }

@@ -23,7 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -97,7 +97,7 @@ public class ExecuterMovesOpp2 implements Runnable {
         if (ThreadGameInstance.isGameOver == false) {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story mode bug
-                if (ThreadGameInstance.story == false && ThreadGameInstance.isGameOver == false) {
+                if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
                     RenderStandardGameplay.getInstance().shakeCharLB();

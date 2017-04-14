@@ -1,7 +1,6 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
 
 import javax.imageio.ImageIO;
@@ -24,6 +23,7 @@ public abstract class JenesisMode extends JPanel {
     protected int screenWidth = 852;
     protected int screenHeight = 480;
     protected float opacity;
+    protected boolean loadAssets = true;
 
     /**
      * System notice in overlay
@@ -85,12 +85,34 @@ public abstract class JenesisMode extends JPanel {
             if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
             }
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + StandardGameplay.generateUID() + ".png");
+            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
             if (ImageIO.write(bufferedImage, "png", file))
                 systemNotice(JenesisLanguage.getInstance().getLine(170));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Generates unique ID for screens
+     *
+     * @return unique ID
+     */
+    public final String generateUID() {
+        String random_name = "scndgen-legends_";
+        StringBuilder userIDBuff = new StringBuilder(random_name);
+        String[]letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        userIDBuff.append("").append(Math.round(Math.random() * 100)).append("_");
+        int v1 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        int v2 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        int v3 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        userIDBuff.append(letters[v1]);
+        userIDBuff.append(letters[v2]);
+        userIDBuff.append(letters[v3]);
+        userIDBuff.append("_").append(Math.round(Math.random() * 10000)).append("");
+        random_name = userIDBuff.toString();
+
+        return random_name;
     }
 
     @Override

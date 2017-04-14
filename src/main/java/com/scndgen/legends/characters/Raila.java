@@ -123,13 +123,13 @@ public class Raila extends JenesisCharacter {
                 sound3.play();
                 attackStr = status[0];
                 damage = 72;
-                StandardGameplay.setStatIndex(1);
+                RenderStandardGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderStandardGameplay.getInstance().updateLife(damage);
-                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                   RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderStandardGameplay.getInstance().updateOppLife(damage);
-                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                   RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -137,13 +137,13 @@ public class Raila extends JenesisCharacter {
                 sound3.play();
                 attackStr = status[1];
                 damage = 79;
-                StandardGameplay.setStatIndex(1);
+                RenderStandardGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderStandardGameplay.getInstance().updateLife(damage);
-                    StandardGameplay.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                   RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderStandardGameplay.getInstance().updateOppLife(damage);
-                    StandardGameplay.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                   RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -152,12 +152,12 @@ public class Raila extends JenesisCharacter {
                 if (limit[1] <= 4) {
                     sound3.play();
                     attackStr = status[2];
-                    StandardGameplay.setStatIndex(3);
+                    RenderStandardGameplay.getInstance().setStatIndex(3);
                     if (forWho == 2) {
-                        StandardGameplay.setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
+                       RenderStandardGameplay.getInstance().setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
                         RenderStandardGameplay.getInstance().alterDamageCounter('o', +1);
                     } else {
-                        StandardGameplay.setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
+                       RenderStandardGameplay.getInstance().setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
                         RenderStandardGameplay.getInstance().alterDamageCounter('c', +1);
                     }
                     RenderStandardGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
@@ -170,13 +170,13 @@ public class Raila extends JenesisCharacter {
                 if (limit[0] <= 4) {
                     sound3.play();
                     attackStr = status[3];
-                    StandardGameplay.setStatIndex(4);
+                    RenderStandardGameplay.getInstance().setStatIndex(4);
                     if (forWho == 2) {
                         //as a player(2) yo8u attack the opponent(1)
-                        StandardGameplay.setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
+                       RenderStandardGameplay.getInstance().setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
                         RenderStandardGameplay.getInstance().alterDamageCounter('c', -1);
                     } else {
-                        StandardGameplay.setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
+                       RenderStandardGameplay.getInstance().setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
                         RenderStandardGameplay.getInstance().alterDamageCounter('o', -1);
                     }
                     RenderStandardGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");

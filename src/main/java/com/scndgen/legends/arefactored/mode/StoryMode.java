@@ -24,7 +24,7 @@ package com.scndgen.legends.arefactored.mode;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.characters.Character;
-import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.ThreadGameInstance;
@@ -189,7 +189,7 @@ public class StoryMode implements Runnable {
      */
     private void storyIn() {
         storyMus.play();
-        ThreadGameInstance.story = true;
+        ThreadGameInstance.storySequence = true;
         doneShowingText = false;
         RenderStandardGameplay.getInstance().getGameInstance().pauseActivityRegen();
         RenderStandardGameplay.getInstance().getGameInstance().pauseActivityRegenOpp();
@@ -204,7 +204,7 @@ public class StoryMode implements Runnable {
         RenderStandardGameplay.getInstance().charPortBlank();
         RenderStandardGameplay.getInstance().flashyText("");
         t.stop();
-        ThreadGameInstance.story = false;
+        ThreadGameInstance.storySequence = false;
         doneShowingText = true;
         RenderStandardGameplay.getInstance().getGameInstance().resumeActivityRegen();
         RenderStandardGameplay.getInstance().getGameInstance().resumeActivityRegenOpp();

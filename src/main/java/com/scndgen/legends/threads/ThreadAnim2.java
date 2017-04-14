@@ -21,11 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.windows.WindowOptions;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author ndana
@@ -50,71 +47,71 @@ public class ThreadAnim2 implements Runnable {
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             do {
                 //if rotating
-                if (StandardGameplay.animDirection.equalsIgnoreCase("rot")) {
+                if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("rot")) {
                     try {
                         //loop1
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
-                            StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
-                            t.sleep(StandardGameplay.delay);
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
+                            RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop2
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
-                            StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
-                            t.sleep(StandardGameplay.delay);
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
+                            RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop3
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
-                            StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
-                            t.sleep(StandardGameplay.delay);
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
+                            RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
                         //loop4
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
-                            StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
-                            t.sleep(StandardGameplay.delay);
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
+                            RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
+                        ex.printStackTrace(System.err);
                     }
                 } //if NOT rotating
                 else {
-                    StandardGameplay.fgx = 0;
-                    StandardGameplay.fgy = 0;
+                    RenderStandardGameplay.getInstance().fgx = 0;
+                    RenderStandardGameplay.getInstance().fgy = 0;
 
                     try {
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            if (StandardGameplay.animDirection.equalsIgnoreCase("both")) {
-                                StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
-                                StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
-                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("horiz")) {
-                                StandardGameplay.fgx = StandardGameplay.fgx + StandardGameplay.fgxInc;
-                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("vert")) {
-                                StandardGameplay.fgy = StandardGameplay.fgy + StandardGameplay.fgyInc;
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("both")) {
+                                RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
+                                RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
+                            } else if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("horiz")) {
+                                RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx + RenderStandardGameplay.getInstance().fgxInc;
+                            } else if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("vert")) {
+                                RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy + RenderStandardGameplay.getInstance().fgyInc;
                             }
 
-                            t.sleep(StandardGameplay.delay);
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
 
-                        for (int o = 0; o <= StandardGameplay.animLoops; o++) {
-                            if (StandardGameplay.animDirection.equalsIgnoreCase("both")) {
-                                StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
-                                StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
-                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("horiz")) {
-                                StandardGameplay.fgx = StandardGameplay.fgx - StandardGameplay.fgxInc;
-                            } else if (StandardGameplay.animDirection.equalsIgnoreCase("vert")) {
-                                StandardGameplay.fgy = StandardGameplay.fgy - StandardGameplay.fgyInc;
+                        for (int o = 0; o <= RenderStandardGameplay.getInstance().animLoops; o++) {
+                            if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("both")) {
+                                RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
+                                RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
+                            } else if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("horiz")) {
+                                RenderStandardGameplay.getInstance().fgx = RenderStandardGameplay.getInstance().fgx - RenderStandardGameplay.getInstance().fgxInc;
+                            } else if (RenderStandardGameplay.getInstance().animDirection.equalsIgnoreCase("vert")) {
+                                RenderStandardGameplay.getInstance().fgy = RenderStandardGameplay.getInstance().fgy - RenderStandardGameplay.getInstance().fgyInc;
                             }
 
-                            t.sleep(StandardGameplay.delay);
+                            t.sleep(RenderStandardGameplay.getInstance().delay);
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
+                        ex.printStackTrace(System.err);
                     }
                 }
             } while (1 != 0);
