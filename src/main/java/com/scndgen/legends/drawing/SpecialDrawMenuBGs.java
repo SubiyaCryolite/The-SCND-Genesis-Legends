@@ -22,7 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,7 +108,7 @@ public class SpecialDrawMenuBGs extends JPanel {
                 volatileImg.flush();
                 volatileImg = null;
             }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
+            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
             volatileImg.setAccelerationPriority(1.0f);
             g2d = volatileImg.createGraphics();
             runNew = false;

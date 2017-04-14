@@ -79,11 +79,11 @@ public class NetworkScanLan extends JFrame implements ActionListener {
         if (source == connect) {
             try {
                 //int v = list.getSelectedIndex();
-                LoginScreen.getLoginScreen().setIP(txt.getText());
+                LoginScreen.getInstance().setIP(txt.getText());
                 System.out.println("Attempting to connect to : " + txt.getText());
                 Thread.sleep(0050);
-                LoginScreen.getLoginScreen().getMenu().hostGame();
-                LoginScreen.getLoginScreen().getMenu().terminateThis();
+                LoginScreen.getInstance().getMenu().hostGame();
+                LoginScreen.getInstance().getMenu().terminateThis();
                 frame.dispose();
             } catch (InterruptedException ex) {
                 Logger.getLogger(NetworkScanLan.class.getName()).log(Level.SEVERE, null, ex);

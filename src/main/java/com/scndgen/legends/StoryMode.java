@@ -23,7 +23,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.CanvasStageSelect;
+import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowOptions;
@@ -50,7 +50,7 @@ public class StoryMode implements Runnable {
     private Thread t;
 
     public StoryMode() {
-        langz = LoginScreen.getLoginScreen().getLangInst();
+        langz = LoginScreen.getInstance().getLangInst();
         modeN = 0;
     }
 
@@ -58,7 +58,7 @@ public class StoryMode implements Runnable {
         t = new Thread(this);
         t.setName("Story mode thread");
         t.setPriority(5);
-        LoginScreen.getLoginScreen().getMenu().getMain().getStory().setCurrMode(stage);
+        LoginScreen.getInstance().getMenu().getMain().getStory().setCurrMode(stage);
         storyMus = new ThreadMP3(ThreadMP3.storySound(), false);
         tlkSpeed = WindowOptions.txtSpeed;
         notAsked = true;
@@ -67,111 +67,111 @@ public class StoryMode implements Runnable {
         if (stage == 0) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('o');
-            CanvasStageSelect.stage1();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRaila('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRav('o');
+            RenderStageSelect.stage1();
         }
 
         if (stage == 1) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('o');
-            CanvasStageSelect.stage100();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selLynx('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRaila('o');
+            RenderStageSelect.stage100();
         }
 
         if (stage == 2) {
             time = 30;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAisha('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('o');
-            CanvasStageSelect.stage5();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAisha('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selLynx('o');
+            RenderStageSelect.stage5();
         }
 
 
         if (stage == 3) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('o');
-            CanvasStageSelect.stage4();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRaila('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selSubiya('o');
+            RenderStageSelect.stage4();
         }
 
         if (stage == 4) {
             time = 45;
             stat = "half way";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAde('o');
-            CanvasStageSelect.stage7();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRav('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAde('o');
+            RenderStageSelect.stage7();
         }
 
         if (stage == 5) {
             time = 45;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setNumOfBoards(2);
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selJon('o');
-            CanvasStageSelect.stage7();
+            LoginScreen.getInstance().getMenu().getMain().getGame().setNumOfBoards(2);
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAdam('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selJon('o');
+            RenderStageSelect.stage7();
         }
 
         if (stage == 6) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAza('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selNOVAAdam('o');
-            CanvasStageSelect.stage10();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAza('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selNOVAAdam('o');
+            RenderStageSelect.stage10();
         }
 
         if (stage == 7) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRav('o');
-            CanvasStageSelect.stage2();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selSubiya('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRav('o');
+            RenderStageSelect.stage2();
         }
 
         if (stage == 8) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selLynx('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('o');
-            CanvasStageSelect.stage10();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selLynx('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAdam('o');
+            RenderStageSelect.stage10();
         }
 
         if (stage == 9) {
             time = 60;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selRaila('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSorr('o');
-            CanvasStageSelect.stage10();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selRaila('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selSorr('o');
+            RenderStageSelect.stage10();
         }
 
         if (stage == 10) {
             time = 90;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selSubiya('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selNOVAAdam('o');
-            CanvasStageSelect.stage11();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selSubiya('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selNOVAAdam('o');
+            RenderStageSelect.stage11();
         }
 
         if (stage == 11) {
             time = 181;
             stat = "nrml";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selAdam('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selThing('x');
-            CanvasStageSelect.stage13();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selAdam('c');
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selThing('x');
+            RenderStageSelect.stage13();
         }
 
         if (start) {
@@ -191,34 +191,34 @@ public class StoryMode implements Runnable {
         storyMus.play();
         ThreadGameInstance.story = true;
         doneShowingText = false;
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().pauseActivityRegenOpp();
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().pauseActivityRegenOpp();
     }
 
     private void storyOut(boolean tx) {
         if (tx) {
             storyMus.close();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().playMusicNow();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().musNotice();
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().playMusicNow();
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().musNotice();
         }
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText("");
+        LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
+        LoginScreen.getInstance().getMenu().getMain().getGame().flashyText("");
         t.stop();
         ThreadGameInstance.story = false;
         doneShowingText = true;
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().resumeActivityRegenOpp();
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().resumeActivityRegenOpp();
     }
 
     @SuppressWarnings("static-access")
     @Override
     public void run() {
         try {
-            System.out.println("Stage " + LoginScreen.getLoginScreen().getMenu().getMain().getStory().getStage());
+            System.out.println("Stage " + LoginScreen.getInstance().getMenu().getMain().getStory().getStage());
 
             if (modeN == 0) //scene 1
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
                 //set difficulty
@@ -226,57 +226,57 @@ public class StoryMode implements Runnable {
                 //Characters.setDamageCounter('o',14);
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(0);
 
                 storyText = langz.getLine(174);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
 
                 storyText = langz.getLine(175);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(176);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(1);
                 storyText = langz.getLine(177);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(178);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(179);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(372);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1); //sub
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1); //sub
                 storyText = langz.getLine(180);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4); //rav
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4); //rav
                 storyText = langz.getLine(181);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1); //sub
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1); //sub
                 storyText = langz.getLine(182);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
 
 
                 storyOut(false);
@@ -284,138 +284,138 @@ public class StoryMode implements Runnable {
 
             if (modeN == 1) //scene 2
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(1);
 
                 storyText = langz.getLine(183);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(184);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(185);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(2);
                 storyText = langz.getLine(186);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(187);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(146);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
 
                 storyOut(false);
             }
 
             if (modeN == 2) //scene 3
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(2);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2); //lynx
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2); //lynx
                 storyText = langz.getLine(188);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0); //raila
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0); //raila
                 storyText = langz.getLine(189);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2); //lynx
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2); //lynx
                 storyText = langz.getLine(190) + " .......";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3); //aisha
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3); //aisha
                 storyText = langz.getLine(191);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(192);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3);
                 storyText = langz.getLine(193);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(194);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3);
                 storyText = langz.getLine(195);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(196);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(197);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(198);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(3);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
                 storyText = langz.getLine(199);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3);
                 storyText = langz.getLine(200);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(201);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3);
                 storyText = langz.getLine(202);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(203);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(3);
                 storyText = langz.getLine(204);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(205);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -423,77 +423,77 @@ public class StoryMode implements Runnable {
 
             if (modeN == 3) //scene 4
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(3);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(3);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(206);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(207);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(208);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(5);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(5);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(209);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(210);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(211);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(212);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(213);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(214);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(215);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(216);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(203);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(217);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -501,74 +501,74 @@ public class StoryMode implements Runnable {
 
             if (modeN == 4) //scene 5
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(5);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(5);
 
                 storyText = langz.getLine(218) + " .......";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(219);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5); //ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5); //ade
                 storyText = langz.getLine(220);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10); //sorrowe
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10); //sorrowe
                 storyText = langz.getLine(221);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5); //ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5); //ade
                 storyText = langz.getLine(222);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4); //ravage
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4); //ravage
                 storyText = langz.getLine(223);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5); //ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5); //ade
                 storyText = langz.getLine(224);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(225);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5); //ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5); //ade
                 storyText = langz.getLine(226);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6); //jonah
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6); //jonah
                 storyText = langz.getLine(227);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(228);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(229);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5);//ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5);//ade
                 storyText = langz.getLine(230);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -576,111 +576,111 @@ public class StoryMode implements Runnable {
 
             if (modeN == 5) //scene 6
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(5);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(5);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(231);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5);//ade
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5);//ade
                 storyText = langz.getLine(232);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(233);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(234);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(235);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(236);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(237);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(238);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(239);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(240);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(241);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(242);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(243);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(244);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(245);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5);
                 storyText = langz.getLine(246);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(247);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(248);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(249);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(250);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -688,68 +688,68 @@ public class StoryMode implements Runnable {
 
             if (modeN == 6) //scene 7
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(4);
 
                 storyText = langz.getLine(251);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(252);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(253);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(6);
                 storyText = langz.getLine(254);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(255);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(256);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(257);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(258);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(259);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(260);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(261);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(262);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -758,46 +758,46 @@ public class StoryMode implements Runnable {
 
             if (modeN == 7) //scene 8
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(6);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(263);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(264);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(265);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(266);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(267);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(268);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = ".......... " + langz.getLine(269);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -805,66 +805,66 @@ public class StoryMode implements Runnable {
 
             if (modeN == 8) //scene 9
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(8);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(8);
 
 
                 storyText = langz.getLine(270);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(271);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(272);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(273);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(274);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(275);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(276);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(277);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(231) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(278);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(279) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -874,81 +874,81 @@ public class StoryMode implements Runnable {
 
             if (modeN == 9) //scene 10
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(9);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(280) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(281);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(282);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(283);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(284);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(285);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(286);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
                 storyText = langz.getLine(287) + " ...";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(288);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(289) + " !!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(290);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(291);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(292);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(293);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -956,84 +956,84 @@ public class StoryMode implements Runnable {
 
             if (modeN == 10) //scene 11
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(11);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(11);
 
                 //set difficulty - hard
                 Characters.setDamageCounter('o', 18);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(294) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(231) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(295);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(296);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(297);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(0);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(0);
                 storyText = langz.getLine(298);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(299) + "!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(300) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(301) + " ?";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(302) + " !!!!!!!!!!!!!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(303) + " !!!";
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(2);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(2);
                 storyText = langz.getLine(304);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(305);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(7);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(7);
                 storyText = langz.getLine(306);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -1041,105 +1041,105 @@ public class StoryMode implements Runnable {
 
             if (modeN == 11) //scene 12
             {
-                LoginScreen.getLoginScreen().getMenu().getMain().storyGame();
+                LoginScreen.getInstance().getMenu().getMain().storyGame();
                 storyIn();
                 firstRun = false;
 
                 t.sleep(5000);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().changeStoryBoard(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().changeStoryBoard(10);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(373);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
                 storyText = langz.getLine(374);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(375);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(376);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(1);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(1);
                 storyText = langz.getLine(377);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortBlank();
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortBlank();
                 storyText = langz.getLine(378);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(4);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(4);
                 storyText = langz.getLine(379);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(5);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(5);
                 storyText = langz.getLine(380);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyText = langz.getLine(381);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(8);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(8);
                 storyText = langz.getLine(383);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(11);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(11);
                 storyText = langz.getLine(384);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(385);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(9);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(9);
                 storyText = langz.getLine(386);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(8);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(8);
                 storyText = langz.getLine(387);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(388);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(10);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(10);
                 storyText = langz.getLine(389);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(8);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(8);
                 storyText = langz.getLine(390);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(8);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(8);
                 storyText = langz.getLine(391);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().charPortSet(6);
+                LoginScreen.getInstance().getMenu().getMain().getGame().charPortSet(6);
                 storyText = langz.getLine(392);
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().flashyText(storyText);
+                LoginScreen.getInstance().getMenu().getMain().getGame().flashyText(storyText);
                 t.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);

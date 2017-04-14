@@ -23,24 +23,24 @@ package com.scndgen.legends.menus;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.StoryMode;
-import com.scndgen.legends.drawing.DrawStorySel;
+import com.scndgen.legends.drawing.RenderStoryMenu;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.threads.ThreadMP3;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CanvasStorySelect extends DrawStorySel {
+public class StoryMenu extends RenderStoryMenu {
 
     public int characterSel, opponentSel;
     public String charDesc = "";
     public String oppName, charName;
     private JenesisLanguage lang;
     private StoryMode storyInstance;
-    private int mode, currMode = LoginScreen.getLoginScreen().stage;
+    private int mode, currMode = LoginScreen.getInstance().stage;
     private ThreadMP3 yay;
 
-    public CanvasStorySelect() {
+    public StoryMenu() {
         initializePanel();
     }
 
@@ -154,7 +154,7 @@ public class CanvasStorySelect extends DrawStorySel {
 
     protected void initializePanel() {
         storyInstance = new StoryMode();
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        lang = LoginScreen.getInstance().getLangInst();
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
@@ -182,14 +182,14 @@ public class CanvasStorySelect extends DrawStorySel {
 
     public void back() {
         getStoryInstance().firstRun = true;
-        LoginScreen.getLoginScreen().getMenu().getMain().backToMenuScreen();
+        LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
     }
 
     /**
      * Find out the stage the player is on
      */
     public void resetCurrentStage() {
-        mode = LoginScreen.getLoginScreen().stage;
+        mode = LoginScreen.getInstance().stage;
     }
 
     public void selectStage() {
@@ -220,7 +220,7 @@ public class CanvasStorySelect extends DrawStorySel {
             //if the player has advanced
             //and theres still more stages
             if (currMode > mode) {
-                LoginScreen.getLoginScreen().stage = currMode;
+                LoginScreen.getInstance().stage = currMode;
             }
         }
     }
@@ -256,10 +256,10 @@ public class CanvasStorySelect extends DrawStorySel {
         if (currMode < StoryMode.max) {
             answer = true;
         } //if won last 'final' match
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon()) {
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().hasWon()) {
             //incrementMode();
             //go back to user difficulty
-            LoginScreen.getLoginScreen().difficultyDyn = LoginScreen.getLoginScreen().difficultyStat;
+            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficultyStat;
             yay = new ThreadMP3(ThreadMP3.soundGameOver(), true);
             yay.play();
             JOptionPane.showMessageDialog(null, lang.getLine(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);

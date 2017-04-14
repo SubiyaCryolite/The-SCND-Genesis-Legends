@@ -72,59 +72,59 @@ public class Raila extends JenesisCharacter {
         if (attack.equalsIgnoreCase("01")) {
             attackStr = physical[0];
             damage = 83;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("02")) {
             attackStr = physical[1];
             damage = 82;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
             //DrawGame.specialEffect(2,true);
         }
 
         if (attack.equalsIgnoreCase("03")) {
             attackStr = physical[2];
             damage = 82;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
             //DrawGame.specialEffect(2,true);
         }
 
         if (attack.equalsIgnoreCase("04")) {
             attackStr = physical[3];
             damage = 81;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("05")) {
             attackStr = celestia[0];
             damage = 88;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("06")) {
             attackStr = celestia[1];
             damage = 85;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("07")) {
             attackStr = celestia[2];
             damage = 85;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("08")) {
             attackStr = celestia[3];
             damage = 83;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("09")) {
@@ -133,13 +133,13 @@ public class Raila extends JenesisCharacter {
             damage = 72;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("10")) {
@@ -148,13 +148,13 @@ public class Raila extends JenesisCharacter {
             damage = 79;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("11")) {
@@ -165,15 +165,15 @@ public class Raila extends JenesisCharacter {
                 DrawGame.setStatIndex(3);
                 if (forWho == 2) {
                     DrawGame.setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().alterDamageCounter('o', +1);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().alterDamageCounter('o', +1);
                 } else {
                     DrawGame.setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().alterDamageCounter('c', +1);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().alterDamageCounter('c', +1);
                 }
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " strengthened himself!!!");
+                LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " strengthened himself!!!");
             } else {
                 // disble this move
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " cant use his attack!!!!");
+                LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " cant use his attack!!!!");
             }
         }
 
@@ -186,15 +186,15 @@ public class Raila extends JenesisCharacter {
                 if (forWho == 2) {
                     //as a player(2) yo8u attack the opponent(1)
                     DrawGame.setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().alterDamageCounter('c', -1);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().alterDamageCounter('c', -1);
                 } else {
                     DrawGame.setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().alterDamageCounter('o', -1);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().alterDamageCounter('o', -1);
                 }
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " weakened his opponent!!!");
+                LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " weakened his opponent!!!");
             } else {
                 // disble this move
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " cant use his attack!!!!");
+                LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " cant use his attack!!!!");
             }
         }
 

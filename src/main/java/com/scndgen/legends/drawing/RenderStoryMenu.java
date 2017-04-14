@@ -22,28 +22,25 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisImage;
-import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisCanvas;
-import com.scndgen.legends.menus.CanvasStageSelect;
 import com.scndgen.legends.StoryMode;
+import io.github.subiyacryolite.enginev1.JenesisRender;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
+import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
-import java.io.File;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawStorySel extends JenesisCanvas {
+public abstract class RenderStoryMenu extends JenesisRender {
 
     public int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
     public String loadTxt = "";
@@ -70,19 +67,19 @@ public abstract class DrawStorySel extends JenesisCanvas {
     /**
      * Teh constructorz XD
      */
-    public DrawStorySel() {
-        lang = LoginScreen.getLoginScreen().getLangInst();
+    public RenderStoryMenu() {
+        lang = LoginScreen.getInstance().getLangInst();
         numberOfstorys = 12;
         renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-        headerFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.extraTxtSize);
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
+        headerFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         menuSound = new ThreadMP3("audio/menu-select.mp3", true);
         verticalRows = (numberOfstorys / 3);
         storyCapBlur = new Image[numberOfstorys];
         storyCap = new Image[numberOfstorys];
         storyCapUn = new Image[numberOfstorys];
         hiddenStage = new boolean[numberOfstorys];
-        mode = LoginScreen.getLoginScreen().stage;
+        mode = LoginScreen.getInstance().stage;
         for (int u = 0; u < hiddenStage.length; u++) {
             if (u <= mode)//if you are higher stage enable
             {
@@ -107,7 +104,7 @@ public abstract class DrawStorySel extends JenesisCanvas {
     public static boolean bothArentSelected() {
         boolean answer = true;
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
             answer = false;
         }
 
@@ -150,7 +147,7 @@ public abstract class DrawStorySel extends JenesisCanvas {
             g2d.setColor(Color.WHITE);
             //g2d.drawString(lang.getLine(165), (852 - g2d.getFontMetrics().stringWidth(lang.getLine(165))) / 2, 200);
 
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
 
@@ -253,7 +250,7 @@ public abstract class DrawStorySel extends JenesisCanvas {
     }
 
     private void loadCaps() {
-        CanvasStageSelect.selectedStage = false;
+        RenderStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < numberOfstorys; i++) {
                 storyCap[i] = pix.loadImageFromToolkitNoScale("images/Story/locked/x" + (i + 1) + ".png");
@@ -407,32 +404,6 @@ public abstract class DrawStorySel extends JenesisCanvas {
     }
 
     /**
-     * Gets screenshot
-     */
-    public void captureScreenShot() {
-        try {
-            BufferedImage dudeC = volatileImg.getSnapshot();
-
-            //image = getGaussianBlurFilter(10, true).filter(image, null);
-            //image = getGaussianBlurFilter(10, false).filter(image, null);
-
-            File file;
-
-            //Save the screenshot as a png
-
-            //file = new File(generateUID() + ".png");
-            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
-                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
-            }
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
-            ImageIO.write(dudeC, "png", file);
-            systemNotice(lang.getLine(170));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
      * Sets the story
      *
      * @param where
@@ -453,26 +424,4 @@ public abstract class DrawStorySel extends JenesisCanvas {
     }
 
     public abstract void startGame(int mode);
-
-
-    /**
-     * Hardware acceleration
-     */
-    private void createBackBuffer() {
-        if (runNew) {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
-            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            //optimise, clear unused memory
-            if (volatileImg != null) {
-                volatileImg.flush();
-                volatileImg = null;
-            }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
-            g2d.setRenderingHints(renderHints); //activate aliasing
-            runNew = false;
-        }
-    }
 }

@@ -23,9 +23,9 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.SpecialDrawModeCanvas;
+import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.threads.ThreadMP3;
@@ -51,14 +51,13 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     private JenesisLanguage lang;
     private WindowMain startApp;
     private String[] mode = {WindowMain.singlePlayer, WindowMain.lanHost, WindowMain.lanClient, WindowMain.storyMode, WindowMain.singlePlayer2};
-    private SpecialDrawModeCanvas draw;
+    private SpecialDrawModeRender draw;
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;
     private NetworkScanLan scan;
     private WindowModeSelect mainMenu;
     private MenuLeaderBoard board;
-    private GamePadController gpController;
     private ThreadMP3 startup;
     private boolean[] buttonz;
     private Desktop desktop;
@@ -73,11 +72,11 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
         strUser = dude;
         window = new JFrame();
         window.setUndecorated(true);
-        draw = new SpecialDrawModeCanvas();
+        draw = new SpecialDrawModeRender();
         window.setLayout(new BorderLayout());
         window.setContentPane(draw);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + CanvasGameRender.getVersionStr());
+        window.setTitle("The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
         window.addMouseMotionListener(this);
         window.addMouseListener(this);
         window.addMouseWheelListener(this);
@@ -89,19 +88,18 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
         window.setResizable(false);
         window.setVisible(true);
         try {
-            gpController = new GamePadController();
-            if (gpController.controllerFound) {
+            if (GamePadController.getInstance().controllerFound) {
                 controller = true;
-                buttonz = new boolean[gpController.NUM_BUTTONS];
+                buttonz = new boolean[GamePadController.getInstance().NUM_BUTTONS];
                 pollController();
             }
             if (this.p.controller) {
 
-                if (gpController.statusInt == 1) {
-                    sytemNotice(gpController.controllerName + " " + lang.getLine(103));
-                } else if (gpController.statusInt == 0) {
+                if (GamePadController.getInstance().statusInt == 1) {
+                    sytemNotice(GamePadController.getInstance().controllerName + " " + lang.getLine(103));
+                } else if (GamePadController.getInstance().statusInt == 0) {
                     sytemNotice(lang.getLine(104));
-                } else if (gpController.statusInt == 2) {
+                } else if (GamePadController.getInstance().statusInt == 2) {
                     sytemNotice(lang.getLine(105));
                 }
             }
@@ -127,10 +125,6 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     public void logOut() {
         window.dispose();
         p.showWindow();
-    }
-
-    public GamePadController getController() {
-        return gpController;
     }
 
     public final void sytemNotice(String moi) {
@@ -501,7 +495,7 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
     public void showModes() {
         isActive = true;
         try {
-            if (gpController.controllerFound) {
+            if (GamePadController.getInstance().controllerFound) {
                 pollController();
             }
         } catch (Exception e) {
@@ -541,30 +535,30 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
             public void run() {
                 try {
                     do {
-                        gpController.poll();
+                        GamePadController.getInstance().poll();
 
-                        compassDir2 = gpController.getXYStickDir();
-                        if (compassDir2 == gpController.NORTH) {
+                        compassDir2 = GamePadController.getInstance().getXYStickDir();
+                        if (compassDir2 == GamePadController.getInstance().NORTH) {
                             draw.goUp();
-                        } else if (compassDir2 == gpController.SOUTH) {
+                        } else if (compassDir2 == GamePadController.getInstance().SOUTH) {
                             draw.goDown();
                         }
 
                         //update bottons
-                        buttonz = gpController.getButtons();
+                        buttonz = GamePadController.getInstance().getButtons();
 
 
                         // get POV hat compass direction
-                        compassDir = gpController.getHatDir();
+                        compassDir = GamePadController.getInstance().getHatDir();
                         {
-                            if (compassDir == gpController.SOUTH) {
+                            if (compassDir == GamePadController.getInstance().SOUTH) {
                                 if (doneChilling) {
                                     draw.goDown();
                                 }
                                 menuLatency();
                             }
 
-                            if (compassDir == gpController.NORTH) {
+                            if (compassDir == GamePadController.getInstance().NORTH) {
                                 if (doneChilling) {
                                     draw.goUp();
                                 }
@@ -589,9 +583,9 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
                         }
 
                         // get compass direction for the two analog sticks
-                        compassDir = gpController.getXYStickDir();
+                        compassDir = GamePadController.getInstance().getXYStickDir();
 
-                        compassDir = gpController.getZRZStickDir();
+                        compassDir = GamePadController.getInstance().getZRZStickDir();
 
 
                         this.sleep(66);
@@ -633,9 +627,9 @@ public class WindowModeSelect extends JFrame implements ActionListener, KeyListe
             @Override
             public void run() {
                 try {
-                    gpController.setRumbler(true, power);
+                    GamePadController.getInstance().setRumbler(true, power);
                     this.sleep(time);
-                    gpController.setRumbler(false, 0.0f);
+                    GamePadController.getInstance().setRumbler(false, 0.0f);
                 } catch (Exception e) {
                 }
             }

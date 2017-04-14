@@ -39,35 +39,35 @@ public class ExecuterMovesChar implements Runnable {
 
     @Override
     public void run() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-            //LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('a',9,11);
-            //LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('b',9,11);
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+            //LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('a',9,11);
+            //LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('b',9,11);
         }
-        //LoginScreen.getLoginScreen().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+        //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
         // each Mattack will check if they are in the battle que.... if they are they execute
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
+        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
             for (int o = 0; o < 4; o++) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().attack(Integer.parseInt(LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[o]), 2, 'c', 'o');
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeOppCharLB();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('c');
-                if ((o + 1) == LoginScreen.getLoginScreen().getMenu().getMain().getGame().numOfAttacks) {
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(Integer.parseInt(LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[o]), 2, 'c', 'o');
+                LoginScreen.getInstance().getMenu().getMain().getGame().shakeOppCharLB();
+                LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('c');
+                if ((o + 1) == LoginScreen.getInstance().getMenu().getMain().getGame().numOfAttacks) {
                     break;
                 }
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
             }
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().done != 1)// if game still running enable menus
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().done != 1)// if game still running enable menus
         {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
         }
 
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter = 0;
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().numOfAttacks = 0;
+        LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
+        LoginScreen.getInstance().getMenu().getMain().getGame().numOfAttacks = 0;
     }
 
     public void pause() {

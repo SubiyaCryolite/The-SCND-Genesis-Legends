@@ -19,9 +19,11 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.engine;
+package io.github.subiyacryolite.enginev1;
 
+import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
+import com.scndgen.legends.engine.JenesisLanguage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,11 +37,20 @@ import java.io.File;
  *
  * @author ndana
  */
-public class JenesisCanvas extends JPanel {
+public abstract class JenesisRender extends JPanel {
 
     public JenesisGlassPane over1;
     protected VolatileImage volatileImg;
     protected JenesisLanguage langz;
+    protected GraphicsEnvironment ge;
+    protected GraphicsConfiguration gc;
+    protected Graphics2D g2d;
+    protected int screenWidth;
+    protected int screenHeight;
+    protected int valCode;
+    protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
+
+    public abstract void paintComponent(Graphics g);
 
     /**
      * System notice in overlay
@@ -66,7 +77,7 @@ public class JenesisCanvas extends JPanel {
      * @param alpha, value from 10 to 0
      * @return
      */
-    public AlphaComposite makeComposite(float alpha) {
+    public final AlphaComposite makeComposite(float alpha) {
         int type = AlphaComposite.SRC_OVER;
         if (alpha >= 0.0f && alpha <= 1.0f) {
             //nothing
@@ -77,9 +88,24 @@ public class JenesisCanvas extends JPanel {
     }
 
     /**
+     * Hardware acceleration
+     */
+    protected final void createBackBuffer() {
+        if (volatileImg == null) {
+            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
+            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            volatileImg.setAccelerationPriority(1.0f);
+            g2d = volatileImg.createGraphics();
+            g2d.setRenderingHints(renderHints); //activate aliasing
+        }
+    }
+
+    /**
      * Gets screenshot
      */
-    public void captureScreenShot() {
+    public final void captureScreenShot() {
         try {
             BufferedImage dudeC = volatileImg.getSnapshot();
 

@@ -63,95 +63,95 @@ public class Subiya extends JenesisCharacter {
         if (attack.equalsIgnoreCase("01")) {
             attackStr = physical[0];
             damage = 85;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("02")) {
             attackStr = physical[1];
             damage = 87;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("03")) {
             attackStr = physical[2];
             damage = 90;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("04")) {
             attackStr = physical[3];
             damage = 87;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("05")) {
             attackStr = celestia[0];
             damage = 88;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("06")) {
             attackStr = celestia[1];
             damage = 86;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("07")) {
             attackStr = celestia[2];
             damage = 88;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("08")) {
             attackStr = celestia[3];
             damage = 93;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("09")) {
             sound3.play();
             attackStr = status[0];
             damage = 79;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("blue"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("blue"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("10")) {
             sound3.play();
             attackStr = status[1];
             damage = 69;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("11")) {
             sound3.play();
             attackStr = status[2];
             damage = 73;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("12")) {
             sound3.play();
             attackStr = status[3];
             damage = 72;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("99")) {
         }
     }

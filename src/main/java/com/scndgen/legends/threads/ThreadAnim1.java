@@ -23,7 +23,7 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -55,8 +55,8 @@ public class ThreadAnim1 implements Runnable {
     public void run() {
         do {
             try {
-                if (CanvasGameRender.getBreak() > 5 && CanvasGameRender.getBreak() < 999) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().setBreak(-fac);
+                if (RenderGameRender.getBreak() > 5 && RenderGameRender.getBreak() < 999) {
+                    LoginScreen.getInstance().getMenu().getMain().getGame().setBreak(-fac);
                 }
 
                 for (int o = 0; o <= 10; o++) {

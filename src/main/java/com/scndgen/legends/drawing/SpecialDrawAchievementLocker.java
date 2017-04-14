@@ -24,7 +24,7 @@ package com.scndgen.legends.drawing;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.StoryMode;
 
 import java.awt.*;
@@ -39,8 +39,8 @@ public class SpecialDrawAchievementLocker {
 
     private int spacer = 14;
     private JenesisLanguage lang;
-    private Font font2 = LoginScreen.getLoginScreen().getMyFont(spacer - 1);
-    private Font font1 = LoginScreen.getLoginScreen().getMyFont(spacer + 2);
+    private Font font2 = LoginScreen.getInstance().getMyFont(spacer - 1);
+    private Font font1 = LoginScreen.getInstance().getMyFont(spacer + 2);
     private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private int offset = 10, offset2 = 350, offset2x = 40, achPic = 40, achPicSpacer = 60, scroller = 0;
     private String stat1, stat2, stat3,
@@ -55,15 +55,15 @@ public class SpecialDrawAchievementLocker {
     private Achievements ach;
 
     public SpecialDrawAchievementLocker() {
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        lang = LoginScreen.getInstance().getLangInst();
         pix = new JenesisImage();
         loadPix();
         refreshStats();
-        ach = LoginScreen.getLoginScreen().getAch();
+        ach = LoginScreen.getInstance().getAch();
     }
 
     public float GETsTORYpROGRESSION() {
-        return LoginScreen.getLoginScreen().stage / (float) StoryMode.max;
+        return LoginScreen.getInstance().stage / (float) StoryMode.max;
     }
 
     public int getAchUnlockedPerc() {
@@ -82,11 +82,11 @@ public class SpecialDrawAchievementLocker {
      */
     public void drawStats(Graphics2D screen, ImageObserver obs) {
         try {
-            denom = LoginScreen.getLoginScreen().win + LoginScreen.getLoginScreen().loss;
-            gWin = 200 * (LoginScreen.getLoginScreen().win / denom);
-            gLoss = 200 * (LoginScreen.getLoginScreen().loss / denom);
+            denom = LoginScreen.getInstance().win + LoginScreen.getInstance().loss;
+            gWin = 200 * (LoginScreen.getInstance().win / denom);
+            gLoss = 200 * (LoginScreen.getInstance().loss / denom);
             progression = 200 * (GETsTORYpROGRESSION());
-            //System.out.println("Dude "+(LoginScreen.getLoginScreen().stage/(float)StoryMode.max));
+            //System.out.println("Dude "+(LoginScreen.getInstance().stage/(float)StoryMode.max));
         } catch (Exception e) {
             gWin = 0;
             gLoss = 0;
@@ -100,26 +100,26 @@ public class SpecialDrawAchievementLocker {
         //back to full opacity
         screen.setComposite(makeComposite(10 * 0.1F));
 
-        if (LoginScreen.getLoginScreen().isConnected()) {
+        if (LoginScreen.getInstance().isConnected()) {
             //-----player account type
-            stat1 = lang.getLine(118) + ": " + shortVer(LoginScreen.getLoginScreen().strUser);
-            stat2 = lang.getLine(119) + ": " + shortVer(LoginScreen.getLoginScreen().strPoint);
-            stat3 = lang.getLine(120) + ": " + LoginScreen.getLoginScreen().timeCal(LoginScreen.getLoginScreen().strPlayTime);
-            stat4 = lang.getLine(121) + ": " + LoginScreen.getLoginScreen().getUnlockedAch();
-            stat5 = lang.getLine(122) + ": " + LoginScreen.getLoginScreen().getATriggeredAchiev() + " time(s)";
-            stat6 = lang.getLine(123) + ": " + LoginScreen.getLoginScreen().matchCountStr;
+            stat1 = lang.getLine(118) + ": " + shortVer(LoginScreen.getInstance().strUser);
+            stat2 = lang.getLine(119) + ": " + shortVer(LoginScreen.getInstance().strPoint);
+            stat3 = lang.getLine(120) + ": " + LoginScreen.getInstance().timeCal(LoginScreen.getInstance().strPlayTime);
+            stat4 = lang.getLine(121) + ": " + LoginScreen.getInstance().getUnlockedAch();
+            stat5 = lang.getLine(122) + ": " + LoginScreen.getInstance().getATriggeredAchiev() + " time(s)";
+            stat6 = lang.getLine(123) + ": " + LoginScreen.getInstance().matchCountStr;
 
             try {
-                stat7 = lang.getLine(124) + ": " + Integer.parseInt(LoginScreen.getLoginScreen().strPoint) / Integer.parseInt(LoginScreen.getLoginScreen().matchCountStr);
+                stat7 = lang.getLine(124) + ": " + Integer.parseInt(LoginScreen.getInstance().strPoint) / Integer.parseInt(LoginScreen.getInstance().matchCountStr);
             } catch (ArithmeticException ae) {
                 stat7 = lang.getLine(124) + ": 0";
             }
 
-            stat15 = lang.getLine(125) + ": " + LoginScreen.getLoginScreen().win;
-            stat16 = lang.getLine(126) + ": " + LoginScreen.getLoginScreen().loss;
+            stat15 = lang.getLine(125) + ": " + LoginScreen.getInstance().win;
+            stat16 = lang.getLine(126) + ": " + LoginScreen.getInstance().loss;
 
-            stat13 = lang.getLine(127) + ": " + style[LoginScreen.getLoginScreen().userAwesomeness()];
-            stat17 = lang.getLine(128) + ": " + DrawGame.charNames[LoginScreen.getLoginScreen().mostPopularChar()] + " " + LoginScreen.getLoginScreen().mostPopularCharPercentage() + " %";
+            stat13 = lang.getLine(127) + ": " + style[LoginScreen.getInstance().userAwesomeness()];
+            stat17 = lang.getLine(128) + ": " + DrawGame.charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
         }
 
         screen.setColor(Color.WHITE);
@@ -182,21 +182,21 @@ public class SpecialDrawAchievementLocker {
         screen.drawString(lang.getLine(131) + " >>>", 530, 470);
 
         //even
-        for (int u = 0; u < LoginScreen.getLoginScreen().ach.length; u++) {
+        for (int u = 0; u < LoginScreen.getInstance().ach.length; u++) {
             if (activated[u]) {
                 screen.drawImage(achCap[u], offset2x, scroller + achPic + (u * achPicSpacer), obs);
                 screen.setFont(font1);
                 screen.drawString((u + 1) + ":: " + ach.achDesc[u] + " >>", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
                 screen.drawString(ach.achFull[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
-                screen.drawString(lang.getLine(133) + " " + LoginScreen.getLoginScreen().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
+                screen.drawString(lang.getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
             } else {
                 screen.drawImage(no, offset2x, scroller + achPic + (u * achPicSpacer), obs);
                 screen.setFont(font1);
                 screen.drawString((u + 1) + ":: " + ach.achDesc[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
                 screen.drawString("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
-                screen.drawString(lang.getLine(133) + " " + LoginScreen.getLoginScreen().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
+                screen.drawString(lang.getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
             }
         }
     }
@@ -216,8 +216,8 @@ public class SpecialDrawAchievementLocker {
      * Load my pix
      */
     private void loadPix() {
-        total = (float) LoginScreen.getLoginScreen().ach.length;
-        achCap = new Image[LoginScreen.getLoginScreen().ach.length];
+        total = (float) LoginScreen.getInstance().ach.length;
+        achCap = new Image[LoginScreen.getInstance().ach.length];
         for (int u = 0; u < achCap.length; u++) {
             achCap[u] = pix.loadImageFromIcon("images/ach/" + u + ".png");
         }
@@ -276,9 +276,9 @@ public class SpecialDrawAchievementLocker {
     @SuppressWarnings("static-access")
     public void refreshStats() {
         triggeredCount = 0.0f;
-        activated = new boolean[LoginScreen.getLoginScreen().ach.length];
-        for (int u = 0; u < LoginScreen.getLoginScreen().ach.length; u++) {
-            if (LoginScreen.getLoginScreen().ach[u] > 0) {
+        activated = new boolean[LoginScreen.getInstance().ach.length];
+        for (int u = 0; u < LoginScreen.getInstance().ach.length; u++) {
+            if (LoginScreen.getInstance().ach[u] > 0) {
                 activated[u] = true;
                 triggeredCount = triggeredCount + 1.0f;
             }

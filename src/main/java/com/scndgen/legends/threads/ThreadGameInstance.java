@@ -28,8 +28,8 @@ import com.scndgen.legends.executers.ExecuterMovesChar;
 import com.scndgen.legends.executers.ExecuterMovesChar2;
 import com.scndgen.legends.executers.ExecuterMovesOpp;
 import com.scndgen.legends.executers.ExecuterMovesOpp2;
-import com.scndgen.legends.menus.CanvasGameRender;
-import com.scndgen.legends.menus.CanvasStageSelect;
+import com.scndgen.legends.menus.RenderGameRender;
+import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.StoryMode;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
@@ -90,12 +90,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private ExecuterMovesChar executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
-    private CanvasGameRender parentx;
+    private RenderGameRender parentx;
 
     //indicates if game is running, controls game over screen and Achievements which require wins
-    public ThreadGameInstance(int forWho, CanvasGameRender parentx) {
+    public ThreadGameInstance(int forWho, RenderGameRender parentx) {
         this.parentx = parentx;
-        musicStr = CanvasStageSelect.getTrack();
+        musicStr = RenderStageSelect.getTrack();
         newInstance();
     }
 
@@ -118,25 +118,25 @@ public class ThreadGameInstance implements Runnable, ActionListener {
 
             //---------recover Characters activity bar
             if (sampleChar <= limitChar && incrementActivityBar) {
-                sampleCharDB = sampleCharDB + (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getCharRecoverySpeed());
+                sampleCharDB = sampleCharDB + (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getCharRecoverySpeed());
                 sampleChar = Integer.parseInt("" + Math.round(sampleCharDB) + "");
             }
 
             //---------recover opponents activity bar
 
             if (sampleOpp <= limitOpp && incrementActivityBarOpp && story == false) {
-                sampleOppDB = sampleOppDB + (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getOppRecoverySpeed());
+                sampleOppDB = sampleOppDB + (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && story == false) {
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                     aiRunning = true;
                     executorAI.attack();
                 }
             }
 
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                 if (sampleOpp2 <= limitOpp2 && incrementActivityBarOpp2 && story == false) {
-                    sampleOppDB2 = sampleOppDB2 + (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getOppRecoverySpeed2());
+                    sampleOppDB2 = sampleOppDB2 + (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getOppRecoverySpeed2());
                     sampleOpp2 = Integer.parseInt("" + Math.round(sampleOppDB2) + "");
                 } else if (aiRunning2 == false && incrementActivityBarOpp2 && story == false) {
 
@@ -147,7 +147,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 }
 
                 if (sampleChar2 <= limitChar2 && incrementActivityBarChar2 && story == false) {
-                    sampleCharDB2 = sampleCharDB2 + (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getCharRecoverySpeed2());
+                    sampleCharDB2 = sampleCharDB2 + (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getCharRecoverySpeed2());
                     sampleChar2 = Integer.parseInt("" + Math.round(sampleCharDB2) + "");
                 } else if (aiRunning3 == false && incrementActivityBarChar2 && story == false) {
                     {
@@ -315,7 +315,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         try {
 
             isPaused = true;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().pauseThreads();
+            LoginScreen.getInstance().getMenu().getMain().getGame().pauseThreads();
             t.suspend();
             executorAI.pause();
             executorPlyr.pause();
@@ -330,7 +330,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void resumeGame() {
         try {
             isPaused = false;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().resumeThreads();
+            LoginScreen.getInstance().getMenu().getMain().getGame().resumeThreads();
             t.resume();
             executorAI.resume();
             executorPlyr.resume();
@@ -345,13 +345,13 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void gameOver() {
         gameRunning = false;
         isGameOver = true;
-        LoginScreen.getLoginScreen().getMenu().getMain().freeToSave = true;
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().closeAudio();
-        LoginScreen.getLoginScreen().setCurrentPlayTime(playTimeCounter);
+        LoginScreen.getInstance().getMenu().getMain().freeToSave = true;
+        LoginScreen.getInstance().getMenu().getMain().getGame().closeAudio();
+        LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
         //if not story mode, increment char usage
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
-            LoginScreen.getLoginScreen().incrementCharUsage(LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex);
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
+            LoginScreen.getInstance().incrementCharUsage(LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex);
         }
         if (parentx.hasWon()) {
             DrawGame.winPic();
@@ -360,8 +360,8 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             DrawGame.losePic();
             loseMus.play();
         }
-        CanvasStageSelect.selectedStage = false;
-        LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().resetCharacters();
+        RenderStageSelect.selectedStage = false;
+        LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().resetCharacters();
         DrawGame.drawAchievements();
     }
 
@@ -409,7 +409,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
      */
     private void recordPlayTime() {
         matchDuration = 0;
-        playTimeCounter = LoginScreen.getLoginScreen().getCurrentPlayTime();
+        playTimeCounter = LoginScreen.getInstance().getCurrentPlayTime();
         new Thread() {
 
             @Override
@@ -448,28 +448,28 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void closingThread(int mo) {
         instance = false;
         //update profile operations
-        LoginScreen.getLoginScreen().incrementMatchCount();
-        LoginScreen.getLoginScreen().setPoints(ach.getNewUserPoints());
+        LoginScreen.getInstance().incrementMatchCount();
+        LoginScreen.getInstance().setPoints(ach.getNewUserPoints());
         //save profile
-        LoginScreen.getLoginScreen().saveConfigFile();
-        LoginScreen.getLoginScreen().getMenu().getMain().systemNotice("Saved File");
+        LoginScreen.getInstance().saveConfigFile();
+        LoginScreen.getInstance().getMenu().getMain().systemNotice("Saved File");
         t.stop(); //stop this thread
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && LoginScreen.getLoginScreen().getMenu().getMain().getStory().moreStages()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && LoginScreen.getInstance().getMenu().getMain().getStory().moreStages()) {
             //nextStage if you've won
             if (parentx.hasWon()) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getStory().incrementMode();
+                LoginScreen.getInstance().getMenu().getMain().getStory().incrementMode();
                 winMus.play();
             } else {
                 loseMus.play();
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getStory().storyProcceed();
-            LoginScreen.getLoginScreen().getMenu().getMain().nextStage();
+            LoginScreen.getInstance().getMenu().getMain().getStory().storyProcceed();
+            LoginScreen.getInstance().getMenu().getMain().nextStage();
         } else {
             //javax.swing.JOptionPane.showMessageDialog(null, "Done");
             if (mo == 0) {
-                LoginScreen.getLoginScreen().getMenu().getMain().backToMenuScreen();
+                LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
             } else if (mo == 1) {
-                LoginScreen.getLoginScreen().getMenu().getMain().backToCharSelect();
+                LoginScreen.getInstance().getMenu().getMain().backToCharSelect();
             }
         }
         //go back to mode menu
@@ -485,10 +485,10 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         gameRunning = false;
         isGameOver = true;
         instance = false;
-        LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().resetCharacters();
+        LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().resetCharacters();
 
         //kill threads
-        LoginScreen.getLoginScreen().getMenu().getMain().getGame().closeAudio();
+        LoginScreen.getInstance().getMenu().getMain().getGame().closeAudio();
     }
 
     public void timeOut(int time) {
@@ -556,13 +556,13 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         executorAI2 = new ExecuterMovesOpp2();
         executorAI3 = new ExecuterMovesChar2();
 
-        ach = LoginScreen.getLoginScreen().getAch();
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+        ach = LoginScreen.getInstance().getAch();
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
             story = true;
             time = StoryMode.time;
         } //if LAN, client uses hosts time preset
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-            time = LoginScreen.getLoginScreen().getMenu().getMain().hostTime;
+        else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            time = LoginScreen.getInstance().getMenu().getMain().hostTime;
         } else {
             time = WindowOptions.time;
         }
@@ -586,25 +586,25 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         isPaused = false;
         isGameOver = false;
         ach.newInstance();
-        LoginScreen.getLoginScreen().newGame = true;
+        LoginScreen.getInstance().newGame = true;
         winMus = new ThreadMP3(ThreadMP3.winSound(), false);
         loseMus = new ThreadMP3(ThreadMP3.loseSound(), false);
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().playBGSound();
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
+            LoginScreen.getInstance().getMenu().getMain().getGame().playBGSound();
             musNotice();
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex));
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex));
         }
 
         t = new Thread(this);
         t.setName("MAIN GAME LOGIC THREAD");
         t.setPriority(5);
         t.start();
-        LoginScreen.getLoginScreen().getMenu().getMain().reSize("menu");
+        LoginScreen.getInstance().getMenu().getMain().reSize("menu");
         count2 = 0;
     }
 
     public void musNotice() {
-        LoginScreen.getLoginScreen().getMenu().getMain().systemNotice2(CanvasStageSelect.trax[CanvasStageSelect.musicInt]);
+        LoginScreen.getInstance().getMenu().getMain().systemNotice2(RenderStageSelect.trax[RenderStageSelect.musicInt]);
     }
 
     /**
@@ -612,8 +612,8 @@ public class ThreadGameInstance implements Runnable, ActionListener {
      */
     public void playMusicNow() {
         try {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().playBGSound();
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex));
+            LoginScreen.getInstance().getMenu().getMain().getGame().playBGSound();
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

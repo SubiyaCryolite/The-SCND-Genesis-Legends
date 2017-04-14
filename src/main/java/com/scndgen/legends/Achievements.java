@@ -23,7 +23,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
 
 import java.util.ArrayList;
@@ -151,10 +151,10 @@ public class Achievements {
      * Scan for conditions
      */
     public void scan() {
-        if (Characters.getCharMinLife() <= 79 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent >= 82 && isLocked[0]) {
+        if (Characters.getCharMinLife() <= 79 && LoginScreen.getInstance().getMenu().getMain().getGame().perCent >= 82 && isLocked[0]) {
             DrawGame.setNotifiationPic(1); //cat + 1
             name.add(achDesc[0]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[0]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[0]);
             desc.add(achFull[0]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -163,10 +163,10 @@ public class Achievements {
             isLocked[0] = false;
         }
 
-        if (Characters.getCharMinLife() <= 30 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent >= 50 && isLocked[1]) {
+        if (Characters.getCharMinLife() <= 30 && LoginScreen.getInstance().getMenu().getMain().getGame().perCent >= 50 && isLocked[1]) {
             DrawGame.setNotifiationPic(3); //cat + 1
             name.add(achDesc[1]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[1]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[1]);
             desc.add(achFull[1]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -175,10 +175,10 @@ public class Achievements {
             isLocked[1] = false;
         }
 
-        if (((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent - LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2) >= 50) && isLocked[4]) {
+        if (((LoginScreen.getInstance().getMenu().getMain().getGame().perCent - LoginScreen.getInstance().getMenu().getMain().getGame().perCent2) >= 50) && isLocked[4]) {
             DrawGame.setNotifiationPic(3); //cat + 1
             name.add(achDesc[2]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[2]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[2]);
             desc.add(achFull[2]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -189,10 +189,10 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent - LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2) >= 40) && isLocked[3]) {
+        if (((LoginScreen.getInstance().getMenu().getMain().getGame().perCent - LoginScreen.getInstance().getMenu().getMain().getGame().perCent2) >= 40) && isLocked[3]) {
             DrawGame.setNotifiationPic(2); //cat + 1
             name.add(achDesc[3]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[3]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[3]);
             desc.add(achFull[3]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -202,10 +202,10 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent - LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2) >= 30) && isLocked[2]) {
+        if (((LoginScreen.getInstance().getMenu().getMain().getGame().perCent - LoginScreen.getInstance().getMenu().getMain().getGame().perCent2) >= 30) && isLocked[2]) {
             DrawGame.setNotifiationPic(1); //cat + 1
             name.add(achDesc[4]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[4]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[4]);
             desc.add(achFull[4]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -214,10 +214,10 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (DrawGame.getAttackType('c').equalsIgnoreCase("fury") && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver && LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && isLocked[5]) {
+        if (DrawGame.getAttackType('c').equalsIgnoreCase("fury") && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver && LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && isLocked[5]) {
             DrawGame.setNotifiationPic(3); //cat + 1
             name.add(achDesc[5]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[5]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[5]);
             desc.add(achFull[5]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -226,10 +226,10 @@ public class Achievements {
             isLocked[5] = false;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver) {
             DrawGame.setNotifiationPic(2); //cat + 1
             name.add(achDesc[6]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[6]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[6]);
             desc.add(achFull[6]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -237,10 +237,10 @@ public class Achievements {
             currentPoints = currentPoints + pointsArr[0] + bonus;
         }
 
-        if (DrawGame.getAttackType('o').equalsIgnoreCase("fury") && LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver && isLocked[6]) {
+        if (DrawGame.getAttackType('o').equalsIgnoreCase("fury") && LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver && isLocked[6]) {
             DrawGame.setNotifiationPic(3); //cat + 1
             name.add(achDesc[7]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[7]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[7]);
             desc.add(achFull[7]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -249,10 +249,10 @@ public class Achievements {
             isLocked[6] = false;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver && (LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent - LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2 <= 30) && isLocked[7]) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver && (LoginScreen.getInstance().getMenu().getMain().getGame().perCent - LoginScreen.getInstance().getMenu().getMain().getGame().perCent2 <= 30) && isLocked[7]) {
             DrawGame.setNotifiationPic(2); //cat + 1
             name.add(achDesc[8]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[8]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[8]);
             desc.add(achFull[8]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -261,10 +261,10 @@ public class Achievements {
             isLocked[7] = false;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver && parent.consecWins >= 5 && isLocked[8]) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver && parent.consecWins >= 5 && isLocked[8]) {
             DrawGame.setNotifiationPic(2); //cat + 1
             name.add(achDesc[9]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[9]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[9]);
             desc.add(achFull[9]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -274,10 +274,10 @@ public class Achievements {
             isLocked[8] = false;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().hasWon() && StoryMode.stat.equalsIgnoreCase("half way") && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver && isLocked[9]) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().hasWon() && StoryMode.stat.equalsIgnoreCase("half way") && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver && isLocked[9]) {
             DrawGame.setNotifiationPic(2); //cat + 1
             name.add(achDesc[10]);
-            LoginScreen.getLoginScreen().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[10]);
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(lang.getLine(83) + ": " + achDesc[10]);
             desc.add(achFull[10]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);

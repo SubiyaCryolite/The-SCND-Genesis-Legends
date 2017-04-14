@@ -55,21 +55,21 @@ public class ExecuterMovesCharOnline implements Runnable {
         //normal attack
         if (well == 'n') {
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter = 0;
+            LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
             //clear active combos
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('c', 9, 11);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('o', 9, 11);
-            //LoginScreen.getLoginScreen().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('c', 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('o', 9, 11);
+            //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
 
             executingTheCommands();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
         }
 
         //limit break
         if (well == 'l') {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().Clash(1, 'c');
+            LoginScreen.getInstance().getMenu().getMain().getGame().Clash(1, 'c');
         }
     }
 
@@ -77,11 +77,11 @@ public class ExecuterMovesCharOnline implements Runnable {
         int[] moveBuff = {i1, i2, i3, i4};
 
         for (int o = 0; o < 4; o++) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-            LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().attack(moveBuff[o], 2, 'c', 'o');
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeOppCharLB();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('c');
-            LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(moveBuff[o], 2, 'c', 'o');
+            LoginScreen.getInstance().getMenu().getMain().getGame().shakeOppCharLB();
+            LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('c');
+            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
         }
     }
 }

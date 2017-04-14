@@ -77,12 +77,12 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowOptions() {
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize - 2);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize - 2);
         box = new Box(BoxLayout.Y_AXIS);
         box.setOpaque(false);
 
         logoPic = new SpecialDrawMenuBGs();
-        langz = LoginScreen.getLoginScreen().getLangInst();
+        langz = LoginScreen.getInstance().getLangInst();
 
         comicTxtFreqStr = new String[]{langz.getLine(1), langz.getLine(2), langz.getLine(3), langz.getLine(4)};
         mode = new String[]{langz.getLine(22), langz.getLine(23), langz.getLine(24), langz.getLine(25)};
@@ -136,7 +136,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         /*
         countries = Locale.getISOCountries();
         nation = new JComboBox(countries);
-        nation.setSelectedItem(LoginScreen.getLoginScreen().getCCode());
+        nation.setSelectedItem(LoginScreen.getInstance().getCCode());
          */
 
         diffSett = new JComboBox(diffSettOpt);
@@ -166,8 +166,8 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         opLabel5 = new JLabel(langz.getLine(8));
         graphicsCombo = new JComboBox(preset);
-        graphics = LoginScreen.getLoginScreen().graffix;
-        graphicsCombo.setSelectedItem(LoginScreen.getLoginScreen().graffix);
+        graphics = LoginScreen.getInstance().graffix;
+        graphicsCombo.setSelectedItem(LoginScreen.getInstance().graffix);
         graphicsCombo.addActionListener(this);
         graphicsCombo.setToolTipText(langz.getLine(9));
         panGraffix = new JPanel(new GridLayout(1, 2));
@@ -176,7 +176,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         frameR = new JComboBox(frames);
         frameR.addActionListener(this);
-        frameR.setSelectedItem(LoginScreen.getLoginScreen().frames + "");
+        frameR.setSelectedItem(LoginScreen.getInstance().frames + "");
         opLabel6 = new JLabel(langz.getLine(10));
         panFrameRate = new JPanel(new GridLayout(1, 2));
         panFrameRate.add(opLabel6);
@@ -188,7 +188,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         soundOn.addActionListener(this);
         soundOff.addActionListener(this);
 
-        if (LoginScreen.getLoginScreen().soundStatus.equalsIgnoreCase("on")) {
+        if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
             soundOn.setSelected(true); //on by default
         } else {
             soundOff.setSelected(true);
@@ -205,7 +205,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         opLabel3 = new JLabel(langz.getLine(14));
         timeDur = new JComboBox(times);
-        timeDur.setSelectedItem("" + LoginScreen.getLoginScreen().timePref);
+        timeDur.setSelectedItem("" + LoginScreen.getInstance().timePref);
         timeDur.addActionListener(this);
         panTimeDur = new JPanel(new GridLayout(1, 2));
         panTimeDur.add(opLabel3);
@@ -227,7 +227,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         pan3.add(countryCode);
         pan3.add(nation);
          */
-        if (LoginScreen.getLoginScreen().autoUpdate.equalsIgnoreCase("yes")) {
+        if (LoginScreen.getInstance().autoUpdate.equalsIgnoreCase("yes")) {
             updateOn.setSelected(true); //on by default
         } else {
             updateOff.setSelected(true);
@@ -242,14 +242,14 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         panLefty = new JPanel(new GridLayout(1, 2));
         lefty = new JComboBox(new String[]{langz.getLine(172), langz.getLine(171)});
-        lefty.setSelectedIndex(LoginScreen.getLoginScreen().getIsLeftyInt());
+        lefty.setSelectedIndex(LoginScreen.getInstance().getIsLeftyInt());
         lefty.addActionListener(this);
         opLabel10 = new JLabel(langz.getLine(173));
         panLefty.add(opLabel10);
         panLefty.add(lefty);
 
         comicT = new JComboBox(comicTxtFreqStr);
-        comicT.setSelectedIndex(LoginScreen.getLoginScreen().comicPicOcc);
+        comicT.setSelectedIndex(LoginScreen.getInstance().comicPicOcc);
         comicT.addActionListener(this);
         opLabel8 = new JLabel(langz.getLine(17));
         panComicText = new JPanel(new GridLayout(1, 2));
@@ -258,7 +258,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         cont = new JCheckBox();
         cont.addItemListener(this);
-        if (LoginScreen.getLoginScreen().controller) {
+        if (LoginScreen.getInstance().controller) {
             cont.setSelected(true);
         } else {
             cont.setSelected(false);
@@ -268,8 +268,8 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panController.add(opLabel9);
         panController.add(cont);
 
-        langSett = new JComboBox(LoginScreen.getLoginScreen().getLangInst().getSupportedLanguages());
-        langSett.setSelectedIndex(LoginScreen.getLoginScreen().getSelLang());
+        langSett = new JComboBox(LoginScreen.getInstance().getLangInst().getSupportedLanguages());
+        langSett.setSelectedIndex(LoginScreen.getInstance().getSelLang());
         langSett.addActionListener(this);
         opLabel11 = new JLabel(langz.getLine(19));
         panLanguage = new JPanel(new GridLayout(1, 2));
@@ -338,7 +338,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         window.setResizable(false);
         window.setVisible(true);
 
-        setRating(LoginScreen.getLoginScreen().getGameRating() / 20);
+        setRating(LoginScreen.getInstance().getGameRating() / 20);
     }
 
     /**
@@ -350,27 +350,27 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         one = 0;
         //500,2500, 3500, 4500, 6500
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff0) {
+        if (LoginScreen.getInstance().difficultyStat == diff0) {
             one = 0;
         }
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff1) {
+        if (LoginScreen.getInstance().difficultyStat == diff1) {
             one = 1;
         }
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff2) {
+        if (LoginScreen.getInstance().difficultyStat == diff2) {
             one = 2;
         }
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff3) {
+        if (LoginScreen.getInstance().difficultyStat == diff3) {
             one = 3;
         }
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff4) {
+        if (LoginScreen.getInstance().difficultyStat == diff4) {
             one = 4;
         }
 
-        if (LoginScreen.getLoginScreen().difficultyStat == diff5) {
+        if (LoginScreen.getInstance().difficultyStat == diff5) {
             one = 5;
         }
 
@@ -385,9 +385,9 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
     @Override
     public void itemStateChanged(ItemEvent ie) {
         if (ie.getStateChange() == ItemEvent.SELECTED) {
-            LoginScreen.getLoginScreen().controllerStr = "true";
+            LoginScreen.getInstance().controllerStr = "true";
         } else {
-            LoginScreen.getLoginScreen().controllerStr = "false";
+            LoginScreen.getInstance().controllerStr = "false";
         }
     }
 
@@ -408,9 +408,9 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 ratings[u].setEnabled(false);
             }
             gameRating = num;
-            LoginScreen.getLoginScreen().setGameRating(gameRating);
+            LoginScreen.getInstance().setGameRating(gameRating);
             ratingL.setText(langz.getLine(35) + gameRating + "/5");
-            LoginScreen.getLoginScreen().saveConfigFile();
+            LoginScreen.getInstance().saveConfigFile();
         }
     }
 
@@ -431,7 +431,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         if (source == audio) {
             if (!downloadingMusic) {
-                LoginScreen.getLoginScreen().downloadMusic();
+                LoginScreen.getInstance().downloadMusic();
                 downloadingMusic = true;
             }
         }
@@ -445,38 +445,38 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 val = "yes";
             }
 
-            LoginScreen.getLoginScreen().setIsLefty(val);
+            LoginScreen.getInstance().setIsLefty(val);
         }
         if (source == reset) {
             resetRating();
         } else if (source == frameR) {
-            LoginScreen.getLoginScreen().frames = Integer.parseInt(frameR.getSelectedItem() + "");
+            LoginScreen.getInstance().frames = Integer.parseInt(frameR.getSelectedItem() + "");
         } else if (source == comicT) {
-            LoginScreen.getLoginScreen().comicPicOcc = comicT.getSelectedIndex();
+            LoginScreen.getInstance().comicPicOcc = comicT.getSelectedIndex();
         } else if (source == resSett) {
-            LoginScreen.getLoginScreen().scalePos = resSett.getSelectedIndex();
+            LoginScreen.getInstance().scalePos = resSett.getSelectedIndex();
         } else if (source == langSett) {
-            LoginScreen.getLoginScreen().getLangInst().setLanguage(langSett.getSelectedIndex());
-            LoginScreen.getLoginScreen().setActivLang(langSett.getSelectedIndex());
+            LoginScreen.getInstance().getLangInst().setLanguage(langSett.getSelectedIndex());
+            LoginScreen.getInstance().setActivLang(langSett.getSelectedIndex());
         } else if (source == diffSett) {
-            LoginScreen.getLoginScreen().difficultyDyn = Arr[diffSett.getSelectedIndex()];
-            LoginScreen.getLoginScreen().difficultyStat = Arr[diffSett.getSelectedIndex()];
+            LoginScreen.getInstance().difficultyDyn = Arr[diffSett.getSelectedIndex()];
+            LoginScreen.getInstance().difficultyStat = Arr[diffSett.getSelectedIndex()];
             System.out.println("Diff = " + Arr[diffSett.getSelectedIndex()]);
             System.out.println("Diff Range = " + (LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()]));
             System.out.println("Diff Range Rate = " + ((LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()])) / LoginScreen.difficultyScale);
         } else if (source == txtSpeedCombo) {
             txtSpeed = txtSpeedArr[txtSpeedCombo.getSelectedIndex()];
         } else if (source == soundOn) {
-            LoginScreen.getLoginScreen().soundStatus = "on";
+            LoginScreen.getInstance().soundStatus = "on";
         } else if (source == soundOff) {
-            LoginScreen.getLoginScreen().soundStatus = "off";
+            LoginScreen.getInstance().soundStatus = "off";
         } else if (source == updateOn) {
-            LoginScreen.getLoginScreen().autoUpdate = "yes";
+            LoginScreen.getInstance().autoUpdate = "yes";
         } else if (source == updateOff) {
-            LoginScreen.getLoginScreen().autoUpdate = "no";
+            LoginScreen.getInstance().autoUpdate = "no";
         } else if (source == graphicsCombo) {
             graphics = "" + graphicsCombo.getSelectedItem();
-            LoginScreen.getLoginScreen().graffix = "" + graphicsCombo.getSelectedItem();
+            LoginScreen.getInstance().graffix = "" + graphicsCombo.getSelectedItem();
         } else if (source == timeDur) {
             if (timeDur.getSelectedItem() == "infinite") {
                 time = 182; //above limit
@@ -494,10 +494,10 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 time = 30;
             }
 
-            LoginScreen.getLoginScreen().timePref = time;
+            LoginScreen.getInstance().timePref = time;
         } else if (source == save) {
-            //LoginScreen.getLoginScreen().setCountryCode(nation.getSelectedItem() + "");
-            LoginScreen.getLoginScreen().saveConfigFile();
+            //LoginScreen.getInstance().setCountryCode(nation.getSelectedItem() + "");
+            LoginScreen.getInstance().saveConfigFile();
             window.setVisible(false);
         }
     }

@@ -25,7 +25,7 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
 import com.scndgen.legends.engine.JenesisCharacter;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 
 import java.lang.annotation.Documented;
 
@@ -269,7 +269,7 @@ public class Characters {
 
         if (c == 1) {
             nameChar = "Subiya";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 1;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 1;
             dudeP2 = new Raila();
             assChar = "Raila";
             dudeP = new Subiya();
@@ -277,7 +277,7 @@ public class Characters {
 
         if (c == 2) {
             nameChar = "Raila";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 0;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 0;
             dudeP2 = new Subiya();
             assChar = "Subiya";
             dudeP = new Raila();
@@ -285,7 +285,7 @@ public class Characters {
 
         if (c == 3) {
             nameChar = "Lynx";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 2;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 2;
             dudeP2 = new Aisha();
             assChar = "Aisha";
             dudeP = new Lynx();
@@ -293,7 +293,7 @@ public class Characters {
 
         if (c == 4) {
             nameChar = "Aisha";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 3;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 3;
             dudeP2 = new Lynx();
             assChar = "Lynx";
             dudeP = new Aisha();
@@ -301,7 +301,7 @@ public class Characters {
 
         if (c == 5) {
             nameChar = "Ravage";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 4;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 4;
             dudeP2 = new Jon();
             assChar = "Jonah";
             dudeP = new Ravage();
@@ -309,7 +309,7 @@ public class Characters {
 
         if (c == 6) {
             nameChar = "Ade";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 5;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 5;
             dudeP2 = new Adam();
             assChar = "NovaAdam";
             dudeP = new Ade();
@@ -317,7 +317,7 @@ public class Characters {
 
         if (c == 7) {
             nameChar = "Jonah";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 6;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 6;
             dudeP2 = new Ravage();
             assChar = "Ravage";
             dudeP = new Jon();
@@ -325,7 +325,7 @@ public class Characters {
 
         if (c == 8) {
             nameChar = "NovaAdam";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 7;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 7;
             dudeP2 = new Ade();
             assChar = "Ade";
             dudeP = new Adam();
@@ -333,7 +333,7 @@ public class Characters {
 
         if (c == 9) {
             nameChar = "NOVA NovaAdam";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 8;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 8;
             dudeP2 = new Ade();
             assChar = "Ade";
             assChar = "Blank";
@@ -342,7 +342,7 @@ public class Characters {
 
         if (c == 10) {
             nameChar = "Azaria";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 9;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 9;
             dudeP2 = new Lynx();
             assChar = "Lynx";
             dudeP = new Azaria();
@@ -350,7 +350,7 @@ public class Characters {
 
         if (c == 11) {
             nameChar = "Sorrowe";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 10;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 10;
 
             dudeP2 = new Ade();
             assChar = "Ade";
@@ -359,7 +359,7 @@ public class Characters {
 
         if (c == 12) {
             nameChar = "The Thing";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex = 11;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex = 11;
             dudeP2 = new NovaAdam();
             assChar = "NOVA NovaAdam";
             dudeP = new Thing(0);
@@ -368,14 +368,14 @@ public class Characters {
         activityRecoverRateChar = dudeP.getRecovSpeed();
         healthRecoveryRateChar = dudeP.getHPRecovRate();
         setPoints(dudeP.getPoints());
-        CanvasGameRender.setLife(dudeP.getLife());
-        CanvasGameRender.setMaxLife(dudeP.getLife());
+        RenderGameRender.setLife(dudeP.getLife());
+        RenderGameRender.setMaxLife(dudeP.getLife());
 
 
         activityRecoveryRateChar2 = dudeP2.getRecovSpeed();
         healthRecoveryRateChar2 = dudeP2.getHPRecovRate();
-        CanvasGameRender.setCharLife3(dudeP2.getLife());
-        CanvasGameRender.setCharMaxLife3(dudeP2.getLife());
+        RenderGameRender.setCharLife3(dudeP2.getLife());
+        RenderGameRender.setCharMaxLife3(dudeP2.getLife());
         dudeP2.setAiProf3();
     }
 
@@ -389,7 +389,7 @@ public class Characters {
 
         if (c == 1) {
             nameOpp = "Subiya";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 1;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 1;
             dudeO2 = new Raila();
             assOpp = "Raila";
             dudeO = new Subiya();
@@ -397,7 +397,7 @@ public class Characters {
 
         if (c == 2) {
             nameOpp = "Raila";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 0;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 0;
             dudeO2 = new Subiya();
             assOpp = "Subiya";
             dudeO = new Raila();
@@ -405,7 +405,7 @@ public class Characters {
 
         if (c == 3) {
             nameOpp = "Lynx";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 2;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 2;
             dudeO2 = new Aisha();
             assOpp = "Aisha";
             dudeO = new Lynx();
@@ -413,7 +413,7 @@ public class Characters {
 
         if (c == 4) {
             nameOpp = "Aisha";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 3;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 3;
             dudeO2 = new Lynx();
             assOpp = "Lynx";
             dudeO = new Aisha();
@@ -421,7 +421,7 @@ public class Characters {
 
         if (c == 5) {
             nameOpp = "Ravage";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 4;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 4;
             dudeO2 = new Jon();
             assOpp = "Jonah";
             dudeO = new Ravage();
@@ -429,7 +429,7 @@ public class Characters {
 
         if (c == 6) {
             nameOpp = "Ade";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 5;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 5;
             dudeO2 = new Adam();
             assOpp = "NovaAdam";
             dudeO = new Ade();
@@ -437,7 +437,7 @@ public class Characters {
 
         if (c == 7) {
             nameOpp = "Jonah";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 6;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 6;
             dudeO2 = new Ravage();
             assOpp = "Ravage";
             dudeO = new Jon();
@@ -445,7 +445,7 @@ public class Characters {
 
         if (c == 8) {
             nameOpp = "NovaAdam";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 7;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 7;
             dudeO2 = new Ade();
             assOpp = "Ade";
             dudeO = new Adam();
@@ -453,7 +453,7 @@ public class Characters {
 
         if (c == 9) {
             nameOpp = "NOVA NovaAdam";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 8;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 8;
             dudeO2 = new Ade();
             assOpp = "Ade";
             dudeO = new NovaAdam();
@@ -461,7 +461,7 @@ public class Characters {
 
         if (c == 10) {
             nameOpp = "Azaria";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 9;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 9;
             dudeO2 = new Lynx();
             assOpp = "Lynx";
             dudeO = new Azaria();
@@ -469,7 +469,7 @@ public class Characters {
 
         if (c == 11) {
             nameOpp = "Sorrowe";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 10;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 10;
             dudeO2 = new Ade();
             assOpp = "Ade";
             dudeO = new Sorr();
@@ -477,7 +477,7 @@ public class Characters {
 
         if (c == 12) {
             nameOpp = "The Thing";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 11;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 11;
             dudeO2 = new NovaAdam();
             assOpp = "NOVA NovaAdam";
             dudeO = new Thing(0);
@@ -485,7 +485,7 @@ public class Characters {
 
         if (c == 13) {
             nameOpp = "The Thing";
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex = 11;
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex = 11;
             dudeO2 = new NovaAdam();
             assOpp = "NOVA NovaAdam";
             dudeO = new Thing(1);
@@ -494,15 +494,15 @@ public class Characters {
 
         activityRecoveryRateOpp = dudeO.getRecovSpeed();
         healthRecoveryRateOpp = dudeO.getHPRecovRate();
-        CanvasGameRender.setOppLife(dudeO.getLife());
-        CanvasGameRender.setOppMaxLife(dudeO.getLife());
+        RenderGameRender.setOppLife(dudeO.getLife());
+        RenderGameRender.setOppMaxLife(dudeO.getLife());
         dudeO.setAiProf();
 
 
         activityRecoveryRateOpp2 = dudeO2.getRecovSpeed();
         healthRecoveryRateOpp2 = dudeO2.getHPRecovRate();
-        CanvasGameRender.setOppLife2(dudeO2.getLife());
-        CanvasGameRender.setOppMaxLife2(dudeO2.getLife());
+        RenderGameRender.setOppLife2(dudeO2.getLife());
+        RenderGameRender.setOppMaxLife2(dudeO2.getLife());
         dudeO2.setAiProf2();
     }
 
@@ -513,7 +513,7 @@ public class Characters {
     public void resetCharacters() {
         dudeO.resetLimits();
         dudeP.resetLimits();
-        LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 = false;
-        LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 = false;
+        LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 = false;
+        LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 = false;
     }
 }

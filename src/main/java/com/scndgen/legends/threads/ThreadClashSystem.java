@@ -100,11 +100,11 @@ public class ThreadClashSystem implements Runnable {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
                 DrawGame.setStatusPic('c', "GOT EM !!!", Colors.getColor("blue"));
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('c');
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('c');
             } else {
                 DrawGame.setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().resetBreak();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(200);
+                LoginScreen.getInstance().getMenu().getMain().getGame().resetBreak();
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(200);
                 //player didn't trigger clash but won, they arent attacked
             }
 
@@ -113,22 +113,22 @@ public class ThreadClashSystem implements Runnable {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
                 DrawGame.setStatusPic('o', "GOT YA !!!", Colors.getColor("blue"));
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
 
             } else {
                 DrawGame.setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().resetBreak();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(200);
+                LoginScreen.getInstance().getMenu().getMain().getGame().resetBreak();
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(200);
                 //opponent didn't trigger clash but won, they arent attacked
             }
         }
     }
 
     public void plrClashing() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("oppClsh" + plyClashPerc);
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("oppClsh" + plyClashPerc);
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            LoginScreen.getInstance().getMenu().getMain().sendToServer("oppClsh" + plyClashPerc);
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            LoginScreen.getInstance().getMenu().getMain().sendToClient("oppClsh" + plyClashPerc);
         }
 
         plyrClash = plyrClash + 1;

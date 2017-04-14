@@ -53,13 +53,13 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowControls() {
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize - 2);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize - 2);
         logoPic = new SpecialDrawMenuBGs();
 
         box = new Box(BoxLayout.Y_AXIS);
         box.setOpaque(false);
 
-        langz = LoginScreen.getLoginScreen().getLangInst();
+        langz = LoginScreen.getInstance().getLangInst();
 
         ok = new JButton(langz.getLine(36));
         ok.addActionListener(this);

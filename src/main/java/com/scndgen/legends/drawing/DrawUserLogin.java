@@ -68,10 +68,10 @@ public class DrawUserLogin extends JPanel {
         g2d.setColor(Color.black);
         g2d.fillRoundRect(0, 0, 310, 82, 15, 10); //54+lines x 14
 
-        stat1 = lang.getLine(118) + ": " + shortStr(LoginScreen.getLoginScreen().strUser);
-        stat2 = lang.getLine(119) + ": " + shortStr(LoginScreen.getLoginScreen().strPoint);
-        cal.setTimeInMillis(Integer.parseInt(LoginScreen.getLoginScreen().strPlayTime) * 1000);
-        stat3 = lang.getLine(120) + ": " + timeCal(LoginScreen.getLoginScreen().strPlayTime);
+        stat1 = lang.getLine(118) + ": " + shortStr(LoginScreen.getInstance().strUser);
+        stat2 = lang.getLine(119) + ": " + shortStr(LoginScreen.getInstance().strPoint);
+        cal.setTimeInMillis(Integer.parseInt(LoginScreen.getInstance().strPlayTime) * 1000);
+        stat3 = lang.getLine(120) + ": " + timeCal(LoginScreen.getInstance().strPlayTime);
 
 
         g2d.setColor(Color.WHITE);
@@ -80,13 +80,13 @@ public class DrawUserLogin extends JPanel {
         g2d.drawString(stat2, offset, (48 - 3) + (14 * 1));
         g2d.drawString(stat3, offset, (48 - 3) + (14 * 2));
 
-        if (LoginScreen.getLoginScreen().isDownloadingMusic) {
+        if (LoginScreen.getInstance().isDownloadingMusic) {
             g2d.setColor(Color.black);
             g2d.fillRoundRect(0, 85, 310, 82, 15, 10);
             g2d.setColor(Color.white);
-            g2d.drawString("Downloading :: " + LoginScreen.getLoginScreen().currentFile, 10, 120);
-            g2d.drawString("Size :: " + LoginScreen.getLoginScreen().trackSize / 1024 + "kb", 10, 132);
-            g2d.drawString("Percentage :: " + LoginScreen.getLoginScreen().musicPerc + "%", 10, 144);
+            g2d.drawString("Downloading :: " + LoginScreen.getInstance().currentFile, 10, 120);
+            g2d.drawString("Size :: " + LoginScreen.getInstance().trackSize / 1024 + "kb", 10, 132);
+            g2d.drawString("Percentage :: " + LoginScreen.getInstance().musicPerc + "%", 10, 144);
         }
     }
 

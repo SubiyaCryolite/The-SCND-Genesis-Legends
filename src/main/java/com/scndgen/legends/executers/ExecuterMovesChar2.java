@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CanvasCharSelect;
+import com.scndgen.legends.menus.CharacterSelectionScreen;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +56,7 @@ public class ExecuterMovesChar2 implements Runnable {
 
 
             try {
-                int time = LoginScreen.getLoginScreen().difficultyDyn;
+                int time = LoginScreen.getInstance().difficultyDyn;
                 Thread.sleep((int) (time + (Math.random() * time)));
             } catch (InterruptedException ex) {
                 Logger.getLogger(ExecuterMovesChar2.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,29 +64,29 @@ public class ExecuterMovesChar2 implements Runnable {
 
             executingTheCommandsAI();
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar2(0);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().aiRunning3 = false;
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar2(0);
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().aiRunning3 = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = CanvasCharSelect.getAISlot3();
+        aiMoves = CharacterSelectionScreen.getAISlot3();
         range = aiMoves.length - 1;
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
 
             int randomNumber = (int) (Math.random() * 12);
             if (randomNumber <= 6) {
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2a >= 0) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent2a >= 0) {
                     whoToAttack = 4;
                 } // normally CPU player 1 attacks CPU opponent 2
                 else {
                     whoToAttack = 2;
                 }
             } else if (randomNumber >= 7) {
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2 >= 0) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent2 >= 0) {
                     whoToAttack = 2;
                 } //attack CPU opponent 1
                 else {
@@ -96,14 +96,14 @@ public class ExecuterMovesChar2 implements Runnable {
 
 
             for (int o = 0; o < 4; o++) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 //fix story mode bug
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().story == false) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeCharLB();
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('a');
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().story == false) {
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
+                    LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
+                    LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('a');
                 }
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
             }
         }
     }

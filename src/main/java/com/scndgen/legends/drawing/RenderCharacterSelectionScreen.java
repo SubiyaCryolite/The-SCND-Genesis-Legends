@@ -23,27 +23,24 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.engine.JenesisCanvas;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 import com.scndgen.legends.windows.WindowMain;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
-import java.io.File;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public abstract class DrawCharSel extends JenesisCanvas {
+public abstract class RenderCharacterSelectionScreen extends JenesisRender {
 
-    private static String[] statsChar = new String[LoginScreen.getLoginScreen().charNames.length];
+    private static String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     public int col, currentSlot = 0, lastRow, numOfCharacters = 12, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
     private GraphicsEnvironment ge;
     private JenesisLanguage lang;
@@ -67,8 +64,8 @@ public abstract class DrawCharSel extends JenesisCanvas {
     private String[] oppPrevLox = {"images/Raila/RailaPrevO.png", "images/Subiya/SubiyaPrevO.png", "images/Lynx/LynxPrevO.png", "images/Aisha/PrevO.png", "images/Ravage/PrevO.png", "images/Ade/PrevO.png", "images/Jonah/PrevO.png", "images/Adam/PrevO.png", "images/NOVA Adam/PrevO.png", "images/Azaria/PrevO.png", "images/Sorrowe/PrevO.png", "images/The Thing/PrevO.png"};
     private RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
 
-    public DrawCharSel() {
-        lang = LoginScreen.getLoginScreen().getLangInst();
+    public RenderCharacterSelectionScreen() {
+        lang = LoginScreen.getInstance().getLangInst();
         loadDesc();
         opacInc = 0.025f;
         pix = new JenesisImage();
@@ -84,7 +81,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
      */
     public static boolean bothArentSelected() {
         boolean answer = true;
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
             answer = false;
         }
         return answer;
@@ -144,7 +141,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
         g2d.setComposite(makeComposite(1.0f));
 
         //character preview DYNAMIC change
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 != true) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 != true) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(charPrev[charPrevLoicIndex], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -152,7 +149,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
         }
 
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(oppPrev[charPrevLoicIndex], 512 - x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -161,15 +158,15 @@ public abstract class DrawCharSel extends JenesisCanvas {
 
 
         //if character selected draw FIXED prev
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1) {
-            g2d.drawImage(charPrev[LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().charPrevLoc], charXcap, charYcap, this);
-            g2d.drawImage(charNames[LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedCharIndex], 40, 380, this);
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1) {
+            g2d.drawImage(charPrev[LoginScreen.getInstance().getMenu().getMain().getCharSelect().charPrevLoc], charXcap, charYcap, this);
+            g2d.drawImage(charNames[LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedCharIndex], 40, 380, this);
         }
 
         //if opp selected, draw FIXED prev
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2) {
-            g2d.drawImage(oppPrev[LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().oppPrevLoc], 512, charYcap, this);
-            g2d.drawImage(charNames[LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().selectedOppIndex], 553, 380, this);
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
+            g2d.drawImage(oppPrev[LoginScreen.getInstance().getMenu().getMain().getCharSelect().oppPrevLoc], 512, charYcap, this);
+            g2d.drawImage(charNames[LoginScreen.getInstance().getMenu().getMain().getCharSelect().selectedOppIndex], 553, 380, this);
         }
 
         //all char caps in this segment
@@ -178,11 +175,11 @@ public abstract class DrawCharSel extends JenesisCanvas {
             g2d.drawImage(charHold, 311, 0, this);
 
             if (well()) {
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 != true) {
+                if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 != true) {
                     g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
                     g2d.drawImage(oppBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
             }
@@ -192,7 +189,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 {
                     g2d.drawImage(charBlur[col], hPos, firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == i && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 1 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos, firstLine + (vSpacer * i), this);
@@ -205,7 +202,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 {
                     g2d.drawImage(charBlur[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == i && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 2 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
@@ -218,7 +215,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 {
                     g2d.drawImage(charBlur[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
                     //normal
-                    if (bothArentSelected() && hIndex == 3 && vIndex == i && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 3 && vIndex == i && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
@@ -235,7 +232,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
             if (rem == 1) {
                 g2d.drawImage(charBlur[col], hPos, firstLine, this);
                 //normal
-                if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                 {
                     g2d.setComposite(makeComposite(opacChar));
                     g2d.drawImage(charNorm[col], hPos, firstLine, this);
@@ -246,7 +243,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 {
                     g2d.drawImage(charBlur[col], hPos, firstLine, this);
                     //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col], hPos, firstLine, this);
@@ -259,7 +256,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 {
                     g2d.drawImage(charBlur[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
                     //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
+                    if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && LoginScreen.getInstance().getMenu().getMain().getCharSelect().allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
                     {
                         g2d.setComposite(makeComposite(opacChar));
                         g2d.drawImage(charNorm[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
@@ -270,7 +267,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
                 }
             }
 
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2) {
+            if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2) {
                 g2d.drawImage(fight, 0, 0, this);
                 g2d.setFont(bigFont);
                 g2d.setColor(Color.WHITE);
@@ -280,11 +277,11 @@ public abstract class DrawCharSel extends JenesisCanvas {
         }
         g2d.setFont(normalFont);
         g2d.setColor(Color.white);
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 == false) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 == false) {
             g2d.drawImage(charDescPic, 0, 0, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 4 + x, 18);
         }
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().proceed2 == false) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed1 && LoginScreen.getInstance().getMenu().getMain().getCharSelect().proceed2 == false) {
             g2d.drawImage(oppDescPic, 452, 450, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 852 - g2d.getFontMetrics(normalFont).stringWidth(statsChar[charPrevLoicIndex]) + x, 468);
         }
@@ -301,8 +298,8 @@ public abstract class DrawCharSel extends JenesisCanvas {
     }
 
     private void loadCaps() {
-        bigFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.extraTxtSize);
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
+        bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = pix.loadImageFromToolkitNoScale("images/charInfoO.png");
         charDescPic = pix.loadImageFromToolkitNoScale("images/charInfoC.png");
 
@@ -350,7 +347,7 @@ public abstract class DrawCharSel extends JenesisCanvas {
         oppBack = pix.loadImageFromToolkitNoScale("images/selOpp.png");
         charHold = pix.loadImageFromToolkitNoScale("images/charHold.png");
 
-        Image[] tmp = SpecialDrawModeCanvas.getPics();
+        Image[] tmp = SpecialDrawModeRender.getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
@@ -480,50 +477,4 @@ public abstract class DrawCharSel extends JenesisCanvas {
         return ans;
     }
 
-    /**
-     * Gets screenshot
-     */
-    public void captureScreenShot() {
-        try {
-            BufferedImage dudeC = volatileImg.getSnapshot();
-
-            //image = getGaussianBlurFilter(10, true).filter(image, null);
-            //image = getGaussianBlurFilter(10, false).filter(image, null);
-
-            File file;
-
-            //Save the screenshot as a png
-
-            //file = new File(generateUID() + ".png");
-            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
-                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
-            }
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + DrawGame.generateUID() + ".png");
-            ImageIO.write(dudeC, "png", file);
-            systemNotice(lang.getLine(170));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Hardware acceleration
-     */
-    private void createBackBuffer() {
-        if (runNew) {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
-            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            //optimise, clear unused memory
-            if (volatileImg != null) {
-                volatileImg.flush();
-                volatileImg = null;
-            }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
-            g2d.setRenderingHints(renderHints); //activate aliasing
-            runNew = false;
-        }
-    }
 }

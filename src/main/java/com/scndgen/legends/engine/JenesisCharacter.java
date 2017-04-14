@@ -23,8 +23,9 @@ package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.DrawGame;
-import com.scndgen.legends.menus.CanvasCharSelect;
+import com.scndgen.legends.menus.CharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadMP3;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -93,17 +94,17 @@ public abstract class JenesisCharacter {
     public void loadMeHigh(ImageObserver obs) {
         sortQue();
         spr = new VolatileImage[12];
-        spr[0] = pix.loadBImage2(charSpritesStr[0], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs);  //1
-        spr[1] = pix.loadBImage2(charSpritesStr[1], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //2
-        spr[2] = pix.loadBImage2(charSpritesStr[2], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //3
-        spr[3] = pix.loadBImage2(charSpritesStr[3], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //4
-        spr[4] = pix.loadBImage2(charSpritesStr[4], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //5
-        spr[5] = pix.loadBImage2(charSpritesStr[5], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //6
-        spr[6] = pix.loadBImage2(charSpritesStr[6], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //7
-        spr[7] = pix.loadBImage2(charSpritesStr[7], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //8
-        spr[8] = pix.loadBImage2(charSpritesStr[8], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //9
-        spr[9] = pix.loadBImage2(charSpritesStr[9], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //10
-        spr[10] = pix.loadBImage2(charSpritesStr[10], LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), obs); //11
+        spr[0] = pix.loadBImage2(charSpritesStr[0], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs);  //1
+        spr[1] = pix.loadBImage2(charSpritesStr[1], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //2
+        spr[2] = pix.loadBImage2(charSpritesStr[2], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //3
+        spr[3] = pix.loadBImage2(charSpritesStr[3], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //4
+        spr[4] = pix.loadBImage2(charSpritesStr[4], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //5
+        spr[5] = pix.loadBImage2(charSpritesStr[5], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //6
+        spr[6] = pix.loadBImage2(charSpritesStr[6], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //7
+        spr[7] = pix.loadBImage2(charSpritesStr[7], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //8
+        spr[8] = pix.loadBImage2(charSpritesStr[8], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //9
+        spr[9] = pix.loadBImage2(charSpritesStr[9], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //10
+        spr[10] = pix.loadBImage2(charSpritesStr[10], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //11
         spr[11] = pix.loadBImage2(charSpritesStr[11], 32, 32, obs); //12
     }
 
@@ -236,33 +237,33 @@ public abstract class JenesisCharacter {
      * Set Characters AI, opponent 1
      */
     public void setAiProf() {
-        CanvasCharSelect.setAISlot(arr1, 1);
-        CanvasCharSelect.setAISlot(arr2, 2);
-        CanvasCharSelect.setAISlot(arr3, 3);
-        CanvasCharSelect.setAISlot(arr4, 4);
-        CanvasCharSelect.setAISlot(arr5, 5);
+        CharacterSelectionScreen.setAISlot(arr1, 1);
+        CharacterSelectionScreen.setAISlot(arr2, 2);
+        CharacterSelectionScreen.setAISlot(arr3, 3);
+        CharacterSelectionScreen.setAISlot(arr4, 4);
+        CharacterSelectionScreen.setAISlot(arr5, 5);
     }
 
     /**
      * Set Characters AI, opponent 2
      */
     public void setAiProf2() {
-        CanvasCharSelect.setAISlot2(arr1, 1);
-        CanvasCharSelect.setAISlot2(arr2, 2);
-        CanvasCharSelect.setAISlot2(arr3, 3);
-        CanvasCharSelect.setAISlot2(arr4, 4);
-        CanvasCharSelect.setAISlot2(arr5, 5);
+        CharacterSelectionScreen.setAISlot2(arr1, 1);
+        CharacterSelectionScreen.setAISlot2(arr2, 2);
+        CharacterSelectionScreen.setAISlot2(arr3, 3);
+        CharacterSelectionScreen.setAISlot2(arr4, 4);
+        CharacterSelectionScreen.setAISlot2(arr5, 5);
     }
 
     /**
      * Set Characters AI, player 2
      */
     public void setAiProf3() {
-        CanvasCharSelect.setAISlot3(arr1, 1);
-        CanvasCharSelect.setAISlot3(arr2, 2);
-        CanvasCharSelect.setAISlot3(arr3, 3);
-        CanvasCharSelect.setAISlot3(arr4, 4);
-        CanvasCharSelect.setAISlot3(arr5, 5);
+        CharacterSelectionScreen.setAISlot3(arr1, 1);
+        CharacterSelectionScreen.setAISlot3(arr2, 2);
+        CharacterSelectionScreen.setAISlot3(arr3, 3);
+        CharacterSelectionScreen.setAISlot3(arr4, 4);
+        CharacterSelectionScreen.setAISlot3(arr5, 5);
     }
 
     public int getPoints() {

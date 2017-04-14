@@ -19,10 +19,10 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.engine;
+package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CanvasStageSelect;
+import com.scndgen.legends.menus.RenderStageSelect;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -79,8 +79,8 @@ public class JenesisImage {
             URL url = cl.getResource(imageName);
             if (url != null) {
                 System.out.println("Processing pix........" + imageName);
-                int picWidth = (int) (LoginScreen.getLoginScreen().getGameXScale() * widthB);
-                int picHeight = (int) (LoginScreen.getLoginScreen().getGameYScale() * heightB);
+                int picWidth = (int) (LoginScreen.getInstance().getGameXScale() * widthB);
+                int picHeight = (int) (LoginScreen.getInstance().getGameYScale() * heightB);
                 return Toolkit.getDefaultToolkit().createImage(url).getScaledInstance(picWidth, picHeight, imageQual);
             }
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class JenesisImage {
             URL url = cl.getResource(imageName);
             if (url != null) {
                 System.out.println("Processing pix........" + imageName);
-                CanvasStageSelect.loadTxt("caching :: " + imageName);
+                RenderStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -200,15 +200,15 @@ public class JenesisImage {
             URL url = cl.getResource(imageName);
             if (url != null) {
                 System.out.println("Processing pix........" + imageName);
-                CanvasStageSelect.loadTxt("caching :: " + imageName);
+                RenderStageSelect.loadTxt("caching :: " + imageName);
                 //return new ImageIcon( url ).getImage();
 
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 
                 BufferedImage bi = ImageIO.read(url);
-                int picWidth = (int) (LoginScreen.getLoginScreen().getGameXScale() * widthB);
-                int picHeight = (int) (LoginScreen.getLoginScreen().getGameYScale() * heightB);
+                int picWidth = (int) (LoginScreen.getInstance().getGameXScale() * widthB);
+                int picHeight = (int) (LoginScreen.getInstance().getGameYScale() * heightB);
                 Image pic = bi.getScaledInstance(picWidth, picHeight, imageQual);
                 //Image bi=Toolkit.getDefaultToolkit().createImage(url);
                 //,Transparency.OPAQU

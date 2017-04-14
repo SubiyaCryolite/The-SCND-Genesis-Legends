@@ -23,9 +23,12 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.engine.*;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import java.awt.*;
 import java.awt.image.ConvolveOp;
@@ -38,10 +41,9 @@ import java.util.Calendar;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class SpecialDrawModeCanvas extends JenesisCanvas {
+public class SpecialDrawModeRender extends JenesisRender {
 
     private static final int fontSize = 16;
-    public static Graphics2D g2d;
     private static boolean animThread = true;
     private static float opac = 10;
     private static Font font;
@@ -56,14 +58,10 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
             ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
     private static int timeInt = 0;
     private static int spacer = 12, time;
-    RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-    private GraphicsEnvironment ge;
     private Color bg = new Color(214, 217, 223);
-    private int valCode, screenWidth = 852, screenHeight = 480;
-    private GraphicsConfiguration gc;
     private SpecialDrawAchievementLocker achDraw;
     private String mess;
-    private boolean runNew = true, fadeOutFeedback;
+    private boolean fadeOutFeedback;
     private float feedBackOpac = 1.0f;
     private JenesisImage pix = new JenesisImage();
     private Image sgLogo, ndanaSol;
@@ -87,18 +85,18 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
     //---blur op
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    public SpecialDrawModeCanvas() {
+    public SpecialDrawModeRender() {
         screenWidth = 852;
         screenHeight = 480;
         openOpac = 3.0f;
 
-        txt = LoginScreen.getLoginScreen().getMyFont(fontSize);
+        txt = LoginScreen.getInstance().getMyFont(fontSize);
 
 
         feedBackOpac = 1.0f;
         fadeOutFeedback = false;
 
-        langz = LoginScreen.getLoginScreen().getLangInst();
+        langz = LoginScreen.getInstance().getLangInst();
         over1 = new JenesisGlassPane();
         itemz = new String[(menuEntries + 2) * 2];
         achDraw = new SpecialDrawAchievementLocker();
@@ -106,7 +104,7 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
         loadPix();
-        font = LoginScreen.getLoginScreen().getMyFont(fontSize - 2);
+        font = LoginScreen.getInstance().getMyFont(fontSize - 2);
 
         ndanaSol = pix.loadImageFromToolkitNoScale("logo/ndana_sol.png");
 
@@ -397,7 +395,7 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
 
             over1.overlay(g2d, this);
 
-            g2d.drawString("The SCND Genesis: Legends " + CanvasGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+            g2d.drawString("The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
             g2d.setComposite(makeComposite(feedBackOpac));
             mess = "Press 'F' to provide Feedback";
             g2d.drawString(mess, 590, 14);
@@ -492,27 +490,6 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
         return menuItmStr;
     }
 
-    /**
-     * Hardware acceleration
-     */
-    private void createBackBuffer() {
-        if (runNew) {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
-            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            //optimise, clear unused memory
-            if (volatileImg != null) {
-                volatileImg.flush();
-                volatileImg = null;
-            }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
-            g2d.setRenderingHints(renderHints); //activate aliasing
-            runNew = false;
-        }
-    }
-
     public void StopRepaint() {
         animThread = false;
     }
@@ -551,10 +528,6 @@ public class SpecialDrawModeCanvas extends JenesisCanvas {
         } else {
             menuIndex = menuEntries;
         }
-    }
-
-    public int getMenuPosition() {
-        return menuIndex;
     }
 
     private void loadPix() {

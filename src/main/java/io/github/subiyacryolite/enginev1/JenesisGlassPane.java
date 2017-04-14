@@ -19,7 +19,7 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.engine;
+package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
 

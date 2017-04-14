@@ -55,10 +55,17 @@ public class GamePadController {
     private int rumblerIdx;      // index for the rumbler being used
     private ControllerEnvironment ce;
     private Controller[] cs;
+    private static GamePadController instance;
 
-    public GamePadController() {
+    public static synchronized GamePadController getInstance() {
+        if (instance == null)
+            instance = new GamePadController();
+        return instance;
+    }
+
+    private GamePadController() {
         try {
-            if (LoginScreen.getLoginScreen().controller) {
+            if (LoginScreen.getInstance().controller) {
                 ce = ControllerEnvironment.getDefaultEnvironment();
                 cs = ce.getControllers();
                 if (cs.length == 0) {

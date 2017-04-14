@@ -23,6 +23,7 @@ package com.scndgen.legends.engine;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.threads.ThreadMP3;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -45,9 +46,9 @@ public class JenesisTutorial implements Runnable {
     private ThreadMP3 bgSound, nextSound, backSound;
 
     public JenesisTutorial() {
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        lang = LoginScreen.getInstance().getLangInst();
         pixfac = new JenesisImage();
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
         sec = 0;
         slide = -1;
@@ -129,7 +130,7 @@ public class JenesisTutorial implements Runnable {
 
         screen.setComposite(makeComposite(0.5f));
         screen.setColor(Color.BLACK);
-        screen.fillRoundRect(0, 216, LoginScreen.getLoginScreen().getdefSpriteWidth(), 48, 48, 48); //mid minus half the font size (430-6)
+        screen.fillRoundRect(0, 216, LoginScreen.getInstance().getdefSpriteWidth(), 48, 48, 48); //mid minus half the font size (430-6)
 
         screen.setComposite(makeComposite(10 * 0.1f));
         screen.setColor(Color.WHITE);

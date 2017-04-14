@@ -22,25 +22,24 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Achievements;
+import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisCanvas;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisImage;
-import com.scndgen.legends.menus.CanvasStageSelect;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
+import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.VolatileImage;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +49,7 @@ import java.util.logging.Logger;
  * @Author: Ifunga Ndana
  * @Class: DrawGame
  */
-public abstract class DrawGame extends JenesisCanvas {
+public abstract class DrawGame extends JenesisRender {
     //mp3 wav
 
     private final static float inc = 0.05f;
@@ -166,8 +165,8 @@ public abstract class DrawGame extends JenesisCanvas {
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
     private int valCode, x = 2;
     private Font bigFont, normalFont;
-    private Font notSelected = LoginScreen.getLoginScreen().getMyFont(12);
-    private Font statusFont = LoginScreen.getLoginScreen().getMyFont(28);
+    private Font notSelected = LoginScreen.getInstance().getMyFont(12);
+    private Font statusFont = LoginScreen.getInstance().getMyFont(28);
     private int oppBarYOffset, leftyXOffset, y = 0;
     private Graphics g;
     private GraphicsConfiguration gc;
@@ -176,7 +175,7 @@ public abstract class DrawGame extends JenesisCanvas {
     private int result;
 
     public DrawGame() {
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        lang = LoginScreen.getInstance().getLangInst();
         pix = new JenesisImage();
         over1 = new JenesisGlassPane();
         newInstance();
@@ -247,7 +246,7 @@ public abstract class DrawGame extends JenesisCanvas {
     public static void drawAchievements() {
         try {
             int howMany = Achievements.getAcievementsTriggered();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().timeOut(howMany);
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().timeOut(howMany);
             do {
                 for (int u = 0; u < howMany; u++) {
                     String[] thisOne = Achievements.getName(u);
@@ -264,7 +263,7 @@ public abstract class DrawGame extends JenesisCanvas {
                         Logger.getLogger(DrawGame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } while (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().instance);
+            } while (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().instance);
         } catch (Exception e) {
             //nothin
         }
@@ -293,7 +292,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * Get the Characters
      */
     private static void getCharMoveset() {
-        LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().getDude().setCharMoveset();
+        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getDude().setCharMoveset();
     }
 
     /**
@@ -343,7 +342,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * Get the move selected by the player
      */
     private static String getSelMove(int move) {
-        String txt = LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().getDude().getMoveQued(move);
+        String txt = LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getDude().getMoveQued(move);
 
         return txt;
     }
@@ -433,7 +432,6 @@ public abstract class DrawGame extends JenesisCanvas {
     /**
      * Change storyboard pic
      *
-     * @param here - scene
      */
     public static void changeStoryBoard(int here2) {
         try {
@@ -514,18 +512,18 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     public static void Clash(int dude, char homie) {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("clashing^T&T^&T&^");
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("clashing^T&T^&T&^");
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            LoginScreen.getInstance().getMenu().getMain().sendToServer("clashing^T&T^&T&^");
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            LoginScreen.getInstance().getMenu().getMain().sendToClient("clashing^T&T^&T&^");
         }
 
-        if (CanvasGameRender.getBreak() == 1000 && safeToSelect && clasherOn == false) {
+        if (RenderGameRender.getBreak() == 1000 && safeToSelect && clasherOn == false) {
             clasher = new ThreadClashSystem(dude, homie);
             clasherOn = true;
 
             //AI if story or arcade
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                 oppAttack = new ThreadClashingOpponent();
                 System.out.println("Clash ai");
             }
@@ -537,17 +535,17 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     public static void sendToClient(String message) {
-        LoginScreen.getLoginScreen().getMenu().getMain().sendToClient(message);
-        //private static LoginScreen.getLoginScreen().getMenu().getMain().jenesisClient client;
+        LoginScreen.getInstance().getMenu().getMain().sendToClient(message);
+        //private static LoginScreen.getInstance().getMenu().getMain().jenesisClient client;
     }
 
     public static void sendToServer(String message) {
-        LoginScreen.getLoginScreen().getMenu().getMain().sendToServer(message);
+        LoginScreen.getInstance().getMenu().getMain().sendToServer(message);
     }
 
     public static void comicText() {
-        if (LoginScreen.getLoginScreen().comicPicOcc > 0) {
-            int well = Math.round((float) (Math.random() * LoginScreen.getLoginScreen().comicPicOcc));
+        if (LoginScreen.getInstance().comicPicOcc > 0) {
+            int well = Math.round((float) (Math.random() * LoginScreen.getInstance().comicPicOcc));
 
             if (well == 1) {
                 setRandomPic();
@@ -585,7 +583,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * @return height
      */
     public int getGameHeight() {
-        return LoginScreen.getLoginScreen().getGameHeight();
+        return LoginScreen.getInstance().getGameHeight();
     }
 
     /**
@@ -594,7 +592,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * @return width
      */
     public int getGameWidth() {
-        return LoginScreen.getLoginScreen().getGameWidth();
+        return LoginScreen.getInstance().getGameWidth();
     }
 
     @Override
@@ -609,10 +607,10 @@ public abstract class DrawGame extends JenesisCanvas {
         }
 
         if (imagesCharChached != true) {
-            g2d.fillRect(0, 0, LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight());
+            g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
         } else if (ThreadGameInstance.story) {
             g2d.setColor(Color.BLACK);
-            g2d.fillRect(0, 0, LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight());
+            g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
             if (opacityPic < 0.98f) {
                 opacityPic = opacityPic + 0.02f;
@@ -622,7 +620,7 @@ public abstract class DrawGame extends JenesisCanvas {
             g2d.setComposite(makeComposite(10 * 0.1f));
 
             g2d.setComposite(makeComposite(0.5f));
-            g2d.fillRoundRect(0, 424, LoginScreen.getLoginScreen().getdefSpriteWidth(), 48, 48, 48); //mid minus half the font size (430-6)
+            g2d.fillRoundRect(0, 424, LoginScreen.getInstance().getdefSpriteWidth(), 48, 48, 48); //mid minus half the font size (430-6)
             g2d.setComposite(makeComposite(10 * 0.1f));
 
             g2d.setColor(Color.WHITE);
@@ -641,7 +639,7 @@ public abstract class DrawGame extends JenesisCanvas {
         } else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.story == false) {
             g2d.drawImage(bgPic, 0, 0, this);
             g2d.setFont(notSelected);
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife() >= 0) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife() >= 0) {
                 if (animLayer.equalsIgnoreCase("both")) {
                     g2d.drawImage(ambient2, amb2x, amb2y, this);
                 } else if (animLayer.equalsIgnoreCase("back")) {
@@ -649,14 +647,14 @@ public abstract class DrawGame extends JenesisCanvas {
                     g2d.drawImage(ambient2, amb2x, amb2y, this);
                 }
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                if (LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
                 }
 
-                g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getLoginScreen().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight(), this);
+                g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), this);
 
 
-                if (!LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                if (!LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
                 }
 
@@ -671,8 +669,8 @@ public abstract class DrawGame extends JenesisCanvas {
                  * "Java Tip 32: You'll flip over Java images -- literally! - JavaWorld"
                  * http://www.javaworld.com/javaworld/javatips/jw-javatip32.html?page=2
                  */
-                if ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife()) < 0.66f) {
-                    damOpInc = 6.66f - ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife()) * 10);
+                if ((LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife()) < 0.66f) {
+                    damOpInc = 6.66f - ((LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife()) * 10);
                     //BACK to transparency
                 }
 
@@ -688,12 +686,12 @@ public abstract class DrawGame extends JenesisCanvas {
 
 
                 for (int xB = 0; xB < 4; xB++) {
-                    g2d.drawImage(quePic1, (xB * 70 + 5 + leftyXOffset), (int) (LoginScreen.getLoginScreen().getGameYScale() * 440), this);
+                    g2d.drawImage(quePic1, (xB * 70 + 5 + leftyXOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
                 }
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter >= 1) {
-                    for (int xV = 0; xV < LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter; xV++) {
-                        g2d.drawImage(quePic2, (xV * 70 + 5 + leftyXOffset), (int) (LoginScreen.getLoginScreen().getGameYScale() * 440), this);
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter >= 1) {
+                    for (int xV = 0; xV < LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter; xV++) {
+                        g2d.drawImage(quePic2, (xV * 70 + 5 + leftyXOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
                     }
                 }
 
@@ -740,32 +738,32 @@ public abstract class DrawGame extends JenesisCanvas {
 
                 g2d.drawImage(hpHolder, (45 + 62 + x2) + shakeyOffsetOpp, (y + 4 + y2 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setColor(Color.WHITE);
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
-                    g2d.drawString("HP: " + Math.round((LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() + LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife())) + " : " + ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2a + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2) / 2) + "%", (int) ((55 + 64 + x2)), (int) ((18 + y2 - oppBarYOffset)));
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                    g2d.drawString("HP: " + Math.round((LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() + LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife())) + " : " + ((LoginScreen.getInstance().getMenu().getMain().getGame().perCent2a + LoginScreen.getInstance().getMenu().getMain().getGame().perCent2) / 2) + "%", (int) ((55 + 64 + x2)), (int) ((18 + y2 - oppBarYOffset)));
                 } else {
-                    g2d.drawString("HP: " + Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife()) + " : " + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
+                    g2d.drawString("HP: " + Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife()) + " : " + LoginScreen.getInstance().getMenu().getMain().getGame().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
                 }
 
                 g2d.setColor(Color.BLACK);
                 g2d.drawImage(oppBar, (x2 - 20) + shakeyOffsetOpp, (y2 + 18 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setPaint(gradient1);
-                g2d.fillRoundRect((x2 - 17) + shakeyOffsetOpp, (y2 + 22 - oppBarYOffset) - shakeyOffsetOpp, LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp(), 6, 6, 6);
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                g2d.fillRoundRect((x2 - 17) + shakeyOffsetOpp, (y2 + 22 - oppBarYOffset) - shakeyOffsetOpp, LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp(), 6, 6, 6);
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
                     g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 40), this);
                     g2d.setColor(Color.WHITE);
-                    g2d.drawString("HP: " + Math.round((LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() + LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife())) + " : " + ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2a + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent2) / 2) + "%", 55 + 64 + x2, 18 + y2 - 40);
+                    g2d.drawString("HP: " + Math.round((LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() + LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife())) + " : " + ((LoginScreen.getInstance().getMenu().getMain().getGame().perCent2a + LoginScreen.getInstance().getMenu().getMain().getGame().perCent2) / 2) + "%", 55 + 64 + x2, 18 + y2 - 40);
                     g2d.setColor(Color.BLACK);
                     g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 40, this);
                     g2d.setPaint(gradient1);
-                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 40, LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp2(), 6, 6, 6);
+                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 40, LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp2(), 6, 6, 6);
 
                     g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 80), this);
                     g2d.setColor(Color.WHITE);
-                    g2d.drawString("HP: " + ((Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3()) + Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife()))) + " : " + ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent3a + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent) / 2) + "%", 55 + 64 + x2, 18 + y2 - 80);
+                    g2d.drawString("HP: " + ((Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3()) + Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife()))) + " : " + ((LoginScreen.getInstance().getMenu().getMain().getGame().perCent3a + LoginScreen.getInstance().getMenu().getMain().getGame().perCent) / 2) + "%", 55 + 64 + x2, 18 + y2 - 80);
                     g2d.setColor(Color.BLACK);
                     g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 80, this);
                     g2d.setPaint(gradient2);
-                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 80, LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar2(), 6, 6, 6);
+                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 80, LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar2(), 6, 6, 6);
                 }
 
                 //------------player 1 HUD---------------------//
@@ -783,10 +781,10 @@ public abstract class DrawGame extends JenesisCanvas {
                 {
                     g2d.setColor(Color.WHITE);
 
-                    if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-                        g2d.drawString("HP: " + ((Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3()) + Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife()))) + " : " + ((LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent3a + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent) / 2) + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
+                    if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                        g2d.drawString("HP: " + ((Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3()) + Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife()))) + " : " + ((LoginScreen.getInstance().getMenu().getMain().getGame().perCent3a + LoginScreen.getInstance().getMenu().getMain().getGame().perCent) / 2) + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
                     } else {
-                        g2d.drawString("HP: " + Math.round(LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife()) + " : " + LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
+                        g2d.drawString("HP: " + Math.round(LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife()) + " : " + LoginScreen.getInstance().getMenu().getMain().getGame().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
                     }
                     g2d.setComposite(makeComposite(10 * 0.1f)); //op back to normal for other drawings
                 }
@@ -794,13 +792,13 @@ public abstract class DrawGame extends JenesisCanvas {
 
             g2d.drawImage(counterPane, paneCord, 0, this);
 
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().time > 180) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().time > 180) {
                 g2d.drawImage(numberPix[11], (int) (386), 0, this);
             } else {
 
-                g2d.drawImage(times[LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().time1], (int) (356), 0, this);
-                g2d.drawImage(times[LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().time2], (int) ((356) + 40), 0, this);
-                g2d.drawImage(times[LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().time3], (int) ((356) + 80), 0, this);
+                g2d.drawImage(times[LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().time1], (int) (356), 0, this);
+                g2d.drawImage(times[LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().time2], (int) ((356) + 40), 0, this);
+                g2d.drawImage(times[LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().time3], (int) ((356) + 80), 0, this);
             }
 
 
@@ -848,7 +846,7 @@ public abstract class DrawGame extends JenesisCanvas {
             g2d.drawImage(fury, 20 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 190 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
             g2d.drawImage(furyBar, 10 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), furyBarY - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), this);
             g2d.setColor(Color.RED);
-            g2d.fillRoundRect(12 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 132 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 12, CanvasGameRender.getBreak() / 5, 12, 12);
+            g2d.fillRoundRect(12 + ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 132 - ((shakeyOffsetOpp + shakeyOffsetChar) / 2), 12, RenderGameRender.getBreak() / 5, 12, 12);
             //COMBO
 
             if (furyComboOpacity > 0.01f) {
@@ -945,7 +943,7 @@ public abstract class DrawGame extends JenesisCanvas {
 
     public void shakeCharLB() {
         try {
-            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(true, 0.4f);
+            GamePadController.getInstance().setRumbler(true, 0.4f);
         } catch (Exception e) {
         }
 
@@ -953,16 +951,16 @@ public abstract class DrawGame extends JenesisCanvas {
         {
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetChar = shakeyOffsetChar + 1;
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().slowDown(shakingChar);
+                LoginScreen.getInstance().getMenu().getMain().getGame().slowDown(shakingChar);
             }
 
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetChar = shakeyOffsetChar - 1;
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().slowDown(shakingChar);
+                LoginScreen.getInstance().getMenu().getMain().getGame().slowDown(shakingChar);
             }
         }
         try {
-            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(false, 0.0f);
+            GamePadController.getInstance().setRumbler(false, 0.0f);
         } catch (Exception e) {
         }
     }
@@ -972,24 +970,24 @@ public abstract class DrawGame extends JenesisCanvas {
         {
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetOpp = shakeyOffsetOpp + 1;
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().slowDown(shakingChar);
+                LoginScreen.getInstance().getMenu().getMain().getGame().slowDown(shakingChar);
             }
 
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetOpp = shakeyOffsetOpp - 1;
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().slowDown(shakingChar);
+                LoginScreen.getInstance().getMenu().getMain().getGame().slowDown(shakingChar);
             }
         }
     }
 
     private void checkFuryStatus() {
-        if (CanvasGameRender.getBreak() == 1000) {
+        if (RenderGameRender.getBreak() == 1000) {
             fury = fury1;
         } else {
             fury = fury2;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == true) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == true) {
             //slow mo!!!!
         }
     }
@@ -1066,7 +1064,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * Caches number
      */
     private void cacheNumPix() {
-        if (LoginScreen.getLoginScreen().isLefty().equalsIgnoreCase("no")) {
+        if (LoginScreen.getInstance().isLefty().equalsIgnoreCase("no")) {
             leftyXOffset = 548;
         } else {
             leftyXOffset = 0;
@@ -1118,17 +1116,17 @@ public abstract class DrawGame extends JenesisCanvas {
     private void loadCharSpritesHigh() {
         if (imagesCharChached == false) {
             try {
-                LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().loadMeHigh(this);
-                LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().loadMeHigh(this);
+                LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().loadMeHigh(this);
+                LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().loadMeHigh(this);
 
                 charSprites = new VolatileImage[12];
-                for (int i = 0; i < LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getNumberOfSprites(); i++) {
-                    charSprites[i] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(i);
+                for (int i = 0; i < LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getNumberOfSprites(); i++) {
+                    charSprites[i] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(i);
                 }
 
                 oppSprites = new VolatileImage[12];
-                for (int i = 0; i < LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getNumberOfSprites(); i++) {
-                    oppSprites[i] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getMeHigh(i);
+                for (int i = 0; i < LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getNumberOfSprites(); i++) {
+                    oppSprites[i] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getMeHigh(i);
                 }
 
                 comboPicArray = new Image[9];
@@ -1136,16 +1134,16 @@ public abstract class DrawGame extends JenesisCanvas {
                     comboPicArray[u] = pix.loadImageFromToolkitNoScale("images/screenTxt/" + u + ".png");
                 }
                 comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
-                comboPicArray[8] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
+                comboPicArray[8] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
 
                 comicPicArray = new Image[10];
-                comicPicArray[0] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
+                comicPicArray[0] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
                     comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
                 }
 
-                menuHold = pix.loadImageFromToolkitNoScale("images/" + LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getCharName() + "/menu.png");
-                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight());
+                menuHold = pix.loadImageFromToolkitNoScale("images/" + LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getCharName() + "/menu.png");
+                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
                 time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
                 time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
@@ -1161,7 +1159,7 @@ public abstract class DrawGame extends JenesisCanvas {
 
                 charCaption = new VolatileImage[charNames.length];
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     for (int p = 0; p < charNames.length; p++) {
                         charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
                     }
@@ -1185,10 +1183,10 @@ public abstract class DrawGame extends JenesisCanvas {
                 ambient1 = pix.loadBImage2("images/bgBG" + activeStage + "a.png", 852, 480, this);
                 ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     storyPicArr = new VolatileImage[13];
                     for (int u = 0; u < 11; u++) {
-                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), this);
+                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
                     }
                     storyPic = storyPicArr[0];
                 }
@@ -1234,17 +1232,17 @@ public abstract class DrawGame extends JenesisCanvas {
             try {
 
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().loadMeLow();
-                LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().loadMeLow();
+                LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().loadMeLow();
+                LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().loadMeLow();
 
                 charSprites = new Image[12];
-                for (int i = 0; i < LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getNumberOfSprites(); i++) {
-                    charSprites[i] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeLow(i);
+                for (int i = 0; i < LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getNumberOfSprites(); i++) {
+                    charSprites[i] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeLow(i);
                 }
 
                 oppSprites = new Image[12];
-                for (int i = 0; i < LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getNumberOfSprites(); i++) {
-                    oppSprites[i] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getMeLow(i);
+                for (int i = 0; i < LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getNumberOfSprites(); i++) {
+                    oppSprites[i] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().getMeLow(i);
                 }
 
                 comboPicArray = new Image[9];
@@ -1253,16 +1251,16 @@ public abstract class DrawGame extends JenesisCanvas {
                 }
 
                 comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
-                comboPicArray[8] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
+                comboPicArray[8] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
 
                 comicPicArray = new Image[10];
-                comicPicArray[0] = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
+                comicPicArray[0] = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().getMeHigh(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
                     comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
                 }
 
-                menuHold = pix.loadImageFromToolkitNoScale("images/" + LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getCharName() + "/menu.png");
-                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight());
+                menuHold = pix.loadImageFromToolkitNoScale("images/" + LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getCharName() + "/menu.png");
+                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
                 time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
                 time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
@@ -1278,7 +1276,7 @@ public abstract class DrawGame extends JenesisCanvas {
 
                 charCaption = new VolatileImage[charNames.length];
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     for (int p = 0; p < charNames.length; p++) {
                         charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
                     }
@@ -1304,10 +1302,10 @@ public abstract class DrawGame extends JenesisCanvas {
                     ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
                 }
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     storyPicArr = new VolatileImage[11];
                     for (int u = 0; u < 11; u++) {
-                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getLoginScreen().getdefSpriteWidth(), LoginScreen.getLoginScreen().getdefSpriteHeight(), this);
+                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
                     }
                     storyPic = storyPicArr[0];
                 }
@@ -1363,33 +1361,12 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     /**
-     * Hardware acceleration
-     */
-    private void createBackBuffer() {
-        if (runNew) {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
-            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            //optimise, clear unused memory
-            if (volatileImg != null) {
-                volatileImg.flush();
-                volatileImg = null;
-            }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
-            g2d.setRenderingHints(renderHints); //activate aliasing
-            runNew = false;
-        }
-    }
-
-    /**
      * Calculates angle of circle
      *
      * @return circel angle
      */
     private int phyAngle() {
-        float start = LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar() / 290.0f;
+        float start = LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar() / 290.0f;
         angleRaw = start * 360;
         result = Integer.parseInt("" + Math.round(angleRaw));
         if (result >= 360) {
@@ -1406,21 +1383,6 @@ public abstract class DrawGame extends JenesisCanvas {
      */
     public void stopAnimations() {
         pauseThreads();
-    }
-
-    /**
-     * Gets screenshot
-     */
-    public void captureScreenShot() {
-        try {
-            BufferedImage dudeC = volatileImg.getSnapshot();
-            File file;
-            file = new File(LoginScreen.configLoc + generateUID() + ".png");
-            ImageIO.write(dudeC, "png", file);
-            systemNotice(lang.getLine(170));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     /**
@@ -1512,12 +1474,12 @@ public abstract class DrawGame extends JenesisCanvas {
             sound = new ThreadMP3(ThreadMP3.selectSound(), false);
             sound.play();
             move = (currentCols * 4) + itemindex + 1;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().incrimentComboCounter();
+            LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0
+            LoginScreen.getInstance().getMenu().getMain().getGame().incrimentComboCounter();
             checkStatus();
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage("Qued up " + getSelMove(move));
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage("Qued up " + getSelMove(move));
         } else {
-            LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().errorSound();
+            LoginScreen.getInstance().getMenu().getMain().getCharSelect().errorSound();
         }
     }
 
@@ -1526,7 +1488,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * TRIGGERS ATTACKS
      */
     private void checkStatus() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter == 4) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter == 4) {
             attack();
         }
     }
@@ -1536,61 +1498,61 @@ public abstract class DrawGame extends JenesisCanvas {
      */
     public void attack() {
         if (numOfAttacks > 0) {
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                 disableSelection();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
-            } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter = 0;
+                LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
+            } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
                 //clear active combos
 
                 setSprites('c', 9, 11);
                 setSprites('o', 9, 11);
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                     setSprites('a', 9, 11);
                     setSprites('b', 9, 11);
                 }
-                //LoginScreen.getLoginScreen().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+                //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
                 // each Mattack will check if they are in the battle que.... if they are they execute
 
                 //broadcast hurtChar on net
-                attackStr = "" + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[0] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[1] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[2] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[3] + " attack";
+                attackStr = "" + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[0] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[1] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[2] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[3] + " attack";
                 System.out.println(attackStr);
                 client.sendData(attackStr);
 
                 //attack on local
                 disableSelection();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
+                LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
 
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().done != 1)// if game still running enable menus
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().done != 1)// if game still running enable menus
                 {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                 }
-            } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter = 0;
+            } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
                 //clear active combos
 
                 setSprites('c', 9, 11);
                 setSprites('o', 9, 11);
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                     setSprites('a', 9, 11);
                     setSprites('b', 9, 11);
                 }
-                //LoginScreen.getLoginScreen().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
+                //LoginScreen.getInstance().getMenu().getMain().getGame().DisableMenus(); disable issueing of more attacksCombatMage during execution
                 // each Mattack will check if they are in the battle que.... if they are they execute
 
                 //broadcast hurtChar on net
-                attackStr = "" + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[0] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[1] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[2] + LoginScreen.getLoginScreen().getMenu().getMain().getGame().attackArray[3] + " attack";
+                attackStr = "" + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[0] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[1] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[2] + LoginScreen.getInstance().getMenu().getMain().getGame().attackArray[3] + " attack";
                 System.out.println(attackStr);
                 server.sendData(attackStr);
 
                 //attack on local
                 disableSelection();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
+                LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().triggerCharAttack();
 
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().done != 1)// if game still running enable menus
+                LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+                if (LoginScreen.getInstance().getMenu().getMain().getGame().done != 1)// if game still running enable menus
                 {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                 }
             }
         }
@@ -1621,78 +1583,78 @@ public abstract class DrawGame extends JenesisCanvas {
 
             @Override
             public void run() {
-                if (CanvasGameRender.getBreak() == 1000) {
-                    //&& LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar()>289
+                if (RenderGameRender.getBreak() == 1000) {
+                    //&& LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar()>289
                     //runs on local
-                    if (dude == 'c' && limitRunning && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar() > 289) {
+                    if (dude == 'c' && limitRunning && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
 
                         //broadcast on net
-                        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                            LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("limt_Break_Oxodia_Ownz");
-                        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                            LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("limt_Break_Oxodia_Ownz");
+                        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                            LoginScreen.getInstance().getMenu().getMain().sendToServer("limt_Break_Oxodia_Ownz");
+                        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                            LoginScreen.getInstance().getMenu().getMain().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", 'c');
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().comboCounter = 0;
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
+                        LoginScreen.getInstance().getMenu().getMain().getGame().comboCounter = 0;
+                        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().pauseActivityRegen();
+                        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsChar(0);
                         try {
-                            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(true, 0.8f);
+                            GamePadController.getInstance().setRumbler(true, 0.8f);
                         } catch (Exception e) {
                         }
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
-                            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
+                            if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
                                 furySound();
                                 hurtSoundOpp();
-                                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                                 setSprites('c', i, 11);
                                 setSprites('a', i, 11);
                                 setSprites('o', 0, 11);
                                 shakeOppCharLB();
                                 comboPicArrayPosOpp = i;
                                 furyComboOpacity = 1.0f;
-                                LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(2, 100, "");
+                                LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(2, 100, "");
                             }
                         }
-                        LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                         try {
-                            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(false, 0.0f);
+                            GamePadController.getInstance().setRumbler(false, 0.0f);
                         } catch (Exception e) {
                         }
                         comboPicArrayPosOpp = 8;
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
+                        LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().resumeActivityRegen();
                         setSprites('c', 9, 11);
                         setSprites('o', 9, 11);
                         setSprites('a', 11, 11);
                         limitRunning = true;
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().resetBreak();
+                        LoginScreen.getInstance().getMenu().getMain().getGame().resetBreak();
                         setAttackType("normal", 'c');
-                    } else if (dude == 'o' && limitRunning && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp() > 289) {
+                    } else if (dude == 'o' && limitRunning && LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().getRecoveryUnitsOpp() > 289) {
                         setAttackType("fury", 'o');
                         limitRunning = false;
                         try {
-                            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(true, 0.8f);
+                            GamePadController.getInstance().setRumbler(true, 0.8f);
                         } catch (Exception e) {
                         }
                         for (int i = 1; i < 9; i++) {
-                            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
-                                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                            if (LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().isGameOver == false) {
+                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                                 furySound();
                                 hurtSoundChar();
-                                LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
+                                LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
                                 setSprites('o', i, 11);
                                 setSprites('b', i, 11);
                                 setSprites('c', 0, 11);
                                 shakeCharLB();
                                 comboPicArrayPosOpp = i;
-                                LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(1, 100, "");
+                                LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(1, 100, "");
                             }
                         }
-                        LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                         try {
-                            LoginScreen.getLoginScreen().getMenu().getMain().getController().setRumbler(false, 0.0f);
+                            GamePadController.getInstance().setRumbler(false, 0.0f);
                         } catch (Exception e) {
                         }
                         comboPicArrayPosOpp = 8;
@@ -1700,7 +1662,7 @@ public abstract class DrawGame extends JenesisCanvas {
                         setSprites('c', 9, 11);
                         setSprites('b', 11, 11);
                         limitRunning = true;
-                        LoginScreen.getLoginScreen().getMenu().getMain().getGame().resetBreak();
+                        LoginScreen.getInstance().getMenu().getMain().getGame().resetBreak();
                         setAttackType("normal", 'o');
                     }
                 }
@@ -1712,7 +1674,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * Attack sounds
      */
     private void attackSoundChar() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().isMale()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().isMale()) {
             randSoundIntChar = (int) (Math.random() * ThreadMP3.maleHurt.length * 2);
             if (randSoundIntChar < ThreadMP3.maleHurt.length) {
                 attackChar = new ThreadMP3(ThreadMP3.maleAttack(randSoundIntChar), false);
@@ -1728,7 +1690,7 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     private void attackSoundOpp() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().isMale()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().isMale()) {
             randSoundIntOpp = (int) (Math.random() * ThreadMP3.maleHurt.length * 2);
             if (randSoundIntOpp < ThreadMP3.maleHurt.length) {
                 attackOpp = new ThreadMP3(ThreadMP3.maleAttack(randSoundIntOpp), false);
@@ -1744,7 +1706,7 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     private void hurtSoundChar() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().isMale()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * ThreadMP3.maleAttacks.length * 2);
             if (randSoundIntCharHurt < ThreadMP3.maleAttacks.length) {
                 hurtChar = new ThreadMP3(ThreadMP3.maleHurt(randSoundIntCharHurt), false);
@@ -1760,7 +1722,7 @@ public abstract class DrawGame extends JenesisCanvas {
     }
 
     private void hurtSoundOpp() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeChar().isMale()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeChar().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * ThreadMP3.maleAttacks.length * 2);
             if (randSoundIntOppHurt < ThreadMP3.maleAttacks.length) {
                 hurtOpp = new ThreadMP3(ThreadMP3.maleHurt(randSoundIntOppHurt), false);
@@ -1799,11 +1761,11 @@ public abstract class DrawGame extends JenesisCanvas {
         statIndexChar = 0;
         statIndexOpp = 0;
 
-        bigFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.bigTxtSize);
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
+        bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.bigTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
 
         oppBarYOffset = 435;
-        LoginScreen.getLoginScreen().defHeight = LoginScreen.getLoginScreen().getGameHeight();
+        LoginScreen.getInstance().defHeight = LoginScreen.getInstance().getGameHeight();
         paneCord = (int) (306);
         menuBarY = (int) (360);
 
@@ -1822,23 +1784,23 @@ public abstract class DrawGame extends JenesisCanvas {
             specialEffect = false;
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-            server = LoginScreen.getLoginScreen().getMenu().getMain().getServer();
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            server = LoginScreen.getInstance().getMenu().getMain().getServer();
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
             //get ip from game
-            client = LoginScreen.getLoginScreen().getMenu().getMain().getClient();
+            client = LoginScreen.getInstance().getMenu().getMain().getClient();
         }
 
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
             charAssSpriteStatus = 9;
             oppAssSpriteStatus = 9;
         } else {
             charAssSpriteStatus = 11;
             oppAssSpriteStatus = 11;
         }
-        charPointInc = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getPoints();
+        charPointInc = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getPoints();
         System.out.println("Char inc: " + charPointInc);
         getCharMoveset();
         currentColumn = physical;
@@ -1862,7 +1824,7 @@ public abstract class DrawGame extends JenesisCanvas {
         itemX = 215;
         itemY = (int) (360);
         dnladng = true;
-        fightMus = new ThreadMP3("audio/" + CanvasStageSelect.musFiles[CanvasStageSelect.musicInt] + ".mp3", true);
+        fightMus = new ThreadMP3("audio/" + RenderStageSelect.musFiles[RenderStageSelect.musicInt] + ".mp3", true);
         //setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
     }
 
@@ -1930,7 +1892,7 @@ public abstract class DrawGame extends JenesisCanvas {
      * @return y scale
      */
     public float scaleY() {
-        return LoginScreen.getLoginScreen().getGameYScale();
+        return LoginScreen.getInstance().getGameYScale();
     }
 
     /**
@@ -1939,6 +1901,6 @@ public abstract class DrawGame extends JenesisCanvas {
      * @return X scale
      */
     public float scaleX() {
-        return LoginScreen.getLoginScreen().getGameXScale();
+        return LoginScreen.getInstance().getGameXScale();
     }
 }

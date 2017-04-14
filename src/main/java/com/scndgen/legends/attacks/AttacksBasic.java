@@ -41,7 +41,7 @@ public class AttacksBasic {
      * Creates an opponent object
      */
     public AttacksBasic() {
-        dude = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
+        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
     }
 
     /**
@@ -58,9 +58,9 @@ public class AttacksBasic {
             forWho = 999; //override for pose
         }
         if (thisMove == 0) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites(attacker, 9, 11);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites(attackee, 9, 11);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage("");
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attacker, 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attackee, 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage("");
         }
 
         if (thisMove == 1) {
@@ -129,15 +129,15 @@ public class AttacksBasic {
         }
 
         if (whoDoneIt == 999) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites(attack, 10, 11); //USE ITEM
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)
             if (move > 9) {
                 move = 10;
             }
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites(attack, move, 11); //attack
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites(target, 0, 11); //defend
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(attack, move, 11); //attack
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites(target, 0, 11); //defend
         }
     }
 

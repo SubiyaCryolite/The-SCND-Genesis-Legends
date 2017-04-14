@@ -57,7 +57,7 @@ public class MenuLeaderBoard implements ActionListener {
 
     public MenuLeaderBoard() {
         if (notLoaded) {
-            lang = LoginScreen.getLoginScreen().getLoginScreen().getLangInst();
+            lang = LoginScreen.getInstance().getInstance().getLangInst();
 
             upload = new JButton(lang.getLine(97));
             upload.addActionListener(this);
@@ -134,15 +134,15 @@ public class MenuLeaderBoard implements ActionListener {
                 try {
                     //if exists error shall be thrown
                     System.out.println("Brand new");
-                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getLoginScreen().usrCode + "', " + LoginScreen.getLoginScreen().getLoginScreen().getGameRating() + ", '" + LoginScreen.getLoginScreen().strUser + "', '" + LoginScreen.getLoginScreen().getLoginScreen().getCCode() + "', '" + CanvasGameRender.getVersionStr() + "', " + CanvasGameRender.getVersionInt() + ", " + (LoginScreen.getLoginScreen().getLoginScreen().win + LoginScreen.getLoginScreen().getLoginScreen().loss) + ", " + LoginScreen.getLoginScreen().getLoginScreen().win + ", " + LoginScreen.getLoginScreen().getLoginScreen().loss + ", " + LoginScreen.getLoginScreen().getLoginScreen().mostPopularChar() + ", " + LoginScreen.getLoginScreen().strPoint + ")");
+                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCCode() + "', '" + RenderGameRender.getVersionStr() + "', " + RenderGameRender.getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", " + LoginScreen.getInstance().getInstance().win + ", " + LoginScreen.getInstance().getInstance().loss + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
                 } catch (Exception e) {
                     System.out.println("Override old record");
-                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getLoginScreen().usrCode + "', rating=" + LoginScreen.getLoginScreen().getLoginScreen().getGameRating() + ", userName='" + LoginScreen.getLoginScreen().strUser + "', userCountry='" + LoginScreen.getLoginScreen().getLoginScreen().getCCode() + "', gameVersion='" + CanvasGameRender.getVersionStr() + "', versionInt=" + CanvasGameRender.getVersionInt() + ", userTotalMatches=" + (LoginScreen.getLoginScreen().getLoginScreen().win + LoginScreen.getLoginScreen().getLoginScreen().loss) + ", userWin=" + LoginScreen.getLoginScreen().getLoginScreen().win + ", userLoss=" + LoginScreen.getLoginScreen().getLoginScreen().loss + ", favCharacter=" + LoginScreen.getLoginScreen().getLoginScreen().mostPopularChar() + ", userPoints=" + LoginScreen.getLoginScreen().strPoint + " WHERE id='" + LoginScreen.getLoginScreen().usrCode + "'");
+                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCCode() + "', gameVersion='" + RenderGameRender.getVersionStr() + "', versionInt=" + RenderGameRender.getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", userWin=" + LoginScreen.getInstance().getInstance().win + ", userLoss=" + LoginScreen.getInstance().getInstance().loss + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
 
                 }
 
 
-                LoginScreen.getLoginScreen().getLoginScreen().saveConfigFile();
+                LoginScreen.getInstance().getInstance().saveConfigFile();
                 JOptionPane.showMessageDialog(null, lang.getLine(99), lang.getLine(102), JOptionPane.PLAIN_MESSAGE);
             } catch (Exception e) {
                 System.err.println(e);

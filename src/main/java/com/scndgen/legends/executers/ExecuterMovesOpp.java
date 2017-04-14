@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CanvasCharSelect;
+import com.scndgen.legends.menus.CharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -53,33 +53,33 @@ public class ExecuterMovesOpp implements Runnable {
     public void run() {
         do {
             try {
-                Thread.sleep(LoginScreen.getLoginScreen().difficultyDyn);
+                Thread.sleep(LoginScreen.getInstance().difficultyDyn);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ExecuterMovesOpp.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             executingTheCommandsAI();
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().aiRunning = false;
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().aiRunning = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = CanvasCharSelect.getAISlot();
+        aiMoves = CharacterSelectionScreen.getAISlot();
         range = aiMoves.length - 1;
 
         if (ThreadGameInstance.isGameOver == false) {
-            for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getLoginScreen().difficultyDyn) / LoginScreen.difficultyScale); o++) {
+            for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story mode bug
                 if (ThreadGameInstance.story == false && ThreadGameInstance.isGameOver == false) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeCharLB();
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('o');
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
+                    LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
+                    LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('o');
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }
         }

@@ -29,7 +29,6 @@ public class GamePadViewer extends JFrame {
 
     private static final int DELAY = 40;   // ms (polling interval)
     // needs to be fast to catch fast button pressing!
-    private GamePadController gpController;
     private CompassPanel xyPanel, zrzPanel, hatPanel;
     // shows the two analog sticks and POV hat
     private ButtonsPanel buttonsPanel;   // shows which buttons are pressed
@@ -38,7 +37,6 @@ public class GamePadViewer extends JFrame {
 
     public GamePadViewer() {
         super("GamePad Viewer");
-        gpController = new GamePadController();
         makeGUI();
         addWindowListener(new WindowAdapter() {
 
@@ -87,10 +85,10 @@ public class GamePadViewer extends JFrame {
 
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
-                    gpController.setRumbler(true, 0.8f);  // switch on
+                    GamePadController.getInstance().setRumbler(true, 0.8f);  // switch on
                 } else // deselected
                 {
-                    gpController.setRumbler(false, 0.0f);  // switch off
+                    GamePadController.getInstance().setRumbler(false, 0.0f);  // switch off
                 }
             }
         });
@@ -105,22 +103,22 @@ public class GamePadViewer extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 // System.out.println("polling...");
-                gpController.poll();
+                GamePadController.getInstance().poll();
 
                 // update the GUI:
                 // get POV hat compass direction
-                int compassDir = gpController.getHatDir();
+                int compassDir = GamePadController.getInstance().getHatDir();
                 hatPanel.setCompass(compassDir);
 
                 // get compass direction for the two analog sticks
-                compassDir = gpController.getXYStickDir();
+                compassDir = GamePadController.getInstance().getXYStickDir();
                 xyPanel.setCompass(compassDir);
 
-                compassDir = gpController.getZRZStickDir();
+                compassDir = GamePadController.getInstance().getZRZStickDir();
                 zrzPanel.setCompass(compassDir);
 
                 // get button settings
-                boolean[] buttons = gpController.getButtons();
+                boolean[] buttons = GamePadController.getInstance().getButtons();
                 buttonsPanel.setButtons(buttons);
             }
         };

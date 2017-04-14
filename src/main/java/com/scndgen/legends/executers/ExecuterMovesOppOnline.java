@@ -61,12 +61,12 @@ public class ExecuterMovesOppOnline implements Runnable {
             if (well == 'n') {
                 int interator = 0;
                 do {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('c', 9, 11);
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('o', 9, 11);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('c', 9, 11);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('o', 9, 11);
 
                     executingTheCommandsAI(f1, f2, f3, f4);
 
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
+                    LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp(0);
                     interator = interator + 1;
                 } while (interator != 1);
             }
@@ -81,11 +81,11 @@ public class ExecuterMovesOppOnline implements Runnable {
             System.out.println("AI Opponent>>>>>>>>");
 
             for (int o = 0; o < 4; o++) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp().attack(aiMoves[o], 1, 'o', 'c');
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeCharLB();
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('o');
-                LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[o], 1, 'o', 'c');
+                LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
+                LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('o');
+                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -54,7 +54,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowUpdate(String updateVerStr, String fname, String[] updates, LoginScreen p) {
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         updateVer = updateVerStr;
         updateArr = updates;
         logo = new JPanel();

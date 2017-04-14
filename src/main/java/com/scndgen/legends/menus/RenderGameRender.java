@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author Ifunga Ndana
  */
-public class CanvasGameRender extends DrawGame implements ActionListener {
+public class RenderGameRender extends DrawGame implements ActionListener {
 
     public static String attackPicSrc;
     public static String attackPicOppSrc;
@@ -125,7 +125,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
     /**
      * Create the panel
      */
-    public CanvasGameRender() {
+    public RenderGameRender() {
         initializePanel();
     }
 
@@ -265,7 +265,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
             @Override
             public void run() {
                 int icrement = inc;
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                     icrement = icrement / 2;
                 }
                 this.setName("Fury bar increment stage");
@@ -275,7 +275,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
                             limitBreak = limitBreak + 1;
                             this.sleep(15);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(CanvasGameRender.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(RenderGameRender.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
@@ -310,7 +310,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
      * @return Y's scale
      */
     public float getscaleY() {
-        return LoginScreen.getLoginScreen().getGameYScale();
+        return LoginScreen.getInstance().getGameYScale();
     }
 
     /**
@@ -319,7 +319,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
      * @return Y's scale
      */
     public float getscaleX() {
-        return LoginScreen.getLoginScreen().getGameXScale();
+        return LoginScreen.getInstance().getGameXScale();
     }
 
     /**
@@ -356,7 +356,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
      */
     public void matchStatus() {
         if (gameOver == false) {
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
                 if ((oppLife + oppLife2) < 0 || (life + charLife3) < 0 || (getGameInstance().time <= 0 && getGameInstance().time <= 180)) {
                     if ((float) (oppLife + oppLife2) / (float) (oppMaxLife + oppMaxLife2) > (float) (life + charLife3) / (float) (maXlife + charMaxLife3) || (float) (oppLife + oppLife2) / (float) (oppMaxLife + oppMaxLife2) < (float) (life + charLife3) / (float) (charMaxLife3 + maXlife)) {
                         getGameInstance().gameOver();
@@ -575,7 +575,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
      * @param thischar - active character
      */
     public void AnimatePhyAttax(char thischar) {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
             setSprites('c', 9, 11);
             setSprites('o', 9, 11);
             setSprites('b', 9, 11);
@@ -618,10 +618,10 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
         fpsGen = new ThreadGameInstance(1, this);
         startDrawing = 1;
         comboCounter = 0;
-        LoginScreen.getLoginScreen().getMenu().getMain().setGameRunning();
+        LoginScreen.getInstance().getMenu().getMain().setGameRunning();
         perCent = 100;
         perCent2 = 100;
-        LoginScreen.getLoginScreen().getMenu().getMain().reSize("game");
+        LoginScreen.getInstance().getMenu().getMain().reSize("game");
     }
 
     public ThreadGameInstance getGameInstance() {
@@ -669,7 +669,7 @@ public class CanvasGameRender extends DrawGame implements ActionListener {
             }
 
             if (manipulateThis.length() == 4) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+                LoginScreen.getInstance().getMenu().getMain().getGame().setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
             }
         }
     }

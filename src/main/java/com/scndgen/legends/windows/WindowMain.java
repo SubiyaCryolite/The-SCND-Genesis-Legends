@@ -29,12 +29,12 @@ import com.scndgen.legends.attacks.AttacksPlyr1;
 import com.scndgen.legends.attacks.AttacksPlyr2;
 import com.scndgen.legends.drawing.DrawGame;
 import com.scndgen.legends.drawing.DrawWaiting;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.executers.ExecuterMovesCharOnline;
 import com.scndgen.legends.executers.ExecuterMovesOppOnline;
 import com.scndgen.legends.menus.*;
-import com.scndgen.legends.menus.CanvasCharSelect;
-import com.scndgen.legends.menus.CanvasStageSelect;
+import com.scndgen.legends.menus.CharacterSelectionScreen;
+import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.threads.ThreadMP3;
@@ -87,10 +87,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private String ServerName;
     private String last, UserName;
     private OverWorld world;
-    private CanvasGameRender newGame;
-    private CanvasCharSelect charPan;
-    private CanvasStorySelect storyPane;
-    private CanvasStageSelect stage;
+    private RenderGameRender newGame;
+    private CharacterSelectionScreen charPan;
+    private StoryMenu storyPane;
+    private RenderStageSelect stage;
     private int mouseYoffset = 0;
     private String gameMode;
     //offline, host, client
@@ -100,17 +100,15 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private JenesisImage pix;
     private ArrayList imageList;
     private Image ico16, ico22, ico24, ico32, ico48, ico72, ico96, ico128, ico256;
-    private GamePadController gpController;
     private WindowMain gameWindow;
     private ThreadMP3 bgMus;
     private int topY, topX, columns, vspacer, hspacer, rows;
 
     public WindowMain(String nameOfUser, String mode) {
         try {
-            gpController = LoginScreen.getLoginScreen().getMenu().getController();
-            if (gpController.NUM_BUTTONS > 0) {
+            if (GamePadController.getInstance().NUM_BUTTONS > 0) {
                 controller = true;
-                buttonz = new boolean[gpController.NUM_BUTTONS];
+                buttonz = new boolean[GamePadController.getInstance().NUM_BUTTONS];
                 pollController();
             }
         } catch (Exception e) {
@@ -128,14 +126,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             server.start();
         }
 
-        if (LoginScreen.getLoginScreen().isLefty().equalsIgnoreCase("no")) {
+        if (LoginScreen.getInstance().isLefty().equalsIgnoreCase("no")) {
             leftyXOffset = 548;
         } else {
             leftyXOffset = 0;
         }
 
         if (getGameMode().equalsIgnoreCase(lanClient)) {
-            client = new jenesisClient(LoginScreen.getLoginScreen().getIP());
+            client = new jenesisClient(LoginScreen.getInstance().getIP());
         }
         daWindow = new JFrame();
         daWindow.setUndecorated(true);
@@ -162,13 +160,13 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         daWindow.setIconImages(imageList);
         //daWindow.seti(loadIconImage("images/GameIco.ico"));
 
-        charPan = new CanvasCharSelect();
-        stage = new CanvasStageSelect();
+        charPan = new CharacterSelectionScreen();
+        stage = new RenderStageSelect();
         if (mode.equals(lanHost)) {
             isWaiting = true;
             drawWait = new DrawWaiting();
         } else if (mode.equals(storyMode)) {
-            storyPane = new CanvasStorySelect();
+            storyPane = new StoryMenu();
             inStoryPane = true;
             currentScreen = "storySelectScreen";
         } else {
@@ -241,35 +239,35 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             public void run() {
                 try {
                     do {
-                        gpController.poll();
+                        GamePadController.getInstance().poll();
 
                         //update bottons
-                        buttonz = gpController.getButtons();
+                        buttonz = GamePadController.getInstance().getButtons();
                         // get compass direction for the two analog sticks
-                        compassDir2 = gpController.getXYStickDir();
-                        if (compassDir2 == gpController.NORTH) {
+                        compassDir2 = GamePadController.getInstance().getXYStickDir();
+                        if (compassDir2 == GamePadController.getInstance().NORTH) {
                             up();
-                        } else if (compassDir2 == gpController.SOUTH) {
+                        } else if (compassDir2 == GamePadController.getInstance().SOUTH) {
                             down();
-                        } else if (compassDir2 == gpController.WEST) {
+                        } else if (compassDir2 == GamePadController.getInstance().WEST) {
                             left();
-                        } else if (compassDir2 == gpController.EAST) {
+                        } else if (compassDir2 == GamePadController.getInstance().EAST) {
                             right();
                         }
 
 
                         // get POV hat compass direction
-                        compassDir = gpController.getHatDir();
+                        compassDir = GamePadController.getInstance().getHatDir();
                         {
-                            if (compassDir == gpController.SOUTH) {
+                            if (compassDir == GamePadController.getInstance().SOUTH) {
                                 down();
                             }
 
-                            if (compassDir == gpController.NORTH) {
+                            if (compassDir == GamePadController.getInstance().NORTH) {
                                 up();
                             }
 
-                            if (compassDir == gpController.WEST) {
+                            if (compassDir == GamePadController.getInstance().WEST) {
                                 left();
                             }
 
@@ -300,12 +298,12 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                         }
 
                         // get compass direction for the two analog sticks
-                        compassDir = gpController.getXYStickDir();
+                        compassDir = GamePadController.getInstance().getXYStickDir();
 
-                        compassDir = gpController.getZRZStickDir();
+                        compassDir = GamePadController.getInstance().getZRZStickDir();
 
                         // get button settings
-                        buttons = gpController.getButtons();
+                        buttons = GamePadController.getInstance().getButtons();
 
                         this.sleep(33);
                     } while (true);
@@ -315,25 +313,16 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }.start();
     }
 
-    public CanvasStorySelect getStory() {
+    public StoryMenu getStory() {
         return storyPane;
     }
 
-    public CanvasCharSelect getCharSelect() {
+    public CharacterSelectionScreen getCharSelect() {
         return charPan;
     }
 
-    /**
-     * Dude
-     *
-     * @return
-     */
-    public GamePadController getController() {
-        return gpController;
-    }
-
     public WindowMain getMain() {
-        return LoginScreen.getLoginScreen().getMenu().getMain();
+        return LoginScreen.getInstance().getMenu().getMain();
     }
 
     public void main(String[] args) {
@@ -406,7 +395,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             oppenentEntity2 = new AttacksOpp2();
             characterEntity2 = new AttacksPlyr2();
         }
-        newGame = new CanvasGameRender();
+        newGame = new RenderGameRender();
         stopMus();
         daWindow.setContentPane(newGame);
         newGame.startFight();
@@ -420,8 +409,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public void reSize(String mode) {
 
         if (mode.equalsIgnoreCase("game")) {
-            daWindow.resize(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            //daWindow.setSize(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
+            daWindow.resize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            //daWindow.setSize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
         } else {
             daWindow.resize(852, 480);
             //daWindow.setSize(852, 480);
@@ -431,7 +420,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         daWindow.setLocationRelativeTo(null);
     }
 
-    public CanvasGameRender getGame() {
+    public RenderGameRender getGame() {
         return newGame;
     }
 
@@ -447,7 +436,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             characterEntity2 = new AttacksPlyr2();
         }
         characterEntity = new AttacksPlyr1();
-        newGame = new CanvasGameRender();
+        newGame = new RenderGameRender();
         currentScreen = "newGame";
         stopMus();
         daWindow.setContentPane(newGame);
@@ -476,7 +465,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         //bgMusclose();
         oppenentEntity = new AttacksOpp1();
         characterEntity = new AttacksPlyr1();
-        newGame = new CanvasGameRender();
+        newGame = new RenderGameRender();
         currentScreen = "newGame";
         stopMus();
         daWindow.setContentPane(newGame);
@@ -662,9 +651,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             @SuppressWarnings("static-access")
             public void run() {
                 try {
-                    gpController.setRumbler(true, power);
+                    GamePadController.getInstance().setRumbler(true, power);
                     this.sleep(time);
-                    gpController.setRumbler(false, 0.0f);
+                    GamePadController.getInstance().setRumbler(false, 0.0f);
                 } catch (Exception e) {
                 }
             }
@@ -910,7 +899,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
 
         if (keyCode == KeyEvent.VK_F4) {
-            LoginScreen.getLoginScreen().getMenu().exit();
+            LoginScreen.getInstance().getMenu().exit();
         }
 
         if (keyCode == KeyEvent.VK_F5) {
@@ -1319,7 +1308,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
         switch (ansx) {
             case JOptionPane.YES_OPTION: {
-                sendToClient("as1wds2_" + LoginScreen.getLoginScreen().timePref);
+                sendToClient("as1wds2_" + LoginScreen.getInstance().timePref);
                 isWaiting = false;
                 drawWait.stopRepaint();
                 daWindow.setContentPane(charPan);

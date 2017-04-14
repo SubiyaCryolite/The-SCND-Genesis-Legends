@@ -22,9 +22,9 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.drawing.DrawUserLogin;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowModeSelect;
 import com.scndgen.legends.windows.WindowOptions;
@@ -64,7 +64,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     public static int difficultyBase = 8000, difficultyScale = 1333;
     public static String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
-    private static LoginScreen me;
+    private static LoginScreen instance;
     public final int numberOfCharacters = charNames.length;
     public int frames, activLang;
     public boolean ans, newGame = true;
@@ -138,7 +138,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private String fname;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public LoginScreen() throws FileNotFoundException {
+    private LoginScreen() throws FileNotFoundException {
         changeTheLookAndFeel(2);
 
         createDB();
@@ -165,7 +165,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         countries = Locale.getISOCountries();
 
         loadTray();
-        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + CanvasGameRender.getVersionStr());
+        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
         pan1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -234,7 +234,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         pan1.add(thisPic);
 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("The SCND Genesis: Legends" + CanvasGameRender.getVersionStr());
+        window.setTitle("The SCND Genesis: Legends" + RenderGameRender.getVersionStr());
         window.pack();
         window.addKeyListener(this);
         window.setLocationRelativeTo(null);
@@ -256,7 +256,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     public static void main(String[] args) {
         try {
-            me = new LoginScreen();
+            instance = new LoginScreen();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -269,8 +269,8 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      *
      * @return this instance
      */
-    public static LoginScreen getLoginScreen() {
-        return me;
+    public static LoginScreen getInstance() {
+        return instance;
     }
 
     /**
@@ -789,7 +789,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         } catch (Exception e) {
                             System.err.println(e.toString());
                         } //if latest version, just try and download music
-                        if (webVersion.equalsIgnoreCase(CanvasGameRender.getVersionStr())) {
+                        if (webVersion.equalsIgnoreCase(RenderGameRender.getVersionStr())) {
                             ans = false;
                             if (whoCalled.equalsIgnoreCase("default")) {
                                 System.out.println("You are up to date");
@@ -800,7 +800,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
                                 @Override
                                 public void run() {
-                                    newy = new WindowUpdate(webVersion, fname, updatesArr, me);
+                                    newy = new WindowUpdate(webVersion, fname, updatesArr, instance);
                                     ans = true;
                                 }
                             }.start();

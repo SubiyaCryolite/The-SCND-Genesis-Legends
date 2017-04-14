@@ -29,6 +29,6 @@ public class AttacksPlyr2 extends AttacksBasic {
      * Constructor
      */
     public AttacksPlyr2() {
-        dude = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
+        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
     }
 }

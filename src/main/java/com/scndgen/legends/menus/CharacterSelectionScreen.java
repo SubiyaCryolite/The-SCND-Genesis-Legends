@@ -23,7 +23,7 @@ package com.scndgen.legends.menus;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.drawing.DrawCharSel;
+import com.scndgen.legends.drawing.RenderCharacterSelectionScreen;
 import com.scndgen.legends.drawing.DrawGame;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.threads.ThreadMP3;
@@ -34,12 +34,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CanvasCharSelect extends DrawCharSel implements ActionListener {
+public class CharacterSelectionScreen extends RenderCharacterSelectionScreen implements ActionListener {
 
     public static int characterSel, opponentSel;
     public static String charDesc = "";
     public static String oppName, charName;
-    public static int[] allPlayers = new int[LoginScreen.getLoginScreen().charNames.length];
+    public static int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
     public static int oppPrevLoc, charPrevLoc;
     private static JenesisLanguage lang;
     private static int[] arr1, arr2, arr3, arr4, arr5;
@@ -57,7 +57,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
     /**
      * Initialises the character select panel
      */
-    public CanvasCharSelect() {
+    public CharacterSelectionScreen() {
         initializePanel();
     }
 
@@ -180,31 +180,31 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
     public static int[] getAISlot() {
         int[] array = {};
         //when doing well, all attacks
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 1.00) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 1.00) {
             array = arr1;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 0.75 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() < 1.00) {
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 1.00) {
             array = arr2;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() < 0.75) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 0.75) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife() < 0.50) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife() < 0.50) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4;
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('o');
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5;
@@ -223,31 +223,31 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
         int[] array = {};
 
         //when doing well, all attacks
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 1.00) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 1.00) {
             array = arr1a;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 0.75 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() < 1.00) {
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 1.00) {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() < 0.75) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 0.75) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getOppMaxLife2() < 0.50) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getOppLife2() / LoginScreen.getInstance().getMenu().getMain().getGame().getOppMaxLife2() < 0.50) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4a;
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('b');
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5a;
@@ -266,31 +266,31 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
         int[] array = {};
 
         //when doing well, all attacks
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 1.00) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 1.00) {
             array = arr1a;
         } //when doing well, all attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 0.75 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() < 1.00) {
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.75 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 1.00) {
             array = arr2a;
         } //when doing well, 4 attacks + 2 buffs
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 0.50 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() < 0.75) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.50 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 0.75) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
             }
         } //when doing well, 4 buffs + 2 moves
-        else if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() >= 0.25 && LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getLoginScreen().getMenu().getMain().getGame().getCharMaxLife3() < 0.50) {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
+        else if (LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() >= 0.25 && LoginScreen.getInstance().getMenu().getMain().getGame().getCharLife3() / LoginScreen.getInstance().getMenu().getMain().getGame().getCharMaxLife3() < 0.50) {
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4a;
             }
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
-            if (CanvasGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
-                LoginScreen.getLoginScreen().getMenu().getMain().triggerFury('a');
+            if (RenderGameRender.getBreak() == 1000 && DrawGame.limitRunning) {
+                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5a;
@@ -351,7 +351,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
         setLayout(new BorderLayout());
         //add(charSelect(), BorderLayout.CENTER);
         players = new Characters();
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        lang = LoginScreen.getInstance().getLangInst();
         attacks = new int[4];
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
@@ -367,16 +367,16 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
     public void backToMenu() {
         refreshSelections();
         //cancel hosting
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.lanHost)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().closeTheServer();
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.lanClient)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().closeTheClient();
-        } else if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equals(WindowMain.storyMode)) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getStory().getStoryInstance().skipDialogue();
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.lanHost)) {
+            LoginScreen.getInstance().getMenu().getMain().closeTheServer();
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.lanClient)) {
+            LoginScreen.getInstance().getMenu().getMain().closeTheClient();
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.storyMode)) {
+            LoginScreen.getInstance().getMenu().getMain().getStory().getStoryInstance().skipDialogue();
         }
-        LoginScreen.getLoginScreen().getMenu().getMain().backToMenuScreen();
-        if (LoginScreen.getLoginScreen().getMenu().getMain().isGameInstanciated()) {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().closeAudio();
+        LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
+        if (LoginScreen.getInstance().getMenu().getMain().isGameInstanciated()) {
+            LoginScreen.getInstance().getMenu().getMain().getGame().closeAudio();
         }
     }
 
@@ -384,11 +384,11 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
      * Starts a new game
      */
     public void beginGame() {
-        if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost) || LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase("offline2")) {
-            LoginScreen.getLoginScreen().getMenu().getMain().selectStage();
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase("offline2")) {
+            LoginScreen.getInstance().getMenu().getMain().selectStage();
 
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("watchStageSel_xcbD");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("watchStageSel_xcbD");
             }
         }
 
@@ -400,7 +400,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
     public void refreshSelections() {
         charPrevLoc = 0;
         oppPrevLoc = 0;
-        //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+        //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
         for (int u = 0; u < allPlayers.length; u++) {
             allPlayers[u] = 0; // 0 means free, 1 means selected
         }
@@ -408,8 +408,8 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
         proceed2 = false;
         //selectedCharIndex=0;
         //selectedOppIndex=0;
-        LoginScreen.getLoginScreen().getMenu().getMain().storedX = 99;
-        LoginScreen.getLoginScreen().getMenu().getMain().storedY = 99;
+        LoginScreen.getInstance().getMenu().getMain().storedX = 99;
+        LoginScreen.getInstance().getMenu().getMain().storedY = 99;
     }
 
     /**
@@ -454,28 +454,28 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
                 charName = "Raila";
                 getPayers().prepare(2);
                 selectedCharIndex = 0;
-                //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+                //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
                 allPlayers[0] = 1;
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selRai_jkxc");
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                    LoginScreen.getInstance().getMenu().getMain().sendToClient("selRai_jkxc");
                     disableAll();
                 }
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selRai_jkxc");
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                    LoginScreen.getInstance().getMenu().getMain().sendToServer("selRai_jkxc");
                     disableAll();
                 }
             }
         } else if (type == 'o' && proceed2 == false) {
             sound2 = new ThreadMP3(ThreadMP3.charSelectSound(), false);
             sound2.play();
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
             }
             proceed2 = true;
             oppName = "Raila";
             selectedOppIndex = 0;
             getPayers().prepareO(2);
             oppPrevLoc = 0;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[0] = 1;
         }
     }
@@ -498,14 +498,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
                 selectedCharIndex = 1;
                 getPayers().prepare(1);
                 charDesc = getPayers().getDudeChar().getDescSmall();
-                //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+                //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
                 allPlayers[1] = 1;
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selSub_jkxc");
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                    LoginScreen.getInstance().getMenu().getMain().sendToClient("selSub_jkxc");
                     disableAll();
                 }
-                if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selSub_jkxc");
+                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                    LoginScreen.getInstance().getMenu().getMain().sendToServer("selSub_jkxc");
                     disableAll();
                 }
             }
@@ -520,7 +520,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 1;
             getPayers().prepareO(1);
             oppPrevLoc = 1;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[1] = 1;
         }
     }
@@ -542,18 +542,18 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 2;
             getPayers().prepare(3);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[2] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selLyn_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selLyn_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selLyn_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selLyn_jkxc");
                 disableAll();
             }
 
-            //if(LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.StoryMode))
+            //if(LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.StoryMode))
             //{
             //   Lynx.story(1,false);
             //   disableAll();
@@ -571,7 +571,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 2;
             getPayers().prepareO(3);
             oppPrevLoc = 2;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[2] = 1;
         }
     }
@@ -593,14 +593,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 3;
             getPayers().prepare(4);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[3] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selAlx_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAlx_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selAlx_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAlx_jkxc");
                 disableAll();
             }
         }
@@ -614,7 +614,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 3;
             getPayers().prepareO(4);
             oppPrevLoc = 3;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[3] = 1;
         }
     }
@@ -636,14 +636,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 5;
             getPayers().prepare(6);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[5] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selAde_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAde_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selAde_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAde_jkxc");
                 disableAll();
             }
         }
@@ -657,7 +657,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 5;
             getPayers().prepareO(6);
             oppPrevLoc = 5;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[5] = 1;
         }
     }
@@ -679,14 +679,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 4;
             getPayers().prepare(5);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[4] = 0;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selRav_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selRav_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selRav_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selRav_jkxc");
                 disableAll();
             }
         }
@@ -700,7 +700,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 4;
             getPayers().prepareO(5);
             oppPrevLoc = 4;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[4] = 0;
         }
     }
@@ -723,12 +723,12 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             getPayers().prepare(7);
             charDesc = getPayers().getDudeChar().getDescSmall();
             allPlayers[6] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selJon_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selJon_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selJon_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selJon_jkxc");
                 disableAll();
             }
         }
@@ -742,7 +742,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 6;
             getPayers().prepareO(7);
             oppPrevLoc = 6;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[6] = 1;
         }
     }
@@ -764,14 +764,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 7;
             getPayers().prepare(8);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[7] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selAdam_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAdam_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selAdam_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAdam_jkxc");
                 disableAll();
             }
         }
@@ -806,14 +806,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 8;
             getPayers().prepare(9);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[8] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selNOVAAdam_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selNOVAAdam_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selNOVAAdam_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selNOVAAdam_jkxc");
                 disableAll();
             }
         }
@@ -827,7 +827,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 8;
             getPayers().prepareO(9);
             oppPrevLoc = 8;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[8] = 1;
         }
     }
@@ -849,14 +849,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 9;
             getPayers().prepare(10);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[9] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selAzaria_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAzaria_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selAzaria_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAzaria_jkxc");
                 disableAll();
             }
         }
@@ -870,7 +870,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 9;
             getPayers().prepareO(10);
             oppPrevLoc = 9;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[9] = 1;
         }
     }
@@ -892,14 +892,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 10;
             getPayers().prepare(11);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[10] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selSorr_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selSorr_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selSorr_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selSorr_jkxc");
                 disableAll();
             }
         }
@@ -913,7 +913,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 10;
             getPayers().prepareO(11);
             oppPrevLoc = 10;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[10] = 1;
         }
     }
@@ -935,14 +935,14 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedCharIndex = 11;
             getPayers().prepare(12);
             charDesc = getPayers().getDudeChar().getDescSmall();
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[11] = 1;
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToClient("selThi_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToClient("selThi_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getLoginScreen().getMenu().getMain().sendToServer("selThi_jkxc");
+            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+                LoginScreen.getInstance().getMenu().getMain().sendToServer("selThi_jkxc");
                 disableAll();
             }
         }
@@ -956,7 +956,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 11;
             getPayers().prepareO(12);
             oppPrevLoc = 11;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[11] = 1;
         }
 
@@ -969,7 +969,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
             selectedOppIndex = 11;
             getPayers().prepareO(13);
             oppPrevLoc = 11;
-            //LoginScreen.getLoginScreen().getMenu().getMain().repaintCharSel();
+            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
             allPlayers[11] = 1;
         }
     }
@@ -1007,7 +1007,7 @@ public class CanvasCharSelect extends DrawCharSel implements ActionListener {
                             e.printStackTrace();
                         }
                     }
-                    while (LoginScreen.getLoginScreen().getMenu().getMain().currentScreen.equalsIgnoreCase("charSelectScreen"));
+                    while (LoginScreen.getInstance().getMenu().getMain().currentScreen.equalsIgnoreCase("charSelectScreen"));
                 }
 
             }

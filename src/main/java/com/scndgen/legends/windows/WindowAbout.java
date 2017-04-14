@@ -23,7 +23,7 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CanvasGameRender;
+import com.scndgen.legends.menus.RenderGameRender;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
     private SpecialDrawMenuBGs logoPic;
     private JPanel box;
     private Font normalFont;
-    private String text = "The SCND Genesis: Legends " + CanvasGameRender.getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
+    private String text = "The SCND Genesis: Legends " + RenderGameRender.getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
             + "\n\nSpecial Thanks:"
             + "\n   -God"
             + "\n   -Jesus"
@@ -147,7 +147,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowAbout() {
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize + 4);
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize + 4);
         box = new JPanel(new FlowLayout(FlowLayout.CENTER));
         logoPic = new SpecialDrawMenuBGs();
         txt = new JTextArea("", 2, 2);

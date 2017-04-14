@@ -171,7 +171,7 @@ public class ThreadMP3 implements Runnable {
     // play the MP3 file to the sound card
     public void play() {
         try {
-            if (LoginScreen.getLoginScreen().soundStatus.equalsIgnoreCase("on")) {
+            if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
 
                 classloader = getClass().getClassLoader();
                 fin = classloader.getResourceAsStream(filenameM);

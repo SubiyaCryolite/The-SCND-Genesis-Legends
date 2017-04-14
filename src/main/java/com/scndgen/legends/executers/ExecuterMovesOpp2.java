@@ -22,7 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.CanvasCharSelect;
+import com.scndgen.legends.menus.CharacterSelectionScreen;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -54,12 +54,12 @@ public class ExecuterMovesOpp2 implements Runnable {
     @Override
     public void run() {
         do {
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('c', 9, 11);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('o', 9, 11);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().setSprites('b', 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('c', 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('o', 9, 11);
+            LoginScreen.getInstance().getMenu().getMain().getGame().setSprites('b', 9, 11);
 
             try {
-                int time = LoginScreen.getLoginScreen().difficultyDyn;
+                int time = LoginScreen.getInstance().difficultyDyn;
                 Thread.sleep((int) (time + (Math.random() * time)));
             } catch (InterruptedException ex) {
                 Logger.getLogger(ExecuterMovesOpp2.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,26 +67,26 @@ public class ExecuterMovesOpp2 implements Runnable {
 
             executingTheCommandsAI();
 
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp2(0);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().getGameInstance().aiRunning2 = false;
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().setRecoveryUnitsOpp2(0);
+            LoginScreen.getInstance().getMenu().getMain().getGame().getGameInstance().aiRunning2 = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = CanvasCharSelect.getAISlot2();
+        aiMoves = CharacterSelectionScreen.getAISlot2();
         range = aiMoves.length - 1;
 
         int randomNumber = (int) (Math.random() * 12);
         if (randomNumber >= 7) {
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent3a >= 0) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent3a >= 0) {
                 whoToAttack = 3;
             } else {
                 whoToAttack = 1;
             }
         } else if (randomNumber <= 6) {
-            if (LoginScreen.getLoginScreen().getMenu().getMain().getGame().perCent >= 0) {
+            if (LoginScreen.getInstance().getMenu().getMain().getGame().perCent >= 0) {
                 whoToAttack = 1;
             } else {
                 whoToAttack = 3;
@@ -94,14 +94,14 @@ public class ExecuterMovesOpp2 implements Runnable {
         }
 
         if (ThreadGameInstance.isGameOver == false) {
-            for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getLoginScreen().difficultyDyn) / LoginScreen.difficultyScale); o++) {
+            for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story mode bug
                 if (ThreadGameInstance.story == false && ThreadGameInstance.isGameOver == false) {
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().shakeCharLB();
-                    LoginScreen.getLoginScreen().getMenu().getMain().getGame().AnimatePhyAttax('o');
-                    LoginScreen.getLoginScreen().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
+                    LoginScreen.getInstance().getMenu().getMain().getGame().shakeCharLB();
+                    LoginScreen.getInstance().getMenu().getMain().getGame().AnimatePhyAttax('o');
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }
         }

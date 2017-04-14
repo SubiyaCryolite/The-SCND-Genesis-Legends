@@ -64,64 +64,64 @@ public class Aisha extends JenesisCharacter {
         if (attack.equalsIgnoreCase("00")) {
             attackStr = physical[0];
             damage = 50;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("01")) {
             attackStr = physical[0];
             damage = 93;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("02")) {
             attackStr = physical[1];
             damage = 100;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("03")) {
             attackStr = physical[2];
             damage = 95;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("04")) {
             attackStr = physical[3];
             damage = 94;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("05")) {
             attackStr = celestia[0];
             damage = 94;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("06")) {
             attackStr = celestia[1];
             damage = 95;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("07")) {
             attackStr = celestia[2];
             damage = 97;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("08")) {
             attackStr = celestia[3];
             damage = 97;
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().lifePhysUpdateSimple(forWho, damage, name);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("09")) {
@@ -131,13 +131,13 @@ public class Aisha extends JenesisCharacter {
             damage = 82;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("10")) {
@@ -146,13 +146,13 @@ public class Aisha extends JenesisCharacter {
             damage = 84;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("11")) {
@@ -161,13 +161,13 @@ public class Aisha extends JenesisCharacter {
             damage = 78;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         if (attack.equalsIgnoreCase("12")) {
@@ -176,13 +176,13 @@ public class Aisha extends JenesisCharacter {
             damage = 80;
             DrawGame.setStatIndex(1);
             if (forWho == 2) {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateLife(damage);
                 DrawGame.setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                LoginScreen.getLoginScreen().getMenu().getMain().getGame().updateOppLife(damage);
+                LoginScreen.getInstance().getMenu().getMain().getGame().updateOppLife(damage);
                 DrawGame.setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
-            LoginScreen.getLoginScreen().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
+            LoginScreen.getInstance().getMenu().getMain().getGame().showBattleMessage(name + " used " + attackStr);
         }
 
         //dummy, do nothing

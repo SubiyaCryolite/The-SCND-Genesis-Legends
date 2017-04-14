@@ -22,10 +22,10 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisImage;
+import io.github.subiyacryolite.enginev1.JenesisImage;
 import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.engine.JenesisGlassPane;
-import com.scndgen.legends.engine.JenesisCanvas;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawWaiting extends JenesisCanvas {
+public class DrawWaiting extends JenesisRender {
 
     private static Image pic1, pic2;
     private static VolatileImage volatileImg;
@@ -65,8 +65,8 @@ public class DrawWaiting extends JenesisCanvas {
     public DrawWaiting() {
         runNew = true;
         renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-        normalFont = LoginScreen.getLoginScreen().getMyFont(LoginScreen.normalTxtSize);
-        lang = LoginScreen.getLoginScreen().getLangInst();
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        lang = LoginScreen.getInstance().getLangInst();
         pix2 = new JenesisImage();
         over1 = new JenesisGlassPane();
         try {
@@ -121,27 +121,6 @@ public class DrawWaiting extends JenesisCanvas {
         over1.overlay(g2d, this);
 
         g.drawImage(volatileImg, 0, 0, this);
-    }
-
-    /**
-     * Hardware acceleration
-     */
-    private void createBackBuffer() {
-        if (runNew) {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
-            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            //optimise, clear unused memory
-            if (volatileImg != null) {
-                volatileImg.flush();
-                volatileImg = null;
-            }
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getLoginScreen().getGameWidth(), LoginScreen.getLoginScreen().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
-            g2d.setRenderingHints(renderHints); //activate aliasing
-            runNew = false;
-        }
     }
 
     public void stopRepaint() {

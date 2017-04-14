@@ -29,6 +29,6 @@ public class AttacksOpp1 extends AttacksBasic {
      * Creates an opponent object
      */
     public AttacksOpp1() {
-        dude = LoginScreen.getLoginScreen().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
+        dude = LoginScreen.getInstance().getMenu().getMain().getCharSelect().getPayers().getDudeOpp();
     }
 }
