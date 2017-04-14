@@ -22,8 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;

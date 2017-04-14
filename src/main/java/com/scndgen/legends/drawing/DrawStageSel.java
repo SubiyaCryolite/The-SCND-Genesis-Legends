@@ -226,18 +226,18 @@ public abstract class DrawStageSel extends JenesisMode {
         RenderStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < stagePrevLox.length; i++) {
-                stageCap[i] = pix.loadImageFromToolkitNoScale("images/t_" + stagePrevLox[i] + ".png");
+                stageCap[i] = pix.loadImage("images/t_" + stagePrevLox[i] + ".png");
             }
         } catch (Exception e) {
             System.err.println(e);
         }
 
-        charBack = pix.loadImageFromToolkitNoScale("images/selStage.png");
-        loading = pix.loadImageFromToolkitNoScale("images/appletprogress.gif");
+        charBack = pix.loadImage("images/selStage.png");
+        loading = pix.loadImage("images/appletprogress.gif");
 
 
         for (int vd = 0; vd < stagePrevLox.length; vd++) {
-            stagePrev[vd] = pix.loadImageFromToolkitNoScale("images/prev/" + stagePrevLox[vd] + ".jpg");
+            stagePrev[vd] = pix.loadImage("images/prev/" + stagePrevLox[vd] + ".jpg");
         }
     }
 

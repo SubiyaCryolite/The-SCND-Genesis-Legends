@@ -107,11 +107,11 @@ public class Subiya extends JenesisCharacter {
             damage = 79;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("blue"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("blue"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("blue"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("blue"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("10")) {
@@ -120,11 +120,11 @@ public class Subiya extends JenesisCharacter {
             damage = 69;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("11")) {
@@ -133,11 +133,11 @@ public class Subiya extends JenesisCharacter {
             damage = 73;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("12")) {
@@ -146,11 +146,11 @@ public class Subiya extends JenesisCharacter {
             damage = 72;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         } else if (attack.equalsIgnoreCase("99")) {

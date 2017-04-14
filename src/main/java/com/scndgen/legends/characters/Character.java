@@ -38,45 +38,12 @@ public class Character {
     public static String[] moveMusicChar = new String[8];
     public static int[] pointsArr = new int[12];
     public static String[] typeArray = new String[4];
-    private String characterName, nameOpp, assistCharacterName, opponentAssistantName;
     private static float activityRecoveryRateChar2, activityRecoverRateChar, activityRecoveryRateOpp, activityRecoveryRateOpp2;
     private static float healthRecoveryRateChar2, healthRecoveryRateChar, healthRecoveryRateOpp, healthRecoveryRateOpp2;
     //AIRCON 12 GLOWING HOT GIMP 2.6.8
     private static int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
+    private String characterName, nameOpp, assistCharacterName, opponentAssistantName;
     private JenesisCharacter character, assistCharacter, opponent, opponentAssistant;
-
-    //--------public accessor methods-----------------
-    public String getCharName() {
-        return characterName;
-    }
-
-    /**
-     * Get the Character assist partner
-     *
-     * @return character assist partner
-     */
-    public String getCharAssName() {
-        return assistCharacterName;
-    }
-
-    /**
-     * Get the opponents assist partner
-     *
-     * @return opponent assist partner
-     */
-    public String getOppAssName() {
-        return opponentAssistantName;
-    }
-
-    public String getOppName() {
-        return nameOpp;
-    }
-
-    public void setOppName(String thisName) {
-        minOppLife = 100;
-        currOppLife = 100;
-        nameOpp = thisName;
-    }
 
     public static float getCharRecoverySpeed() {
         return activityRecoverRateChar;
@@ -217,6 +184,39 @@ public class Character {
         }
 
         return myInt;
+    }
+
+    //--------public accessor methods-----------------
+    public String getCharName() {
+        return characterName;
+    }
+
+    /**
+     * Get the Character assist partner
+     *
+     * @return character assist partner
+     */
+    public String getCharAssName() {
+        return assistCharacterName;
+    }
+
+    /**
+     * Get the opponents assist partner
+     *
+     * @return opponent assist partner
+     */
+    public String getOppAssName() {
+        return opponentAssistantName;
+    }
+
+    public String getOppName() {
+        return nameOpp;
+    }
+
+    public void setOppName(String thisName) {
+        minOppLife = 100;
+        currOppLife = 100;
+        nameOpp = thisName;
     }
 
     public JenesisCharacter getCharacter() {

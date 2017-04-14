@@ -5,5 +5,6 @@ package io.github.subiyacryolite.enginev1;
  */
 public interface JenesisRender {
     void loadAssets();
+
     void cleanAssets();
 }

@@ -42,28 +42,28 @@ import java.awt.*;
  */
 public class RenderCharacterSelectionScreen extends CharacterSelectionScreen implements JenesisRender {
 
-    private Font bigFont, normalFont;
+    private static RenderCharacterSelectionScreen instance;
     private final String[] charDesc = new String[numOfCharacters];
     private final Image[] thumbnailNormal = new Image[numOfCharacters];
     private final Image[] thumbnailBlurred = new Image[numOfCharacters];
     private final Image[] portrait = new Image[numOfCharacters];
     private final Image[] portraitFlipped = new Image[numOfCharacters];
     private final Image[] caption = new Image[numOfCharacters];
+    private Font bigFont, normalFont;
     private Image fg1, fg2, fg3, bg3;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
-    private static RenderCharacterSelectionScreen instance;
+
+    private RenderCharacterSelectionScreen() {
+        opacInc = 0.025f;
+        loadAssets = true;
+        setBorder(BorderFactory.createEmptyBorder());
+    }
 
     public static synchronized RenderCharacterSelectionScreen getInstance() {
         if (instance == null) {
             instance = new RenderCharacterSelectionScreen();
         }
         return instance;
-    }
-
-    private RenderCharacterSelectionScreen() {
-        opacInc = 0.025f;
-        loadAssets = true;
-        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public void loadAssets() {
@@ -275,8 +275,8 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
     private void loadCaps() {
         bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        oppDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoO.png");
-        charDescPic = imageLoader.loadImageFromToolkitNoScale("images/charInfoC.png");
+        oppDescPic = imageLoader.loadImage("images/charInfoO.png");
+        charDescPic = imageLoader.loadImage("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
         loadUiContent(CharacterEnum.SUBIYA);
         loadUiContent(CharacterEnum.LYNX);
@@ -289,26 +289,26 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         loadUiContent(CharacterEnum.AZARIA);
         loadUiContent(CharacterEnum.SORROWE);
         loadUiContent(CharacterEnum.THING);
-        charBack = imageLoader.loadImageFromToolkitNoScale("images/selChar.png");
-        oppBack = imageLoader.loadImageFromToolkitNoScale("images/selOpp.png");
-        charHold = imageLoader.loadImageFromToolkitNoScale("images/charHold.png");
+        charBack = imageLoader.loadImage("images/selChar.png");
+        oppBack = imageLoader.loadImage("images/selOpp.png");
+        charHold = imageLoader.loadImage("images/charHold.png");
         Image[] tmp = SpecialDrawModeRender.getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
         fg3 = tmp[3];
-        p1 = imageLoader.loadImageFromToolkitNoScale("images/player1.png");
-        p2 = imageLoader.loadImageFromToolkitNoScale("images/player2.png");
-        fight = imageLoader.loadImageFromToolkitNoScale("images/fight.png");
+        p1 = imageLoader.loadImage("images/player1.png");
+        p2 = imageLoader.loadImage("images/player2.png");
+        fight = imageLoader.loadImage("images/fight.png");
         charDesc[0] = Raila.class.getName();
     }
 
     public void loadUiContent(CharacterEnum characterEnum) {
-        thumbnailNormal[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/cap.png");
-        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/capB.png");
-        caption[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/name.png");
-        portrait[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/Prev.png");
-        portraitFlipped[characterEnum.index()] = imageLoader.loadImageFromToolkitNoScale("images/" + characterEnum.data() + "/PrevO.png");
+        thumbnailNormal[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/PrevO.png");
     }
 
     public void cleanAssets() {

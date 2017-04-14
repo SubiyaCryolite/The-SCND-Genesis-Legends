@@ -25,8 +25,9 @@ import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.mode.StoryMode;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.arefactored.render.RenderStoryMenu;
 import com.scndgen.legends.executers.ExecuterMovesChar;
 import com.scndgen.legends.executers.ExecuterMovesChar2;
 import com.scndgen.legends.executers.ExecuterMovesOpp;
@@ -53,6 +54,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public static int time, count2;
     public static boolean instance, storySequence;
     private static boolean incrementActivityBar = true, incrementActivityBarOpp = true, incrementActivityBarOpp2 = true, incrementActivityBarChar2 = true;
+    private final StandardGameplay standardGameplay;
     public int taskComplete;
     public int taskRun = 0;
     public int feeCol;
@@ -91,7 +93,6 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private ExecuterMovesChar executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
-    private final StandardGameplay standardGameplay;
 
     //indicates if game is running, controls game over screen and Achievements which require wins
     public ThreadGameInstance(int forWho, StandardGameplay standardGameplay) {
@@ -455,7 +456,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().saveConfigFile();
         LoginScreen.getInstance().getMenu().getMain().systemNotice("Saved File");
         t.stop(); //stop this thread
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && LoginScreen.getInstance().getMenu().getMain().getStory().moreStages()) {
+        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (standardGameplay.hasWon()) {
                 LoginScreen.getInstance().getMenu().getMain().getStory().incrementMode();
@@ -557,7 +558,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         ach = LoginScreen.getInstance().getAch();
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
             storySequence = true;
-            time = StoryMode.time;
+            time = StoryMode.getInstance().time;
         } //if LAN, client uses hosts time preset
         else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
             time = LoginScreen.getInstance().getMenu().getMain().hostTime;

@@ -24,6 +24,7 @@ package com.scndgen.legends.arefactored.mode;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -36,10 +37,8 @@ import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.awt.image.VolatileImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,35 +49,12 @@ import java.util.logging.Logger;
  * @Class: StandardGameplay
  */
 public abstract class StandardGameplay extends JenesisMode {
-    //mp3 wav
-    protected final float inc = 0.05f;
-    protected final float upShear = 0.005f;
-    protected final float downShear = 0.005f;
-    //threads only run once
     public String ActivePerson; // person who performed an attack, name shall show in battle info status area
-    public int Win = 0;
-    public int waitAnim = 0;
-    public int damageMultiplierChar, damageMultiplierOpp, celestiaMultiplierChar, celestiaMultiplierOpp;
-    protected float daNum, daNum2, daNum2a, daNum3a;
-    protected long lifePlain, lifeTotalPlain, lifePlain2, lifePlain2a, lifePlain3a, lifeTotalPlain2, lifeTotalPlain2a, lifeTotalPlain3a;
-    protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
-    protected boolean fancyBWAnimeEffectEnabled;
-    protected ThreadGameInstance fpsGen;
-    protected boolean isMoveQued, gameOver;
-    protected int thisInt; //max damage that can be dealt by Celestia Physics
-    protected int counter1, damageC, damageO;
-    protected int life, maXlife, oppLife, oppMaxLife, oppLife2, oppMaxLife2, charLife3, charMaxLife3;
-    protected int damageChar, damageOpp, damageChar2, damageOpp2;
-    protected int limitTop = 1000;
-    protected String versionString = " 2K17 RMX";
-    protected int versioInt = 20120630; // yyyy-mm-dd
-    protected float finalOppLife, finalCharLife;
     public int perCent = 100, perCent2 = 100, perCent2a = 100, perCent3a = 100;
     public Character selectedChar, selectedOpp;
     public int done = 0; // if gameover
     public String[] attackArray = new String[8];//up to 8 moves can be qued
     public int comboCounter = 0; //must be negative one to reach index 0, app wide counter, enable you to que attacks of different kinds
-    protected Object source;
     public boolean threadsNotRunningYet = true, playATBFile = false;
     public StringBuilder StatusText = new StringBuilder();
     public int startDrawing = 0, menuBarY;
@@ -90,9 +66,7 @@ public abstract class StandardGameplay extends JenesisMode {
     public String animDirection = "vert", verticalMove = "no";
     public int oppXcord = 10;
     public int playerDamageXLoc, opponentDamageXLoc, numOfAttacks = 0;
-    public VolatileImage charSpec, opp1;
-    public String fgLocation, tmpStr1;
-    //public String bgLocation="images/bgBG"+Math.round((Math.random()*2)+1)+".png"; //
+    public String fgLocation;
     public String bgLocation;
     public String scenePic = "images/bgBG2.png";
     public String attackPicSrc = "images/trans.png";
@@ -108,6 +82,22 @@ public abstract class StandardGameplay extends JenesisMode {
     public boolean safeToSelect = true;
     public String animLayer = "";
     public boolean clasherOn = false, dnladng;
+    public boolean loadedUpdaters;
+    protected float daNum, daNum2, daNum2a, daNum3a;
+    protected long lifePlain, lifeTotalPlain, lifePlain2, lifePlain2a, lifePlain3a, lifeTotalPlain2, lifeTotalPlain2a, lifeTotalPlain3a;
+    protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
+    protected boolean fancyBWAnimeEffectEnabled;
+    protected ThreadGameInstance fpsGen;
+    protected boolean isMoveQued, gameOver;
+    protected int thisInt; //max damage that can be dealt by Celestia Physics
+    protected int damageC, damageO;
+    protected int life, maXlife, oppLife, oppMaxLife, oppLife2, oppMaxLife2, charLife3, charMaxLife3;
+    protected int damageChar, damageOpp, damageChar2, damageOpp2;
+    protected int limitTop = 1000;
+    protected String versionString = " 2K17 RMX";
+    protected int versioInt = 20120630; // yyyy-mm-dd
+    protected float finalOppLife, finalCharLife;
+    protected Object source;
     protected int shakingChar = 0033, loop1 = 3, loop2 = 4;
     protected int x2 = 560, comX = 380, comY = 100;
     protected int xLocal = 470;
@@ -141,10 +131,6 @@ public abstract class StandardGameplay extends JenesisMode {
     protected WindowMain.jenesisClient client;
     protected boolean specialEffect;
     protected ThreadClashSystem clasher;
-
-    public boolean loadedUpdaters;
-    protected GraphicsEnvironment ge;
-    protected BufferedImage bim;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
     protected boolean imagesNumChached = false, imagesCharChached = false;
     protected int x = 2;
@@ -467,8 +453,6 @@ public abstract class StandardGameplay extends JenesisMode {
     }
 
 
-
-
     /**
      * Navigate to specific location in the menu. Used by the mouse
      */
@@ -600,7 +584,6 @@ public abstract class StandardGameplay extends JenesisMode {
             }
         }
     }
-
 
 
     public void newInstance() {
@@ -744,7 +727,7 @@ public abstract class StandardGameplay extends JenesisMode {
      * @return the damage multiplier
      */
     public int getDamageMultiplierChar() {
-        return damageMultiplierChar;
+        return RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier();
     }
 
     /**
@@ -753,10 +736,8 @@ public abstract class StandardGameplay extends JenesisMode {
      * @return the damage multiplier
      */
     public int getDamageMultiplierOpp() {
-        return damageMultiplierOpp;
+        return RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier();
     }
-
-
 
 
     /**
@@ -942,10 +923,10 @@ public abstract class StandardGameplay extends JenesisMode {
     public void resetGame() {
         life = maXlife;
         oppLife = oppMaxLife;
-        damageMultiplierChar = Character.getDamageMultiplier('c');
-        damageMultiplierOpp = Character.getDamageMultiplier('o');
-        celestiaMultiplierChar = 10;
-        celestiaMultiplierOpp = 10;
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(Character.getDamageMultiplier('c'));
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setCelestiaMultiplier(10);
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setCelestiaMultiplier(10);
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(Character.getDamageMultiplier('o'));
     }
 
     /**
@@ -980,7 +961,6 @@ public abstract class StandardGameplay extends JenesisMode {
      */
     public void incrimentComboCounter() {
         comboCounter = comboCounter + 1;
-        //System.out.println("DUDE :: "+comboCounter);
     }
 
     /**
@@ -990,13 +970,9 @@ public abstract class StandardGameplay extends JenesisMode {
         if (comboCounter >= 1 && safeToSelect) {
             //change curent index
             comboCounter = comboCounter - 1;
-
-            //ADD points at index
             int moi = Integer.parseInt(attackArray[comboCounter]);
             Character.alterPoints2(moi);
             System.out.println("UNQUED " + moi);
-
-            //numOfAttacks=numOfAttacks-1;
         }
     }
 
@@ -1008,14 +984,12 @@ public abstract class StandardGameplay extends JenesisMode {
      */
     public boolean scanPhyQue(int desiredAttack) {
         isMoveQued = false;
-
         for (int x = 0; x <= 3; x++) //loops 4 times
         {
             if (Integer.parseInt(attackArray[x]) == desiredAttack) {
                 isMoveQued = true;
             }
         }
-
         return isMoveQued;
     }
 
@@ -1024,8 +998,8 @@ public abstract class StandardGameplay extends JenesisMode {
      *
      * @param thisMuch - value
      */
-    public void updateLife(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierChar * thisMuch;
+    public void updatePlayerLife(int thisMuch) {
+        int thisMuch2 = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() * thisMuch;
         life = life + thisMuch2;
         daNum = ((getCharLife() / getCharMaxLife()) * 100); //perc life x life bar length
         lifePlain = Math.round(daNum); // round off
@@ -1040,8 +1014,8 @@ public abstract class StandardGameplay extends JenesisMode {
      *
      * @param thisMuch - value
      */
-    public void updateOppLife(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
+    public void updateOpponentLife(int thisMuch) {
+        int thisMuch2 = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() * thisMuch;
         oppLife = oppLife + thisMuch2;
         daNum2 = ((getOppLife() / getOppMaxLife()) * 100); //perc life x life bar length
         lifePlain2 = Math.round(daNum2); // round off
@@ -1056,8 +1030,8 @@ public abstract class StandardGameplay extends JenesisMode {
      *
      * @param thisMuch - value
      */
-    public void updateOppLife2(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
+    public void updateAssistantOpponentLife(int thisMuch) {
+        int thisMuch2 = RenderCharacterSelectionScreen.getInstance().getPlayers().getAssistOpponent().getCelestiaMultiplier() * thisMuch;
         oppLife2 = oppLife2 + thisMuch2;
         daNum2a = ((getOppLife2() / getOppMaxLife2()) * 100); //perc life x life bar length
         lifePlain2a = Math.round(daNum2a); // round off
@@ -1073,8 +1047,8 @@ public abstract class StandardGameplay extends JenesisMode {
      *
      * @param thisMuch - value
      */
-    public void updateOppLife3(int thisMuch) {
-        int thisMuch2 = celestiaMultiplierOpp * thisMuch;
+    public void updateAssistantCharacterLife(int thisMuch) {
+        int thisMuch2 = RenderCharacterSelectionScreen.getInstance().getPlayers().getAssistCharacter().getCelestiaMultiplier() * thisMuch;
         charLife3 = charLife3 + thisMuch2;
         daNum3a = ((getCharLife3() / getCharMaxLife3()) * 100); //perc life x life bar length
         lifePlain2a = Math.round(daNum3a); // round off
@@ -1118,12 +1092,12 @@ public abstract class StandardGameplay extends JenesisMode {
      * @param thisMuch the number to alter by
      */
     public void alterDamageCounter(char per, int thisMuch) {
-        if (per == 'c' && damageMultiplierOpp > 0 && damageMultiplierOpp < 20) {
-            damageMultiplierOpp = damageMultiplierOpp + thisMuch;
+        if (per == 'c' && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() < 20) {
+            RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() + thisMuch);
         }
 
-        if (per == 'o' && damageMultiplierChar > 0 && damageMultiplierChar < 20) {
-            damageMultiplierChar = damageMultiplierChar + thisMuch;
+        if (per == 'o' && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() < 20) {
+            RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() + thisMuch);
         }
     }
 
@@ -1134,12 +1108,12 @@ public abstract class StandardGameplay extends JenesisMode {
      * @param thisMuch the number to alter by
      */
     public void alterCelestiaCounter(char per, int thisMuch) {
-        if (per == 'c' && celestiaMultiplierOpp > 0 && celestiaMultiplierOpp < 16) {
-            celestiaMultiplierOpp = celestiaMultiplierOpp + thisMuch;
+        if (per == 'c' && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() < 16) {
+            RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setCelestiaMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() + thisMuch);
         }
 
-        if (per == 'o' && celestiaMultiplierChar > 0 && celestiaMultiplierChar < 16) {
-            celestiaMultiplierChar = celestiaMultiplierChar + thisMuch;
+        if (per == 'o' && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() < 16) {
+            RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setCelestiaMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() + thisMuch);
         }
     }
 

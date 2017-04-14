@@ -58,16 +58,16 @@ public class JenesisTutorial implements Runnable {
 
         pix = new Image[6];
         for (int u = 0; u < pix.length; u++) {
-            pix[u] = pixfac.loadImageFromToolkitNoScale("images/tutorial/" + u + ".png");
+            pix[u] = pixfac.loadImage("images/tutorial/" + u + ".png");
         }
 
         arrows = new Image[9];
         for (int u = 0; u < arrows.length; u++) {
-            arrows[u] = pixfac.loadImageFromToolkitNoScale("images/tutorial/a" + u + ".png");
+            arrows[u] = pixfac.loadImage("images/tutorial/a" + u + ".png");
         }
 
-        forward = pixfac.loadImageFromToolkitNoScale("images/tutorial/list_item_arrow_r.png");
-        back = pixfac.loadImageFromToolkitNoScale("images/tutorial/list_item_arrow_l.png");
+        forward = pixfac.loadImage("images/tutorial/list_item_arrow_r.png");
+        back = pixfac.loadImage("images/tutorial/list_item_arrow_l.png");
 
         tutText = "tutorial";
         isShowing = true;

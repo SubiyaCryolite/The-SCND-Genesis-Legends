@@ -1396,7 +1396,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         if (SystemTray.isSupported()) {
         imageLoader = new JenesisImageLoader();
         tray = SystemTray.getSystemTray();
-        image = imageLoader.loadBufferedImageFromToolkit("images/GameIco16.png");
+        image = imageLoader.loadBufferedImage("images/GameIco16.png");
         
         popup = new PopupMenu();
         trayIcon = new TrayIcon(image, "The SCND Genesis: Legends", null);

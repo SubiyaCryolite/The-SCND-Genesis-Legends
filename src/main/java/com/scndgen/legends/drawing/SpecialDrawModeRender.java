@@ -103,29 +103,29 @@ public class SpecialDrawModeRender extends JenesisMode {
         loadPix();
         font = LoginScreen.getInstance().getMyFont(fontSize - 2);
 
-        ndanaSol = pix.loadImageFromToolkitNoScale("logo/ndana_sol.png");
+        ndanaSol = pix.loadImage("logo/ndana_sol.png");
 
-        sgLogo = pix.loadImageFromToolkitNoScale("images/sglogo.png");
-        pointer = pix.loadImageFromToolkitNoScale("images/pointer.png");
+        sgLogo = pix.loadImage("images/sglogo.png");
+        pointer = pix.loadImage("images/pointer.png");
 
         //0 to 8hrs :: Morning
         if (time >= 0 && time <= 9) {
-            pic1 = pix.loadImageFromToolkitNoScale("images/blur/bgBG1.png");
-            fg = pix.loadImageFromToolkitNoScale("images/blur/bgBG1fg.png");
-            foreGroundA = pix.loadImageFromToolkitNoScale("images/blur/bgBG1a.png");
-            foreGroundB = pix.loadImageFromToolkitNoScale("images/blur/bgBG1b.png");
+            pic1 = pix.loadImage("images/blur/bgBG1.png");
+            fg = pix.loadImage("images/blur/bgBG1fg.png");
+            foreGroundA = pix.loadImage("images/blur/bgBG1a.png");
+            foreGroundB = pix.loadImage("images/blur/bgBG1b.png");
         } //9hrs to 16hrs :: Afternoon
         else if (time > 9 && time <= 16) {
-            pic1 = pix.loadImageFromToolkitNoScale("images/blur/bgBG6.png");
-            fg = pix.loadImageFromToolkitNoScale("images/blur/bgBG6fg.png");
-            foreGroundA = pix.loadImageFromToolkitNoScale("images/blur/bgBG6a.png");
-            foreGroundB = pix.loadImageFromToolkitNoScale("images/blur/bgBG6b.png");
+            pic1 = pix.loadImage("images/blur/bgBG6.png");
+            fg = pix.loadImage("images/blur/bgBG6fg.png");
+            foreGroundA = pix.loadImage("images/blur/bgBG6a.png");
+            foreGroundB = pix.loadImage("images/blur/bgBG6b.png");
         } //17 to 24hrs :: Evening
         else if (time > 16 && time <= 24) {
-            pic1 = pix.loadImageFromToolkitNoScale("images/blur/bgBG5.png");
-            fg = pix.loadImageFromToolkitNoScale("images/blur/bgBG5fg.png");
-            foreGroundA = pix.loadImageFromToolkitNoScale("images/blur/bgBG5a.png");
-            foreGroundB = pix.loadImageFromToolkitNoScale("images/blur/bgBG5b.png");
+            pic1 = pix.loadImage("images/blur/bgBG5.png");
+            fg = pix.loadImage("images/blur/bgBG5fg.png");
+            foreGroundA = pix.loadImage("images/blur/bgBG5a.png");
+            foreGroundB = pix.loadImage("images/blur/bgBG5b.png");
         }
 
         itemz[0] = JenesisLanguage.getInstance().getLine(307);

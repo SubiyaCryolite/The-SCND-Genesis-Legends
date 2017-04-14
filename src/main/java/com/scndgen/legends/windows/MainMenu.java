@@ -23,10 +23,10 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.MenuLeaderBoard;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.threads.ThreadMP3;
 

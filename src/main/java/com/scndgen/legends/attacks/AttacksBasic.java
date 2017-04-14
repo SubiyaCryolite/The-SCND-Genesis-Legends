@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisCharacter;
 
 public class AttacksBasic {

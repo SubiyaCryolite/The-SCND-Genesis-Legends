@@ -25,6 +25,7 @@ import com.scndgen.legends.GamePadController;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.WindowMain;
@@ -43,9 +44,17 @@ import java.util.logging.Logger;
  * @author Ifunga Ndana
  */
 public class RenderStandardGameplay extends StandardGameplay implements JenesisRender {
+    private static RenderStandardGameplay instance;
     public ThreadAnim1 upDown;
     public ThreadAnim2 upDown2;
     public ThreadAnim3 upDown3;
+    public boolean limitRunning = true, animCharFree = true;
+    private Font bigFont, normalFont;
+    private Font notSelected;
+    private Font statusFont;
+    private float angleRaw, charPointInc;
+    private int result;
+    private VolatileImage charSpec, blankPortrait;
     private VolatileImage infoPic, stat1, stat2, stat3, stat4;
     private VolatileImage ambient1, ambient2, foreGround;
     private int limitBreak;
@@ -55,12 +64,8 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
     private float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
     private int comboPicArrayPosOpp = 8;
     private String manipulateThis;
-    protected Font bigFont, normalFont;
-    protected Font notSelected;
-    protected Font statusFont;
     private int one, two, three, four, oneO, twoO, threeO, fourO;
     private int comicY, opponentDamageYLoc, playerDamageYLoc, yTEST = 25, yTESTinit = 25;
-    public boolean limitRunning = true, animCharFree = true;
     private float opac = 1.0f;
     private float damOpInc;
     private boolean nextEnabled = true, backEnabled = true;
@@ -68,15 +73,13 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
     private VolatileImage flashy;
     private Image[] moveCat, numberPix;
-    private VolatileImage[] charCaption;
+    private VolatileImage[] characterPortraits;
     private ThreadMP3 sound, fightMus, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
     private Image[] comboPicArray, comicPicArray, times, statsPicChar = new Image[5], statsPicOpp = new Image[5];
     private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, bgPic, damLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
     //UI images
-    private VolatileImage opp11, assSprite, assOppSprite;
-    private VolatileImage charPort, storyPic;
+    private VolatileImage characterPortrait, storyPic;
     private int charOp = 10, comicPicArrayPos = 0;
-    private VolatileImage charMeleeSprite, charCelestiaSprite, tmpIm, oppMeleeSprite, oppCelestiaSprite;
     //numbers are arrays
     private Image[] charSprites, oppSprites;
     private VolatileImage[] attackAnim2, attackAnim1;
@@ -84,19 +87,15 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
     private Color CurrentColor = (Color.RED);
     private float opacityTxt = 10, opacityPic = 0.0f;
 
-    protected float angleRaw, charPointInc;
-    protected int result;
-    private static RenderStandardGameplay instance;
+    private RenderStandardGameplay() {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createLineBorder(Color.black, 1));
+    }
 
     public static synchronized RenderStandardGameplay getInstance() {
         if (instance == null)
             instance = new RenderStandardGameplay();
         return instance;
-    }
-
-    private RenderStandardGameplay() {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
     public void loadAssets() {
@@ -167,7 +166,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
                 opacityTxt = opacityTxt + 0.02f;
             }
             g2d.setComposite(makeComposite(opacityTxt));
-            g2d.drawImage(charPort, ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2) - 50, 424, this);
+            g2d.drawImage(characterPortrait, ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2) - 50, 424, this);
             g2d.drawString(battleInf.toString(), ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2), 450);
             g2d.setComposite(makeComposite(10 * 0.1f));
 
@@ -559,9 +558,6 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
                                 }
                             }
                         }
-
-
-                        charSpec = opp11;
                         animCharFree = true;
                     } catch (InterruptedException ex) {
                         Logger.getLogger(StandardGameplay.class.getName()).log(Level.SEVERE, null, ex);
@@ -583,7 +579,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
         }
     }
 
-    public void setP2Damage(int oneA, int twoA, int threeA, int fourA) {
+    public void setOpponentDamage(int oneA, int twoA, int threeA, int fourA) {
         comicText();
 
         nrmlDamageSound();
@@ -607,7 +603,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
     }
 
 
-    public void setP1Damage(int oneA, int twoA, int threeA, int fourA) {
+    public void setPlayerDamage(int oneA, int twoA, int threeA, int fourA) {
         comicText();
 
         nrmlDamageSound();
@@ -640,39 +636,39 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
         }
         if (imagesNumChached == false) {
             JenesisImageLoader pix = new JenesisImageLoader();
-            counterPane = pix.loadImageFromToolkitNoScale("images/countPane.png");
+            counterPane = pix.loadImage("images/countPane.png");
             if (activeStage != 100) {
-                foreGround = pix.loadBImage2(fgLocation, 852, 480, this);
+                foreGround = pix.loadVolatileImage(fgLocation, 852, 480, this);
             } else {
-                foreGround = pix.loadBImage2(fgLocation, 960, 480, this);
+                foreGround = pix.loadVolatileImage(fgLocation, 960, 480, this);
             }
-            num0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
-            num1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
-            num2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
-            num3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
-            num4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
-            num5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
-            num6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
-            num7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
-            num8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
-            num9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
-            numInfinite = pix.loadImageFromToolkitNoScale("images/fig/infinite.png");
-            numNull = pix.loadImageFromToolkitNoScale("images/trans.png");
-            //flashy=imageLoader.loadBImage2("images/flash.gif",40,40);
+            num0 = pix.loadImage("images/fig/0.png");
+            num1 = pix.loadImage("images/fig/1.png");
+            num2 = pix.loadImage("images/fig/2.png");
+            num3 = pix.loadImage("images/fig/3.png");
+            num4 = pix.loadImage("images/fig/4.png");
+            num5 = pix.loadImage("images/fig/5.png");
+            num6 = pix.loadImage("images/fig/6.png");
+            num7 = pix.loadImage("images/fig/7.png");
+            num8 = pix.loadImage("images/fig/8.png");
+            num9 = pix.loadImage("images/fig/9.png");
+            numInfinite = pix.loadImage("images/fig/infinite.png");
+            numNull = pix.loadImage("images/trans.png");
+            //flashy=imageLoader.loadVolatileImage("images/flash.gif",40,40);
             flashy = null;
             numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
 
-            statsPicChar[0] = pix.loadImageFromToolkitNoScale("images/trans.png");
-            statsPicChar[1] = pix.loadImageFromToolkitNoScale("images/stats/stat1.png");
-            statsPicChar[2] = pix.loadImageFromToolkitNoScale("images/stats/stat2.png");
-            statsPicChar[3] = pix.loadImageFromToolkitNoScale("images/stats/stat3.png");
-            statsPicChar[4] = pix.loadImageFromToolkitNoScale("images/stats/stat4.png");
+            statsPicChar[0] = pix.loadImage("images/trans.png");
+            statsPicChar[1] = pix.loadImage("images/stats/stat1.png");
+            statsPicChar[2] = pix.loadImage("images/stats/stat2.png");
+            statsPicChar[3] = pix.loadImage("images/stats/stat3.png");
+            statsPicChar[4] = pix.loadImage("images/stats/stat4.png");
 
-            statsPicOpp[0] = pix.loadImageFromToolkitNoScale("images/trans.png");
-            statsPicOpp[1] = pix.loadImageFromToolkitNoScale("images/stats/stat1.png");
-            statsPicOpp[2] = pix.loadImageFromToolkitNoScale("images/stats/stat2.png");
-            statsPicOpp[3] = pix.loadImageFromToolkitNoScale("images/stats/stat3.png");
-            statsPicOpp[4] = pix.loadImageFromToolkitNoScale("images/stats/stat4.png");
+            statsPicOpp[0] = pix.loadImage("images/trans.png");
+            statsPicOpp[1] = pix.loadImage("images/stats/stat1.png");
+            statsPicOpp[2] = pix.loadImage("images/stats/stat2.png");
+            statsPicOpp[3] = pix.loadImage("images/stats/stat3.png");
+            statsPicOpp[4] = pix.loadImage("images/stats/stat4.png");
 
             System.out.println("loaded all imageLoader");
             imagesNumChached = true;
@@ -692,97 +688,87 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
 
                 charSprites = new VolatileImage[12];
                 for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
-                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(i);
+                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(i);
                 }
 
                 oppSprites = new VolatileImage[12];
                 for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
-                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getMeHigh(i);
+                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getHighQualitySprite(i);
                 }
 
                 comboPicArray = new Image[9];
                 for (int u = 0; u < 6; u++) {
-                    comboPicArray[u] = pix.loadImageFromToolkitNoScale("images/screenTxt/" + u + ".png");
+                    comboPicArray[u] = pix.loadImage("images/screenTxt/" + u + ".png");
                 }
-                comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
-                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                comboPicArray[7] = pix.loadImage("images/screenTxt/7.png");
+                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
 
                 comicPicArray = new Image[10];
-                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
-                    comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
+                    comicPicArray[bx] = pix.loadImage("images/screenComic/" + (bx - 1) + ".png");
                 }
 
-                menuHold = pix.loadImageFromToolkitNoScale("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getEnum().data() + "/menu.png");
-                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
+                menuHold = pix.loadImage("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getEnum().data() + "/menu.png");
+                damLayer = pix.loadImage("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
-                time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
-                time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
-                time2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
-                time3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
-                time4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
-                time5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
-                time6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
-                time7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
-                time8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
-                time9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
-                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9, opp11};
+                time0 = pix.loadImage("images/fig/0.png");
+                time1 = pix.loadImage("images/fig/1.png");
+                time2 = pix.loadImage("images/fig/2.png");
+                time3 = pix.loadImage("images/fig/3.png");
+                time4 = pix.loadImage("images/fig/4.png");
+                time5 = pix.loadImage("images/fig/5.png");
+                time6 = pix.loadImage("images/fig/6.png");
+                time7 = pix.loadImage("images/fig/7.png");
+                time8 = pix.loadImage("images/fig/8.png");
+                time9 = pix.loadImage("images/fig/9.png");
+                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
 
-                charCaption = new VolatileImage[charNames.length];
+                characterPortraits = new VolatileImage[charNames.length];
 
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
-                    for (int p = 0; p < charNames.length; p++) {
-                        charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
+                    for (CharacterEnum characterEnum : CharacterEnum.values()) {
+                        characterPortraits[characterEnum.index()] = pix.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
                     }
                 } else {
                     for (int p = 0; p < charNames.length; p++) {
-                        charCaption[p] = null;
+                        characterPortraits[p] = null;
                     }
                 }
-                charPort = opp11;
-                Image transBuf = pix.loadImageFromToolkit("images/trans.png", 5, 5);
-                hpHolder = pix.loadImageFromToolkitNoScale("images/hpHolder.png");
-
-                bgPic = pix.loadImageFromToolkit(bgLocation, 852, 480);
-                phys = pix.loadImageFromToolkitNoScale("images/t_physical.png");
-                cel = pix.loadImageFromToolkitNoScale("images/t_celestia.png");
-                itm = pix.loadImageFromToolkitNoScale("images/t_item.png");
-                fury1 = pix.loadImageFromToolkitNoScale("images/fury.gif");
-                fury2 = pix.loadImageFromToolkitNoScale("images/furyo.png");
+                Image transBuf = pix.loadImage("images/trans.png", 5, 5);
+                hpHolder = pix.loadImage("images/hpHolder.png");
+                bgPic = pix.loadImage(bgLocation, 852, 480);
+                phys = pix.loadImage("images/t_physical.png");
+                cel = pix.loadImage("images/t_celestia.png");
+                itm = pix.loadImage("images/t_item.png");
+                fury1 = pix.loadImage("images/fury.gif");
+                fury2 = pix.loadImage("images/furyo.png");
                 fury = fury2;
-
-                ambient1 = pix.loadBImage2("images/bgBG" + activeStage + "a.png", 852, 480, this);
-                ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
-
+                ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
+                ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     storyPicArr = new VolatileImage[13];
                     for (int u = 0; u < 11; u++) {
-                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                        storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
                     }
                     storyPic = storyPicArr[0];
                 }
-
-                furyBar = pix.loadImageFromToolkitNoScale("images/furyBar.png");
-                quePic1 = pix.loadImageFromToolkitNoScale("images/queB.png");
-                quePic2 = pix.loadImageFromToolkitNoScale("images/que.gif");
-                oppBar = pix.loadImageFromToolkitNoScale("images/oppBar.png");
-
+                furyBar = pix.loadImage("images/furyBar.png");
+                quePic1 = pix.loadImage("images/queB.png");
+                quePic2 = pix.loadImage("images/que.gif");
+                oppBar = pix.loadImage("images/oppBar.png");
                 moveCat = new Image[]{phys, cel, itm};
                 curr = moveCat[0];
-
-                stat1 = pix.loadBImage2("images/stats/stat1.png", 90, 24, this);
-                stat2 = pix.loadBImage2("images/stats/stat2.png", 90, 24, this);
-                stat3 = pix.loadBImage2("images/stats/stat3.png", 90, 24, this);
-                stat4 = pix.loadBImage2("images/stats/stat4.png", 90, 24, this);
+                stat1 = pix.loadVolatileImage("images/stats/stat1.png", 90, 24, this);
+                stat2 = pix.loadVolatileImage("images/stats/stat2.png", 90, 24, this);
+                stat3 = pix.loadVolatileImage("images/stats/stat3.png", 90, 24, this);
+                stat4 = pix.loadVolatileImage("images/stats/stat4.png", 90, 24, this);
                 stats = new VolatileImage[]{stat1, stat2, stat3, stat4};
-
-                hud1 = pix.loadImageFromToolkitNoScale("images/hud1.png");
-                hud2 = pix.loadImageFromToolkitNoScale("images/hud2.png");
-
-                win = pix.loadImageFromToolkitNoScale("images/win.png");
-                lose = pix.loadImageFromToolkitNoScale("images/lose.png");
+                hud1 = pix.loadImage("images/hud1.png");
+                hud2 = pix.loadImage("images/hud2.png");
+                win = pix.loadImage("images/win.png");
+                lose = pix.loadImage("images/lose.png");
                 status = transBuf;
-
                 System.out.println("loaded all char sprites imageLoader");
                 imagesCharChached = true;
                 //ensures method is only run once
@@ -805,82 +791,79 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
                 RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().loadMeLow();
                 charSprites = new Image[12];
                 for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
-                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeLow(i);
+                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getLowQualitySprite(i);
                 }
                 oppSprites = new Image[12];
                 for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
-                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getMeLow(i);
+                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getLowQualitySprite(i);
                 }
                 comboPicArray = new Image[9];
                 for (int u = 0; u < 6; u++) {
-                    comboPicArray[u] = pix.loadImageFromToolkitNoScale("images/screenTxt/" + u + ".png");
+                    comboPicArray[u] = pix.loadImage("images/screenTxt/" + u + ".png");
                 }
-                comboPicArray[7] = pix.loadImageFromToolkitNoScale("images/screenTxt/7.png");
-                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                comboPicArray[7] = pix.loadImage("images/screenTxt/7.png");
+                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
                 comicPicArray = new Image[10];
-                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getMeHigh(11);
+                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
-                    comicPicArray[bx] = pix.loadImageFromToolkitNoScale("images/screenComic/" + (bx - 1) + ".png");
+                    comicPicArray[bx] = pix.loadImage("images/screenComic/" + (bx - 1) + ".png");
                 }
-                menuHold = pix.loadImageFromToolkitNoScale("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharName() + "/menu.png");
-                damLayer = pix.loadImageFromToolkit("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
-                time0 = pix.loadImageFromToolkitNoScale("images/fig/0.png");
-                time1 = pix.loadImageFromToolkitNoScale("images/fig/1.png");
-                time2 = pix.loadImageFromToolkitNoScale("images/fig/2.png");
-                time3 = pix.loadImageFromToolkitNoScale("images/fig/3.png");
-                time4 = pix.loadImageFromToolkitNoScale("images/fig/4.png");
-                time5 = pix.loadImageFromToolkitNoScale("images/fig/5.png");
-                time6 = pix.loadImageFromToolkitNoScale("images/fig/6.png");
-                time7 = pix.loadImageFromToolkitNoScale("images/fig/7.png");
-                time8 = pix.loadImageFromToolkitNoScale("images/fig/8.png");
-                time9 = pix.loadImageFromToolkitNoScale("images/fig/9.png");
-                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9, opp11};
-                charCaption = new VolatileImage[charNames.length];
+                menuHold = pix.loadImage("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharName() + "/menu.png");
+                damLayer = pix.loadImage("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
+                time0 = pix.loadImage("images/fig/0.png");
+                time1 = pix.loadImage("images/fig/1.png");
+                time2 = pix.loadImage("images/fig/2.png");
+                time3 = pix.loadImage("images/fig/3.png");
+                time4 = pix.loadImage("images/fig/4.png");
+                time5 = pix.loadImage("images/fig/5.png");
+                time6 = pix.loadImage("images/fig/6.png");
+                time7 = pix.loadImage("images/fig/7.png");
+                time8 = pix.loadImage("images/fig/8.png");
+                time9 = pix.loadImage("images/fig/9.png");
+                times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
+                characterPortraits = new VolatileImage[charNames.length];
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     for (int p = 0; p < charNames.length; p++) {
-                        charCaption[p] = pix.loadBImage2("images/" + charNames[p] + "/cap.png", 48, 48, this);
+                        characterPortraits[p] = pix.loadVolatileImage("images/" + charNames[p] + "/cap.png", 48, 48, this);
                     }
                 } else {
                     for (int p = 0; p < charNames.length; p++) {
-                        charCaption[p] = null;
+                        characterPortraits[p] = null;
                     }
                 }
-                charPort = opp11;
-                Image transBuf = pix.loadImageFromToolkit("images/trans.png", 5, 5);
-                hpHolder = pix.loadImageFromToolkitNoScale("images/hpHolder.png");
-                bgPic = pix.loadImageFromToolkit(bgLocation, 852, 480);
-                phys = pix.loadImageFromToolkitNoScale("images/t_physical.png");
-                cel = pix.loadImageFromToolkitNoScale("images/t_celestia.png");
-                itm = pix.loadImageFromToolkitNoScale("images/t_item.png");
-                fury1 = pix.loadImageFromToolkitNoScale("images/fury.gif");
-                fury2 = pix.loadImageFromToolkitNoScale("images/furyo.png");
+                Image transBuf = pix.loadImage("images/trans.png", 5, 5);
+                hpHolder = pix.loadImage("images/hpHolder.png");
+                bgPic = pix.loadImage(bgLocation, 852, 480);
+                phys = pix.loadImage("images/t_physical.png");
+                cel = pix.loadImage("images/t_celestia.png");
+                itm = pix.loadImage("images/t_item.png");
+                fury1 = pix.loadImage("images/fury.gif");
+                fury2 = pix.loadImage("images/furyo.png");
                 fury = fury2;
-                {
-                    ambient1 = pix.loadBImage2("images/bgBG" + activeStage + "a.png", 852, 480, this);
-                    ambient2 = pix.loadBImage2("images/bgBG" + activeStage + "b.png", 852, 480, this);
-                }
+                ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
+                ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
                 if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
                     storyPicArr = new VolatileImage[11];
                     for (int u = 0; u < 11; u++) {
-                        storyPicArr[u] = pix.loadBImage2("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                        storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
                     }
                     storyPic = storyPicArr[0];
                 }
-                furyBar = pix.loadImageFromToolkitNoScale("images/furyBar.png");
-                quePic1 = pix.loadImageFromToolkitNoScale("images/queB.png");
-                quePic2 = pix.loadImageFromToolkitNoScale("images/que.gif");
-                oppBar = pix.loadImageFromToolkitNoScale("images/oppBar.png");
+                furyBar = pix.loadImage("images/furyBar.png");
+                quePic1 = pix.loadImage("images/queB.png");
+                quePic2 = pix.loadImage("images/que.gif");
+                oppBar = pix.loadImage("images/oppBar.png");
                 moveCat = new Image[]{phys, cel, itm};
                 curr = moveCat[0];
-                stat1 = pix.loadBImage2("images/stats/stat1.png", 90, 24, this);
-                stat2 = pix.loadBImage2("images/stats/stat2.png", 90, 24, this);
-                stat3 = pix.loadBImage2("images/stats/stat3.png", 90, 24, this);
-                stat4 = pix.loadBImage2("images/stats/stat4.png", 90, 24, this);
+                stat1 = pix.loadVolatileImage("images/stats/stat1.png", 90, 24, this);
+                stat2 = pix.loadVolatileImage("images/stats/stat2.png", 90, 24, this);
+                stat3 = pix.loadVolatileImage("images/stats/stat3.png", 90, 24, this);
+                stat4 = pix.loadVolatileImage("images/stats/stat4.png", 90, 24, this);
                 stats = new VolatileImage[]{stat1, stat2, stat3, stat4};
-                hud1 = pix.loadImageFromToolkitNoScale("images/hud1.png");
-                hud2 = pix.loadImageFromToolkitNoScale("images/hud2.png");
-                win = pix.loadImageFromToolkitNoScale("images/win.png");
-                lose = pix.loadImageFromToolkitNoScale("images/lose.png");
+                hud1 = pix.loadImage("images/hud1.png");
+                hud2 = pix.loadImage("images/hud2.png");
+                win = pix.loadImage("images/win.png");
+                lose = pix.loadImage("images/lose.png");
                 status = transBuf;
                 System.out.println("loaded all char sprites imageLoader");
                 imagesCharChached = true;
@@ -973,31 +956,31 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
         manipulateThis = "" + Math.round(damageAmount);
         if (who == 'c') {
             if (manipulateThis.length() == 1) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
             if (manipulateThis.length() == 2) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
             }
             if (manipulateThis.length() == 3) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
             }
             if (manipulateThis.length() == 4) {
-                setP1Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
             }
         }
 
         if (who == 'o') {
             if (manipulateThis.length() == 1) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
             if (manipulateThis.length() == 2) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
             }
             if (manipulateThis.length() == 3) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
             }
             if (manipulateThis.length() == 4) {
-                setP2Damage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
             }
         }
     }
@@ -1257,7 +1240,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
      * Clear char port
      */
     public void charPortBlank() {
-        charPort = opp1;
+        characterPortrait = blankPortrait;
     }
 
     /**
@@ -1266,7 +1249,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
      * @param here - index of pic
      */
     public void charPortSet(int here) {
-        charPort = charCaption[here];
+        characterPortrait = characterPortraits[here];
     }
 
 
@@ -1468,7 +1451,7 @@ public class RenderStandardGameplay extends StandardGameplay implements JenesisR
      *
      * @return circel angle
      */
-    protected int phyAngle() {
+    private int phyAngle() {
         float start = RenderStandardGameplay.getInstance().getGameInstance().getRecoveryUnitsChar() / 290.0f;
         angleRaw = start * 360;
         result = Integer.parseInt("" + Math.round(angleRaw));

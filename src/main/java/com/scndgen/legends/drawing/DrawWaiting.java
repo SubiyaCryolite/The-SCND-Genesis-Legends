@@ -81,8 +81,8 @@ public class DrawWaiting extends JenesisMode {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-        pic1 = pix2.loadImageFromToolkitNoScale("images/menus/waiting.jpg");
-        pic2 = pix2.loadImageFromToolkitNoScale("images/menus/loading.gif");
+        pic1 = pix2.loadImage("images/menus/waiting.jpg");
+        pic2 = pix2.loadImage("images/menus/loading.gif");
         setBorder(BorderFactory.createEmptyBorder());
     }
 

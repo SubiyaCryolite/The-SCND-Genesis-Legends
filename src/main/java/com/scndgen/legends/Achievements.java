@@ -273,7 +273,7 @@ public class Achievements {
             isLocked[8] = false;
         }
 
-        if (RenderStandardGameplay.getInstance().hasWon() && StoryMode.stat.equalsIgnoreCase("half way") && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && isLocked[9]) {
+        if (RenderStandardGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && RenderStandardGameplay.getInstance().getGameInstance().isGameOver && isLocked[9]) {
             RenderStandardGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[10]);
             LoginScreen.getInstance().getMenu().getMain().systemNotice(JenesisLanguage.getInstance().getLine(83) + ": " + achDesc[10]);

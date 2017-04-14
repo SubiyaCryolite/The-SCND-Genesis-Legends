@@ -120,10 +120,10 @@ public class Azaria extends JenesisCharacter {
             damage = 78;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
@@ -135,10 +135,10 @@ public class Azaria extends JenesisCharacter {
             damage = 80;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
@@ -150,10 +150,10 @@ public class Azaria extends JenesisCharacter {
             damage = 84;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
@@ -165,10 +165,10 @@ public class Azaria extends JenesisCharacter {
             damage = 76;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
                 RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);

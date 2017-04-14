@@ -22,7 +22,6 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.engine.JenesisCharacter;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -119,11 +118,11 @@ public class NovaAdam extends JenesisCharacter {
             damage = 123;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -134,11 +133,11 @@ public class NovaAdam extends JenesisCharacter {
             damage = 125;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -149,11 +148,11 @@ public class NovaAdam extends JenesisCharacter {
             damage = 129;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }
@@ -164,11 +163,11 @@ public class NovaAdam extends JenesisCharacter {
             damage = 111;
             RenderStandardGameplay.getInstance().setStatIndex(1);
             if (forWho == 2) {
-                RenderStandardGameplay.getInstance().updateLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updatePlayerLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
             } else {
-                RenderStandardGameplay.getInstance().updateOppLife(damage);
-               RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                RenderStandardGameplay.getInstance().updateOpponentLife(damage);
+                RenderStandardGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
             }
             RenderStandardGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
         }

@@ -101,7 +101,7 @@ public abstract class JenesisMode extends JPanel {
     public final String generateUID() {
         String random_name = "scndgen-legends_";
         StringBuilder userIDBuff = new StringBuilder(random_name);
-        String[]letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        String[] letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         userIDBuff.append("").append(Math.round(Math.random() * 100)).append("_");
         int v1 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
         int v2 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));

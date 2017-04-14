@@ -19,19 +19,16 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.menus;
+package com.scndgen.legends.arefactored.mode;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.threads.ThreadMP3;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class StoryMode extends JenesisMode {
+public abstract class StoryMenu extends JenesisMode {
 
     public int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
     public int characterSel, opponentSel;
@@ -42,16 +39,16 @@ public abstract class StoryMode extends JenesisMode {
     protected int oldId = -1;
     protected boolean[] hiddenStage;
     protected boolean loadingNow;
-    private com.scndgen.legends.arefactored.mode.StoryMode storyInstance;
-    private int currMode = LoginScreen.getInstance().stage;
-    private ThreadMP3 yay;
-    private ThreadMP3 menuSound;
+    protected int currMode = LoginScreen.getInstance().stage;
 
-    public StoryMode() {
-        menuSound = new ThreadMP3("audio/menu-select.mp3", true);
-        storyInstance = new com.scndgen.legends.arefactored.mode.StoryMode();
+    public StoryMenu() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
+
+    }
+
+    public void newInstance() {
+        StoryMode.getInstance().newInstance();
         opacity = 1.0f;
     }
 
@@ -70,13 +67,10 @@ public abstract class StoryMode extends JenesisMode {
         return answer;
     }
 
-    public com.scndgen.legends.arefactored.mode.StoryMode getStoryInstance() {
-        return storyInstance;
+    public StoryMode getStoryInstance() {
+        return StoryMode.getInstance();
     }
 
-    public void setStoryInstance(com.scndgen.legends.arefactored.mode.StoryMode p) {
-        storyInstance = p;
-    }
 
     /**
      * Animates captions
@@ -210,10 +204,6 @@ public abstract class StoryMode extends JenesisMode {
         mode = LoginScreen.getInstance().stage;
     }
 
-    public void selectStage() {
-        prepareStory();
-    }
-
     public void backToMainMenu() {
         back();
     }
@@ -231,7 +221,7 @@ public abstract class StoryMode extends JenesisMode {
      * When you win a match, move to the next level
      */
     public void incrementMode() {
-        if (currMode < com.scndgen.legends.arefactored.mode.StoryMode.max) {
+        if (currMode < StoryMode.getInstance().max) {
             currMode = currMode + 1;
 
             //dont mess up progress
@@ -258,48 +248,13 @@ public abstract class StoryMode extends JenesisMode {
      * @return the number of levels
      */
     public int getStorySize() {
-        return com.scndgen.legends.arefactored.mode.StoryMode.max;
+        return StoryMode.getInstance().max;
     }
 
-    /**
-     * Are there more stages?????
-     *
-     * @return
-     */
-    public boolean moreStages() {
-        boolean answer = false;
-        resetCurrentStage();
-
-        //check if more stages
-        if (currMode < com.scndgen.legends.arefactored.mode.StoryMode.max) {
-            answer = true;
-        } //if won last 'final' match
-        else if (RenderStandardGameplay.getInstance().hasWon()) {
-            //incrementMode();
-            //go back to user difficulty
-            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficultyStat;
-            yay = new ThreadMP3(ThreadMP3.soundGameOver(), true);
-            yay.play();
-            JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
-            answer = false;
-        }
-
-        return answer;
-    }
-
-    public void prepareStory() {
-        for (int i = 0; i <= com.scndgen.legends.arefactored.mode.StoryMode.max; i++) {
-            if (storySelIndex == i) {
-                startGame(i);
-                menuSound.play();
-                break;
-            }
-        }
-    }
 
     public void startGame(int mode) {
         if (hiddenStage[mode]) {
-            if (storySelIndex < com.scndgen.legends.arefactored.mode.StoryMode.max + 1) {
+            if (storySelIndex < StoryMode.getInstance().max + 1) {
                 storySelIndex = mode;
             } else {
                 storySelIndex = mode - 1;

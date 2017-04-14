@@ -22,9 +22,11 @@
 package com.scndgen.legends.arefactored.render;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.arefactored.mode.StoryMode;
 import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.menus.StoryMode;
+import com.scndgen.legends.arefactored.mode.StoryMenu;
+import com.scndgen.legends.threads.ThreadMP3;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -38,17 +40,27 @@ import java.awt.*;
  * @class: drawPrevChar
  * This class creates a graphical preview of the character and opponent
  */
-public class RenderStoryMode extends StoryMode implements JenesisRender {
+public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 
+
+    private ThreadMP3 yay;
+    private ThreadMP3 menuSound;
     private Font headerFont, normalFont;
     private Image charBack, loading;
     private Image[] storyCap, storyCapUn, storyCapBlur;
     private Image storyPrev;
+    private static RenderStoryMenu instance;
+
+    public static synchronized RenderStoryMenu getInstance() {
+        if (instance == null)
+            instance = new RenderStoryMenu();
+        return instance;
+    }
 
     /**
      * Teh constructorz XD
      */
-    public RenderStoryMode() {
+    private RenderStoryMenu() {
         scenes = 12;
         headerFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
@@ -188,47 +200,48 @@ public class RenderStoryMode extends StoryMode implements JenesisRender {
 
     public void loadAssets() {
         if (!loadAssets) return;
+        menuSound = new ThreadMP3("audio/menu-select.mp3", true);
         JenesisImageLoader pix = new JenesisImageLoader();
         RenderStageSelect.selectedStage = false;
         try {
             for (int i = 0; i < scenes; i++) {
-                storyCap[i] = pix.loadImageFromToolkitNoScale("images/Story/locked/x" + (i + 1) + ".png");
+                storyCap[i] = pix.loadImage("images/Story/locked/x" + (i + 1) + ".png");
             }
 
             for (int i = 0; i < scenes; i++) {
-                storyCapUn[i] = pix.loadImageFromToolkitNoScale("images/Story/x" + (i + 1) + ".png");
+                storyCapUn[i] = pix.loadImage("images/Story/x" + (i + 1) + ".png");
             }
 
             for (int i = 0; i < scenes; i++) {
-                storyCapBlur[i] = pix.loadImageFromToolkitNoScale("images/Story/blur/t_" + i + ".png");
+                storyCapBlur[i] = pix.loadImage("images/Story/blur/t_" + i + ".png");
             }
         } catch (Exception e) {
             System.err.println(e);
         }
 
-        //charBack = imageLoader.loadImageFromToolkitNoScale("images/selstory.png");
-        loading = pix.loadImageFromToolkitNoScale("images/appletprogress.gif");
-        charBack = pix.loadImageFromToolkitNoScale("images/Story/frame.png");
+        //charBack = imageLoader.loadImage("images/selstory.png");
+        loading = pix.loadImage("images/appletprogress.gif");
+        charBack = pix.loadImage("images/Story/frame.png");
         int x = (int) (Math.random() * 4);
         switch (x) {
             case 0: {
-                storyPrev = pix.loadBufferedImageFromToolkit("images/Story/blur/s4.png");
+                storyPrev = pix.loadBufferedImage("images/Story/blur/s4.png");
             }
             break;
 
             case 1: {
-                storyPrev = pix.loadBufferedImageFromToolkit("images/Story/blur/s5.png");
+                storyPrev = pix.loadBufferedImage("images/Story/blur/s5.png");
             }
             break;
 
             case 2: {
-                storyPrev = pix.loadBufferedImageFromToolkit("images/Story/blur/s6.png");
+                storyPrev = pix.loadBufferedImage("images/Story/blur/s6.png");
 
             }
             break;
 
             default: {
-                storyPrev = pix.loadBufferedImageFromToolkit("images/Story/blur/s6.png");
+                storyPrev = pix.loadBufferedImage("images/Story/blur/s6.png");
 
             }
             break;
@@ -252,5 +265,49 @@ public class RenderStoryMode extends StoryMode implements JenesisRender {
         }
         storyPrev.flush();
         loadAssets = true;
+    }
+
+    public void newInstance() {
+        super.newInstance();
+    }
+
+    /**
+     * Are there more stages?????
+     *
+     * @return
+     */
+    public boolean moreStages() {
+        boolean answer = false;
+        resetCurrentStage();
+
+        //check if more stages
+        if (currMode < StoryMode.getInstance().max) {
+            answer = true;
+        } //if won last 'final' match
+        else if (RenderStandardGameplay.getInstance().hasWon()) {
+            //incrementMode();
+            //go back to user difficulty
+            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficultyStat;
+            yay = new ThreadMP3(ThreadMP3.soundGameOver(), true);
+            yay.play();
+            JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
+            answer = false;
+        }
+
+        return answer;
+    }
+
+    public void prepareStory() {
+        for (int i = 0; i <= StoryMode.getInstance().max; i++) {
+            if (storySelIndex == i) {
+                startGame(i);
+                menuSound.play();
+                break;
+            }
+        }
+    }
+
+    public void selectStage() {
+        prepareStory();
     }
 }

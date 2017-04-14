@@ -104,7 +104,7 @@ public class ThreadClashSystem implements Runnable {
             } else {
                 RenderStandardGameplay.getInstance().setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
-                RenderStandardGameplay.getInstance().updateLife(200);
+                RenderStandardGameplay.getInstance().updatePlayerLife(200);
                 //player didn't trigger clash but won, they arent attacked
             }
 
@@ -118,7 +118,7 @@ public class ThreadClashSystem implements Runnable {
             } else {
                 RenderStandardGameplay.getInstance().setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
                 RenderStandardGameplay.getInstance().resetBreak();
-                RenderStandardGameplay.getInstance().updateOppLife(200);
+                RenderStandardGameplay.getInstance().updateOpponentLife(200);
                 //opponent didn't trigger clash but won, they arent attacked
             }
         }

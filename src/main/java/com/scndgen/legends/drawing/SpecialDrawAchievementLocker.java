@@ -61,8 +61,8 @@ public class SpecialDrawAchievementLocker {
         ach = LoginScreen.getInstance().getAch();
     }
 
-    public float GETsTORYpROGRESSION() {
-        return LoginScreen.getInstance().stage / (float) StoryMode.max;
+    public float getStoryProgression() {
+        return LoginScreen.getInstance().stage / (float) StoryMode.getInstance().max;
     }
 
     public int getAchUnlockedPerc() {
@@ -70,7 +70,7 @@ public class SpecialDrawAchievementLocker {
     }
 
     public int getGameCompletion() {
-        return ((int) Math.round(GETsTORYpROGRESSION() * 100) + getAchUnlockedPerc()) / 2;
+        return ((int) Math.round(getStoryProgression() * 100) + getAchUnlockedPerc()) / 2;
     }
 
     /**
@@ -84,8 +84,8 @@ public class SpecialDrawAchievementLocker {
             denom = LoginScreen.getInstance().win + LoginScreen.getInstance().loss;
             gWin = 200 * (LoginScreen.getInstance().win / denom);
             gLoss = 200 * (LoginScreen.getInstance().loss / denom);
-            progression = 200 * (GETsTORYpROGRESSION());
-            //System.out.println("Dude "+(LoginScreen.getInstance().stage/(float)StoryMode.max));
+            progression = 200 * (getStoryProgression());
+            //System.out.println("Dude "+(LoginScreen.getInstance().stage/(float)StoryMenu.max));
         } catch (Exception e) {
             gWin = 0;
             gLoss = 0;
@@ -145,7 +145,7 @@ public class SpecialDrawAchievementLocker {
         screen.setColor(Color.WHITE);
 
         screen.drawString(JenesisLanguage.getInstance().getLine(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
-        screen.drawString(" " + Math.round(100 * (GETsTORYpROGRESSION())) + " %", offset + 500, (48 - 3) + (spacer * 3));
+        screen.drawString(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
         screen.drawString(JenesisLanguage.getInstance().getLine(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
 
         screen.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Integer.parseInt("" + Math.round(progression)), spacer);

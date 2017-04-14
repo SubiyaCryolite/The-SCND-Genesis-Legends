@@ -41,9 +41,6 @@ public class JenesisImageLoader {
 
     private int imageQual = Image.SCALE_SMOOTH;
 
-    public JenesisImageLoader() {
-    }
-
     /**
      * Loads a an image from an image icon
      *
@@ -52,16 +49,12 @@ public class JenesisImageLoader {
      */
     public Image loadImageFromIcon(String imageName) {
         try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                return new ImageIcon(url).getImage();
-                //return Toolkit.getDefaultToolkit().getImage(url);
-            }
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL url = classLoader.getResource(imageName);
+            return new ImageIcon(url).getImage();
         } catch (Exception e) {
             System.err.println(e); // keep for dev to see missing files
         }
-
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }
 
@@ -69,20 +62,18 @@ public class JenesisImageLoader {
      * Loads image from toolkit
      *
      * @param imageName - location of image
-     * @param heightB   - height of image
-     * @param widthB    - width of image
+     * @param h         - height of image
+     * @param w         - width of image
      * @return toolkit image
      */
-    public Image loadImageFromToolkit(String imageName, int widthB, int heightB) {
+    public Image loadImage(String imageName, int w, int h) {
         try {
             ClassLoader cl = getClass().getClassLoader();
             URL url = cl.getResource(imageName);
-            if (url != null) {
-                System.out.println("Processing imageLoader........" + imageName);
-                int picWidth = (int) (LoginScreen.getInstance().getGameXScale() * widthB);
-                int picHeight = (int) (LoginScreen.getInstance().getGameYScale() * heightB);
-                return Toolkit.getDefaultToolkit().createImage(url).getScaledInstance(picWidth, picHeight, imageQual);
-            }
+            System.out.println("Processing imageLoader........" + imageName);
+            int width = (int) (LoginScreen.getInstance().getGameXScale() * w);
+            int height = (int) (LoginScreen.getInstance().getGameYScale() * h);
+            return Toolkit.getDefaultToolkit().createImage(url).getScaledInstance(width, height, imageQual);
         } catch (Exception e) {
             System.err.println(e); // keep for dev to see missing files
         }
@@ -95,14 +86,12 @@ public class JenesisImageLoader {
      * @param imageName - location of image
      * @return toolkit image
      */
-    public BufferedImage loadBufferedImageFromToolkit(String imageName) {
+    public BufferedImage loadBufferedImage(String imageName) {
         try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                System.out.println("Processing imageLoader........" + imageName);
-                return ImageIO.read(url);
-            }
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL resource = classLoader.getResource(imageName);
+            System.out.println("Processing imageLoader........" + imageName);
+            return ImageIO.read(resource);
         } catch (Exception e) {
             System.err.println(e); // keep for dev to see missing files
         }
@@ -115,14 +104,12 @@ public class JenesisImageLoader {
      * @param imageName - location of image
      * @return toolkit image
      */
-    public Image loadImageFromToolkitNoScale(String imageName) {
+    public Image loadImage(String imageName) {
         try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                System.out.println("Processing imageLoader........" + imageName);
-                return Toolkit.getDefaultToolkit().createImage(url);
-            }
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL url = classLoader.getResource(imageName);
+            System.out.println("Processing imageLoader........" + imageName);
+            return Toolkit.getDefaultToolkit().createImage(url);
         } catch (Exception e) {
             System.err.println(e); // keep for dev to see missing files
         }
@@ -138,124 +125,26 @@ public class JenesisImageLoader {
      * @param obs       - an image observer
      * @return the image
      */
-    public VolatileImage loadBImage2(String imageName, int widthB, int heightB, ImageObserver obs) {
+    public VolatileImage loadVolatileImage(String imageName, int widthB, int heightB, ImageObserver obs) {
         try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                System.out.println("Processing imageLoader........" + imageName);
-                RenderStageSelect.loadTxt("caching :: " + imageName);
-                //return new ImageIcon( url ).getImage();
-
-                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-
-                BufferedImage bi = ImageIO.read(url);
-                int picWidth = bi.getWidth();
-                int picHeight = bi.getHeight();
-                //Image bi=Toolkit.getDefaultToolkit().createImage(url);
-                //,Transparency.OPAQU
-                //Optimized buffered image
-                VolatileImage vimage = gc.createCompatibleVolatileImage(picWidth, picHeight, bi.getTransparency());
-                Graphics2D gt = null;
-
-                //try
-                {
-                    gt = vimage.createGraphics();
-                    gt.setComposite(AlphaComposite.Src);
-                    gt.setColor(new Color(0, 0, 0, 0));
-                    gt.fillRect(0, 0, picWidth, picHeight);
-
-                    gt.drawImage(bi, 0, 0, obs);
-                }
-
-                //finally
-                {
-                    bi = null;
-                    gt.dispose();
-                }
-
-                return vimage;
-            }
-
-        } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
-        }
-
-        throw new IllegalArgumentException("Unable to load image: " + imageName);
-    }
-
-    /**
-     * Loads volatile images
-     *
-     * @param imageName - string location
-     * @param heightB   - height of an image
-     * @param widthB    - width of the image
-     * @param obs       - an image observer
-     * @return the image
-     */
-    public VolatileImage loadBImage(String imageName, int widthB, int heightB, ImageObserver obs) {
-        try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                System.out.println("Processing imageLoader........" + imageName);
-                RenderStageSelect.loadTxt("caching :: " + imageName);
-                //return new ImageIcon( url ).getImage();
-
-                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-
-                BufferedImage bi = ImageIO.read(url);
-                int picWidth = (int) (LoginScreen.getInstance().getGameXScale() * widthB);
-                int picHeight = (int) (LoginScreen.getInstance().getGameYScale() * heightB);
-                Image pic = bi.getScaledInstance(picWidth, picHeight, imageQual);
-                //Image bi=Toolkit.getDefaultToolkit().createImage(url);
-                //,Transparency.OPAQU
-                //Optimized buffered image
-                VolatileImage vimage = gc.createCompatibleVolatileImage(picWidth, picHeight, bi.getTransparency());
-                Graphics2D graphics2D = null;
-
-                //try
-                {
-                    graphics2D = vimage.createGraphics();
-                    graphics2D.setComposite(AlphaComposite.Src);
-                    graphics2D.setColor(new Color(0, 0, 0, 0));
-                    graphics2D.fillRect(0, 0, picWidth, picHeight);
-
-                    graphics2D.drawImage(pic, 0, 0, obs);
-                }
-
-                //finally
-                {
-                    bi = null;
-                    graphics2D.dispose();
-                }
-
-                return vimage;
-            }
-
-        } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
-        }
-
-        throw new IllegalArgumentException("Unable to load image: " + imageName);
-    }
-
-    /**
-     * Loads an image icon
-     *
-     * @param imageName - the name of the image
-     * @return the image icon
-     */
-    public ImageIcon loadIconImage(String imageName) {
-        try {
-            ClassLoader cl = getClass().getClassLoader();
-            URL url = cl.getResource(imageName);
-            if (url != null) {
-                ImageIcon pic = new ImageIcon(url);
-                return pic;
-            }
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL resource = classLoader.getResource(imageName);
+            System.out.println("Processing imageLoader........" + imageName);
+            RenderStageSelect.loadTxt("caching :: " + imageName);
+            GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsConfiguration graphicsConfiguration = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration();
+            BufferedImage bufferedImage = ImageIO.read(resource);
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+            VolatileImage volatileImage = graphicsConfiguration.createCompatibleVolatileImage(width, height, bufferedImage.getTransparency());
+            Graphics2D graphics2D = volatileImage.createGraphics();
+            graphics2D.setComposite(AlphaComposite.Src);
+            graphics2D.setColor(new Color(0, 0, 0, 0));
+            graphics2D.fillRect(0, 0, width, height);
+            graphics2D.drawImage(bufferedImage, 0, 0, obs);
+            graphics2D.dispose();
+            bufferedImage.flush();
+            return volatileImage;
         } catch (Exception e) {
             System.err.println(e); // keep for dev to see missing files
         }
