@@ -23,7 +23,7 @@ package com.scndgen.legends.render;
 
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.mode.Gameplay;
+import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.menus.RenderStageSelect;

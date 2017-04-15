@@ -25,7 +25,7 @@ import com.scndgen.legends.render.RenderGameplay;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.mode.StoryMenu;
+import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.attacks.AttackOpponent;
@@ -421,7 +421,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Increments to next stage in story mode
+     * Increments to next stage in story scene
      */
     public void nextStage() {
         //bgMusclose();
@@ -711,7 +711,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     } //in game, during story sequence
                     else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == true) {
                         getStory().getStoryInstance().skipDialogue();
-                    } //story mode -- after text
+                    } //story scene -- after text
                     else if (ThreadGameInstance.isGameOver == false && getStory().getStoryInstance().doneShowingText) {
                         getStory().getStoryInstance().skipDialogue();
                     } else {

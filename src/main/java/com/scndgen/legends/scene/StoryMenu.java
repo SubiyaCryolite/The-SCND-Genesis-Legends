@@ -19,7 +19,7 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.mode;
+package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;

@@ -455,7 +455,7 @@ public class SpecialDrawModeRender extends JenesisMode {
     }
 
     /**
-     * Get the string representation of a mode
+     * Get the string representation of a scene
      *
      * @return
      */

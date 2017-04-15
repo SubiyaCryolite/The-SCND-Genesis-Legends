@@ -29,7 +29,7 @@ import com.scndgen.legends.executers.AssistCharacterAttacks;
 import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.executers.AssistOpponentAttacks;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.mode.Gameplay;
+import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStoryMenu;
@@ -60,7 +60,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public int feeCol;
     public boolean isRunning = false;
     public String musicStr;
-    public String timeStr;//, mode;
+    public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
     public boolean aiAttack = false, aiRunning = false, aiRunning2 = false, aiRunning3 = false;
     public Achievements ach;
@@ -351,7 +351,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         RenderGameplay.getInstance().closeAudio();
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
-        //if not story mode, increment char usage
+        //if not story scene, increment char usage
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().selectedCharIndex);
         }

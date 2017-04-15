@@ -22,7 +22,7 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.mode.CharacterSelectionScreen;
+import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.Language;

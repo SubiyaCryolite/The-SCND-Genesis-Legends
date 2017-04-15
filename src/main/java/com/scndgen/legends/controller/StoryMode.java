@@ -70,7 +70,7 @@ public class StoryMode implements Runnable {
 
     public void story(int stage, boolean start) {
         thread = new Thread(this);
-        thread.setName("Story mode thread");
+        thread.setName("Story scene thread");
         thread.setPriority(5);
         LoginScreen.getInstance().getMenu().getMain().getStory().setCurrMode(stage);
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
@@ -187,7 +187,7 @@ public class StoryMode implements Runnable {
     }
 
     /**
-     * In story mode chars and opp should generate nothin
+     * In story scene chars and opp should generate nothin
      */
     private void storyIn() {
         storyMus.play();

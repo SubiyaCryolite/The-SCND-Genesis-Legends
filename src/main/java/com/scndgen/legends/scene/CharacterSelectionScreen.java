@@ -1,4 +1,4 @@
-package com.scndgen.legends.mode;
+package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
@@ -323,7 +323,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     }
 
     /**
-     * Depending on mode, sets
+     * Depending on scene, sets
      */
     private static void sortMode(char who) {
         /**

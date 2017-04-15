@@ -74,7 +74,7 @@ public class OpponentAttacks implements Runnable {
 
         if (ThreadGameInstance.isGameOver == false) {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
-                //fix story mode bug
+                //fix story scene bug
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');

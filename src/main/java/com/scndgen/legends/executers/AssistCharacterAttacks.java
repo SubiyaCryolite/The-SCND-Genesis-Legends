@@ -87,7 +87,7 @@ public class AssistCharacterAttacks implements Runnable {
             }
             for (int o = 0; o < 4; o++) {
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                //fix story mode bug
+                //fix story scene bug
                 if (RenderGameplay.getInstance().getGameInstance().storySequence == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
                     RenderGameplay.getInstance().shakeCharLB();

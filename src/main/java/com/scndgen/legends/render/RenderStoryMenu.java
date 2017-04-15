@@ -22,7 +22,7 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.mode.StoryMenu;
+import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.menus.RenderStageSelect;

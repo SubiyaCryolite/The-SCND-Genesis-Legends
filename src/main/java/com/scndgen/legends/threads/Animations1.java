@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.mode.Gameplay;
+import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.WindowOptions;
 
