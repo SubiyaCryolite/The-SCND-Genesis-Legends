@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderGameplay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class SqlQuery implements ActionListener {
         levels = new int[]{1, 5, 10, 50, 100, 200};
         levelsStr = new String[]{"King of the Hill", "Top 5", "Top 10", "Top 50", "Top 100", "Top 200"};
         notInitislied = true;
-        tblColumns = new String[]{"No", "Name", "Rating", "Country", "Version", "Code", "Matches", "Wins", "Loss", "Character", "Points"};
+        tblColumns = new String[]{"No", "Name", "Rating", "Country", "Version", "Code", "Matches", "Wins", "Loss", "Characters", "Points"};
 
         sortBy = new JLabel("Sort by: ");
         sorters = new String[]{"userPoints", "rating", "userWin", "userLoss"};
@@ -176,7 +176,7 @@ public class SqlQuery implements ActionListener {
                             results[currentIndex][7] = (rs.getInt("userWin"));
                             results[currentIndex][8] = (rs.getInt("userLoss"));
                             results[currentIndex][6] = (Integer.parseInt("" + results[currentIndex][8]) + Integer.parseInt("" + results[currentIndex][7]));
-                            results[currentIndex][9] = RenderStandardGameplay.getInstance().getFavChar(rs.getInt("favCharacter"));
+                            results[currentIndex][9] = RenderGameplay.getInstance().getFavChar(rs.getInt("favCharacter"));
                             results[currentIndex][10] = (rs.getInt("userPoints"));
                             currentIndex++;
                         }

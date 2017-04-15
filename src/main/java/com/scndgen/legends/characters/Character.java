@@ -21,378 +21,284 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
-
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.engine.JenesisCharacter;
+import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.threads.AudioPlayback;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+
+import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.awt.image.VolatileImage;
 
 /**
- * This class should be self explainatory -_-
+ * Basic character template
  *
- * @author Ifunga Ndana
+ * @author ndana
  */
-public class Character {
+public abstract class Character {
 
-    public static String[] moveMusicOpp = new String[8];
-    public static String[] moveMusicChar = new String[8];
-    public static int[] pointsArr = new int[12];
-    public static String[] typeArray = new String[4];
-    private static float activityRecoveryRateChar2, activityRecoverRateChar, activityRecoveryRateOpp, activityRecoveryRateOpp2;
-    private static float healthRecoveryRateChar2, healthRecoveryRateChar, healthRecoveryRateOpp, healthRecoveryRateOpp2;
-    //AIRCON 12 GLOWING HOT GIMP 2.6.8
-    private static int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
-    private String characterName, nameOpp, assistCharacterName, opponentAssistantName;
-    private JenesisCharacter character, assistCharacter, opponent, opponentAssistant;
+    public String descSmall, name, attackStr;
+    public String[] physical, celestia, status, bragRights;
+    //ints
+    public int points, life, hitPoints, damage, celestiaMultiplier, damageMultiplier;
+    public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
+    //floats
+    public float[] weakness;
+    public float actionRecoverRate, hpRecovRate;
+    protected AudioPlayback sound3;
+    protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
+    //imgs
+    private VolatileImage[] highQualitySprites;
+    private Image[] lowQualitySprites;
+    private JenesisImageLoader pix;
+    //string
+    private String[] spriteLocation;
+    private boolean isMale;
 
-    public static float getCharRecoverySpeed() {
-        return activityRecoverRateChar;
+    public Character() {
+        bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
+        sound3 = new AudioPlayback(AudioPlayback.itemSound1(), false);
+        isMale = true;
     }
 
-    public static float getOppRecoverySpeed() {
-        return activityRecoveryRateOpp;
+    public void isNotMale() {
+        isMale = false;
     }
 
-    public static float getOppRecoverySpeed2() {
-        return activityRecoveryRateOpp2;
+    public boolean isMale() {
+        return isMale;
     }
 
-    public static float getCharRecoverySpeed2() {
-        return activityRecoveryRateChar2;
+    public CharacterEnum getEnum() {
+        return characterEnum;
     }
 
-    public static float getCharRecoveryRate() {
-        return healthRecoveryRateChar;
+    private void sortQue() {
+        pix = new JenesisImageLoader();
+        spriteLocation = new String[12];
+        spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
+        spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
+        spriteLocation[2] = "images/" + characterEnum.data() + "/M2.png"; //3
+        spriteLocation[3] = "images/" + characterEnum.data() + "/M3.png"; //4
+        spriteLocation[4] = "images/" + characterEnum.data() + "/M4.png"; //5
+        spriteLocation[5] = "images/" + characterEnum.data() + "/M5.png"; //6
+        spriteLocation[6] = "images/" + characterEnum.data() + "/M6.png"; //7
+        spriteLocation[7] = "images/" + characterEnum.data() + "/M7.png"; //8
+        spriteLocation[8] = "images/" + characterEnum.data() + "/M8.png"; //9
+        spriteLocation[9] = "images/" + characterEnum.data() + "/N.png"; //10
+        spriteLocation[10] = "images/" + characterEnum.data() + "/P.png"; //11
+        spriteLocation[11] = "images/trans.png"; //12
+        System.out.println("FROM CHARACTER CLASS " + characterEnum.data());
     }
 
-    public static float getOppRecoveryRate() {
-        return healthRecoveryRateOpp;
+    public int getNumberOfSprites() {
+        return spriteLocation.length;
     }
 
-    public static void incrementSpeedRate(char who, float thisMuch) {
-        if (who == 'c') {
-            activityRecoverRateChar = activityRecoverRateChar + thisMuch;
-        }
-
-        if (who == 'o') {
-            activityRecoveryRateOpp = activityRecoveryRateOpp + thisMuch;
-        }
+    public void loadMeHigh(ImageObserver obs) {
+        sortQue();
+        highQualitySprites = new VolatileImage[12];
+        highQualitySprites[0] = pix.loadVolatileImage(spriteLocation[0], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs);  //1
+        highQualitySprites[1] = pix.loadVolatileImage(spriteLocation[1], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //2
+        highQualitySprites[2] = pix.loadVolatileImage(spriteLocation[2], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //3
+        highQualitySprites[3] = pix.loadVolatileImage(spriteLocation[3], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //4
+        highQualitySprites[4] = pix.loadVolatileImage(spriteLocation[4], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //5
+        highQualitySprites[5] = pix.loadVolatileImage(spriteLocation[5], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //6
+        highQualitySprites[6] = pix.loadVolatileImage(spriteLocation[6], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //7
+        highQualitySprites[7] = pix.loadVolatileImage(spriteLocation[7], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //8
+        highQualitySprites[8] = pix.loadVolatileImage(spriteLocation[8], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //9
+        highQualitySprites[9] = pix.loadVolatileImage(spriteLocation[9], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //10
+        highQualitySprites[10] = pix.loadVolatileImage(spriteLocation[10], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //11
+        highQualitySprites[11] = pix.loadVolatileImage(spriteLocation[11], 32, 32, obs); //12
     }
 
-    //called when character damaged
-    public static void setCurrLifeChar(int life) {
-        currCharLife = life;
-        //percentages
-        if (life < minCharlife) {
-            minCharlife = life;
-            //System.out.println("min char life "+minCharlife);
-        }
+    public void loadMeLow() {
+        sortQue();
+        lowQualitySprites = new Image[12];
+        lowQualitySprites[0] = pix.loadImage(spriteLocation[0]);  //1
+        lowQualitySprites[1] = pix.loadImage(spriteLocation[1]); //2
+        lowQualitySprites[2] = pix.loadImage(spriteLocation[2]); //3
+        lowQualitySprites[3] = pix.loadImage(spriteLocation[3]); //4
+        lowQualitySprites[4] = pix.loadImage(spriteLocation[4]); //5
+        lowQualitySprites[5] = pix.loadImage(spriteLocation[5]); //6
+        lowQualitySprites[6] = pix.loadImage(spriteLocation[6]); //7
+        lowQualitySprites[7] = pix.loadImage(spriteLocation[7]); //8
+        lowQualitySprites[8] = pix.loadImage(spriteLocation[8]); //9
+        lowQualitySprites[9] = pix.loadImage(spriteLocation[9]); //10
+        lowQualitySprites[10] = pix.loadImage(spriteLocation[10]); //11
+        lowQualitySprites[11] = pix.loadImage(spriteLocation[11]); //12
     }
 
-    //called when opp damaged
-    public static void setCurrLifeOpp(int life) {
-        currOppLife = life;
-
-        //percentages
-        if (life < minOppLife) {
-            minOppLife = life;
-        }
+    public Image getLowQualitySprite(int i) {
+        return lowQualitySprites[i];
     }
 
-    //called when opp damaged
-    public static void setCurrLifeOpp2(int life) {
-        currOppLife2 = life;
-
-        //percentages
-        if (life < minOppLife2) {
-            minOppLife2 = life;
-        }
+    public VolatileImage getHighQualitySprite(int i) {
+        return highQualitySprites[i];
     }
 
-    //called when opp damaged
-    public static void setCurrLifeChar2(int life) {
-        currCharLife3 = life;
+    public abstract void attack(String attack, int forWho);
 
-        //percentages
-        if (life < currCharLife3) {
-            currCharLife3 = life;
-        }
-    }
-
-    public static float getCharMinLife() {
-        return (float) minCharlife;
-    }
-
-    public static float getCharCurrLife() {
-        return (float) currCharLife;
-    }
-
-    public static float getOppMinLife() {
-        return (float) minOppLife;
-    }
-
-    public static float getOppCurrLife() {
-        return (float) currOppLife;
-    }
-
-    public static float getPoints() {
-        return (float) points / maxPoints;
-    }
-
-    public static void setPoints(int amount) {
-        points = amount;
-        maxPoints = amount;
-    }
-
-    public static void alterPoints(int thisMuch) {
-        points = points - thisMuch;
-    }
-
-    /*
+    /**
+     * Gets the move set of the character
      *
+     * @return array of physical attacks
      */
-    public static void alterPoints2(int index) {
-        if (RenderStandardGameplay.getInstance().numOfAttacks > 1) {
-            RenderStandardGameplay.getInstance().numOfAttacks = RenderStandardGameplay.getInstance().numOfAttacks = 1;
-            points = points + pointsArr[index];
-        }
+    public void setCharMoveset() {
+        RenderGameplay.getInstance().setStats(physical, celestia, status);
     }
 
     /**
-     * SET damage multipliers, used to strengthen/weaken attacks
+     * Gets the name of a qued move
      *
-     * @param per      the person calling the method
-     * @param thisMuch the number to alter by
+     * @return The name of the qued move
      */
-    public static void setDamageCounter(char per, int thisMuch) {
-        if (per == 'c') {
-            damageMultiplierOpp = thisMuch;
+    public String getMoveQued(int move) {
+
+        int yus = move - 1;
+        String txt = "";
+
+        if (yus < 4) {
+            txt = physical[yus];
         }
 
-        if (per == 'o') {
-            damageMultiplierChar = thisMuch;
-        }
-    }
-
-    public static int getDamageMultiplier(char per) {
-        int myInt = 0;
-
-        if (per == 'c') {
-            myInt = damageMultiplierOpp;
-        } else if (per == 'o') {
-            myInt = damageMultiplierChar;
+        if (yus >= 4 && yus <= 7) {
+            txt = celestia[yus - 4];
         }
 
-        return myInt;
-    }
+        if (yus >= 8 && yus <= 11) {
+            txt = status[yus - 8];
+        }
 
-    //--------public accessor methods-----------------
-    public String getCharName() {
-        return characterName;
+        return txt;
     }
 
     /**
-     * Get the Character assist partner
+     * Returns the Character description. Used in menus
      *
-     * @return character assist partner
+     * @return The Character description
      */
-    public String getCharAssName() {
-        return assistCharacterName;
+    public String getDescSmall() {
+        return descSmall;
     }
 
     /**
-     * Get the opponents assist partner
+     * Gets character to character battle taunts
      *
-     * @return opponent assist partner
+     * @param indx, the character
+     * @return bragging text
      */
-    public String getOppAssName() {
-        return opponentAssistantName;
-    }
-
-    public String getOppName() {
-        return nameOpp;
-    }
-
-    public void setOppName(String thisName) {
-        minOppLife = 100;
-        currOppLife = 100;
-        nameOpp = thisName;
-    }
-
-    public JenesisCharacter getCharacter() {
-        return character;
-    }
-
-    public JenesisCharacter getAssistCharacter() {
-        return assistCharacter;
-    }
-
-    public JenesisCharacter getOpponent() {
-        return opponent;
-    }
-
-    public JenesisCharacter getAssistOpponent() {
-        return opponentAssistant;
-    }
-
-    public void prepare(CharacterEnum characterEnum) {
-
-        minOppLife = 100;
-        currOppLife = 100;
-        minCharlife = 100;
-        currCharLife = 100;
-        setDamageCounter('c', 12);
-
-        switch (characterEnum) {
-            case SUBIYA:
-                assistCharacter = new Raila();
-                character = new Subiya();
-                break;
-            case RAILA:
-                assistCharacter = new Subiya();
-                character = new Raila();
-                break;
-            case LYNX:
-                assistCharacter = new Aisha();
-                character = new Lynx();
-                break;
-            case AISHA:
-                assistCharacter = new Lynx();
-                character = new Aisha();
-                break;
-            case RAVAGE:
-                assistCharacter = new Jonah();
-                character = new Ravage();
-                break;
-            case ADE:
-                assistCharacter = new Adam();
-                character = new Ade();
-                break;
-            case JONAH:
-                assistCharacter = new Ravage();
-                character = new Jonah();
-                break;
-            case ADAM:
-                assistCharacter = new Ade();
-                character = new Adam();
-                break;
-            case NOVA_ADAM:
-                assistCharacter = new Ade();
-                character = new NovaAdam();
-                break;
-            case AZARIA:
-                assistCharacter = new Lynx();
-                character = new Azaria();
-                break;
-            case SORROWE:
-                assistCharacter = new Ade();
-                character = new Sorrowe();
-                break;
-            case THING:
-                assistCharacter = new NovaAdam();
-                character = new Thing(0);
-                break;
-        }
-
-        characterName = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().selectedCharIndex = characterEnum.index();
-        assistCharacterName = assistCharacter.getEnum().name();
-
-        activityRecoverRateChar = character.getRecovSpeed();
-        healthRecoveryRateChar = character.getHPRecovRate();
-        setPoints(character.getPoints());
-        RenderStandardGameplay.getInstance().setLife(character.getLife());
-        RenderStandardGameplay.getInstance().setMaxLife(character.getLife());
-
-
-        activityRecoveryRateChar2 = assistCharacter.getRecovSpeed();
-        healthRecoveryRateChar2 = assistCharacter.getHPRecovRate();
-        RenderStandardGameplay.getInstance().setCharLife3(assistCharacter.getLife());
-        RenderStandardGameplay.getInstance().setCharMaxLife3(assistCharacter.getLife());
-        assistCharacter.setAiProf3();
-    }
-
-    public void prepareO(CharacterEnum characterEnum) {
-        minOppLife = 100;
-        currOppLife = 100;
-        minCharlife = 100;
-        currCharLife = 100;
-        setDamageCounter('o', 12);
-        switch (characterEnum) {
-            case SUBIYA:
-                opponentAssistant = new Raila();
-                opponent = new Subiya();
-                break;
-            case RAILA:
-                opponentAssistant = new Subiya();
-                opponent = new Raila();
-                break;
-            case LYNX:
-                opponentAssistant = new Aisha();
-                opponent = new Lynx();
-                break;
-            case AISHA:
-                opponentAssistant = new Lynx();
-                opponent = new Aisha();
-                break;
-            case RAVAGE:
-                opponentAssistant = new Jonah();
-                opponent = new Ravage();
-                break;
-            case ADE:
-                opponentAssistant = new Adam();
-                opponent = new Ade();
-                break;
-            case JONAH:
-                opponentAssistant = new Ravage();
-                opponent = new Jonah();
-                break;
-            case ADAM:
-                opponentAssistant = new Ade();
-                opponent = new Adam();
-                break;
-            case NOVA_ADAM:
-                opponentAssistant = new Ade();
-                opponent = new NovaAdam();
-                break;
-            case AZARIA:
-                opponentAssistant = new Lynx();
-                opponent = new Azaria();
-                break;
-            case SORROWE:
-                opponentAssistant = new Ade();
-                opponent = new Sorrowe();
-                break;
-            case THING:
-                opponentAssistant = new NovaAdam();
-                opponent = new Thing(0);
-                break;
-        }
-        nameOpp = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().selectedOppIndex = characterEnum.index();
-        opponentAssistantName = opponentAssistant.getEnum().name();
-
-        activityRecoveryRateOpp = opponent.getRecovSpeed();
-        healthRecoveryRateOpp = opponent.getHPRecovRate();
-        RenderStandardGameplay.getInstance().setOppLife(opponent.getLife());
-        RenderStandardGameplay.getInstance().setOppMaxLife(opponent.getLife());
-        opponent.setAiProf();
-
-        activityRecoveryRateOpp2 = opponentAssistant.getRecovSpeed();
-        healthRecoveryRateOpp2 = opponentAssistant.getHPRecovRate();
-        RenderStandardGameplay.getInstance().setOppLife2(opponentAssistant.getLife());
-        RenderStandardGameplay.getInstance().setOppMaxLife2(opponentAssistant.getLife());
-        opponentAssistant.setAiProf2();
+    public String getBraggingRights(int indx) {
+        return name + ": " + bragRights[indx];
     }
 
     /**
-     * Added 19/jan/2011 by SubiyaCryolite -
-     * resets every character
+     * Shall return the Character life
+     *
+     * @return character life
      */
-    public void resetCharacters() {
-        opponent.resetLimits();
-        character.resetLimits();
-        RenderCharacterSelectionScreen.getInstance().characterSelected = false;
-        RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+    public int getLife() {
+        return life;
+    }
+
+    /**
+     * Get the Character recovery rate
+     *
+     * @return activity recovery rate
+     */
+    public float getRecovSpeed() {
+        return actionRecoverRate;
+    }
+
+    /**
+     * Get the Character hp recover rate
+     *
+     * @return hp recovery rate
+     */
+    public float getHPRecovRate() {
+        return hpRecovRate;
+    }
+
+    /**
+     * Gets the character name
+     *
+     * @return character name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get the Character hit points
+     *
+     * @return Hit Points
+     */
+    public int getHitPoints() {
+        return hitPoints;
+    }
+
+    /**
+     * Set Character AI, opponent 1
+     */
+    public void setAiProf() {
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours5, 5);
+    }
+
+    /**
+     * Set Character AI, opponent 2
+     */
+    public void setAiProf2() {
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours5, 5);
+    }
+
+    /**
+     * Set Character AI, player 2
+     */
+    public void setAiProf3() {
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours1, 1);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours2, 2);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours3, 3);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours4, 4);
+        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours5, 5);
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    /**
+     * Added 19/January/2011 by SubiyaCryolite
+     * resets the Character limits after each fight
+     */
+    public void resetLimits() {
+        for (int index = 0; index < limit.length; index++) {
+            limit[index] = 0;
+        }
+    }
+
+    public final int getCelestiaMultiplier() {
+        return celestiaMultiplier;
+    }
+
+    public final void setCelestiaMultiplier(int value) {
+        celestiaMultiplier = value;
+    }
+
+    public final int getDamageMultiplier() {
+        return damageMultiplier;
+    }
+
+    public final void setDamageMultiplier(int value) {
+        damageMultiplier = value;
     }
 }

@@ -22,7 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,10 +66,10 @@ public class DrawUserLogin extends JPanel {
         g2d.setColor(Color.black);
         g2d.fillRoundRect(0, 0, 310, 82, 15, 10); //54+lines x 14
 
-        stat1 = JenesisLanguage.getInstance().getLine(118) + ": " + shortStr(LoginScreen.getInstance().strUser);
-        stat2 = JenesisLanguage.getInstance().getLine(119) + ": " + shortStr(LoginScreen.getInstance().strPoint);
+        stat1 = Language.getInstance().getLine(118) + ": " + shortStr(LoginScreen.getInstance().strUser);
+        stat2 = Language.getInstance().getLine(119) + ": " + shortStr(LoginScreen.getInstance().strPoint);
         cal.setTimeInMillis(Integer.parseInt(LoginScreen.getInstance().strPlayTime) * 1000);
-        stat3 = JenesisLanguage.getInstance().getLine(120) + ": " + timeCal(LoginScreen.getInstance().strPlayTime);
+        stat3 = Language.getInstance().getLine(120) + ": " + timeCal(LoginScreen.getInstance().strPlayTime);
 
 
         g2d.setColor(Color.WHITE);

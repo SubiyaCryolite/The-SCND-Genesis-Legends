@@ -21,12 +21,13 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.GamePadController;
+import com.scndgen.legends.render.RenderGameplay;
+import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.arefactored.render.RenderStoryMenu;
+import com.scndgen.legends.mode.StoryMenu;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.attacks.AttacksOpp1;
 import com.scndgen.legends.attacks.AttacksOpp2;
 import com.scndgen.legends.attacks.AttacksPlyr1;
@@ -36,10 +37,9 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.executers.ExecuterMovesCharOnline;
 import com.scndgen.legends.executers.ExecuterMovesOppOnline;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.arefactored.mode.StoryMenu;
-import com.scndgen.legends.threads.ThreadClashSystem;
+import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ThreadGameInstance;
-import com.scndgen.legends.threads.ThreadMP3;
+import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
@@ -63,20 +63,19 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public int hostTime;
     public boolean inStoryPane;
     public boolean isGameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
-    public int item = 0, storedX = 99, storedY = 99, compassDir2;
+    public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
     public ModeEnum currentScreen = ModeEnum.EMPTY;
     RandomAccessFile rand;
     private AttacksOpp1 oppenentEntity;
     private AttacksOpp2 oppenentEntity2;
     private AttacksPlyr1 characterEntity;
     private AttacksPlyr2 characterEntity2;
-    private boolean[] buttonz;
-    private boolean[] buttons;
+    private boolean[] buttonPressed;
     //sever
     private jenesisServer server;
     private InetAddress ServerAddress;
     private int serverLatency;
-    private int leftyXOffset, onlineClients = 0, compassDir;
+    private int leftyXOffset, onlineClients = 0, hatDir;
     private boolean messageSent = false, isWaiting = true, isNotRepainting = true, doneChilling = true;
     private ExecuterMovesOppOnline playerHost2, playerClient1;
     private ExecuterMovesCharOnline playerHost1, playerClient2;
@@ -99,20 +98,20 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private ArrayList imageList;
     private Image ico16, ico22, ico24, ico32, ico48, ico72, ico96, ico128, ico256;
     private WindowMain gameWindow;
-    private ThreadMP3 bgMus;
+    private AudioPlayback backgroundMusic;
     private int topY, topX, columns, vspacer, hspacer, rows;
 
     public WindowMain(String nameOfUser, String mode) {
         try {
-            if (GamePadController.getInstance().NUM_BUTTONS > 0) {
+            if (JenesisGamePad.getInstance().NUM_BUTTONS > 0) {
                 controller = true;
-                buttonz = new boolean[GamePadController.getInstance().NUM_BUTTONS];
+                buttonPressed = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
                 pollController();
             }
         } catch (Exception e) {
         }
-        bgMus = new ThreadMP3(ThreadMP3.menuMus(), false);
-        bgMus.play();
+        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), false);
+        backgroundMusic.play();
         pix = new JenesisImageLoader();
         gameMode = mode;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
@@ -134,7 +133,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             client = new jenesisClient(LoginScreen.getInstance().getIP());
         }
         setUndecorated(true);
-        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
+        setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         ico16 = pix.loadImage("images/GameIco16.png");
         ico22 = pix.loadImage("images/GameIco22.png");
         ico24 = pix.loadImage("images/GameIco24.png");
@@ -179,7 +178,6 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         } else {
             setContentPane(RenderCharacterSelectionScreen.getInstance());
         }
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(this);
         addMouseMotionListener(this);
@@ -200,7 +198,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void stopMus() {
-        bgMus.close();
+        backgroundMusic.close();
     }
 
     /**
@@ -226,7 +224,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Polls game pads for inputC data
+     * Polls game pads for dataInputStream data
      */
     private void pollController() {
         new Thread() {
@@ -235,72 +233,55 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             public void run() {
                 try {
                     do {
-                        GamePadController.getInstance().poll();
-
+                        JenesisGamePad.getInstance().poll();
                         //update bottons
-                        buttonz = GamePadController.getInstance().getButtons();
+                        buttonPressed = JenesisGamePad.getInstance().getButtons();
                         // get compass direction for the two analog sticks
-                        compassDir2 = GamePadController.getInstance().getXYStickDir();
-                        if (compassDir2 == GamePadController.getInstance().NORTH) {
+                        xyzStickDir = JenesisGamePad.getInstance().getXYStickDir();
+                        if (xyzStickDir == JenesisGamePad.getInstance().NORTH) {
                             up();
-                        } else if (compassDir2 == GamePadController.getInstance().SOUTH) {
+                        } else if (xyzStickDir == JenesisGamePad.getInstance().SOUTH) {
                             down();
-                        } else if (compassDir2 == GamePadController.getInstance().WEST) {
+                        } else if (xyzStickDir == JenesisGamePad.getInstance().WEST) {
                             left();
-                        } else if (compassDir2 == GamePadController.getInstance().EAST) {
+                        } else if (xyzStickDir == JenesisGamePad.getInstance().EAST) {
                             right();
                         }
 
 
                         // get POV hat compass direction
-                        compassDir = GamePadController.getInstance().getHatDir();
-                        {
-                            if (compassDir == GamePadController.getInstance().SOUTH) {
-                                down();
-                            }
-
-                            if (compassDir == GamePadController.getInstance().NORTH) {
-                                up();
-                            }
-
-                            if (compassDir == GamePadController.getInstance().WEST) {
-                                left();
-                            }
-
-                            if (compassDir == GamePadController.EAST) {
-                                right();
-                            }
+                        hatDir = JenesisGamePad.getInstance().getHatDir();
+                        if (hatDir == JenesisGamePad.getInstance().SOUTH) {
+                            down();
                         }
-
+                        if (hatDir == JenesisGamePad.getInstance().NORTH) {
+                            up();
+                        }
+                        if (hatDir == JenesisGamePad.getInstance().WEST) {
+                            left();
+                        }
+                        if (hatDir == JenesisGamePad.EAST) {
+                            right();
+                        }
                         //button one
-                        if (buttonz[0]) {
+                        if (buttonPressed[0]) {
                             back();
                         }
-
-                        if (buttonz[1]) {
+                        if (buttonPressed[1]) {
                             trigger();
                         }
-
-                        if (buttonz[2]) {
+                        if (buttonPressed[2]) {
                             accept();
                         }
-
-                        if (buttonz[3]) {
+                        if (buttonPressed[3]) {
                             escape();
                         }
-
-                        if (buttonz[5]) {
+                        if (buttonPressed[5]) {
                             triggerFury('c');
                         }
-
-                        // get compass direction for the two analog sticks
-                        compassDir = GamePadController.getInstance().getXYStickDir();
-
-                        compassDir = GamePadController.getInstance().getZRZStickDir();
-
-                        // get button settings
-                        buttons = GamePadController.getInstance().getButtons();
-
+                        hatDir = JenesisGamePad.getInstance().getXYStickDir();
+                        hatDir = JenesisGamePad.getInstance().getZRZStickDir();
+                        buttonPressed = JenesisGamePad.getInstance().getButtons();
                         this.sleep(33);
                     } while (true);
                 } catch (Exception e) {
@@ -388,9 +369,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             characterEntity2 = new AttacksPlyr2();
         }
         stopMus();
-        RenderStandardGameplay.getInstance().newInstance();
-        setContentPane(RenderStandardGameplay.getInstance());
-        RenderStandardGameplay.getInstance().startFight();
+        RenderGameplay.getInstance().newInstance();
+        setContentPane(RenderGameplay.getInstance());
+        RenderGameplay.getInstance().startFight();
         reSize("game");
 
     }
@@ -422,8 +403,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         characterEntity = new AttacksPlyr1();
         currentScreen = ModeEnum.newGame;
         stopMus();
-        setContentPane(RenderStandardGameplay.getInstance());
-        RenderStandardGameplay.getInstance().startFight();
+        setContentPane(RenderGameplay.getInstance());
+        RenderGameplay.getInstance().startFight();
         reSize("game");
     }
 
@@ -432,10 +413,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     public void backToMenuScreen() {
         MainMenu.getMenu().showModes();
-        bgMus.stop();
-        bgMus.close();
+        backgroundMusic.stop();
+        backgroundMusic.close();
         dispose();
-        RenderStandardGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().killGameInstance();
         focus();
     }
 
@@ -448,8 +429,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         characterEntity = new AttacksPlyr1();
         currentScreen = ModeEnum.newGame;
         stopMus();
-        setContentPane(RenderStandardGameplay.getInstance());
-        RenderStandardGameplay.getInstance().startFight();
+        setContentPane(RenderGameplay.getInstance());
+        RenderGameplay.getInstance().startFight();
         reSize("game");
 
     }
@@ -477,7 +458,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         try {
             for (int nm = 0; nm < possibilities.length; nm++) {
                 if (s.equals(possibilities[nm])) {
-                    RenderStandardGameplay.getInstance().bgLocation = "images/bgBG" + (nm + 1) + ".png"; //Assign arena
+                    RenderGameplay.getInstance().bgLocation = "images/bgBG" + (nm + 1) + ".png"; //Assign arena
                 }
             }
         } catch (Exception e) {
@@ -525,11 +506,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         isGameRunning = false;
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         currentScreen = ModeEnum.charSelectScreen;
-        RenderStandardGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().killGameInstance();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
         RenderCharacterSelectionScreen.getInstance().refreshSelections();
-        bgMus = new ThreadMP3(ThreadMP3.menuMus(), true);
-        bgMus.play();
+        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
+        backgroundMusic.play();
         reSize("menu");
         focus();
     }
@@ -539,16 +520,16 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     public void backToCharSelect2() {
         isGameRunning = false;
-        RenderStandardGameplay.getInstance().getGameInstance().isPaused = false;
-        RenderStandardGameplay.getInstance().getGameInstance().terminateThread();
+        RenderGameplay.getInstance().getGameInstance().isPaused = false;
+        RenderGameplay.getInstance().getGameInstance().terminateThread();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
         RenderCharacterSelectionScreen.getInstance().refreshSelections();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
-        RenderStandardGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().killGameInstance();
         RenderCharacterSelectionScreen.getInstance().systemNotice("Canceled Match");
         currentScreen = ModeEnum.charSelectScreen;
-        bgMus = new ThreadMP3(ThreadMP3.menuMus(), true);
-        bgMus.play();
+        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
+        backgroundMusic.play();
         reSize("menu");
         focus();
         stage.defValue();
@@ -582,7 +563,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * @param mess - the message to display
      */
     public void systemNotice(String mess) {
-        RenderStandardGameplay.getInstance().systemNotice(mess);
+        RenderGameplay.getInstance().systemNotice(mess);
     }
 
     /**
@@ -591,7 +572,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * @param mess - the message to display
      */
     public void systemNotice2(String mess) {
-        RenderStandardGameplay.getInstance().systemNotice2(mess);
+        RenderGameplay.getInstance().systemNotice2(mess);
     }
 
     /**
@@ -604,7 +585,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 getStory().getStoryInstance().firstRun = true;
             }
             //unpause if match was paused
-            if (RenderStandardGameplay.getInstance().getGameInstance().isPaused) {
+            if (RenderGameplay.getInstance().getGameInstance().isPaused) {
                 pause();
             }
             stage.selectedStage = false;
@@ -627,9 +608,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             @SuppressWarnings("static-access")
             public void run() {
                 try {
-                    GamePadController.getInstance().setRumbler(true, power);
+                    JenesisGamePad.getInstance().setRumbler(true, power);
                     this.sleep(time);
-                    GamePadController.getInstance().setRumbler(false, 0.0f);
+                    JenesisGamePad.getInstance().setRumbler(false, 0.0f);
                 } catch (Exception e) {
                 }
             }
@@ -651,7 +632,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     stage.moveUp();
                 }
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().upItem();
+                RenderGameplay.getInstance().upItem();
             }
         }
         menuLatency();
@@ -672,7 +653,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     stage.moveDown();
                 }
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().downItem();
+                RenderGameplay.getInstance().downItem();
             }
         }
         menuLatency();
@@ -693,7 +674,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     stage.moveLeft();
                 }
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().prevAnim();
+                RenderGameplay.getInstance().prevAnim();
             }
         }
         menuLatency();
@@ -711,7 +692,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 stage.moveRight();
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().nextAnim();
+                RenderGameplay.getInstance().nextAnim();
             }
         }
         menuLatency();
@@ -726,7 +707,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 if (ThreadGameInstance.isPaused == false) {
                     //in game, no story sequence
                     if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
-                        RenderStandardGameplay.getInstance().moveSelected();
+                        RenderGameplay.getInstance().moveSelected();
                     } //in game, during story sequence
                     else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == true) {
                         getStory().getStoryInstance().skipDialogue();
@@ -743,9 +724,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                             if (getGameMode().equalsIgnoreCase(singlePlayer)
                                     || getGameMode().equalsIgnoreCase(lanClient)
                                     || getGameMode().equalsIgnoreCase(lanHost)) {
-                                RenderStandardGameplay.getInstance().getGameInstance().closingThread(1);
+                                RenderGameplay.getInstance().getGameInstance().closingThread(1);
                             } else {
-                                RenderStandardGameplay.getInstance().getGameInstance().closingThread(0);
+                                RenderGameplay.getInstance().getGameInstance().closingThread(0);
                             }
                         }
                     }
@@ -810,14 +791,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     RenderCharacterSelectionScreen.getInstance().refreshSelections();
                 }
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().unQueMove();
+                RenderGameplay.getInstance().unQueMove();
             }
         }
         menuLatency();
     }
 
     public void triggerFury(char who) {
-        RenderStandardGameplay.getInstance().triggerFury(who);
+        RenderGameplay.getInstance().triggerFury(who);
     }
 
     /**
@@ -826,7 +807,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private void trigger() {
         if (doneChilling) {
             if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().attack();
+                RenderGameplay.getInstance().attack();
             }
         }
         menuLatency();
@@ -891,12 +872,12 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 stage.screenShot();
             } else if (getIsGameRunning()) {
-                RenderStandardGameplay.getInstance().takeScreenShot();
+                RenderGameplay.getInstance().takeScreenShot();
             }
         } else if (getIsGameRunning()) {
             //use T for testing stuff
             if (keyCode == KeyEvent.VK_T) {
-                //RenderStandardGameplay.getInstance().systemNotice("Testing");
+                //RenderGameplay.getInstance().systemNotice("Testing");
             }
 
             if (keyCode == KeyEvent.VK_L) {
@@ -913,16 +894,16 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         //when fighting
         if (isGameRunning) {
-            if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.storySequence == false) {
+            if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.storySequence == false) {
                 int count = mwe.getWheelRotation();
 
                 //down - positive values
                 if (count >= 0) {
-                    RenderStandardGameplay.getInstance().prevAnim();
+                    RenderGameplay.getInstance().prevAnim();
                 }
                 //up -negative values
                 if (count < 0) {
-                    RenderStandardGameplay.getInstance().nextAnim();
+                    RenderGameplay.getInstance().nextAnim();
                 }
             }
         }
@@ -952,17 +933,17 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 if (m.getButton() == MouseEvent.BUTTON1) {
                     //selecting move
                     if (m.getX() > (29 + leftyXOffset) && m.getX() < (220 + leftyXOffset) && (m.getY() > 358)) {
-                        RenderStandardGameplay.getInstance().moveSelected();
+                        RenderGameplay.getInstance().moveSelected();
                     }
 
                     //prev
                     if (m.getX() < (29 + leftyXOffset)) {
-                        RenderStandardGameplay.getInstance().prevAnim();
+                        RenderGameplay.getInstance().prevAnim();
                     }
 
                     //next
                     if (m.getX() > (220 + leftyXOffset) && m.getX() < (305 + leftyXOffset)) {
-                        RenderStandardGameplay.getInstance().nextAnim();
+                        RenderGameplay.getInstance().nextAnim();
                     } else if ((m.getX() > 25 && m.getX() < 46) && (m.getY() > 190 && m.getY() < 270)) {
                         //activate fury via click
                         triggerFury('c');
@@ -976,7 +957,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
                 //right click
                 if (m.getButton() == MouseEvent.BUTTON3) {
-                    RenderStandardGameplay.getInstance().unQueMove();
+                    RenderGameplay.getInstance().unQueMove();
                 }
             }
         }
@@ -1178,26 +1159,26 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             }
         } else if (getIsGameRunning()) {
             //when fighting
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false && RenderStandardGameplay.getInstance().dnladng) {
+            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false && RenderGameplay.getInstance().dnladng) {
                 //browse moves
                 if (m.getX() > (29 + leftyXOffset) && m.getX() < (436 + leftyXOffset)) {
-                    if (m.getY() > (int) (373 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (390 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (373 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (390 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 0;
                     }
 
-                    if (m.getY() > (int) (390 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (407 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (390 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (407 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 1;
                     }
 
-                    if (m.getY() > (int) (407 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (420 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (407 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (420 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 2;
                     }
 
-                    if (m.getY() > (int) (420 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (435 * RenderStandardGameplay.getInstance().getscaleY()) + mouseYoffset) {
+                    if (m.getY() > (int) (420 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (435 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
                         item = 3;
                     }
 
-                    RenderStandardGameplay.getInstance().thisItem(item);
+                    RenderGameplay.getInstance().thisItem(item);
                 }
             }
         }
@@ -1236,14 +1217,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private void pause() {
         if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(storyMode) || getGameMode().equalsIgnoreCase(singlePlayer2)) {
             if (ThreadGameInstance.isPaused == false) {
-                RenderStandardGameplay.getInstance().getGameInstance().pauseGame();
-                RenderStandardGameplay.getInstance().pauseThreads();
+                RenderGameplay.getInstance().getGameInstance().pauseGame();
+                RenderGameplay.getInstance().pauseThreads();
                 if (ThreadGameInstance.storySequence == true) {
                     getStory().getStoryInstance().pauseDialogue();
                 }
             } else {
-                RenderStandardGameplay.getInstance().start();
-                RenderStandardGameplay.getInstance().resumeThreads();
+                RenderGameplay.getInstance().start();
+                RenderGameplay.getInstance().resumeThreads();
                 if (ThreadGameInstance.storySequence == true) {
                     getStory().getStoryInstance().resumeDialogue();
                 }
@@ -1327,7 +1308,6 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         private ServerSocket server;
         private Socket connection;
         private Thread t;
-        private String line;
         private boolean serverIsRunning;
 
         /**
@@ -1392,7 +1372,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             while (serverIsRunning) {
                 try {
                     getStreams();
-                    ReadMassage();
+                    readMessage();
                     t.sleep(serverLatency);
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
@@ -1407,7 +1387,6 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             try {
                 output = new DataOutputStream(connection.getOutputStream());
                 output.flush();
-
                 input = new DataInputStream(connection.getInputStream());
             } catch (Exception e) {
                 System.err.println(e.getMessage());
@@ -1417,10 +1396,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         /**
          * Read incoming data
          */
-        public void ReadMassage() {
+        public void readMessage() {
             try {
-
-                line = input.readUTF();
+                String line = input.readUTF();
                 if (line.endsWith("quit")) {
                     closeServer();
                 } else if (line.endsWith("player_QSLV")) {
@@ -1494,7 +1472,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 else if (line.contains("oppClsh")) {
                     System.out.println("THis is it " + line.substring(7));
                     int val = Integer.parseInt(line.substring(7));
-                    ThreadClashSystem.setOpp(val);
+                    ClashSystem.getInstance().setOpp(val);
                 }
             } catch (Exception ex) {
                 System.err.println(ex);
@@ -1522,11 +1500,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
     public class jenesisClient implements Runnable {
 
-        private DataOutputStream outputC;
-        private DataInputStream inputC;
-        private Socket clientx;
-        private Thread t;
-        private String line, IPaddress;
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private Socket socket;
+        private Thread thread;
+        private String IPaddress;
         private boolean clientIsRunning;
 
         /**
@@ -1535,8 +1513,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         public jenesisClient(String ip) {
             clientIsRunning = true;
             IPaddress = ip;
-            t = new Thread(this);
-            t.start();
+            thread = new Thread(this);
+            thread.start();
         }
 
         @Override
@@ -1548,9 +1526,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             connectToServer(IPaddress);
             while (clientIsRunning) {
                 getStreams();
-                ReadMassage();
+                readMassage();
                 try {
-                    t.sleep(serverLatency);
+                    thread.sleep(serverLatency);
                 } catch (InterruptedException ie) {
                     JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
                     backToCharSelect();
@@ -1567,7 +1545,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         private void connectToServer(String hostname) {
             try {
                 clientIsRunning = true;
-                clientx = new Socket(InetAddress.getByName(hostname), PORT);
+                socket = new Socket(InetAddress.getByName(hostname), PORT);
                 System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
             } catch (IOException ex) {
                 System.err.println(ex);
@@ -1580,9 +1558,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
          */
         private void getStreams() {
             try {
-                outputC = new DataOutputStream(clientx.getOutputStream());
-                outputC.flush();
-                inputC = new DataInputStream(clientx.getInputStream());
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataOutputStream.flush();
+                dataInputStream = new DataInputStream(socket.getInputStream());
             } catch (Exception e) {
                 System.err.println(e.getMessage());
                 e.printStackTrace();
@@ -1592,28 +1570,22 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         /**
          * Read incoming data stream
          */
-        public void ReadMassage() {
+        public void readMassage() {
             try {
-
-                line = inputC.readUTF();
-
+                String line = dataInputStream.readUTF();
                 if (line.endsWith("attack")) {
                     int back = line.length();
                     int y1 = Integer.parseInt("" + line.substring(back - 15, back - 13) + "");
                     int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
                     int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                     int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-
                     if (getGameMode().equalsIgnoreCase(lanHost)) {
                         playerClient2 = new ExecuterMovesCharOnline(y1, y2, y3, y4, 'n');
                     }
-
                     if (getGameMode().equalsIgnoreCase(lanClient)) {
                         playerClient1 = new ExecuterMovesOppOnline(y1, y2, y3, y4, 'n');
                     }
-
                     System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
-                    //SendMassage(client,client.socket().getInetAddress()+" ATTACKED YOU!!!");
                     System.out.println("\n");
                 } else if (line.endsWith("pauseGame")) {
                     //pauseMethod();
@@ -1721,16 +1693,15 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 else if (line.contains("oppClsh")) {
                     System.out.println("THis is it " + line.substring(7));
                     int val = Integer.parseInt(line.substring(7));
-                    ThreadClashSystem.setOpp(val);
+                    ClashSystem.getInstance().setOpp(val);
                 } //rejected
                 else if (line.contains("getLost")) ;
                 {
-                    //JOptionPane.showMessageDialog(null, "HARSH!, The dude doesnt want to fight you -_-"+messageSent+" "+getGameMode(),"Ouchies",JOptionPane.ERROR_MESSAGE);
-                    //sendToServer("quit");
-                    //closeTheClient();
-                    //backToMenuScreen();
+                    JOptionPane.showMessageDialog(null, "HARSH!, The dude doesnt want to fight you -_-" + messageSent + " " + getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                    sendToServer("quit");
+                    closeTheClient();
+                    backToMenuScreen();
                 }
-
             } catch (Exception ex) {
                 System.err.println(ex);
                 ex.printStackTrace();
@@ -1746,11 +1717,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         public void sendData(String mess) {
             try {
                 last = mess;
-                outputC.writeUTF(mess);
-                outputC.flush();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
+                dataOutputStream.writeUTF(mess);
+                dataOutputStream.flush();
+            } catch (Exception exception) {
+                exception.printStackTrace(System.err);
             }
         }
 
@@ -1760,14 +1730,12 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         public void closeClient() {
             try {
                 clientIsRunning = false;
-                outputC.close();
-                inputC.close();
-                clientx.close();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
+                dataOutputStream.close();
+                dataInputStream.close();
+                socket.close();
+            } catch (Exception exception) {
+                exception.printStackTrace(System.err);
             }
         }
     }
-//AAAA
 }

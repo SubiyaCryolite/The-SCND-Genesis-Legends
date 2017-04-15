@@ -23,16 +23,16 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.mode.StandardGameplay;
-import com.scndgen.legends.arefactored.controller.StoryMode;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.arefactored.render.RenderStoryMenu;
+import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.executers.ExecuterMovesChar;
 import com.scndgen.legends.executers.ExecuterMovesChar2;
 import com.scndgen.legends.executers.ExecuterMovesOpp;
 import com.scndgen.legends.executers.ExecuterMovesOpp2;
 import com.scndgen.legends.menus.RenderStageSelect;
+import com.scndgen.legends.mode.Gameplay;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.windows.WindowMain;
 import com.scndgen.legends.windows.WindowOptions;
 
@@ -54,7 +54,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public static int time, count2;
     public static boolean instance, storySequence;
     private static boolean incrementActivityBar = true, incrementActivityBarOpp = true, incrementActivityBarOpp2 = true, incrementActivityBarChar2 = true;
-    private final StandardGameplay standardGameplay;
+    private final Gameplay gameplay;
     public int taskComplete;
     public int taskRun = 0;
     public int feeCol;
@@ -64,7 +64,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public int time1 = 10, time2 = 10, time3 = 10;
     public boolean aiAttack = false, aiRunning = false, aiRunning2 = false, aiRunning3 = false;
     public Achievements ach;
-    public ThreadMP3 loseMus, winMus;
+    public AudioPlayback loseMus, winMus;
     private Thread thread;
     private Timer timer;
     //recov char HP
@@ -95,8 +95,8 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private int matchDuration, playTimeCounter;
 
     //indicates if game is running, controls game over screen and Achievements which require wins
-    public ThreadGameInstance(int forWho, StandardGameplay standardGameplay) {
-        this.standardGameplay = standardGameplay;
+    public ThreadGameInstance(int forWho, Gameplay gameplay) {
+        this.gameplay = gameplay;
         musicStr = RenderStageSelect.getTrack();
         newInstance();
     }
@@ -112,7 +112,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             instance = true;
             try {
                 thread.sleep(33); // fps
-                standardGameplay.matchStatus();
+                gameplay.matchStatus();
                 ach.scan();
             } catch (InterruptedException ex) {
                 Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
@@ -317,7 +317,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         try {
 
             isPaused = true;
-            RenderStandardGameplay.getInstance().pauseThreads();
+            RenderGameplay.getInstance().pauseThreads();
             thread.suspend();
             executorAI.pause();
             executorPlyr.pause();
@@ -332,7 +332,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void resumeGame() {
         try {
             isPaused = false;
-            RenderStandardGameplay.getInstance().resumeThreads();
+            RenderGameplay.getInstance().resumeThreads();
             thread.resume();
             executorAI.resume();
             executorPlyr.resume();
@@ -348,23 +348,23 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         gameRunning = false;
         isGameOver = true;
         LoginScreen.getInstance().getMenu().getMain().freeToSave = true;
-        RenderStandardGameplay.getInstance().closeAudio();
+        RenderGameplay.getInstance().closeAudio();
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
         //if not story mode, increment char usage
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().selectedCharIndex);
         }
-        if (standardGameplay.hasWon()) {
-            RenderStandardGameplay.getInstance().showWinLabel();
+        if (gameplay.hasWon()) {
+            RenderGameplay.getInstance().showWinLabel();
             winMus.play();
         } else {
-            RenderStandardGameplay.getInstance().showLoseLabel();
+            RenderGameplay.getInstance().showLoseLabel();
             loseMus.play();
         }
         RenderStageSelect.selectedStage = false;
         RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
-        RenderStandardGameplay.getInstance().drawAchievements();
+        RenderGameplay.getInstance().drawAchievements();
     }
 
     /**
@@ -458,7 +458,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         thread.stop(); //stop this thread
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
-            if (standardGameplay.hasWon()) {
+            if (gameplay.hasWon()) {
                 LoginScreen.getInstance().getMenu().getMain().getStory().incrementMode();
                 winMus.play();
             } else {
@@ -485,7 +485,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         isGameOver = true;
         instance = false;
         RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
-        RenderStandardGameplay.getInstance().closeAudio();
+        RenderGameplay.getInstance().closeAudio();
     }
 
     public void timeOut(int time) {
@@ -584,18 +584,20 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         isGameOver = false;
         ach.newInstance();
         LoginScreen.getInstance().newGame = true;
-        winMus = new ThreadMP3(ThreadMP3.winSound(), false);
-        loseMus = new ThreadMP3(ThreadMP3.loseSound(), false);
+        winMus = new AudioPlayback(AudioPlayback.winSound(), false);
+        loseMus = new AudioPlayback(AudioPlayback.loseSound(), false);
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
-            RenderStandardGameplay.getInstance().playBGSound();
+            RenderGameplay.getInstance().playBGSound();
             musNotice();
             LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         }
-
-        thread = new Thread(this);
-        thread.setName("MAIN GAME LOGIC THREAD");
-        thread.setPriority(5);
-        thread.start();
+        if (thread != null) {
+            thread.resume();
+        } else {
+            thread = new Thread(this);
+            thread.setName("MAIN GAME LOGIC THREAD");
+            thread.start();
+        }
         LoginScreen.getInstance().getMenu().getMain().reSize("menu");
         count2 = 0;
     }
@@ -609,7 +611,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
      */
     public void playMusicNow() {
         try {
-            RenderStandardGameplay.getInstance().playBGSound();
+            RenderGameplay.getInstance().playBGSound();
             LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());

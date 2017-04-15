@@ -23,7 +23,7 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,14 +81,14 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         box.setOpaque(false);
 
         logoPic = new SpecialDrawMenuBGs();
-        comicTxtFreqStr = new String[]{JenesisLanguage.getInstance().getLine(1), JenesisLanguage.getInstance().getLine(2), JenesisLanguage.getInstance().getLine(3), JenesisLanguage.getInstance().getLine(4)};
-        mode = new String[]{JenesisLanguage.getInstance().getLine(22), JenesisLanguage.getInstance().getLine(23), JenesisLanguage.getInstance().getLine(24), JenesisLanguage.getInstance().getLine(25)};
-        diffSettOpt = new String[]{JenesisLanguage.getInstance().getLine(26), JenesisLanguage.getInstance().getLine(27), JenesisLanguage.getInstance().getLine(28), JenesisLanguage.getInstance().getLine(29), JenesisLanguage.getInstance().getLine(30)};
-        preset = new String[]{JenesisLanguage.getInstance().getLine(32), JenesisLanguage.getInstance().getLine(33)};
+        comicTxtFreqStr = new String[]{Language.getInstance().getLine(1), Language.getInstance().getLine(2), Language.getInstance().getLine(3), Language.getInstance().getLine(4)};
+        mode = new String[]{Language.getInstance().getLine(22), Language.getInstance().getLine(23), Language.getInstance().getLine(24), Language.getInstance().getLine(25)};
+        diffSettOpt = new String[]{Language.getInstance().getLine(26), Language.getInstance().getLine(27), Language.getInstance().getLine(28), Language.getInstance().getLine(29), Language.getInstance().getLine(30)};
+        preset = new String[]{Language.getInstance().getLine(32), Language.getInstance().getLine(33)};
 
         gameRating = 0;
 
-        reset = new JButton(JenesisLanguage.getInstance().getLine(31));
+        reset = new JButton(Language.getInstance().getLine(31));
         reset.setPreferredSize(new Dimension(64, 32));
         reset.addActionListener(this);
 
@@ -123,7 +123,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panMusic = new JPanel(new FlowLayout());
         panMusic.add(audio);
 
-        ratingL = new JLabel(JenesisLanguage.getInstance().getLine(5) + gameRating + "/10");
+        ratingL = new JLabel(Language.getInstance().getLine(5) + gameRating + "/10");
         alterJLabel(ratingL);
         panGameRating = new JPanel(new GridLayout(1, 2));
         panGameRating.add(ratingL);
@@ -139,7 +139,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         diffSett = new JComboBox(diffSettOpt);
         diffSett.setSelectedIndex(whichOne());
         diffSett.addActionListener(this);
-        opLabel1 = new JLabel(JenesisLanguage.getInstance().getLine(6));
+        opLabel1 = new JLabel(Language.getInstance().getLine(6));
         panDifficulty = new JPanel(new GridLayout(1, 2));
         panDifficulty.add(opLabel1);
         panDifficulty.add(diffSett);
@@ -156,17 +156,17 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         txtSpeedCombo = new JComboBox(mode);
         txtSpeedCombo.setSelectedIndex(2);
         txtSpeedCombo.addActionListener(this);
-        opLabel4 = new JLabel(JenesisLanguage.getInstance().getLine(7));
+        opLabel4 = new JLabel(Language.getInstance().getLine(7));
         panTextSpeed = new JPanel(new GridLayout(1, 2));
         panTextSpeed.add(opLabel4);
         panTextSpeed.add(txtSpeedCombo);
 
-        opLabel5 = new JLabel(JenesisLanguage.getInstance().getLine(8));
+        opLabel5 = new JLabel(Language.getInstance().getLine(8));
         graphicsCombo = new JComboBox(preset);
         graphics = LoginScreen.getInstance().graffix;
         graphicsCombo.setSelectedItem(LoginScreen.getInstance().graffix);
         graphicsCombo.addActionListener(this);
-        graphicsCombo.setToolTipText(JenesisLanguage.getInstance().getLine(9));
+        graphicsCombo.setToolTipText(Language.getInstance().getLine(9));
         panGraffix = new JPanel(new GridLayout(1, 2));
         panGraffix.add(opLabel5);
         panGraffix.add(graphicsCombo);
@@ -174,14 +174,14 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         frameR = new JComboBox(frames);
         frameR.addActionListener(this);
         frameR.setSelectedItem(LoginScreen.getInstance().frames + "");
-        opLabel6 = new JLabel(JenesisLanguage.getInstance().getLine(10));
+        opLabel6 = new JLabel(Language.getInstance().getLine(10));
         panFrameRate = new JPanel(new GridLayout(1, 2));
         panFrameRate.add(opLabel6);
         panFrameRate.add(frameR);
 
-        opLabel2 = new JLabel(JenesisLanguage.getInstance().getLine(11));
-        soundOn = new JToggleButton(JenesisLanguage.getInstance().getLine(12));
-        soundOff = new JToggleButton(JenesisLanguage.getInstance().getLine(13));
+        opLabel2 = new JLabel(Language.getInstance().getLine(11));
+        soundOn = new JToggleButton(Language.getInstance().getLine(12));
+        soundOff = new JToggleButton(Language.getInstance().getLine(13));
         soundOn.addActionListener(this);
         soundOff.addActionListener(this);
 
@@ -200,7 +200,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panSound.add(soundOff);
         panSound.setOpaque(false);
 
-        opLabel3 = new JLabel(JenesisLanguage.getInstance().getLine(14));
+        opLabel3 = new JLabel(Language.getInstance().getLine(14));
         timeDur = new JComboBox(times);
         timeDur.setSelectedItem("" + LoginScreen.getInstance().timePref);
         timeDur.addActionListener(this);
@@ -208,15 +208,15 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panTimeDur.add(opLabel3);
         panTimeDur.add(timeDur);
 
-        opLabel7 = new JLabel(JenesisLanguage.getInstance().getLine(15));
-        updateOn = new JToggleButton(JenesisLanguage.getInstance().getLine(12));
-        updateOff = new JToggleButton(JenesisLanguage.getInstance().getLine(13));
+        opLabel7 = new JLabel(Language.getInstance().getLine(15));
+        updateOn = new JToggleButton(Language.getInstance().getLine(12));
+        updateOff = new JToggleButton(Language.getInstance().getLine(13));
         updateOn.addActionListener(this);
         updateOff.addActionListener(this);
 
 
         pan3 = new JPanel();
-        updateButton = new JButton(JenesisLanguage.getInstance().getLine(16));
+        updateButton = new JButton(Language.getInstance().getLine(16));
         updateButton.addActionListener(this);
         pan3.add(updateButton);
         /*
@@ -238,17 +238,17 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panUpdates.add(updateOff);
 
         panLefty = new JPanel(new GridLayout(1, 2));
-        lefty = new JComboBox(new String[]{JenesisLanguage.getInstance().getLine(172), JenesisLanguage.getInstance().getLine(171)});
+        lefty = new JComboBox(new String[]{Language.getInstance().getLine(172), Language.getInstance().getLine(171)});
         lefty.setSelectedIndex(LoginScreen.getInstance().getIsLeftyInt());
         lefty.addActionListener(this);
-        opLabel10 = new JLabel(JenesisLanguage.getInstance().getLine(173));
+        opLabel10 = new JLabel(Language.getInstance().getLine(173));
         panLefty.add(opLabel10);
         panLefty.add(lefty);
 
         comicT = new JComboBox(comicTxtFreqStr);
         comicT.setSelectedIndex(LoginScreen.getInstance().comicPicOcc);
         comicT.addActionListener(this);
-        opLabel8 = new JLabel(JenesisLanguage.getInstance().getLine(17));
+        opLabel8 = new JLabel(Language.getInstance().getLine(17));
         panComicText = new JPanel(new GridLayout(1, 2));
         panComicText.add(opLabel8);
         panComicText.add(comicT);
@@ -260,21 +260,21 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         } else {
             cont.setSelected(false);
         }
-        opLabel9 = new JLabel(JenesisLanguage.getInstance().getLine(18));
+        opLabel9 = new JLabel(Language.getInstance().getLine(18));
         panController = new JPanel(new GridLayout(1, 2));
         panController.add(opLabel9);
         panController.add(cont);
 
-        langSett = new JComboBox(JenesisLanguage.getInstance().getSupportedLanguages());
+        langSett = new JComboBox(Language.getInstance().getSupportedLanguages());
         langSett.setSelectedIndex(LoginScreen.getInstance().getSelLang());
         langSett.addActionListener(this);
-        opLabel11 = new JLabel(JenesisLanguage.getInstance().getLine(19));
+        opLabel11 = new JLabel(Language.getInstance().getLine(19));
         panLanguage = new JPanel(new GridLayout(1, 2));
         panLanguage.add(opLabel11);
         panLanguage.add(langSett);
 
 
-        save = new JButton(JenesisLanguage.getInstance().getLine(20));
+        save = new JButton(Language.getInstance().getLine(20));
         save.addActionListener(this);
 
         opPanelSave = new JPanel(new FlowLayout());
@@ -322,7 +322,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         box.add(opPanelSave);
 
         window = new JFrame();
-        window.setTitle(JenesisLanguage.getInstance().getLine(34));
+        window.setTitle(Language.getInstance().getLine(34));
         window.setUndecorated(true);
         window.setContentPane(logoPic);
         window.add(box);
@@ -406,7 +406,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
             }
             gameRating = num;
             LoginScreen.getInstance().setGameRating(gameRating);
-            ratingL.setText(JenesisLanguage.getInstance().getLine(35) + gameRating + "/5");
+            ratingL.setText(Language.getInstance().getLine(35) + gameRating + "/5");
             LoginScreen.getInstance().saveConfigFile();
         }
     }
@@ -453,7 +453,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         } else if (source == resSett) {
             LoginScreen.getInstance().scalePos = resSett.getSelectedIndex();
         } else if (source == langSett) {
-            JenesisLanguage.getInstance().setLanguage(langSett.getSelectedIndex());
+            Language.getInstance().setLanguage(langSett.getSelectedIndex());
             LoginScreen.getInstance().setActivLang(langSett.getSelectedIndex());
         } else if (source == diffSett) {
             LoginScreen.getInstance().difficultyDyn = Arr[diffSett.getSelectedIndex()];

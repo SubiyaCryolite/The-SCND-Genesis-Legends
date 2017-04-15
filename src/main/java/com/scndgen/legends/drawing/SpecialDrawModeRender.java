@@ -22,9 +22,9 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.engine.JenesisLanguage;
-import com.scndgen.legends.arefactored.controller.Tutorial;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.Language;
+import com.scndgen.legends.controller.Tutorial;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -128,33 +128,33 @@ public class SpecialDrawModeRender extends JenesisMode {
             foreGroundB = pix.loadImage("images/blur/bgBG5b.png");
         }
 
-        itemz[0] = JenesisLanguage.getInstance().getLine(307);
+        itemz[0] = Language.getInstance().getLine(307);
         itemz[1] = "STORY MODE";
-        itemz[2] = JenesisLanguage.getInstance().getLine(308);
+        itemz[2] = Language.getInstance().getLine(308);
         itemz[3] = "QUICK MATCH";
         itemz[4] = "Quick Match (2 vs 2)";
         itemz[5] = "QUICK MATCH (2 vs 2)";
-        itemz[6] = JenesisLanguage.getInstance().getLine(309);
+        itemz[6] = Language.getInstance().getLine(309);
         itemz[7] = "HOST A LAN MATCH";
-        itemz[8] = JenesisLanguage.getInstance().getLine(310);
+        itemz[8] = Language.getInstance().getLine(310);
         itemz[9] = "JOIN A LAN MATCH";
-        itemz[10] = JenesisLanguage.getInstance().getLine(311);
+        itemz[10] = Language.getInstance().getLine(311);
         itemz[11] = "YOUR STATS";
-        itemz[12] = JenesisLanguage.getInstance().getLine(312);
+        itemz[12] = Language.getInstance().getLine(312);
         itemz[13] = "OPTIONS";
-        itemz[14] = JenesisLanguage.getInstance().getLine(313);
+        itemz[14] = Language.getInstance().getLine(313);
         itemz[15] = "VIEW CONTROLS";
-        itemz[16] = JenesisLanguage.getInstance().getLine(314);
+        itemz[16] = Language.getInstance().getLine(314);
         itemz[17] = "ABOUT";
-        itemz[18] = JenesisLanguage.getInstance().getLine(315);
+        itemz[18] = Language.getInstance().getLine(315);
         itemz[19] = "EXIT";
-        itemz[20] = JenesisLanguage.getInstance().getLine(316);
+        itemz[20] = Language.getInstance().getLine(316);
         itemz[21] = "ACHIEVEMENT LOCKER";
-        itemz[22] = JenesisLanguage.getInstance().getLine(317);
+        itemz[22] = Language.getInstance().getLine(317);
         itemz[23] = "ONLINE LEADER BOARDS";
-        itemz[22] = JenesisLanguage.getInstance().getLine(318);
+        itemz[22] = Language.getInstance().getLine(318);
         itemz[23] = "LOG OUT";
-        itemz[24] = JenesisLanguage.getInstance().getLine(319);
+        itemz[24] = Language.getInstance().getLine(319);
         itemz[25] = "TUTORIAL";
 
         new Thread() {
@@ -369,7 +369,7 @@ public class SpecialDrawModeRender extends JenesisMode {
 
         JenesisGlassPane.getInstance().overlay(g2d, this);
 
-        g2d.drawString("The SCND Genesis: Legends " + RenderStandardGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        g2d.drawString("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         g2d.setComposite(makeComposite(feedBackOpac));
         mess = "Press 'F' to provide Feedback";
         g2d.drawString(mess, 590, 14);

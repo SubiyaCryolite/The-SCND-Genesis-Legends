@@ -21,14 +21,14 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.GamePadController;
+import com.scndgen.legends.render.RenderGameplay;
+import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
 import com.scndgen.legends.drawing.SpecialDrawModeRender;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
-import com.scndgen.legends.threads.ThreadMP3;
+import com.scndgen.legends.threads.AudioPlayback;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private WindowAbout about;
     private NetworkScanLan scan;
     private MenuLeaderBoard board;
-    private ThreadMP3 startup;
+    private AudioPlayback startup;
     private boolean[] buttonz;
     private Desktop desktop;
     private int compassDir, compassDir2, last = 13;
@@ -63,7 +63,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     @SuppressWarnings("LeakingThisInConstructor")
     public MainMenu(String dude, LoginScreen px) {
         p = px;
-        startup = new ThreadMP3(ThreadMP3.startUpSound(), false);
+        startup = new AudioPlayback(AudioPlayback.startUpSound(), false);
         startup.play();
         strUser = dude;
         setUndecorated(true);
@@ -71,7 +71,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         setLayout(new BorderLayout());
         setContentPane(draw);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
+        setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         addMouseMotionListener(this);
         addMouseListener(this);
         addMouseWheelListener(this);
@@ -83,23 +83,23 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         setResizable(false);
         setVisible(true);
         try {
-            if (GamePadController.getInstance().controllerFound) {
+            if (JenesisGamePad.getInstance().controllerFound) {
                 controller = true;
-                buttonz = new boolean[GamePadController.getInstance().NUM_BUTTONS];
+                buttonz = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
                 pollController();
             }
             if (this.p.controller) {
 
-                if (GamePadController.getInstance().statusInt == 1) {
-                    sytemNotice(GamePadController.getInstance().controllerName + " " + JenesisLanguage.getInstance().getLine(103));
-                } else if (GamePadController.getInstance().statusInt == 0) {
-                    sytemNotice(JenesisLanguage.getInstance().getLine(104));
-                } else if (GamePadController.getInstance().statusInt == 2) {
-                    sytemNotice(JenesisLanguage.getInstance().getLine(105));
+                if (JenesisGamePad.getInstance().statusInt == 1) {
+                    sytemNotice(JenesisGamePad.getInstance().controllerName + " " + Language.getInstance().getLine(103));
+                } else if (JenesisGamePad.getInstance().statusInt == 0) {
+                    sytemNotice(Language.getInstance().getLine(104));
+                } else if (JenesisGamePad.getInstance().statusInt == 2) {
+                    sytemNotice(Language.getInstance().getLine(105));
                 }
             }
         } catch (Error ex) {
-            sytemNotice(JenesisLanguage.getInstance().getLine(106));
+            sytemNotice(Language.getInstance().getLine(106));
         }
         refreshWindow();
     }
@@ -147,15 +147,15 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                 scan = new NetworkScanLan();
             } else if (destination.equalsIgnoreCase(WindowMain.lanHost)) {
                 terminateThis();
-                draw.systemNotice(JenesisLanguage.getInstance().getLine(107));
+                draw.systemNotice(Language.getInstance().getLine(107));
                 startApp = new WindowMain(strUser, mode[1]);
             } else if (destination.equalsIgnoreCase("vs1")) {
                 terminateThis();
-                draw.systemNotice(JenesisLanguage.getInstance().getLine(108));
+                draw.systemNotice(Language.getInstance().getLine(108));
                 startApp = new WindowMain(strUser, mode[0]);
             } else if (destination.equalsIgnoreCase("vs2")) {
                 terminateThis();
-                draw.systemNotice(JenesisLanguage.getInstance().getLine(109));
+                draw.systemNotice(Language.getInstance().getLine(109));
                 startApp = new WindowMain(strUser, mode[4]);
             } else if (destination.equalsIgnoreCase(WindowMain.storyMode)) {
 
@@ -451,11 +451,11 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      * Exit game
      */
     public void exit() {
-        int x = JOptionPane.showConfirmDialog(null, JenesisLanguage.getInstance().getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
+        int x = JOptionPane.showConfirmDialog(null, Language.getInstance().getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
         if (x == JOptionPane.YES_OPTION) {
-            int b = JOptionPane.showConfirmDialog(null, JenesisLanguage.getInstance().getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
+            int b = JOptionPane.showConfirmDialog(null, Language.getInstance().getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
             if (b == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, JenesisLanguage.getInstance().getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, Language.getInstance().getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
         }
@@ -490,7 +490,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     public void showModes() {
         isActive = true;
         try {
-            if (GamePadController.getInstance().controllerFound) {
+            if (JenesisGamePad.getInstance().controllerFound) {
                 pollController();
             }
         } catch (Exception e) {
@@ -530,30 +530,30 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
             public void run() {
                 try {
                     do {
-                        GamePadController.getInstance().poll();
+                        JenesisGamePad.getInstance().poll();
 
-                        compassDir2 = GamePadController.getInstance().getXYStickDir();
-                        if (compassDir2 == GamePadController.getInstance().NORTH) {
+                        compassDir2 = JenesisGamePad.getInstance().getXYStickDir();
+                        if (compassDir2 == JenesisGamePad.getInstance().NORTH) {
                             draw.goUp();
-                        } else if (compassDir2 == GamePadController.getInstance().SOUTH) {
+                        } else if (compassDir2 == JenesisGamePad.getInstance().SOUTH) {
                             draw.goDown();
                         }
 
                         //update bottons
-                        buttonz = GamePadController.getInstance().getButtons();
+                        buttonz = JenesisGamePad.getInstance().getButtons();
 
 
                         // get POV hat compass direction
-                        compassDir = GamePadController.getInstance().getHatDir();
+                        compassDir = JenesisGamePad.getInstance().getHatDir();
                         {
-                            if (compassDir == GamePadController.getInstance().SOUTH) {
+                            if (compassDir == JenesisGamePad.getInstance().SOUTH) {
                                 if (doneChilling) {
                                     draw.goDown();
                                 }
                                 menuLatency();
                             }
 
-                            if (compassDir == GamePadController.getInstance().NORTH) {
+                            if (compassDir == JenesisGamePad.getInstance().NORTH) {
                                 if (doneChilling) {
                                     draw.goUp();
                                 }
@@ -578,9 +578,9 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                         }
 
                         // get compass direction for the two analog sticks
-                        compassDir = GamePadController.getInstance().getXYStickDir();
+                        compassDir = JenesisGamePad.getInstance().getXYStickDir();
 
-                        compassDir = GamePadController.getInstance().getZRZStickDir();
+                        compassDir = JenesisGamePad.getInstance().getZRZStickDir();
 
 
                         this.sleep(66);
@@ -622,9 +622,9 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
             @Override
             public void run() {
                 try {
-                    GamePadController.getInstance().setRumbler(true, power);
+                    JenesisGamePad.getInstance().setRumbler(true, power);
                     this.sleep(time);
-                    GamePadController.getInstance().setRumbler(false, 0.0f);
+                    JenesisGamePad.getInstance().setRumbler(false, 0.0f);
                 } catch (Exception e) {
                 }
             }

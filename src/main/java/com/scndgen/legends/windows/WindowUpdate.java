@@ -23,7 +23,7 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,9 +61,9 @@ public class WindowUpdate extends JFrame implements ActionListener {
         logoPic = new SpecialDrawMenuBGs();
         logo.add(logoPic);
 
-        text = "The SCND Genesis: Legends " + updateVer + " " + JenesisLanguage.getInstance().getLine(58) + " "
+        text = "The SCND Genesis: Legends " + updateVer + " " + Language.getInstance().getLine(58) + " "
                 + "\nhttp://www.sourceforge.com/projects/scndgen/files/executable/" + fname + "/download"
-                + "\n\n" + JenesisLanguage.getInstance().getLine(59) + ": \n"
+                + "\n\n" + Language.getInstance().getLine(59) + ": \n"
                 + stringBuilder(updates)
                 + "\n\nThe SCND Genesis: Legends copyright © " + WindowAbout.year() + " Ifunga Ndana.";
 
@@ -79,10 +79,10 @@ public class WindowUpdate extends JFrame implements ActionListener {
         textHolder = new JPanel();
         textHolder.add(scroller);
 
-        get = new JButton(JenesisLanguage.getInstance().getLine(416));
+        get = new JButton(Language.getInstance().getLine(416));
         get.setFont(normalFont);
         get.addActionListener(this);
-        ok = new JButton(JenesisLanguage.getInstance().getLine(417));
+        ok = new JButton(Language.getInstance().getLine(417));
         ok.setFont(normalFont);
         ok.addActionListener(this);
         bottom = new JPanel();
@@ -93,7 +93,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
         box.add(bottom);
 
         window = new JFrame();
-        window.setTitle(updateVer + " " + JenesisLanguage.getInstance().getLine(60));
+        window.setTitle(updateVer + " " + Language.getInstance().getLine(60));
         window.add(box);
         window.pack();
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

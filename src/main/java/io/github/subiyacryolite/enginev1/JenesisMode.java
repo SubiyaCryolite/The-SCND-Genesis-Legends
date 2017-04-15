@@ -1,7 +1,7 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -87,7 +87,7 @@ public abstract class JenesisMode extends JPanel {
             }
             file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
             if (ImageIO.write(bufferedImage, "png", file))
-                systemNotice(JenesisLanguage.getInstance().getLine(170));
+                systemNotice(Language.getInstance().getLine(170));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

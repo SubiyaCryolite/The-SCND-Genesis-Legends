@@ -23,9 +23,9 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.controller.StoryMode;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.Language;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.awt.*;
@@ -101,24 +101,24 @@ public class SpecialDrawAchievementLocker {
 
         if (LoginScreen.getInstance().isConnected()) {
             //-----player account type
-            stat1 = JenesisLanguage.getInstance().getLine(118) + ": " + shortVer(LoginScreen.getInstance().strUser);
-            stat2 = JenesisLanguage.getInstance().getLine(119) + ": " + shortVer(LoginScreen.getInstance().strPoint);
-            stat3 = JenesisLanguage.getInstance().getLine(120) + ": " + LoginScreen.getInstance().timeCal(LoginScreen.getInstance().strPlayTime);
-            stat4 = JenesisLanguage.getInstance().getLine(121) + ": " + LoginScreen.getInstance().getUnlockedAch();
-            stat5 = JenesisLanguage.getInstance().getLine(122) + ": " + LoginScreen.getInstance().getATriggeredAchiev() + " time(s)";
-            stat6 = JenesisLanguage.getInstance().getLine(123) + ": " + LoginScreen.getInstance().matchCountStr;
+            stat1 = Language.getInstance().getLine(118) + ": " + shortVer(LoginScreen.getInstance().strUser);
+            stat2 = Language.getInstance().getLine(119) + ": " + shortVer(LoginScreen.getInstance().strPoint);
+            stat3 = Language.getInstance().getLine(120) + ": " + LoginScreen.getInstance().timeCal(LoginScreen.getInstance().strPlayTime);
+            stat4 = Language.getInstance().getLine(121) + ": " + LoginScreen.getInstance().getUnlockedAch();
+            stat5 = Language.getInstance().getLine(122) + ": " + LoginScreen.getInstance().getATriggeredAchiev() + " time(s)";
+            stat6 = Language.getInstance().getLine(123) + ": " + LoginScreen.getInstance().matchCountStr;
 
             try {
-                stat7 = JenesisLanguage.getInstance().getLine(124) + ": " + Integer.parseInt(LoginScreen.getInstance().strPoint) / Integer.parseInt(LoginScreen.getInstance().matchCountStr);
+                stat7 = Language.getInstance().getLine(124) + ": " + Integer.parseInt(LoginScreen.getInstance().strPoint) / Integer.parseInt(LoginScreen.getInstance().matchCountStr);
             } catch (ArithmeticException ae) {
-                stat7 = JenesisLanguage.getInstance().getLine(124) + ": 0";
+                stat7 = Language.getInstance().getLine(124) + ": 0";
             }
 
-            stat15 = JenesisLanguage.getInstance().getLine(125) + ": " + LoginScreen.getInstance().win;
-            stat16 = JenesisLanguage.getInstance().getLine(126) + ": " + LoginScreen.getInstance().loss;
+            stat15 = Language.getInstance().getLine(125) + ": " + LoginScreen.getInstance().win;
+            stat16 = Language.getInstance().getLine(126) + ": " + LoginScreen.getInstance().loss;
 
-            stat13 = JenesisLanguage.getInstance().getLine(127) + ": " + style[LoginScreen.getInstance().userAwesomeness()];
-            stat17 = JenesisLanguage.getInstance().getLine(128) + ": " + RenderStandardGameplay.getInstance().charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
+            stat13 = Language.getInstance().getLine(127) + ": " + style[LoginScreen.getInstance().userAwesomeness()];
+            stat17 = Language.getInstance().getLine(128) + ": " + RenderGameplay.getInstance().charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
         }
 
         screen.setColor(Color.WHITE);
@@ -144,9 +144,9 @@ public class SpecialDrawAchievementLocker {
         //story progress
         screen.setColor(Color.WHITE);
 
-        screen.drawString(JenesisLanguage.getInstance().getLine(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
+        screen.drawString(Language.getInstance().getLine(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
         screen.drawString(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
-        screen.drawString(JenesisLanguage.getInstance().getLine(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
+        screen.drawString(Language.getInstance().getLine(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
 
         screen.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Integer.parseInt("" + Math.round(progression)), spacer);
 
@@ -158,7 +158,7 @@ public class SpecialDrawAchievementLocker {
         screen.drawString(stat13, offset, (48 - 3) + (spacer * 8));
         screen.drawString(stat17, offset, (48 - 3) + (spacer * 9));
 
-        screen.drawString(JenesisLanguage.getInstance().getLine(131) + " >>>", offset, 430);
+        screen.drawString(Language.getInstance().getLine(131) + " >>>", offset, 430);
     }
 
     /**
@@ -175,10 +175,10 @@ public class SpecialDrawAchievementLocker {
         screen.setComposite(makeComposite(1.0f));
         screen.setColor(Color.white);
 
-        screen.drawString(triggeredCount + " " + JenesisLanguage.getInstance().getLine(121), 530, 100);
-        screen.drawString(getAchUnlockedPerc() + " % " + JenesisLanguage.getInstance().getLine(132), 530, 114);
-        screen.drawString(JenesisLanguage.getInstance().getLine(130) + " " + getGameCompletion() + " %", 530, 128);
-        screen.drawString(JenesisLanguage.getInstance().getLine(131) + " >>>", 530, 470);
+        screen.drawString(triggeredCount + " " + Language.getInstance().getLine(121), 530, 100);
+        screen.drawString(getAchUnlockedPerc() + " % " + Language.getInstance().getLine(132), 530, 114);
+        screen.drawString(Language.getInstance().getLine(130) + " " + getGameCompletion() + " %", 530, 128);
+        screen.drawString(Language.getInstance().getLine(131) + " >>>", 530, 470);
 
         //even
         for (int u = 0; u < LoginScreen.getInstance().ach.length; u++) {
@@ -188,14 +188,14 @@ public class SpecialDrawAchievementLocker {
                 screen.drawString((u + 1) + ":: " + ach.achDesc[u] + " >>", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
                 screen.drawString(ach.achFull[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
-                screen.drawString(JenesisLanguage.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
+                screen.drawString(Language.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
             } else {
                 screen.drawImage(no, offset2x, scroller + achPic + (u * achPicSpacer), obs);
                 screen.setFont(font1);
                 screen.drawString((u + 1) + ":: " + ach.achDesc[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
                 screen.drawString("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
-                screen.drawString(JenesisLanguage.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
+                screen.drawString(Language.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
             }
         }
     }

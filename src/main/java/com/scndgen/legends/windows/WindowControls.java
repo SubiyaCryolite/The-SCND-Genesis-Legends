@@ -23,7 +23,7 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,31 +58,31 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
         box = new Box(BoxLayout.Y_AXIS);
         box.setOpaque(false);
 
-        ok = new JButton(JenesisLanguage.getInstance().getLine(36));
+        ok = new JButton(Language.getInstance().getLine(36));
         ok.addActionListener(this);
         bottom = new JPanel();
         bottom.add(ok);
 
-        lLabel = new JLabel(JenesisLanguage.getInstance().getLine(37));
-        l1 = new JLabel(" " + JenesisLanguage.getInstance().getLine(38));
-        l2 = new JLabel(JenesisLanguage.getInstance().getLine(40));
-        l17 = new JLabel(" " + JenesisLanguage.getInstance().getLine(39));
-        l18 = new JLabel(JenesisLanguage.getInstance().getLine(41));
-        l3 = new JLabel(" " + JenesisLanguage.getInstance().getLine(42));
+        lLabel = new JLabel(Language.getInstance().getLine(37));
+        l1 = new JLabel(" " + Language.getInstance().getLine(38));
+        l2 = new JLabel(Language.getInstance().getLine(40));
+        l17 = new JLabel(" " + Language.getInstance().getLine(39));
+        l18 = new JLabel(Language.getInstance().getLine(41));
+        l3 = new JLabel(" " + Language.getInstance().getLine(42));
         l4 = new JLabel("F12");
-        l5 = new JLabel(" " + JenesisLanguage.getInstance().getLine(43));
+        l5 = new JLabel(" " + Language.getInstance().getLine(43));
         l6 = new JLabel("ESC");
-        l7 = new JLabel(" " + JenesisLanguage.getInstance().getLine(44));
+        l7 = new JLabel(" " + Language.getInstance().getLine(44));
         l8 = new JLabel("L");
-        l9 = new JLabel(" " + JenesisLanguage.getInstance().getLine(45));
+        l9 = new JLabel(" " + Language.getInstance().getLine(45));
         l10 = new JLabel("Left");
-        l11 = new JLabel(" " + JenesisLanguage.getInstance().getLine(46));
+        l11 = new JLabel(" " + Language.getInstance().getLine(46));
         l12 = new JLabel("Right");
-        l13 = new JLabel(" " + JenesisLanguage.getInstance().getLine(47));
+        l13 = new JLabel(" " + Language.getInstance().getLine(47));
         l14 = new JLabel("Up");
-        l15 = new JLabel(" " + JenesisLanguage.getInstance().getLine(48));
-        l16 = new JLabel(JenesisLanguage.getInstance().getLine(49));
-        l19 = new JLabel(" " + JenesisLanguage.getInstance().getLine(50));
+        l15 = new JLabel(" " + Language.getInstance().getLine(48));
+        l16 = new JLabel(Language.getInstance().getLine(49));
+        l19 = new JLabel(" " + Language.getInstance().getLine(50));
         l20 = new JLabel("F4");
 
         p9 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -130,36 +130,36 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
         p17.add(l20);
 
         //Mouse
-        mLabel = new JLabel(JenesisLanguage.getInstance().getLine(51));
+        mLabel = new JLabel(Language.getInstance().getLine(51));
         p13 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p13.add(mLabel);
 
-        m1 = new JLabel(JenesisLanguage.getInstance().getLine(52));
-        m2 = new JLabel(" " + JenesisLanguage.getInstance().getLine(45));
+        m1 = new JLabel(Language.getInstance().getLine(52));
+        m2 = new JLabel(" " + Language.getInstance().getLine(45));
         p10 = new JPanel(new GridLayout(1, 2));
         p10.add(m2);
         p10.add(m1);
 
-        m3 = new JLabel(JenesisLanguage.getInstance().getLine(53));
-        m4 = new JLabel(" " + JenesisLanguage.getInstance().getLine(46));
+        m3 = new JLabel(Language.getInstance().getLine(53));
+        m4 = new JLabel(" " + Language.getInstance().getLine(46));
         p11 = new JPanel(new GridLayout(1, 2));
         p11.add(m4);
         p11.add(m3);
 
-        m5 = new JLabel(JenesisLanguage.getInstance().getLine(54));
-        m6 = new JLabel(" " + JenesisLanguage.getInstance().getLine(38));
+        m5 = new JLabel(Language.getInstance().getLine(54));
+        m6 = new JLabel(" " + Language.getInstance().getLine(38));
         p12 = new JPanel(new GridLayout(1, 2));
         p12.add(m6);
         p12.add(m5);
 
-        m7 = new JLabel(JenesisLanguage.getInstance().getLine(55));
-        m8 = new JLabel(" " + JenesisLanguage.getInstance().getLine(44));
+        m7 = new JLabel(Language.getInstance().getLine(55));
+        m8 = new JLabel(" " + Language.getInstance().getLine(44));
         p14 = new JPanel(new GridLayout(1, 2));
         p14.add(m8);
         p14.add(m7);
 
-        m9 = new JLabel(JenesisLanguage.getInstance().getLine(56));
-        m10 = new JLabel(" " + JenesisLanguage.getInstance().getLine(39));
+        m9 = new JLabel(Language.getInstance().getLine(56));
+        m10 = new JLabel(" " + Language.getInstance().getLine(39));
         p16 = new JPanel(new GridLayout(1, 2));
         p16.add(m10);
         p16.add(m9);
@@ -246,7 +246,7 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
         box.add(bottom);
 
         window = new JFrame();
-        window.setTitle(JenesisLanguage.getInstance().getLine(57));
+        window.setTitle(Language.getInstance().getLine(57));
         window.setContentPane(logoPic);
         window.add(box, BorderLayout.CENTER);
         window.setUndecorated(true);

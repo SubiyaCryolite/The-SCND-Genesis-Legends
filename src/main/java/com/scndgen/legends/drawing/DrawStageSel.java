@@ -22,8 +22,8 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.Language;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -59,7 +59,7 @@ public abstract class DrawStageSel extends JenesisMode {
      * Teh constructorz XD
      */
     public DrawStageSel() {
-        JenesisLanguage lang = JenesisLanguage.getInstance();
+        Language lang = Language.getInstance();
         stagePrevLox = new String[]{"bgBG1", "bgBG2", "bgBG3", "bgBG4", "bgBG5", "bgBG6", "bgBG7", "bgBG8", "bgBG9", "bgBG10", "bgBG100", "bgBG11", "bgBG13", "bgBG14", "bgBG15", "bgBG12"};
         stageNameStr = new String[]{lang.getLine(152),
                 lang.getLine(153),
@@ -139,13 +139,13 @@ public abstract class DrawStageSel extends JenesisMode {
 
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-            g2d.drawString(JenesisLanguage.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(JenesisLanguage.getInstance().getLine(165))) / 2, 200);
+            g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && RenderStageSelect.selectedStage == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.setColor(Color.WHITE);
-            g2d.drawString(">> " + JenesisLanguage.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + JenesisLanguage.getInstance().getLine(166) + " <<")) / 2, 300);
+            g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
         } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);

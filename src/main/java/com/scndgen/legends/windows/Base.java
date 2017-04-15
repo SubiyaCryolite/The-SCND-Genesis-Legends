@@ -1,6 +1,6 @@
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.GamePadController;
+import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
 
 import javax.swing.*;
@@ -81,9 +81,9 @@ public class Base extends JFrame implements KeyListener, WindowListener, MouseLi
             @Override
             public void run() {
                 try {
-                    GamePadController.getInstance().setRumbler(true, power);
+                    JenesisGamePad.getInstance().setRumbler(true, power);
                     this.sleep(time);
-                    GamePadController.getInstance().setRumbler(false, 0.0f);
+                    JenesisGamePad.getInstance().setRumbler(false, 0.0f);
                 } catch (Exception e) {
                 }
             }

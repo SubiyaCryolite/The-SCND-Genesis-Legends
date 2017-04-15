@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 
 public class AttacksOpp1 extends AttacksBasic {
 

@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
-import com.scndgen.legends.engine.JenesisCharacter;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.characters.Character;
 
 public class AttacksBasic {
 
@@ -36,7 +36,7 @@ public class AttacksBasic {
     public int oppPicAttack;
     public int victim = 0;
     public int move;
-    public JenesisCharacter dude;
+    public Character dude;
 
     /**
      * Creates an opponent object
@@ -59,9 +59,9 @@ public class AttacksBasic {
             forWho = 999; //override for pose
         }
         if (thisMove == 0) {
-            RenderStandardGameplay.getInstance().setSprites(attacker, 9, 11);
-            RenderStandardGameplay.getInstance().setSprites(attackee, 9, 11);
-            RenderStandardGameplay.getInstance().showBattleMessage("");
+            RenderGameplay.getInstance().setSprites(attacker, 9, 11);
+            RenderGameplay.getInstance().setSprites(attackee, 9, 11);
+            RenderGameplay.getInstance().showBattleMessage("");
         }
 
         if (thisMove == 1) {
@@ -130,15 +130,15 @@ public class AttacksBasic {
         }
 
         if (whoDoneIt == 999) {
-            RenderStandardGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
+            RenderGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)
             if (move > 9) {
                 move = 10;
             }
 
-            RenderStandardGameplay.getInstance().setSprites(attack, move, 11); //attack
-            RenderStandardGameplay.getInstance().setSprites(target, 0, 11); //defend
+            RenderGameplay.getInstance().setSprites(attack, move, 11); //attack
+            RenderGameplay.getInstance().setSprites(target, 0, 11); //defend
         }
     }
 
@@ -183,7 +183,7 @@ public class AttacksBasic {
         dude.attack(attackNum, victim);
     }
 
-    public JenesisCharacter getDude() {
+    public Character getDude() {
         return dude;
     }
 }

@@ -21,9 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawUserLogin;
-import com.scndgen.legends.engine.JenesisLanguage;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.WindowMain;
@@ -203,7 +202,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         countries = Locale.getISOCountries();
 
         loadTray();
-        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderStandardGameplay.getVersionStr());
+        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderGameplay.getVersionStr());
         pan1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -264,7 +263,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         pan1.add(thisPic);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("The SCND Genesis: Legends" + RenderStandardGameplay.getInstance().getVersionStr());
+        setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         pack();
         addKeyListener(this);
         setLocationRelativeTo(null);
@@ -685,7 +684,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 if (login.getText().length() >= 1 && login.getText().length() <= 24) {
                     createConfigFile(login.getText());
                 } else {
-                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Character long");
+                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Characters long");
                 }
             } else if (numberOfAccounts > 0) {
                 //extra account
@@ -693,7 +692,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 if (newAcc.length() >= 1 && newAcc.length() <= 24) {
                     createConfigFile(newAcc);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Character long");
+                    JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 Characters long");
                 }
             }
         }
@@ -804,7 +803,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         } catch (Exception e) {
                             System.err.println(e.toString());
                         } //if latest version, just try and download music
-                        if (webVersion.equalsIgnoreCase(RenderStandardGameplay.getInstance().getVersionStr())) {
+                        if (webVersion.equalsIgnoreCase(RenderGameplay.getInstance().getVersionStr())) {
                             ans = false;
                             if (whoCalled.equalsIgnoreCase("default")) {
                                 System.out.println("You are up to date");
@@ -873,7 +872,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     public void setActivLang(int x) {
         activLang = x;
-        JenesisLanguage.getInstance().setLanguage(activLang);
+        Language.getInstance().setLanguage(activLang);
     }
 
     /**
@@ -1112,7 +1111,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             int y = Integer.parseInt(matchCountStr) + 1;
             matchCountStr = "" + y;
             newGame = false;
-            if (RenderStandardGameplay.getInstance().getCharLife() < RenderStandardGameplay.getInstance().getOppLife()) {
+            if (RenderGameplay.getInstance().getCharLife() < RenderGameplay.getInstance().getOppLife()) {
                 loss = loss + 1;
                 consecWins = 0;
                 consecWinsTmp = 0;

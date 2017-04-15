@@ -22,8 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,8 +65,8 @@ public class ExecuterMovesChar2 implements Runnable {
 
             executingTheCommandsAI();
 
-            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsChar2(0);
-            RenderStandardGameplay.getInstance().getGameInstance().aiRunning3 = false;
+            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar2(0);
+            RenderGameplay.getInstance().getGameInstance().aiRunning3 = false;
 
             timer.suspend();
         } while (1 != 0);
@@ -76,18 +76,18 @@ public class ExecuterMovesChar2 implements Runnable {
         aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot3();
         range = aiMoves.length - 1;
 
-        if (RenderStandardGameplay.getInstance().getGameInstance().isGameOver == false) {
+        if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
 
             int randomNumber = (int) (Math.random() * 12);
             if (randomNumber <= 6) {
-                if (RenderStandardGameplay.getInstance().perCent2a >= 0) {
+                if (RenderGameplay.getInstance().perCent2a >= 0) {
                     whoToAttack = 4;
                 } // normally CPU player 1 attacks CPU opponent 2
                 else {
                     whoToAttack = 2;
                 }
             } else if (randomNumber >= 7) {
-                if (RenderStandardGameplay.getInstance().perCent2 >= 0) {
+                if (RenderGameplay.getInstance().perCent2 >= 0) {
                     whoToAttack = 2;
                 } //attack CPU opponent 1
                 else {
@@ -99,10 +99,10 @@ public class ExecuterMovesChar2 implements Runnable {
             for (int o = 0; o < 4; o++) {
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 //fix story mode bug
-                if (RenderStandardGameplay.getInstance().getGameInstance().storySequence == false) {
+                if (RenderGameplay.getInstance().getGameInstance().storySequence == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
-                    RenderStandardGameplay.getInstance().shakeCharLB();
-                    RenderStandardGameplay.getInstance().AnimatePhyAttax('a');
+                    RenderGameplay.getInstance().shakeCharLB();
+                    RenderGameplay.getInstance().AnimatePhyAttax('a');
                 }
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
             }

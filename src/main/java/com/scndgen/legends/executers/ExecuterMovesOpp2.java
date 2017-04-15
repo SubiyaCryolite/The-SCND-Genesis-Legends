@@ -22,8 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -55,9 +55,9 @@ public class ExecuterMovesOpp2 implements Runnable {
     @Override
     public void run() {
         do {
-            RenderStandardGameplay.getInstance().setSprites('c', 9, 11);
-            RenderStandardGameplay.getInstance().setSprites('o', 9, 11);
-            RenderStandardGameplay.getInstance().setSprites('b', 9, 11);
+            RenderGameplay.getInstance().setSprites('c', 9, 11);
+            RenderGameplay.getInstance().setSprites('o', 9, 11);
+            RenderGameplay.getInstance().setSprites('b', 9, 11);
 
             try {
                 int time = LoginScreen.getInstance().difficultyDyn;
@@ -68,8 +68,8 @@ public class ExecuterMovesOpp2 implements Runnable {
 
             executingTheCommandsAI();
 
-            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp2(0);
-            RenderStandardGameplay.getInstance().getGameInstance().aiRunning2 = false;
+            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp2(0);
+            RenderGameplay.getInstance().getGameInstance().aiRunning2 = false;
 
             timer.suspend();
         } while (1 != 0);
@@ -81,13 +81,13 @@ public class ExecuterMovesOpp2 implements Runnable {
 
         int randomNumber = (int) (Math.random() * 12);
         if (randomNumber >= 7) {
-            if (RenderStandardGameplay.getInstance().perCent3a >= 0) {
+            if (RenderGameplay.getInstance().perCent3a >= 0) {
                 whoToAttack = 3;
             } else {
                 whoToAttack = 1;
             }
         } else if (randomNumber <= 6) {
-            if (RenderStandardGameplay.getInstance().perCent >= 0) {
+            if (RenderGameplay.getInstance().perCent >= 0) {
                 whoToAttack = 1;
             } else {
                 whoToAttack = 3;
@@ -100,8 +100,8 @@ public class ExecuterMovesOpp2 implements Runnable {
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    RenderStandardGameplay.getInstance().shakeCharLB();
-                    RenderStandardGameplay.getInstance().AnimatePhyAttax('o');
+                    RenderGameplay.getInstance().shakeCharLB();
+                    RenderGameplay.getInstance().AnimatePhyAttax('o');
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }

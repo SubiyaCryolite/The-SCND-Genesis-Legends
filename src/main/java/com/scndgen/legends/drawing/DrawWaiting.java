@@ -22,14 +22,13 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.VolatileImage;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
@@ -41,19 +40,13 @@ import java.util.Enumeration;
  */
 public class DrawWaiting extends JenesisMode {
 
-    private static Image pic1, pic2;
-    private static VolatileImage volatileImg;
+    private Image pic1, pic2;
     private static float opac = 10;
     private static int y = 0;
     private static boolean alive = true;
     private static String name, ip;
-    public Graphics2D g2d;
-    private RenderingHints renderHints; //anti aliasing, kill jaggies
-    private int valCode = 0, screenWidth = 852, screenHeight = 480;
-    private GraphicsConfiguration gc;
-    private GraphicsEnvironment ge;
     private InetAddress ia;
-    private JenesisImageLoader pix2;
+    private JenesisImageLoader imageLoader;
     private Font normalFont;
     private Enumeration enumeration;
     private NetworkInterface networkInterface;
@@ -61,9 +54,8 @@ public class DrawWaiting extends JenesisMode {
 
     @SuppressWarnings("static-access")
     public DrawWaiting() {
-        renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        pix2 = new JenesisImageLoader();
+        imageLoader = new JenesisImageLoader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
             while (enumeration.hasMoreElements()) {
@@ -81,33 +73,26 @@ public class DrawWaiting extends JenesisMode {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-        pic1 = pix2.loadImage("images/menus/waiting.jpg");
-        pic2 = pix2.loadImage("images/menus/loading.gif");
+        pic1 = imageLoader.loadImage("images/menus/waiting.jpg");
+        pic2 = imageLoader.loadImage("images/menus/loading.gif");
         setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        gc = this.getGraphicsConfiguration();
         createBackBuffer();
-        //Check if Image is valid
-        valCode = volatileImg.validate(gc);
-        //if not create new vi, only affects windows apparently
-        if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-            createBackBuffer();
-        }
         g2d = volatileImg.createGraphics();
         g2d.setRenderingHints(renderHints);
         g2d.setFont(normalFont);
         g2d.drawImage(pic1, 0, 0, this);
         g2d.drawImage(pic2, 100, 100, this);
         g2d.setColor(Color.WHITE);
-        g2d.drawString(JenesisLanguage.getInstance().getLine(167), 20, 300);
+        g2d.drawString(Language.getInstance().getLine(167), 20, 300);
         g2d.drawString("\'" + name + "\',", 20, 314);
         g2d.drawString("Or use \'" + ip + "\',", 20, 328);
-        g2d.drawString(JenesisLanguage.getInstance().getLine(168), 20, 360);
-        g2d.drawString(JenesisLanguage.getInstance().getLine(169), 20, 376);
-        g2d.drawString(JenesisLanguage.getInstance().getLine(131), 20, 390);
+        g2d.drawString(Language.getInstance().getLine(168), 20, 360);
+        g2d.drawString(Language.getInstance().getLine(169), 20, 376);
+        g2d.drawString(Language.getInstance().getLine(131), 20, 390);
         JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }

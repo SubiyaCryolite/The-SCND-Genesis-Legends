@@ -22,7 +22,7 @@
 package com.scndgen.legends.menus;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawStageSel;
 import com.scndgen.legends.windows.WindowMain;
 
@@ -228,17 +228,17 @@ public class RenderStageSelect extends DrawStageSel {
     public static void defValue() {
 
         setStage(0);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 10;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 10;
-        RenderStandardGameplay.getInstance().animDirection = "vert";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "both";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 4;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 3;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 10;
+        RenderGameplay.getInstance().animDirection = "vert";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "both";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 4;
+        RenderGameplay.getInstance().ambSpeed2 = 3;
         musicInt = 0;
         getReady();
     }
@@ -256,17 +256,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage2() {
         setStage(1);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "none";
-        RenderStandardGameplay.getInstance().delay = 66;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 0;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 0;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
         musicInt = 1;
         getReady();
     }
@@ -276,17 +276,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage3() {
         setStage(2);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 5;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 4;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "forg";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 5;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 4;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "forg";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 2;
         getReady();
     }
@@ -296,17 +296,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage4() {
         setStage(3);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "none";
-        RenderStandardGameplay.getInstance().delay = 66;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 0;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 0;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
         musicInt = 3;
         getReady();
     }
@@ -316,17 +316,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage5() {
         setStage(4);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 10;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 10;
-        RenderStandardGameplay.getInstance().animDirection = "vert";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "both";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 4;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 3;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 10;
+        RenderGameplay.getInstance().animDirection = "vert";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "both";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 4;
+        RenderGameplay.getInstance().ambSpeed2 = 3;
         musicInt = 4;
         getReady();
     }
@@ -336,17 +336,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage6() {
         setStage(5);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 5;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 4;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "forg";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 5;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 4;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "forg";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 5;
         getReady();
     }
@@ -356,17 +356,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage7() {
         setStage(6);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 10;
-        RenderStandardGameplay.getInstance().fgxInc = 5;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 4;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "yes";
-        RenderStandardGameplay.getInstance().animLayer = "both";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().fgxInc = 5;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 4;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "yes";
+        RenderGameplay.getInstance().animLayer = "both";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 6;
         getReady();
     }
@@ -376,34 +376,34 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage100() {
         setStage(10);
-        RenderStandardGameplay.getInstance().fgx = -40;
-        RenderStandardGameplay.getInstance().fgy = 20;
-        RenderStandardGameplay.getInstance().fgxInc = 2;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "rot";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "back";
-        RenderStandardGameplay.getInstance().delay = 25;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 1;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 2;
+        RenderGameplay.getInstance().fgx = -40;
+        RenderGameplay.getInstance().fgy = 20;
+        RenderGameplay.getInstance().fgxInc = 2;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "rot";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().delay = 25;
+        RenderGameplay.getInstance().ambSpeed1 = 1;
+        RenderGameplay.getInstance().ambSpeed2 = 2;
         musicInt = 0;
         getReady();
     }
 
     public static void stage12() {
         setStage(12);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "none";
-        RenderStandardGameplay.getInstance().delay = 66;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 0;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 0;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
         musicInt = 3;
         getReady();
     }
@@ -413,17 +413,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage11() {
         setStage(11);
-        RenderStandardGameplay.getInstance().fgx = -40;
-        RenderStandardGameplay.getInstance().fgy = 20;
-        RenderStandardGameplay.getInstance().fgxInc = 2;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "rot";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "back";
-        RenderStandardGameplay.getInstance().delay = 25;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 1;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 2;
+        RenderGameplay.getInstance().fgx = -40;
+        RenderGameplay.getInstance().fgy = 20;
+        RenderGameplay.getInstance().fgxInc = 2;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "rot";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().delay = 25;
+        RenderGameplay.getInstance().ambSpeed1 = 1;
+        RenderGameplay.getInstance().ambSpeed2 = 2;
         musicInt = 1;
         getReady();
     }
@@ -433,17 +433,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage8() {
         setStage(7);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "none";
-        RenderStandardGameplay.getInstance().delay = 66;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 0;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 0;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
         musicInt = 2;
         getReady();
     }
@@ -453,17 +453,17 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage9() {
         setStage(8);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "back";
-        RenderStandardGameplay.getInstance().delay = 122;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().delay = 122;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 3;
         getReady();
     }
@@ -473,51 +473,51 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public static void stage10() {
         setStage(9);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 5;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 4;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "both";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 5;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 4;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "both";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 4;
         getReady();
     }
 
     public static void stage13() {
         setStage(13);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 5;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 4;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "forg";
-        RenderStandardGameplay.getInstance().delay = 33;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 2;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 1;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 5;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 4;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "forg";
+        RenderGameplay.getInstance().delay = 33;
+        RenderGameplay.getInstance().ambSpeed1 = 2;
+        RenderGameplay.getInstance().ambSpeed2 = 1;
         musicInt = 1;
         getReady();
     }
 
     public static void stage14() {
         setStage(14);
-        RenderStandardGameplay.getInstance().fgx = 0;
-        RenderStandardGameplay.getInstance().fgy = 0;
-        RenderStandardGameplay.getInstance().fgxInc = 1;
-        RenderStandardGameplay.getInstance().fgyInc = 1;
-        RenderStandardGameplay.getInstance().animLoops = 20;
-        RenderStandardGameplay.getInstance().animDirection = "none";
-        RenderStandardGameplay.getInstance().verticalMove = "no";
-        RenderStandardGameplay.getInstance().animLayer = "none";
-        RenderStandardGameplay.getInstance().delay = 66;
-        RenderStandardGameplay.getInstance().ambSpeed1 = 0;
-        RenderStandardGameplay.getInstance().ambSpeed2 = 0;
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
         musicInt = 3;
         getReady();
     }
@@ -527,9 +527,9 @@ public class RenderStageSelect extends DrawStageSel {
     }
 
     private static void getReady() {
-        RenderStandardGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
-        RenderStandardGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
-        RenderStandardGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
+        RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
+        RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
+        RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
     }
 
     public static void loadTxt(String args) {

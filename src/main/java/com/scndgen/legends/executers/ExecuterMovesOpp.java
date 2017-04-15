@@ -22,8 +22,8 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.arefactored.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.arefactored.render.RenderStandardGameplay;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
@@ -61,8 +61,8 @@ public class ExecuterMovesOpp implements Runnable {
 
             executingTheCommandsAI();
 
-            RenderStandardGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
-            RenderStandardGameplay.getInstance().getGameInstance().aiRunning = false;
+            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
+            RenderGameplay.getInstance().getGameInstance().aiRunning = false;
 
             timer.suspend();
         } while (1 != 0);
@@ -78,8 +78,8 @@ public class ExecuterMovesOpp implements Runnable {
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
                     LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
-                    RenderStandardGameplay.getInstance().shakeCharLB();
-                    RenderStandardGameplay.getInstance().AnimatePhyAttax('o');
+                    RenderGameplay.getInstance().shakeCharLB();
+                    RenderGameplay.getInstance().AnimatePhyAttax('o');
                     LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
             }

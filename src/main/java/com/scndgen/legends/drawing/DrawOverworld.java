@@ -22,7 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.engine.JenesisLanguage;
+import com.scndgen.legends.Language;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -30,7 +30,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.VolatileImage;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,10 +41,7 @@ import java.util.logging.Logger;
  */
 public class DrawOverworld extends JenesisMode {
 
-    public Graphics2D g2d;
-    RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
     private ClassLoader classloader;
-    private GraphicsEnvironment ge;
     private URL url;
     private Color bg = new Color(214, 217, 223);
     private Image userPic = loadIcon("images/clouds.png");
@@ -63,7 +59,7 @@ public class DrawOverworld extends JenesisMode {
     private int moveSpec = 10;
     private Font font = new Font("SansSerif", Font.PLAIN, 14);
     private int spriteSto = 0;
-    private int valCode, picWidth, picHeight;
+    private int  picWidth, picHeight;
     private int yTEST = 400;
     private float opac = 10;
     private AffineTransform tfm = new AffineTransform(1.0, 0.0,
@@ -77,8 +73,6 @@ public class DrawOverworld extends JenesisMode {
             0.0, -1.0,
             (float) 50, (float) screenHeight);
     private Line2D lineT, lineB, lineL, lineR;
-    private VolatileImage volatileImg;
-    private GraphicsConfiguration gc;
     private int[] obX = new int[]{888, 2618};
     private int[] obY = new int[]{1575, 693};
     private Rectangle charBoxT, charBoxR, charBoxL, charBoxB;
@@ -125,12 +119,6 @@ public class DrawOverworld extends JenesisMode {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        //Check if Image is valid
-        valCode = volatileImg.validate(gc);
-        //if not create new vi, only affects windows apparently
-        if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-            createBackBuffer();
-        }
         g2d.drawImage(netWork, xCord, yCord, this);
         g2d.drawImage(drawSpr, xCordChar, yCordChar, this); //245,240
         g2d.drawImage(hills, xCord, yCord, this);
@@ -138,10 +126,9 @@ public class DrawOverworld extends JenesisMode {
         g2d.setColor(Color.BLACK);
         g2d.drawString("X: " + (xCord), 700, 24);
         g2d.drawString("Y: " + (yCord), 700, 38);
-        g2d.drawString(JenesisLanguage.getInstance().getLine(151), 700, 48);
+        g2d.drawString(Language.getInstance().getLine(151), 700, 48);
         g2d.drawString("CharX: " + (xCordChar), 750, 24);
         g2d.drawString("CharY: " + (yCordChar), 750, 38);
-
         if (showCollision) {
             //this code was used in my collision detection tests
             g2d.setComposite(makeComposite(5 * 0.1F));
