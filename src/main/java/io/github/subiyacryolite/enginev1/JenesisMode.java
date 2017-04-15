@@ -11,7 +11,7 @@ import java.awt.image.VolatileImage;
 import java.io.File;
 
 /**
- * Created by ifung on 14/04/2017.
+ * Created by ifunga on 14/04/2017.
  */
 public abstract class JenesisMode extends JPanel {
 

@@ -22,7 +22,6 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.menus.RenderStageSelect;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -130,7 +129,6 @@ public class JenesisImageLoader {
             ClassLoader classLoader = getClass().getClassLoader();
             URL resource = classLoader.getResource(imageName);
             System.out.println("Processing imageLoader........" + imageName);
-            RenderStageSelect.loadTxt("caching :: " + imageName);
             GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsConfiguration graphicsConfiguration = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration();
             BufferedImage bufferedImage = ImageIO.read(resource);

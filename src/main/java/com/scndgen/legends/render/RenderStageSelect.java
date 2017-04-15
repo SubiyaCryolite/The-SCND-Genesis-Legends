@@ -19,13 +19,13 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.menus;
+package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.StageSelect;
 import com.scndgen.legends.enums.StageSelection;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.scene.StageSelect;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisRender;
@@ -36,23 +36,22 @@ import java.awt.*;
 public class RenderStageSelect extends StageSelect implements JenesisRender {
 
     //♩♪♬♫
-    public static String[] trax = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
+    private String[] amnientMusicMetaData = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
             "\"vengeful\" by \"Jeremy Nicoll\" from \"The Battle for Wesnoth OST\"", //1
             "\"The City Falls\" by \"Doug Kaufman\" from \"The Battle for Wesnoth OST\"", //2
             "\"Suspense\" by \"Ryan Reilly\" from \"The Battle for Wesnoth OST\"", //3
             "\"Elvish theme\" by \"Doug Kaufman\" from \"The Battle for Wesnoth OST\"", //4
             "\"Breaking the Chains\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //5
             "\"Battle Music\" by \"Aleksi Aubry-Carlson\" from \"The Battle for Wesnoth OST\""}; //6
-    public static String[] musFiles = {"Mattias Westlund - The King is Dead",
+    private String[] ambientMusic = {"Mattias Westlund - The King is Dead",
             "Jeremy Nicoll - Vengeful Pursuit",
             "Doug Kaufman - The City Falls",
             "Ryan Reilly - Suspense",
             "Doug Kaufman - Elvish theme",
             "Mattias Westlund - Breaking the Chains",
             "Aleksi Aubry-Carlson - Battle Music"};
-    public static String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
     private Image charBack, loading;
-    public int horizColumns = 3, verticalRows;
+    private int horizColumns = 3, verticalRows;
     private JenesisImageLoader pix;
     private Image[] stageCap = new Image[numberOfStages];
     private Image[] stagePrev = new Image[numberOfStages];
@@ -112,7 +111,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     public void paintComponent(Graphics g) {
         createBackBuffer();
         loadAssets();
-        if (RenderStageSelect.selectedStage) {
+        if (selectedStage) {
             g2d.setColor(Color.BLACK);
             g2d.drawImage(stagePrev[stageSelIndex], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(0.7f));
@@ -124,13 +123,13 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
             g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && RenderStageSelect.selectedStage == false) {
+        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) && selectedStage == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.setColor(Color.WHITE);
             g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
+        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
@@ -182,7 +181,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
 
 
     private void loadCaps() {
-        RenderStageSelect.selectedStage = false;
+        selectedStage = false;
         try {
             for (int i = 0; i < stagePrevLox.length; i++) {
                 stageCap[i] = pix.loadImage("images/t_" + stagePrevLox[i] + ".png");
@@ -213,8 +212,8 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         }
     }
 
-    public static String getTrack() {
-        return musFiles[musicInt];
+    public String getTrack() {
+        return ambientMusic[ambientMusicIndex];
     }
 
     /**
@@ -354,5 +353,25 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
      */
     public int getCharRows() {
         return verticalRows;
+    }
+
+    public String[] getAmbientMusic() {
+        return ambientMusic;
+    }
+
+    public int getAmbientMusicIndex() {
+        return ambientMusicIndex;
+    }
+
+    public void setSelectedStage(boolean value) {
+        selectedStage = value;
+    }
+
+    public boolean getSelectedStage() {
+        return selectedStage;
+    }
+
+    public String[] getAmnientMusicMetaData() {
+        return amnientMusicMetaData;
     }
 }

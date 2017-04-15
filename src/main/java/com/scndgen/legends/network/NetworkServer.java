@@ -3,7 +3,7 @@ package com.scndgen.legends.network;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ClashSystem;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Created by ifung on 15/04/2017.
+ * Created by ifunga on 15/04/2017.
  */
 public class NetworkServer implements Runnable {
 
@@ -45,7 +45,7 @@ public class NetworkServer implements Runnable {
     private void InitServer() {
         try {
             serverIsRunning = true;
-            server = new ServerSocket(WindowMain.PORT, 1);
+            server = new ServerSocket(MainWindow.PORT, 1);
             System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -60,7 +60,7 @@ public class NetworkServer implements Runnable {
         try {
             connection = server.accept();
             System.out.println(connection.getInetAddress().getHostName());
-            WindowMain.getInstance().playerFound();
+            MainWindow.getInstance().playerFound();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -87,7 +87,7 @@ public class NetworkServer implements Runnable {
             try {
                 getStreams();
                 readMessage();
-                thread.sleep(WindowMain.serverLatency);
+                thread.sleep(MainWindow.serverLatency);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
@@ -116,7 +116,7 @@ public class NetworkServer implements Runnable {
             if (line.endsWith("quit")) {
                 closeServer();
             } else if (line.endsWith("player_QSLV")) {
-                WindowMain.getInstance().playerFound();
+                MainWindow.getInstance().playerFound();
             } else if (line.endsWith("attack")) {
 
                 //1111 attack
@@ -127,8 +127,8 @@ public class NetworkServer implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
-                if (WindowMain.getInstance().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    WindowMain.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
 
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
@@ -137,7 +137,7 @@ public class NetworkServer implements Runnable {
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                WindowMain.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
+                MainWindow.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
             } //Character
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);
@@ -178,10 +178,10 @@ public class NetworkServer implements Runnable {
                     RenderCharacterSelectionScreen.getInstance().selThing('o');
                 }
             } else if (line.equalsIgnoreCase("lastMess")) {
-                sendData(WindowMain.getInstance().last);
+                sendData(MainWindow.getInstance().last);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                WindowMain.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury('o');
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
@@ -202,7 +202,7 @@ public class NetworkServer implements Runnable {
      */
     public void sendData(String mess) {
         try {
-            WindowMain.getInstance().last = mess;
+            MainWindow.getInstance().last = mess;
             output.writeUTF(mess);
             output.flush();
         } catch (Exception e) {

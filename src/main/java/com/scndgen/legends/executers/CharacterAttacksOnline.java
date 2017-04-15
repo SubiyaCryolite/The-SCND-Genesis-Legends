@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.windows.MainWindow;
 
 public class CharacterAttacksOnline implements Runnable {
 
@@ -51,7 +51,7 @@ public class CharacterAttacksOnline implements Runnable {
     public void run() {
         //normal attack
         if (executionType == 'n') {
-            RenderGameplay.getInstance().comboCounter = 0;
+            RenderGameplay.getInstance().setComboCounter(0);
             //clear active combos
             RenderGameplay.getInstance().setSprites('c', 9, 11);
             RenderGameplay.getInstance().setSprites('o', 9, 11);
@@ -67,11 +67,11 @@ public class CharacterAttacksOnline implements Runnable {
     private void executingTheCommands() {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
-            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(action[index], 2, 'c', 'o');
+            MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
+            MainWindow.getInstance().getAttacksChar().attack(action[index], 2, 'c', 'o');
             RenderGameplay.getInstance().shakeOppCharLB();
             RenderGameplay.getInstance().AnimatePhyAttax('c');
-            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+            MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
         }
     }
 }

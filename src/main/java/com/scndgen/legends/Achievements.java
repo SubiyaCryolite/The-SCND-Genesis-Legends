@@ -24,6 +24,7 @@ package com.scndgen.legends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.util.ArrayList;
@@ -33,10 +34,10 @@ import java.util.ArrayList;
  */
 public class Achievements {
 
-    private static ArrayList name = new ArrayList();
-    private static ArrayList desc = new ArrayList();
-    private static ArrayList cat = new ArrayList();
-    private static ArrayList points = new ArrayList();
+    private final ArrayList name = new ArrayList();
+    private final ArrayList desc = new ArrayList();
+    private final ArrayList cat = new ArrayList();
+    private final ArrayList points = new ArrayList();
     public String[] achDesc;
     public String[] achFull;
     private JenesisImageLoader pix;
@@ -47,14 +48,12 @@ public class Achievements {
     private boolean[] isLocked = new boolean[14];
     private int currentPoints;
     private int bonus;
+    private static Achievements instance;
 
-
-    public Achievements(LoginScreen p) {
-
-        parent = p;
-
+    public Achievements(LoginScreen loginScreen) {
+        instance = this;
+        parent = loginScreen;
         newInstance();
-
         achDesc = new String[]{Language.getInstance().getLine(61), //0
                 Language.getInstance().getLine(62), //1
                 Language.getInstance().getLine(63), //2
@@ -112,7 +111,7 @@ public class Achievements {
      *
      * @return
      */
-    public static int getAcievementsTriggered() {
+    public int getAcievementsTriggered() {
         return name.size();
     }
 
@@ -122,7 +121,7 @@ public class Achievements {
      * @param index
      * @return details
      */
-    public static String[] getName(int index) {
+    public String[] getName(int index) {
         String[] results = new String[4];
         results[0] = "" + name.get(index);
         results[1] = "" + desc.get(index);
@@ -149,10 +148,10 @@ public class Achievements {
      * Scan for conditions
      */
     public void scan() {
-        if (Characters.getCharMinLife() <= 79 && RenderGameplay.getInstance().perCent >= 82 && isLocked[0]) {
+        if (Characters.getCharMinLife() <= 79 && RenderGameplay.getInstance().getPercent() >= 82 && isLocked[0]) {
             RenderGameplay.getInstance().setNotifiationPic(1); //cat + 1
             name.add(achDesc[0]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[0]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[0]);
             desc.add(achFull[0]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -161,10 +160,10 @@ public class Achievements {
             isLocked[0] = false;
         }
 
-        if (Characters.getCharMinLife() <= 30 && RenderGameplay.getInstance().perCent >= 50 && isLocked[1]) {
+        if (Characters.getCharMinLife() <= 30 && RenderGameplay.getInstance().getPercent() >= 50 && isLocked[1]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[1]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[1]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[1]);
             desc.add(achFull[1]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -173,10 +172,10 @@ public class Achievements {
             isLocked[1] = false;
         }
 
-        if (((RenderGameplay.getInstance().perCent - RenderGameplay.getInstance().perCent2) >= 50) && isLocked[4]) {
+        if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 50) && isLocked[4]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[2]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[2]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[2]);
             desc.add(achFull[2]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -187,10 +186,10 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (((RenderGameplay.getInstance().perCent - RenderGameplay.getInstance().perCent2) >= 40) && isLocked[3]) {
+        if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 40) && isLocked[3]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[3]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[3]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[3]);
             desc.add(achFull[3]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -200,10 +199,10 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (((RenderGameplay.getInstance().perCent - RenderGameplay.getInstance().perCent2) >= 30) && isLocked[2]) {
+        if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 30) && isLocked[2]) {
             RenderGameplay.getInstance().setNotifiationPic(1); //cat + 1
             name.add(achDesc[4]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[4]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[4]);
             desc.add(achFull[4]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -215,7 +214,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().getAttackType('c').equalsIgnoreCase("fury") && RenderGameplay.getInstance().getGameInstance().isGameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[5]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[5]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[5]);
             desc.add(achFull[5]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -227,7 +226,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver) {
             RenderGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[6]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[6]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[6]);
             desc.add(achFull[6]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -238,7 +237,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().getAttackType('o').equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //cat + 1
             name.add(achDesc[7]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[7]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[7]);
             desc.add(achFull[7]);
             cat.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -247,10 +246,10 @@ public class Achievements {
             isLocked[6] = false;
         }
 
-        if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && (RenderGameplay.getInstance().perCent - RenderGameplay.getInstance().perCent2 <= 30) && isLocked[7]) {
+        if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && (RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2() <= 30) && isLocked[7]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[8]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[8]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[8]);
             desc.add(achFull[8]);
             cat.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -262,7 +261,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && parent.consecWins >= 5 && isLocked[8]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[9]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[9]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[9]);
             desc.add(achFull[9]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -275,7 +274,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[9]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //cat + 1
             name.add(achDesc[10]);
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[10]);
+            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achDesc[10]);
             desc.add(achFull[10]);
             cat.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -318,5 +317,9 @@ public class Achievements {
         //
         //Gameplay.setNotifiationPic(1); //cat + 1
         currentPoints = currentPoints + 20 + bonus;
+    }
+
+    public static synchronized Achievements getInstance() {
+        return instance;
     }
 }

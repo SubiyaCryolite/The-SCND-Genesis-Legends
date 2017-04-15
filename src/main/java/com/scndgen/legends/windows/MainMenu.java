@@ -22,9 +22,9 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderMainMenu;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
@@ -47,9 +47,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private static LoginScreen p;
     public int[] ach = new int[5];
     public int[] classArr = new int[5];
-    private WindowMain startApp;
-    private String[] mode = {WindowMain.singlePlayer, WindowMain.lanHost, WindowMain.lanClient, WindowMain.storyMode, WindowMain.singlePlayer2};
-    private SpecialDrawModeRender draw;
+    private String[] mode = {MainWindow.singlePlayer, MainWindow.lanHost, MainWindow.lanClient, MainWindow.storyMode, MainWindow.singlePlayer2};
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;
@@ -67,9 +65,9 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         startup.play();
         strUser = dude;
         setUndecorated(true);
-        draw = new SpecialDrawModeRender();
         setLayout(new BorderLayout());
-        setContentPane(draw);
+        RenderMainMenu.getInstance().newInstance();
+        setContentPane(RenderMainMenu.getInstance());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         addMouseMotionListener(this);
@@ -123,7 +121,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     }
 
     public final void sytemNotice(String moi) {
-        draw.systemNotice(moi);
+        RenderMainMenu.getInstance().systemNotice(moi);
     }
 
     @Override
@@ -135,46 +133,46 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      */
     private void select() {
         //if viewing stats, go back to menu
-        if (draw.getPlace() == 1 || draw.getPlace() == 2 || draw.getPlace() == 3) {
-            if (draw.getPlace() == 3) {
-                draw.stopTut();
+        if (RenderMainMenu.getInstance().getPlace() == 1 || RenderMainMenu.getInstance().getPlace() == 2 || RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().stopTut();
             }
-            draw.setPlace(0);
+            RenderMainMenu.getInstance().setPlace(0);
         } else {
-            String destination = draw.getMenuModeStr();
+            String destination = RenderMainMenu.getInstance().getMenuModeStr();
 
-            if (destination.equalsIgnoreCase(WindowMain.lanClient)) {
+            if (destination.equalsIgnoreCase(MainWindow.lanClient)) {
                 scan = new NetworkScanLan();
-            } else if (destination.equalsIgnoreCase(WindowMain.lanHost)) {
+            } else if (destination.equalsIgnoreCase(MainWindow.lanHost)) {
                 terminateThis();
-                draw.systemNotice(Language.getInstance().getLine(107));
-                startApp = new WindowMain(strUser, mode[1]);
+                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(107));
+                MainWindow.newInstance(strUser, mode[1]);
             } else if (destination.equalsIgnoreCase("vs1")) {
                 terminateThis();
-                draw.systemNotice(Language.getInstance().getLine(108));
-                startApp = new WindowMain(strUser, mode[0]);
+                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(108));
+                MainWindow.newInstance(strUser, mode[0]);
             } else if (destination.equalsIgnoreCase("vs2")) {
                 terminateThis();
-                draw.systemNotice(Language.getInstance().getLine(109));
-                startApp = new WindowMain(strUser, mode[4]);
-            } else if (destination.equalsIgnoreCase(WindowMain.storyMode)) {
+                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(109));
+                MainWindow.newInstance(strUser, mode[4]);
+            } else if (destination.equalsIgnoreCase(MainWindow.storyMode)) {
 
                 terminateThis();
-                startApp = new WindowMain(strUser, WindowMain.storyMode);
+                MainWindow.newInstance(strUser, MainWindow.storyMode);
             } else if (destination.equalsIgnoreCase("options")) {
                 options = new WindowOptions();
             } else if (destination.equalsIgnoreCase("stats")) {
-                draw.setPlace(1);
+                RenderMainMenu.getInstance().setPlace(1);
             } else if (destination.equalsIgnoreCase("ach")) {
-                draw.refreshStats();
-                draw.setPlace(2);
+                RenderMainMenu.getInstance().refreshStats();
+                RenderMainMenu.getInstance().setPlace(2);
             } else if (destination.equalsIgnoreCase("about")) {
                 about = new WindowAbout();
             } else if (destination.equalsIgnoreCase("controls")) {
                 controls = new WindowControls();
             } else if (destination.equalsIgnoreCase("tutorial")) {
-                draw.setPlace(3);
-                draw.startTut();
+                RenderMainMenu.getInstance().setPlace(3);
+                RenderMainMenu.getInstance().startTut();
             } else if (destination.equalsIgnoreCase("logout")) {
                 logOut();
             } else if (destination.equalsIgnoreCase("leaders")) {
@@ -192,10 +190,6 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         }
     }
 
-    public WindowMain getMain() {
-        return startApp;
-    }
-
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         {
@@ -203,25 +197,25 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
 
             //down - positive values
             if (count >= 0) {
-                draw.goDown();
+                RenderMainMenu.getInstance().goDown();
             }
             //up -negative values
             if (count < 0) {
-                draw.goUp();
+                RenderMainMenu.getInstance().goUp();
             }
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent m) {
-        int x = draw.getXMenu();
-        int y = draw.getYMenu() - 14;
-        int space = draw.getSpacer();
-        if (draw.getPlace() == 3) {
+        int x = RenderMainMenu.getInstance().getXMenu();
+        int y = RenderMainMenu.getInstance().getYMenu() - 14;
+        int space = RenderMainMenu.getInstance().getSpacer();
+        if (RenderMainMenu.getInstance().getPlace() == 3) {
             if (m.getX() >= 425) {
-                draw.forwarTut();
+                RenderMainMenu.getInstance().forwarTut();
             } else {
-                draw.backTut();
+                RenderMainMenu.getInstance().backTut();
             }
         } else if ((m.getY() > y) && (m.getY() < (y + (space * last))) && m.getX() > x) {
             if (m.getButton() == MouseEvent.BUTTON1) {
@@ -248,61 +242,61 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
 
     @Override
     public void mouseMoved(MouseEvent m) {
-        int x = draw.getXMenu();
-        int y = draw.getYMenu() - 14;
-        int space = draw.getSpacer() - 2;
+        int x = RenderMainMenu.getInstance().getXMenu();
+        int y = RenderMainMenu.getInstance().getYMenu() - 14;
+        int space = RenderMainMenu.getInstance().getSpacer() - 2;
         //menu space
         if ((m.getX() > x) && (m.getX() < x + 200)) {
             if ((m.getY() > space) && (m.getY() < (y + space))) {
-                draw.setMenuPos(0);
+                RenderMainMenu.getInstance().setMenuPos(0);
             }
 
             if ((m.getY() > (y + space)) && (m.getY() < (y + (space * 2)))) {
-                draw.setMenuPos(1);
+                RenderMainMenu.getInstance().setMenuPos(1);
             }
 
             if ((m.getY() > (y + (space * 2))) && (m.getY() < (y + (space * 3)))) {
-                draw.setMenuPos(2);
+                RenderMainMenu.getInstance().setMenuPos(2);
             }
 
             if ((m.getY() > (y + (space * 3))) && (m.getY() < (y + (space * 4)))) {
-                draw.setMenuPos(3);
+                RenderMainMenu.getInstance().setMenuPos(3);
             }
 
             if ((m.getY() > (y + (space * 4))) && (m.getY() < (y + (space * 5)))) {
-                draw.setMenuPos(4);
+                RenderMainMenu.getInstance().setMenuPos(4);
             }
 
             if ((m.getY() > (y + (space * 5))) && (m.getY() < (y + (space * 6)))) {
-                draw.setMenuPos(5);
+                RenderMainMenu.getInstance().setMenuPos(5);
             }
 
             if ((m.getY() > (y + (space * 7))) && (m.getY() < (y + (space * 8)))) {
-                draw.setMenuPos(6);
+                RenderMainMenu.getInstance().setMenuPos(6);
             }
 
             if ((m.getY() > (y + (space * 8))) && (m.getY() < (y + (space * 9)))) {
-                draw.setMenuPos(7);
+                RenderMainMenu.getInstance().setMenuPos(7);
             }
 
             if ((m.getY() > (y + (space * 9))) && (m.getY() < (y + (space * 10)))) {
-                draw.setMenuPos(8);
+                RenderMainMenu.getInstance().setMenuPos(8);
             }
 
             if ((m.getY() > (y + (space * 10))) && (m.getY() < (y + (space * 11)))) {
-                draw.setMenuPos(9);
+                RenderMainMenu.getInstance().setMenuPos(9);
             }
 
             if ((m.getY() > (y + (space * 11))) && (m.getY() < (y + (space * 12)))) {
-                draw.setMenuPos(10);
+                RenderMainMenu.getInstance().setMenuPos(10);
             }
 
             if ((m.getY() > (y + (space * 12))) && (m.getY() < (y + (space * last)))) {
-                draw.setMenuPos(11);
+                RenderMainMenu.getInstance().setMenuPos(11);
             }
 
             if ((m.getY() > (y + (space * 13))) && (m.getY() < (y + (space * last)))) {
-                draw.setMenuPos(12);
+                RenderMainMenu.getInstance().setMenuPos(12);
             }
         }
         //System.out.print("Mouse X:"+m.getX());
@@ -326,11 +320,11 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         int keyCode = e.getKeyCode();
 
         if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
-            draw.goDown();
+            RenderMainMenu.getInstance().goDown();
         }
 
         if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
-            draw.goUp();
+            RenderMainMenu.getInstance().goUp();
         }
 
         if (keyCode == KeyEvent.VK_F) {
@@ -346,55 +340,55 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         }
 
         if (keyCode == KeyEvent.VK_RIGHT) {
-            if (draw.getPlace() == 3) {
-                draw.forwarTut();
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().forwarTut();
             }
         }
 
         if (keyCode == KeyEvent.VK_LEFT) {
-            if (draw.getPlace() == 3) {
-                draw.backTut();
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().backTut();
             }
         }
 
         if (keyCode == KeyEvent.VK_1) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(0);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(0);
             }
         }
 
         if (keyCode == KeyEvent.VK_2) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(3);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(3);
             }
         }
 
         if (keyCode == KeyEvent.VK_3) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(11);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(11);
             }
         }
 
         if (keyCode == KeyEvent.VK_4) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(20);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(20);
             }
         }
 
         if (keyCode == KeyEvent.VK_5) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(27);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(27);
             }
         }
 
         if (keyCode == KeyEvent.VK_6) {
-            if (draw.getPlace() == 3) {
-                draw.sktpToTut(32);
+            if (RenderMainMenu.getInstance().getPlace() == 3) {
+                RenderMainMenu.getInstance().sktpToTut(32);
             }
         }
 
         if (keyCode == KeyEvent.VK_F12) {
-            draw.captureScreenShot();
+            RenderMainMenu.getInstance().captureScreenShot();
         }
 
         if (keyCode == KeyEvent.VK_ENTER) {
@@ -465,21 +459,21 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      * Repaints GUI
      */
     public void refresh() {
-        draw.repaint();
+        RenderMainMenu.getInstance().repaint();
     }
 
     /**
      * Stops repainting GUI
      */
     public void stopPaint() {
-        draw.StopRepaint();
+        RenderMainMenu.getInstance().StopRepaint();
     }
 
     /**
      * Gets rid of main menu (minimise)
      */
     public void terminateThis() {
-        draw.StopRepaint();
+        RenderMainMenu.getInstance().StopRepaint();
         isActive = false;
         dispose();
     }
@@ -502,7 +496,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      * Create a client game
      */
     public void hostGame() {
-        startApp = new WindowMain(MainMenu.getUserName(), WindowMain.lanClient);
+        MainWindow.newInstance(com.scndgen.legends.windows.MainMenu.getUserName(), MainWindow.lanClient);
     }
 
     private void refreshWindow() {
@@ -534,9 +528,9 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
 
                         compassDir2 = JenesisGamePad.getInstance().getXYStickDir();
                         if (compassDir2 == JenesisGamePad.getInstance().NORTH) {
-                            draw.goUp();
+                            RenderMainMenu.getInstance().goUp();
                         } else if (compassDir2 == JenesisGamePad.getInstance().SOUTH) {
-                            draw.goDown();
+                            RenderMainMenu.getInstance().goDown();
                         }
 
                         //update bottons
@@ -548,14 +542,14 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                         {
                             if (compassDir == JenesisGamePad.getInstance().SOUTH) {
                                 if (doneChilling) {
-                                    draw.goDown();
+                                    RenderMainMenu.getInstance().goDown();
                                 }
                                 menuLatency();
                             }
 
                             if (compassDir == JenesisGamePad.getInstance().NORTH) {
                                 if (doneChilling) {
-                                    draw.goUp();
+                                    RenderMainMenu.getInstance().goUp();
                                 }
                                 menuLatency();
                             }

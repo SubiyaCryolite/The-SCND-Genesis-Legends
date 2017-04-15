@@ -25,6 +25,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ThreadGameInstance;
+import com.scndgen.legends.windows.MainWindow;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,11 +77,11 @@ public class OpponentAttacks implements Runnable {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story scene bug
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
-                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
+                    MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                    MainWindow.getInstance().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
                     RenderGameplay.getInstance().shakeCharLB();
                     RenderGameplay.getInstance().AnimatePhyAttax('o');
-                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                    MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 }
             }
         }

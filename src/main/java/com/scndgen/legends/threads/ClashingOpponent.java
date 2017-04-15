@@ -48,7 +48,7 @@ public class ClashingOpponent implements Runnable {
 
     @Override
     public void run() {
-        while (RenderGameplay.getInstance().clasherRunnign) {
+        while (RenderGameplay.getInstance().getClasherRunnign()) {
             try {
                 int delay = 360;
                 RenderGameplay.getInstance().opponetClashing();

@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawOverworld;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -33,6 +33,7 @@ import java.util.logging.Logger;
  */
 public class Animations3 implements Runnable {
     private Thread thread;
+
     public Animations3() {
         if (thread != null) {
             thread.resume();
@@ -48,27 +49,26 @@ public class Animations3 implements Runnable {
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             do {
                 try {
-                    if (RenderGameplay.getInstance().verticalMove.equalsIgnoreCase("no")) {
+                    if (RenderGameplay.getInstance().getVerticalMove().equalsIgnoreCase("no")) {
                         thread.sleep(0016);
-                        RenderGameplay.getInstance().amb1x = RenderGameplay.getInstance().amb1x - RenderGameplay.getInstance().ambSpeed1;
-                        RenderGameplay.getInstance().amb2x = RenderGameplay.getInstance().amb2x - RenderGameplay.getInstance().ambSpeed2;
-
-                        if (RenderGameplay.getInstance().amb1x < (-960)) {
-                            RenderGameplay.getInstance().amb1x = 852;
+                        RenderGameplay.getInstance().setAmb1x(RenderGameplay.getInstance().getAmb1x() - RenderGameplay.getInstance().getAmbSpeed1());
+                        RenderGameplay.getInstance().setAmb2x(RenderGameplay.getInstance().getAmb2x() - RenderGameplay.getInstance().getAmbSpeed2());
+                        if (RenderGameplay.getInstance().getAmb1x() < -960) {
+                            RenderGameplay.getInstance().setAmb1x(852);
                         }
-                        if (RenderGameplay.getInstance().amb2x < (-960)) {
-                            RenderGameplay.getInstance().amb2x = 852;
+                        if (RenderGameplay.getInstance().getAmb2x() < (-960)) {
+                            RenderGameplay.getInstance().setAmb2x(852);
                         }
                     } else {
                         thread.sleep(0016);
-                        RenderGameplay.getInstance().amb1y = RenderGameplay.getInstance().amb1y + RenderGameplay.getInstance().ambSpeed1;
-                        RenderGameplay.getInstance().amb2y = RenderGameplay.getInstance().amb2y + RenderGameplay.getInstance().ambSpeed2;
+                        RenderGameplay.getInstance().setAmb1y(RenderGameplay.getInstance().getAmb1y() + RenderGameplay.getInstance().getAmbSpeed1());
+                        RenderGameplay.getInstance().setAmb2y(RenderGameplay.getInstance().getAmb2y() + RenderGameplay.getInstance().getAmbSpeed2());
 
-                        if (RenderGameplay.getInstance().amb1y > 480) {
-                            RenderGameplay.getInstance().amb1y = -480;
+                        if (RenderGameplay.getInstance().getAmb1y() > 480) {
+                            RenderGameplay.getInstance().setAmb1y(-480);
                         }
-                        if (RenderGameplay.getInstance().amb2y > 480) {
-                            RenderGameplay.getInstance().amb2y = -480;
+                        if (RenderGameplay.getInstance().getAmb2y() > 480) {
+                            RenderGameplay.getInstance().setAmb2y(-480);
                         }
                     }
 

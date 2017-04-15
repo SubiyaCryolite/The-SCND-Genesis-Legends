@@ -21,9 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 
 public class CharacterAttacks implements Runnable {
 
@@ -37,35 +36,32 @@ public class CharacterAttacks implements Runnable {
 
     @Override
     public void run() {
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
             //RenderGameplay.getInstance().setSprites('a',9,11);
             //RenderGameplay.getInstance().setSprites('b',9,11);
         }
         //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
-        // each Mattack will check if they are in the battle que.... if they are they execute
+        //each attack will check if they are in the battle que.... if they are they execute
         RenderGameplay.getInstance().getGameInstance().pauseActivityRegen();
         RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
-
         if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
             for (int o = 0; o < 4; o++) {
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().attackArray[o]), 2, 'c', 'o');
+                MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
+                MainWindow.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), 2, 'c', 'o');
                 RenderGameplay.getInstance().shakeOppCharLB();
                 RenderGameplay.getInstance().AnimatePhyAttax('c');
-                if ((o + 1) == RenderGameplay.getInstance().numOfAttacks) {
+                if ((o + 1) == RenderGameplay.getInstance().getNumOfAttacks()) {
                     break;
                 }
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
             }
         }
-
-        if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
+        if (RenderGameplay.getInstance().getDone() != 1)// if game still running enable menus
         {
             RenderGameplay.getInstance().getGameInstance().resumeActivityRegen();
         }
-
-        RenderGameplay.getInstance().comboCounter = 0;
-        RenderGameplay.getInstance().numOfAttacks = 0;
+        RenderGameplay.getInstance().setComboCounter(0);
+        RenderGameplay.getInstance().setNumOfAttacks(0);
     }
 
     public void pause() {

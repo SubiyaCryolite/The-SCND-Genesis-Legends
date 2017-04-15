@@ -25,9 +25,8 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisRender;
@@ -92,7 +91,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
             g2d.setComposite(makeComposite(1.0f));
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
+        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) == false) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.drawImage(storyPrev, charXcap + x, charYcap, this);
@@ -159,7 +158,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         victorySound = new AudioPlayback(AudioPlayback.soundGameOver(), true);
         menuSound = new AudioPlayback("audio/menu-select.mp3", true);
         JenesisImageLoader pix = new JenesisImageLoader();
-        RenderStageSelect.selectedStage = false;
+        RenderStageSelect.getInstance().setSelectedStage(false);
         try {
             for (int i = 0; i < scenes; i++) {
                 storyCap[i] = pix.loadImage("images/Story/locked/x" + (i + 1) + ".png");

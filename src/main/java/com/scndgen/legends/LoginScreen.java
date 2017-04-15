@@ -25,7 +25,7 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.windows.MainMenu;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -528,7 +528,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 jenesisLog(graffix);
 
                 frames = rs.getInt("frames");
-                WindowMain.tTime = frames;
+                MainWindow.tTime = frames;
                 jenesisLog(frames);
 
                 upToDate = rs.getString("upToDate");
@@ -1246,7 +1246,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                     new File(directory).mkdir();
                     isDownloadingMusic = true;
                     thisPic.repaint();
-                    //find outR the number of trax needed
+                    //find outR the number of amnientMusicMetaData needed
                     //read the file
                     try {
                         br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
@@ -1279,7 +1279,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                         for (int u = 1; u
                                 <= numOfTraxToDownload; u++) {
                             if (u < 10) {
-                                currentTrack = tx.substring(tx.indexOf("<trax" + u + ">") + 7, tx.indexOf("</trax" + u + ">"));
+                                currentTrack = tx.substring(tx.indexOf("<amnientMusicMetaData" + u + ">") + 7, tx.indexOf("</amnientMusicMetaData" + u + ">"));
                                 fileNameMus = tx.substring(tx.indexOf("<name" + u + ">") + 7, tx.indexOf("</name" + u + ">"));
                                 currentTrackSize = Long.parseLong(tx.substring(tx.indexOf("<size" + u + ">") + 7, tx.indexOf("</size" + u + ">")));
                                 System.out.println("Parsed " + currentTrackSize);
@@ -1287,7 +1287,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
                             } else//float digit songs
                             {
-                                currentTrack = tx.substring(tx.indexOf("<trax" + u + ">") + 8, tx.indexOf("</trax" + u + ">"));
+                                currentTrack = tx.substring(tx.indexOf("<amnientMusicMetaData" + u + ">") + 8, tx.indexOf("</amnientMusicMetaData" + u + ">"));
                                 currentTrackSize = Long.parseLong(tx.substring(tx.indexOf("<size" + u + ">") + 8, tx.indexOf("</size" + u + ">")));
                                 fileNameMus = tx.substring(tx.indexOf("<name" + u + ">") + 8, tx.indexOf("</name" + u + ">"));
 

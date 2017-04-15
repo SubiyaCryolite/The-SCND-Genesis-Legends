@@ -24,6 +24,7 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import javax.swing.*;
@@ -31,8 +32,8 @@ import java.awt.*;
 
 public abstract class StoryMenu extends JenesisMode {
 
-    public int lastRow, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
-    public int mode, scenes, columns = 3, rows;
+    protected int lastRow, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
+    protected int mode, scenes, columns = 3, rows;
     protected int oldId = -1;
     protected boolean[] hiddenStage;
     protected boolean loadingNow;
@@ -183,7 +184,7 @@ public abstract class StoryMenu extends JenesisMode {
 
     public void back() {
         getStoryInstance().firstRun = true;
-        LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
+        MainWindow.getInstance().backToMenuScreen();
     }
 
     /**

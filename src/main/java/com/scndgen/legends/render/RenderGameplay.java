@@ -21,14 +21,12 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.menus.RenderStageSelect;
+import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -45,47 +43,30 @@ import java.util.logging.Logger;
  */
 public class RenderGameplay extends Gameplay implements JenesisRender {
     private static RenderGameplay instance;
-    public Animations1 upDown;
-    public Animations2 upDown2;
-    public Animations3 upDown3;
-    public boolean limitRunning = true, animCharFree = true;
+    private Animations1 upDown;
+    private Animations2 upDown2;
+    private Animations3 upDown3;
     private Font bigFont, normalFont;
     private Font notSelected;
     private Font statusFont;
-    private float angleRaw, charPointInc;
-    private int result;
     private VolatileImage charSpec, blankPortrait;
     private VolatileImage infoPic, stat1, stat2, stat3, stat4;
     private VolatileImage ambient1, ambient2, foreGround;
-    private int limitBreak;
     private GradientPaint queBar = new GradientPaint(0, 0, Color.YELLOW, 255, 10, Color.RED, false);
     private GradientPaint gradient1 = new GradientPaint(xLocal, 10, Color.YELLOW, 255, 10, Color.RED, true);
     private GradientPaint gradient2 = new GradientPaint(xLocal, 10, Color.white, 255, 10, Color.blue, true);
-    private float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
-    private int comboPicArrayPosOpp = 8;
-    private String manipulateThis;
-    private int one, two, three, four, oneO, twoO, threeO, fourO;
-    private int comicY, opponentDamageYLoc, playerDamageYLoc, yTEST = 25, yTESTinit = 25;
-    private float opac = 1.0f;
-    private float damOpInc;
-    private boolean nextEnabled = true, backEnabled = true;
-    //good guys
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
     private VolatileImage flashy;
     private Image[] moveCat, numberPix;
     private VolatileImage[] characterPortraits;
-    private AudioPlayback sound, fightMus, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
+    private AudioPlayback sound, ambientMusic, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
     private Image[] comboPicArray, comicPicArray, times, statsPicChar = new Image[5], statsPicOpp = new Image[5];
     private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, bgPic, damLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
-    //UI images
-    private VolatileImage characterPortrait, storyPic;
-    private int charOp = 10, comicPicArrayPos = 0;
-    //numbers are arrays
     private Image[] charSprites, oppSprites;
     private VolatileImage[] attackAnim2, attackAnim1;
     private VolatileImage[] storyPicArr, stats;
+    private VolatileImage characterPortrait, storyPic;
     private Color CurrentColor = (Color.RED);
-    private float opacityTxt = 10, opacityPic = 0.0f;
 
     private RenderGameplay() {
         setLayout(new BorderLayout());
@@ -104,7 +85,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         statusFont = LoginScreen.getInstance().getMyFont(28);
         bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.bigTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
-        getCharMoveset();
+        setCharMoveset();
         LoginScreen.getInstance().defHeight = LoginScreen.getInstance().getGameHeight();
         cacheNumPix();
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
@@ -112,15 +93,15 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         } else {
             loadCharSpritesLow();
         }
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-            server = LoginScreen.getInstance().getMenu().getMain().getServer();
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            server = MainWindow.getInstance().getServer();
         }
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
             //get ip from game
-            client = LoginScreen.getInstance().getMenu().getMain().getClient();
+            client = MainWindow.getInstance().getClient();
         }
 
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+        if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
             charAssSpriteStatus = 9;
             oppAssSpriteStatus = 9;
         } else {
@@ -181,14 +162,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     g2d.drawImage(ambient2, amb2x, amb2y, this);
                 }
 
-                if (LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                if (MainWindow.getInstance().getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
                 }
 
                 g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), this);
 
 
-                if (!LoginScreen.getInstance().getMenu().getMain().getAttacksChar().isOverlayDisabled()) {
+                if (!MainWindow.getInstance().getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + shakeyOffsetChar, charYcord - shakeyOffsetChar, this);
                 }
 
@@ -272,7 +253,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
                 g2d.drawImage(hpHolder, (45 + 62 + x2) + shakeyOffsetOpp, (y + 4 + y2 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setColor(Color.WHITE);
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
                     g2d.drawString("HP: " + Math.round((RenderGameplay.getInstance().getOppLife2() + RenderGameplay.getInstance().getOppLife())) + " : " + ((RenderGameplay.getInstance().perCent2a + RenderGameplay.getInstance().perCent2) / 2) + "%", (int) ((55 + 64 + x2)), (int) ((18 + y2 - oppBarYOffset)));
                 } else {
                     g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getOppLife()) + " : " + RenderGameplay.getInstance().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
@@ -282,7 +263,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 g2d.drawImage(oppBar, (x2 - 20) + shakeyOffsetOpp, (y2 + 18 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setPaint(gradient1);
                 g2d.fillRoundRect((x2 - 17) + shakeyOffsetOpp, (y2 + 22 - oppBarYOffset) - shakeyOffsetOpp, RenderGameplay.getInstance().getGameInstance().getRecoveryUnitsOpp(), 6, 6, 6);
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.singlePlayer2)) {
+                if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
                     g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 40), this);
                     g2d.setColor(Color.WHITE);
                     g2d.drawString("HP: " + Math.round((RenderGameplay.getInstance().getOppLife2() + RenderGameplay.getInstance().getOppLife())) + " : " + ((RenderGameplay.getInstance().perCent2a + RenderGameplay.getInstance().perCent2) / 2) + "%", 55 + 64 + x2, 18 + y2 - 40);
@@ -315,7 +296,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 {
                     g2d.setColor(Color.WHITE);
 
-                    if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                    if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
                         g2d.drawString("HP: " + ((Math.round(RenderGameplay.getInstance().getCharLife3()) + Math.round(RenderGameplay.getInstance().getCharLife()))) + " : " + ((RenderGameplay.getInstance().perCent3a + RenderGameplay.getInstance().perCent) / 2) + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
                     } else {
                         g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getCharLife()) + " : " + RenderGameplay.getInstance().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
@@ -726,7 +707,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
                 characterPortraits = new VolatileImage[charNames.length];
 
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
                     for (CharacterEnum characterEnum : CharacterEnum.values()) {
                         characterPortraits[characterEnum.index()] = pix.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
                     }
@@ -746,7 +727,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 fury = fury2;
                 ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
                 ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
                     storyPicArr = new VolatileImage[13];
                     for (int u = 0; u < 11; u++) {
                         storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
@@ -822,7 +803,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 time9 = pix.loadImage("images/fig/9.png");
                 times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
                 characterPortraits = new VolatileImage[charNames.length];
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
                     for (int p = 0; p < charNames.length; p++) {
                         characterPortraits[p] = pix.loadVolatileImage("images/" + charNames[p] + "/cap.png", 48, 48, this);
                     }
@@ -842,7 +823,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 fury = fury2;
                 ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
                 ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
                     storyPicArr = new VolatileImage[11];
                     for (int u = 0; u < 11; u++) {
                         storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
@@ -986,84 +967,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     /**
-     * Updates the life of Character
-     *
-     * @param forWho   - the person affected
-     * @param ThisMuch - the life to add/subtract
-     * @param attacker - who inflicted damage
-     */
-    public void lifePhysUpdateSimple(int forWho, int ThisMuch, String attacker) {
-
-        if (forWho == 1) //Attack from player
-        {
-            damageChar = ThisMuch;
-            ActivePerson = attacker;
-            incLImit(damageChar);
-            guiScreenChaos(ThisMuch * getDamageMultiplierOpp(), 'o');
-            for (int m = 0; m < damageChar; m++) {
-                if (life >= 0) {
-                    life = life - (1 * getDamageMultiplierOpp());
-                }
-            }
-            daNum = ((getCharLife() / getCharMaxLife()) * 100); //perc life x life bar length
-            lifePlain = Math.round(daNum); // round off
-            lifeTotalPlain = Math.round(getCharLife()); // for text
-            perCent = Math.round(lifePlain);
-        }
-
-        if (forWho == 2) //Attack from CPU pponent 1
-        {
-            damageOpp = ThisMuch;
-            ActivePerson = attacker;
-            incLImit(damageOpp);
-            guiScreenChaos(ThisMuch * getDamageMultiplierChar(), 'c');
-            for (int m = 0; m < damageOpp; m++) {
-                if (oppLife >= 0) {
-                    oppLife = oppLife - (1 * getDamageMultiplierOpp());
-                }
-            }
-            daNum2 = ((getOppLife() / getOppMaxLife()) * 100); //perc life x life bar length
-            lifePlain2 = Math.round(daNum2); // round off
-            lifeTotalPlain2 = Math.round(getOppLife()); // for text
-            perCent2 = Math.round(lifePlain2);
-        }
-
-        if (forWho == 4) //Attack from CPU opponent 2
-        {
-            damageOpp2 = ThisMuch;
-            ActivePerson = attacker;
-            incLImit(damageOpp2);
-            guiScreenChaos(ThisMuch * getDamageMultiplierChar(), 'a');
-            for (int m = 0; m < damageOpp2; m++) {
-                if (oppLife2 >= 0) {
-                    oppLife2 = oppLife2 - (1 * getDamageMultiplierOpp());
-                }
-            }
-            daNum2a = ((getOppLife2() / getOppMaxLife2()) * 100); //perc life x life bar length
-            lifePlain2a = Math.round(daNum2a); // round off
-            lifeTotalPlain2a = Math.round(getOppLife2()); // for text
-            perCent2a = Math.round(lifePlain2a);
-        }
-
-        if (forWho == 3) //Attack from CPU player 2
-        {
-            damageChar2 = ThisMuch;
-            ActivePerson = attacker;
-            incLImit(damageChar2);
-            guiScreenChaos(ThisMuch * getDamageMultiplierOpp(), 'b');
-            for (int m = 0; m < damageChar2; m++) {
-                if (charLife3 >= 0) {
-                    charLife3 = charLife3 - (1 * getDamageMultiplierOpp());
-                }
-            }
-            daNum3a = ((getCharLife3() / getCharMaxLife3()) * 100); //perc life x life bar length
-            lifePlain3a = Math.round(daNum3a); // round off
-            lifeTotalPlain3a = Math.round(getCharLife3()); // for text
-            perCent3a = Math.round(lifePlain3a);
-        }
-    }
-
-    /**
      * Draws battle message at bottom of screen
      *
      * @param writeThis - what to display
@@ -1091,7 +994,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    private void attackSoundOpp() {
+    protected void attackSoundOpp() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioPlayback.maleHurt.length * 2);
             if (randSoundIntOpp < AudioPlayback.maleHurt.length) {
@@ -1107,7 +1010,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    private void hurtSoundChar() {
+    protected void hurtSoundChar() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.maleAttacks.length * 2);
             if (randSoundIntCharHurt < AudioPlayback.maleAttacks.length) {
@@ -1123,7 +1026,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    private void hurtSoundOpp() {
+    public void hurtSoundOpp() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.maleAttacks.length * 2);
             if (randSoundIntOppHurt < AudioPlayback.maleAttacks.length) {
@@ -1139,7 +1042,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    private void furySound() {
+    public void furySound() {
         furySound = new AudioPlayback(AudioPlayback.furyAttck(), false);
         furySound.play();
     }
@@ -1192,9 +1095,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     public synchronized void playBGSound() {
-        if (fightMus == null)
-            fightMus = new AudioPlayback("audio/" + RenderStageSelect.musFiles[RenderStageSelect.musicInt] + ".mp3", true);
-        fightMus.play();
+        if (ambientMusic == null)
+            ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".mp3", true);
+        ambientMusic.play();
     }
 
     /**
@@ -1202,7 +1105,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      */
     public void pauseThreads() {
         try {
-            fightMus.pause();
+            ambientMusic.pause();
             if (WindowOptions.graphics.equalsIgnoreCase("High")) {
                 upDown.pauseThread();
                 upDown2.pauseThread();
@@ -1215,8 +1118,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     public void closeAudio() {
         try {
-            fightMus.stop();
-            //fightMus.close();
+            ambientMusic.stop();
+            //ambientMusic.close();
         } catch (Exception e) {
         }
     }
@@ -1226,7 +1129,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      */
     public void resumeThreads() {
         try {
-            fightMus.resume();
+            ambientMusic.resume();
             if (WindowOptions.graphics.equalsIgnoreCase("High")) {
                 upDown.resumeThread();
                 upDown2.resumeThread();
@@ -1254,108 +1157,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
 
     /**
-     * limit break, wee!!!
-     */
-    public void limitBreak(char who) {
-        dude = who;
-        new Thread() {
-
-            @Override
-            public void run() {
-                if (getBreak() == 1000) {
-                    //&& getGameInstance().getRecoveryUnitsChar()>289
-                    //runs on local
-                    if (dude == 'c' && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
-                        limitRunning = false;
-
-                        //broadcast on net
-                        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                            LoginScreen.getInstance().getMenu().getMain().sendToServer("limt_Break_Oxodia_Ownz");
-                        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                            LoginScreen.getInstance().getMenu().getMain().sendToClient("limt_Break_Oxodia_Ownz");
-                        }
-                        setAttackType("fury", 'c');
-                        comboCounter = 0;
-                        getGameInstance().pauseActivityRegen();
-                        getGameInstance().setRecoveryUnitsChar(0);
-                        try {
-                            JenesisGamePad.getInstance().setRumbler(true, 0.8f);
-                        } catch (Exception e) {
-                        }
-                        for (int i = 1; i < 9; i++) {
-                            //stop attacking when game over
-                            if (getGameInstance().isGameOver == false) {
-                                furySound();
-                                hurtSoundOpp();
-                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                                setSprites('c', i, 11);
-                                setSprites('a', i, 11);
-                                setSprites('o', 0, 11);
-                                shakeOppCharLB();
-                                comboPicArrayPosOpp = i;
-                                furyComboOpacity = 1.0f;
-                                lifePhysUpdateSimple(2, 100, "");
-                            }
-                        }
-                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                        try {
-                            JenesisGamePad.getInstance().setRumbler(false, 0.0f);
-                        } catch (Exception e) {
-                        }
-                        comboPicArrayPosOpp = 8;
-                        getGameInstance().resumeActivityRegen();
-                        setSprites('c', 9, 11);
-                        setSprites('o', 9, 11);
-                        setSprites('a', 11, 11);
-                        limitRunning = true;
-                        resetBreak();
-                        setAttackType("normal", 'c');
-                    } else if (dude == 'o' && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
-                        setAttackType("fury", 'o');
-                        limitRunning = false;
-                        try {
-                            JenesisGamePad.getInstance().setRumbler(true, 0.8f);
-                        } catch (Exception e) {
-                        }
-                        for (int i = 1; i < 9; i++) {
-                            if (getGameInstance().isGameOver == false) {
-                                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-                                furySound();
-                                hurtSoundChar();
-                                getGameInstance().setRecoveryUnitsOpp(0);
-                                setSprites('o', i, 11);
-                                setSprites('b', i, 11);
-                                setSprites('c', 0, 11);
-                                shakeCharLB();
-                                comboPicArrayPosOpp = i;
-                                lifePhysUpdateSimple(1, 100, "");
-                            }
-                        }
-                        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                        try {
-                            JenesisGamePad.getInstance().setRumbler(false, 0.0f);
-                        } catch (Exception e) {
-                        }
-                        comboPicArrayPosOpp = 8;
-                        setSprites('o', 9, 11);
-                        setSprites('c', 9, 11);
-                        setSprites('b', 11, 11);
-                        limitRunning = true;
-                        resetBreak();
-                        setAttackType("normal", 'o');
-                    }
-                }
-            }
-        }.start();
-    }
-
-    /**
      * Animate attacks in graphics context
      *
      * @param thischar - active character
      */
     public void AnimatePhyAttax(char thischar) {
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
             setSprites('c', 9, 11);
             setSprites('o', 9, 11);
             setSprites('b', 9, 11);
@@ -1367,14 +1174,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    /**
-     * Get the break status
-     *
-     * @return break status
-     */
-    public int getBreak() {
-        return limitBreak;
-    }
 
     /**
      * set the break status
@@ -1382,46 +1181,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     public void setBreak(int change) {
         limitBreak = limitBreak + change;
     }
-
-    public void resetGame() {
-        super.resetGame();
-        limitBreak = 5;
-    }
-
-    /**
-     * Increment limit
-     */
-    private void incLImit(int ThisMuch) {
-        final int inc = ThisMuch;
-        new Thread() {
-            //add one, make sure we dont go over 2000
-
-            @SuppressWarnings("static-access")
-            @Override
-            public void run() {
-                int icrement = inc;
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
-                    icrement = icrement / 2;
-                }
-                this.setName("Fury bar increment stage");
-                for (int o = 0; o < icrement; o++) {
-                    if (limitBreak < limitTop) {
-                        try {
-                            limitBreak = limitBreak + 1;
-                            this.sleep(15);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(RenderGameplay.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-        }.start();
-    }
-
-    public void triggerFury(char who) {
-        limitBreak(who);
-    }
-
 
     /**
      * Makes text white, meaning its OK to select a move
@@ -1439,12 +1198,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         safeToSelect = false;
     }
 
-    /**
-     * Sets limit back to initial value
-     */
-    public void resetBreak() {
-        limitBreak = 5;
-    }
 
     /**
      * Calculates angle of circle
@@ -1460,8 +1213,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         } else {
             disableSelection();
         }
-
         return result;
     }
-
 }

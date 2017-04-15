@@ -24,6 +24,7 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.windows.MainWindow;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,14 +72,14 @@ public class AssistCharacterAttacks implements Runnable {
 
             int randomNumber = (int) (Math.random() * 12);
             if (randomNumber <= 6) {
-                if (RenderGameplay.getInstance().perCent2a >= 0) {
+                if (RenderGameplay.getInstance().getPercent2a() >= 0) {
                     whoToAttack = 4;
                 } // normally CPU player 1 attacks CPU opponent 2
                 else {
                     whoToAttack = 2;
                 }
             } else if (randomNumber >= 7) {
-                if (RenderGameplay.getInstance().perCent2 >= 0) {
+                if (RenderGameplay.getInstance().getPercent2() >= 0) {
                     whoToAttack = 2;
                 } //attack CPU opponent 1
                 else {
@@ -86,14 +87,14 @@ public class AssistCharacterAttacks implements Runnable {
                 }
             }
             for (int o = 0; o < 4; o++) {
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+                MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 //fix story scene bug
                 if (RenderGameplay.getInstance().getGameInstance().storySequence == false) {
-                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
+                    MainWindow.getInstance().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
                     RenderGameplay.getInstance().shakeCharLB();
                     RenderGameplay.getInstance().AnimatePhyAttax('a');
                 }
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
             }
         }
     }

@@ -24,16 +24,16 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.executers.CharacterAttacks;
 import com.scndgen.legends.executers.AssistCharacterAttacks;
-import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.executers.AssistOpponentAttacks;
-import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.executers.CharacterAttacks;
+import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 
 import javax.swing.*;
@@ -97,7 +97,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     //indicates if game is running, controls game over screen and Achievements which require wins
     public ThreadGameInstance(int forWho, Gameplay gameplay) {
         this.gameplay = gameplay;
-        musicStr = RenderStageSelect.getTrack();
+        musicStr = RenderStageSelect.getInstance().getTrack();
         newInstance();
     }
 
@@ -130,13 +130,13 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && storySequence == false) {
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
                     aiRunning = true;
                     executorAI.attack();
                 }
             }
 
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
                 if (sampleOpp2 <= limitOpp2 && incrementActivityBarOpp2 && storySequence == false) {
                     sampleOppDB2 = sampleOppDB2 + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed2());
                     sampleOpp2 = Integer.parseInt("" + Math.round(sampleOppDB2) + "");
@@ -347,12 +347,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void gameOver() {
         gameRunning = false;
         isGameOver = true;
-        LoginScreen.getInstance().getMenu().getMain().freeToSave = true;
+        MainWindow.getInstance().freeToSave = true;
         RenderGameplay.getInstance().closeAudio();
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
         //if not story scene, increment char usage
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().selectedCharIndex);
         }
         if (gameplay.hasWon()) {
@@ -362,7 +362,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             RenderGameplay.getInstance().showLoseLabel();
             loseMus.play();
         }
-        RenderStageSelect.selectedStage = false;
+        RenderStageSelect.getInstance().setSelectedStage(false);
         RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
         RenderGameplay.getInstance().drawAchievements();
     }
@@ -454,24 +454,24 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().setPoints(ach.getNewUserPoints());
         //save profile
         LoginScreen.getInstance().saveConfigFile();
-        LoginScreen.getInstance().getMenu().getMain().systemNotice("Saved File");
+        MainWindow.getInstance().systemNotice("Saved File");
         thread.stop(); //stop this thread
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (gameplay.hasWon()) {
-                LoginScreen.getInstance().getMenu().getMain().getStory().incrementMode();
+                MainWindow.getInstance().getStory().incrementMode();
                 winMus.play();
             } else {
                 loseMus.play();
             }
-            LoginScreen.getInstance().getMenu().getMain().getStory().storyProcceed();
-            LoginScreen.getInstance().getMenu().getMain().nextStage();
+            MainWindow.getInstance().getStory().storyProcceed();
+            MainWindow.getInstance().nextStage();
         } else {
             //javax.swing.JOptionPane.showMessageDialog(null, "Done");
             if (mo == 0) {
-                LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
+                MainWindow.getInstance().backToMenuScreen();
             } else if (mo == 1) {
-                LoginScreen.getInstance().getMenu().getMain().backToCharSelect();
+                MainWindow.getInstance().backToCharSelect();
             }
         }
     }
@@ -554,12 +554,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         executorAI3 = new AssistCharacterAttacks();
 
         ach = LoginScreen.getInstance().getAch();
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
             storySequence = true;
             time = StoryMode.getInstance().time;
         } //if LAN, client uses hosts time preset
-        else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-            time = LoginScreen.getInstance().getMenu().getMain().hostTime;
+        else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+            time = MainWindow.getInstance().hostTime;
         } else {
             time = WindowOptions.time;
         }
@@ -586,10 +586,10 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().newGame = true;
         winMus = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMus = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         }
         if (thread != null) {
             thread.resume();
@@ -598,12 +598,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             thread.setName("MAIN GAME LOGIC THREAD");
             thread.start();
         }
-        LoginScreen.getInstance().getMenu().getMain().reSize("menu");
+        MainWindow.getInstance().reSize("menu");
         count2 = 0;
     }
 
     public void musNotice() {
-        LoginScreen.getInstance().getMenu().getMain().systemNotice2(RenderStageSelect.trax[RenderStageSelect.musicInt]);
+        MainWindow.getInstance().systemNotice2(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
     }
 
     /**
@@ -612,7 +612,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

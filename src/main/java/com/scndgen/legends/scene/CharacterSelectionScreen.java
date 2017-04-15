@@ -7,7 +7,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by ifung on 14/04/2017.
+ * Created by ifunga on 14/04/2017.
  */
 public abstract class CharacterSelectionScreen extends JenesisMode implements ActionListener {
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
@@ -181,7 +181,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
+                MainWindow.getInstance().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
@@ -189,7 +189,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
+                MainWindow.getInstance().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4;
@@ -197,7 +197,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
+                MainWindow.getInstance().triggerFury('o');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5;
@@ -224,7 +224,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife2() / RenderGameplay.getInstance().getOppMaxLife2() >= 0.50 && RenderGameplay.getInstance().getOppLife2() / RenderGameplay.getInstance().getOppMaxLife2() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
+                MainWindow.getInstance().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
@@ -232,7 +232,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getOppLife2() / RenderGameplay.getInstance().getOppMaxLife2() >= 0.25 && RenderGameplay.getInstance().getOppLife2() / RenderGameplay.getInstance().getOppMaxLife2() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
+                MainWindow.getInstance().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4a;
@@ -240,7 +240,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('b');
+                MainWindow.getInstance().triggerFury('b');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5a;
@@ -267,7 +267,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getCharLife3() / RenderGameplay.getInstance().getCharMaxLife3() >= 0.50 && RenderGameplay.getInstance().getCharLife3() / RenderGameplay.getInstance().getCharMaxLife3() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
+                MainWindow.getInstance().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3a;
@@ -275,7 +275,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getCharLife3() / RenderGameplay.getInstance().getCharMaxLife3() >= 0.25 && RenderGameplay.getInstance().getCharLife3() / RenderGameplay.getInstance().getCharMaxLife3() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
+                MainWindow.getInstance().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4a;
@@ -283,7 +283,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('a');
+                MainWindow.getInstance().triggerFury('a');
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5a;
@@ -348,14 +348,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void backToMenu() {
         refreshSelections();
         //cancel hosting
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.lanHost)) {
-            LoginScreen.getInstance().getMenu().getMain().closeTheServer();
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.lanClient)) {
-            LoginScreen.getInstance().getMenu().getMain().closeTheClient();
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equals(WindowMain.storyMode)) {
-            LoginScreen.getInstance().getMenu().getMain().getStory().getStoryInstance().skipDialogue();
+        if (MainWindow.getInstance().getGameMode().equals(MainWindow.lanHost)) {
+            MainWindow.getInstance().closeTheServer();
+        } else if (MainWindow.getInstance().getGameMode().equals(MainWindow.lanClient)) {
+            MainWindow.getInstance().closeTheClient();
+        } else if (MainWindow.getInstance().getGameMode().equals(MainWindow.storyMode)) {
+            MainWindow.getInstance().getStory().getStoryInstance().skipDialogue();
         }
-        LoginScreen.getInstance().getMenu().getMain().backToMenuScreen();
+        MainWindow.getInstance().backToMenuScreen();
         RenderGameplay.getInstance().closeAudio();
     }
 
@@ -363,11 +363,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * Starts a new game
      */
     public void beginGame() {
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase("offline2")) {
-            LoginScreen.getInstance().getMenu().getMain().selectStage();
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("offline2")) {
+            MainWindow.getInstance().selectStage();
 
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("watchStageSel_xcbD");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("watchStageSel_xcbD");
             }
         }
 
@@ -379,7 +379,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void refreshSelections() {
         charPrevLoc = 0;
         oppPrevLoc = 0;
-        //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
+        //MainWindow.getInstance().repaintCharSel();
         for (int u = 0; u < allPlayers.length; u++) {
             allPlayers[u] = 0; // 0 means free, 1 means selected
         }
@@ -387,8 +387,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         opponentSelected = false;
         //selectedCharIndex=0;
         //selectedOppIndex=0;
-        LoginScreen.getInstance().getMenu().getMain().storedX = 99;
-        LoginScreen.getInstance().getMenu().getMain().storedY = 99;
+        MainWindow.getInstance().storedX = 99;
+        MainWindow.getInstance().storedY = 99;
     }
 
     /**
@@ -425,19 +425,19 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 character = CharacterEnum.RAILA;
                 getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("selRai_jkxc");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("selRai_jkxc");
                     disableAll();
                 }
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToServer("selRai_jkxc");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                    MainWindow.getInstance().sendToServer("selRai_jkxc");
                     disableAll();
                 }
             }
         } else if (type == 'o' && opponentSelected == false) {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
             }
             opponentSelected = true;
             opponent = CharacterEnum.RAILA;
@@ -463,12 +463,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
                 charDesc = getPlayers().getCharacter().getDescSmall();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("selSub_jkxc");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("selSub_jkxc");
                     disableAll();
                 }
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToServer("selSub_jkxc");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                    MainWindow.getInstance().sendToServer("selSub_jkxc");
                     disableAll();
                 }
             }
@@ -501,12 +501,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selLyn_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selLyn_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selLyn_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selLyn_jkxc");
                 disableAll();
             }
         }
@@ -537,12 +537,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAlx_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selAlx_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAlx_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selAlx_jkxc");
                 disableAll();
             }
         }
@@ -574,12 +574,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAde_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selAde_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAde_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selAde_jkxc");
                 disableAll();
             }
         }
@@ -611,12 +611,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selRav_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selRav_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selRav_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selRav_jkxc");
                 disableAll();
             }
         }
@@ -649,12 +649,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             allPlayers[6] = 1;
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selJon_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selJon_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selJon_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selJon_jkxc");
                 disableAll();
             }
         }
@@ -686,12 +686,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAdam_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selAdam_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAdam_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selAdam_jkxc");
                 disableAll();
             }
         }
@@ -723,14 +723,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
+            //MainWindow.getInstance().repaintCharSel();
             allPlayers[8] = 1;
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selNOVAAdam_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selNOVAAdam_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selNOVAAdam_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selNOVAAdam_jkxc");
                 disableAll();
             }
         }
@@ -762,14 +762,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
+            //MainWindow.getInstance().repaintCharSel();
             allPlayers[9] = 1;
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selAzaria_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selAzaria_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selAzaria_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selAzaria_jkxc");
                 disableAll();
             }
         }
@@ -801,14 +801,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
+            //MainWindow.getInstance().repaintCharSel();
             allPlayers[10] = 1;
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selSorr_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selSorr_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selSorr_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selSorr_jkxc");
                 disableAll();
             }
         }
@@ -839,14 +839,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //LoginScreen.getInstance().getMenu().getMain().repaintCharSel();
+            //MainWindow.getInstance().repaintCharSel();
             allPlayers[11] = 1;
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("selThi_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("selThi_jkxc");
                 disableAll();
             }
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToServer("selThi_jkxc");
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                MainWindow.getInstance().sendToServer("selThi_jkxc");
                 disableAll();
             }
         }
@@ -905,7 +905,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                             e.printStackTrace();
                         }
                     }
-                    while (LoginScreen.getInstance().getMenu().getMain().currentScreen == ModeEnum.charSelectScreen);
+                    while (MainWindow.getInstance().currentScreen == ModeEnum.charSelectScreen);
                 }
 
             }

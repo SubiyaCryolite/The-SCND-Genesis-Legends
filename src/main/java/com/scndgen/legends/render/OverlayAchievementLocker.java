@@ -19,13 +19,12 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.drawing;
+package com.scndgen.legends.render;
 
 import com.scndgen.legends.Achievements;
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.Language;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import java.awt.*;
@@ -36,7 +35,7 @@ import java.awt.image.ImageObserver;
  *
  * @author ndana
  */
-public class SpecialDrawAchievementLocker {
+public class OverlayAchievementLocker {
 
     private int spacer = 14;
     private Font font2 = LoginScreen.getInstance().getMyFont(spacer - 1);
@@ -54,7 +53,7 @@ public class SpecialDrawAchievementLocker {
     private float total = 0.0f, triggeredCount = 0.0f;
     private Achievements ach;
 
-    public SpecialDrawAchievementLocker() {
+    public OverlayAchievementLocker() {
         pix = new JenesisImageLoader();
         loadPix();
         refreshStats();
@@ -118,7 +117,7 @@ public class SpecialDrawAchievementLocker {
             stat16 = Language.getInstance().getLine(126) + ": " + LoginScreen.getInstance().loss;
 
             stat13 = Language.getInstance().getLine(127) + ": " + style[LoginScreen.getInstance().userAwesomeness()];
-            stat17 = Language.getInstance().getLine(128) + ": " + RenderGameplay.getInstance().charNames[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
+            stat17 = Language.getInstance().getLine(128) + ": " + RenderGameplay.getInstance().getCharNames()[LoginScreen.getInstance().mostPopularChar()] + " " + LoginScreen.getInstance().mostPopularCharPercentage() + " %";
         }
 
         screen.setColor(Color.WHITE);

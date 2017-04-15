@@ -1,113 +1,42 @@
-/**************************************************************************
+package com.scndgen.legends.render;
 
- The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
-
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
-
- The SCND Genesis: Legends is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- The SCND Genesis: Legends is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
-
- **************************************************************************/
-package com.scndgen.legends.drawing;
-
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.Language;
-import com.scndgen.legends.controller.Tutorial;
+import com.scndgen.legends.scene.MainMenu;
+import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowAbout;
-import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisMode;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import java.awt.*;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.util.Calendar;
 
 /**
- * @Author: Ifunga Ndana
- * @Class: screenDrawer
- * This class draws nd manipulates all sprites, images and effects used in the game
+ * Created by ifunga on 15/04/2017.
  */
-public class SpecialDrawModeRender extends JenesisMode {
+public class RenderMainMenu extends MainMenu implements JenesisRender {
 
-    private static final int fontSize = 16;
-    private static boolean animThread = true;
-    private static float opac = 10;
-    private static Font font;
-    private static int menuIndex = 0;
-    private static int xMenu = 500;
-    private static int place = 0, menuItem, menuEntries = 11;
-    private static int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
-    private static Image fg, foreGroundA, pic1, foreGroundB;
-    private static int xCordCloud = 0, yCordCloud = 0, xCordCloud2 = 0, yCordCloud2 = 20, xCordCloud3 = 0, yCordCloud3 = 40;
-    private static String menuItmStr, stat1, stat2, stat3,
-            stat4, stat5, stat6, stat7, ach1, ach2, ach3,
-            ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
-    private static int timeInt = 0;
-    private static int spacer = 12, time;
-    private Color bg = new Color(214, 217, 223);
-    private SpecialDrawAchievementLocker achDraw;
-    private String mess;
-    private boolean fadeOutFeedback;
-    private float feedBackOpac = 1.0f;
     private JenesisImageLoader pix = new JenesisImageLoader();
     private Image sgLogo, ndanaSol;
     private Image pointer;
-    private String[] itemz;
-    private int offset = 10;
-    private Calendar cal;
-    private Font txt, font2 = new Font("SansSerif", Font.PLAIN, spacer);
-    private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
-    private Image[] achs;
-    private float gWin, gLoss, denom, progression;
-    private Tutorial tut;
-    //---blur op
-    private int size;
-    private float[] data;
-    private float sigma, openOpac;
-    private float twoSigmaSquare;
-    private float sigmaRoot;
-    private float total;
-    private Kernel kernel;
-    //---blur op
+    private Image fg, foreGroundA, pic1, foreGroundB;
+    private static RenderMainMenu instance;
 
-    @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    public SpecialDrawModeRender() {
-        screenWidth = 852;
-        screenHeight = 480;
-        openOpac = 3.0f;
+    public static synchronized RenderMainMenu getInstance() {
+        if (instance == null)
+            instance = new RenderMainMenu();
+        return instance;
+    }
 
-        txt = LoginScreen.getInstance().getMyFont(fontSize);
+    @Override
+    public void newInstance() {
 
+    }
 
-        feedBackOpac = 1.0f;
-        fadeOutFeedback = false;
-        itemz = new String[(menuEntries + 2) * 2];
-        achDraw = new SpecialDrawAchievementLocker();
-        cal = Calendar.getInstance();
-        time = (cal.get(Calendar.HOUR_OF_DAY));
-        System.out.println("Hour: " + time);
-        loadPix();
-        font = LoginScreen.getInstance().getMyFont(fontSize - 2);
-
+    @Override
+    public void loadAssets() {
+        if (!loadAssets) return;
         ndanaSol = pix.loadImage("logo/ndana_sol.png");
-
         sgLogo = pix.loadImage("images/sglogo.png");
         pointer = pix.loadImage("images/pointer.png");
-
         //0 to 8hrs :: Morning
         if (time >= 0 && time <= 9) {
             pic1 = pix.loadImage("images/blur/bgBG1.png");
@@ -127,92 +56,18 @@ public class SpecialDrawModeRender extends JenesisMode {
             foreGroundA = pix.loadImage("images/blur/bgBG5a.png");
             foreGroundB = pix.loadImage("images/blur/bgBG5b.png");
         }
-
-        itemz[0] = Language.getInstance().getLine(307);
-        itemz[1] = "STORY MODE";
-        itemz[2] = Language.getInstance().getLine(308);
-        itemz[3] = "QUICK MATCH";
-        itemz[4] = "Quick Match (2 vs 2)";
-        itemz[5] = "QUICK MATCH (2 vs 2)";
-        itemz[6] = Language.getInstance().getLine(309);
-        itemz[7] = "HOST A LAN MATCH";
-        itemz[8] = Language.getInstance().getLine(310);
-        itemz[9] = "JOIN A LAN MATCH";
-        itemz[10] = Language.getInstance().getLine(311);
-        itemz[11] = "YOUR STATS";
-        itemz[12] = Language.getInstance().getLine(312);
-        itemz[13] = "OPTIONS";
-        itemz[14] = Language.getInstance().getLine(313);
-        itemz[15] = "VIEW CONTROLS";
-        itemz[16] = Language.getInstance().getLine(314);
-        itemz[17] = "ABOUT";
-        itemz[18] = Language.getInstance().getLine(315);
-        itemz[19] = "EXIT";
-        itemz[20] = Language.getInstance().getLine(316);
-        itemz[21] = "ACHIEVEMENT LOCKER";
-        itemz[22] = Language.getInstance().getLine(317);
-        itemz[23] = "ONLINE LEADER BOARDS";
-        itemz[22] = Language.getInstance().getLine(318);
-        itemz[23] = "LOG OUT";
-        itemz[24] = Language.getInstance().getLine(319);
-        itemz[25] = "TUTORIAL";
-
-        new Thread() {
-
-            @Override
-            @SuppressWarnings("static-access")
-            public void run() {
-                try {
-                    fadeOutFeedback = false;
-                    feedBackOpac = 1.0f;
-                    this.sleep(15000);
-                    fadeOutFeedback = true;
-                } catch (Exception e) {
-                }
-            }
-        }.start();
+        loadAssets = false;
     }
 
-    /**
-     * Get time, dynamic menu
-     *
-     * @return time
-     */
-    public static int getTime() {
-        return time;
-    }
-
-    private static String shortStr(String message) {
-        String returnThis;
-
-        if (message.length() < 20) {
-            returnThis = message;
-        } else {
-            returnThis = message.substring(0, 20) + "...";
-        }
-
-        return returnThis;
-    }
-
-    /**
-     * Get menu images for use in character select screen
-     *
-     * @return pictures
-     */
-    public static Image[] getPics() {
-        return new Image[]{pic1, foreGroundA, foreGroundB, fg};
-    }
-
-    /**
-     * Refresh achievement stats
-     */
-    public void refreshStats() {
-        achDraw.refreshStats();
+    @Override
+    public void cleanAssets() {
+        loadAssets = true;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
+        loadAssets();
         g2d.setComposite(makeComposite(1));
         if (fadeOutFeedback && (feedBackOpac > 0.0f)) {
             feedBackOpac = feedBackOpac - 0.025f;
@@ -224,19 +79,19 @@ public class SpecialDrawModeRender extends JenesisMode {
 
         g2d.setColor(Color.BLACK);
         g2d.setComposite(makeComposite(0.50f));
-        g2d.fillRect(0, 0, 853, 480);
+        g2d.fillRect(0, 0, screenWidth, screenHeight);
         g2d.setComposite(makeComposite(1.0f));
         g2d.drawImage(sgLogo, 0, 0, this);
 
         g2d.setColor(Color.WHITE);
-        g2d.setFont(txt);
+        g2d.setFont(font1);
 
 
         if (place == 0) {
 
             menuItem = 0;
             if (menuIndex == menuItem) {
-                menuItmStr = WindowMain.storyMode;
+                menuItmStr = MainWindow.storyMode;
                 g2d.drawImage(pointer, xMenu - 18, yMenu - 15, this);
                 g2d.drawString(itemz[1], xMenu, yMenu);
             } else {
@@ -265,7 +120,7 @@ public class SpecialDrawModeRender extends JenesisMode {
                  */
 
             if (menuIndex == menuItem) {
-                menuItmStr = WindowMain.lanHost;
+                menuItmStr = MainWindow.lanHost;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
                 g2d.drawString(itemz[7], xMenu, yMenu + (fontSize * menuItem));
             } else {
@@ -274,7 +129,7 @@ public class SpecialDrawModeRender extends JenesisMode {
             menuItem++;
 
             if (menuIndex == menuItem) {
-                menuItmStr = WindowMain.lanClient;
+                menuItmStr = MainWindow.lanClient;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
                 g2d.drawString(itemz[9], xMenu, yMenu + (fontSize * menuItem));
             } else {
@@ -434,116 +289,13 @@ public class SpecialDrawModeRender extends JenesisMode {
         g.drawImage(volatileImg, 0, 0, this);
     }
 
-    public void stopTut() {
-        tut.stopTut();
-    }
-
-    public void backTut() {
-        tut.backTut();
-    }
-
-    public void forwarTut() {
-        tut.forwarTut();
-    }
-
-    public void startTut() {
-        tut.startTut();
-    }
-
-    public void sktpToTut(int n) {
-        tut.skipToSection(n - 1);
-    }
 
     /**
-     * Get the string representation of a scene
+     * Get menu images for use in character select screen
      *
-     * @return
+     * @return pictures
      */
-    public String getMenuModeStr() {
-        return menuItmStr;
-    }
-
-    public void StopRepaint() {
-        animThread = false;
-    }
-
-    public int getXMenu() {
-        return xMenu;
-    }
-
-    public int getYMenu() {
-        return yMenu;
-    }
-
-    public int getSpacer() {
-        return fontSize;
-    }
-
-    public void setMenuPos(int where) {
-        menuIndex = where;
-    }
-
-    public void goDown() {
-        if (menuIndex < menuEntries && place == 0) {
-            menuIndex = menuIndex + 1;
-        } else if (place == 2) {
-            achDraw.scrollDown();
-        } else {
-            menuIndex = 0;
-        }
-    }
-
-    public void goUp() {
-        if (menuIndex > 0 && place == 0) {
-            menuIndex = menuIndex - 1;
-        } else if (place == 2) {
-            achDraw.scrollUp();
-        } else {
-            menuIndex = menuEntries;
-        }
-    }
-
-    private void loadPix() {
-    }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int here) {
-        if (here == 3) {
-            tut = new Tutorial();
-        }
-        place = here;
-    }
-
-    private ConvolveOp getGaussianBlurFilter(int radius, boolean horizontal) {
-        if (radius < 1) {
-            throw new IllegalArgumentException("Radius must be >= 1");
-        }
-
-        size = radius * 2 + 1;
-        data = new float[size];
-        sigma = radius / 3.0f;
-        twoSigmaSquare = 2.0f * sigma * sigma;
-        sigmaRoot = (float) Math.sqrt(twoSigmaSquare * Math.PI);
-        total = 0.0f;
-        for (int i = -radius; i <= radius; i++) {
-            float distance = i * i;
-            int index = i + radius;
-            data[index] = (float) Math.exp(-distance / twoSigmaSquare) / sigmaRoot;
-            total += data[index];
-        }
-
-        for (int i = 0; i < data.length; i++) {
-            data[i] /= total;
-        }
-        kernel = null;
-        if (horizontal) {
-            kernel = new Kernel(size, 1, data);
-        } else {
-            kernel = new Kernel(1, size, data);
-        }
-        return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+    public Image[] getPics() {
+        return new Image[]{pic1, foreGroundA, foreGroundB, fg};
     }
 }

@@ -22,9 +22,9 @@
 package com.scndgen.legends.characters;
 
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
 
 /**
  * This class should be self explainatory -_-
@@ -151,8 +151,8 @@ public class Characters {
      *
      */
     public static void alterPoints2(int index) {
-        if (RenderGameplay.getInstance().numOfAttacks > 1) {
-            RenderGameplay.getInstance().numOfAttacks = RenderGameplay.getInstance().numOfAttacks = 1;
+        if (RenderGameplay.getInstance().getNumOfAttacks() > 1) {
+            RenderGameplay.getInstance().setNumOfAttacks(1);
             points = points + pointsArr[index];
         }
     }

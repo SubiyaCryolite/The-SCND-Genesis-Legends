@@ -19,13 +19,13 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.drawing;
+package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 /**
@@ -35,185 +35,184 @@ import io.github.subiyacryolite.enginev1.JenesisMode;
  */
 public abstract class StageSelect extends JenesisMode {
 
-    public static int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
-    public static String loadTxt = "";
-    public static StageSelection mode = StageSelection.NORMAL;
-    public static int musicInt = 0;
-    private static int source;
-    public static int numberOfStages;
-    public static boolean selectedStage = false;
-    public static String[] stagePrevLox= new String[]{"bgBG1", "bgBG2", "bgBG3", "bgBG4", "bgBG5", "bgBG6", "bgBG7", "bgBG8", "bgBG9", "bgBG10", "bgBG100", "bgBG11", "bgBG13", "bgBG14", "bgBG15", "bgBG12"};
+    protected int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
+    protected StageSelection mode = StageSelection.NORMAL;
+    protected int ambientMusicIndex = 0;
+    protected int source;
+    protected int numberOfStages;
+    protected boolean selectedStage = false;
+    protected String[] stagePrevLox= new String[]{"bgBG1", "bgBG2", "bgBG3", "bgBG4", "bgBG5", "bgBG6", "bgBG7", "bgBG8", "bgBG9", "bgBG10", "bgBG100", "bgBG11", "bgBG13", "bgBG14", "bgBG15", "bgBG12"};
 
     /**
      * SHows loading screen
      */
-    public static void nowLoading() {
+    public void nowLoading() {
         selectedStage = true;
     }
 
-    public static void SelectStageNow() {
+    public void SelectStageNow() {
         if (mode == StageSelection.NORMAL) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 source = stageSelIndex;
                 nowLoading();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("loadingGVSHA");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             source = (int) (Math.random() * (numberOfStages - 1));
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 nowLoading();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("loadingGVSHA");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
 
         if (source == 0) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage1();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage1_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage1_vgdt");
                 }
             }
         }
 
         if (source == 1) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage2();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage2_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage2_vgdt");
                 }
             }
         }
 
         if (source == 2) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage3();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage3_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage3_vgdt");
                 }
             }
         }
 
         if (source == 3) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage4();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage4_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage4_vgdt");
                 }
             }
         }
 
         if (source == 4) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage5();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage5_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage5_vgdt");
                 }
             }
         }
 
         if (source == 5) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage6();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage6_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage6_vgdt");
                 }
             }
         }
 
         if (source == 6) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage7();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage7_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage7_vgdt");
                 }
             }
         }
 
         if (source == 10) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage100();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage100_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage100_vgdt");
                 }
             }
         }
 
         if (source == 7) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage8();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage8_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage8_vgdt");
                 }
             }
         }
 
         if (source == 8) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage9();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage9_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage9_vgdt");
                 }
             }
         }
 
         if (source == 9) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage10();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage10_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage10_vgdt");
                 }
             }
         }
 
         if (source == 11) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage11();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage11_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage11_vgdt");
                 }
             }
         }
 
         if (source == 12) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage12();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage12_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage12_vgdt");
                 }
             }
         }
 
         if (source == 13) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage13();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage13_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage13_vgdt");
                 }
             }
         }
 
         if (source == 14) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 stage14();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage14_vgdt");
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                    MainWindow.getInstance().sendToClient("stage14_vgdt");
                 }
             }
         }
 
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase("watch")) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("gameStart7%^&");
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("watch")) {
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient("gameStart7%^&");
             }
             start();
         }
     }
 
-    public static void defValue() {
+    public void defValue() {
         setStage(0);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
@@ -226,14 +225,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 4;
         RenderGameplay.getInstance().ambSpeed2 = 3;
-        musicInt = 0;
+        ambientMusicIndex = 0;
         getReady();
     }
 
     /**
      * Ibex Hill- day
      */
-    public static void stage1() //
+    public void stage1() //
     {
         defValue();
     }
@@ -241,7 +240,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Chelston City docks
      */
-    public static void stage2() {
+    public void stage2() {
         setStage(1);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -254,14 +253,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 66;
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 1;
+        ambientMusicIndex = 1;
         getReady();
     }
 
     /**
      * The Ruined Hall
      */
-    public static void stage3() {
+    public void stage3() {
         setStage(2);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -274,14 +273,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 2;
+        ambientMusicIndex = 2;
         getReady();
     }
 
     /**
      * Chelston City - Streets
      */
-    public static void stage4() {
+    public void stage4() {
         setStage(3);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -294,14 +293,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 66;
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
+        ambientMusicIndex = 3;
         getReady();
     }
 
     /**
      * Ibex Hill - Night
      */
-    public static void stage5() {
+    public void stage5() {
         setStage(4);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
@@ -314,14 +313,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 4;
         RenderGameplay.getInstance().ambSpeed2 = 3;
-        musicInt = 4;
+        ambientMusicIndex = 4;
         getReady();
     }
 
     /**
      * Scorched Ruins
      */
-    public static void stage6() {
+    public void stage6() {
         setStage(5);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -334,14 +333,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 5;
+        ambientMusicIndex = 5;
         getReady();
     }
 
     /**
      * Frozen Wilderness
      */
-    public static void stage7() {
+    public void stage7() {
         setStage(6);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
@@ -354,14 +353,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 6;
+        ambientMusicIndex = 6;
         getReady();
     }
 
     /**
      * Distant Isle
      */
-    public static void stage100() {
+    public void stage100() {
         setStage(10);
         RenderGameplay.getInstance().fgx = -40;
         RenderGameplay.getInstance().fgy = 20;
@@ -374,11 +373,11 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 25;
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
-        musicInt = 0;
+        ambientMusicIndex = 0;
         getReady();
     }
 
-    public static void stage12() {
+    public void stage12() {
         setStage(12);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -391,14 +390,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 66;
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
+        ambientMusicIndex = 3;
         getReady();
     }
 
     /**
      * Distant Isle night
      */
-    public static void stage11() {
+    public void stage11() {
         setStage(11);
         RenderGameplay.getInstance().fgx = -40;
         RenderGameplay.getInstance().fgy = 20;
@@ -411,14 +410,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 25;
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
-        musicInt = 1;
+        ambientMusicIndex = 1;
         getReady();
     }
 
     /**
      * Hidden Cave
      */
-    public static void stage8() {
+    public void stage8() {
         setStage(7);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -431,14 +430,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 66;
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 2;
+        ambientMusicIndex = 2;
         getReady();
     }
 
     /**
      * African Village
      */
-    public static void stage9() {
+    public void stage9() {
         setStage(8);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -451,14 +450,14 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 122;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 3;
+        ambientMusicIndex = 3;
         getReady();
     }
 
     /**
      * The Apocalypse
      */
-    public static void stage10() {
+    public void stage10() {
         setStage(9);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -471,11 +470,11 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 4;
+        ambientMusicIndex = 4;
         getReady();
     }
 
-    public static void stage13() {
+    public void stage13() {
         setStage(13);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -488,11 +487,11 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 33;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 1;
+        ambientMusicIndex = 1;
         getReady();
     }
 
-    public static void stage14() {
+    public void stage14() {
         setStage(14);
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
@@ -505,7 +504,7 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().delay = 66;
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
+        ambientMusicIndex = 3;
         getReady();
     }
 
@@ -513,22 +512,18 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * @return stage
      */
-    public static String getStage() {
+    public String getStage() {
         return stagePrevLox[stageSelIndex];
     }
 
 
-    private static void getReady() {
+    private void getReady() {
         RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
         RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
         RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
     }
 
-    public static void loadTxt(String args) {
-        loadTxt = args;
-    }
-
-    public static void start() {
+    public void start() {
         getReady();
 
         new Thread() {
@@ -538,7 +533,7 @@ public abstract class StageSelect extends JenesisMode {
             public void run() {
                 try {
                     this.sleep(1000);
-                    LoginScreen.getInstance().getMenu().getMain().newGame();
+                    MainWindow.getInstance().newGame();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -551,7 +546,7 @@ public abstract class StageSelect extends JenesisMode {
      *
      * @return false if both Character have been selected, true if only one is selected
      */
-    public static boolean bothArentSelected() {
+    public boolean bothArentSelected() {
         boolean answer = true;
 
         if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected) {
@@ -568,7 +563,7 @@ public abstract class StageSelect extends JenesisMode {
      *
      * @param where
      */
-    public static void setStage(int where) {
+    public void setStage(int where) {
         stageSelIndex = where;
     }
 

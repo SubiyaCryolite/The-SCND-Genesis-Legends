@@ -24,10 +24,9 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.drawing.SpecialDrawModeRender;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisRender;
@@ -121,7 +120,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         }
 
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -151,7 +150,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
                     g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
 
-                if (characterSelected && opponentSelected != true && LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer)) {
+                if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
                     g2d.drawImage(oppBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 }
             }
@@ -286,7 +285,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         charBack = imageLoader.loadImage("images/selChar.png");
         oppBack = imageLoader.loadImage("images/selOpp.png");
         charHold = imageLoader.loadImage("images/charHold.png");
-        Image[] tmp = SpecialDrawModeRender.getPics();
+        Image[] tmp = RenderMainMenu.getInstance().getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];

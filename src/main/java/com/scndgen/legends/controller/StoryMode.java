@@ -21,14 +21,14 @@
  **************************************************************************/
 package com.scndgen.legends.controller;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.Language;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.Language;
-import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.threads.ThreadGameInstance;
+import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.AudioPlayback;
+import com.scndgen.legends.threads.ThreadGameInstance;
+import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -72,7 +72,7 @@ public class StoryMode implements Runnable {
         thread = new Thread(this);
         thread.setName("Story scene thread");
         thread.setPriority(5);
-        LoginScreen.getInstance().getMenu().getMain().getStory().setCurrMode(stage);
+        MainWindow.getInstance().getStory().setCurrMode(stage);
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
         tlkSpeed = WindowOptions.txtSpeed;
         notAsked = true;
@@ -84,7 +84,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
-                RenderStageSelect.stage1();
+                RenderStageSelect.getInstance().stage1();
                 break;
             case 1:
                 time = 181;
@@ -92,7 +92,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selRaila('o');
-                RenderStageSelect.stage100();
+                RenderStageSelect.getInstance().stage100();
                 break;
             case 2:
                 time = 30;
@@ -100,7 +100,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAisha('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selLynx('o');
-                RenderStageSelect.stage5();
+                RenderStageSelect.getInstance().stage5();
                 break;
             case 3:
                 time = 181;
@@ -108,7 +108,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selSubiya('o');
-                RenderStageSelect.stage4();
+                RenderStageSelect.getInstance().stage4();
                 break;
             case 4:
                 time = 45;
@@ -116,7 +116,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRav('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selAde('o');
-                RenderStageSelect.stage7();
+                RenderStageSelect.getInstance().stage7();
                 break;
             case 5:
                 time = 45;
@@ -125,7 +125,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selJon('o');
-                RenderStageSelect.stage7();
+                RenderStageSelect.getInstance().stage7();
                 break;
             case 6:
                 time = 181;
@@ -133,7 +133,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAza('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                RenderStageSelect.stage10();
+                RenderStageSelect.getInstance().stage10();
                 break;
             case 7:
                 time = 181;
@@ -141,7 +141,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
-                RenderStageSelect.stage2();
+                RenderStageSelect.getInstance().stage2();
                 break;
             case 8:
                 time = 181;
@@ -149,7 +149,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selAdam('o');
-                RenderStageSelect.stage10();
+                RenderStageSelect.getInstance().stage10();
                 break;
             case 9:
                 time = 60;
@@ -157,7 +157,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selSorr('o');
-                RenderStageSelect.stage10();
+                RenderStageSelect.getInstance().stage10();
                 break;
             case 10:
                 time = 90;
@@ -165,7 +165,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                RenderStageSelect.stage11();
+                RenderStageSelect.getInstance().stage11();
                 break;
             case 11:
                 time = 181;
@@ -173,7 +173,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
                 RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
                 RenderCharacterSelectionScreen.getInstance().selThing('x');
-                RenderStageSelect.stage13();
+                RenderStageSelect.getInstance().stage13();
                 break;
         }
         if (start) {
@@ -216,11 +216,11 @@ public class StoryMode implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Stage " + LoginScreen.getInstance().getMenu().getMain().getStory().getStage());
+            System.out.println("Stage " + MainWindow.getInstance().getStory().getStage());
 
             if (modeN == 0) //scene 1
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
                 //set difficulty
@@ -286,7 +286,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 1) //scene 2
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -322,7 +322,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 2) //scene 3
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -425,7 +425,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 3) //scene 4
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -503,7 +503,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 4) //scene 5
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -578,7 +578,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 5) //scene 6
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -690,7 +690,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 6) //scene 7
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -760,7 +760,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 7) //scene 8
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -807,7 +807,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 8) //scene 9
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -876,7 +876,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 9) //scene 10
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -958,7 +958,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 10) //scene 11
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 
@@ -1043,7 +1043,7 @@ public class StoryMode implements Runnable {
 
             if (modeN == 11) //scene 12
             {
-                LoginScreen.getInstance().getMenu().getMain().storyGame();
+                MainWindow.getInstance().storyGame();
                 storyIn();
                 firstRun = false;
 

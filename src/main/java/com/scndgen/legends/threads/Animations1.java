@@ -57,13 +57,13 @@ public class Animations1 implements Runnable {
                     RenderGameplay.getInstance().setBreak(-factor);
                 }
                 for (int o = 0; o <= 10; o++) {
-                    RenderGameplay.getInstance().charYcord = RenderGameplay.getInstance().charYcord + 1;
-                    RenderGameplay.getInstance().oppYcord = RenderGameplay.getInstance().oppYcord + 1;
+                    RenderGameplay.getInstance().setCharYcord(RenderGameplay.getInstance().getCharYcord() + 1);
+                    RenderGameplay.getInstance().setOppYcord(RenderGameplay.getInstance().getOppYcord() + 1);
                     thread.sleep(66);
                 }
                 for (int o = 0; o <= 10; o++) {
-                    RenderGameplay.getInstance().charYcord = RenderGameplay.getInstance().charYcord - 1;
-                    RenderGameplay.getInstance().oppYcord = RenderGameplay.getInstance().oppYcord - 1;
+                    RenderGameplay.getInstance().setCharYcord(RenderGameplay.getInstance().getCharYcord() - 1);
+                    RenderGameplay.getInstance().setOppYcord(RenderGameplay.getInstance().getOppYcord() - 1);
                     thread.sleep(66);
                 }
             } catch (InterruptedException ex) {

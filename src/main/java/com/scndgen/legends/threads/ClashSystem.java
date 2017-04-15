@@ -24,7 +24,7 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 
 /**
  * @author ndana
@@ -78,7 +78,7 @@ public class ClashSystem implements Runnable {
             }
         }
         isClashOn = false;
-        RenderGameplay.getInstance().clasherRunnign = false;
+        RenderGameplay.getInstance().setClasherRunnign(false);
         clashWinner(person);
     }
 
@@ -93,7 +93,7 @@ public class ClashSystem implements Runnable {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic('c', "GOT EM !!!", Colors.getColor("blue"));
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('c');
+                MainWindow.getInstance().triggerFury('c');
             } else {
                 RenderGameplay.getInstance().setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
@@ -106,7 +106,7 @@ public class ClashSystem implements Runnable {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic('o', "GOT YA !!!", Colors.getColor("blue"));
-                LoginScreen.getInstance().getMenu().getMain().triggerFury('o');
+                MainWindow.getInstance().triggerFury('o');
             } else {
                 RenderGameplay.getInstance().setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
@@ -117,10 +117,10 @@ public class ClashSystem implements Runnable {
     }
 
     public void plrClashing() {
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient)) {
-            LoginScreen.getInstance().getMenu().getMain().sendToServer("oppClsh" + plyClashPerc);
-        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-            LoginScreen.getInstance().getMenu().getMain().sendToClient("oppClsh" + plyClashPerc);
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+            MainWindow.getInstance().sendToServer("oppClsh" + plyClashPerc);
+        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            MainWindow.getInstance().sendToClient("oppClsh" + plyClashPerc);
         }
         plyrClash = plyrClash + 1;
         plyClashPerc = (plyrClash / (plyrClash + oppClash)) * 100;

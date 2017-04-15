@@ -22,7 +22,7 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.windows.WindowMain;
+import com.scndgen.legends.windows.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 public class NetworkScanLan extends JFrame implements ActionListener {
 
-    private static WindowMain startApp;
+    private static MainWindow startApp;
     private InetAddress ia;
     private JFrame frame;
     private JPanel buttons, panel, txtP;
