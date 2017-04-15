@@ -79,11 +79,14 @@ public class Animations3 implements Runnable {
         }
     }
 
-    public void stop() {
-        thread = null;
-        //thread.destroy();
+    public boolean isRunning()
+    {
+        return thread.isAlive();
     }
 
+    public void stop() {
+        thread.stop();
+    }
     public void pauseThread() {
         thread.suspend();
     }

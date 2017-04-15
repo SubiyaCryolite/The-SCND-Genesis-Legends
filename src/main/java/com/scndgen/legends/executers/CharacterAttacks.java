@@ -36,10 +36,6 @@ public class CharacterAttacks implements Runnable {
 
     @Override
     public void run() {
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
-            //RenderGameplay.getInstance().setSprites('a',9,11);
-            //RenderGameplay.getInstance().setSprites('b',9,11);
-        }
         //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
         //each attack will check if they are in the battle que.... if they are they execute
         RenderGameplay.getInstance().getGameInstance().pauseActivityRegen();

@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scnd_lang>
-    
-    <!-- The number of lines of dialog, ie, last sentence+1 -->
     <lines>418</lines>
-
-    <!-- put the number of fully implemented languages here-->    
     <langz>2</langz>
-    
-    
-    <!-- 
-    Add fully implemented language names here.
-    Make sure the numbers following 'lang' are in sequence
-    -->    
     <lang0>Engilsh</lang0>
     <lang1>ExampleLang</lang1>
-
-<!--
-Yeah, this implementation is crude but it works.
-Please use this template to translate.
-The language precedes the digit, and must be the same way it appears
-above in the <langX></langX> block or else the system wont recognize it.
--->
     <Engilsh0>Hello</Engilsh0>
     <ExampleLang0>Tyani</ExampleLang0>
     <Spanish0>Hola</Spanish0>

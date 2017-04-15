@@ -48,7 +48,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private static LoginScreen p;
     public int[] ach = new int[5];
     public int[] classArr = new int[5];
-    private String[] mode = {MainWindow.singlePlayer, MainWindow.lanHost, MainWindow.lanClient, MainWindow.storyMode, MainWindow.singlePlayer2};
+    private String[] mode = {MainWindow.singlePlayer, MainWindow.lanHost, MainWindow.lanClient, MainWindow.storyMode};
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;

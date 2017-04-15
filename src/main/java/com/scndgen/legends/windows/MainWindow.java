@@ -23,8 +23,6 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.attacks.AttackAssistOpponent;
-import com.scndgen.legends.attacks.AttackAssistPlayer;
 import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
@@ -55,7 +53,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public static String lanHost = "lanHost";
     public static String lanClient = "lanClient";
     public static String singlePlayer = "singlePlayer";
-    public static String singlePlayer2 = "singlePlayer2";
     public static String storyMode = "StoryMenu";
     public static int tTime;
     public static final int PORT = 5555;
@@ -65,9 +62,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
     public Mode mode = Mode.EMPTY;
     private AttackOpponent attackOpponent;
-    private AttackAssistOpponent attackAssistOpponent;
     private AttackPlayer attackPlayer;
-    private AttackAssistPlayer attackAssistPlayer;
     private boolean[] buttonPressed;
     //sever
     private NetworkServer server;
@@ -362,13 +357,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         return attackOpponent;
     }
 
-    public AttackAssistOpponent getAssistantOpponent() {
-        return attackAssistOpponent;
-    }
-
-    public AttackAssistPlayer getAssistantPlayer() {
-        return attackAssistPlayer;
-    }
 
     public AttackPlayer getAttacksChar() {
         return attackPlayer;
@@ -378,10 +366,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         mode = Mode.NEW_GAME;
         attackOpponent = new AttackOpponent();
         attackPlayer = new AttackPlayer();
-        if (getGameMode().equals(singlePlayer2)) {
-            attackAssistOpponent = new AttackAssistOpponent();
-            attackAssistPlayer = new AttackAssistPlayer();
-        }
         stopBackgroundMusic();
         RenderGameplay.getInstance().newInstance();
         setContentPane(RenderGameplay.getInstance());
@@ -407,10 +391,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void storyGame() {
         //bgMusclose();
         attackOpponent = new AttackOpponent();
-        if (getGameMode().equals(singlePlayer2)) {
-            attackAssistOpponent = new AttackAssistOpponent();
-            attackAssistPlayer = new AttackAssistPlayer();
-        }
         attackPlayer = new AttackPlayer();
         mode = Mode.NEW_GAME;
         stopBackgroundMusic();
@@ -427,7 +407,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         backgroundMusic.stop();
         backgroundMusic.close();
         dispose();
-        RenderGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().cleanAssets();
         focus();
     }
 
@@ -517,7 +497,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         isGameRunning = false;
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         mode = Mode.CHAR_SELECT_SCREEN;
-        RenderGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().cleanAssets();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
         RenderCharacterSelectionScreen.getInstance().refreshSelections();
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
@@ -536,7 +516,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
         RenderCharacterSelectionScreen.getInstance().refreshSelections();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
-        RenderGameplay.getInstance().killGameInstance();
+        RenderGameplay.getInstance().cleanAssets();
         RenderCharacterSelectionScreen.getInstance().systemNotice("Canceled Match");
         mode = Mode.CHAR_SELECT_SCREEN;
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
@@ -748,7 +728,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             } else if (mode == Mode.CHAR_SELECT_SCREEN) {
                 //if both Character are selected
                 if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                    if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
+                    if ((getGameMode().equalsIgnoreCase(singlePlayer)  || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.6f, 1000);
                         RenderCharacterSelectionScreen.getInstance().beginGame();
                     }
@@ -762,7 +742,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
+                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer)|| getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.66f, 1000);
                         RenderStageSelect.getInstance().selectStage();
                     }
@@ -777,7 +757,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      */
     private void escape() {
         if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
-            if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2)) {
+            if (getGameMode().equalsIgnoreCase(singlePlayer) ) {
                 {
                     RenderCharacterSelectionScreen.getInstance().refreshSelections();
                     RenderCharacterSelectionScreen.getInstance().backToMenu();
@@ -901,7 +881,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void mouseClicked(MouseEvent m) {
         if (mode == Mode.CHAR_SELECT_SCREEN && withinCharPanel) {
             if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
+                if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                     quickVibrate(0.6f, 1000);
                     RenderCharacterSelectionScreen.getInstance().beginGame();
                 }
@@ -1190,7 +1170,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     private void pause() {
-        if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(storyMode) || getGameMode().equalsIgnoreCase(singlePlayer2)) {
+        if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(storyMode)) {
             if (ThreadGameInstance.isPaused == false) {
                 RenderGameplay.getInstance().getGameInstance().pauseGame();
                 RenderGameplay.getInstance().pauseThreads();

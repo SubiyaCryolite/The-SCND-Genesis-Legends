@@ -225,7 +225,8 @@ public class JenesisGamePad {
      * update the component values in the controller
      */
     public void poll() {
-        controller.poll();
+        if (controller != null)
+            controller.poll();
     }
 
     /**

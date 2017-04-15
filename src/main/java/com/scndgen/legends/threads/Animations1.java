@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -39,7 +39,7 @@ public class Animations1 implements Runnable {
     public Animations1() {
         if (thread != null) {
             thread.resume();
-        } else  {
+        } else {
             thread = new Thread(this);
             thread.setName("Animator thread 1 - Characters");
             thread.start();
@@ -72,8 +72,12 @@ public class Animations1 implements Runnable {
         } while (1 != 0);
     }
 
+    public boolean isRunning() {
+        return thread.isAlive();
+    }
+
     public void stop() {
-        thread = null;
+        thread.stop();
     }
 
     public void pauseThread() {

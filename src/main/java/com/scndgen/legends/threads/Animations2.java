@@ -112,9 +112,14 @@ public class Animations2 implements Runnable {
         }
     }
 
+
+    public boolean isRunning()
+    {
+        return thread.isAlive();
+    }
+
     public void stop() {
-        thread = null;
-        //thread.destroy();
+        thread.stop();
     }
 
     public void pauseThread() {

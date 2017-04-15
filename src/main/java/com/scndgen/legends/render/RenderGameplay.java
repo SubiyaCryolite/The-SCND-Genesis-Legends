@@ -43,9 +43,9 @@ import java.util.logging.Logger;
  */
 public class RenderGameplay extends Gameplay implements JenesisRender {
     private static RenderGameplay instance;
-    private Animations1 upDown;
-    private Animations2 upDown2;
-    private Animations3 upDown3;
+    private Animations1 animations1;
+    private Animations2 animations2;
+    private Animations3 animations3;
     private Font bigFont, normalFont;
     private Font notSelected;
     private Font statusFont;
@@ -100,19 +100,20 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             //get ip from game
             client = MainWindow.getInstance().getClient();
         }
-
-        if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
-            charAssSpriteStatus = 9;
-            oppAssSpriteStatus = 9;
-        } else {
-            charAssSpriteStatus = 11;
-            oppAssSpriteStatus = 11;
-        }
         charPointInc = RenderCharacterSelectionScreen.getInstance().getPlayers().getPoints();
         loadAssets = false;
     }
 
     public void cleanAssets() {
+        if (animations1 != null)
+            if (animations1.isRunning())
+                animations1.stop();
+        if (animations2 != null)
+            if (animations2.isRunning())
+                animations2.stop();
+        if (animations3 != null)
+            if (animations3.isRunning())
+                animations3.stop();
         loadAssets = true;
     }
 
@@ -253,33 +254,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
                 g2d.drawImage(hpHolder, (45 + 62 + x2) + shakeyOffsetOpp, (y + 4 + y2 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setColor(Color.WHITE);
-                if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
-                    g2d.drawString("HP: " + Math.round((RenderGameplay.getInstance().getOppLife2() + RenderGameplay.getInstance().getOppLife())) + " : " + ((RenderGameplay.getInstance().perCent2a + RenderGameplay.getInstance().perCent2) / 2) + "%", (int) ((55 + 64 + x2)), (int) ((18 + y2 - oppBarYOffset)));
-                } else {
-                    g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getOppLife()) + " : " + RenderGameplay.getInstance().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
-                }
+                g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getOppLife()) + " : " + RenderGameplay.getInstance().perCent2 + "%", (55 + 64 + x2) + shakeyOffsetOpp, (18 + y2 - oppBarYOffset) - shakeyOffsetOpp);
 
                 g2d.setColor(Color.BLACK);
                 g2d.drawImage(oppBar, (x2 - 20) + shakeyOffsetOpp, (y2 + 18 - oppBarYOffset) - shakeyOffsetOpp, this);
                 g2d.setPaint(gradient1);
                 g2d.fillRoundRect((x2 - 17) + shakeyOffsetOpp, (y2 + 22 - oppBarYOffset) - shakeyOffsetOpp, RenderGameplay.getInstance().getGameInstance().getRecoveryUnitsOpp(), 6, 6, 6);
-                if (MainWindow.getInstance().getGameMode().equals(MainWindow.singlePlayer2)) {
-                    g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 40), this);
-                    g2d.setColor(Color.WHITE);
-                    g2d.drawString("HP: " + Math.round((RenderGameplay.getInstance().getOppLife2() + RenderGameplay.getInstance().getOppLife())) + " : " + ((RenderGameplay.getInstance().perCent2a + RenderGameplay.getInstance().perCent2) / 2) + "%", 55 + 64 + x2, 18 + y2 - 40);
-                    g2d.setColor(Color.BLACK);
-                    g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 40, this);
-                    g2d.setPaint(gradient1);
-                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 40, RenderGameplay.getInstance().getGameInstance().getRecoveryUnitsOpp2(), 6, 6, 6);
-
-                    g2d.drawImage(hpHolder, 45 + 62 + x2, (y + 4 + y2 - 80), this);
-                    g2d.setColor(Color.WHITE);
-                    g2d.drawString("HP: " + ((Math.round(RenderGameplay.getInstance().getCharLife3()) + Math.round(RenderGameplay.getInstance().getCharLife()))) + " : " + ((RenderGameplay.getInstance().perCent3a + RenderGameplay.getInstance().perCent) / 2) + "%", 55 + 64 + x2, 18 + y2 - 80);
-                    g2d.setColor(Color.BLACK);
-                    g2d.drawImage(oppBar, x2 - 20, y2 + 18 - 80, this);
-                    g2d.setPaint(gradient2);
-                    g2d.fillRoundRect(x2 - 17, y2 + 22 - 80, RenderGameplay.getInstance().getGameInstance().getRecoveryUnitsChar2(), 6, 6, 6);
-                }
 
                 //------------player 1 HUD---------------------//
                 g2d.drawImage(hpHolder, (lbx2 - 438) + shakeyOffsetChar, (lby2 - 410) - shakeyOffsetChar, this); // HOLDS hp
@@ -292,17 +272,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 //inner loop
                 g2d.setColor(Color.BLACK);
                 g2d.drawImage(hud2, lbx2 - 488 + shakeyOffsetChar, lby2 - 407 - shakeyOffsetChar, this);
-
-                {
-                    g2d.setColor(Color.WHITE);
-
-                    if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
-                        g2d.drawString("HP: " + ((Math.round(RenderGameplay.getInstance().getCharLife3()) + Math.round(RenderGameplay.getInstance().getCharLife()))) + " : " + ((RenderGameplay.getInstance().perCent3a + RenderGameplay.getInstance().perCent) / 2) + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
-                    } else {
-                        g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getCharLife()) + " : " + RenderGameplay.getInstance().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
-                    }
-                    g2d.setComposite(makeComposite(10 * 0.1f)); //op back to normal for other drawings
-                }
+                g2d.setColor(Color.WHITE);
+                g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getCharLife()) + " : " + RenderGameplay.getInstance().perCent + "%", (lbx2 - 416) + shakeyOffsetChar, (lby2 - 398) - shakeyOffsetChar);
+                g2d.setComposite(makeComposite(10 * 0.1f)); //op back to normal for other drawings
             }
 
             g2d.drawImage(counterPane, paneCord, 0, this);
@@ -918,10 +890,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         fourO = 10;
         opponentDamageYLoc = 400;
         playerDamageYLoc = 400;
-        upDown = new Animations1();
+        animations1 = new Animations1();
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
-            upDown2 = new Animations2();
-            upDown3 = new Animations3();
+            animations2 = new Animations2();
+            animations3 = new Animations3();
             loadedUpdaters = true;
         }
         System.out.println("Char inc: " + charPointInc);
@@ -1107,9 +1079,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         try {
             ambientMusic.pause();
             if (WindowOptions.graphics.equalsIgnoreCase("High")) {
-                upDown.pauseThread();
-                upDown2.pauseThread();
-                upDown3.pauseThread();
+                animations1.pauseThread();
+                animations2.pauseThread();
+                animations3.pauseThread();
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -1131,9 +1103,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         try {
             ambientMusic.resume();
             if (WindowOptions.graphics.equalsIgnoreCase("High")) {
-                upDown.resumeThread();
-                upDown2.resumeThread();
-                upDown3.resumeThread();
+                animations1.resumeThread();
+                animations2.resumeThread();
+                animations3.resumeThread();
             }
         } catch (Exception e) {
         }
@@ -1162,12 +1134,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * @param thischar - active character
      */
     public void AnimatePhyAttax(char thischar) {
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
-            setSprites('c', 9, 11);
-            setSprites('o', 9, 11);
-            setSprites('b', 9, 11);
-            setSprites('a', 9, 11);
-        } else if (thischar == 'c' || thischar == 'o') {
+        if (thischar == 'c' || thischar == 'o') {
             //sprites back to normal poses
             setSprites('c', 9, 11);
             setSprites('o', 9, 11);

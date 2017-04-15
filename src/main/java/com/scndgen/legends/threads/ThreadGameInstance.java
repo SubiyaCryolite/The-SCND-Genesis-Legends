@@ -24,8 +24,6 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.executers.AssistCharacterAttacks;
-import com.scndgen.legends.executers.AssistOpponentAttacks;
 import com.scndgen.legends.executers.CharacterAttacks;
 import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -53,7 +51,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public static boolean isGameOver, isPaused, gameRunning;
     public static int time, count2;
     public static boolean instance, storySequence;
-    private static boolean incrementActivityBar = true, incrementActivityBarOpp = true, incrementActivityBarOpp2 = true, incrementActivityBarChar2 = true;
+    private static boolean incrementActivityBar = true, incrementActivityBarOpp = true;
     private final Gameplay gameplay;
     public int taskComplete;
     public int taskRun = 0;
@@ -62,7 +60,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public String musicStr;
     public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
-    public boolean aiAttack = false, aiRunning = false, aiRunning2 = false, aiRunning3 = false;
+    public boolean aiAttack = false, aiRunning = false;
     public Achievements ach;
     public AudioPlayback loseMus, winMus;
     private Thread thread;
@@ -73,26 +71,18 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private int sampleChar;
     private float sampleCharDB;
     private int limitChar;
-    private int sampleChar2;
-    private float sampleCharDB2;
-    private int limitChar2;
     //recov opp hp
     private float hpOpp;
     //recov opp activity bar
     private int sampleOpp;
     private float sampleOppDB;
     private int limitOpp;
-    private int sampleOpp2;
-    private float sampleOppDB2;
-    private int limitOpp2;
-    private int timeToChill;
     private float count = 0.0f;
     private OpponentAttacks executorAI;
-    private AssistOpponentAttacks executorAI2;
-    private AssistCharacterAttacks executorAI3;
     private CharacterAttacks executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
+    private int timeOut;
 
     //indicates if game is running, controls game over screen and Achievements which require wins
     public ThreadGameInstance(int forWho, Gameplay gameplay) {
@@ -130,32 +120,9 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && storySequence == false) {
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
+                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
                     aiRunning = true;
                     executorAI.attack();
-                }
-            }
-
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2)) {
-                if (sampleOpp2 <= limitOpp2 && incrementActivityBarOpp2 && storySequence == false) {
-                    sampleOppDB2 = sampleOppDB2 + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed2());
-                    sampleOpp2 = Integer.parseInt("" + Math.round(sampleOppDB2) + "");
-                } else if (aiRunning2 == false && incrementActivityBarOpp2 && storySequence == false) {
-
-                    {
-                        aiRunning2 = true;
-                        executorAI2.attack();
-                    }
-                }
-
-                if (sampleChar2 <= limitChar2 && incrementActivityBarChar2 && storySequence == false) {
-                    sampleCharDB2 = sampleCharDB2 + (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharRecoverySpeed2());
-                    sampleChar2 = Integer.parseInt("" + Math.round(sampleCharDB2) + "");
-                } else if (aiRunning3 == false && incrementActivityBarChar2 && storySequence == false) {
-                    {
-                        aiRunning3 = true;
-                        executorAI3.attack();
-                    }
                 }
             }
 
@@ -250,62 +217,6 @@ public class ThreadGameInstance implements Runnable, ActionListener {
      */
     public int getLimitOpp() {
         return limitOpp;
-    }
-
-    /**
-     * Get the opponents recovery limits
-     *
-     * @return recovery limit for opponent
-     */
-    public int getLimitChar2() {
-        return limitChar2;
-    }
-
-    /**
-     * Get the opponents recovery units
-     *
-     * @return opponents recovery units
-     */
-    public int getRecoveryUnitsOpp2() {
-        return sampleOpp2;
-    }
-
-    /**
-     * Set the opponents recovery units
-     *
-     * @param thisNum2 - the value to set
-     */
-    public void setRecoveryUnitsOpp2(int thisNum2) {
-        sampleOppDB2 = (int) Float.parseFloat("" + thisNum2 + "");
-        sampleOpp2 = thisNum2;
-    }
-
-    /**
-     * Get the opponents recovery units
-     *
-     * @return opponents recovery units
-     */
-    public int getRecoveryUnitsChar2() {
-        return sampleChar2;
-    }
-
-    /**
-     * Set the opponents recovery units
-     *
-     * @param thisNum2 - the value to set
-     */
-    public void setRecoveryUnitsChar2(int thisNum2) {
-        sampleCharDB2 = (int) Float.parseFloat("" + thisNum2 + "");
-        sampleChar2 = thisNum2;
-    }
-
-    /**
-     * Get the opponents recovery limits
-     *
-     * @return recovery limit for opponent
-     */
-    public int getLimitOpp2() {
-        return limitOpp2;
     }
 
     /**
@@ -488,9 +399,6 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         RenderGameplay.getInstance().closeAudio();
     }
 
-    public void timeOut(int time) {
-        timeToChill = time;
-    }
 
     /**
      * This method prevents the regeneration of Activity while movesare executing
@@ -514,45 +422,15 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     }
 
     /**
-     * This method prevents the regeneration of Activity while movesare executing
-     */
-    public void pauseActivityRegenOpp2() {
-        incrementActivityBarOpp2 = false;
-    }
-
-    /**
      * Resumes the activity bar
      */
     public void resumeActivityRegenOpp() {
         incrementActivityBarOpp = true;
     }
 
-    /**
-     * Resumes the activity bar
-     */
-    public void resumeActivityRegenOpp2() {
-        incrementActivityBarOpp2 = true;
-    }
-
-    /**
-     * This method prevents the regeneration of Activity while movesare executing
-     */
-    public void pauseActivityRegenChar2() {
-        incrementActivityBarChar2 = false;
-    }
-
-    /**
-     * Resumes the activity bar
-     */
-    public void resumeActivityRegenChar2() {
-        incrementActivityBarChar2 = true;
-    }
 
     private void newInstance() {
         executorAI = new OpponentAttacks();
-        executorAI2 = new AssistOpponentAttacks();
-        executorAI3 = new AssistCharacterAttacks();
-
         ach = LoginScreen.getInstance().getAch();
         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
             storySequence = true;
@@ -570,16 +448,10 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         sampleCharDB = 00;
         limitChar = 290;
         hpChar2 = 0.0f;
-        sampleChar2 = 00;
-        sampleCharDB2 = 00;
-        limitChar2 = 290;
         hpOpp = 0.0f;
         sampleOpp = 00;
         sampleOppDB = 00;
         limitOpp = 290;
-        sampleOpp2 = 00;
-        sampleOppDB2 = 00;
-        limitOpp2 = 290;
         isPaused = false;
         isGameOver = false;
         ach.newInstance();
@@ -621,5 +493,9 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //
+    }
+
+    public void setTimeOut(int timeOut) {
+        this.timeOut = timeOut;
     }
 }
