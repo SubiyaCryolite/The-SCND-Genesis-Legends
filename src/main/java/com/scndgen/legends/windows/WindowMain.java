@@ -21,25 +21,26 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.render.RenderGameplay;
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.scene.StoryMenu;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackAssistOpponent;
-import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.attacks.AttackAssistPlayer;
+import com.scndgen.legends.attacks.AttackOpponent;
+import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.menus.RenderStageSelect;
-import com.scndgen.legends.threads.ClashSystem;
-import com.scndgen.legends.threads.ThreadGameInstance;
+import com.scndgen.legends.network.NetworkClient;
+import com.scndgen.legends.network.NetworkServer;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderStoryMenu;
+import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
+import com.scndgen.legends.threads.ThreadGameInstance;
+import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
 import javax.swing.*;
@@ -47,8 +48,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class WindowMain extends JFrame implements KeyListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -59,7 +58,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public static String singlePlayer2 = "singlePlayer2";
     public static String storyMode = "StoryMenu";
     public static int tTime;
-    private final int PORT = 5555;
+    public static final int PORT = 5555;
     public int hostTime;
     public boolean inStoryPane;
     public boolean isGameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
@@ -72,22 +71,21 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private AttackAssistPlayer characterEntity2;
     private boolean[] buttonPressed;
     //sever
-    private jenesisServer server;
+    private NetworkServer server;
     private InetAddress ServerAddress;
-    private int serverLatency;
+    public static final int serverLatency = 500;
     private int leftyXOffset, onlineClients = 0, hatDir;
-    private boolean messageSent = false, isWaiting = true, isNotRepainting = true, doneChilling = true;
-    private OpponentAttacksOnline playerHost2, playerClient1;
-    private CharacterAttacksOnline playerHost1, playerClient2;
+    private boolean messageSent = false, isWaiting = true, isNotRepainting = true, menuLatencyElapsed = true;
+    public OpponentAttacksOnline playerHost2, playerClient1;
+    public CharacterAttacksOnline playerHost1, playerClient2;
     //client
-    private jenesisClient client;
-    private JTextField Server = new JTextField(20);
-    private JLabel myLabel = new JLabel("Server Name :");
-    private JTextField User = new JTextField(20);
-    private String ServerName;
-    private String last, UserName;
+    private NetworkClient client;
+    private JTextField txtServerName = new JTextField(20);
+    private JLabel myLabel = new JLabel("txtServerName Name :");
+    private JTextField txtUserName = new JTextField(20);
+    public String ServerName;
+    public String last, UserName;
     private OverWorld world;
-    private RenderStageSelect stage;
     private int mouseYoffset = 0;
     private String gameMode = "";
     //offline, host, client
@@ -100,8 +98,14 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private WindowMain gameWindow;
     private AudioPlayback backgroundMusic;
     private int topY, topX, columns, vspacer, hspacer, rows;
+    private static WindowMain instance;
+
+    public static WindowMain getInstance() {
+        return instance;
+    }
 
     public WindowMain(String nameOfUser, String mode) {
+        instance = this;
         try {
             if (JenesisGamePad.getInstance().NUM_BUTTONS > 0) {
                 controller = true;
@@ -116,10 +120,9 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         gameMode = mode;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
-        serverLatency = 500;
 
         if (getGameMode().equalsIgnoreCase(lanHost)) {
-            server = new jenesisServer();
+            server = new NetworkServer();
             server.start();
         }
 
@@ -130,7 +133,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
 
         if (getGameMode().equalsIgnoreCase(lanClient)) {
-            client = new jenesisClient(LoginScreen.getInstance().getIP());
+            client = new NetworkClient(LoginScreen.getInstance().getIP());
         }
         setUndecorated(true);
         setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
@@ -156,7 +159,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         setIconImages(imageList);
         //seti(loadIconImage("images/GameIco.ico"));
 
-        stage = new RenderStageSelect();
+        RenderStageSelect.getInstance().newInstance();
         if (mode.equals(lanHost)) {
             isWaiting = true;
             drawWait = new DrawWaiting();
@@ -197,8 +200,16 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         packWindow();
     }
 
-    public void stopMus() {
+    public void stopBackgroundMusic() {
         backgroundMusic.close();
+    }
+
+    public String getServerName() {
+        return txtServerName.getText();
+    }
+
+    public String getServerUserName() {
+        return txtUserName.getText();
     }
 
     /**
@@ -210,13 +221,18 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
         public void run() {
         try {
-        doneChilling = false;
+        menuLatencyElapsed = false;
         this.sleep(166);
-        doneChilling = true;
+        menuLatencyElapsed = true;
         } catch (Exception e) {
         }
         }
         }.start();*/
+    }
+
+    public boolean isMessageSent()
+    {
+        return messageSent;
     }
 
     public void packWindow() {
@@ -368,7 +384,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             oppenentEntity2 = new AttackAssistOpponent();
             characterEntity2 = new AttackAssistPlayer();
         }
-        stopMus();
+        stopBackgroundMusic();
         RenderGameplay.getInstance().newInstance();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
@@ -402,7 +418,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
         characterEntity = new AttackPlayer();
         currentScreen = ModeEnum.newGame;
-        stopMus();
+        stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
         reSize("game");
@@ -428,7 +444,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         oppenentEntity = new AttackOpponent();
         characterEntity = new AttackPlayer();
         currentScreen = ModeEnum.newGame;
-        stopMus();
+        stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
         reSize("game");
@@ -492,7 +508,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Enables player to select a stage
      */
     public void selectStage() {
-        setContentPane(stage);
+        setContentPane(RenderStageSelect.getInstance());
         currentScreen = ModeEnum.stageSelectScreen;
         pack();
         setLocationRelativeTo(null);
@@ -532,7 +548,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         backgroundMusic.play();
         reSize("menu");
         focus();
-        stage.defValue();
+        RenderStageSelect.getInstance().defValue();
         if (getGameMode().equalsIgnoreCase(storyMode)) {
             RenderCharacterSelectionScreen.getInstance().backToMenu();
 
@@ -540,7 +556,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Closes hosting jenesisServer
+     * Closes hosting NetworkServer
      */
     public void closeTheServer() {
         server.closeServer();
@@ -588,7 +604,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             if (RenderGameplay.getInstance().getGameInstance().isPaused) {
                 pause();
             }
-            stage.selectedStage = false;
+            RenderStageSelect.getInstance().selectedStage = false;
             backToCharSelect2();
         }
     }
@@ -621,7 +637,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Contains universal up menu/game movements
      */
     private void up() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (currentScreen == ModeEnum.charSelectScreen) {
                 RenderCharacterSelectionScreen.getInstance().moveUp();
             } else if (currentScreen == ModeEnum.storySelectScreen) {
@@ -629,7 +645,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    stage.moveUp();
+                    RenderStageSelect.getInstance().moveUp();
                 }
             } else if (getIsGameRunning()) {
                 RenderGameplay.getInstance().upItem();
@@ -642,7 +658,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Contains universal down menu/game movements
      */
     private void down() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (currentScreen == ModeEnum.charSelectScreen) {
                 RenderCharacterSelectionScreen.getInstance().moveDown();
             } else if (currentScreen == ModeEnum.storySelectScreen) {
@@ -650,7 +666,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should not be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    stage.moveDown();
+                    RenderStageSelect.getInstance().moveDown();
                 }
             } else if (getIsGameRunning()) {
                 RenderGameplay.getInstance().downItem();
@@ -663,7 +679,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Contains universal left menu/game movements
      */
     private void left() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (currentScreen == ModeEnum.charSelectScreen) {
                 RenderCharacterSelectionScreen.getInstance().moveLeft();
             } else if (currentScreen == ModeEnum.storySelectScreen) {
@@ -671,7 +687,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    stage.moveLeft();
+                    RenderStageSelect.getInstance().moveLeft();
                 }
             } else if (getIsGameRunning()) {
                 RenderGameplay.getInstance().prevAnim();
@@ -684,13 +700,13 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Contains universal right menu/game movements
      */
     private void right() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (currentScreen == ModeEnum.charSelectScreen) {
                 RenderCharacterSelectionScreen.getInstance().moveRight();
             } else if (currentScreen == ModeEnum.storySelectScreen) {
                 RenderStoryMenu.getInstance().moveRight();
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
-                stage.moveRight();
+                RenderStageSelect.getInstance().moveRight();
             } else if (getIsGameRunning()) {
                 RenderGameplay.getInstance().nextAnim();
             }
@@ -702,7 +718,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Handles universal accept functions
      */
     private void accept() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (getIsGameRunning()) {
                 if (ThreadGameInstance.isPaused == false) {
                     //in game, no story sequence
@@ -753,7 +769,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                     if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(singlePlayer2) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.66f, 1000);
-                        stage.SelectStageNow();
+                        RenderStageSelect.getInstance().SelectStageNow();
                     }
                 }
             }
@@ -785,7 +801,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Global back
      */
     private void back() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (currentScreen == ModeEnum.charSelectScreen) {
                 if (getGameMode().equalsIgnoreCase(singlePlayer)) {
                     RenderCharacterSelectionScreen.getInstance().refreshSelections();
@@ -805,7 +821,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Universal trigger
      */
     private void trigger() {
-        if (doneChilling) {
+        if (menuLatencyElapsed) {
             if (getIsGameRunning()) {
                 RenderGameplay.getInstance().attack();
             }
@@ -866,13 +882,13 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
         if (keyCode == KeyEvent.VK_F12) {
             if (currentScreen == ModeEnum.charSelectScreen) {
-                RenderCharacterSelectionScreen.getInstance().getScreeny();
+                RenderCharacterSelectionScreen.getInstance().captureScreenShot();
             } else if (currentScreen == ModeEnum.storySelectScreen) {
-                RenderStoryMenu.getInstance().takeScreenshotX();
+                RenderStoryMenu.getInstance().captureScreenShot();
             } else if (currentScreen == ModeEnum.stageSelectScreen) {
-                stage.screenShot();
+                RenderStageSelect.getInstance().captureScreenShot();
             } else if (getIsGameRunning()) {
-                RenderGameplay.getInstance().takeScreenShot();
+                RenderGameplay.getInstance().captureScreenShot();
             }
         } else if (getIsGameRunning()) {
             //use T for testing stuff
@@ -926,7 +942,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             RenderStoryMenu.getInstance().selectStage();
         }
         if (currentScreen == ModeEnum.stageSelectScreen && withinCharPanel) {
-            stage.SelectStageNow();
+            RenderStageSelect.getInstance().SelectStageNow();
         } else if (getIsGameRunning()) {
             //when fighting
             if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
@@ -1116,12 +1132,12 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      * Attempts to map selected character using mouse
      */
     private void sortCharPosLoc2(int xPos, int yPos) {
-        topY = stage.getStartY() + mouseYoffset;
-        topX = stage.getStartX();
-        columns = stage.getNumberOfCharColumns();
-        vspacer = stage.getCharHSpacer();
-        hspacer = stage.getCharVSpacer();
-        rows = stage.getCharRows();
+        topY = RenderStageSelect.getInstance().getStartY() + mouseYoffset;
+        topX = RenderStageSelect.getInstance().getStartX();
+        columns = RenderStageSelect.getInstance().getNumberOfCharColumns();
+        vspacer = RenderStageSelect.getInstance().getCharHSpacer();
+        hspacer = RenderStageSelect.getInstance().getCharVSpacer();
+        rows = RenderStageSelect.getInstance().getCharRows();
 
         if (xPos > topX && xPos < (topX + (hspacer * columns)) && (yPos > topY) && (yPos < topY + (vspacer * (rows + 1)))) {
             int vIndex = (yPos - topY) / vspacer;
@@ -1129,8 +1145,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
             //System.out.println("within char pan dog");
             //System.out.println("Row "+vIndex);
             //System.out.println("Column "+hIndex);
-            stage.setHindex(hIndex);
-            stage.setVindex(vIndex);
+            RenderStageSelect.getInstance().setHindex(hIndex);
+            RenderStageSelect.getInstance().setVindex(vIndex);
             //RenderCharacterSelectionScreen.getInstance().setItem();
             animateCap2(hIndex, vIndex);
             withinCharPanel = true;
@@ -1285,11 +1301,11 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         }
     }
 
-    public jenesisServer getServer() {
+    public NetworkServer getServer() {
         return server;
     }
 
-    public jenesisClient getClient() {
+    public NetworkClient getClient() {
         return client;
     }
 
@@ -1301,441 +1317,5 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         client.sendData(thisTxt);
     }
 
-    public class jenesisServer implements Runnable {
 
-        private DataOutputStream output;
-        private DataInputStream input;
-        private ServerSocket server;
-        private Socket connection;
-        private Thread t;
-        private boolean serverIsRunning;
-
-        /**
-         * Basic constructor
-         */
-        public jenesisServer() {
-            InitServer();
-            t = new Thread(this);
-        }
-
-        /**
-         * Start this jenesisServer
-         */
-        public void start() {
-            t.start();
-        }
-
-        /**
-         * Initialize jenesisServer
-         */
-        private void InitServer() {
-            try {
-                serverIsRunning = true;
-                server = new ServerSocket(PORT, 1);
-                System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
-            } catch (IOException ex) {
-                System.err.println(ex);
-                System.err.println("Address already in use, please close other instances");
-            }
-        }
-
-        /**
-         * Establish a new connection
-         */
-        private void establishConnection() {
-            try {
-                connection = server.accept();
-                System.out.println(connection.getInetAddress().getHostName());
-                playerFound();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-        }
-
-        /**
-         * Close the jenesisServer
-         */
-        public void closeServer() {
-            try {
-                serverIsRunning = false;
-                output.close();
-                input.close();
-                connection.close();
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-            }
-        }
-
-        @Override
-        public void run() {
-            establishConnection();
-            while (serverIsRunning) {
-                try {
-                    getStreams();
-                    readMessage();
-                    t.sleep(serverLatency);
-                } catch (Exception ex) {
-                    System.err.println(ex.getMessage());
-                }
-            }
-        }
-
-        /**
-         * Get data streams
-         */
-        private void getStreams() {
-            try {
-                output = new DataOutputStream(connection.getOutputStream());
-                output.flush();
-                input = new DataInputStream(connection.getInputStream());
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-        }
-
-        /**
-         * Read incoming data
-         */
-        public void readMessage() {
-            try {
-                String line = input.readUTF();
-                if (line.endsWith("quit")) {
-                    closeServer();
-                } else if (line.endsWith("player_QSLV")) {
-                    playerFound();
-                } else if (line.endsWith("attack")) {
-
-                    //1111 attack
-                    //01010101 attack
-                    int back = line.length();
-                    int y1 = Integer.parseInt("" + line.substring(back - 15, back - 13) + "");
-                    int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
-                    int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
-                    int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-
-                    if (getGameMode().equalsIgnoreCase(lanHost)) {
-                        playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
-                    }
-
-                    System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
-                    //SendMassage(client,client.socket().getInetAddress()+" ATTACKED YOU!!!");
-                    System.out.println("\n");
-                } else if (line.endsWith("pauseGame")) {
-                    //pauseMethod();
-                } else if (line.endsWith(" xc_97_mb")) {
-                    systemNotice(line.replaceAll(" xc_97_mb", ""));
-                } //Character
-                else if (line.endsWith("_jkxc")) {
-                    System.out.println("Server mess: " + line);
-                    if (line.contains("selSub")) {
-                        RenderCharacterSelectionScreen.getInstance().selSubiya('o');
-                    }
-                    if (line.contains("selRai")) {
-                        RenderCharacterSelectionScreen.getInstance().selRaila('o');
-                    }
-                    if (line.contains("selAlx")) {
-                        RenderCharacterSelectionScreen.getInstance().selAisha('o');
-                    }
-                    if (line.contains("selLyn")) {
-                        RenderCharacterSelectionScreen.getInstance().selLynx('o');
-                    }
-                    if (line.contains("selRav")) {
-                        RenderCharacterSelectionScreen.getInstance().selRav('o');
-                    }
-                    if (line.contains("selAde")) {
-                        RenderCharacterSelectionScreen.getInstance().selAde('o');
-                    }
-                    if (line.contains("selJon")) {
-                        RenderCharacterSelectionScreen.getInstance().selJon('o');
-                    }
-                    if (line.contains("selAdam")) {
-                        RenderCharacterSelectionScreen.getInstance().selAdam('o');
-                    }
-                    if (line.contains("selNOVAAdam")) {
-                        RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                    }
-                    if (line.contains("selAzaria")) {
-                        RenderCharacterSelectionScreen.getInstance().selAza('o');
-                    }
-                    if (line.contains("selSorr")) {
-                        RenderCharacterSelectionScreen.getInstance().selSorr('o');
-                    }
-                    if (line.contains("selThi")) {
-                        RenderCharacterSelectionScreen.getInstance().selThing('o');
-                    }
-                } else if (line.equalsIgnoreCase("lastMess")) {
-                    sendData(last);
-                } //special moves
-                else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                    triggerFury('o');
-                } //clashes
-                else if (line.contains("oppClsh")) {
-                    System.out.println("THis is it " + line.substring(7));
-                    int val = Integer.parseInt(line.substring(7));
-                    ClashSystem.getInstance().setOpp(val);
-                }
-            } catch (Exception ex) {
-                System.err.println(ex);
-                ex.printStackTrace();
-                sendData("lastMess");
-            }
-        }
-
-        /**
-         * Send data stream
-         *
-         * @param mess message to send
-         */
-        public void sendData(String mess) {
-            try {
-                last = mess;
-                output.writeUTF(mess);
-                output.flush();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-        }
-    }
-
-
-    public class jenesisClient implements Runnable {
-
-        private DataOutputStream dataOutputStream;
-        private DataInputStream dataInputStream;
-        private Socket socket;
-        private Thread thread;
-        private String IPaddress;
-        private boolean clientIsRunning;
-
-        /**
-         * Constructor, expects name/ip address
-         */
-        public jenesisClient(String ip) {
-            clientIsRunning = true;
-            IPaddress = ip;
-            thread = new Thread(this);
-            thread.start();
-        }
-
-        @Override
-        public void run() {
-
-            ServerName = Server.getText();
-            System.out.println(ServerName);
-            UserName = User.getText();
-            connectToServer(IPaddress);
-            while (clientIsRunning) {
-                getStreams();
-                readMassage();
-                try {
-                    thread.sleep(serverLatency);
-                } catch (InterruptedException ie) {
-                    JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                    backToCharSelect();
-                }
-            }
-
-        }
-
-        /**
-         * Connect to a given jenesisServer
-         *
-         * @param hostname jenesisServer name
-         */
-        private void connectToServer(String hostname) {
-            try {
-                clientIsRunning = true;
-                socket = new Socket(InetAddress.getByName(hostname), PORT);
-                System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
-            } catch (IOException ex) {
-                System.err.println(ex);
-                System.out.println("Address already in use, please close other instances");
-            }
-        }
-
-        /**
-         * Get data streams
-         */
-        private void getStreams() {
-            try {
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.flush();
-                dataInputStream = new DataInputStream(socket.getInputStream());
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        /**
-         * Read incoming data stream
-         */
-        public void readMassage() {
-            try {
-                String line = dataInputStream.readUTF();
-                if (line.endsWith("attack")) {
-                    int back = line.length();
-                    int y1 = Integer.parseInt("" + line.substring(back - 15, back - 13) + "");
-                    int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
-                    int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
-                    int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                    if (getGameMode().equalsIgnoreCase(lanHost)) {
-                        playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
-                    }
-                    if (getGameMode().equalsIgnoreCase(lanClient)) {
-                        playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
-                    }
-                    System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
-                    System.out.println("\n");
-                } else if (line.endsWith("pauseGame")) {
-                    //pauseMethod();
-                } else if (line.endsWith(" xc_97_mb")) {
-                    systemNotice(line.replaceAll(" xc_97_mb", ""));
-                } //Character
-                else if (line.endsWith("_jkxc")) {
-                    if (line.contains("selSub")) {
-                        RenderCharacterSelectionScreen.getInstance().selSubiya('o');
-                    }
-                    if (line.contains("selRai")) {
-                        RenderCharacterSelectionScreen.getInstance().selRaila('o');
-                    }
-                    if (line.contains("selAlx")) {
-                        RenderCharacterSelectionScreen.getInstance().selAisha('o');
-                    }
-                    if (line.contains("selLyn")) {
-                        RenderCharacterSelectionScreen.getInstance().selLynx('o');
-                    }
-                    if (line.contains("selRav")) {
-                        RenderCharacterSelectionScreen.getInstance().selRav('o');
-                    }
-                    if (line.contains("selAde")) {
-                        RenderCharacterSelectionScreen.getInstance().selAde('o');
-                    }
-                    if (line.contains("selJon")) {
-                        RenderCharacterSelectionScreen.getInstance().selJon('o');
-                    }
-                    if (line.contains("selAdam")) {
-                        RenderCharacterSelectionScreen.getInstance().selAdam('o');
-                    }
-                    if (line.contains("selNOVAAdam")) {
-                        RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                    }
-                    if (line.contains("selAzaria")) {
-                        RenderCharacterSelectionScreen.getInstance().selAza('o');
-                    }
-                    if (line.contains("selSorr")) {
-                        RenderCharacterSelectionScreen.getInstance().selSorr('o');
-                    }
-                    if (line.contains("selThi")) {
-                        RenderCharacterSelectionScreen.getInstance().selThing('o');
-                    }
-                } else if (line.endsWith("watchStageSel_xcbD")) {
-                    selectStage();
-                } else if (line.startsWith("as1wds2_")) {
-                    hostTime = Integer.parseInt(line.substring(8));
-                    System.out.println("aquired time is " + hostTime);
-                } //stages
-                else if (line.endsWith("_vgdt")) {
-                    if (line.contains("stage1")) {
-                        stage.stage1();
-                    }
-                    if (line.contains("stage2")) {
-                        stage.stage2();
-                    }
-                    if (line.contains("stage3")) {
-                        stage.stage3();
-                    }
-                    if (line.contains("stage4")) {
-                        stage.stage4();
-                    }
-                    if (line.contains("stage5")) {
-                        stage.stage5();
-                    }
-                    if (line.contains("stage6")) {
-                        stage.stage6();
-                    }
-                    if (line.contains("stage7")) {
-                        stage.stage7();
-                    }
-                    if (line.contains("stage100")) {
-                        stage.stage100();
-                    }
-                    if (line.contains("stage8")) {
-                        stage.stage8();
-                    }
-                    if (line.contains("stage9")) {
-                        stage.stage9();
-                    }
-                    if (line.contains("stage10")) {
-                        stage.stage10();
-                    }
-                    if (line.contains("stage11")) {
-                        stage.stage11();
-                    }
-                    if (line.contains("stage12")) {
-                        stage.stage12();
-                    }
-                    if (line.contains("stage13")) {
-                        stage.stage13();
-                    }
-                    if (line.contains("stage14")) {
-                        stage.stage14();
-                    }
-                } //start game
-                else if (line.endsWith("gameStart7%^&")) {
-                    stage.start();
-                } else if (line.contains("loadingGVSHA")) {
-                    stage.nowLoading();
-                } //special moves
-                else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                    triggerFury('o');
-                } //clashes
-                else if (line.contains("oppClsh")) {
-                    System.out.println("THis is it " + line.substring(7));
-                    int val = Integer.parseInt(line.substring(7));
-                    ClashSystem.getInstance().setOpp(val);
-                } //rejected
-                else if (line.contains("getLost")) ;
-                {
-                    JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + messageSent + " " + getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
-                    sendToServer("quit");
-                    closeTheClient();
-                    backToMenuScreen();
-                }
-            } catch (Exception ex) {
-                System.err.println(ex);
-                ex.printStackTrace();
-                sendData("lastMess");
-            }
-        }
-
-        /**
-         * Send a data stream
-         *
-         * @param mess message to send
-         */
-        public void sendData(String mess) {
-            try {
-                last = mess;
-                dataOutputStream.writeUTF(mess);
-                dataOutputStream.flush();
-            } catch (Exception exception) {
-                exception.printStackTrace(System.err);
-            }
-        }
-
-        /**
-         * Terminate client
-         */
-        public void closeClient() {
-            try {
-                clientIsRunning = false;
-                dataOutputStream.close();
-                dataInputStream.close();
-                socket.close();
-            } catch (Exception exception) {
-                exception.printStackTrace(System.err);
-            }
-        }
-    }
 }

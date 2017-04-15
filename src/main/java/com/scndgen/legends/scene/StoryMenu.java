@@ -169,14 +169,6 @@ public abstract class StoryMenu extends JenesisMode {
         return rows;
     }
 
-    /**
-     * Get starting x coordinate
-     *
-     * @return starting x coordinate
-     */
-    public void takeScreenshotX() {
-        captureScreenShot();
-    }
 
     /**
      * Animates caption

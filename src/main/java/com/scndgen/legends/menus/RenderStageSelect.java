@@ -21,15 +21,19 @@
  **************************************************************************/
 package com.scndgen.legends.menus;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.drawing.DrawStageSel;
+import com.scndgen.legends.drawing.StageSelect;
+import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.windows.WindowMain;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RenderStageSelect extends DrawStageSel {
+public class RenderStageSelect extends StageSelect implements JenesisRender {
 
     //♩♪♬♫
     public static String[] trax = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
@@ -46,551 +50,257 @@ public class RenderStageSelect extends DrawStageSel {
             "Doug Kaufman - Elvish theme",
             "Mattias Westlund - Breaking the Chains",
             "Aleksi Aubry-Carlson - Battle Music"};
-    public static int musicInt = 0;
     public static String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
-    public static boolean selectedStage = false;
-    private static int source;
+    private Image charBack, loading;
+    public int horizColumns = 3, verticalRows;
+    private JenesisImageLoader pix;
+    private Image[] stageCap = new Image[numberOfStages];
+    private Image[] stagePrev = new Image[numberOfStages];
+    private Font normalFont, bigFont;
+    private String[] stageNameStr;
+    private int oldId = -1;
+    private static RenderStageSelect instance;
+
+    public static synchronized RenderStageSelect getInstance() {
+        if (instance == null)
+            instance = new RenderStageSelect();
+        return instance;
+    }
 
     public RenderStageSelect() {
-        initializePanel();
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        Language lang = Language.getInstance();
+        stageNameStr = new String[]{lang.getLine(152),
+                lang.getLine(153),
+                lang.getLine(154),
+                lang.getLine(155),
+                lang.getLine(156),
+                lang.getLine(157),
+                lang.getLine(158),
+                lang.getLine(159),
+                lang.getLine(160),
+                lang.getLine(161),
+                lang.getLine(162),
+                lang.getLine(163),
+                lang.getLine(369),
+                lang.getLine(370),
+                lang.getLine(371),
+                lang.getLine(164)};
+        numberOfStages = stageNameStr.length;
+
+        verticalRows = (numberOfStages / 3);
+        stageCap = new Image[numberOfStages];
+        stagePrev = new Image[numberOfStages];
     }
 
-    /**
-     * SHows loading screen
-     */
-    public static void nowLoading() {
-        selectedStage = true;
+    @Override
+    public void loadAssets() {
+        if (!loadAssets) return;
+        pix = new JenesisImageLoader();
+        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        loadCaps();
+        loadAssets = false;
     }
 
-    public static void SelectStageNow() {
-        if (mode == 1) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                source = stageSelIndex;
-                nowLoading();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("loadingGVSHA");
-                }
-            }//repaint();
-        } //random stage
-        else {
-            source = (int) (Math.random() * (numberOfStages - 1));
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                nowLoading();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("loadingGVSHA");
-                }
-            }
-        }
+    @Override
+    public void cleanAssets() {
+        loadAssets = true;
+    }
 
-        if (source == 0) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage1();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage1_vgdt");
-                }
+    @Override
+    public void paintComponent(Graphics g) {
+        createBackBuffer();
+        loadAssets();
+        if (RenderStageSelect.selectedStage) {
+            g2d.setColor(Color.BLACK);
+            g2d.drawImage(stagePrev[stageSelIndex], charXcap + x, charYcap, this);
+            g2d.setComposite(makeComposite(0.7f));
+            g2d.fillRect(0, 0, 852, 480);
+            g2d.setComposite(makeComposite(1.0f));
+            g2d.setComposite(makeComposite(0.5f));
+            g2d.fillRect(200, 0, 452, 480);
+            g2d.setComposite(makeComposite(1.0f));
+            g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) && RenderStageSelect.selectedStage == false) {
+            g2d.setFont(normalFont);
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, 852, 480);
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
+        } else if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanClient) == false) {
+            g2d.setFont(normalFont);
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, 852, 480);
+            //character preview DYNAMIC change
+            if (opacity < 0.98f) {
+                opacity = opacity + 0.02f;
             }
-        }
+            g2d.setComposite(makeComposite(opacity));
+            g2d.drawImage(stagePrev[stageSelIndex], charXcap + x, charYcap, this);
+            g2d.setComposite(makeComposite(1.0f));
+            lastRow = 0;
+            {
+                g2d.setComposite(makeComposite(5 * 0.1F));
+                g2d.fillRoundRect(283, 0, 285, 480, 30, 30);
+                g2d.setComposite(makeComposite(10 * 0.1F));
 
-        if (source == 1) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage2();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage2_vgdt");
+                int col = 0;
+                for (int i = 0; i < (stageCap.length / 3); i++) {
+                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * i), this);
+                    col++;
+                    g2d.drawImage(stageCap[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
+                    col++;
+                    g2d.drawImage(stageCap[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
+                    col++;
+                    lastRow = i;
                 }
-            }
-        }
 
-        if (source == 2) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage3();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage3_vgdt");
+                int rem = stageCap.length % 3;
+
+                if (rem == 1) {
+                    //System.out.println("Remainder 11");
+                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+                } else if (rem == 2) {
+                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
+                    g2d.drawImage(stageCap[col + 1], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
                 }
-            }
-        }
 
-        if (source == 3) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage4();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage4_vgdt");
-                }
-            }
-        }
-
-        if (source == 4) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage5();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage5_vgdt");
-                }
-            }
-        }
-
-        if (source == 5) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage6();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage6_vgdt");
-                }
-            }
-        }
-
-        if (source == 6) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage7();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage7_vgdt");
-                }
-            }
-        }
-
-        if (source == 10) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage100();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage100_vgdt");
-                }
-            }
-        }
-
-        if (source == 7) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage8();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage8_vgdt");
+                if (well()) {
+                    {
+                        showStageName(stageSelIndex);
+                        g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
+                    }
                 }
             }
         }
+        JenesisGlassPane.getInstance().overlay(g2d, this);
+        g.drawImage(volatileImg, 0, 0, this);
+    }
 
-        if (source == 8) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage9();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage9_vgdt");
-                }
+
+    private void loadCaps() {
+        RenderStageSelect.selectedStage = false;
+        try {
+            for (int i = 0; i < stagePrevLox.length; i++) {
+                stageCap[i] = pix.loadImage("images/t_" + stagePrevLox[i] + ".png");
             }
+        } catch (Exception e) {
+            System.err.println(e);
         }
 
-        if (source == 9) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage10();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage10_vgdt");
-                }
-            }
-        }
+        charBack = pix.loadImage("images/selStage.png");
+        loading = pix.loadImage("images/appletprogress.gif");
 
-        if (source == 11) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage11();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage11_vgdt");
-                }
-            }
-        }
 
-        if (source == 12) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage12();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage12_vgdt");
-                }
-            }
-        }
-
-        if (source == 13) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage13();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage13_vgdt");
-                }
-            }
-        }
-
-        if (source == 14) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                stage14();
-                if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                    LoginScreen.getInstance().getMenu().getMain().sendToClient("stage14_vgdt");
-                }
-            }
-        }
-
-        if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.singlePlayer2) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost) || LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase("watch")) {
-            if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.lanHost)) {
-                LoginScreen.getInstance().getMenu().getMain().sendToClient("gameStart7%^&");
-            }
-            start();
+        for (int vd = 0; vd < stagePrevLox.length; vd++) {
+            stagePrev[vd] = pix.loadImage("images/prev/" + stagePrevLox[vd] + ".jpg");
         }
     }
 
-    public static void defValue() {
-
-        setStage(0);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 10;
-        RenderGameplay.getInstance().animDirection = "vert";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "both";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 4;
-        RenderGameplay.getInstance().ambSpeed2 = 3;
-        musicInt = 0;
-        getReady();
-    }
-
-    /**
-     * Ibex Hill- day
-     */
-    public static void stage1() //
-    {
-        defValue();
-    }
-
-    /**
-     * Chelston City docks
-     */
-    public static void stage2() {
-        setStage(1);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "none";
-        RenderGameplay.getInstance().delay = 66;
-        RenderGameplay.getInstance().ambSpeed1 = 0;
-        RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 1;
-        getReady();
-    }
-
-    /**
-     * The Ruined Hall
-     */
-    public static void stage3() {
-        setStage(2);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 5;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 4;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "forg";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 2;
-        getReady();
-    }
-
-    /**
-     * Chelston City - Streets
-     */
-    public static void stage4() {
-        setStage(3);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "none";
-        RenderGameplay.getInstance().delay = 66;
-        RenderGameplay.getInstance().ambSpeed1 = 0;
-        RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
-        getReady();
-    }
-
-    /**
-     * Ibex Hill - Night
-     */
-    public static void stage5() {
-        setStage(4);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 10;
-        RenderGameplay.getInstance().animDirection = "vert";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "both";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 4;
-        RenderGameplay.getInstance().ambSpeed2 = 3;
-        musicInt = 4;
-        getReady();
-    }
-
-    /**
-     * Scorched Ruins
-     */
-    public static void stage6() {
-        setStage(5);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 5;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 4;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "forg";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 5;
-        getReady();
-    }
-
-    /**
-     * Frozen Wilderness
-     */
-    public static void stage7() {
-        setStage(6);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
-        RenderGameplay.getInstance().fgxInc = 5;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 4;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "yes";
-        RenderGameplay.getInstance().animLayer = "both";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 6;
-        getReady();
-    }
-
-    /**
-     * Distant Isle
-     */
-    public static void stage100() {
-        setStage(10);
-        RenderGameplay.getInstance().fgx = -40;
-        RenderGameplay.getInstance().fgy = 20;
-        RenderGameplay.getInstance().fgxInc = 2;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "rot";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
-        RenderGameplay.getInstance().delay = 25;
-        RenderGameplay.getInstance().ambSpeed1 = 1;
-        RenderGameplay.getInstance().ambSpeed2 = 2;
-        musicInt = 0;
-        getReady();
-    }
-
-    public static void stage12() {
-        setStage(12);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "none";
-        RenderGameplay.getInstance().delay = 66;
-        RenderGameplay.getInstance().ambSpeed1 = 0;
-        RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
-        getReady();
-    }
-
-    /**
-     * Distant Isle night
-     */
-    public static void stage11() {
-        setStage(11);
-        RenderGameplay.getInstance().fgx = -40;
-        RenderGameplay.getInstance().fgy = 20;
-        RenderGameplay.getInstance().fgxInc = 2;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "rot";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
-        RenderGameplay.getInstance().delay = 25;
-        RenderGameplay.getInstance().ambSpeed1 = 1;
-        RenderGameplay.getInstance().ambSpeed2 = 2;
-        musicInt = 1;
-        getReady();
-    }
-
-    /**
-     * Hidden Cave
-     */
-    public static void stage8() {
-        setStage(7);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "none";
-        RenderGameplay.getInstance().delay = 66;
-        RenderGameplay.getInstance().ambSpeed1 = 0;
-        RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 2;
-        getReady();
-    }
-
-    /**
-     * African Village
-     */
-    public static void stage9() {
-        setStage(8);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
-        RenderGameplay.getInstance().delay = 122;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 3;
-        getReady();
-    }
-
-    /**
-     * The Apocalypse
-     */
-    public static void stage10() {
-        setStage(9);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 5;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 4;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "both";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 4;
-        getReady();
-    }
-
-    public static void stage13() {
-        setStage(13);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 5;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 4;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "forg";
-        RenderGameplay.getInstance().delay = 33;
-        RenderGameplay.getInstance().ambSpeed1 = 2;
-        RenderGameplay.getInstance().ambSpeed2 = 1;
-        musicInt = 1;
-        getReady();
-    }
-
-    public static void stage14() {
-        setStage(14);
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
-        RenderGameplay.getInstance().fgxInc = 1;
-        RenderGameplay.getInstance().fgyInc = 1;
-        RenderGameplay.getInstance().animLoops = 20;
-        RenderGameplay.getInstance().animDirection = "none";
-        RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "none";
-        RenderGameplay.getInstance().delay = 66;
-        RenderGameplay.getInstance().ambSpeed1 = 0;
-        RenderGameplay.getInstance().ambSpeed2 = 0;
-        musicInt = 3;
-        getReady();
+    private void showStageName(int id) {
+        if (id != oldId) {
+            capAnim();
+            systemNotice(stageNameStr[id]);
+            oldId = id;
+            if (oldId == stageNameStr.length - 1) {
+                mode = StageSelection.RANDOM;
+            } else {
+                mode = StageSelection.NORMAL;
+            }
+        }
     }
 
     public static String getTrack() {
         return musFiles[musicInt];
     }
 
-    private static void getReady() {
-        RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
-        RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
-        RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
-    }
-
-    public static void loadTxt(String args) {
-        loadTxt = args;
-    }
-
-    public static void start() {
-        getReady();
-
-        new Thread() {
-
-            @Override
-            @SuppressWarnings("static-access")
-            public void run() {
-                try {
-                    this.sleep(1000);
-                    LoginScreen.getInstance().getMenu().getMain().newGame();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
-    }
-
-    protected void initializePanel() {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
-    }
-
     /**
-     * Character select screen, move up
+     * Move up
      */
     public void moveUp() {
-        upMove();
+        if (vIndex > 0) {
+            vIndex = vIndex - 1;
+        } else {
+            vIndex = verticalRows;
+        }
+        capAnim();
     }
 
     /**
-     * Character select screen, move down
+     * Move down
      */
     public void moveDown() {
-        downMove();
+        if (vIndex < verticalRows) {
+            vIndex = vIndex + 1;
+        } else {
+            vIndex = 0;
+        }
+
+        capAnim();
     }
 
     /**
-     * Character select screen, move right
+     * Move right
      */
     public void moveRight() {
-        rightMove();
+        if (hIndex < horizColumns) {
+            hIndex = hIndex + 1;
+        } else {
+            hIndex = 1;
+        }
+
+        capAnim();
     }
 
     /**
-     * Character select screen, move left
+     * Move left
      */
     public void moveLeft() {
-        leftMove();
+        if (hIndex > 1) {
+            hIndex = hIndex - 1;
+        } else {
+            hIndex = horizColumns;
+        }
+        capAnim();
     }
 
-    public void screenShot() {
-        captureScreenShot();
+    public void newInstance() {
     }
 
+    /**
+     * Horizontal index
+     *
+     * @return hIndex
+     */
+    public int getHindex() {
+        return hIndex;
+    }
+
+    /**
+     * Set horizontal index
+     */
+    public void setHindex(int value) {
+        hIndex = value;
+    }
+
+    /**
+     * Vertical index
+     *
+     * @return vIndex
+     */
+    public int getVindex() {
+        return vIndex;
+    }
+
+    /**
+     * Set vertical index
+     */
+    public void setVindex(int value) {
+        vIndex = value;
+    }
 
     /**
      * Gets the number of columns in the character select screen
@@ -644,12 +354,5 @@ public class RenderStageSelect extends DrawStageSel {
      */
     public int getCharRows() {
         return verticalRows;
-    }
-
-    /**
-     * Animates caption
-     */
-    public void animateCaption() {
-        capAnim();
     }
 }

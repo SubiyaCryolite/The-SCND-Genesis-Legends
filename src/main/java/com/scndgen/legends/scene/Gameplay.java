@@ -23,7 +23,9 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.network.NetworkClient;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -127,8 +129,8 @@ public abstract class Gameplay extends JenesisMode {
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String ach1 = "", ach2 = "", ach3 = "", ach4 = "";
     protected int move = 0;
-    protected WindowMain.jenesisServer server;
-    protected WindowMain.jenesisClient client;
+    protected NetworkServer server;
+    protected NetworkClient client;
     protected boolean specialEffect;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
     protected boolean imagesNumChached = false, imagesCharChached = false;
@@ -374,7 +376,7 @@ public abstract class Gameplay extends JenesisMode {
 
     public void sendToClient(String message) {
         LoginScreen.getInstance().getMenu().getMain().sendToClient(message);
-        //protected LoginScreen.getInstance().getMenu().getMain().jenesisClient client;
+        //protected LoginScreen.getInstance().getMenu().getMain().NetworkClient client;
     }
 
     public void sendToServer(String message) {
@@ -770,14 +772,6 @@ public abstract class Gameplay extends JenesisMode {
      */
     public float getscaleX() {
         return LoginScreen.getInstance().getGameXScale();
-    }
-
-    /**
-     * Takes a screen shot
-     */
-    public void takeScreenShot() {
-        captureScreenShot();
-        systemNotice("Screenshot taken");
     }
 
     /**

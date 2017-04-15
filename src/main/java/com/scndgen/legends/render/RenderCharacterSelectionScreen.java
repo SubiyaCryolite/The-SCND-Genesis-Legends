@@ -21,12 +21,12 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.drawing.SpecialDrawModeRender;
-import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.windows.WindowMain;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -66,6 +66,11 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         return instance;
     }
 
+    @Override
+    public void newInstance() {
+
+    }
+
     public void loadAssets() {
         if (!loadAssets) return;
         imageLoader = new JenesisImageLoader();
@@ -74,19 +79,8 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         loadAssets = false;
     }
 
-    private void loadDesc() {
-        statsChar[0] = Language.getInstance().getLine(134);
-        statsChar[1] = Language.getInstance().getLine(135);
-        statsChar[2] = Language.getInstance().getLine(136);
-        statsChar[3] = Language.getInstance().getLine(137);
-        statsChar[4] = Language.getInstance().getLine(138);
-        statsChar[5] = Language.getInstance().getLine(139);
-        statsChar[6] = Language.getInstance().getLine(140);
-        statsChar[7] = Language.getInstance().getLine(141);
-        statsChar[8] = Language.getInstance().getLine(142);
-        statsChar[9] = Language.getInstance().getLine(143);
-        statsChar[10] = Language.getInstance().getLine(144);
-        statsChar[11] = Language.getInstance().getLine(145);
+    public void cleanAssets() {
+        loadAssets = true;
     }
 
     @Override
@@ -311,7 +305,19 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         portraitFlipped[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/PrevO.png");
     }
 
-    public void cleanAssets() {
-        loadAssets = true;
+
+    private void loadDesc() {
+        statsChar[0] = Language.getInstance().getLine(134);
+        statsChar[1] = Language.getInstance().getLine(135);
+        statsChar[2] = Language.getInstance().getLine(136);
+        statsChar[3] = Language.getInstance().getLine(137);
+        statsChar[4] = Language.getInstance().getLine(138);
+        statsChar[5] = Language.getInstance().getLine(139);
+        statsChar[6] = Language.getInstance().getLine(140);
+        statsChar[7] = Language.getInstance().getLine(141);
+        statsChar[8] = Language.getInstance().getLine(142);
+        statsChar[9] = Language.getInstance().getLine(143);
+        statsChar[10] = Language.getInstance().getLine(144);
+        statsChar[11] = Language.getInstance().getLine(145);
     }
 }

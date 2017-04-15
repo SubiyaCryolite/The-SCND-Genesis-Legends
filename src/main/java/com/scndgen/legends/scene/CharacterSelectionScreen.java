@@ -40,7 +40,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
     public int selectedCharIndex = 0, selectedOppIndex = 0;
     private Object source;
-    //private static DrawStageSel charVisual;
+    //private static StageSelect charVisual;
     private AudioPlayback sound, sound2, error;
     private final Characters players = new Characters();
 
@@ -407,13 +407,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      */
     public CharacterEnum getOppName() {
         return opponent;
-    }
-
-    /**
-     * Gets a screen shot
-     */
-    public void getScreeny() {
-        captureScreenShot();
     }
 
     /**
