@@ -24,7 +24,7 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -73,7 +73,7 @@ public abstract class Gameplay extends JenesisMode {
     protected String scenePic = "images/bgBG2.png";
     protected String attackPicSrc = "images/trans.png";
     protected String[] storyPicArrStr;
-    protected CharacterEnum[] charNames = LoginScreen.charNames;
+    protected Character[] charNames = LoginScreen.charNames;
     protected String attackPicOppSrc = "images/trans.png";
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInf = new StringBuilder("");
@@ -1475,7 +1475,7 @@ public abstract class Gameplay extends JenesisMode {
         return clasherRunnign;
     }
 
-    public CharacterEnum[] getCharNames() {
+    public Character[] getCharNames() {
         return charNames;
     }
 

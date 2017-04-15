@@ -23,19 +23,19 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.threads.AudioPlayback;
 
 /**
  * @author ndana
  */
-public class Ravage extends Character {
+public class Ravage extends com.scndgen.legends.characters.Character {
 
     public Ravage() {
         //strings
         descSmall = "Ravage - a fighter specialised in brute force via the Earth element";
         name = "Ravage";
-        characterEnum = CharacterEnum.RAVAGE;
+        character = Character.RAVAGE;
         //ints
         life = 32000;
         hitPoints = 60;

@@ -24,7 +24,6 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
@@ -48,7 +47,7 @@ public abstract class Character {
     public float[] weakness;
     public float actionRecoverRate, hpRecovRate;
     protected AudioPlayback sound3;
-    protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
+    protected com.scndgen.legends.enums.Character character = com.scndgen.legends.enums.Character.SUBIYA;
     //imgs
     private VolatileImage[] highQualitySprites;
     private Image[] lowQualitySprites;
@@ -71,26 +70,26 @@ public abstract class Character {
         return isMale;
     }
 
-    public CharacterEnum getEnum() {
-        return characterEnum;
+    public com.scndgen.legends.enums.Character getEnum() {
+        return character;
     }
 
     private void sortQue() {
         pix = new JenesisImageLoader();
         spriteLocation = new String[12];
-        spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
-        spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
-        spriteLocation[2] = "images/" + characterEnum.data() + "/M2.png"; //3
-        spriteLocation[3] = "images/" + characterEnum.data() + "/M3.png"; //4
-        spriteLocation[4] = "images/" + characterEnum.data() + "/M4.png"; //5
-        spriteLocation[5] = "images/" + characterEnum.data() + "/M5.png"; //6
-        spriteLocation[6] = "images/" + characterEnum.data() + "/M6.png"; //7
-        spriteLocation[7] = "images/" + characterEnum.data() + "/M7.png"; //8
-        spriteLocation[8] = "images/" + characterEnum.data() + "/M8.png"; //9
-        spriteLocation[9] = "images/" + characterEnum.data() + "/N.png"; //10
-        spriteLocation[10] = "images/" + characterEnum.data() + "/P.png"; //11
+        spriteLocation[0] = "images/" + character.data() + "/D.png";  //1
+        spriteLocation[1] = "images/" + character.data() + "/M1.png"; //2
+        spriteLocation[2] = "images/" + character.data() + "/M2.png"; //3
+        spriteLocation[3] = "images/" + character.data() + "/M3.png"; //4
+        spriteLocation[4] = "images/" + character.data() + "/M4.png"; //5
+        spriteLocation[5] = "images/" + character.data() + "/M5.png"; //6
+        spriteLocation[6] = "images/" + character.data() + "/M6.png"; //7
+        spriteLocation[7] = "images/" + character.data() + "/M7.png"; //8
+        spriteLocation[8] = "images/" + character.data() + "/M8.png"; //9
+        spriteLocation[9] = "images/" + character.data() + "/N.png"; //10
+        spriteLocation[10] = "images/" + character.data() + "/P.png"; //11
         spriteLocation[11] = "images/trans.png"; //12
-        System.out.println("FROM CHARACTER CLASS " + characterEnum.data());
+        System.out.println("FROM CHARACTER CLASS " + character.data());
     }
 
     public int getNumberOfSprites() {

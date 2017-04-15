@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,6 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
     public boolean downloadingMusic, isSoundOn = true;
     public int[] Arr = {diff0, diff1, diff2, diff3, diff4, diff5};
     public String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
-    private JFrame window;
     private Object source;
     private JToggleButton[] ratings;
     private JToggleButton soundOn, soundOff, updateOn, updateOff, star1, star2, star3, star4, star5;
@@ -321,20 +320,18 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         //box.add(panController);
         box.add(opPanelSave);
 
-        window = new JFrame();
-        window.setTitle(Language.getInstance().getLine(34));
-        window.setUndecorated(true);
-        window.setContentPane(logoPic);
-        window.add(box);
-        window.pack();
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        window.addKeyListener(this);
-        window.requestFocusInWindow();
-        window.setFocusable(true);
-        window.setLocationRelativeTo(null);
-        window.setResizable(false);
-        window.setVisible(true);
-
+        setTitle(Language.getInstance().getLine(34));
+        setUndecorated(true);
+        setContentPane(logoPic);
+        add(box);
+        pack();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addKeyListener(this);
+        requestFocusInWindow();
+        setFocusable(true);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
         setRating(LoginScreen.getInstance().getGameRating() / 20);
     }
 
@@ -495,7 +492,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         } else if (source == save) {
             //LoginScreen.getInstance().setCountryCode(nation.getSelectedItem() + "");
             LoginScreen.getInstance().saveConfigFile();
-            window.setVisible(false);
+            setVisible(false);
         }
     }
 
@@ -506,7 +503,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.dispose();
+            dispose();
         }
     }
 

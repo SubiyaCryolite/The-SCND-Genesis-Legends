@@ -40,7 +40,6 @@ import java.awt.event.KeyListener;
 public class WindowControls extends JFrame implements ActionListener, KeyListener {
 
     private Object source;
-    private JFrame window;
     private JPanel bottom;
     private JButton ok;
     private SpecialDrawMenuBGs logoPic;
@@ -245,19 +244,18 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
 
         box.add(bottom);
 
-        window = new JFrame();
-        window.setTitle(Language.getInstance().getLine(57));
-        window.setContentPane(logoPic);
-        window.add(box, BorderLayout.CENTER);
-        window.setUndecorated(true);
-        window.pack();
-        window.addKeyListener(this);
-        window.requestFocusInWindow();
-        window.setFocusable(true);
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        window.setLocationRelativeTo(null);
-        window.setResizable(false);
-        window.setVisible(true);
+        setTitle(Language.getInstance().getLine(57));
+        setContentPane(logoPic);
+        add(box, BorderLayout.CENTER);
+        setUndecorated(true);
+        pack();
+        addKeyListener(this);
+        requestFocusInWindow();
+        setFocusable(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
     }
 
     private void alterJPanel(JPanel p) {
@@ -273,7 +271,7 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
     public void actionPerformed(ActionEvent ae) {
         source = ae.getSource();
         if (source == ok) {
-            window.dispose();
+            dispose();
         }
     }
 
@@ -284,7 +282,7 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.dispose();
+            dispose();
         }
     }
 

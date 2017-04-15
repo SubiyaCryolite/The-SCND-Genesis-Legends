@@ -1,5 +1,6 @@
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.scene.MainMenu;
 import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowAbout;
@@ -76,19 +77,14 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         g2d.drawImage(fg, 0, 0, this);
         g2d.drawImage(foreGroundB, xCordCloud, yCordCloud, this);
         g2d.drawImage(foreGroundA, xCordCloud2, yCordCloud2, this);
-
         g2d.setColor(Color.BLACK);
         g2d.setComposite(makeComposite(0.50f));
         g2d.fillRect(0, 0, screenWidth, screenHeight);
         g2d.setComposite(makeComposite(1.0f));
         g2d.drawImage(sgLogo, 0, 0, this);
-
         g2d.setColor(Color.WHITE);
         g2d.setFont(font1);
-
-
-        if (place == 0) {
-
+        if (overlay == Overlay.PRIMARY) {
             menuItem = 0;
             if (menuIndex == menuItem) {
                 menuItmStr = MainWindow.storyMode;
@@ -223,48 +219,36 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         }
 
         JenesisGlassPane.getInstance().overlay(g2d, this);
-
         g2d.drawString("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         g2d.setComposite(makeComposite(feedBackOpac));
         mess = "Press 'F' to provide Feedback";
         g2d.drawString(mess, 590, 14);
-
         mess = "Press 'B' to visit our Blog";
         g2d.drawString(mess, 590, 30);
-
         mess = "Press 'L' to like us on Facebook";
         g2d.drawString(mess, 590, 46);
-
         g2d.drawLine(590 - 5, 0, 590 - 5, 46);
         g2d.setComposite(makeComposite(1.0f));
-
         g2d.setColor(Color.WHITE);
-
-        if (place == 1) {
-            achDraw.drawStats(g2d, this);
+        if (overlay == Overlay.STATISTICS) {
+            achachievementLocker.drawStats(g2d, this);
         }
-
-        if (place == 2) {
-            achDraw.drawAch(g2d, this);
+        if (overlay == Overlay.ACHIEVEMENTS) {
+            achachievementLocker.drawAch(g2d, this);
         }
-
-        if (place == 3) {
-            tut.draw(g2d, this);
+        if (overlay == Overlay.TUTORIAL) {
+            tutorial.draw(g2d, this);
         }
-
-
         if (xCordCloud < -960) {
             xCordCloud = screenWidth;
         } else {
             xCordCloud = xCordCloud - 1;
         }
-
         if (xCordCloud2 < -960) {
             xCordCloud2 = screenWidth;
         } else {
             xCordCloud2 = xCordCloud2 - 2;
         }
-
         if (xCordCloud3 < -960) {
             xCordCloud3 = screenWidth;
         } else {

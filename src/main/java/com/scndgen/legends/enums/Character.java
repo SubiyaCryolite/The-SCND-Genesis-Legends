@@ -3,7 +3,7 @@ package com.scndgen.legends.enums;
 /**
  * Created by ifunga on 14/04/2017.
  */
-public enum CharacterEnum {
+public enum Character {
     SUBIYA("Subiya", "Subiya", 0),
     RAILA("Raila", "Raila", 1),
     LYNX("Lynx", "Lynx", 2),
@@ -21,7 +21,7 @@ public enum CharacterEnum {
     private final String dataFile;
     private final int index;
 
-    CharacterEnum(String name, String dataFile, int index) {
+    Character(String name, String dataFile, int index) {
         this.character = name;
         this.dataFile = dataFile;
         this.index = index;

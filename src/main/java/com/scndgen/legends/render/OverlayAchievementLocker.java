@@ -184,14 +184,14 @@ public class OverlayAchievementLocker {
             if (activated[u]) {
                 screen.drawImage(achCap[u], offset2x, scroller + achPic + (u * achPicSpacer), obs);
                 screen.setFont(font1);
-                screen.drawString((u + 1) + ":: " + ach.achDesc[u] + " >>", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
+                screen.drawString((u + 1) + ":: " + ach.achievementName[u] + " >>", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
-                screen.drawString(ach.achFull[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
+                screen.drawString(ach.achievemenDescription[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
                 screen.drawString(Language.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);
             } else {
                 screen.drawImage(no, offset2x, scroller + achPic + (u * achPicSpacer), obs);
                 screen.setFont(font1);
-                screen.drawString((u + 1) + ":: " + ach.achDesc[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
+                screen.drawString((u + 1) + ":: " + ach.achievementName[u], offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 14);
                 screen.setFont(font2);
                 screen.drawString("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 28);
                 screen.drawString(Language.getInstance().getLine(133) + " " + LoginScreen.getInstance().ach[u] + " time(s)", offset2x + achPicSpacer, scroller + achPic + (u * achPicSpacer) + 42);

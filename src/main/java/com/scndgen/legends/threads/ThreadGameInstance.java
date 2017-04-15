@@ -353,7 +353,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         ach.scan();
         //if not story scene, increment char usage
         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
-            LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().selectedCharIndex);
+            LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex());
         }
         if (gameplay.hasWon()) {
             RenderGameplay.getInstance().showWinLabel();
@@ -589,7 +589,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
         if (thread != null) {
             thread.resume();
@@ -612,7 +612,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

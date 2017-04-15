@@ -22,7 +22,6 @@
 package com.scndgen.legends.characters;
 
 
-import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 
@@ -42,7 +41,7 @@ public class Characters {
     //AIRCON 12 GLOWING HOT GIMP 2.6.8
     private static int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
     private String characterName, nameOpp, assistCharacterName, opponentAssistantName;
-    private Character character, assistCharacter, opponent, opponentAssistant;
+    private com.scndgen.legends.characters.Character character, assistCharacter, opponent, opponentAssistant;
 
     public static float getCharRecoverySpeed() {
         return activityRecoverRateChar;
@@ -218,23 +217,23 @@ public class Characters {
         nameOpp = thisName;
     }
 
-    public Character getCharacter() {
+    public com.scndgen.legends.characters.Character getCharacter() {
         return character;
     }
 
-    public Character getAssistCharacter() {
+    public com.scndgen.legends.characters.Character getAssistCharacter() {
         return assistCharacter;
     }
 
-    public Character getOpponent() {
+    public com.scndgen.legends.characters.Character getOpponent() {
         return opponent;
     }
 
-    public Character getAssistOpponent() {
+    public com.scndgen.legends.characters.Character getAssistOpponent() {
         return opponentAssistant;
     }
 
-    public void prepare(CharacterEnum characterEnum) {
+    public void prepare(com.scndgen.legends.enums.Character character) {
 
         minOppLife = 100;
         currOppLife = 100;
@@ -242,66 +241,66 @@ public class Characters {
         currCharLife = 100;
         setDamageCounter('c', 12);
 
-        switch (characterEnum) {
+        switch (character) {
             case SUBIYA:
                 assistCharacter = new Raila();
-                character = new Subiya();
+                this.character = new Subiya();
                 break;
             case RAILA:
                 assistCharacter = new Subiya();
-                character = new Raila();
+                this.character = new Raila();
                 break;
             case LYNX:
                 assistCharacter = new Aisha();
-                character = new Lynx();
+                this.character = new Lynx();
                 break;
             case AISHA:
                 assistCharacter = new Lynx();
-                character = new Aisha();
+                this.character = new Aisha();
                 break;
             case RAVAGE:
                 assistCharacter = new Jonah();
-                character = new Ravage();
+                this.character = new Ravage();
                 break;
             case ADE:
                 assistCharacter = new Adam();
-                character = new Ade();
+                this.character = new Ade();
                 break;
             case JONAH:
                 assistCharacter = new Ravage();
-                character = new Jonah();
+                this.character = new Jonah();
                 break;
             case ADAM:
                 assistCharacter = new Ade();
-                character = new Adam();
+                this.character = new Adam();
                 break;
             case NOVA_ADAM:
                 assistCharacter = new Ade();
-                character = new NovaAdam();
+                this.character = new NovaAdam();
                 break;
             case AZARIA:
                 assistCharacter = new Lynx();
-                character = new Azaria();
+                this.character = new Azaria();
                 break;
             case SORROWE:
                 assistCharacter = new Ade();
-                character = new Sorrowe();
+                this.character = new Sorrowe();
                 break;
             case THING:
                 assistCharacter = new NovaAdam();
-                character = new Thing(0);
+                this.character = new Thing(0);
                 break;
         }
 
-        characterName = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().selectedCharIndex = characterEnum.index();
+        characterName = character.name();
+        RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(character.index());
         assistCharacterName = assistCharacter.getEnum().name();
 
-        activityRecoverRateChar = character.getRecovSpeed();
-        healthRecoveryRateChar = character.getHPRecovRate();
-        setPoints(character.getPoints());
-        RenderGameplay.getInstance().setLife(character.getLife());
-        RenderGameplay.getInstance().setMaxLife(character.getLife());
+        activityRecoverRateChar = this.character.getRecovSpeed();
+        healthRecoveryRateChar = this.character.getHPRecovRate();
+        setPoints(this.character.getPoints());
+        RenderGameplay.getInstance().setLife(this.character.getLife());
+        RenderGameplay.getInstance().setMaxLife(this.character.getLife());
 
 
         activityRecoveryRateChar2 = assistCharacter.getRecovSpeed();
@@ -311,13 +310,13 @@ public class Characters {
         assistCharacter.setAiProf3();
     }
 
-    public void prepareO(CharacterEnum characterEnum) {
+    public void prepareO(com.scndgen.legends.enums.Character character) {
         minOppLife = 100;
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
         setDamageCounter('o', 12);
-        switch (characterEnum) {
+        switch (character) {
             case SUBIYA:
                 opponentAssistant = new Raila();
                 opponent = new Subiya();
@@ -367,8 +366,8 @@ public class Characters {
                 opponent = new Thing(0);
                 break;
         }
-        nameOpp = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().selectedOppIndex = characterEnum.index();
+        nameOpp = character.name();
+        RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(character.index());
         opponentAssistantName = opponentAssistant.getEnum().name();
 
         activityRecoveryRateOpp = opponent.getRecovSpeed();
@@ -391,7 +390,7 @@ public class Characters {
     public void resetCharacters() {
         opponent.resetLimits();
         character.resetLimits();
-        RenderCharacterSelectionScreen.getInstance().characterSelected = false;
-        RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+        RenderCharacterSelectionScreen.getInstance().setCharacterSelected(false);
+        RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
     }
 }

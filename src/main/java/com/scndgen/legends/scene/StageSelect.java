@@ -50,7 +50,7 @@ public abstract class StageSelect extends JenesisMode {
         selectedStage = true;
     }
 
-    public void SelectStageNow() {
+    public void selectStage() {
         if (mode == StageSelection.NORMAL) {
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer2) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 source = stageSelIndex;

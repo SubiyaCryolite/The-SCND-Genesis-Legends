@@ -94,7 +94,7 @@ public class AssistOpponentAttacks implements Runnable {
                 //fix story scene bug
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                    MainWindow.getInstance().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
+                    MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
                     RenderGameplay.getInstance().shakeCharLB();
                     RenderGameplay.getInstance().AnimatePhyAttax('o');
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();

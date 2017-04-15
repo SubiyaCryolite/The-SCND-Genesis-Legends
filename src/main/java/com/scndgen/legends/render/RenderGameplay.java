@@ -23,7 +23,7 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.MainWindow;
@@ -708,8 +708,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 characterPortraits = new VolatileImage[charNames.length];
 
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
-                    for (CharacterEnum characterEnum : CharacterEnum.values()) {
-                        characterPortraits[characterEnum.index()] = pix.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
+                    for (Character character : Character.values()) {
+                        characterPortraits[character.index()] = pix.loadVolatileImage("images/" + character.data() + "/cap.png", 48, 48, this);
                     }
                 } else {
                     for (int p = 0; p < charNames.length; p++) {
@@ -869,7 +869,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     /**
      * Go to next command menu column
      */
-    public void nextAnim() {
+    public void nextAnimation() {
         if (nextEnabled && backEnabled) {
             backEnabled = false;
             yTEST = yTESTinit;
@@ -888,7 +888,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     /**
      * Go to previous command menu column
      */
-    public void prevAnim() {
+    public void prevAnimation() {
         if (backEnabled && nextEnabled) {
             nextEnabled = false;
             yTEST = yTESTinit;

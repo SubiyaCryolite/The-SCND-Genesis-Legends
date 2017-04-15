@@ -82,7 +82,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
                 RenderStageSelect.getInstance().stage1();
                 break;
@@ -90,7 +90,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRaila('o');
                 RenderStageSelect.getInstance().stage100();
                 break;
@@ -98,7 +98,7 @@ public class StoryMode implements Runnable {
                 time = 30;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selAisha('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selLynx('o');
                 RenderStageSelect.getInstance().stage5();
                 break;
@@ -106,7 +106,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selSubiya('o');
                 RenderStageSelect.getInstance().stage4();
                 break;
@@ -114,7 +114,7 @@ public class StoryMode implements Runnable {
                 time = 45;
                 stat = "half way";
                 RenderCharacterSelectionScreen.getInstance().selRav('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selAde('o');
                 RenderStageSelect.getInstance().stage7();
                 break;
@@ -123,7 +123,7 @@ public class StoryMode implements Runnable {
                 stat = "nrml";
                 RenderGameplay.getInstance().setNumOfBoards(2);
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selJon('o');
                 RenderStageSelect.getInstance().stage7();
                 break;
@@ -131,7 +131,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selAza('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
                 RenderStageSelect.getInstance().stage10();
                 break;
@@ -139,7 +139,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
                 RenderStageSelect.getInstance().stage2();
                 break;
@@ -147,7 +147,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selAdam('o');
                 RenderStageSelect.getInstance().stage10();
                 break;
@@ -155,7 +155,7 @@ public class StoryMode implements Runnable {
                 time = 60;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selSorr('o');
                 RenderStageSelect.getInstance().stage10();
                 break;
@@ -163,7 +163,7 @@ public class StoryMode implements Runnable {
                 time = 90;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
                 RenderStageSelect.getInstance().stage11();
                 break;
@@ -171,7 +171,7 @@ public class StoryMode implements Runnable {
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
-                RenderCharacterSelectionScreen.getInstance().opponentSelected = false;
+                RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selThing('x');
                 RenderStageSelect.getInstance().stage13();
                 break;

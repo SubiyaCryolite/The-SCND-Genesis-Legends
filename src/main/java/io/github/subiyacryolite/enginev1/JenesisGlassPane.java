@@ -31,15 +31,14 @@ import java.awt.image.ImageObserver;
  *
  * @author ndana
  */
-// Second technique: JPanel
 public class JenesisGlassPane {
 
     private static JenesisGlassPane instance;
-    private String sysNot = "", sysNot2 = "";
-    private float sysNotOpac = 0.0f, sysNotOpac2 = 0.0f;
+    private String primaryNotification = "", secondaryNotification = "";
+    private float primaryOpacity = 0.0f, secondaryOpacity = 0.0f;
     private int gameWidth = 0;
-    private float opacShow, opacShow2;
-    private boolean opacUpb, opacShowb, opacUpb2, opacShowb2;
+    private float primaryTimeout, secondaryTimeout;
+    private boolean increasePrimaryOpacity, fadeOutPrimaryNotification, increaseSecondaryOpacity, fadeOutSecondaryNotification;
 
     private JenesisGlassPane() {
         gameWidth = LoginScreen.getGameWidth();
@@ -52,53 +51,53 @@ public class JenesisGlassPane {
     }
 
     /**
-     * Adds overlay to drawing commands, place at bottom
+     * Adds overlay to drawing commands, overlay at bottom
      *
-     * @param here, the Graphics2D object
-     * @param obs,  the image observer object
+     * @param graphics2D, the Graphics2D object
+     * @param imageObserver,  the image observer object
      */
-    public void overlay(Graphics2D here, ImageObserver obs) {
-        here.setColor(Color.black);
-        if (opacUpb && sysNotOpac < 0.99f) {//fade up
-            sysNotOpac = sysNotOpac + 0.01f;
+    public void overlay(Graphics2D graphics2D, ImageObserver imageObserver) {
+        graphics2D.setColor(Color.black);
+        if (increasePrimaryOpacity && primaryOpacity < 0.99f) {//fade up
+            primaryOpacity = primaryOpacity + 0.01f;
         } else {
-            opacUpb = false;
-            opacShowb = true;
+            increasePrimaryOpacity = false;
+            fadeOutPrimaryNotification = true;
         }
-        if (opacUpb == false && opacShowb) {
-            if (opacShow < (180.0f)) {//show for 3 seconds
-                opacShow = opacShow + 1.0f;
-            } else if (sysNotOpac > 0.01f) {
-                sysNotOpac = sysNotOpac - 0.01f;
+        if (increasePrimaryOpacity == false && fadeOutPrimaryNotification) {
+            if (primaryTimeout < (180.0f)) {//show for 3 seconds
+                primaryTimeout = primaryTimeout + 1.0f;
+            } else if (primaryOpacity > 0.01f) {
+                primaryOpacity = primaryOpacity - 0.01f;
             }
         }
-        here.setComposite(makeComposite(sysNotOpac / 2.5f));
-        here.fillRoundRect((gameWidth - 5 - 5 - here.getFontMetrics().stringWidth(sysNot)), 55, 14 + (sysNot.length() * 8), 20, 10, 10);
-        here.setComposite(makeComposite(sysNotOpac));
-        here.setColor(Color.white);
-        here.drawString(sysNot, (gameWidth - 5 - here.getFontMetrics().stringWidth(sysNot)), 70);
-        here.setComposite(makeComposite(1.0f));
+        graphics2D.setComposite(makeComposite(primaryOpacity / 2.5f));
+        graphics2D.fillRoundRect((gameWidth - 5 - 5 - graphics2D.getFontMetrics().stringWidth(primaryNotification)), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
+        graphics2D.setComposite(makeComposite(primaryOpacity));
+        graphics2D.setColor(Color.white);
+        graphics2D.drawString(primaryNotification, (gameWidth - 5 - graphics2D.getFontMetrics().stringWidth(primaryNotification)), 70);
+        graphics2D.setComposite(makeComposite(1.0f));
 
-        if (opacUpb2 && sysNotOpac2 < 0.99f) {//fade up
-            sysNotOpac2 = sysNotOpac2 + 0.01f;
+        if (increaseSecondaryOpacity && secondaryOpacity < 0.99f) {//fade up
+            secondaryOpacity = secondaryOpacity + 0.01f;
         } else {
-            opacUpb2 = false;
-            opacShowb2 = true;
+            increaseSecondaryOpacity = false;
+            fadeOutSecondaryNotification = true;
         }
-        if (opacUpb2 == false && opacShowb2) {
-            if (opacShow2 < (360.0f)) {//show for 6 seconds
-                opacShow2 = opacShow2 + 1.0f;
-            } else if (sysNotOpac2 > 0.01f) {
-                sysNotOpac2 = sysNotOpac2 - 0.01f;
+        if (increaseSecondaryOpacity == false && fadeOutSecondaryNotification) {
+            if (secondaryTimeout < (360.0f)) {//show for 6 seconds
+                secondaryTimeout = secondaryTimeout + 1.0f;
+            } else if (secondaryOpacity > 0.01f) {
+                secondaryOpacity = secondaryOpacity - 0.01f;
             }
         }
-        here.setColor(Color.black);
-        here.setComposite(makeComposite(sysNotOpac2 / 2.5f));
-        here.fillRoundRect((gameWidth - 5 - 5 - here.getFontMetrics().stringWidth(sysNot2)), 35, 14 + (sysNot2.length() * 8), 20, 10, 10);
-        here.setComposite(makeComposite(sysNotOpac2));
-        here.setColor(Color.white);
-        here.drawString(sysNot2, (gameWidth - 5 - here.getFontMetrics().stringWidth(sysNot2)), 50);
-        here.setComposite(makeComposite(1.0F));
+        graphics2D.setColor(Color.black);
+        graphics2D.setComposite(makeComposite(secondaryOpacity / 2.5f));
+        graphics2D.fillRoundRect((gameWidth - 5 - 5 - graphics2D.getFontMetrics().stringWidth(secondaryNotification)), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
+        graphics2D.setComposite(makeComposite(secondaryOpacity));
+        graphics2D.setColor(Color.white);
+        graphics2D.drawString(secondaryNotification, (gameWidth - 5 - graphics2D.getFontMetrics().stringWidth(secondaryNotification)), 50);
+        graphics2D.setComposite(makeComposite(1.0F));
     }
 
     /**
@@ -124,13 +123,11 @@ public class JenesisGlassPane {
      * @param message to display
      */
     public void systemNotice(String message) {
-        //new message
-        sysNot = message;
-        opacUpb = true;
-        opacShowb = false;
-
-        sysNotOpac = 0.0f;
-        opacShow = 0.0f;
+        primaryNotification = message;
+        increasePrimaryOpacity = true;
+        fadeOutPrimaryNotification = false;
+        primaryOpacity = 0.0f;
+        primaryTimeout = 0.0f;
     }
 
     /**
@@ -139,11 +136,10 @@ public class JenesisGlassPane {
      * @param message to display
      */
     public void systemNotice2(String message) {
-        //new message
-        sysNot2 = message;
-        opacUpb2 = true;
-        opacShowb2 = false;
-        sysNotOpac2 = 0.0f;
-        opacShow2 = 0.0f;
+        secondaryNotification = message;
+        increaseSecondaryOpacity = true;
+        fadeOutSecondaryNotification = false;
+        secondaryOpacity = 0.0f;
+        secondaryTimeout = 0.0f;
     }
 }

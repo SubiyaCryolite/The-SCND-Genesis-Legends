@@ -21,14 +21,15 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.render.RenderMainMenu;
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.threads.AudioPlayback;
+import io.github.subiyacryolite.enginev1.JenesisGamePad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +56,6 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private MenuLeaderBoard board;
     private AudioPlayback startup;
     private boolean[] buttonz;
-    private Desktop desktop;
     private int compassDir, compassDir2, last = 13;
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -133,14 +133,13 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      */
     private void select() {
         //if viewing stats, go back to menu
-        if (RenderMainMenu.getInstance().getPlace() == 1 || RenderMainMenu.getInstance().getPlace() == 2 || RenderMainMenu.getInstance().getPlace() == 3) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
-                RenderMainMenu.getInstance().stopTut();
+        if (RenderMainMenu.getInstance().getOverlay() == Overlay.STATISTICS || RenderMainMenu.getInstance().getOverlay() == Overlay.ACHIEVEMENTS || RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
+                RenderMainMenu.getInstance().stopTutorial();
             }
-            RenderMainMenu.getInstance().setPlace(0);
+            RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY);
         } else {
             String destination = RenderMainMenu.getInstance().getMenuModeStr();
-
             if (destination.equalsIgnoreCase(MainWindow.lanClient)) {
                 scan = new NetworkScanLan();
             } else if (destination.equalsIgnoreCase(MainWindow.lanHost)) {
@@ -162,16 +161,16 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
             } else if (destination.equalsIgnoreCase("options")) {
                 options = new WindowOptions();
             } else if (destination.equalsIgnoreCase("stats")) {
-                RenderMainMenu.getInstance().setPlace(1);
+                RenderMainMenu.getInstance().setOverlay(Overlay.STATISTICS);
             } else if (destination.equalsIgnoreCase("ach")) {
                 RenderMainMenu.getInstance().refreshStats();
-                RenderMainMenu.getInstance().setPlace(2);
+                RenderMainMenu.getInstance().setOverlay(Overlay.ACHIEVEMENTS);
             } else if (destination.equalsIgnoreCase("about")) {
                 about = new WindowAbout();
             } else if (destination.equalsIgnoreCase("controls")) {
                 controls = new WindowControls();
             } else if (destination.equalsIgnoreCase("tutorial")) {
-                RenderMainMenu.getInstance().setPlace(3);
+                RenderMainMenu.getInstance().setOverlay(Overlay.TUTORIAL);
                 RenderMainMenu.getInstance().startTut();
             } else if (destination.equalsIgnoreCase("logout")) {
                 logOut();
@@ -211,11 +210,11 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         int x = RenderMainMenu.getInstance().getXMenu();
         int y = RenderMainMenu.getInstance().getYMenu() - 14;
         int space = RenderMainMenu.getInstance().getSpacer();
-        if (RenderMainMenu.getInstance().getPlace() == 3) {
+        if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
             if (m.getX() >= 425) {
-                RenderMainMenu.getInstance().forwarTut();
+                RenderMainMenu.getInstance().advanceTutorial();
             } else {
-                RenderMainMenu.getInstance().backTut();
+                RenderMainMenu.getInstance().reverseTutorial();
             }
         } else if ((m.getY() > y) && (m.getY() < (y + (space * last))) && m.getX() > x) {
             if (m.getButton() == MouseEvent.BUTTON1) {
@@ -318,79 +317,56 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-
         if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
             RenderMainMenu.getInstance().goDown();
         }
-
         if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
             RenderMainMenu.getInstance().goUp();
         }
-
         if (keyCode == KeyEvent.VK_F) {
             provideFeedback('f');
         }
-
         if (keyCode == KeyEvent.VK_B) {
             provideFeedback('b');
         }
-
         if (keyCode == KeyEvent.VK_L) {
             provideFeedback('l');
         }
-
         if (keyCode == KeyEvent.VK_RIGHT) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
-                RenderMainMenu.getInstance().forwarTut();
-            }
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                RenderMainMenu.getInstance().advanceTutorial();
         }
-
         if (keyCode == KeyEvent.VK_LEFT) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
-                RenderMainMenu.getInstance().backTut();
-            }
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                RenderMainMenu.getInstance().reverseTutorial();
         }
-
         if (keyCode == KeyEvent.VK_1) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(0);
-            }
         }
-
         if (keyCode == KeyEvent.VK_2) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(3);
-            }
         }
-
         if (keyCode == KeyEvent.VK_3) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(11);
-            }
         }
-
         if (keyCode == KeyEvent.VK_4) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(20);
-            }
         }
-
         if (keyCode == KeyEvent.VK_5) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(27);
-            }
         }
-
         if (keyCode == KeyEvent.VK_6) {
-            if (RenderMainMenu.getInstance().getPlace() == 3) {
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                 RenderMainMenu.getInstance().sktpToTut(32);
-            }
         }
-
         if (keyCode == KeyEvent.VK_F12) {
             RenderMainMenu.getInstance().captureScreenShot();
         }
-
         if (keyCode == KeyEvent.VK_ENTER) {
             select();
         }
@@ -398,7 +374,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
 
     private void provideFeedback(char code) {
         if (Desktop.isDesktopSupported()) {
-            desktop = Desktop.getDesktop();
+            Desktop desktop = Desktop.getDesktop();
             if (desktop.isSupported(Desktop.Action.BROWSE)) {
                 URI uri = null;
                 try {
@@ -408,7 +384,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                         }
                         break;
                         case 'b': {
-                            uri = new URI("http://scndgen.sf.net/blog.php");
+                            uri = new URI("https://subiyacryolite.github.io/");
                         }
                         break;
                         case 'l': {
@@ -417,10 +393,9 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                         break;
 
                         default: {
-                            uri = new URI("http://scndgen.sf.net");
+                            uri = new URI("http://www.scndgen.com");
                         }
                     }
-
                     desktop.browse(uri);
                 } catch (IOException ioe) {
                     ioe.printStackTrace();

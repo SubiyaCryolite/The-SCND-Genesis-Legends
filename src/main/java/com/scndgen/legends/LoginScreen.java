@@ -23,7 +23,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawUserLogin;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
@@ -101,7 +101,7 @@ import java.util.logging.Logger;
 
 public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
-    public static final CharacterEnum[] charNames = CharacterEnum.values();
+    public static final Character[] charNames = Character.values();
     public static int difficultyBase = 8000, difficultyScale = 1333;
     public static String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
@@ -227,7 +227,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         thisPic = new DrawUserLogin(this);
         {
             achObj = new Achievements(this);
-            ach = new int[achObj.achDesc.length];
+            ach = new int[achObj.achievementName.length];
             classArr = new int[ach.length];
 
             //make all achievents zero first

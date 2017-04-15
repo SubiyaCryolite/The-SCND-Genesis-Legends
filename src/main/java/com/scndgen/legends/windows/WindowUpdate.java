@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,6 @@ import java.net.URI;
 public class WindowUpdate extends JFrame implements ActionListener {
 
     private Object source;
-    private JFrame window;
     private JTextArea txt;
     private JPanel logo, textHolder, bottom;
     private JButton ok, get;
@@ -92,21 +91,20 @@ public class WindowUpdate extends JFrame implements ActionListener {
         box.add(scroller);
         box.add(bottom);
 
-        window = new JFrame();
-        window.setTitle(updateVer + " " + Language.getInstance().getLine(60));
-        window.add(box);
-        window.pack();
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        window.setLocationRelativeTo(null);
-        window.setResizable(false);
-        window.setVisible(true);
+        setTitle(updateVer + " " + Language.getInstance().getLine(60));
+        add(box);
+        pack();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         source = ae.getSource();
         if (source == ok) {
-            window.dispose();
+            dispose();
         } else if (source == get) {
             try {
                 Desktop me = Desktop.getDesktop();
@@ -114,10 +112,10 @@ public class WindowUpdate extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "You must install the patch and \n"
                         + "then reboot the game in order to complete the update.\n "
                         + "Have a great day!");
-            } catch (Exception e) {
+            } catch (Exception ex) {
+                ex.printStackTrace(System.err);
             }
-
-            window.dispose();
+            dispose();
             System.exit(0);
         }
     }

@@ -23,12 +23,12 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 
 /**
  * @author ndana
  */
-public class Thing extends Character {
+public class Thing extends com.scndgen.legends.characters.Character {
 
     private int bonus;
 
@@ -61,11 +61,11 @@ public class Thing extends Character {
         points = 1800;
         damage = 0;
         if (y == 0) {
-            characterEnum = CharacterEnum.THING;
+            character = Character.THING;
             life = 40000;
             bonus = 0;
         } else {
-            characterEnum = CharacterEnum.THING;
+            character = Character.THING;
             life = 60000;
             bonus = 5;
         }

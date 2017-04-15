@@ -23,18 +23,17 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
 
 /**
  * @author ndana
  */
-public class Jonah extends Character {
+public class Jonah extends com.scndgen.legends.characters.Character {
 
     public Jonah() {
         //strings
         descSmall = "Jonah - a fighter specialised in Force combat";
         name = "Jonah";
-        characterEnum = CharacterEnum.JONAH;
+        character = com.scndgen.legends.enums.Character.JONAH;
         //string arrays
         bragRights = new String[]{"I don't like fighting weakling, this'll be over soon", "Do me a favour.....die", "I'm not my brother, I'll destroy you", "You're no match for me", "Time for some tough love brother", "Sorry Ade, it can't be helped", "Let's do this", "NovaAdam, prove you're more than just talk", "So this is your true form.....I'LL DESTROY IT!!!!", "Out of my way!!! I've got stronger opponents to destroy", "You talk big for a tiny girl", "Terrible, just terrible"};
         physical = new String[]{"One!", "Two!!", "Ou!!!", "Jaw Breaker"};

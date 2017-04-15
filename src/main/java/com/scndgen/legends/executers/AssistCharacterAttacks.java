@@ -90,7 +90,7 @@ public class AssistCharacterAttacks implements Runnable {
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 //fix story scene bug
                 if (RenderGameplay.getInstance().getGameInstance().storySequence == false) {
-                    MainWindow.getInstance().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
+                    MainWindow.getInstance().getAssistantOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
                     RenderGameplay.getInstance().shakeCharLB();
                     RenderGameplay.getInstance().AnimatePhyAttax('a');
                 }

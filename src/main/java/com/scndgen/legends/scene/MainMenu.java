@@ -24,6 +24,7 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.Tutorial;
+import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.render.OverlayAchievementLocker;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -45,14 +46,15 @@ public abstract class MainMenu extends JenesisMode {
     protected Font font;
     protected int menuIndex = 0;
     protected int xMenu = 500;
-    protected int place = 0, menuItem, menuEntries = 11;
+    protected Overlay overlay = Overlay.PRIMARY;
+    protected int menuItem, menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
     protected int xCordCloud = 0, yCordCloud = 0, xCordCloud2 = 0, yCordCloud2 = 20, xCordCloud3 = 0, yCordCloud3 = 40;
     protected String menuItmStr, stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
     protected int timeInt = 0;
     protected int spacer = 12, time;
     protected Color bg = new Color(214, 217, 223);
-    protected OverlayAchievementLocker achDraw;
+    protected OverlayAchievementLocker achachievementLocker;
     protected String mess;
     protected boolean fadeOutFeedback;
     protected float feedBackOpac = 1.0f;
@@ -63,7 +65,7 @@ public abstract class MainMenu extends JenesisMode {
     protected String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     protected Image[] achs;
     protected float gWin, gLoss, denom, progression;
-    protected Tutorial tut;
+    protected Tutorial tutorial;
     //---blur op
     protected int size;
     protected float[] data;
@@ -81,7 +83,7 @@ public abstract class MainMenu extends JenesisMode {
         feedBackOpac = 1.0f;
         fadeOutFeedback = false;
         itemz = new String[(menuEntries + 2) * 2];
-        achDraw = new OverlayAchievementLocker();
+        achachievementLocker = new OverlayAchievementLocker();
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
@@ -158,28 +160,28 @@ public abstract class MainMenu extends JenesisMode {
      * Refresh achievement stats
      */
     public void refreshStats() {
-        achDraw.refreshStats();
+        achachievementLocker.refreshStats();
     }
 
 
-    public void stopTut() {
-        tut.stopTut();
+    public void stopTutorial() {
+        tutorial.stopTut();
     }
 
-    public void backTut() {
-        tut.backTut();
+    public void reverseTutorial() {
+        tutorial.backTut();
     }
 
-    public void forwarTut() {
-        tut.forwarTut();
+    public void advanceTutorial() {
+        tutorial.forwarTut();
     }
 
     public void startTut() {
-        tut.startTut();
+        tutorial.startTut();
     }
 
     public void sktpToTut(int n) {
-        tut.skipToSection(n - 1);
+        tutorial.skipToSection(n - 1);
     }
 
     /**
@@ -212,20 +214,20 @@ public abstract class MainMenu extends JenesisMode {
     }
 
     public void goDown() {
-        if (menuIndex < menuEntries && place == 0) {
+        if (menuIndex < menuEntries && overlay == Overlay.PRIMARY) {
             menuIndex = menuIndex + 1;
-        } else if (place == 2) {
-            achDraw.scrollDown();
+        } else if (overlay == Overlay.ACHIEVEMENTS) {
+            achachievementLocker.scrollDown();
         } else {
             menuIndex = 0;
         }
     }
 
     public void goUp() {
-        if (menuIndex > 0 && place == 0) {
+        if (menuIndex > 0 && overlay == Overlay.PRIMARY) {
             menuIndex = menuIndex - 1;
-        } else if (place == 2) {
-            achDraw.scrollUp();
+        } else if (overlay == Overlay.ACHIEVEMENTS) {
+            achachievementLocker.scrollUp();
         } else {
             menuIndex = menuEntries;
         }
@@ -234,15 +236,15 @@ public abstract class MainMenu extends JenesisMode {
     protected void loadPix() {
     }
 
-    public int getPlace() {
-        return place;
+    public Overlay getOverlay() {
+        return overlay;
     }
 
-    public void setPlace(int here) {
-        if (here == 3) {
-            tut = new Tutorial();
+    public void setOverlay(Overlay overlay) {
+        if (overlay == Overlay.TUTORIAL) {
+            tutorial = new Tutorial();
         }
-        place = here;
+        this.overlay = overlay;
     }
 
     protected ConvolveOp getGaussianBlurFilter(int radius, boolean horizontal) {

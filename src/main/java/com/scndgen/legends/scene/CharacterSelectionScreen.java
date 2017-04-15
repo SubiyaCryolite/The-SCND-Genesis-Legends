@@ -1,11 +1,11 @@
 package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.ModeEnum;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -21,28 +21,27 @@ import java.awt.event.ActionListener;
  */
 public abstract class CharacterSelectionScreen extends JenesisMode implements ActionListener {
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
-    protected int numOfCharacters = CharacterEnum.values().length;
+    protected int numOfCharacters = Character.values().length;
     protected int col, currentSlot = 0, lastRow, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
     protected JenesisImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
-
-    public static int characterSel, opponentSel;
-    public static String charDesc = "";
-    public CharacterEnum opponent, character;
-    public int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
-    public int oppPrevLoc, charPrevLoc;
-    private static int[] arr1, arr2, arr3, arr4, arr5;
-    private static int[] arr1a, arr2a, arr3a, arr4a, arr5a;
-    private static int[] arr1b, arr2b, arr3b, arr4b, arr5b;
-    private static int[] attacks;
-    private static int storyBoards;
-    public boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
-    public int selectedCharIndex = 0, selectedOppIndex = 0;
-    private Object source;
+    protected static int characterSel, opponentSel;
+    protected static String charDesc = "";
+    protected Character opponent, character;
+    protected int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
+    protected int oppPrevLoc, charPrevLoc;
+    protected static int[] arr1, arr2, arr3, arr4, arr5;
+    protected static int[] arr1a, arr2a, arr3a, arr4a, arr5a;
+    protected static int[] arr1b, arr2b, arr3b, arr4b, arr5b;
+    protected static int[] attacks;
+    protected static int storyBoards;
+    protected boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
+    protected int selectedCharIndex = 0, selectedOppIndex = 0;
+    protected Object source;
     //private static StageSelect charVisual;
-    private AudioPlayback sound, sound2, error;
-    private final Characters players = new Characters();
+    protected AudioPlayback sound, sound2, error;
+    protected final Characters players = new Characters();
 
 
     /**
@@ -396,7 +395,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return character name
      */
-    public CharacterEnum getCharName() {
+    public Character getCharName() {
         return character;
     }
 
@@ -405,7 +404,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return opponent name
      */
-    public CharacterEnum getOppName() {
+    public Character getOppName() {
         return opponent;
     }
 
@@ -422,7 +421,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
                 sound.play();
                 characterSelected = true;
-                character = CharacterEnum.RAILA;
+                character = Character.RAILA;
                 getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
@@ -440,7 +439,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
             }
             opponentSelected = true;
-            opponent = CharacterEnum.RAILA;
+            opponent = Character.RAILA;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -459,7 +458,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
                 sound.play();
                 characterSelected = true;
-                character = CharacterEnum.SUBIYA;
+                character = Character.SUBIYA;
                 getPlayers().prepare(character);
                 allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
                 charDesc = getPlayers().getCharacter().getDescSmall();
@@ -479,7 +478,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.SUBIYA;
+            opponent = Character.SUBIYA;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -497,7 +496,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.LYNX;
+            character = Character.LYNX;
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -515,7 +514,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.LYNX;
+            opponent = Character.LYNX;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -533,7 +532,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.AISHA;
+            character = Character.AISHA;
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -552,7 +551,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.AISHA;
+            opponent = Character.AISHA;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -570,7 +569,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.ADE;
+            character = Character.ADE;
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -589,7 +588,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.ADE;
+            opponent = Character.ADE;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -607,7 +606,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.RAVAGE;
+            character = Character.RAVAGE;
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -626,7 +625,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.RAVAGE;
+            opponent = Character.RAVAGE;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -644,7 +643,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.JONAH;
+            character = Character.JONAH;
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -664,7 +663,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.JONAH;
+            opponent = Character.JONAH;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -682,7 +681,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.ADAM;
+            character = Character.ADAM;
             getPlayers().prepare(character);
             allPlayers[character.index()] = charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -701,7 +700,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.NOVA_ADAM;
+            opponent = Character.NOVA_ADAM;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -719,7 +718,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.NOVA_ADAM;
+            character = Character.NOVA_ADAM;
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -740,7 +739,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.NOVA_ADAM;
+            opponent = Character.NOVA_ADAM;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -758,7 +757,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.AZARIA;
+            character = Character.AZARIA;
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -779,7 +778,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.AZARIA;
+            opponent = Character.AZARIA;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -797,7 +796,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.SORROWE;
+            character = Character.SORROWE;
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -835,7 +834,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
             characterSelected = true;
-            character = CharacterEnum.THING;
+            character = Character.THING;
             getPlayers().prepare(character);
             charPrevLoc = selectedCharIndex = character.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
@@ -856,7 +855,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.THING;
+            opponent = Character.THING;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -866,7 +865,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             opponentSelected = true;
-            opponent = CharacterEnum.THING;
+            opponent = Character.THING;
             getPlayers().prepareO(opponent);
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
@@ -905,7 +904,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                             e.printStackTrace();
                         }
                     }
-                    while (MainWindow.getInstance().currentScreen == ModeEnum.charSelectScreen);
+                    while (MainWindow.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
                 }
 
             }
@@ -1286,5 +1285,33 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             answer = false;
         }
         return answer;
+    }
+
+    public void setOpponentSelected(boolean opponentSelected) {
+        this.opponentSelected = opponentSelected;
+    }
+
+    public int getSelectedCharIndex() {
+        return selectedCharIndex;
+    }
+
+    public void setSelectedCharIndex(int selectedCharIndex) {
+        this.selectedCharIndex = selectedCharIndex;
+    }
+
+    public boolean getCharacterSelected() {
+        return characterSelected;
+    }
+
+    public boolean getOpponentSelected() {
+        return opponentSelected;
+    }
+
+    public void setSelectedOppIndex(int selectedOppIndex) {
+        this.selectedOppIndex = selectedOppIndex;
+    }
+
+    public void setCharacterSelected(boolean characterSelected) {
+        this.characterSelected = characterSelected;
     }
 }

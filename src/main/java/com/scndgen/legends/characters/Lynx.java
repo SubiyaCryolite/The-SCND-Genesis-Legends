@@ -23,18 +23,17 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.enums.CharacterEnum;
 
 /**
  * @author ndana
  */
-public class Lynx extends Character {
+public class Lynx extends com.scndgen.legends.characters.Character {
 
     public Lynx() {
         //strings
         descSmall = "Lynx - a fighter specialised in dual blade combat";
         name = "Lynx";
-        characterEnum = CharacterEnum.LYNX;
+        character = com.scndgen.legends.enums.Character.LYNX;
         //string arrays
         bragRights = new String[]{"Don't expect me to go easy on ya!", "Show me what you've learnt", "Let's do this", "This'll be fun. Don't hold back Aisha!!!", "I don't take kindly to scum", "A worthy opponent, lets do this!!!", "This'll be over quick, brace yourself", "The sword of Genesis, show me its strength", "So this is an awakened one, I'll show no mercy", "It's an honour to battle you", "I don't wanna fight a little girl", "Abomination much?"};
         physical = new String[]{"Blade Barrage", "Dual Slice", "Basic Slice", "Fatal DESCENT"};

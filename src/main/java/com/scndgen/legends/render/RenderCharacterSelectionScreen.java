@@ -24,7 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -270,18 +270,18 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = imageLoader.loadImage("images/charInfoO.png");
         charDescPic = imageLoader.loadImage("images/charInfoC.png");
-        loadUiContent(CharacterEnum.RAILA);
-        loadUiContent(CharacterEnum.SUBIYA);
-        loadUiContent(CharacterEnum.LYNX);
-        loadUiContent(CharacterEnum.AISHA);
-        loadUiContent(CharacterEnum.RAVAGE);
-        loadUiContent(CharacterEnum.ADE);
-        loadUiContent(CharacterEnum.JONAH);
-        loadUiContent(CharacterEnum.NOVA_ADAM);
-        loadUiContent(CharacterEnum.ADAM);
-        loadUiContent(CharacterEnum.AZARIA);
-        loadUiContent(CharacterEnum.SORROWE);
-        loadUiContent(CharacterEnum.THING);
+        loadUiContent(Character.RAILA);
+        loadUiContent(Character.SUBIYA);
+        loadUiContent(Character.LYNX);
+        loadUiContent(Character.AISHA);
+        loadUiContent(Character.RAVAGE);
+        loadUiContent(Character.ADE);
+        loadUiContent(Character.JONAH);
+        loadUiContent(Character.NOVA_ADAM);
+        loadUiContent(Character.ADAM);
+        loadUiContent(Character.AZARIA);
+        loadUiContent(Character.SORROWE);
+        loadUiContent(Character.THING);
         charBack = imageLoader.loadImage("images/selChar.png");
         oppBack = imageLoader.loadImage("images/selOpp.png");
         charHold = imageLoader.loadImage("images/charHold.png");
@@ -296,12 +296,12 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         charDesc[0] = Raila.class.getName();
     }
 
-    public void loadUiContent(CharacterEnum characterEnum) {
-        thumbnailNormal[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
-        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/capB.png");
-        caption[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/name.png");
-        portrait[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/Prev.png");
-        portraitFlipped[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/PrevO.png");
+    public void loadUiContent(Character character) {
+        thumbnailNormal[character.index()] = imageLoader.loadImage("images/" + character.data() + "/cap.png");
+        thumbnailBlurred[character.index()] = imageLoader.loadImage("images/" + character.data() + "/capB.png");
+        caption[character.index()] = imageLoader.loadImage("images/" + character.data() + "/name.png");
+        portrait[character.index()] = imageLoader.loadImage("images/" + character.data() + "/Prev.png");
+        portraitFlipped[character.index()] = imageLoader.loadImage("images/" + character.data() + "/PrevO.png");
     }
 
 
