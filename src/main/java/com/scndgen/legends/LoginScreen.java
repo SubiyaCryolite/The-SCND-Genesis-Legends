@@ -347,7 +347,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     }
 
     /**
-     * Is this dude left handed?
+     * Is this opponent left handed?
      *
      * @return
      */
@@ -1330,7 +1330,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     /**
      * Returns an int, corresponding to the index of the name of the most popular character
      *
-     * @return index of most popular dude
+     * @return index of most popular opponent
      */
     public int mostPopularChar() {
         int max = charUsage[0];

@@ -28,10 +28,10 @@ import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.attacks.AttacksOpp1;
-import com.scndgen.legends.attacks.AttacksOpp2;
-import com.scndgen.legends.attacks.AttacksPlyr1;
-import com.scndgen.legends.attacks.AttacksPlyr2;
+import com.scndgen.legends.attacks.AttackOpponent;
+import com.scndgen.legends.attacks.AttackAssistOpponent;
+import com.scndgen.legends.attacks.AttackPlayer;
+import com.scndgen.legends.attacks.AttackAssistPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
@@ -66,10 +66,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
     public ModeEnum currentScreen = ModeEnum.EMPTY;
     RandomAccessFile rand;
-    private AttacksOpp1 oppenentEntity;
-    private AttacksOpp2 oppenentEntity2;
-    private AttacksPlyr1 characterEntity;
-    private AttacksPlyr2 characterEntity2;
+    private AttackOpponent oppenentEntity;
+    private AttackAssistOpponent oppenentEntity2;
+    private AttackPlayer characterEntity;
+    private AttackAssistPlayer characterEntity2;
     private boolean[] buttonPressed;
     //sever
     private jenesisServer server;
@@ -343,30 +343,30 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
         focus();
     }
 
-    public AttacksOpp1 getAttacksOpp() {
+    public AttackOpponent getAttacksOpp() {
         return oppenentEntity;
     }
 
-    public AttacksOpp2 getAttacksOpp2() {
+    public AttackAssistOpponent getAttacksOpp2() {
         return oppenentEntity2;
     }
 
-    public AttacksPlyr2 getAttacksChar2() {
+    public AttackAssistPlayer getAttacksChar2() {
         return characterEntity2;
     }
 
-    public AttacksPlyr1 getAttacksChar() {
+    public AttackPlayer getAttacksChar() {
         return characterEntity;
     }
 
     public void newGame() {
         currentScreen = ModeEnum.newGame;
         //bgMusclose();
-        oppenentEntity = new AttacksOpp1();
-        characterEntity = new AttacksPlyr1();
+        oppenentEntity = new AttackOpponent();
+        characterEntity = new AttackPlayer();
         if (getGameMode().equals(singlePlayer2)) {
-            oppenentEntity2 = new AttacksOpp2();
-            characterEntity2 = new AttacksPlyr2();
+            oppenentEntity2 = new AttackAssistOpponent();
+            characterEntity2 = new AttackAssistPlayer();
         }
         stopMus();
         RenderGameplay.getInstance().newInstance();
@@ -395,12 +395,12 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
 
     public void storyGame() {
         //bgMusclose();
-        oppenentEntity = new AttacksOpp1();
+        oppenentEntity = new AttackOpponent();
         if (getGameMode().equals(singlePlayer2)) {
-            oppenentEntity2 = new AttacksOpp2();
-            characterEntity2 = new AttacksPlyr2();
+            oppenentEntity2 = new AttackAssistOpponent();
+            characterEntity2 = new AttackAssistPlayer();
         }
-        characterEntity = new AttacksPlyr1();
+        characterEntity = new AttackPlayer();
         currentScreen = ModeEnum.newGame;
         stopMus();
         setContentPane(RenderGameplay.getInstance());
@@ -425,8 +425,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
      */
     public void nextStage() {
         //bgMusclose();
-        oppenentEntity = new AttacksOpp1();
-        characterEntity = new AttacksPlyr1();
+        oppenentEntity = new AttackOpponent();
+        characterEntity = new AttackPlayer();
         currentScreen = ModeEnum.newGame;
         stopMus();
         setContentPane(RenderGameplay.getInstance());
@@ -1697,7 +1697,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                 } //rejected
                 else if (line.contains("getLost")) ;
                 {
-                    JOptionPane.showMessageDialog(null, "HARSH!, The dude doesnt want to fight you -_-" + messageSent + " " + getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + messageSent + " " + getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
                     sendToServer("quit");
                     closeTheClient();
                     backToMenuScreen();

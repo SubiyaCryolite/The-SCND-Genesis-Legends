@@ -21,10 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends.menus;
 
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.network.SqlQuery;
+import com.scndgen.legends.render.RenderGameplay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,15 +38,13 @@ import java.sql.Statement;
 /**
  * @author ifunga
  */
-public class MenuLeaderBoard implements ActionListener {
+public class MenuLeaderBoard extends JFrame implements ActionListener {
 
-    private JFrame frame;
     private JPanel line1, line2, line3;
     private JButton upload, view, close;
     private String dbName = "sql09.freemysql.net/scndrating";
     private String passWd = "user=subiyacryolite&password=dbHomie";
     private boolean notLoaded = true;
-    private Object source;
     private Box box;
     private SqlQuery viewer;
     private boolean viewerNotLoaded = true, notInitislied = true;
@@ -56,6 +54,7 @@ public class MenuLeaderBoard implements ActionListener {
     private ResultSet rs;
 
     public MenuLeaderBoard() {
+        super(Language.getInstance().getLine(98));
         if (notLoaded) {
             upload = new JButton(Language.getInstance().getLine(97));
             upload.addActionListener(this);
@@ -63,26 +62,22 @@ public class MenuLeaderBoard implements ActionListener {
             view.addActionListener(this);
             close = new JButton(Language.getInstance().getLine(95));
             close.addActionListener(this);
-
             line1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
             line1.add(view);
             line2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
             line2.add(upload);
             line3 = new JPanel(new FlowLayout(FlowLayout.CENTER));
             line3.add(close);
-
             box = new Box(BoxLayout.Y_AXIS);
             box.add(line1);
             box.add(line2);
             box.add(line3);
-
-            frame = new JFrame(Language.getInstance().getLine(98));
-            frame.add(box);
-            frame.pack();
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
-            frame.setResizable(false);
-            frame.setVisible(true);
+            add(box);
+            pack();
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+            setResizable(false);
+            setVisible(true);
             notLoaded = false;
         }
     }
@@ -92,14 +87,12 @@ public class MenuLeaderBoard implements ActionListener {
     }
 
     public void reappear() {
-        frame.show();
+        show();
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        source = ae.getSource();
-
-        if (source == view) {
+        if (ae.getSource() == view) {
             if (viewerNotLoaded) {
                 viewer = new SqlQuery();
                 viewerNotLoaded = false;
@@ -107,13 +100,11 @@ public class MenuLeaderBoard implements ActionListener {
                 viewer.reappear();
             }
         }
-
-        if (source == upload) {
+        if (ae.getSource() == upload) {
             upload();
         }
-
-        if (source == close) {
-            frame.dispose();
+        if (ae.getSource() == close) {
+            dispose();
         }
     }
 
@@ -138,8 +129,6 @@ public class MenuLeaderBoard implements ActionListener {
                     stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCCode() + "', gameVersion='" + RenderGameplay.getInstance().getVersionStr() + "', versionInt=" + RenderGameplay.getInstance().getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", userWin=" + LoginScreen.getInstance().getInstance().win + ", userLoss=" + LoginScreen.getInstance().getInstance().loss + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
 
                 }
-
-
                 LoginScreen.getInstance().getInstance().saveConfigFile();
                 JOptionPane.showMessageDialog(null, Language.getInstance().getLine(99), Language.getInstance().getLine(102), JOptionPane.PLAIN_MESSAGE);
             } catch (Exception e) {

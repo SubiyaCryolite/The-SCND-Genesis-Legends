@@ -589,7 +589,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode) == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         }
         if (thread != null) {
             thread.resume();
@@ -612,7 +612,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getDude().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
+            LoginScreen.getInstance().getMenu().getMain().systemNotice(LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().selectedCharIndex));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

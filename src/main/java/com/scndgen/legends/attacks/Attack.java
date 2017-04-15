@@ -21,98 +21,85 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.characters.Character;
+import com.scndgen.legends.render.RenderGameplay;
 
-public class AttacksBasic {
+public abstract class Attack {
 
-    public static boolean overlayEnabled;
+    public boolean overlayEnabled;
     public String attackStr;
-    public String[] attaX = new String[8]; //each car has 8 unique phtsical attacks
-    public String statsStr = "phy";
-    public String attackNum = "00";
+    public String attackIdentifier = "00";
     public int overlay = 0;
-    public int oppPicAttack;
     public int victim = 0;
-    public int move;
-    public Character dude;
-
-    /**
-     * Creates an opponent object
-     */
-    public AttacksBasic() {
-        dude = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent();
-    }
+    public int attack;
+    public Character opponent;
 
     /**
      * Attack sorter
      *
-     * @param thisMove - the move to execute
-     * @param forWho   - who's attacking
+     * @param attack - the move to execute
+     * @param target   - who's attacking
      */
-    public void attack(int thisMove, int forWho, char attacker, char attackee) {
-        move = thisMove;
-        victim = forWho;
-
-        if (thisMove > 8) {
-            forWho = 999; //override for pose
+    public void attack(int attack, int target, char source, char destination) {
+        this.attack = attack;
+        victim = target;
+        if (attack > 8) {
+            target = 999; //override for pose
         }
-        if (thisMove == 0) {
-            RenderGameplay.getInstance().setSprites(attacker, 9, 11);
-            RenderGameplay.getInstance().setSprites(attackee, 9, 11);
+        if (attack == 0) {
+            RenderGameplay.getInstance().setSprites(source, 9, 11);
+            RenderGameplay.getInstance().setSprites(destination, 9, 11);
             RenderGameplay.getInstance().showBattleMessage("");
         }
-
-        if (thisMove == 1) {
-            attackNum = "01";
+        if (attack == 1) {
+            attackIdentifier = "01";
         }
 
-        if (thisMove == 2) {
-            attackNum = "02";
+        if (attack == 2) {
+            attackIdentifier = "02";
         }
 
-        if (thisMove == 3) {
-            attackNum = "03";
+        if (attack == 3) {
+            attackIdentifier = "03";
         }
 
-        if (thisMove == 4) {
-            attackNum = "04";
+        if (attack == 4) {
+            attackIdentifier = "04";
         }
 
-        if (thisMove == 5) {
-            attackNum = "05";
+        if (attack == 5) {
+            attackIdentifier = "05";
         }
 
-        if (thisMove == 6) {
-            attackNum = "06";
+        if (attack == 6) {
+            attackIdentifier = "06";
         }
 
-        if (thisMove == 7) {
-            attackNum = "07";
+        if (attack == 7) {
+            attackIdentifier = "07";
         }
 
-        if (thisMove == 8) {
+        if (attack == 8) {
             //char move thing
-            attackNum = "08";
+            attackIdentifier = "08";
         }
 
-        if (thisMove == 9) {
-            attackNum = "09";
+        if (attack == 9) {
+            attackIdentifier = "09";
         }
 
-        if (thisMove == 10) {
-            attackNum = "10";
+        if (attack == 10) {
+            attackIdentifier = "10";
         }
 
-        if (thisMove == 11) {
-            attackNum = "11";
+        if (attack == 11) {
+            attackIdentifier = "11";
         }
 
-        if (thisMove == 12) {
-            attackNum = "12";
+        if (attack == 12) {
+            attackIdentifier = "12";
         }
-        doThis(forWho, attacker, attackee);
+        doThis(target, source, destination);
         action();
         //regenerative moves update char, so overide forWho?
     }
@@ -133,11 +120,11 @@ public class AttacksBasic {
             RenderGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)
-            if (move > 9) {
-                move = 10;
+            if (this.attack > 9) {
+                this.attack = 10;
             }
 
-            RenderGameplay.getInstance().setSprites(attack, move, 11); //attack
+            RenderGameplay.getInstance().setSprites(attack, this.attack, 11); //attack
             RenderGameplay.getInstance().setSprites(target, 0, 11); //defend
         }
     }
@@ -180,10 +167,10 @@ public class AttacksBasic {
      * ATTAAAAAAACK!!!!!!!
      */
     public void action() {
-        dude.attack(attackNum, victim);
+        opponent.attack(attackIdentifier, victim);
     }
 
-    public Character getDude() {
-        return dude;
+    public Character getOpponent() {
+        return opponent;
     }
 }

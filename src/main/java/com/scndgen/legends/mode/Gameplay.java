@@ -225,7 +225,7 @@ public abstract class Gameplay extends JenesisMode {
      * Get the Character
      */
     protected void getCharMoveset() {
-        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getDude().setCharMoveset();
+        LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getOpponent().setCharMoveset();
     }
 
     /**
@@ -277,7 +277,7 @@ public abstract class Gameplay extends JenesisMode {
      * Get the move selected by the player
      */
     protected String getSelMove(int move) {
-        String txt = LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getDude().getMoveQued(move);
+        String txt = LoginScreen.getInstance().getMenu().getMain().getAttacksChar().getOpponent().getMoveQued(move);
 
         return txt;
     }
@@ -483,7 +483,7 @@ public abstract class Gameplay extends JenesisMode {
 
 
     /**
-     * Checks if dude has more slots
+     * Checks if opponent has more slots
      * TRIGGERS ATTACKS
      */
     protected void checkStatus() {

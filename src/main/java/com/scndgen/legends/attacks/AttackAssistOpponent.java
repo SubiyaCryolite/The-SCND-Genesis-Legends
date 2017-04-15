@@ -23,12 +23,12 @@ package com.scndgen.legends.attacks;
 
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 
-public class AttacksPlyr1 extends AttacksBasic {
+public class AttackAssistOpponent extends Attack {
 
     /**
-     * Constructor
+     * Creates an opponent object
      */
-    public AttacksPlyr1() {
-        dude = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter();
+    public AttackAssistOpponent() {
+        opponent = RenderCharacterSelectionScreen.getInstance().getPlayers().getAssistOpponent();
     }
 }

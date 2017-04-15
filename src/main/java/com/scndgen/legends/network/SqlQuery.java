@@ -32,27 +32,19 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class SqlQuery implements ActionListener {
+public class SqlQuery extends JFrame implements ActionListener {
 
     private static SqlQuery me;
-    private JFrame frame;
     private JComboBox levelC, comboSort;
     private JLabel levelL, averageMatch, averagePoint, labelTop, sortBy;
     private JTable table;
     private JScrollPane scroller;
     private JPanel lineTop, line1, line2, line3, line4;
     private JButton close, sort;
-    private Object source;
     private Connection con;
     private String database;
     private Statement stmt;
-
-    //private String dbName = "localhost/scndgen";
-    //private String passWd = "user=root&password=password";
     private ResultSet rs;
-    /**
-     * Guys the two lines below are VERY important, please don't pillage :D
-     */
     private String dbName = "sql09.freemysql.net/scndrating";
     private String passWd = "user=subiyacryolite&password=dbHomie";
     private Object[][] results;
@@ -67,6 +59,7 @@ public class SqlQuery implements ActionListener {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public SqlQuery() {
+        super("SCND GENESIS -- Leaderboards");
         levels = new int[]{1, 5, 10, 50, 100, 200};
         levelsStr = new String[]{"King of the Hill", "Top 5", "Top 10", "Top 50", "Top 100", "Top 200"};
         notInitislied = true;
@@ -118,15 +111,12 @@ public class SqlQuery implements ActionListener {
         box.add(line2);
         box.add(line4);
         box.add(line3);
-
-
-        frame = new JFrame("SCND GENESIS -- Leaderboards");
-        frame.add(box);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setVisible(true);
+        add(box);
+        pack();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -134,7 +124,7 @@ public class SqlQuery implements ActionListener {
     }
 
     public void reappear() {
-        frame.show();
+        show();
     }
 
     private void reset(int number) {
@@ -238,9 +228,7 @@ public class SqlQuery implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        source = ae.getSource();
-
-        if (source == sort) {
+        if (ae.getSource() == sort) {
             line3.remove(scroller);
             box.remove(line3);
             reset(levels[levelC.getSelectedIndex()]);
@@ -248,11 +236,8 @@ public class SqlQuery implements ActionListener {
             box.add(line3);
             box.revalidate();
         }
-
-        if (source == close) {
-            frame.dispose();
+        if (ae.getSource() == close) {
+            dispose();
         }
-
-
     }
 }
