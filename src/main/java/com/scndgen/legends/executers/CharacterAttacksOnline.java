@@ -24,62 +24,51 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
 
-public class ExecuterMovesCharOnline implements Runnable {
+public class CharacterAttacksOnline implements Runnable {
 
-    public static int taskComplete;
-    public static int taskRun = 0;
-    public static boolean isRunning = false;
-    private static Thread timer;
-    private int i1, i2, i3, i4;
-    private char well;
+    private Thread timer;
+    private int command1, command2, command3, command4;
+    private char executionType;
 
-    public ExecuterMovesCharOnline(int m1, int m2, int m3, int m4, char type) {
-        well = type;
-        i1 = m1;
-        i2 = m2;
-        i3 = m3;
-        i4 = m4;
-
+    public CharacterAttacksOnline(int command1, int command2, int command3, int command4, char executionType) {
+        this.executionType = executionType;
+        this.command1 = command1;
+        this.command2 = command2;
+        this.command3 = command3;
+        this.command4 = command4;
         timer = new Thread(this);
         timer.start();
     }
 
-    public static void pause() {
+    public void pause() {
         timer.suspend();
     }
 
-    public static void resume() {
+    public void resume() {
         timer.resume();
     }
 
     public void run() {
         //normal attack
-        if (well == 'n') {
-
+        if (executionType == 'n') {
             RenderGameplay.getInstance().comboCounter = 0;
             //clear active combos
-
             RenderGameplay.getInstance().setSprites('c', 9, 11);
             RenderGameplay.getInstance().setSprites('o', 9, 11);
             //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
-
             executingTheCommands();
             RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
-        }
-
-        //limit break
-        if (well == 'l') {
+        } else if (executionType == 'l') {//limit break
             RenderGameplay.getInstance().clash(1, 'c');
         }
     }
 
     private void executingTheCommands() {
-        int[] moveBuff = {i1, i2, i3, i4};
-
-        for (int o = 0; o < 4; o++) {
+        int[] action = {command1, command2, command3, command4};
+        for (int index = 0; index < action.length; index++) {
             LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
-            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(moveBuff[o], 2, 'c', 'o');
+            LoginScreen.getInstance().getMenu().getMain().getAttacksChar().attack(action[index], 2, 'c', 'o');
             RenderGameplay.getInstance().shakeOppCharLB();
             RenderGameplay.getInstance().AnimatePhyAttax('c');
             LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();

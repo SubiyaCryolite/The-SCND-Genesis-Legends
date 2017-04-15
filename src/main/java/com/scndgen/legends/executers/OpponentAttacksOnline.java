@@ -24,70 +24,58 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
 
-public class ExecuterMovesOppOnline implements Runnable {
-
-    public static int taskComplete;
-    public static int taskRun = 0;
-    public static char feeCol;
-    public static boolean isRunning = false;
-    private static Thread timer;
-    private static int f1, f2, f3, f4;
-    private static int randomMattackInt;
-    private char well;
+public class OpponentAttacksOnline implements Runnable {
+    private Thread timer;
+    private int command1, command2, command3, command4;
+    private char executionType;
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    public ExecuterMovesOppOnline(int mel1, int mel2, int mel3, int mel4, char type) {
-        well = type;
-        f1 = mel1;
-        f2 = mel2;
-        f3 = mel3;
-        f4 = mel4;
-
+    public OpponentAttacksOnline(int command1, int command2, int command3, int command4, char type) {
+        this.executionType = type;
+        this.command1 = command1;
+        this.command2 = command2;
+        this.command3 = command3;
+        this.command4 = command4;
         timer = new Thread(this);
         timer.start();
     }
 
-    public static void pause() {
+    public void pause() {
         timer.suspend();
     }
 
-    public static void resume() {
+    public void resume() {
         timer.resume();
     }
 
     @Override
     public void run() {
         try {
-            //normal attack
-            if (well == 'n') {
-                int interator = 0;
-                do {
-                    RenderGameplay.getInstance().setSprites('c', 9, 11);
-                    RenderGameplay.getInstance().setSprites('o', 9, 11);
-                    executingTheCommandsAI(f1, f2, f3, f4);
-                    RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
-                    interator = interator + 1;
-                } while (interator != 1);
+            if (executionType == 'n') {
+                RenderGameplay.getInstance().setSprites('c', 9, 11);
+                RenderGameplay.getInstance().setSprites('o', 9, 11);
+                executingTheCommandsAI(command1, command2, command3, command4);
+                RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
+            } else if (executionType == 'l') {//limit break
+                RenderGameplay.getInstance().clash(1, 'c');
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
         }
     }
 
-    private void executingTheCommandsAI(int m1, int m2, int m3, int m4) {
+    private void executingTheCommandsAI(int command1, int command2, int command3, int command4) {
         try {
-            int[] aiMoves = {m1, m2, m3, m4};
-            System.out.println("AI Opponent>>>>>>>>");
-
-            for (int o = 0; o < 4; o++) {
+            int[] commands = {command1, command2, command3, command4};
+            for (int index = 0; index < commands.length; index++) {
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
-                LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[o], 1, 'o', 'c');
+                LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(commands[index], 1, 'o', 'c');
                 RenderGameplay.getInstance().shakeCharLB();
                 RenderGameplay.getInstance().AnimatePhyAttax('o');
                 LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
         }
     }
 }

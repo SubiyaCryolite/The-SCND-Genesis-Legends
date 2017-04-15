@@ -24,10 +24,10 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.executers.ExecuterMovesChar;
-import com.scndgen.legends.executers.ExecuterMovesChar2;
-import com.scndgen.legends.executers.ExecuterMovesOpp;
-import com.scndgen.legends.executers.ExecuterMovesOpp2;
+import com.scndgen.legends.executers.CharacterAttacks;
+import com.scndgen.legends.executers.AssistCharacterAttacks;
+import com.scndgen.legends.executers.OpponentAttacks;
+import com.scndgen.legends.executers.AssistOpponentAttacks;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.mode.Gameplay;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -87,10 +87,10 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private int limitOpp2;
     private int timeToChill;
     private float count = 0.0f;
-    private ExecuterMovesOpp executorAI;
-    private ExecuterMovesOpp2 executorAI2;
-    private ExecuterMovesChar2 executorAI3;
-    private ExecuterMovesChar executorPlyr;
+    private OpponentAttacks executorAI;
+    private AssistOpponentAttacks executorAI2;
+    private AssistCharacterAttacks executorAI3;
+    private CharacterAttacks executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
 
@@ -403,7 +403,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
      * When the player selects all his moves, a new attack sequence is triggered
      */
     public void triggerCharAttack() {
-        executorPlyr = new ExecuterMovesChar();
+        executorPlyr = new CharacterAttacks();
     }
 
     /**
@@ -549,9 +549,9 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     }
 
     private void newInstance() {
-        executorAI = new ExecuterMovesOpp();
-        executorAI2 = new ExecuterMovesOpp2();
-        executorAI3 = new ExecuterMovesChar2();
+        executorAI = new OpponentAttacks();
+        executorAI2 = new AssistOpponentAttacks();
+        executorAI3 = new AssistCharacterAttacks();
 
         ach = LoginScreen.getInstance().getAch();
         if (LoginScreen.getInstance().getMenu().getMain().getGameMode().equalsIgnoreCase(WindowMain.storyMode)) {

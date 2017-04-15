@@ -25,14 +25,11 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.WindowMain;
 
-public class ExecuterMovesChar implements Runnable {
+public class CharacterAttacks implements Runnable {
 
-    public static int taskComplete;
-    public static int taskRun = 0;
-    public static boolean isRunning = false;
-    private static Thread timer;
+    private Thread timer;
 
-    public ExecuterMovesChar() {
+    public CharacterAttacks() {
         timer = new Thread(this);
         timer.setName("Player attacking thread");
         timer.start();

@@ -34,8 +34,8 @@ import com.scndgen.legends.attacks.AttacksPlyr1;
 import com.scndgen.legends.attacks.AttacksPlyr2;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.executers.ExecuterMovesCharOnline;
-import com.scndgen.legends.executers.ExecuterMovesOppOnline;
+import com.scndgen.legends.executers.CharacterAttacksOnline;
+import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.menus.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ThreadGameInstance;
@@ -77,8 +77,8 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
     private int serverLatency;
     private int leftyXOffset, onlineClients = 0, hatDir;
     private boolean messageSent = false, isWaiting = true, isNotRepainting = true, doneChilling = true;
-    private ExecuterMovesOppOnline playerHost2, playerClient1;
-    private ExecuterMovesCharOnline playerHost1, playerClient2;
+    private OpponentAttacksOnline playerHost2, playerClient1;
+    private CharacterAttacksOnline playerHost1, playerClient2;
     //client
     private jenesisClient client;
     private JTextField Server = new JTextField(20);
@@ -1414,7 +1414,7 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
                     if (getGameMode().equalsIgnoreCase(lanHost)) {
-                        playerHost2 = new ExecuterMovesOppOnline(y1, y2, y3, y4, 'n');
+                        playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                     }
 
                     System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
@@ -1580,10 +1580,10 @@ public class WindowMain extends JFrame implements KeyListener, WindowListener, M
                     int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                     int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
                     if (getGameMode().equalsIgnoreCase(lanHost)) {
-                        playerClient2 = new ExecuterMovesCharOnline(y1, y2, y3, y4, 'n');
+                        playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                     }
                     if (getGameMode().equalsIgnoreCase(lanClient)) {
-                        playerClient1 = new ExecuterMovesOppOnline(y1, y2, y3, y4, 'n');
+                        playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                     }
                     System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
                     System.out.println("\n");

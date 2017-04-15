@@ -24,21 +24,19 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.ThreadGameInstance;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ExecuterMovesChar2 implements Runnable {
+public class AssistOpponentAttacks implements Runnable {
 
-    public static int taskComplete;
-    public static int taskRun = 0, range;
-    public static char feeCol;
-    public static boolean isRunning = false;
-    private static Thread timer;
+    public static int range;
+    private Thread timer;
     private int[] aiMoves;
-    private int whoToAttack = 4;
+    private int whoToAttack = 3;
 
-    public ExecuterMovesChar2() {
+    public AssistOpponentAttacks() {
         timer = new Thread(this);
         timer.setName("Opponent attacking thread");
     }
@@ -54,57 +52,52 @@ public class ExecuterMovesChar2 implements Runnable {
     @Override
     public void run() {
         do {
-
-
+            RenderGameplay.getInstance().setSprites('c', 9, 11);
+            RenderGameplay.getInstance().setSprites('o', 9, 11);
+            RenderGameplay.getInstance().setSprites('b', 9, 11);
             try {
                 int time = LoginScreen.getInstance().difficultyDyn;
                 Thread.sleep((int) (time + (Math.random() * time)));
             } catch (InterruptedException ex) {
-                Logger.getLogger(ExecuterMovesChar2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AssistOpponentAttacks.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             executingTheCommandsAI();
-
-            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar2(0);
-            RenderGameplay.getInstance().getGameInstance().aiRunning3 = false;
+            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp2(0);
+            RenderGameplay.getInstance().getGameInstance().aiRunning2 = false;
 
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot3();
+        aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot2();
         range = aiMoves.length - 1;
 
-        if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
-
-            int randomNumber = (int) (Math.random() * 12);
-            if (randomNumber <= 6) {
-                if (RenderGameplay.getInstance().perCent2a >= 0) {
-                    whoToAttack = 4;
-                } // normally CPU player 1 attacks CPU opponent 2
-                else {
-                    whoToAttack = 2;
-                }
-            } else if (randomNumber >= 7) {
-                if (RenderGameplay.getInstance().perCent2 >= 0) {
-                    whoToAttack = 2;
-                } //attack CPU opponent 1
-                else {
-                    whoToAttack = 4;
-                }
+        int randomNumber = (int) (Math.random() * 12);
+        if (randomNumber >= 7) {
+            if (RenderGameplay.getInstance().perCent3a >= 0) {
+                whoToAttack = 3;
+            } else {
+                whoToAttack = 1;
             }
+        } else if (randomNumber <= 6) {
+            if (RenderGameplay.getInstance().perCent >= 0) {
+                whoToAttack = 1;
+            } else {
+                whoToAttack = 3;
+            }
+        }
 
-
-            for (int o = 0; o < 4; o++) {
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
+        if (ThreadGameInstance.isGameOver == false) {
+            for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story mode bug
-                if (RenderGameplay.getInstance().getGameInstance().storySequence == false) {
-                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp2().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], whoToAttack, 'a', 'b');
+                if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksOpp().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
                     RenderGameplay.getInstance().shakeCharLB();
-                    RenderGameplay.getInstance().AnimatePhyAttax('a');
+                    RenderGameplay.getInstance().AnimatePhyAttax('o');
+                    LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayEnabled();
                 }
-                LoginScreen.getInstance().getMenu().getMain().getAttacksChar().CharacterOverlayDisabled();
             }
         }
     }

@@ -29,7 +29,7 @@ import com.scndgen.legends.threads.ThreadGameInstance;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ExecuterMovesOpp implements Runnable {
+public class OpponentAttacks implements Runnable {
 
     public int taskRun = 0, range;
     public char feeCol;
@@ -37,7 +37,7 @@ public class ExecuterMovesOpp implements Runnable {
     private Thread timer;
     private int[] aiMoves;
 
-    public ExecuterMovesOpp() {
+    public OpponentAttacks() {
         timer = new Thread(this);
         timer.setName("Opponent attacking thread");
     }
@@ -56,7 +56,7 @@ public class ExecuterMovesOpp implements Runnable {
             try {
                 Thread.sleep(LoginScreen.getInstance().difficultyDyn);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ExecuterMovesOpp.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OpponentAttacks.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             executingTheCommandsAI();
