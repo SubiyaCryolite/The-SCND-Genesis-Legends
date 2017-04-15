@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;

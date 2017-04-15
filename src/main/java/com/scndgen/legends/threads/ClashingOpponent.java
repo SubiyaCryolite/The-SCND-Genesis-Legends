@@ -32,9 +32,9 @@ import java.util.logging.Logger;
 public class ClashingOpponent implements Runnable {
 
     public static int sleepTime = 0, plyrClash, person, oppClash, plyClashPerc, oppClashPerc;
-    private Thread thread;
     private static boolean isClashOn = false;
     private static char personChar;
+    private Thread thread;
 
     public ClashingOpponent() {
         if (thread != null) {

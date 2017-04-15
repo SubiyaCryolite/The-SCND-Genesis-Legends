@@ -47,7 +47,7 @@ public abstract class MainMenu extends JenesisMode {
     protected int menuIndex = 0;
     protected int xMenu = 500;
     protected Overlay overlay = Overlay.PRIMARY;
-    protected int menuItem, menuEntries = 11;
+    protected int menuItemIndex, menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
     protected int xCordCloud = 0, yCordCloud = 0, xCordCloud2 = 0, yCordCloud2 = 20, xCordCloud3 = 0, yCordCloud3 = 40;
     protected String menuItmStr, stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
@@ -58,7 +58,7 @@ public abstract class MainMenu extends JenesisMode {
     protected String mess;
     protected boolean fadeOutFeedback;
     protected float feedBackOpac = 1.0f;
-    protected String[] itemz;
+    protected String[] menuItem;
     protected int offset = 10;
     protected Calendar cal;
     protected Font font1, font2 = new Font("SansSerif", Font.PLAIN, spacer);
@@ -79,44 +79,43 @@ public abstract class MainMenu extends JenesisMode {
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public MainMenu() {
         openOpac = 3.0f;
-        font1 = LoginScreen.getInstance().getMyFont(fontSize);
         feedBackOpac = 1.0f;
         fadeOutFeedback = false;
-        itemz = new String[(menuEntries + 2) * 2];
+        menuItem = new String[(menuEntries + 2) * 2];
         achachievementLocker = new OverlayAchievementLocker();
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
         loadPix();
         font = LoginScreen.getInstance().getMyFont(fontSize - 2);
-        itemz[0] = Language.getInstance().getLine(307);
-        itemz[1] = "STORY MODE";
-        itemz[2] = Language.getInstance().getLine(308);
-        itemz[3] = "QUICK MATCH";
-        itemz[4] = "Quick Match (2 vs 2)";
-        itemz[5] = "QUICK MATCH (2 vs 2)";
-        itemz[6] = Language.getInstance().getLine(309);
-        itemz[7] = "HOST A LAN MATCH";
-        itemz[8] = Language.getInstance().getLine(310);
-        itemz[9] = "JOIN A LAN MATCH";
-        itemz[10] = Language.getInstance().getLine(311);
-        itemz[11] = "YOUR STATS";
-        itemz[12] = Language.getInstance().getLine(312);
-        itemz[13] = "OPTIONS";
-        itemz[14] = Language.getInstance().getLine(313);
-        itemz[15] = "VIEW CONTROLS";
-        itemz[16] = Language.getInstance().getLine(314);
-        itemz[17] = "ABOUT";
-        itemz[18] = Language.getInstance().getLine(315);
-        itemz[19] = "EXIT";
-        itemz[20] = Language.getInstance().getLine(316);
-        itemz[21] = "ACHIEVEMENT LOCKER";
-        itemz[22] = Language.getInstance().getLine(317);
-        itemz[23] = "ONLINE LEADER BOARDS";
-        itemz[22] = Language.getInstance().getLine(318);
-        itemz[23] = "LOG OUT";
-        itemz[24] = Language.getInstance().getLine(319);
-        itemz[25] = "TUTORIAL";
+        menuItem[0] = Language.getInstance().getLine(307);
+        menuItem[1] = "STORY MODE";
+        menuItem[2] = Language.getInstance().getLine(308);
+        menuItem[3] = "QUICK MATCH";
+        menuItem[4] = "Quick Match (2 vs 2)";
+        menuItem[5] = "QUICK MATCH (2 vs 2)";
+        menuItem[6] = Language.getInstance().getLine(309);
+        menuItem[7] = "HOST A LAN MATCH";
+        menuItem[8] = Language.getInstance().getLine(310);
+        menuItem[9] = "JOIN A LAN MATCH";
+        menuItem[10] = Language.getInstance().getLine(311);
+        menuItem[11] = "YOUR STATS";
+        menuItem[12] = Language.getInstance().getLine(312);
+        menuItem[13] = "OPTIONS";
+        menuItem[14] = Language.getInstance().getLine(313);
+        menuItem[15] = "VIEW CONTROLS";
+        menuItem[16] = Language.getInstance().getLine(314);
+        menuItem[17] = "ABOUT";
+        menuItem[18] = Language.getInstance().getLine(315);
+        menuItem[19] = "EXIT";
+        menuItem[20] = Language.getInstance().getLine(316);
+        menuItem[21] = "ACHIEVEMENT LOCKER";
+        menuItem[22] = Language.getInstance().getLine(317);
+        menuItem[23] = "ONLINE LEADER BOARDS";
+        menuItem[22] = Language.getInstance().getLine(318);
+        menuItem[23] = "LOG OUT";
+        menuItem[24] = Language.getInstance().getLine(319);
+        menuItem[25] = "TUTORIAL";
 
         new Thread() {
 

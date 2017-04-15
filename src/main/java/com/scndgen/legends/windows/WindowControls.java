@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.Language;
 
 import javax.swing.*;
 import java.awt.*;

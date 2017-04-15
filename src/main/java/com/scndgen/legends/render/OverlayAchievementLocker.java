@@ -38,8 +38,8 @@ import java.awt.image.ImageObserver;
 public class OverlayAchievementLocker {
 
     private int spacer = 14;
-    private Font font2 = LoginScreen.getInstance().getMyFont(spacer - 1);
-    private Font font1 = LoginScreen.getInstance().getMyFont(spacer + 2);
+    private Font font2;
+    private Font font1;
     private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private int offset = 10, offset2 = 350, offset2x = 40, achPic = 40, achPicSpacer = 60, scroller = 0;
     private String stat1, stat2, stat3,
@@ -55,7 +55,7 @@ public class OverlayAchievementLocker {
 
     public OverlayAchievementLocker() {
         pix = new JenesisImageLoader();
-        loadPix();
+        loadFontAndPictures();
         refreshStats();
         ach = LoginScreen.getInstance().getAch();
     }
@@ -213,7 +213,9 @@ public class OverlayAchievementLocker {
     /**
      * Load my imageLoader
      */
-    private void loadPix() {
+    private void loadFontAndPictures() {
+        font2 = LoginScreen.getInstance().getMyFont(spacer - 1);
+        font1 = LoginScreen.getInstance().getMyFont(spacer + 2);
         total = (float) LoginScreen.getInstance().ach.length;
         achCap = new Image[LoginScreen.getInstance().ach.length];
         for (int u = 0; u < achCap.length; u++) {

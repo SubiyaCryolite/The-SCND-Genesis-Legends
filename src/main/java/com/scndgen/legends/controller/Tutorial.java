@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.controller;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 

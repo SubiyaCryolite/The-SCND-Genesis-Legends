@@ -21,10 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.scene.StoryMenu;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -41,19 +41,13 @@ import java.awt.*;
  */
 public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 
+    private static RenderStoryMenu instance;
     private AudioPlayback victorySound;
     private AudioPlayback menuSound;
     private Font headerFont, normalFont;
     private Image charBack, loading;
     private Image[] storyCap, storyCapUn, storyCapBlur;
     private Image storyPrev;
-    private static RenderStoryMenu instance;
-
-    public static synchronized RenderStoryMenu getInstance() {
-        if (instance == null)
-            instance = new RenderStoryMenu();
-        return instance;
-    }
 
     private RenderStoryMenu() {
         scenes = 12;
@@ -74,6 +68,12 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
             }
         }
         setBorder(BorderFactory.createEmptyBorder());
+    }
+
+    public static synchronized RenderStoryMenu getInstance() {
+        if (instance == null)
+            instance = new RenderStoryMenu();
+        return instance;
     }
 
     @Override

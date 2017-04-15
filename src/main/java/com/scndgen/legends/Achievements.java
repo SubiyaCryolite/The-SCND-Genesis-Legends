@@ -33,20 +33,20 @@ import java.util.ArrayList;
  */
 public class Achievements {
 
+    private static Achievements instance;
     private final ArrayList name = new ArrayList();
     private final ArrayList descriptions = new ArrayList();
     private final ArrayList categories = new ArrayList();
     private final ArrayList points = new ArrayList();
+    private final LoginScreen loginScreen;
     public String[] achievementName;
     public String[] achievemenDescription;
-    private final LoginScreen loginScreen;
     private int[] pointsArr = {102, 198, 300};//50,33,17
     //private String[] catType = {"★", "★★★", "★★★★★"};
     private String[] catType = {"COOL", "SWEET", "EPIC"};
     private boolean[] isLocked = new boolean[14];
     private int currentPoints;
     private int bonus;
-    private static Achievements instance;
 
     public Achievements(LoginScreen loginScreen) {
         instance = this;
@@ -77,6 +77,10 @@ public class Achievements {
                 Language.getInstance().getLine(81), //9
                 Language.getInstance().getLine(82), //10
         };
+    }
+
+    public static synchronized Achievements getInstance() {
+        return instance;
     }
 
     /**
@@ -284,9 +288,5 @@ public class Achievements {
         }
         bonus = ((loginScreen.difficultyBase - loginScreen.difficultyDyn) / loginScreen.difficultyScale) * 5;
         currentPoints = currentPoints + 20 + bonus;
-    }
-
-    public static synchronized Achievements getInstance() {
-        return instance;
     }
 }

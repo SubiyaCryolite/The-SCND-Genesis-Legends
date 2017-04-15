@@ -39,11 +39,12 @@ public class JenesisGamePad {
     public static final int SW = 6;
     public static final int SOUTH = 7;
     public static final int SE = 8;
+    private static JenesisGamePad instance;
     public boolean rumblerOn = false, controllerFound = false;   // whether rumbler is on or off
     public int statusInt = 0;
+    public String controllerName = "Basic";
     private int xAxis, yAxis, zAxis, rzAxis;
     private int povId;         // index for the POV hat
-    public String controllerName = "Basic";
     private Controller controller;
     private Component[] components;  // holds the components
     private Rumbler[] rumblers;
@@ -51,7 +52,6 @@ public class JenesisGamePad {
     private int buttons[];   // indices for the buttons
     private ControllerEnvironment controllerEnvironment;
     private Controller[] controllers;
-    private static JenesisGamePad instance;
 
     private JenesisGamePad() {
         try {

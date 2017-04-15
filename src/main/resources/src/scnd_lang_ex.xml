@@ -13,23 +13,23 @@
     <ExampleLang2>Cha Mutengo</ExampleLang2>
     <Engilsh3>Medium</Engilsh3>
     <Engilsh4>Low</Engilsh4>
-    <Engilsh5>Rate this game: </Engilsh5>
-    <Engilsh6>Difficulty Setting: </Engilsh6>
-    <Engilsh7>Dialogue speed: </Engilsh7>
-    <Engilsh8>Graphics: </Engilsh8>
-    <Engilsh9>High Quality: caches images and enables animations. 
-                + \nLow Quality: Streams images, disables animations, 
-                + \nuses less memory. May cause graphical corruption. 
-                + \nUse low quality if the game hangs while loading
+    <Engilsh5>Rate this game:</Engilsh5>
+    <Engilsh6>Difficulty Setting:</Engilsh6>
+    <Engilsh7>Dialogue speed:</Engilsh7>
+    <Engilsh8>Graphics:</Engilsh8>
+    <Engilsh9>High Quality: caches images and enables animations.
+        + \nLow Quality: Streams images, disables animations,
+        + \nuses less memory. May cause graphical corruption.
+        + \nUse low quality if the game hangs while loading
     </Engilsh9>
-    <Engilsh10>Frame Rate: </Engilsh10>
-    <Engilsh11>Sound: </Engilsh11>
+    <Engilsh10>Frame Rate:</Engilsh10>
+    <Engilsh11>Sound:</Engilsh11>
     <Engilsh12>ON</Engilsh12>
     <Engilsh13>OFF</Engilsh13>
-    <Engilsh14>Time Duration: </Engilsh14>
-    <Engilsh15>Auto-check for updates: </Engilsh15>
+    <Engilsh14>Time Duration:</Engilsh14>
+    <Engilsh15>Auto-check for updates:</Engilsh15>
     <Engilsh16>Download Audio</Engilsh16>
-    <Engilsh17>Comic book text occurrence: </Engilsh17>
+    <Engilsh17>Comic book text occurrence:</Engilsh17>
     <Engilsh18>Use game pad if available ?</Engilsh18>
     <Engilsh19>Selected Language</Engilsh19>
     <Engilsh20>Save</Engilsh20>
@@ -47,7 +47,7 @@
     <Engilsh32>High</Engilsh32>
     <Engilsh33>Low</Engilsh33>
     <Engilsh34>Game Options</Engilsh34>
-    <Engilsh35>Rate this game: </Engilsh35>
+    <Engilsh35>Rate this game:</Engilsh35>
     <Engilsh36>OK</Engilsh36>
     <Engilsh37>KEYBOARD</Engilsh37>
     <Engilsh38>Select</Engilsh38>
@@ -84,7 +84,7 @@
     <Engilsh69>Close Call</Engilsh69>
     <Engilsh70>On a Roll!!!!</Engilsh70>
     <Engilsh71>Half Way through</Engilsh71>
-    <Engilsh72>You were sustaining damage, but made a quick comeback </Engilsh72>
+    <Engilsh72>You were sustaining damage, but made a quick comeback</Engilsh72>
     <Engilsh73>Your stamina was below 30%, but you made it back to 50%</Engilsh73>
     <Engilsh74>You beat down your opponent and kept your HP above 50%</Engilsh74>
     <Engilsh75>You beat down your opponent and kept your HP above 40%</Engilsh75>
@@ -104,7 +104,7 @@
     <Engilsh89>Ownage time!!</Engilsh89>
     <Engilsh90>*Yawn* Lets end this fast!!</Engilsh90>
     <Engilsh91>I shall destroy you!!</Engilsh91>
-    <Engilsh92>You  stand no chance!!!!</Engilsh92>
+    <Engilsh92>You stand no chance!!!!</Engilsh92>
     <Engilsh93>Prepare for a beating !!</Engilsh93>
     <Engilsh94>Behold my awesomeness!!!</Engilsh94>
     <Engilsh95>Close</Engilsh95>
@@ -182,157 +182,158 @@
     <Engilsh167>Your machines name is:</Engilsh167>
     <Engilsh168>your partner has to enter you're name to fight you</Engilsh168>
     <Engilsh169>Press 'M' to pass time on a world map</Engilsh169>
-    <Engilsh170>Screen-shot taken</Engilsh170>    
-    <Engilsh171>Yes</Engilsh171>    
-    <Engilsh172>No</Engilsh172>    
-    <Engilsh173>Are you left handed?</Engilsh173>    
-    <Engilsh174>It's been two weeks since the killings began</Engilsh174>    
-    <Engilsh175>At first the authorities thought a serial killer was behind it</Engilsh175>   
-    <Engilsh176>But the state of the bodies and the number of casualties said otherwise</Engilsh176>   
-    <Engilsh177>And then came the darkness...</Engilsh177>   
-    <Engilsh178>Murderer. I'm taking you in</Engilsh178>   
+    <Engilsh170>Screen-shot taken</Engilsh170>
+    <Engilsh171>Yes</Engilsh171>
+    <Engilsh172>No</Engilsh172>
+    <Engilsh173>Are you left handed?</Engilsh173>
+    <Engilsh174>It's been two weeks since the killings began</Engilsh174>
+    <Engilsh175>At first the authorities thought a serial killer was behind it</Engilsh175>
+    <Engilsh176>But the state of the bodies and the number of casualties said otherwise</Engilsh176>
+    <Engilsh177>And then came the darkness...</Engilsh177>
+    <Engilsh178>Murderer. I'm taking you in</Engilsh178>
     <Engilsh179>I'm impressed. You were able to track me.</Engilsh179>
     <Engilsh372>However, you're not taking me anywhere</Engilsh372>
-    <Engilsh180>You don't have a choice.</Engilsh180>   
-    <Engilsh181>Hmph, is that so?</Engilsh181>   
-    <Engilsh182>.........</Engilsh182>   
-    <Engilsh183>Shortly after picking up his cousin</Engilsh183>   
-    <Engilsh184>His home was attacked and wrecked by a member of a cult</Engilsh184>   
-    <Engilsh185>His cousin, Raila, and his friend, Subiya, were badly hurt</Engilsh185>  
-    <Engilsh186>After they recovered, he decided it would be best to train them in order for them to defend themselves</Engilsh186>   
-    <Engilsh187>They retired to a secluded location to train, away from the ensuing chaos</Engilsh187>   
-    <Engilsh188>You did well</Engilsh188>   
-    <Engilsh189>*gasp* *gasp* Doesn't feel like it</Engilsh189>   
-    <Engilsh190>*ring* *ring*</Engilsh190>   
-    <Engilsh191>Hey, its me</Engilsh191>   
-    <Engilsh192>To what do I owe this pleasure?</Engilsh192>   
-    <Engilsh193>The Royal Court, has decided to go after the criminals</Engilsh193>   
-    <Engilsh194>Really?</Engilsh194>   
-    <Engilsh195>Yes, we'd need as many able bodied Saints as possible, care to join the cause?</Engilsh195>   
-    <Engilsh196>Well...</Engilsh196>   
-    <Engilsh197>Go ahead</Engilsh197>   
-    <Engilsh198>Yeah, we aren't babies we can take care of ourselves. The Kingdom needs you more than we do</Engilsh198>   
-    <Engilsh199>Lynx, proceeded to return to Acacia. Leaving his two students to train in his absence.</Engilsh199>   
-    <Engilsh200>Welcome back</Engilsh200>   
-    <Engilsh201>Thanks</Engilsh201>   
-    <Engilsh202>Yo, not so fast. We gotta make sure you're fit for duty</Engilsh202>   
-    <Engilsh203>Seriously?</Engilsh203>   
-    <Engilsh204>Yup</Engilsh204>   
-    <Engilsh205>fine, lets do this</Engilsh205>   
-    <Engilsh206>Finally</Engilsh206>   
-    <Engilsh207>Looks like its just you and me huh</Engilsh207>   
-    <Engilsh208>I think we should head back to the mainland?</Engilsh208>   
-    <Engilsh209>What?</Engilsh209>   
-    <Engilsh210>Hiding out on this island doesn't feel right, we should be out there</Engilsh210>   
-    <Engilsh211>In case you hadn't noticed, we haven't even passed the physical exam</Engilsh211>   
-    <Engilsh212>And we totally got wrecked by that psycho dude</Engilsh212>   
-    <Engilsh213>We aren't trained Saints, rushing to battle in this state - </Engilsh213>   
-    <Engilsh214>OW</Engilsh214>   
-    <Engilsh215>What was that?</Engilsh215>   
+    <Engilsh180>You don't have a choice.</Engilsh180>
+    <Engilsh181>Hmph, is that so?</Engilsh181>
+    <Engilsh182>.........</Engilsh182>
+    <Engilsh183>Shortly after picking up his cousin</Engilsh183>
+    <Engilsh184>His home was attacked and wrecked by a member of a cult</Engilsh184>
+    <Engilsh185>His cousin, Raila, and his friend, Subiya, were badly hurt</Engilsh185>
+    <Engilsh186>After they recovered, he decided it would be best to train them in order for them to defend themselves
+    </Engilsh186>
+    <Engilsh187>They retired to a secluded location to train, away from the ensuing chaos</Engilsh187>
+    <Engilsh188>You did well</Engilsh188>
+    <Engilsh189>*gasp* *gasp* Doesn't feel like it</Engilsh189>
+    <Engilsh190>*ring* *ring*</Engilsh190>
+    <Engilsh191>Hey, its me</Engilsh191>
+    <Engilsh192>To what do I owe this pleasure?</Engilsh192>
+    <Engilsh193>The Royal Court, has decided to go after the criminals</Engilsh193>
+    <Engilsh194>Really?</Engilsh194>
+    <Engilsh195>Yes, we'd need as many able bodied Saints as possible, care to join the cause?</Engilsh195>
+    <Engilsh196>Well...</Engilsh196>
+    <Engilsh197>Go ahead</Engilsh197>
+    <Engilsh198>Yeah, we aren't babies we can take care of ourselves. The Kingdom needs you more than we do</Engilsh198>
+    <Engilsh199>Lynx, proceeded to return to Acacia. Leaving his two students to train in his absence.</Engilsh199>
+    <Engilsh200>Welcome back</Engilsh200>
+    <Engilsh201>Thanks</Engilsh201>
+    <Engilsh202>Yo, not so fast. We gotta make sure you're fit for duty</Engilsh202>
+    <Engilsh203>Seriously?</Engilsh203>
+    <Engilsh204>Yup</Engilsh204>
+    <Engilsh205>fine, lets do this</Engilsh205>
+    <Engilsh206>Finally</Engilsh206>
+    <Engilsh207>Looks like its just you and me huh</Engilsh207>
+    <Engilsh208>I think we should head back to the mainland?</Engilsh208>
+    <Engilsh209>What?</Engilsh209>
+    <Engilsh210>Hiding out on this island doesn't feel right, we should be out there</Engilsh210>
+    <Engilsh211>In case you hadn't noticed, we haven't even passed the physical exam</Engilsh211>
+    <Engilsh212>And we totally got wrecked by that psycho dude</Engilsh212>
+    <Engilsh213>We aren't trained Saints, rushing to battle in this state -</Engilsh213>
+    <Engilsh214>OW</Engilsh214>
+    <Engilsh215>What was that?</Engilsh215>
     <Engilsh216>I think you've underestimated our growth</Engilsh216>
-    <Engilsh217>Come, I'll show you how far we've grown.</Engilsh217>    
-    <Engilsh218>Somewhere</Engilsh218>    
-    <Engilsh219>An argument breaks out between two allies</Engilsh219>    
-    <Engilsh220>Listen, I'll be the one leading the assault tomorrow</Engilsh220>    
-    <Engilsh221>Adam, already agreed to it</Engilsh221>    
-    <Engilsh222>Exactly</Engilsh222>    
-    <Engilsh223>This is lame, how come I never get to be in charge?</Engilsh223>    
-    <Engilsh224>because you are immature, childish, reckless, stupid</Engilsh224>    
-    <Engilsh225>you'd jeopardize the mission</Engilsh225>    
-    <Engilsh226>Indeed, I don't even know why we kept you to begin with</Engilsh226>    
-    <Engilsh227>Harsh</Engilsh227>    
-    <Engilsh228>I've had enough of this. You punk!!!</Engilsh228>    
-    <Engilsh229>Lets see if you can back up your talk</Engilsh229>    
-    <Engilsh230>Hmph</Engilsh230>    
-    <Engilsh231>Ugh</Engilsh231>    
-    <Engilsh232>Satisfied?</Engilsh232>    
-    <Engilsh233>You son of a</Engilsh233>    
-    <Engilsh234>Shut up Rav. You're being childish</Engilsh234>    
-    <Engilsh235>Indeed, that was fairly ridiculous</Engilsh235>    
-    <Engilsh236>Adam? When did you get here???</Engilsh236>    
-    <Engilsh237>Just five seconds ago</Engilsh237>    
-    <Engilsh238>Cocky as always....</Engilsh238>    
-    <Engilsh239>Indeed, I hope you've made some progress</Engilsh239>    
-    <Engilsh240>Yes, we invade tomorrow</Engilsh240>    
-    <Engilsh241>And are you prepared?</Engilsh241>    
-    <Engilsh242>We've gathered enough souls to power the device</Engilsh242>    
-    <Engilsh243>Excellent</Engilsh243>    
-    <Engilsh244>We've also been training like crazy, they wont stand a chance against all 5 of us</Engilsh244>    
-    <Engilsh245>Of course, I can beat you down to prove it</Engilsh245>    
-    <Engilsh246>Um that’s not a good idea</Engilsh246> 
-    <Engilsh247>Actually, it is. I'm in the mood for a sparring match. Come with all youve got</Engilsh247>    
-    <Engilsh248>I'll put in half the effort</Engilsh248>    
-    <Engilsh249>Cocky!</Engilsh249>    
-    <Engilsh250>heh heh heh</Engilsh250>    
-    <Engilsh251>The following day....</Engilsh251>    
-    <Engilsh252>Adam and his men stormed the Academy</Engilsh252>    
-    <Engilsh253>The lower rank Saints were no match for them</Engilsh253>    
-    <Engilsh254>During the ensuing chaos. Two fates, crossed paths yet again</Engilsh254>    
-    <Engilsh255>So you're back, how long has it been</Engilsh255>    
-    <Engilsh256>200 years, give or take</Engilsh256> 
-    <Engilsh257>What do you want Adam?</Engilsh257>    
-    <Engilsh258>Don't play dumb! You know what I want</Engilsh258>    
-    <Engilsh259>The Artifact, "The Crest of Hope"</Engilsh259>    
-    <Engilsh260>The council will never allow that</Engilsh260>    
-    <Engilsh261>*Hmph* I'm not asking</Engilsh261>    
-    <Engilsh262>PREPARE TO DIE!!!</Engilsh262>    
-    <Engilsh263>Maaaaaaan, looks like were missing an epic party</Engilsh263>    
-    <Engilsh264>This is gonna be bad</Engilsh264>    
-    <Engilsh265>Well, what do we have here?</Engilsh265>    
-    <Engilsh266>YOU!!!</Engilsh266>    
-    <Engilsh267>Yeah, me</Engilsh267>    
-    <Engilsh268>Rai, get out of here, I'll handle this guy</Engilsh268>    
-    <Engilsh269>Good luck</Engilsh269>    
-    <Engilsh270>Inside the academy</Engilsh270>    
-    <Engilsh271>Argh, you injured me</Engilsh271>    
-    <Engilsh272>Whatever, I still got what I want</Engilsh272>    
-    <Engilsh273>Stop!</Engilsh273>    
-    <Engilsh274>Hmph, you're too weak to stop me now</Engilsh274>    
-    <Engilsh275>Not so fast</Engilsh275>    
-    <Engilsh276>Lynx?</Engilsh276>    
-    <Engilsh277>Fool, you don't stand a</Engilsh277>    
-    <Engilsh278>Shut up, I'll end this once and for all</Engilsh278>    
-    <Engilsh279>You</Engilsh279>    
-    <Engilsh280>Lady Azaria</Engilsh280>    
-    <Engilsh281>Raila? What are you doing here?</Engilsh281>    
-    <Engilsh282>Duh, I'm here to help. You look injured</Engilsh282>    
-    <Engilsh283>I'm fine</Engilsh283>    
-    <Engilsh284>Yeah right, I can see Lynx is busy with the ring leader.</Engilsh284>    
-    <Engilsh285>I'll try and stop his henchmen</Engilsh285>    
-    <Engilsh286>Be careful</Engilsh286>    
+    <Engilsh217>Come, I'll show you how far we've grown.</Engilsh217>
+    <Engilsh218>Somewhere</Engilsh218>
+    <Engilsh219>An argument breaks out between two allies</Engilsh219>
+    <Engilsh220>Listen, I'll be the one leading the assault tomorrow</Engilsh220>
+    <Engilsh221>Adam, already agreed to it</Engilsh221>
+    <Engilsh222>Exactly</Engilsh222>
+    <Engilsh223>This is lame, how come I never get to be in charge?</Engilsh223>
+    <Engilsh224>because you are immature, childish, reckless, stupid</Engilsh224>
+    <Engilsh225>you'd jeopardize the mission</Engilsh225>
+    <Engilsh226>Indeed, I don't even know why we kept you to begin with</Engilsh226>
+    <Engilsh227>Harsh</Engilsh227>
+    <Engilsh228>I've had enough of this. You punk!!!</Engilsh228>
+    <Engilsh229>Lets see if you can back up your talk</Engilsh229>
+    <Engilsh230>Hmph</Engilsh230>
+    <Engilsh231>Ugh</Engilsh231>
+    <Engilsh232>Satisfied?</Engilsh232>
+    <Engilsh233>You son of a</Engilsh233>
+    <Engilsh234>Shut up Rav. You're being childish</Engilsh234>
+    <Engilsh235>Indeed, that was fairly ridiculous</Engilsh235>
+    <Engilsh236>Adam? When did you get here???</Engilsh236>
+    <Engilsh237>Just five seconds ago</Engilsh237>
+    <Engilsh238>Cocky as always....</Engilsh238>
+    <Engilsh239>Indeed, I hope you've made some progress</Engilsh239>
+    <Engilsh240>Yes, we invade tomorrow</Engilsh240>
+    <Engilsh241>And are you prepared?</Engilsh241>
+    <Engilsh242>We've gathered enough souls to power the device</Engilsh242>
+    <Engilsh243>Excellent</Engilsh243>
+    <Engilsh244>We've also been training like crazy, they wont stand a chance against all 5 of us</Engilsh244>
+    <Engilsh245>Of course, I can beat you down to prove it</Engilsh245>
+    <Engilsh246>Um that’s not a good idea</Engilsh246>
+    <Engilsh247>Actually, it is. I'm in the mood for a sparring match. Come with all youve got</Engilsh247>
+    <Engilsh248>I'll put in half the effort</Engilsh248>
+    <Engilsh249>Cocky!</Engilsh249>
+    <Engilsh250>heh heh heh</Engilsh250>
+    <Engilsh251>The following day....</Engilsh251>
+    <Engilsh252>Adam and his men stormed the Academy</Engilsh252>
+    <Engilsh253>The lower rank Saints were no match for them</Engilsh253>
+    <Engilsh254>During the ensuing chaos. Two fates, crossed paths yet again</Engilsh254>
+    <Engilsh255>So you're back, how long has it been</Engilsh255>
+    <Engilsh256>200 years, give or take</Engilsh256>
+    <Engilsh257>What do you want Adam?</Engilsh257>
+    <Engilsh258>Don't play dumb! You know what I want</Engilsh258>
+    <Engilsh259>The Artifact, "The Crest of Hope"</Engilsh259>
+    <Engilsh260>The council will never allow that</Engilsh260>
+    <Engilsh261>*Hmph* I'm not asking</Engilsh261>
+    <Engilsh262>PREPARE TO DIE!!!</Engilsh262>
+    <Engilsh263>Maaaaaaan, looks like were missing an epic party</Engilsh263>
+    <Engilsh264>This is gonna be bad</Engilsh264>
+    <Engilsh265>Well, what do we have here?</Engilsh265>
+    <Engilsh266>YOU!!!</Engilsh266>
+    <Engilsh267>Yeah, me</Engilsh267>
+    <Engilsh268>Rai, get out of here, I'll handle this guy</Engilsh268>
+    <Engilsh269>Good luck</Engilsh269>
+    <Engilsh270>Inside the academy</Engilsh270>
+    <Engilsh271>Argh, you injured me</Engilsh271>
+    <Engilsh272>Whatever, I still got what I want</Engilsh272>
+    <Engilsh273>Stop!</Engilsh273>
+    <Engilsh274>Hmph, you're too weak to stop me now</Engilsh274>
+    <Engilsh275>Not so fast</Engilsh275>
+    <Engilsh276>Lynx?</Engilsh276>
+    <Engilsh277>Fool, you don't stand a</Engilsh277>
+    <Engilsh278>Shut up, I'll end this once and for all</Engilsh278>
+    <Engilsh279>You</Engilsh279>
+    <Engilsh280>Lady Azaria</Engilsh280>
+    <Engilsh281>Raila? What are you doing here?</Engilsh281>
+    <Engilsh282>Duh, I'm here to help. You look injured</Engilsh282>
+    <Engilsh283>I'm fine</Engilsh283>
+    <Engilsh284>Yeah right, I can see Lynx is busy with the ring leader.</Engilsh284>
+    <Engilsh285>I'll try and stop his henchmen</Engilsh285>
+    <Engilsh286>Be careful</Engilsh286>
     <Engilsh287>Nearby</Engilsh287>
-    <Engilsh288>Our plans are getting messed up</Engilsh288>    
-    <Engilsh289>Hey</Engilsh289>    
-    <Engilsh290>Great</Engilsh290>    
-    <Engilsh291>As you can tell, this silly game is over.</Engilsh291>    
-    <Engilsh292>Give up now</Engilsh292>    
-    <Engilsh293>Shut up boy! You're a fool to think you can stop me</Engilsh293>    
-    <Engilsh294>Dammit</Engilsh294>    
-    <Engilsh295>Rai!!! You're a mess!!</Engilsh295>    
-    <Engilsh296>I stopped the girl, but that punk is getting away</Engilsh296>    
-    <Engilsh297>I...I stopped you first</Engilsh297>    
-    <Engilsh298>Shut up, its a draw dammit</Engilsh298>    
+    <Engilsh288>Our plans are getting messed up</Engilsh288>
+    <Engilsh289>Hey</Engilsh289>
+    <Engilsh290>Great</Engilsh290>
+    <Engilsh291>As you can tell, this silly game is over.</Engilsh291>
+    <Engilsh292>Give up now</Engilsh292>
+    <Engilsh293>Shut up boy! You're a fool to think you can stop me</Engilsh293>
+    <Engilsh294>Dammit</Engilsh294>
+    <Engilsh295>Rai!!! You're a mess!!</Engilsh295>
+    <Engilsh296>I stopped the girl, but that punk is getting away</Engilsh296>
+    <Engilsh297>I...I stopped you first</Engilsh297>
+    <Engilsh298>Shut up, its a draw dammit</Engilsh298>
     <Engilsh299>Loser</Engilsh299>
     <Engilsh300>RAAAAAAAAAAAAAGH</Engilsh300>
-    <Engilsh301>The hell</Engilsh301>    
-    <Engilsh302>DIE</Engilsh302>    
-    <Engilsh303>Lynx</Engilsh303>    
-    <Engilsh304>Darn, hes too....... strong</Engilsh304>    
-    <Engilsh305>I'll end this</Engilsh305>    
-    <Engilsh306>Ha ha ha! You have a death wish, boy??</Engilsh306>    
-    <Engilsh307>Story Mode</Engilsh307>    
-    <Engilsh308>Quick Match</Engilsh308>    
-    <Engilsh309>Host a LAN match</Engilsh309>    
-    <Engilsh310>Join a LAN match</Engilsh310>    
-    <Engilsh311>Your stats</Engilsh311>    
-    <Engilsh312>Options</Engilsh312>    
-    <Engilsh313>View Controls</Engilsh313>    
-    <Engilsh314>About</Engilsh314>    
-    <Engilsh315>Exit</Engilsh315>    
-    <Engilsh316>Achievement Locker</Engilsh316>    
+    <Engilsh301>The hell</Engilsh301>
+    <Engilsh302>DIE</Engilsh302>
+    <Engilsh303>Lynx</Engilsh303>
+    <Engilsh304>Darn, hes too....... strong</Engilsh304>
+    <Engilsh305>I'll end this</Engilsh305>
+    <Engilsh306>Ha ha ha! You have a death wish, boy??</Engilsh306>
+    <Engilsh307>Story Mode</Engilsh307>
+    <Engilsh308>Quick Match</Engilsh308>
+    <Engilsh309>Host a LAN match</Engilsh309>
+    <Engilsh310>Join a LAN match</Engilsh310>
+    <Engilsh311>Your stats</Engilsh311>
+    <Engilsh312>Options</Engilsh312>
+    <Engilsh313>View Controls</Engilsh313>
+    <Engilsh314>About</Engilsh314>
+    <Engilsh315>Exit</Engilsh315>
+    <Engilsh316>Achievement Locker</Engilsh316>
     <Engilsh317>On-line Leader Boards</Engilsh317>
     <Engilsh318>Log Out</Engilsh318>
-    <Engilsh319>Tutorial</Engilsh319>    
+    <Engilsh319>Tutorial</Engilsh319>
     <Engilsh320>Hi, welcome to the tutorial.</Engilsh320>
     <Engilsh321>This will teach you how to play..... obviously.</Engilsh321>
     <Engilsh322>First up, the Heads-Up display (HUD ).</Engilsh322>
@@ -355,7 +356,7 @@
     <Engilsh339>You cant do anything unless your AB is fully charged.</Engilsh339>
     <Engilsh340>As you can see, your CM is disabled while your AB is not fully charged.</Engilsh340>
     <Engilsh341>When your AB is fully activated, your CM is enabled, magic!!!</Engilsh341>
-    <Engilsh342>You can now proceed to Que up attacks.</Engilsh342>    
+    <Engilsh342>You can now proceed to Que up attacks.</Engilsh342>
     <Engilsh343>Press ENTER to Skip</Engilsh343>
     <Engilsh344>This is the Time Counter, here set to infinite</Engilsh344>
     <Engilsh345>Some rounds have a time limit, and you will see the countdown here.</Engilsh345>
@@ -385,7 +386,7 @@
     <Engilsh369>The Ruined Hall - Night</Engilsh369>
     <Engilsh370>Scorched Ruins - Night</Engilsh370>
     <Engilsh371>Hidden Cave - Night</Engilsh371>
-    <Engilsh373>Stupid boy, this isn't over!! </Engilsh373>
+    <Engilsh373>Stupid boy, this isn't over!!</Engilsh373>
     <Engilsh374>*SMASH*</Engilsh374>
     <Engilsh375>He blew a hole into the ground... hes escaping</Engilsh375>
     <Engilsh376>No, hes heading for the Hidden Chamber</Engilsh376>

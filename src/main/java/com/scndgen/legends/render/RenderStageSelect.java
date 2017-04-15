@@ -35,6 +35,7 @@ import java.awt.*;
 
 public class RenderStageSelect extends StageSelect implements JenesisRender {
 
+    private static RenderStageSelect instance;
     //♩♪♬♫
     private String[] amnientMusicMetaData = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
             "\"vengeful\" by \"Jeremy Nicoll\" from \"The Battle for Wesnoth OST\"", //1
@@ -52,19 +53,12 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             "Aleksi Aubry-Carlson - Battle Music"};
     private Image charBack, loading;
     private int horizColumns = 3, verticalRows;
-    private JenesisImageLoader pix;
+    private JenesisImageLoader imageLoader;
     private Image[] stageCap = new Image[numberOfStages];
     private Image[] stagePrev = new Image[numberOfStages];
     private Font normalFont, bigFont;
     private String[] stageNameStr;
     private int oldId = -1;
-    private static RenderStageSelect instance;
-
-    public static synchronized RenderStageSelect getInstance() {
-        if (instance == null)
-            instance = new RenderStageSelect();
-        return instance;
-    }
 
     public RenderStageSelect() {
         setLayout(new BorderLayout());
@@ -93,10 +87,16 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         stagePrev = new Image[numberOfStages];
     }
 
+    public static synchronized RenderStageSelect getInstance() {
+        if (instance == null)
+            instance = new RenderStageSelect();
+        return instance;
+    }
+
     @Override
     public void loadAssets() {
         if (!loadAssets) return;
-        pix = new JenesisImageLoader();
+        imageLoader = new JenesisImageLoader();
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         loadCaps();
         loadAssets = false;
@@ -184,18 +184,15 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         selectedStage = false;
         try {
             for (int i = 0; i < stagePrevLox.length; i++) {
-                stageCap[i] = pix.loadImage("images/t_" + stagePrevLox[i] + ".png");
+                stageCap[i] = imageLoader.loadImage("images/t_" + stagePrevLox[i] + ".png");
             }
         } catch (Exception e) {
             System.err.println(e);
         }
-
-        charBack = pix.loadImage("images/selStage.png");
-        loading = pix.loadImage("images/appletprogress.gif");
-
-
+        charBack = imageLoader.loadImage("images/selStage.png");
+        loading = imageLoader.loadImage("images/appletprogress.gif");
         for (int vd = 0; vd < stagePrevLox.length; vd++) {
-            stagePrev[vd] = pix.loadImage("images/prev/" + stagePrevLox[vd] + ".jpg");
+            stagePrev[vd] = imageLoader.loadImage("images/prev/" + stagePrevLox[vd] + ".jpg");
         }
     }
 
@@ -237,7 +234,6 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         } else {
             vIndex = 0;
         }
-
         capAnim();
     }
 
@@ -266,8 +262,6 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         capAnim();
     }
 
-    public void newInstance() {
-    }
 
     /**
      * Horizontal index
@@ -363,15 +357,19 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         return ambientMusicIndex;
     }
 
-    public void setSelectedStage(boolean value) {
-        selectedStage = value;
-    }
-
     public boolean getSelectedStage() {
         return selectedStage;
+    }
+
+    public void setSelectedStage(boolean value) {
+        selectedStage = value;
     }
 
     public String[] getAmnientMusicMetaData() {
         return amnientMusicMetaData;
     }
+
+    public void newInstance() {
+    }
+
 }

@@ -19,7 +19,7 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.menus;
+package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;

@@ -1,5 +1,6 @@
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.scene.MainMenu;
 import com.scndgen.legends.windows.MainWindow;
@@ -15,11 +16,11 @@ import java.awt.*;
  */
 public class RenderMainMenu extends MainMenu implements JenesisRender {
 
+    private static RenderMainMenu instance;
     private JenesisImageLoader pix = new JenesisImageLoader();
     private Image sgLogo, ndanaSol;
     private Image pointer;
     private Image fg, foreGroundA, pic1, foreGroundB;
-    private static RenderMainMenu instance;
 
     public static synchronized RenderMainMenu getInstance() {
         if (instance == null)
@@ -35,6 +36,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
     @Override
     public void loadAssets() {
         if (!loadAssets) return;
+        font1 = LoginScreen.getInstance().getMyFont(fontSize);
         ndanaSol = pix.loadImage("logo/ndana_sol.png");
         sgLogo = pix.loadImage("images/sglogo.png");
         pointer = pix.loadImage("images/pointer.png");
@@ -85,137 +87,112 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         g2d.setColor(Color.WHITE);
         g2d.setFont(font1);
         if (overlay == Overlay.PRIMARY) {
-            menuItem = 0;
-            if (menuIndex == menuItem) {
+            menuItemIndex = 0;
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = MainWindow.storyMode;
                 g2d.drawImage(pointer, xMenu - 18, yMenu - 15, this);
-                g2d.drawString(itemz[1], xMenu, yMenu);
+                g2d.drawString(menuItem[1], xMenu, yMenu);
             } else {
-                g2d.drawString(itemz[0], xMenu, yMenu);
+                g2d.drawString(menuItem[0], xMenu, yMenu);
             }
-            menuItem++;
-
-            if (menuIndex == menuItem) {
+            menuItemIndex++;
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "vs1";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[3], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[3], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[2], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[2], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
-
-                /*
-                if (menuIndex == menuItem) {
-                menuItmStr="vs2";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[5], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                g2d.drawString(itemz[4], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-                 */
-
-            if (menuIndex == menuItem) {
+            menuItemIndex++;
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = MainWindow.lanHost;
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[7], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[7], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[6], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[6], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
-
-            if (menuIndex == menuItem) {
+            menuItemIndex++;
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = MainWindow.lanClient;
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[9], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[9], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[8], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[8], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-                /*
-                if (menuIndex == menuItem) {
-                menuItmStr = "leaders";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[23], xMenu, yMenu + (fontSize * menuItem));
-                } else {
-                g2d.drawString(itemz[22], xMenu, yMenu + (fontSize * menuItem));
-                }
-                menuItem++;
-                 */
-
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "stats";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[11], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[11], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[10], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[10], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "ach";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[21], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[21], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[20], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[20], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "tutorial";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[25], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[25], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[24], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[24], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "options";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[13], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[13], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[12], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[12], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "controls";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[15], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[15], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[14], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[14], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "logout";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[23], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[23], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[22], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[22], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "about";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[17], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[17], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[16], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[16], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
 
-            if (menuIndex == menuItem) {
+            if (menuIndex == menuItemIndex) {
                 menuItmStr = "exit";
-                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItem) - 15, this);
-                g2d.drawString(itemz[19], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
+                g2d.drawString(menuItem[19], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
-                g2d.drawString(itemz[18], xMenu, yMenu + (fontSize * menuItem));
+                g2d.drawString(menuItem[18], xMenu, yMenu + (fontSize * menuItemIndex));
             }
-            menuItem++;
+            menuItemIndex++;
         }
 
         JenesisGlassPane.getInstance().overlay(g2d, this);

@@ -1,11 +1,11 @@
 package com.scndgen.legends.scene;
 
-import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.enums.Character;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -20,28 +20,28 @@ import java.awt.event.ActionListener;
  * Created by ifunga on 14/04/2017.
  */
 public abstract class CharacterSelectionScreen extends JenesisMode implements ActionListener {
+    protected static int characterSel, opponentSel;
+    protected static String charDesc = "";
+    protected static int[] arr1, arr2, arr3, arr4, arr5;
+    protected static int[] arr1a, arr2a, arr3a, arr4a, arr5a;
+    protected static int[] arr1b, arr2b, arr3b, arr4b, arr5b;
+    protected static int[] attacks;
+    protected static int storyBoards;
+    protected final Characters players = new Characters();
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected int numOfCharacters = Character.values().length;
     protected int col, currentSlot = 0, lastRow, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
     protected JenesisImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
-    protected static int characterSel, opponentSel;
-    protected static String charDesc = "";
     protected Character opponent, character;
     protected int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
     protected int oppPrevLoc, charPrevLoc;
-    protected static int[] arr1, arr2, arr3, arr4, arr5;
-    protected static int[] arr1a, arr2a, arr3a, arr4a, arr5a;
-    protected static int[] arr1b, arr2b, arr3b, arr4b, arr5b;
-    protected static int[] attacks;
-    protected static int storyBoards;
     protected boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
     protected Object source;
     //private static StageSelect charVisual;
     protected AudioPlayback sound, sound2, error;
-    protected final Characters players = new Characters();
 
 
     /**
@@ -51,15 +51,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         setLayout(new BorderLayout());
         attacks = new int[4];
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
-    }
-
-    /**
-     * Disables all buttons, used in online and story modes
-     */
-    public void disableAll() {
-        for (int u = 0; u < allPlayers.length; u++) {
-            allPlayers[u] = 1;
-        }
     }
 
     /**
@@ -243,6 +234,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
          * If you choose a character in lan, you can't choose your opponent
          */
         if (who == 'c') {
+        }
+    }
+
+    /**
+     * Disables all buttons, used in online and story modes
+     */
+    public void disableAll() {
+        for (int u = 0; u < allPlayers.length; u++) {
+            allPlayers[u] = 1;
         }
     }
 
@@ -1201,10 +1201,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         return answer;
     }
 
-    public void setOpponentSelected(boolean opponentSelected) {
-        this.opponentSelected = opponentSelected;
-    }
-
     public int getSelectedCharIndex() {
         return selectedCharIndex;
     }
@@ -1217,15 +1213,19 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         return characterSelected;
     }
 
+    public void setCharacterSelected(boolean characterSelected) {
+        this.characterSelected = characterSelected;
+    }
+
     public boolean getOpponentSelected() {
         return opponentSelected;
     }
 
-    public void setSelectedOppIndex(int selectedOppIndex) {
-        this.selectedOppIndex = selectedOppIndex;
+    public void setOpponentSelected(boolean opponentSelected) {
+        this.opponentSelected = opponentSelected;
     }
 
-    public void setCharacterSelected(boolean characterSelected) {
-        this.characterSelected = characterSelected;
+    public void setSelectedOppIndex(int selectedOppIndex) {
+        this.selectedOppIndex = selectedOppIndex;
     }
 }

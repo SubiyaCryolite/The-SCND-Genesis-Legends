@@ -45,11 +45,6 @@ public abstract class StoryMenu extends JenesisMode {
 
     }
 
-    public void newInstance() {
-        StoryMode.getInstance().newInstance();
-        opacity = 1.0f;
-    }
-
     /**
      * When both playes are selected, this prevents movement.
      *
@@ -63,6 +58,11 @@ public abstract class StoryMenu extends JenesisMode {
         }
 
         return answer;
+    }
+
+    public void newInstance() {
+        StoryMode.getInstance().newInstance();
+        opacity = 1.0f;
     }
 
     public StoryMode getStoryInstance() {

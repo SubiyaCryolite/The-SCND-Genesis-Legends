@@ -38,7 +38,7 @@ public abstract class Attack {
      * Attack sorter
      *
      * @param attack - the move to execute
-     * @param target   - who's attacking
+     * @param target - who's attacking
      */
     public void attack(int attack, int target, char source, char destination) {
         this.attack = attack;

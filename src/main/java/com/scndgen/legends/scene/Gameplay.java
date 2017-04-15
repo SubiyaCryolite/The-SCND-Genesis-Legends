@@ -1199,20 +1199,16 @@ public abstract class Gameplay extends JenesisMode {
         return perCent2;
     }
 
-    public void setClasherRunnign(boolean value) {
-        clasherRunnign = value;
-    }
-
     public int getCharYcord() {
         return charYcord;
     }
 
-    public int getOppYcord() {
-        return oppYcord;
-    }
-
     public void setCharYcord(int value) {
         charYcord = value;
+    }
+
+    public int getOppYcord() {
+        return oppYcord;
     }
 
     public void setOppYcord(int value) {
@@ -1227,20 +1223,20 @@ public abstract class Gameplay extends JenesisMode {
         return delay;
     }
 
-    public void setFgx(int fgx) {
-        this.fgx = fgx;
-    }
-
-    public void setFgy(int fgy) {
-        this.fgy = fgy;
-    }
-
     public int getFgx() {
         return fgx;
     }
 
+    public void setFgx(int fgx) {
+        this.fgx = fgx;
+    }
+
     public int getFgy() {
         return fgy;
+    }
+
+    public void setFgy(int fgy) {
+        this.fgy = fgy;
     }
 
     public int getFgxInc() {
@@ -1251,12 +1247,12 @@ public abstract class Gameplay extends JenesisMode {
         return fgyInc;
     }
 
-    public void setComboCounter(int comboCounter) {
-        this.comboCounter = comboCounter;
-    }
-
     public int getComboCounter() {
         return comboCounter;
+    }
+
+    public void setComboCounter(int comboCounter) {
+        this.comboCounter = comboCounter;
     }
 
     public String[] getAttackArray() {
@@ -1279,6 +1275,10 @@ public abstract class Gameplay extends JenesisMode {
         return clasherRunnign;
     }
 
+    public void setClasherRunnign(boolean value) {
+        clasherRunnign = value;
+    }
+
     public Character[] getCharNames() {
         return charNames;
     }
@@ -1299,28 +1299,28 @@ public abstract class Gameplay extends JenesisMode {
         return amb1x;
     }
 
-    public int getAmb2x() {
-        return amb2x;
-    }
-
-    public int getAmb1y() {
-        return amb1y;
-    }
-
-    public int getAmb2y() {
-        return amb2y;
-    }
-
     public void setAmb1x(int amb1x) {
         this.amb1x = amb1x;
+    }
+
+    public int getAmb2x() {
+        return amb2x;
     }
 
     public void setAmb2x(int amb2x) {
         this.amb2x = amb2x;
     }
 
+    public int getAmb1y() {
+        return amb1y;
+    }
+
     public void setAmb1y(int amb1y) {
         this.amb1y = amb1y;
+    }
+
+    public int getAmb2y() {
+        return amb2y;
     }
 
     public void setAmb2y(int amb2y) {

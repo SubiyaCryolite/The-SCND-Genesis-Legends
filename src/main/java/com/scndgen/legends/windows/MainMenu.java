@@ -24,7 +24,6 @@ package com.scndgen.legends.windows;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Overlay;
-import com.scndgen.legends.menus.MenuLeaderBoard;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderMainMenu;

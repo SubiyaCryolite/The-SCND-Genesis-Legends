@@ -54,6 +54,7 @@ public class AudioPlayback implements Runnable {
     private Player player;
     private Thread thread;
     private InputStream inputStream;
+
     public AudioPlayback() {
         //dummy, grant access to methods
     }

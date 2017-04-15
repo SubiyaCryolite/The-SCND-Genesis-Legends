@@ -35,13 +35,9 @@ public class Animations3 implements Runnable {
     private Thread thread;
 
     public Animations3() {
-        if (thread != null) {
-            thread.resume();
-        } else {
-            thread = new Thread(this);
-            thread.setName("Animator thread 3 - Background and Foreground");
-            thread.start();
-        }
+        thread = new Thread(this);
+        thread.setName("Animator thread 3 - Background and Foreground");
+        thread.start();
     }
 
     @Override
@@ -79,14 +75,14 @@ public class Animations3 implements Runnable {
         }
     }
 
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return thread.isAlive();
     }
 
     public void stop() {
         thread.stop();
     }
+
     public void pauseThread() {
         thread.suspend();
     }

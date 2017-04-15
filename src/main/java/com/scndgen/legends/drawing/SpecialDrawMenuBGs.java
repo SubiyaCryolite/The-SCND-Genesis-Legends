@@ -34,9 +34,9 @@ import java.awt.image.BufferedImage;
  */
 public class SpecialDrawMenuBGs extends JPanel {
 
-    public Graphics2D g2d;
     private final JenesisImageLoader imageLoader;
     private final BufferedImage bufferedImage;
+    public Graphics2D g2d;
 
     public SpecialDrawMenuBGs() {
         imageLoader = new JenesisImageLoader();

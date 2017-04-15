@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
@@ -40,11 +40,11 @@ import java.util.Enumeration;
  */
 public class DrawWaiting extends JenesisMode {
 
-    private Image pic1, pic2;
     private static float opac = 10;
     private static int y = 0;
     private static boolean alive = true;
     private static String name, ip;
+    private Image pic1, pic2;
     private InetAddress ia;
     private JenesisImageLoader imageLoader;
     private Font normalFont;

@@ -50,35 +50,36 @@ import java.util.ArrayList;
 
 public class MainWindow extends JFrame implements KeyListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
+    public static final int PORT = 5555;
+    public static final int serverLatency = 500;
     public static String lanHost = "lanHost";
     public static String lanClient = "lanClient";
     public static String singlePlayer = "singlePlayer";
     public static String storyMode = "StoryMenu";
     public static int tTime;
-    public static final int PORT = 5555;
+    private static MainWindow instance;
     public int hostTime;
     public boolean inStoryPane;
     public boolean isGameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
     public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
     public Mode mode = Mode.EMPTY;
+    public OpponentAttacksOnline playerHost2, playerClient1;
+    public CharacterAttacksOnline playerHost1, playerClient2;
+    public String ServerName;
+    public String last, UserName;
     private AttackOpponent attackOpponent;
     private AttackPlayer attackPlayer;
     private boolean[] buttonPressed;
     //sever
     private NetworkServer server;
     private InetAddress ServerAddress;
-    public static final int serverLatency = 500;
     private int leftyXOffset, onlineClients = 0, hatDir;
     private boolean messageSent = false, isWaiting = true, isNotRepainting = true, menuLatencyElapsed = true;
-    public OpponentAttacksOnline playerHost2, playerClient1;
-    public CharacterAttacksOnline playerHost1, playerClient2;
     //client
     private NetworkClient client;
     private JTextField txtServerName = new JTextField(20);
     private JLabel myLabel = new JLabel("txtServerName Name :");
     private JTextField txtUserName = new JTextField(20);
-    public String ServerName;
-    public String last, UserName;
     private OverWorld world;
     private int mouseYoffset = 0;
     private String gameMode = "";
@@ -92,17 +93,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private MainWindow gameWindow;
     private AudioPlayback backgroundMusic;
     private int topY, topX, columns, vspacer, hspacer, rows;
-    private static MainWindow instance;
-
-    public static synchronized MainWindow newInstance(String strUser, String storyMode) {
-        if (instance == null)
-            instance = new MainWindow(strUser, storyMode);
-        return instance;
-    }
-
-    public static MainWindow getInstance() {
-        return instance;
-    }
 
     private MainWindow(String nameOfUser, String mode) {
         instance = this;
@@ -198,6 +188,16 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }
         superRepaintThread();
         packWindow();
+    }
+
+    public static synchronized MainWindow newInstance(String strUser, String storyMode) {
+        if (instance == null)
+            instance = new MainWindow(strUser, storyMode);
+        return instance;
+    }
+
+    public static MainWindow getInstance() {
+        return instance;
     }
 
     public void stopBackgroundMusic() {
@@ -363,7 +363,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void newGame() {
-        mode = Mode.NEW_GAME;
+        mode = Mode.STANDARD_GAMEPLAY;
         attackOpponent = new AttackOpponent();
         attackPlayer = new AttackPlayer();
         stopBackgroundMusic();
@@ -392,7 +392,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         //bgMusclose();
         attackOpponent = new AttackOpponent();
         attackPlayer = new AttackPlayer();
-        mode = Mode.NEW_GAME;
+        mode = Mode.STANDARD_GAMEPLAY;
         stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
@@ -418,7 +418,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         //bgMusclose();
         attackOpponent = new AttackOpponent();
         attackPlayer = new AttackPlayer();
-        mode = Mode.NEW_GAME;
+        mode = Mode.STANDARD_GAMEPLAY;
         stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
@@ -462,7 +462,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * @return status of match
      */
     public boolean getIsGameRunning() {
-        return mode == Mode.NEW_GAME;
+        return mode == Mode.STANDARD_GAMEPLAY;
     }
 
     /**
@@ -728,7 +728,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             } else if (mode == Mode.CHAR_SELECT_SCREEN) {
                 //if both Character are selected
                 if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                    if ((getGameMode().equalsIgnoreCase(singlePlayer)  || getGameMode().equalsIgnoreCase(lanHost))) {
+                    if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.6f, 1000);
                         RenderCharacterSelectionScreen.getInstance().beginGame();
                     }
@@ -742,7 +742,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should be able to meddle in stage select
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer)|| getGameMode().equalsIgnoreCase(lanHost))) {
+                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.66f, 1000);
                         RenderStageSelect.getInstance().selectStage();
                     }
@@ -757,7 +757,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      */
     private void escape() {
         if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
-            if (getGameMode().equalsIgnoreCase(singlePlayer) ) {
+            if (getGameMode().equalsIgnoreCase(singlePlayer)) {
                 {
                     RenderCharacterSelectionScreen.getInstance().refreshSelections();
                     RenderCharacterSelectionScreen.getInstance().backToMenu();

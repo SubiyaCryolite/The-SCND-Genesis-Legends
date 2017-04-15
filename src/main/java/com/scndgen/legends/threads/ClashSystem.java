@@ -22,7 +22,6 @@
 package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -31,12 +30,12 @@ import com.scndgen.legends.windows.MainWindow;
  */
 public class ClashSystem implements Runnable {
 
+    private static ClashSystem instance;
     public int sleepTime = 0, person;
     public float plyrClash, oppClash, plyClashPerc, oppClashPerc;
     private Thread thread;
     private boolean isClashOn = false;
     private char personChar;
-    private static ClashSystem instance;
 
     public ClashSystem(int who, char homie) {
         person = who;
@@ -48,6 +47,10 @@ public class ClashSystem implements Runnable {
             thread.start();
         }
         instance = this;
+    }
+
+    public static ClashSystem getInstance() {
+        return instance;
     }
 
     public void oppClashing() {
@@ -125,9 +128,5 @@ public class ClashSystem implements Runnable {
         plyrClash = plyrClash + 1;
         plyClashPerc = (plyrClash / (plyrClash + oppClash)) * 100;
         oppClashPerc = (oppClash / (plyrClash + oppClash)) * 100;
-    }
-
-    public static ClashSystem getInstance() {
-        return instance;
     }
 }

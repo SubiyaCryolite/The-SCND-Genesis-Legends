@@ -36,28 +36,11 @@ public class Characters {
     public static String[] moveMusicChar = new String[8];
     public static int[] pointsArr = new int[12];
     public static String[] typeArray = new String[4];
-    private float activityRecoverRateChar, activityRecoveryRateOpp;
     //AIRCON 12 GLOWING HOT GIMP 2.6.8
     private static int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
+    private float activityRecoverRateChar, activityRecoveryRateOpp;
     private String characterName, opponentName;
     private com.scndgen.legends.characters.Character character, opponent;
-
-    public float getCharRecoverySpeed() {
-        return activityRecoverRateChar;
-    }
-
-    public float getOppRecoverySpeed() {
-        return activityRecoveryRateOpp;
-    }
-
-    public void incrementSpeedRate(char who, float thisMuch) {
-        if (who == 'c') {
-            activityRecoverRateChar = activityRecoverRateChar + thisMuch;
-        }
-        if (who == 'o') {
-            activityRecoveryRateOpp = activityRecoveryRateOpp + thisMuch;
-        }
-    }
 
     //called when character damaged
     public static void setCurrLifeChar(int life) {
@@ -164,6 +147,23 @@ public class Characters {
         }
 
         return myInt;
+    }
+
+    public float getCharRecoverySpeed() {
+        return activityRecoverRateChar;
+    }
+
+    public float getOppRecoverySpeed() {
+        return activityRecoveryRateOpp;
+    }
+
+    public void incrementSpeedRate(char who, float thisMuch) {
+        if (who == 'c') {
+            activityRecoverRateChar = activityRecoverRateChar + thisMuch;
+        }
+        if (who == 'o') {
+            activityRecoveryRateOpp = activityRecoveryRateOpp + thisMuch;
+        }
     }
 
     //--------public accessor methods-----------------

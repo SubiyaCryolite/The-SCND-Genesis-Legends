@@ -22,8 +22,8 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.render.RenderGameplay;
 
 /**
  * @author ndana

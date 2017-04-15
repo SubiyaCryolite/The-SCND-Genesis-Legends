@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
 
 import javax.swing.*;
 import java.awt.*;

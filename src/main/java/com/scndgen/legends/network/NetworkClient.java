@@ -2,8 +2,8 @@ package com.scndgen.legends.network;
 
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
-import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.MainWindow;
 

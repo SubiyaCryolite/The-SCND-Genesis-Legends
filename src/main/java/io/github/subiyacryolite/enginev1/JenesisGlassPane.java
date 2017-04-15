@@ -53,8 +53,8 @@ public class JenesisGlassPane {
     /**
      * Adds overlay to drawing commands, overlay at bottom
      *
-     * @param graphics2D, the Graphics2D object
-     * @param imageObserver,  the image observer object
+     * @param graphics2D,    the Graphics2D object
+     * @param imageObserver, the image observer object
      */
     public void overlay(Graphics2D graphics2D, ImageObserver imageObserver) {
         graphics2D.setColor(Color.black);

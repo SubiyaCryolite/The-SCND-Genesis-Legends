@@ -1,7 +1,8 @@
 package io.github.subiyacryolite.enginev1;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.LoginScreen;
+import javafx.scene.canvas.GraphicsContext;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -131,4 +132,6 @@ public abstract class JenesisMode extends JPanel {
 
     public void moveDown() {
     }
+
+    public void renderScene(GraphicsContext gc, double w, double h) {}
 }

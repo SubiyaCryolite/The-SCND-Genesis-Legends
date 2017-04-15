@@ -32,13 +32,9 @@ public class Animations2 implements Runnable {
     private Thread thread;
 
     public Animations2() {
-        if (thread != null) {
-            thread.resume();
-        } else {
-            thread = new Thread(this);
-            thread.setName("Animator thread 2 - Foreground");
-            thread.start();
-        }
+        thread = new Thread(this);
+        thread.setName("Animator thread 2 - Foreground");
+        thread.start();
     }
 
     @Override
@@ -113,8 +109,7 @@ public class Animations2 implements Runnable {
     }
 
 
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return thread.isAlive();
     }
 

@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 public class StoryMode implements Runnable {
     //mp3
 
+    private static StoryMode instance;
     public boolean notAsked, firstRun = true, doneShowingText = false;
     public String stat = "";
     public int max = 11;
@@ -49,7 +50,13 @@ public class StoryMode implements Runnable {
     private int opt, tlkSpeed, modeN;
     //thread
     private Thread thread;
-    private static StoryMode instance;
+
+    private StoryMode() {
+        stat = "";
+        time = 181;
+        storyText = "";
+        modeN = 0;
+    }
 
     public static synchronized StoryMode getInstance() {
         if (instance == null)
@@ -59,13 +66,6 @@ public class StoryMode implements Runnable {
 
     public synchronized void newInstance() {
         instance = new StoryMode();
-    }
-
-    private StoryMode() {
-        stat = "";
-        time = 181;
-        storyText = "";
-        modeN = 0;
     }
 
     public void story(int stage, boolean start) {

@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.OverWorld;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -59,7 +59,7 @@ public class DrawOverworld extends JenesisMode {
     private int moveSpec = 10;
     private Font font = new Font("SansSerif", Font.PLAIN, 14);
     private int spriteSto = 0;
-    private int  picWidth, picHeight;
+    private int picWidth, picHeight;
     private int yTEST = 400;
     private float opac = 10;
     private AffineTransform tfm = new AffineTransform(1.0, 0.0,
