@@ -2,15 +2,18 @@ package com.scndgen.legends.tests;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class DemoCanvas extends Canvas {
     private static final Color CIRCLE_BASE_FILL_COLOR = Color.LIGHTSKYBLUE;
     private static final Color OUTLINE_COLOR = Color.GRAY;
     private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private Image image;
 
     public DemoCanvas(int width, int height) {
         super(width, height);
+        image = new Image("images/Adam/M1.png", 1280, 720, true ,true,true);
     }
 
     public double fill = 0;
@@ -31,6 +34,7 @@ public class DemoCanvas extends Canvas {
         context.setStroke(OUTLINE_COLOR);
         context.strokeOval(cx - innerRadius, cy - innerRadius, innerRadius * 2, innerRadius * 2);
         context.strokeOval(cx - currentRadius, cy - currentRadius, currentRadius * 2, currentRadius * 2);
+        context.drawImage(image,0,0);
     }
 
     @Override

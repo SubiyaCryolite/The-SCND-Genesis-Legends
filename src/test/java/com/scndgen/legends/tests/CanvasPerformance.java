@@ -14,7 +14,7 @@ public class CanvasPerformance extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        DemoCanvas canvas = new DemoCanvas(1024,640);
+        DemoCanvas canvas = new DemoCanvas(1280,720);
         Group root = new Group();
         root.getChildren().add(canvas);
         stage.setScene(new Scene(root));

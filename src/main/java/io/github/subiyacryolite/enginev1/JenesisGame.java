@@ -74,7 +74,7 @@ public abstract class JenesisGame {
 
     public abstract void keyPressed(KeyEvent keyEvent);
 
-    public abstract void onMouseMoved(MouseEvent mouseEvent);
+    public abstract void mouseMoved(MouseEvent mouseEvent);
 
-    public abstract void onMouseClicked(MouseEvent mouseEvent);
+    public abstract void mouseClicked(MouseEvent mouseEvent);
 }

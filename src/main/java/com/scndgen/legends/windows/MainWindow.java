@@ -60,7 +60,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private static MainWindow instance;
     public int hostTime;
     public boolean inStoryPane;
-    public boolean isGameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
+    public boolean gameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
     public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
     public Mode mode = Mode.EMPTY;
     public OpponentAttacksOnline playerHost2, playerClient1;
@@ -78,7 +78,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     //client
     private NetworkClient client;
     private JTextField txtServerName = new JTextField(20);
-    private JLabel myLabel = new JLabel("txtServerName Name :");
     private JTextField txtUserName = new JTextField(20);
     private OverWorld world;
     private int mouseYoffset = 0;
@@ -210,24 +209,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     public String getServerUserName() {
         return txtUserName.getText();
-    }
-
-    /**
-     * Responsible for latency in game menus(controller)
-     */
-    private void menuLatency() {
-        /*
-        new Thread() {
-
-        public void run() {
-        try {
-        menuLatencyElapsed = false;
-        this.sleep(166);
-        menuLatencyElapsed = true;
-        } catch (Exception e) {
-        }
-        }
-        }.start();*/
     }
 
     public boolean isMessageSent() {
@@ -434,29 +415,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Legacy, yet useful, code
-     */
-    private void selectArena() {
-        String[] possibilities = {"Ibex Hill", "Chelston City - Harbour", "Royal Court", "Chelston City - Street"};
-        Object s = JOptionPane.showInputDialog(
-                null,
-                "Select your arena:",
-                "Arena Select",
-                JOptionPane.OK_OPTION,
-                null,
-                possibilities,
-                possibilities[1]);
-        try {
-            for (int nm = 0; nm < possibilities.length; nm++) {
-                if (s.equals(possibilities[nm])) {
-                    RenderGameplay.getInstance().setBgLocation("images/bgBG" + (nm + 1) + ".png"); //Assign arena
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    /**
      * Finds out if a match is running
      *
      * @return status of match
@@ -469,14 +427,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * Sets the game to running
      */
     public void setGameRunning() {
-        isGameRunning = true;
-    }
-
-    /**
-     * Sets game to not running
-     */
-    public void setGameNotRunning() {
-        isGameRunning = false;
+        gameRunning = true;
     }
 
     /**
@@ -494,7 +445,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * Back to character select screen, when match is over
      */
     public void backToCharSelect() {
-        isGameRunning = false;
+        gameRunning = false;
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         mode = Mode.CHAR_SELECT_SCREEN;
         RenderGameplay.getInstance().cleanAssets();
@@ -510,7 +461,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * Back to character select screen,, when match is cancelled
      */
     public void backToCharSelect2() {
-        isGameRunning = false;
+        gameRunning = false;
         RenderGameplay.getInstance().getGameInstance().isPaused = false;
         RenderGameplay.getInstance().getGameInstance().terminateThread();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
@@ -526,7 +477,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         RenderStageSelect.getInstance().defValue();
         if (getGameMode().equalsIgnoreCase(storyMode)) {
             RenderCharacterSelectionScreen.getInstance().backToMenu();
-
         }
     }
 
@@ -595,8 +545,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         final float power = strength;
         final int time = length;
         new Thread() {
-
-            @SuppressWarnings("static-access")
             public void run() {
                 try {
                     JenesisGamePad.getInstance().setRumbler(true, power);
@@ -626,7 +574,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderGameplay.getInstance().upItem();
             }
         }
-        menuLatency();
     }
 
     /**
@@ -647,7 +594,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderGameplay.getInstance().downItem();
             }
         }
-        menuLatency();
     }
 
     /**
@@ -668,7 +614,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderGameplay.getInstance().prevAnimation();
             }
         }
-        menuLatency();
     }
 
     /**
@@ -686,7 +631,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderGameplay.getInstance().nextAnimation();
             }
         }
-        menuLatency();
     }
 
     /**
@@ -749,7 +693,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 }
             }
         }
-        menuLatency();
+        
     }
 
     /**
@@ -769,7 +713,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         } else if (mode == Mode.STORY_SELECT_SCREEN && !getIsGameRunning()) {
             RenderStoryMenu.getInstance().backToMainMenu();
         }
-        menuLatency();
+        
     }
 
     /**
@@ -785,7 +729,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderGameplay.getInstance().unQueMove();
             }
         }
-        menuLatency();
+        
     }
 
     public void triggerFury(char who) {
@@ -799,7 +743,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (menuLatencyElapsed)
             if (getIsGameRunning())
                 RenderGameplay.getInstance().attack();
-        menuLatency();
+        
     }
 
     @Override
@@ -864,7 +808,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
-        if (isGameRunning) {
+        if (gameRunning) {
             if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.storySequence == false) {
                 int count = mwe.getWheelRotation();
                 if (count >= 0) {
@@ -1229,14 +1173,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 setLocationRelativeTo(null); // Centers JFrame on screen //
                 break;
             }
-
-            //case JOptionPane.NO_OPTION:
-            //{
-            //name_of_player does not want to fight
-            //close client
-            //sendToClient("getLost_cde343dw3");
-            //break;
-            //}
         }
     }
 

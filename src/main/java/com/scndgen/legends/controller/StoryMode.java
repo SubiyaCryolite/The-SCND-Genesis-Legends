@@ -182,6 +182,7 @@ public class StoryMode implements Runnable {
     }
 
     public void startStoryMode(int x) {
+        RenderGameplay.getInstance().newInstance();
         modeN = x;
         thread.start();
     }

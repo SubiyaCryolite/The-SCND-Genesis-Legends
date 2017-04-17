@@ -890,8 +890,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         fourO = 10;
         opponentDamageYLoc = 400;
         playerDamageYLoc = 400;
+        if (animations1 != null)
+            animations1.stop();
         animations1 = new Animations1();
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
+            if (animations2 != null)
+                animations2.stop();
+            if (animations3 != null)
+                animations3.stop();
             animations2 = new Animations2();
             animations3 = new Animations3();
             loadedUpdaters = true;

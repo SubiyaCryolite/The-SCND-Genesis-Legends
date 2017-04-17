@@ -39,13 +39,13 @@ public class JenesisCanvas extends Application {
         gameCanvas.setOnMouseMoved(
                 new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent mouseEvent) {
-                        game.onMouseMoved(mouseEvent);
+                        game.mouseMoved(mouseEvent);
                     }
                 });
         gameCanvas.setOnMouseClicked(
                 new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent mouseEvent) {
-                        game.onMouseClicked(mouseEvent);
+                        game.mouseClicked(mouseEvent);
                     }
                 });
         gameCanvas.setFocusTraversable(true);
@@ -66,6 +66,5 @@ public class JenesisCanvas extends Application {
     }
 
     private void drawScene(GraphicsContext gc) {
-
     }
 }

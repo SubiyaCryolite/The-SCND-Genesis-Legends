@@ -44,21 +44,25 @@ public class ScndGenLegends extends JenesisGame {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-
+        if (getMode() != null && !isSwitchingModes())
+            getMode().keyReleased(keyEvent);
     }
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-
+        if (getMode() != null && !isSwitchingModes())
+            getMode().keyPressed(keyEvent);
     }
 
     @Override
-    public void onMouseMoved(MouseEvent mouseEvent) {
-
+    public void mouseMoved(MouseEvent mouseEvent) {
+        if (getMode() != null && !isSwitchingModes())
+            getMode().mouseMoved(mouseEvent);
     }
 
     @Override
-    public void onMouseClicked(MouseEvent mouseEvent) {
-
+    public void mouseClicked(MouseEvent mouseEvent) {
+        if (getMode() != null && !isSwitchingModes())
+            getMode().mouseClicked(mouseEvent);
     }
 }

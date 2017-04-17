@@ -3,6 +3,8 @@ package io.github.subiyacryolite.enginev1;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -83,9 +85,8 @@ public abstract class JenesisMode extends JPanel {
         try {
             BufferedImage bufferedImage = volatileImg.getSnapshot();
             File file;
-            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists()) {
+            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists())
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
-            }
             file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
             if (ImageIO.write(bufferedImage, "png", file))
                 systemNotice(Language.getInstance().getLine(170));
@@ -133,5 +134,18 @@ public abstract class JenesisMode extends JPanel {
     public void moveDown() {
     }
 
-    public void renderScene(GraphicsContext gc, double w, double h) {}
+    public void renderScene(GraphicsContext gc, double w, double h) {
+    }
+
+    public void keyReleased(KeyEvent keyEvent) {
+
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+
+    }
+
+    public void mouseMoved(MouseEvent mouseEvent) {
+
+    }
 }

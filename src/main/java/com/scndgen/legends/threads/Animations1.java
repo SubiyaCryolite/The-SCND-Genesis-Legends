@@ -65,7 +65,7 @@ public class Animations1 implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Gameplay.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (1 != 0);
+        } while (true);
     }
 
     public boolean isRunning() {
