@@ -2,6 +2,7 @@ package com.scndgen.legends.network;
 
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Stage;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -100,10 +101,10 @@ public class NetworkClient implements Runnable {
                 int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.getInstance().lanHost)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     MainWindow.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.getInstance().lanClient)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
                     MainWindow.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));

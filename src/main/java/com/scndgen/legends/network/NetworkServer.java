@@ -1,6 +1,7 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ClashSystem;
@@ -128,7 +129,7 @@ public class NetworkServer implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
                     MainWindow.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
 

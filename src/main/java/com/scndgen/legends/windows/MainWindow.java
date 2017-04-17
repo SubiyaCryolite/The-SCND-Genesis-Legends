@@ -28,6 +28,7 @@ import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
@@ -53,9 +54,9 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     public static final int PORT = 5555;
     public static final int serverLatency = 500;
-    public static String lanHost = "lanHost";
-    public static String lanClient = "lanClient";
-    public static String singlePlayer = "singlePlayer";
+    public static String lanHost = "LAN_HOST";
+    public static String lanClient = "LAN_CLIENT";
+    public static String singlePlayer = "SINGLE_PLAYER";
     public static String storyMode = "StoryMenu";
     public static int frameRate;
     private static MainWindow instance;
@@ -82,7 +83,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private JTextField txtUserName = new JTextField(20);
     private OverWorld world;
     private int mouseYoffset = 0;
-    private String gameMode = "";
+    private SubMode gameMode = SubMode.BLANK;
     //offline, host, client
     private String gameIp = "";
     private String userName;
@@ -93,7 +94,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private MainWindow gameWindow;
     private AudioPlayback backgroundMusic;
 
-    private MainWindow(String nameOfUser, String mode) {
+    private MainWindow(String nameOfUser, SubMode mode) {
         instance = this;
         try {
             if (JenesisGamePad.getInstance().NUM_BUTTONS > 0) {
@@ -110,7 +111,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
 
-        if (getGameMode().equalsIgnoreCase(lanHost)) {
+        if (getGameMode() == SubMode.LAN_HOST) {
             server = new NetworkServer();
             server.start();
         }
@@ -121,7 +122,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             leftyXOffset = 0;
         }
 
-        if (getGameMode().equalsIgnoreCase(lanClient)) {
+        if (getGameMode() == SubMode.LAN_CLIENT) {
             client = new NetworkClient(LoginScreen.getInstance().getIP());
         }
         setUndecorated(true);
@@ -184,14 +185,14 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         setLocationRelativeTo(null); // Centers JFrame on screen //
         setResizable(false);
         setVisible(true);
-        if (gameMode.equalsIgnoreCase(lanClient)) {
+        if (gameMode == SubMode.LAN_CLIENT) {
             client.sendData("player_QSLV");
         }
         superRepaintThread();
         packWindow();
     }
 
-    public static synchronized MainWindow newInstance(String strUser, String storyMode) {
+    public static synchronized MainWindow newInstance(String strUser, SubMode storyMode) {
         if (instance == null)
             instance = new MainWindow(strUser, storyMode);
         return instance;
@@ -293,7 +294,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void main(String[] args) {
-        gameWindow = new MainWindow("Punk", singlePlayer);
+        gameWindow = new MainWindow("Punk", SubMode.SINGLE_PLAYER);
     }
 
     public void getRidOfTitleBar() {
@@ -479,7 +480,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         reSize("menu");
         focus();
         RenderStageSelect.getInstance().defaultStageValues();
-        if (getGameMode().equalsIgnoreCase(storyMode)) {
+        if (getGameMode() == SubMode.STORY_MODE) {
             RenderCharacterSelectionScreen.getInstance().backToMenu();
         }
     }
@@ -526,7 +527,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void cancelMatch() {
         int u = JOptionPane.showConfirmDialog(null, "Are you sure you wanna quit?", "Dude!?", JOptionPane.YES_NO_OPTION);
         if (u == JOptionPane.YES_OPTION) {
-            if (getGameMode().equalsIgnoreCase(storyMode)) {
+            if (getGameMode() == SubMode.STORY_MODE) {
                 getStory().getStoryInstance().firstRun = true;
             }
             //unpause if match was paused
@@ -538,7 +539,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }
     }
 
-    public String getGameMode() {
+    public SubMode getGameMode() {
         return gameMode;
     }
 
@@ -571,7 +572,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderStoryMenu.getInstance().moveUp();
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should be able to meddle in stage select
-                if (getGameMode().equalsIgnoreCase(lanClient) == false) {
+                if (getGameMode() != SubMode.LAN_CLIENT) {
                     RenderStageSelect.getInstance().moveUp();
                 }
             } else if (getIsGameRunning()) {
@@ -591,7 +592,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderStoryMenu.getInstance().moveDown();
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should not be able to meddle in stage select
-                if (getGameMode().equalsIgnoreCase(lanClient) == false) {
+                if (getGameMode() != SubMode.LAN_CLIENT) {
                     RenderStageSelect.getInstance().moveDown();
                 }
             } else if (getIsGameRunning()) {
@@ -611,7 +612,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 RenderStoryMenu.getInstance().moveLeft();
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should be able to meddle in stage select
-                if (getGameMode().equalsIgnoreCase(lanClient) == false) {
+                if (getGameMode() != SubMode.LAN_CLIENT) {
                     RenderStageSelect.getInstance().moveLeft();
                 }
             } else if (getIsGameRunning()) {
@@ -660,9 +661,9 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                         //one a save is used, it not free to save (i.e null)
                         if (freeToSave) {
                             freeToSave = false;
-                            if (getGameMode().equalsIgnoreCase(singlePlayer)
-                                    || getGameMode().equalsIgnoreCase(lanClient)
-                                    || getGameMode().equalsIgnoreCase(lanHost)) {
+                            if (getGameMode() == SubMode.SINGLE_PLAYER
+                                    || getGameMode() == SubMode.LAN_CLIENT
+                                    || getGameMode() == SubMode.LAN_HOST) {
                                 RenderGameplay.getInstance().getGameInstance().closingThread(1);
                             } else {
                                 RenderGameplay.getInstance().getGameInstance().closingThread(0);
@@ -676,7 +677,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             } else if (mode == Mode.CHAR_SELECT_SCREEN) {
                 //if both CharacterEnum are selected
                 if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                    if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
+                    if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST) {
                         quickVibrate(0.6f, 1000);
                         RenderCharacterSelectionScreen.getInstance().beginGame();
                     }
@@ -689,8 +690,8 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 quickVibrate(0.4f, 1000);
             } else if (mode == Mode.STAGE_SELECT_SCREEN) {
                 //client should be able to meddle in stage select
-                if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
+                if (getGameMode() != SubMode.LAN_CLIENT) {
+                    if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST)) {
                         quickVibrate(0.66f, 1000);
                         RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
                     }
@@ -705,11 +706,9 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      */
     private void escape() {
         if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
-            if (getGameMode().equalsIgnoreCase(singlePlayer)) {
-                {
-                    RenderCharacterSelectionScreen.getInstance().newInstance();
-                    RenderCharacterSelectionScreen.getInstance().backToMenu();
-                }
+            if (getGameMode() == SubMode.SINGLE_PLAYER) {
+                RenderCharacterSelectionScreen.getInstance().newInstance();
+                RenderCharacterSelectionScreen.getInstance().backToMenu();
             }
         }
         if (getIsGameRunning()) {
@@ -717,7 +716,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         } else if (mode == Mode.STORY_SELECT_SCREEN && !getIsGameRunning()) {
             RenderStoryMenu.getInstance().backToMainMenu();
         }
-
     }
 
     /**
@@ -726,7 +724,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private void back() {
         if (menuLatencyElapsed) {
             if (mode == Mode.CHAR_SELECT_SCREEN) {
-                if (getGameMode().equalsIgnoreCase(singlePlayer)) {
+                if (getGameMode() == SubMode.SINGLE_PLAYER) {
                     RenderCharacterSelectionScreen.getInstance().newInstance();
                 }
             } else if (getIsGameRunning()) {
@@ -829,7 +827,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void mouseClicked(MouseEvent m) {
         if (mode == Mode.CHAR_SELECT_SCREEN && RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) {
             if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
+                if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST) {
                     quickVibrate(0.6f, 1000);
                     RenderCharacterSelectionScreen.getInstance().beginGame();
                 }
@@ -881,6 +879,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         isPainting = true;
         new Thread() {
             final int sleepTime = 1000 / frameRate;
+
             @Override
             public void run() {
                 do {
@@ -906,7 +905,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }
         if (mode == Mode.STAGE_SELECT_SCREEN) {
             //if you're a client stay still
-            if (getGameMode().equalsIgnoreCase(lanClient) == false) {
+            if (getGameMode() != SubMode.LAN_CLIENT) {
                 RenderStageSelect.getInstance().mouseMoved(m.getX(), m.getY());
             }
         } else if (getIsGameRunning()) {
@@ -943,7 +942,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     private void pause() {
-        if (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(storyMode)) {
+        if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.STORY_MODE) {
             if (ThreadGameInstance.isPaused == false) {
                 RenderGameplay.getInstance().getGameInstance().pauseGame();
                 RenderGameplay.getInstance().pauseThreads();

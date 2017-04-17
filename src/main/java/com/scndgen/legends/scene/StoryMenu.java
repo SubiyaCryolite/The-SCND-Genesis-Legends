@@ -25,7 +25,6 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -325,22 +324,22 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void mouseMoved(int mouseX, int mouseY) {
-        int topY = RenderStoryMenu.getInstance().getStartY() ;
-        int topX = RenderStoryMenu.getInstance().getStartX();
-        int columns = RenderStoryMenu.getInstance().getNumberOfCharColumns();
-        int vspacer = RenderStoryMenu.getInstance().getCharHSpacer();
-        int hspacer = RenderStoryMenu.getInstance().getCharVSpacer();
-        int rows = RenderStoryMenu.getInstance().getCharRows();
+        int topY = getStartY() ;
+        int topX = getStartX();
+        int columns = getNumberOfCharColumns();
+        int vspacer = getCharHSpacer();
+        int hspacer = getCharVSpacer();
+        int rows = getCharRows();
         if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * rows))) {
             int vIndex = (mouseY - topY) / vspacer;
             int hIndex = (((mouseX - topX) / hspacer) + 1);
-            RenderStoryMenu.getInstance().setHindex(hIndex);
-            RenderStoryMenu.getInstance().setVindex(vIndex);
+            setHindex(hIndex);
+            setVindex(vIndex);
             animateCap2x(hIndex, vIndex);
             withinMenuPanel = true;
         } else {
-            RenderStoryMenu.getInstance().setHindex(99);
-            RenderStoryMenu.getInstance().setVindex(99);
+            setHindex(99);
+            setVindex(99);
             withinMenuPanel = false;
         }
     }
@@ -362,7 +361,7 @@ public abstract class StoryMenu extends JenesisMode {
         } else {
             storedX = tmpx;
             storedY = tmpy;
-            RenderStoryMenu.getInstance().animateCaption();
+            animateCaption();
         }
     }
 

@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.MainWindow;
@@ -91,7 +92,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
             g2d.setComposite(makeComposite(1.0f));
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) == false) {
+        } else if (MainWindow.getInstance().getGameMode() != SubMode.LAN_CLIENT) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.drawImage(storyPrev, charXcap + x, charYcap, this);

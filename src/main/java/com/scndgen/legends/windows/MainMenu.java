@@ -24,6 +24,7 @@ package com.scndgen.legends.windows;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderMainMenu;
@@ -47,7 +48,6 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private static LoginScreen p;
     public int[] ach = new int[5];
     public int[] classArr = new int[5];
-    private String[] mode = {MainWindow.singlePlayer, MainWindow.lanHost, MainWindow.lanClient, MainWindow.storyMode};
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;
@@ -131,49 +131,44 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      * Select option in menu
      */
     private void select() {
-        //if viewing stats, go back to menu
+        //if viewing STATS, go back to menu
         if (RenderMainMenu.getInstance().getOverlay() == Overlay.STATISTICS || RenderMainMenu.getInstance().getOverlay() == Overlay.ACHIEVEMENTS || RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
             if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
                 RenderMainMenu.getInstance().stopTutorial();
             }
             RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY);
         } else {
-            String destination = RenderMainMenu.getInstance().getMenuModeStr();
-            if (destination.equalsIgnoreCase(MainWindow.lanClient)) {
+            SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
+            if (destination == SubMode.LAN_CLIENT) {
                 scan = new NetworkScanLan();
-            } else if (destination.equalsIgnoreCase(MainWindow.lanHost)) {
+            } else if (destination == SubMode.LAN_HOST) {
                 terminateThis();
                 RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(107));
-                MainWindow.newInstance(strUser, mode[1]);
-            } else if (destination.equalsIgnoreCase("vs1")) {
+                MainWindow.newInstance(strUser, destination);
+            } else if (destination == SubMode.SINGLE_PLAYER) {
                 terminateThis();
                 RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(108));
-                MainWindow.newInstance(strUser, mode[0]);
-            } else if (destination.equalsIgnoreCase("vs2")) {
+                MainWindow.newInstance(strUser, destination);
+            } else if (destination == SubMode.STORY_MODE) {
                 terminateThis();
-                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(109));
-                MainWindow.newInstance(strUser, mode[4]);
-            } else if (destination.equalsIgnoreCase(MainWindow.storyMode)) {
-
-                terminateThis();
-                MainWindow.newInstance(strUser, MainWindow.storyMode);
-            } else if (destination.equalsIgnoreCase("options")) {
+                MainWindow.newInstance(strUser, SubMode.STORY_MODE);
+            } else if (destination == SubMode.OPTIONS) {
                 options = new WindowOptions();
-            } else if (destination.equalsIgnoreCase("stats")) {
+            } else if (destination == SubMode.STATS) {
                 RenderMainMenu.getInstance().setOverlay(Overlay.STATISTICS);
-            } else if (destination.equalsIgnoreCase("ach")) {
+            } else if (destination == SubMode.ACH) {
                 RenderMainMenu.getInstance().refreshStats();
                 RenderMainMenu.getInstance().setOverlay(Overlay.ACHIEVEMENTS);
-            } else if (destination.equalsIgnoreCase("about")) {
+            } else if (destination == SubMode.ABOUT) {
                 about = new WindowAbout();
-            } else if (destination.equalsIgnoreCase("controls")) {
+            } else if (destination == SubMode.CONTROLS) {
                 controls = new WindowControls();
-            } else if (destination.equalsIgnoreCase("tutorial")) {
+            } else if (destination == SubMode.TUTORIAL) {
                 RenderMainMenu.getInstance().setOverlay(Overlay.TUTORIAL);
                 RenderMainMenu.getInstance().startTut();
-            } else if (destination.equalsIgnoreCase("logout")) {
+            } else if (destination == SubMode.LOGOUT) {
                 logOut();
-            } else if (destination.equalsIgnoreCase("leaders")) {
+            } else if (destination == SubMode.LEADERS) {
                 if (boardNotUp) {
                     board = new MenuLeaderBoard();
                     boardNotUp = false;
@@ -181,8 +176,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                     board.reappear();
                 }
             }
-
-            if (destination.equalsIgnoreCase("exit")) {
+            if (destination == SubMode.EXIT) {
                 exit();
             }
         }
@@ -469,8 +463,8 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     /**
      * Create a client game
      */
-    public void hostGame() {
-        MainWindow.newInstance(com.scndgen.legends.windows.MainMenu.getUserName(), MainWindow.lanClient);
+    public void joinGame() {
+        MainWindow.newInstance(com.scndgen.legends.windows.MainMenu.getUserName(), SubMode.LAN_CLIENT);
     }
 
     private void refreshWindow() {

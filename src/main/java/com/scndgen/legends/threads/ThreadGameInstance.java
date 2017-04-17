@@ -24,6 +24,7 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacks;
 import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -84,7 +85,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private int matchDuration, playTimeCounter;
     private int timeOut;
 
-    //indicates if game is running, controls game over screen and Achievements which require wins
+    //indicates if game is running, CONTROLS game over screen and Achievements which require wins
     public ThreadGameInstance(int forWho, Gameplay gameplay) {
         this.gameplay = gameplay;
         musicStr = RenderStageSelect.getInstance().getTrack();
@@ -120,7 +121,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && storySequence == false) {
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+                if (MainWindow.getInstance().getGameMode()== SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
                     aiRunning = true;
                     executorAI.attack();
                 }
@@ -263,7 +264,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
         //if not story scene, increment char usage
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex());
         }
         if (gameplay.hasWon()) {
@@ -367,7 +368,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().saveConfigFile();
         MainWindow.getInstance().systemNotice("Saved File");
         thread.stop(); //stop this thread
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) && RenderStoryMenu.getInstance().moreStages()) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (gameplay.hasWon()) {
                 MainWindow.getInstance().getStory().incrementMode();
@@ -433,11 +434,11 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private void newInstance() {
         executorAI = new OpponentAttacks();
         ach = LoginScreen.getInstance().getAch();
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
             storySequence = true;
             time = StoryMode.getInstance().time;
         } //if LAN, client uses hosts time preset
-        else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+        else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
             time = MainWindow.getInstance().hostTime;
         } else {
             time = WindowOptions.time;
@@ -459,7 +460,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().newGame = true;
         winMus = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMus = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) == false) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
             MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));

@@ -25,6 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -112,7 +113,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
             g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, this);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
+        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
@@ -142,7 +143,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
                         if (characterSelected != true) {
                             g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                         }
-                        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
+                        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
                             g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                         }
                         g2d.setComposite(makeComposite(opacChar));

@@ -23,6 +23,7 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -121,9 +122,9 @@ public class ClashSystem implements Runnable {
     }
 
     public void plrClashing() {
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
             MainWindow.getInstance().sendToServer("oppClsh" + plyClashPerc);
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+        } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
             MainWindow.getInstance().sendToClient("oppClsh" + plyClashPerc);
         }
         plyrClash = plyrClash + 1;

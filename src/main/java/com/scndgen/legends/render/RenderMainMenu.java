@@ -2,8 +2,8 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.MainMenu;
-import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowAbout;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -89,7 +89,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         if (overlay == Overlay.PRIMARY) {
             menuItemIndex = 0;
             if (menuIndex == menuItemIndex) {
-                menuItmStr = MainWindow.storyMode;
+                menuItmStr = SubMode.STORY_MODE;
                 g2d.drawImage(pointer, xMenu - 18, yMenu - 15, this);
                 g2d.drawString(menuItem[1], xMenu, yMenu);
             } else {
@@ -97,7 +97,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             }
             menuItemIndex++;
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "vs1";
+                menuItmStr = SubMode.SINGLE_PLAYER;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[3], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -105,7 +105,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             }
             menuItemIndex++;
             if (menuIndex == menuItemIndex) {
-                menuItmStr = MainWindow.lanHost;
+                menuItmStr = SubMode.LAN_HOST;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[7], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -113,7 +113,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             }
             menuItemIndex++;
             if (menuIndex == menuItemIndex) {
-                menuItmStr = MainWindow.lanClient;
+                menuItmStr = SubMode.LAN_CLIENT;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[9], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -122,7 +122,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "stats";
+                menuItmStr = SubMode.STATS;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[11], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -131,7 +131,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "ach";
+                menuItmStr = SubMode.ACH;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[21], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -140,7 +140,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "tutorial";
+                menuItmStr = SubMode.TUTORIAL;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[25], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -149,7 +149,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "options";
+                menuItmStr = SubMode.OPTIONS;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[13], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -159,7 +159,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
 
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "controls";
+                menuItmStr = SubMode.CONTROLS;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[15], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -168,7 +168,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "logout";
+                menuItmStr = SubMode.LOGOUT;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[23], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -177,16 +177,15 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             menuItemIndex++;
 
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "about";
+                menuItmStr = SubMode.ABOUT;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[17], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
                 g2d.drawString(menuItem[16], xMenu, yMenu + (fontSize * menuItemIndex));
             }
             menuItemIndex++;
-
             if (menuIndex == menuItemIndex) {
-                menuItmStr = "exit";
+                menuItmStr = SubMode.EXIT;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
                 g2d.drawString(menuItem[19], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {

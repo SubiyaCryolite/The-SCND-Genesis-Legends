@@ -153,7 +153,7 @@ public class OverlayAchievementLocker {
 
         screen.setColor(Color.white);
 
-        //last ach spacer + 2
+        //last ACH spacer + 2
         screen.drawString(stat13, offset, (48 - 3) + (spacer * 8));
         screen.drawString(stat17, offset, (48 - 3) + (spacer * 9));
 
@@ -271,7 +271,7 @@ public class OverlayAchievementLocker {
     }
 
     /**
-     * Refresh stats
+     * Refresh STATS
      */
     @SuppressWarnings("static-access")
     public void refreshStats() {

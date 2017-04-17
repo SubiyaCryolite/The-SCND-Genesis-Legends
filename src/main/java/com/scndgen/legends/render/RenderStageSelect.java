@@ -25,6 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StageSelect;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -105,13 +106,13 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
             g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) && !selectedStage) {
+        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT && !selectedStage) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.setColor(Color.WHITE);
             g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(normalFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) == false) {
+        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);

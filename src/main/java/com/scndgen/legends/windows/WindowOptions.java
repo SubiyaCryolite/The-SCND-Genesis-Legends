@@ -32,7 +32,7 @@ import java.awt.event.*;
 /**
  * @author: Ifunga Ndana
  * @class: WindowOptions
- * This class contains the games options
+ * This class contains the games OPTIONS
  */
 public class WindowOptions extends JFrame implements ActionListener, ItemListener, KeyListener {
 

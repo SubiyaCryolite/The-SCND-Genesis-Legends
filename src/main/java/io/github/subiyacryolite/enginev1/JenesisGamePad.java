@@ -105,7 +105,7 @@ public class JenesisGamePad {
         }
         if (i == controllers.length) {
             System.out.println("No game pad found");
-            //System.exit(0);
+            //System.EXIT(0);
         } else {
             System.out.println("Game pad index: " + i);
         }

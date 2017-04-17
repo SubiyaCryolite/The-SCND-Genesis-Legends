@@ -25,6 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.MainWindow;
@@ -47,7 +48,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private Animations3 animations3;
     private Font largeFont, normalFont;
     private Font notSelected;
-    private VolatileImage  stat1, stat2, stat3, stat4;
+    private VolatileImage stat1, stat2, stat3, stat4;
     private VolatileImage ambient1, ambient2, foreGround;
     private GradientPaint gradient1 = new GradientPaint(xLocal, 10, Color.YELLOW, 255, 10, Color.RED, true);
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
@@ -87,10 +88,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         } else {
             loadCharSpritesLow();
         }
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
             server = MainWindow.getInstance().getServer();
         }
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             //get ip from game
             client = MainWindow.getInstance().getClient();
         }
@@ -225,7 +226,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 //-----------draws battle info messages--------------
 
 
-                //stats
+                //STATS
 
                 if (statusOpChar > 0.02f) {
                     statusOpChar = statusOpChar - 0.02f;
@@ -607,7 +608,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
                 characterPortraits = new VolatileImage[charNames.length];
 
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     for (CharacterEnum characterEnum : CharacterEnum.values()) {
                         characterPortraits[characterEnum.index()] = pix.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
                     }
@@ -627,7 +628,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 fury = fury2;
                 ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
                 ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     storyPicArr = new VolatileImage[13];
                     for (int u = 0; u < 11; u++) {
                         storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
@@ -703,7 +704,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 time9 = pix.loadImage("images/fig/9.png");
                 times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
                 characterPortraits = new VolatileImage[charNames.length];
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     for (int p = 0; p < charNames.length; p++) {
                         characterPortraits[p] = pix.loadVolatileImage("images/" + charNames[p] + "/cap.png", 48, 48, this);
                     }
@@ -723,7 +724,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 fury = fury2;
                 ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
                 ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     storyPicArr = new VolatileImage[11];
                     for (int u = 0; u < 11; u++) {
                         storyPicArr[u] = pix.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);

@@ -25,6 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.Tutorial;
 import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.OverlayAchievementLocker;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -50,7 +51,8 @@ public abstract class MainMenu extends JenesisMode {
     protected int menuItemIndex, menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
     protected int xCordCloud = 0, yCordCloud = 0, xCordCloud2 = 0, yCordCloud2 = 20, xCordCloud3 = 0, yCordCloud3 = 40;
-    protected String menuItmStr, stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
+    protected String stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
+    protected SubMode menuItmStr;
     protected int timeInt = 0;
     protected int spacer = 12, time;
     protected Color bg = new Color(214, 217, 223);
@@ -156,7 +158,7 @@ public abstract class MainMenu extends JenesisMode {
 
 
     /**
-     * Refresh achievement stats
+     * Refresh achievement STATS
      */
     public void refreshStats() {
         achachievementLocker.refreshStats();
@@ -188,7 +190,7 @@ public abstract class MainMenu extends JenesisMode {
      *
      * @return
      */
-    public String getMenuModeStr() {
+    public SubMode getMenuModeStr() {
         return menuItmStr;
     }
 

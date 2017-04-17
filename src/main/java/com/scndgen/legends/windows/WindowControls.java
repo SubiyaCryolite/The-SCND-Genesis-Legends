@@ -33,7 +33,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * This class holds about information
+ * This class holds ABOUT information
  *
  * @author ndana
  */

@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  * http://www.scndgenesis.50webs.com
  * The battle system is inspired by Final Fantasy XIII and conventional 2D Fighters
  * The game has a handdrawn comic book graphical style similar to the comic and has other anime style effects
- * Feel free to tell me what you think about the game and comic ifungandana(at)gmail.com
+ * Feel free to tell me what you think ABOUT the game and comic ifungandana(at)gmail.com
  * Year - Month - date
  * for every enhancement add 0.0.0.1
  * for every milestone and 0.0.0.3
@@ -63,34 +63,34 @@ import java.util.logging.Logger;
  * 05/08/10 - Attacks now execute in sequence they were added 0.0.3.8
  * 05/08/10 - All menus and panels under one roof 0.0.3.9
  * 09/08/10 - fixed MP3 plug-in 0.0.4.0
- * 15/08/10 - Added match timer and options 0.0.4.1
+ * 15/08/10 - Added match timer and OPTIONS 0.0.4.1
  * 11/08/10 - Converted timertasks to threads, added arena select, fixed relative sound path 0.0.4.4
  * 19/09/10 - caches all sprites, Serious thread optimizations, AI rewrites, SIGNIFICANT performance improvements 0.0.5.5
  * 22/09/10 - implemented LAN play!!!! Game chat, lobby system needed 0.0.6.5
  * 22/09/10 - implemented login screen, ciphering 0.0.6.7
- * 18/10/10 - implemented in-game chat, utf8 encoding, stats screen, achievement structure, game/profile save 0.0.7.3
+ * 18/10/10 - implemented in-game chat, utf8 encoding, STATS screen, achievement structure, game/profile save 0.0.7.3
  * 21/10/10 - added overworld map, began navigation and screen control 0.0.7.7
  * 23/10/10 - added collision detection algorythm for overworld 0.0.8.0
  * 27/10/10 - added new menu, transition, characterEnum classess, remved command panel 0.0.8.4
  * 30/10/10 -added scene menu, server-client embeddedin menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
  * 03/11/10 -24- added new CharacterEnum, Aisha 0.0.8.8
  * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
- * 17/11/10 -26- better about screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
- * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, options and stats integrated into menu
+ * 17/11/10 -26- better ABOUT screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
+ * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, OPTIONS and STATS integrated into menu
  * 23/11/10 -30- fixed story scene and added pause, skip, resume :D
  * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
  * 04/12/10 -32- One story scene to rule them all, bwa ha ha, added scene select as isWithinRange :)
  * 07/12/10 -33- Added background animation thread
  * 10/12/10 -34- Added Ravage, implemented characterEnum balance scheme, fixed bug in story scene thread
  * Sidenote 14/12/10: Joined Twitter ^_^
- * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, exit to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
+ * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, EXIT to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
  * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
  * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
  * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
  * 01/1/11 -38- Thread optimisations. wee
  * 04/1/11 -39- Fixed story scene bugs, adding GPL headerz gon opensource
  * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
- * 14/1/11 -41- Integrated stats into main menu, pending for connections can be cancelled
+ * 14/1/11 -41- Integrated STATS into main menu, pending for connections can be cancelled
  * 15/1/11 -42- Backwards compatibility for new save items, fixed time
  * 15/1/11 -43- Changelog moved to WindowAbout.java in text3
  * 13/2/11 -44- I'm baaaaack, changelog in WindowAbout is clientSide only, codies go here
@@ -433,13 +433,13 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             while (rs.next()) {
                 searchIndex = 0;
                 ansc = rs.getString(2);
-                if (ansc.contains("ach")) {
+                if (ansc.contains("ACH")) {
                     for (int ix = 12; ix <= 22; ix++) {
-                        //System.err.println("Checking ach" + ix + " in " + ansc);
-                        if (ansc.equalsIgnoreCase("ach" + ix)) {
-                            System.out.println(ansc + " equals ach" + ix + " thus exisits");
+                        //System.err.println("Checking ACH" + ix + " in " + ansc);
+                        if (ansc.equalsIgnoreCase("ACH" + ix)) {
+                            System.out.println(ansc + " equals ACH" + ix + " thus exisits");
                             if (foundAch[ix - 12] != true) {
-                                System.out.println("Found ach" + ix);
+                                System.out.println("Found ACH" + ix);
                                 foundAch[ix - 12] = true;
                             }
                         }
@@ -451,7 +451,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             for (int ix = 12; ix < 23; ix++) {
                 //if not found alter the table
                 if (foundAch[searchIndex] != true) {
-                    ansc = "ALTER TABLE scndsave ADD ach" + ix + " VARCHAR(24) default 'g7h%'";
+                    ansc = "ALTER TABLE scndsave ADD ACH" + ix + " VARCHAR(24) default 'g7h%'";
                     stat = conn.createStatement();
                     stat.executeUpdate(ansc);
                     stat.close();

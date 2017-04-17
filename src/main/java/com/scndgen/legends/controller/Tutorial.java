@@ -67,7 +67,7 @@ public class Tutorial implements Runnable {
         }
         forward = imageLoader.loadImage("images/tutorial/list_item_arrow_r.png");
         back = imageLoader.loadImage("images/tutorial/list_item_arrow_l.png");
-        tutText = "tutorial";
+        tutText = "TUTORIAL";
         isShowing = true;
         bgSound = new AudioPlayback(AudioPlayback.tutorialSound(), false);
         bgSound.play();

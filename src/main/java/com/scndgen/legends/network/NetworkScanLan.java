@@ -82,7 +82,7 @@ public class NetworkScanLan extends JFrame implements ActionListener {
                 LoginScreen.getInstance().setIP(txt.getText());
                 System.out.println("Attempting to connect to : " + txt.getText());
                 Thread.sleep(0050);
-                LoginScreen.getInstance().getMenu().hostGame();
+                LoginScreen.getInstance().getMenu().joinGame();
                 LoginScreen.getInstance().getMenu().terminateThis();
                 frame.dispose();
             } catch (InterruptedException ex) {

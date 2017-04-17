@@ -24,6 +24,7 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
@@ -113,22 +114,22 @@ public abstract class StageSelect extends JenesisMode {
     public void selectStage(Stage stage) {
         hoveredStage = stage;
         if (mode == StageSelection.NORMAL) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     MainWindow.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     MainWindow.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE || MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
             switch (hoveredStage) {
                 case IBEX_HILL:
                     selectIbexHill();
@@ -179,12 +180,12 @@ public abstract class StageSelect extends JenesisMode {
                     selectScorchedRuinsNight();
                     break;
             }
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 MainWindow.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("watch")) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE || MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST || MainWindow.getInstance().getGameMode() == SubMode.WATCH) {
+            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 MainWindow.getInstance().sendToClient("gameStart7%^&");
             }
             start();

@@ -25,6 +25,7 @@ import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -244,7 +245,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Set stats
+     * Set STATS
      *
      * @param physicalS
      * @param celestiaS
@@ -366,15 +367,15 @@ public abstract class Gameplay extends JenesisMode {
 
 
     public void clash(int dude, CharacterState homie) {
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+        if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
             MainWindow.getInstance().sendToServer("clashing^T&T^&T&^");
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+        } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
             MainWindow.getInstance().sendToClient("clashing^T&T^&T&^");
         }
         if (RenderGameplay.getInstance().getBreak() == 1000 && safeToSelect && clasherRunnign == false) {
             new ClashSystem(dude, homie);
             clasherRunnign = true;
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+            if (MainWindow.getInstance().getGameMode()== SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
                 oppAttack = new ClashingOpponent();
                 System.out.println("clash ai");
             }
@@ -525,10 +526,10 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void attack() {
         if (numOfAttacks > 0) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
+            if (MainWindow.getInstance().getGameMode()== SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
                 RenderGameplay.getInstance().disableSelection();
                 RenderGameplay.getInstance().getGameInstance().triggerCharAttack();
-            } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+            } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
 
@@ -550,7 +551,7 @@ public abstract class Gameplay extends JenesisMode {
                 {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
                 }
-            } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
 
@@ -1028,9 +1029,9 @@ public abstract class Gameplay extends JenesisMode {
                     //runs on local
                     if (characterState == CharacterState.CHARACTER && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
-                        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
+                        if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
                             MainWindow.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
-                        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                        } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
                             MainWindow.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
