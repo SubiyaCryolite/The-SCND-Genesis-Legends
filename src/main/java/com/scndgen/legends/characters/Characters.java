@@ -22,6 +22,7 @@
 package com.scndgen.legends.characters;
 
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 
@@ -124,25 +125,25 @@ public class Characters {
     /**
      * SET damage multipliers, used to strengthen/weaken attacks
      *
-     * @param per      the person calling the method
+     * @param characterState      the person calling the method
      * @param thisMuch the number to alter by
      */
-    public static void setDamageCounter(char per, int thisMuch) {
-        if (per == 'c') {
+    public static void setDamageCounter(CharacterState characterState, int thisMuch) {
+        if (characterState == CharacterState.CHARACTER) {
             damageMultiplierOpp = thisMuch;
         }
 
-        if (per == 'o') {
+        if (characterState == CharacterState.OPPONENT) {
             damageMultiplierChar = thisMuch;
         }
     }
 
-    public static int getDamageMultiplier(char per) {
+    public static int getDamageMultiplier(CharacterState per) {
         int myInt = 0;
 
-        if (per == 'c') {
+        if (per == CharacterState.CHARACTER) {
             myInt = damageMultiplierOpp;
-        } else if (per == 'o') {
+        } else if (per == CharacterState.OPPONENT) {
             myInt = damageMultiplierChar;
         }
 
@@ -157,11 +158,11 @@ public class Characters {
         return activityRecoveryRateOpp;
     }
 
-    public void incrementSpeedRate(char who, float thisMuch) {
-        if (who == 'c') {
+    public void incrementSpeedRate(CharacterState who, float thisMuch) {
+        if (who == CharacterState.CHARACTER) {
             activityRecoverRateChar = activityRecoverRateChar + thisMuch;
         }
-        if (who == 'o') {
+        if (who == CharacterState.OPPONENT) {
             activityRecoveryRateOpp = activityRecoveryRateOpp + thisMuch;
         }
     }
@@ -195,7 +196,7 @@ public class Characters {
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
-        setDamageCounter('c', 12);
+        setDamageCounter(CharacterState.CHARACTER, 12);
 
         switch (character) {
             case SUBIYA:
@@ -249,7 +250,7 @@ public class Characters {
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
-        setDamageCounter('o', 12);
+        setDamageCounter(CharacterState.OPPONENT, 12);
         switch (character) {
             case SUBIYA:
                 opponent = new Subiya();

@@ -26,6 +26,7 @@ import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
@@ -271,7 +272,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                             escape();
                         }
                         if (buttonPressed[5]) {
-                            triggerFury('c');
+                            triggerFury(CharacterState.CHARACTER);
                         }
                         hatDir = JenesisGamePad.getInstance().getXYStickDir();
                         hatDir = JenesisGamePad.getInstance().getZRZStickDir();
@@ -732,7 +733,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         
     }
 
-    public void triggerFury(char who) {
+    public void triggerFury(CharacterState who) {
         RenderGameplay.getInstance().triggerFury(who);
     }
 
@@ -798,7 +799,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             }
         } else if (getIsGameRunning()) {
             if (keyCode == KeyEvent.VK_L) {
-                triggerFury('c');
+                triggerFury(CharacterState.CHARACTER);
             }
             if (keyCode == KeyEvent.VK_SPACE) {
                 trigger();
@@ -850,11 +851,11 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                     if (m.getX() > (220 + leftyXOffset) && m.getX() < (305 + leftyXOffset)) {
                         RenderGameplay.getInstance().nextAnimation();
                     } else if ((m.getX() > 25 && m.getX() < 46) && (m.getY() > 190 && m.getY() < 270)) {
-                        triggerFury('c');
+                        triggerFury(CharacterState.CHARACTER);
                     }
                 }
                 if (m.getButton() == MouseEvent.BUTTON2) {
-                    triggerFury('c');
+                    triggerFury(CharacterState.CHARACTER);
                 }
                 if (m.getButton() == MouseEvent.BUTTON3) {
                     RenderGameplay.getInstance().unQueMove();
@@ -1157,7 +1158,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * When a player is found
      */
     public void playerFound() {
-        //System.out.println("Player found");
+        //System.out.println("CharacterState found");
 
         int ansx = JOptionPane.showConfirmDialog(null, userName + " , someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 

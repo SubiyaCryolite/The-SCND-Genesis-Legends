@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.MainWindow;
@@ -913,9 +914,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * @param damageAmount - damage dealt
      * @param who          - who dealt the damage
      */
-    public void guiScreenChaos(float damageAmount, char who) {
+    public void guiScreenChaos(float damageAmount, CharacterState who) {
         manipulateThis = "" + Math.round(damageAmount);
-        if (who == 'c') {
+        if (who == CharacterState.CHARACTER) {
             if (manipulateThis.length() == 1) {
                 setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
@@ -930,7 +931,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             }
         }
 
-        if (who == 'o') {
+        if (who == CharacterState.OPPONENT) {
             if (manipulateThis.length() == 1) {
                 setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
@@ -1141,11 +1142,11 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      *
      * @param thischar - active character
      */
-    public void AnimatePhyAttax(char thischar) {
-        if (thischar == 'c' || thischar == 'o') {
+    public void AnimatePhyAttax(CharacterState thischar) {
+        if (thischar == CharacterState.CHARACTER || thischar == CharacterState.OPPONENT) {
             //sprites back to normal poses
-            setSprites('c', 9, 11);
-            setSprites('o', 9, 11);
+            setSprites(CharacterState.CHARACTER, 9, 11);
+            setSprites(CharacterState.OPPONENT, 9, 11);
         }
     }
 

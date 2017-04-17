@@ -23,6 +23,7 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
 
@@ -114,10 +115,10 @@ public class Ravage extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -128,10 +129,10 @@ public class Ravage extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -142,11 +143,11 @@ public class Ravage extends com.scndgen.legends.characters.Character {
                     attackStr = status[2];
                     RenderGameplay.getInstance().setStatIndex(3);
                     if (forWho == 2) {
-                        RenderGameplay.getInstance().setStatusPic('c', "STRENGTHENED", Colors.getColor("blue"));
-                        RenderGameplay.getInstance().alterDamageCounter('o', +1);
+                        RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "STRENGTHENED", Colors.getColor("blue"));
+                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.OPPONENT, +1);
                     } else {
-                        RenderGameplay.getInstance().setStatusPic('o', "STRENGTHENED", Colors.getColor("blue"));
-                        RenderGameplay.getInstance().alterDamageCounter('c', +1);
+                        RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "STRENGTHENED", Colors.getColor("blue"));
+                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.CHARACTER, +1);
                     }
                     RenderGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
                 } else {
@@ -162,11 +163,11 @@ public class Ravage extends com.scndgen.legends.characters.Character {
                     RenderGameplay.getInstance().setStatIndex(4);
                     if (forWho == 2) {
                         //as a player(2) yo8u attack the opponent(1)
-                        RenderGameplay.getInstance().setStatusPic('o', "WEAKENED!!!", Colors.getColor("red"));
-                        RenderGameplay.getInstance().alterDamageCounter('c', -1);
+                        RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "WEAKENED!!!", Colors.getColor("red"));
+                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.CHARACTER, -1);
                     } else {
-                        RenderGameplay.getInstance().setStatusPic('c', "WEAKENED!!!", Colors.getColor("red"));
-                        RenderGameplay.getInstance().alterDamageCounter('o', -1);
+                        RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "WEAKENED!!!", Colors.getColor("red"));
+                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.OPPONENT, -1);
                     }
                     RenderGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");
                 } else {

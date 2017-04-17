@@ -25,6 +25,7 @@ import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -112,7 +113,7 @@ public abstract class Gameplay extends JenesisMode {
     protected int bgX = 0;
     protected int numberOfStoryPix, lbx2 = 500;
     protected int lby2 = 420;
-    protected String attackType = "normal", attackTYpeOpp = "normal", statusChar = "", statusOpp = "";
+    protected String characterAttackType = "normal", opponentAttackType = "normal", statusChar = "", statusOpp = "";
     protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
     protected float statusOpChar, statusOpOpp;
     protected int itemindex = 0, furyBarY = 0;
@@ -123,7 +124,7 @@ public abstract class Gameplay extends JenesisMode {
     protected boolean lagFactor = true;
     protected float currentXShear = 0, currentYShear = 0;
     protected boolean isFree = true, isFree2 = true;
-    protected char dude;
+    protected CharacterState dude;
     protected String sysNot = "";
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String ach1 = "", ach2 = "", ach3 = "", ach4 = "";
@@ -162,14 +163,14 @@ public abstract class Gameplay extends JenesisMode {
         statIndex = dex;
     }
 
-    public void setStatusPic(char who, String stat, Color c) {
+    public void setStatusPic(CharacterState who, String stat, Color c) {
 
-        if (who == 'c' || who == 'a') {
+        if (who == CharacterState.CHARACTER) {
             statusOpChar = 1.0f;
             statsPosYChar = 0;
             statIndexChar = statIndex;
         }
-        if (who == 'o' || who == 'b') {
+        if (who == CharacterState.OPPONENT) {
             statusOpOpp = 1.0f;
             statsPosYOpp = 0;
             statIndexOpp = statIndex;
@@ -302,12 +303,12 @@ public abstract class Gameplay extends JenesisMode {
      *
      * @return hurtChar type
      */
-    public String getAttackType(char who) {
+    public String getAttackType(CharacterState who) {
         String result = "";
-        if (who == 'c') {
-            result = attackType;
-        } else if (who == 'o') {
-            result = attackTYpeOpp;
+        if (who == CharacterState.CHARACTER) {
+            result = characterAttackType;
+        } else if (who == CharacterState.OPPONENT) {
+            result = opponentAttackType;
         }
 
         return result;
@@ -316,14 +317,12 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * set hurtChar type, normal or fury
      */
-    public void setAttackType(String type, char who) {
-        if (who == 'c') {
-            attackType = type;
+    public void setAttackType(String type, CharacterState who) {
+        if (who == CharacterState.CHARACTER) {
+            characterAttackType = type;
         }
-
-        if (who == 'o') {
-            attackTYpeOpp = type;
-            System.out.println("Opponent is Pissed");
+        if (who == CharacterState.OPPONENT) {
+            opponentAttackType = type;
         }
     }
 
@@ -367,7 +366,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
 
-    public void clash(int dude, char homie) {
+    public void clash(int dude, CharacterState homie) {
         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
             MainWindow.getInstance().sendToServer("clashing^T&T^&T&^");
         } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
@@ -511,12 +510,12 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * assigns pic to array index
      */
-    public void setSprites(char who, int oneA, int Magic) {
-        if (who == 'c') {
+    public void setSprites(CharacterState who, int oneA, int Magic) {
+        if (who == CharacterState.CHARACTER) {
             charMeleeSpriteStatus = oneA;
             charCelestiaSpriteStatus = Magic;
         }
-        if (who == 'o') {
+        if (who == CharacterState.OPPONENT) {
             oppMeleeSpriteStatus = oneA;
             oppCelestiaSpriteStatus = Magic;
         }
@@ -534,8 +533,8 @@ public abstract class Gameplay extends JenesisMode {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
 
-                setSprites('c', 9, 11);
-                setSprites('o', 9, 11);
+                setSprites(CharacterState.CHARACTER, 9, 11);
+                setSprites(CharacterState.OPPONENT, 9, 11);
                 //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
                 // each Mattack will check if they are in the battle que.... if they are they execute
 
@@ -556,8 +555,8 @@ public abstract class Gameplay extends JenesisMode {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
 
-                setSprites('c', 9, 11);
-                setSprites('o', 9, 11);
+                setSprites(CharacterState.CHARACTER, 9, 11);
+                setSprites(CharacterState.OPPONENT, 9, 11);
                 //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
                 // each Mattack will check if they are in the battle que.... if they are they execute
 
@@ -641,16 +640,13 @@ public abstract class Gameplay extends JenesisMode {
      * @param who - which character
      * @return damage multiplier
      */
-    public int getDamageDealt(char who) {
-
-        if (who == 'c') {
+    public int getDamageDealt(CharacterState who) {
+        if (who == CharacterState.CHARACTER) {
             thisInt = damageC;
         }
-
-        if (who == 'o') {
+        if (who == CharacterState.OPPONENT) {
             thisInt = damageO;
         }
-
         return thisInt;
     }
 
@@ -812,10 +808,10 @@ public abstract class Gameplay extends JenesisMode {
         life = maXlife;
         oppLife = oppMaxLife;
         limitBreak = 5;
-        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(Characters.getDamageMultiplier('c'));
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(Characters.getDamageMultiplier(CharacterState.CHARACTER));
         RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setCelestiaMultiplier(10);
         RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setCelestiaMultiplier(10);
-        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(Characters.getDamageMultiplier('o'));
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(Characters.getDamageMultiplier(CharacterState.OPPONENT));
     }
 
     /**
@@ -883,7 +879,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * update Player 1 life
+     * update CharacterState 1 life
      *
      * @param thisMuch - value
      */
@@ -945,12 +941,12 @@ public abstract class Gameplay extends JenesisMode {
      * @param per      the person calling the method
      * @param thisMuch the number to alter by
      */
-    public void alterDamageCounter(char per, int thisMuch) {
-        if (per == 'c' && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() < 20) {
+    public void alterDamageCounter(CharacterState per, int thisMuch) {
+        if (per == CharacterState.CHARACTER && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() < 20) {
             RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getDamageMultiplier() + thisMuch);
         }
 
-        if (per == 'o' && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() < 20) {
+        if (per == CharacterState.OPPONENT && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() < 20) {
             RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getDamageMultiplier() + thisMuch);
         }
     }
@@ -961,12 +957,12 @@ public abstract class Gameplay extends JenesisMode {
      * @param per      the person calling the method
      * @param thisMuch the number to alter by
      */
-    public void alterCelestiaCounter(char per, int thisMuch) {
-        if (per == 'c' && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() < 16) {
+    public void alterCelestiaCounter(CharacterState per, int thisMuch) {
+        if (per == CharacterState.CHARACTER && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() < 16) {
             RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setCelestiaMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getCelestiaMultiplier() + thisMuch);
         }
 
-        if (per == 'o' && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() < 16) {
+        if (per == CharacterState.OPPONENT && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() > 0 && RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() < 16) {
             RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setCelestiaMultiplier(RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getCelestiaMultiplier() + thisMuch);
         }
     }
@@ -1008,7 +1004,7 @@ public abstract class Gameplay extends JenesisMode {
         }.start();
     }
 
-    public void triggerFury(char who) {
+    public void triggerFury(CharacterState who) {
         limitBreak(who);
     }
 
@@ -1023,7 +1019,7 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * limit break, wee!!!
      */
-    public void limitBreak(char who) {
+    public void limitBreak(CharacterState who) {
         dude = who;
         new Thread() {
 
@@ -1032,22 +1028,21 @@ public abstract class Gameplay extends JenesisMode {
                 if (getBreak() == 1000) {
                     //&& getGameInstance().getRecoveryUnitsChar()>289
                     //runs on local
-                    if (dude == 'c' && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
+                    if (dude == CharacterState.CHARACTER && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
-
-                        //broadcast on net
                         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                             MainWindow.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
                         } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                             MainWindow.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
-                        setAttackType("fury", 'c');
+                        setAttackType("fury", CharacterState.CHARACTER);
                         comboCounter = 0;
                         getGameInstance().pauseActivityRegen();
                         getGameInstance().setRecoveryUnitsChar(0);
                         try {
                             JenesisGamePad.getInstance().setRumbler(true, 0.8f);
-                        } catch (Exception e) {
+                        } catch (Exception ex) {
+                            ex.printStackTrace(System.err);
                         }
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
@@ -1055,9 +1050,8 @@ public abstract class Gameplay extends JenesisMode {
                                 furySound();
                                 hurtSoundOpp();
                                 MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                                setSprites('c', i, 11);
-                                setSprites('a', i, 11);
-                                setSprites('o', 0, 11);
+                                setSprites(CharacterState.CHARACTER, i, 11);
+                                setSprites(CharacterState.OPPONENT, 0, 11);
                                 shakeOppCharLB();
                                 comboPicArrayPosOpp = i;
                                 furyComboOpacity = 1.0f;
@@ -1071,14 +1065,13 @@ public abstract class Gameplay extends JenesisMode {
                         }
                         comboPicArrayPosOpp = 8;
                         getGameInstance().resumeActivityRegen();
-                        setSprites('c', 9, 11);
-                        setSprites('o', 9, 11);
-                        setSprites('a', 11, 11);
+                        setSprites(CharacterState.CHARACTER, 9, 11);
+                        setSprites(CharacterState.OPPONENT, 9, 11);
                         limitRunning = true;
                         resetBreak();
-                        setAttackType("normal", 'c');
-                    } else if (dude == 'o' && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
-                        setAttackType("fury", 'o');
+                        setAttackType("normal", CharacterState.CHARACTER);
+                    } else if (dude == CharacterState.OPPONENT && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
+                        setAttackType("fury", CharacterState.OPPONENT);
                         limitRunning = false;
                         try {
                             JenesisGamePad.getInstance().setRumbler(true, 0.8f);
@@ -1090,9 +1083,8 @@ public abstract class Gameplay extends JenesisMode {
                                 furySound();
                                 hurtSoundChar();
                                 getGameInstance().setRecoveryUnitsOpp(0);
-                                setSprites('o', i, 11);
-                                setSprites('b', i, 11);
-                                setSprites('c', 0, 11);
+                                setSprites(CharacterState.OPPONENT, i, 11);
+                                setSprites(CharacterState.CHARACTER, 0, 11);
                                 shakeCharLB();
                                 comboPicArrayPosOpp = i;
                                 lifePhysUpdateSimple(1, 100, "");
@@ -1104,12 +1096,11 @@ public abstract class Gameplay extends JenesisMode {
                         } catch (Exception e) {
                         }
                         comboPicArrayPosOpp = 8;
-                        setSprites('o', 9, 11);
-                        setSprites('c', 9, 11);
-                        setSprites('b', 11, 11);
+                        setSprites(CharacterState.OPPONENT, 9, 11);
+                        setSprites(CharacterState.CHARACTER, 9, 11);
                         limitRunning = true;
                         resetBreak();
-                        setAttackType("normal", 'o');
+                        setAttackType("normal", CharacterState.OPPONENT);
                     }
                 }
             }
@@ -1130,7 +1121,7 @@ public abstract class Gameplay extends JenesisMode {
             damageChar = ThisMuch;
             activePerson = attacker;
             incLImit(damageChar);
-            guiScreenChaos(ThisMuch * getDamageMultiplierOpp(), 'o');
+            guiScreenChaos(ThisMuch * getDamageMultiplierOpp(), CharacterState.OPPONENT);
             for (int m = 0; m < damageChar; m++) {
                 if (life >= 0) {
                     life = life - (1 * getDamageMultiplierOpp());
@@ -1147,7 +1138,7 @@ public abstract class Gameplay extends JenesisMode {
             damageOpp = ThisMuch;
             activePerson = attacker;
             incLImit(damageOpp);
-            guiScreenChaos(ThisMuch * getDamageMultiplierChar(), 'c');
+            guiScreenChaos(ThisMuch * getDamageMultiplierChar(), CharacterState.CHARACTER);
             for (int m = 0; m < damageOpp; m++) {
                 if (oppLife >= 0) {
                     oppLife = oppLife - (1 * getDamageMultiplierOpp());
@@ -1169,7 +1160,7 @@ public abstract class Gameplay extends JenesisMode {
         return limitBreak;
     }
 
-    protected abstract void guiScreenChaos(float damageAmount, char who);
+    protected abstract void guiScreenChaos(float damageAmount, CharacterState who);
 
     protected abstract void furySound();
 

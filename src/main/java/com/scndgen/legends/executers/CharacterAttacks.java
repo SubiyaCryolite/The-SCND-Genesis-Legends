@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -43,9 +44,9 @@ public class CharacterAttacks implements Runnable {
         if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
             for (int o = 0; o < 4; o++) {
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
-                MainWindow.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), 2, 'c', 'o');
+                MainWindow.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), 2, CharacterState.CHARACTER, CharacterState.OPPONENT);
                 RenderGameplay.getInstance().shakeOppCharLB();
-                RenderGameplay.getInstance().AnimatePhyAttax('c');
+                RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
                 if ((o + 1) == RenderGameplay.getInstance().getNumOfAttacks()) {
                     break;
                 }

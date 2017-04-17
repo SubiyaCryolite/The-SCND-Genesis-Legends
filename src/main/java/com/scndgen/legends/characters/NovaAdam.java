@@ -22,6 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
 /**
@@ -110,10 +111,10 @@ public class NovaAdam extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -124,10 +125,10 @@ public class NovaAdam extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -138,10 +139,10 @@ public class NovaAdam extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;
@@ -152,10 +153,10 @@ public class NovaAdam extends com.scndgen.legends.characters.Character {
                 RenderGameplay.getInstance().setStatIndex(1);
                 if (forWho == 2) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('c', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
                     RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic('o', "+" + damage + "0 HP", Colors.getColor("green"));
+                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
                 }
                 RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
                 break;

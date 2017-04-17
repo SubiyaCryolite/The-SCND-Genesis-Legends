@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -52,12 +53,12 @@ public class OpponentAttacksOnline implements Runnable {
     public void run() {
         try {
             if (executionType == 'n') {
-                RenderGameplay.getInstance().setSprites('c', 9, 11);
-                RenderGameplay.getInstance().setSprites('o', 9, 11);
+                RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
+                RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
                 executingTheCommandsAI(command1, command2, command3, command4);
                 RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
             } else if (executionType == 'l') {//limit break
-                RenderGameplay.getInstance().clash(1, 'c');
+                RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -69,9 +70,9 @@ public class OpponentAttacksOnline implements Runnable {
             int[] commands = {command1, command2, command3, command4};
             for (int index = 0; index < commands.length; index++) {
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                MainWindow.getInstance().getAttackOpponent().attack(commands[index], 1, 'o', 'c');
+                MainWindow.getInstance().getAttackOpponent().attack(commands[index], 1, CharacterState.OPPONENT, CharacterState.CHARACTER);
                 RenderGameplay.getInstance().shakeCharLB();
-                RenderGameplay.getInstance().AnimatePhyAttax('o');
+                RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
             }
         } catch (Exception ex) {

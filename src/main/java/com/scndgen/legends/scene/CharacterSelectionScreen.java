@@ -4,6 +4,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -171,7 +172,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
@@ -179,7 +180,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing well, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4;
@@ -187,7 +188,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing well, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5;
@@ -229,11 +230,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Depending on scene, sets
      */
-    private static void sortMode(char who) {
+    private static void sortMode(CharacterState who) {
         /**
          * If you choose a character in lan, you can't choose your opponent
          */
-        if (who == 'c') {
+        if (who == CharacterState.CHARACTER) {
         }
     }
 
@@ -325,11 +326,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Raila
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selRaila(char type) {
+    public void selRaila(CharacterState type) {
         systemNotice(Language.getInstance().getLine(84));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             {
                 sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -347,7 +348,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                     disableAll();
                 }
             }
-        } else if (type == 'o' && opponentSelected == false) {
+        } else if (type == CharacterState.OPPONENT && opponentSelected == false) {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
@@ -362,10 +363,10 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Subiya
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selSubiya(char type) {
-        if (type == 'c') //when selecting char
+    public void selSubiya(CharacterState type) {
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             systemNotice(Language.getInstance().getLine(85));
             {
@@ -387,7 +388,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -401,11 +402,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Lynx
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selLynx(char type) {
+    public void selLynx(CharacterState type) {
         systemNotice(Language.getInstance().getLine(86));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -423,7 +424,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 disableAll();
             }
         }
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -437,11 +438,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Aisha
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selAisha(char type) {
+    public void selAisha(CharacterState type) {
         systemNotice(Language.getInstance().getLine(87));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -460,7 +461,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -474,11 +475,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Ade
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selAde(char type) {
+    public void selAde(CharacterState type) {
         systemNotice(Language.getInstance().getLine(88));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -497,7 +498,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -511,11 +512,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Aisha
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selRav(char type) {
+    public void selRav(CharacterState type) {
         systemNotice(Language.getInstance().getLine(89));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -534,7 +535,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -548,11 +549,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Jonah
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selJon(char type) {
+    public void selJon(CharacterState type) {
         systemNotice(Language.getInstance().getLine(90));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -572,7 +573,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -586,11 +587,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting NovaAdam
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selAdam(char type) {
+    public void selAdam(CharacterState type) {
         systemNotice(Language.getInstance().getLine(91));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -609,7 +610,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -623,11 +624,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting NOVA NovaAdam
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selNOVAAdam(char type) {
+    public void selNOVAAdam(CharacterState type) {
         systemNotice(Language.getInstance().getLine(92));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -648,7 +649,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -662,11 +663,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Azaria
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selAza(char type) {
+    public void selAza(CharacterState type) {
         systemNotice(Language.getInstance().getLine(93));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -687,7 +688,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -701,11 +702,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selSorr(char type) {
+    public void selSorr(CharacterState type) {
         systemNotice(Language.getInstance().getLine(94));
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -726,7 +727,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -739,11 +740,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent ('o') or character ('c')
+     * @param type - opponent (CharacterState.OPPONENT) or character (CharacterState.CHARACTER)
      */
-    public void selThing(char type) {
+    public void selThing(CharacterState type) {
         systemNotice("..........");
-        if (type == 'c') //when selecting char
+        if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound.play();
@@ -764,7 +765,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             }
         }
 
-        if (type == 'o' && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -774,7 +775,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
         }
 
-        if (type == 'x' && opponentSelected == false) // when selecting opponent as boss
+        if (type == CharacterState.BOSS && opponentSelected == false) // when selecting opponent as boss
         {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
@@ -929,9 +930,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 1 && vert == 0) {
             if (allPlayers[0] == 0) {
                 if (characterSelected == false) {
-                    selRaila('c');
+                    selRaila(CharacterState.CHARACTER);
                 } else {
-                    selRaila('o');
+                    selRaila(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -941,9 +942,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 2 && vert == 0) {
             if (allPlayers[1] == 0) {
                 if (characterSelected == false) {
-                    selSubiya('c');
+                    selSubiya(CharacterState.CHARACTER);
                 } else {
-                    selSubiya('o');
+                    selSubiya(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -953,9 +954,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 3 && vert == 0) {
             if (allPlayers[2] == 0) {
                 if (characterSelected == false) {
-                    selLynx('c');
+                    selLynx(CharacterState.CHARACTER);
                 } else {
-                    selLynx('o');
+                    selLynx(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -965,9 +966,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 1 && vert == 1) {
             if (allPlayers[3] == 0) {
                 if (characterSelected == false) {
-                    selAisha('c');
+                    selAisha(CharacterState.CHARACTER);
                 } else {
-                    selAisha('o');
+                    selAisha(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -977,9 +978,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 2 && vert == 1) {
             if (allPlayers[4] == 0) {
                 if (characterSelected == false) {
-                    selRav('c');
+                    selRav(CharacterState.CHARACTER);
                 } else {
-                    selRav('o');
+                    selRav(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -989,9 +990,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 3 && vert == 1) {
             if (allPlayers[5] == 0) {
                 if (characterSelected == false) {
-                    selAde('c');
+                    selAde(CharacterState.CHARACTER);
                 } else {
-                    selAde('o');
+                    selAde(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1001,9 +1002,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 1 && vert == 2) {
             if (allPlayers[6] == 0) {
                 if (characterSelected == false) {
-                    selJon('c');
+                    selJon(CharacterState.CHARACTER);
                 } else {
-                    selJon('o');
+                    selJon(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1013,9 +1014,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 2 && vert == 2) {
             if (allPlayers[7] == 0) {
                 if (characterSelected == false) {
-                    selAdam('c');
+                    selAdam(CharacterState.CHARACTER);
                 } else {
-                    selAdam('o');
+                    selAdam(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1025,9 +1026,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 3 && vert == 2) {
             if (allPlayers[8] == 0) {
                 if (characterSelected == false) {
-                    selNOVAAdam('c');
+                    selNOVAAdam(CharacterState.CHARACTER);
                 } else {
-                    selNOVAAdam('o');
+                    selNOVAAdam(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1037,9 +1038,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 1 && vert == 3) {
             if (allPlayers[9] == 0) {
                 if (characterSelected == false) {
-                    selAza('c');
+                    selAza(CharacterState.CHARACTER);
                 } else {
-                    selAza('o');
+                    selAza(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1049,9 +1050,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 2 && vert == 3) {
             if (allPlayers[10] == 0) {
                 if (characterSelected == false) {
-                    selSorr('c');
+                    selSorr(CharacterState.CHARACTER);
                 } else {
-                    selSorr('o');
+                    selSorr(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();
@@ -1061,9 +1062,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         if (horz == 3 && vert == 3) {
             if (allPlayers[11] == 0) {
                 if (characterSelected == false) {
-                    selThing('c');
+                    selThing(CharacterState.CHARACTER);
                 } else {
-                    selThing('o');
+                    selThing(CharacterState.OPPONENT);
                 }
             } else {
                 errorSound();

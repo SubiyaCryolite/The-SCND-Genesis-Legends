@@ -22,6 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ThreadGameInstance;
@@ -78,9 +79,9 @@ public class OpponentAttacks implements Runnable {
                 //fix story scene bug
                 if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                    MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, 'o', 'c');
+                    MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], 1, CharacterState.OPPONENT, CharacterState.CHARACTER);
                     RenderGameplay.getInstance().shakeCharLB();
-                    RenderGameplay.getInstance().AnimatePhyAttax('o');
+                    RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 }
             }

@@ -23,6 +23,7 @@ package com.scndgen.legends.controller;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
@@ -82,98 +83,98 @@ public class StoryMode implements Runnable {
             case 0:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selRav('o');
+                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 break;
             case 1:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selLynx('c');
+                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selRaila('o');
+                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 break;
             case 2:
                 time = 30;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAisha('c');
+                RenderCharacterSelectionScreen.getInstance().selAisha(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selLynx('o');
+                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 break;
             case 3:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selSubiya('o');
+                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 break;
             case 4:
                 time = 45;
                 stat = "half way";
-                RenderCharacterSelectionScreen.getInstance().selRav('c');
+                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selAde('o');
+                RenderCharacterSelectionScreen.getInstance().selAde(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 5:
                 time = 45;
                 stat = "nrml";
                 RenderGameplay.getInstance().setNumOfBoards(2);
-                RenderCharacterSelectionScreen.getInstance().selAdam('c');
+                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selJon('o');
+                RenderCharacterSelectionScreen.getInstance().selJon(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 6:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAza('c');
+                RenderCharacterSelectionScreen.getInstance().selAza(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 7:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selSubiya('c');
+                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selRav('o');
+                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 break;
             case 8:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selLynx('c');
+                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selAdam('o');
+                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 9:
                 time = 60;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila('c');
+                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selSorr('o');
+                RenderCharacterSelectionScreen.getInstance().selSorr(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 10:
                 time = 90;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selSubiya('c');
+                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 break;
             case 11:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAdam('c');
+                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.CHARACTER);
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
-                RenderCharacterSelectionScreen.getInstance().selThing('x');
+                RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.BOSS);
                 RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }
@@ -227,7 +228,7 @@ public class StoryMode implements Runnable {
                 firstRun = false;
                 //set difficulty
                 //LoginScreen.difficultyDyn=500;
-                //Character.setDamageCounter('o',14);
+                //Character.setDamageCounter(CharacterState.OPPONENT,14);
 
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(0);
@@ -968,7 +969,7 @@ public class StoryMode implements Runnable {
                 RenderGameplay.getInstance().changeStoryBoard(11);
 
                 //set difficulty - hard
-                Characters.setDamageCounter('o', 18);
+                Characters.setDamageCounter(CharacterState.OPPONENT, 18);
 
                 RenderGameplay.getInstance().charPortSet(10);
                 storyText = Language.getInstance().getLine(294) + " !!!";

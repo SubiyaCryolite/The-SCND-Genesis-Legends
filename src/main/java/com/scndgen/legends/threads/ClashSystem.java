@@ -22,6 +22,7 @@
 package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Colors;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -35,9 +36,9 @@ public class ClashSystem implements Runnable {
     public float plyrClash, oppClash, plyClashPerc, oppClashPerc;
     private Thread thread;
     private boolean isClashOn = false;
-    private char personChar;
+    private CharacterState personChar;
 
-    public ClashSystem(int who, char homie) {
+    public ClashSystem(int who, CharacterState homie) {
         person = who;
         personChar = homie;
         if (thread != null) {
@@ -95,10 +96,10 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic('c', "GOT EM !!!", Colors.getColor("blue"));
-                MainWindow.getInstance().triggerFury('c');
+                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "GOT EM !!!", Colors.getColor("blue"));
+                MainWindow.getInstance().triggerFury(CharacterState.CHARACTER);
             } else {
-                RenderGameplay.getInstance().setStatusPic('o', "EVADED YA!!!", Colors.getColor("red"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "EVADED YA!!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
                 RenderGameplay.getInstance().updatePlayerLife(200);
                 //player didn'thread trigger clash but won, they arent attacked
@@ -108,10 +109,10 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic('o', "GOT YA !!!", Colors.getColor("blue"));
-                MainWindow.getInstance().triggerFury('o');
+                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "GOT YA !!!", Colors.getColor("blue"));
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
             } else {
-                RenderGameplay.getInstance().setStatusPic('c', "EVADED !!!", Colors.getColor("red"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "EVADED !!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
                 RenderGameplay.getInstance().updateOpponentLife(200);
                 //opponent didn'thread trigger clash but won, they arent attacked

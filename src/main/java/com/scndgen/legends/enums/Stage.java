@@ -30,11 +30,11 @@ public enum Stage {
         this.index = index;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public String getShortCode() {
+    public final String getShortCode() {
         return shortCode;
     }
 

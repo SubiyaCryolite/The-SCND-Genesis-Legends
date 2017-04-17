@@ -23,6 +23,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -188,7 +189,7 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (RenderGameplay.getInstance().getAttackType('c').equalsIgnoreCase("fury") && RenderGameplay.getInstance().getGameInstance().isGameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
+        if (RenderGameplay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && RenderGameplay.getInstance().getGameInstance().isGameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[5]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[5]);
@@ -211,7 +212,7 @@ public class Achievements {
             currentPoints = currentPoints + pointsArr[0] + bonus;
         }
 
-        if (RenderGameplay.getInstance().getAttackType('o').equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
+        if (RenderGameplay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[7]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[7]);

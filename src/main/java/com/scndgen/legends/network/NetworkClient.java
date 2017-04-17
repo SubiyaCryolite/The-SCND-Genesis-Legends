@@ -1,5 +1,6 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
@@ -114,40 +115,40 @@ public class NetworkClient implements Runnable {
             } //Character
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
-                    RenderCharacterSelectionScreen.getInstance().selSubiya('o');
+                    RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRai")) {
-                    RenderCharacterSelectionScreen.getInstance().selRaila('o');
+                    RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAlx")) {
-                    RenderCharacterSelectionScreen.getInstance().selAisha('o');
+                    RenderCharacterSelectionScreen.getInstance().selAisha(CharacterState.OPPONENT);
                 }
                 if (line.contains("selLyn")) {
-                    RenderCharacterSelectionScreen.getInstance().selLynx('o');
+                    RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRav")) {
-                    RenderCharacterSelectionScreen.getInstance().selRav('o');
+                    RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAde")) {
-                    RenderCharacterSelectionScreen.getInstance().selAde('o');
+                    RenderCharacterSelectionScreen.getInstance().selAde(CharacterState.OPPONENT);
                 }
                 if (line.contains("selJon")) {
-                    RenderCharacterSelectionScreen.getInstance().selJon('o');
+                    RenderCharacterSelectionScreen.getInstance().selJon(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selAdam('o');
+                    RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                    RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAzaria")) {
-                    RenderCharacterSelectionScreen.getInstance().selAza('o');
+                    RenderCharacterSelectionScreen.getInstance().selAza(CharacterState.OPPONENT);
                 }
                 if (line.contains("selSorr")) {
-                    RenderCharacterSelectionScreen.getInstance().selSorr('o');
+                    RenderCharacterSelectionScreen.getInstance().selSorr(CharacterState.OPPONENT);
                 }
                 if (line.contains("selThi")) {
-                    RenderCharacterSelectionScreen.getInstance().selThing('o');
+                    RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.endsWith("watchStageSel_xcbD")) {
                 MainWindow.getInstance().selectStage();
@@ -156,52 +157,52 @@ public class NetworkClient implements Runnable {
                 System.out.println("aquired time is " + MainWindow.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
-                if (line.contains("selectIbexHill")) {
+                if (line.equals(Stage.IBEX_HILL.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 }
-                if (line.contains("selectChelsonCityDocks")) {
+                if (line.equals(Stage.CHELSTON_CITY_DOCKS.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 }
-                if (line.contains("selectDesertRuins")) {
+                if (line.equals(Stage.DESERT_RUINS.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS);
                 }
-                if (line.contains("selectChelstonCityStreets")) {
+                if (line.equals(Stage.CHELSTON_CITY_STREETS.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 }
-                if (line.contains("selectIbexHillNight")) {
+                if (line.equals(Stage.IBEX_HILL_NIGHT.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 }
-                if (line.contains("selectScorchedRuins")) {
+                if (line.equals(Stage.SCORCHED_RUINS.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS);
                 }
-                if (line.contains("selectDistantSnowField")) {
+                if (line.equals(Stage.FROZEN_WILDERNESS.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 }
-                if (line.contains("selectDistantIsle")) {
+                if (line.equals(Stage.DISTANT_ISLE.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 }
-                if (line.contains("selectHiddenCave")) {
+                if (line.equals(Stage.HIDDEN_CAVE.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE);
                 }
-                if (line.contains("selectHiddenCaveNight")) {
+                if (line.equals(Stage.HIDDEN_CAVE_NIGHT.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE_NIGHT);
                 }
-                if (line.contains("selectAfricanVillage")) {
+                if (line.equals(Stage.AFRICAN_VILLAGE.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.AFRICAN_VILLAGE);
                 }
-                if (line.contains("selectApocalypto")) {
+                if (line.equals(Stage.APOCALYPTO.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 }
-                if (line.contains("selectDistantIsleNight")) {
+                if (line.equals(Stage.DISTANT_ISLE_NIGHT.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 }
-                if (line.contains("selectRandomStage")) {
+                if (line.equals(Stage.RANDOM.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.RANDOM);
                 }
-                if (line.contains("selectDesertRuinsNight")) {
+                if (line.equals(Stage.DESERT_RUINS_NIGHT.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 }
-                if (line.contains("selectScorchedRuinsNight")) {
+                if (line.equals(Stage.SCORCHED_RUINS_NIGHT.getShortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
                 }
             } //start game
@@ -211,7 +212,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().nowLoading();
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                MainWindow.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));

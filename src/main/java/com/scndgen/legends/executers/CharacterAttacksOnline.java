@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 
@@ -53,14 +54,14 @@ public class CharacterAttacksOnline implements Runnable {
         if (executionType == 'n') {
             RenderGameplay.getInstance().setComboCounter(0);
             //clear active combos
-            RenderGameplay.getInstance().setSprites('c', 9, 11);
-            RenderGameplay.getInstance().setSprites('o', 9, 11);
+            RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
+            RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
             //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
             executingTheCommands();
             RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
         } else if (executionType == 'l') {//limit break
-            RenderGameplay.getInstance().clash(1, 'c');
+            RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
         }
     }
 
@@ -68,9 +69,9 @@ public class CharacterAttacksOnline implements Runnable {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
             MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
-            MainWindow.getInstance().getAttacksChar().attack(action[index], 2, 'c', 'o');
+            MainWindow.getInstance().getAttacksChar().attack(action[index], 2, CharacterState.CHARACTER, CharacterState.OPPONENT);
             RenderGameplay.getInstance().shakeOppCharLB();
-            RenderGameplay.getInstance().AnimatePhyAttax('c');
+            RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
             MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
         }
     }

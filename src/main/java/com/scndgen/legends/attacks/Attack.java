@@ -22,6 +22,7 @@
 package com.scndgen.legends.attacks;
 
 import com.scndgen.legends.characters.Character;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
 public abstract class Attack {
@@ -40,7 +41,7 @@ public abstract class Attack {
      * @param attack - the move to execute
      * @param target - who's attacking
      */
-    public void attack(int attack, int target, char source, char destination) {
+    public void attack(int attack, int target, CharacterState source, CharacterState destination) {
         this.attack = attack;
         victim = target;
         if (attack > 8) {
@@ -109,8 +110,8 @@ public abstract class Attack {
      *
      * @param whoDoneIt who is active
      */
-    public void doThis(int whoDoneIt, char attack, char target) {
-        if (attack == 'c' || attack == 'a') {
+    public void doThis(int whoDoneIt, CharacterState attack, CharacterState target) {
+        if (attack == CharacterState.CHARACTER) {
             CharacterOverlayDisabled();
         } else {
             CharacterOverlayEnabled();

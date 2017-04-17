@@ -1,5 +1,6 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ClashSystem;
@@ -142,46 +143,46 @@ public class NetworkServer implements Runnable {
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);
                 if (line.contains("selSub")) {
-                    RenderCharacterSelectionScreen.getInstance().selSubiya('o');
+                    RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRai")) {
-                    RenderCharacterSelectionScreen.getInstance().selRaila('o');
+                    RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAlx")) {
-                    RenderCharacterSelectionScreen.getInstance().selAisha('o');
+                    RenderCharacterSelectionScreen.getInstance().selAisha(CharacterState.OPPONENT);
                 }
                 if (line.contains("selLyn")) {
-                    RenderCharacterSelectionScreen.getInstance().selLynx('o');
+                    RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRav")) {
-                    RenderCharacterSelectionScreen.getInstance().selRav('o');
+                    RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAde")) {
-                    RenderCharacterSelectionScreen.getInstance().selAde('o');
+                    RenderCharacterSelectionScreen.getInstance().selAde(CharacterState.OPPONENT);
                 }
                 if (line.contains("selJon")) {
-                    RenderCharacterSelectionScreen.getInstance().selJon('o');
+                    RenderCharacterSelectionScreen.getInstance().selJon(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selAdam('o');
+                    RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
+                    RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAzaria")) {
-                    RenderCharacterSelectionScreen.getInstance().selAza('o');
+                    RenderCharacterSelectionScreen.getInstance().selAza(CharacterState.OPPONENT);
                 }
                 if (line.contains("selSorr")) {
-                    RenderCharacterSelectionScreen.getInstance().selSorr('o');
+                    RenderCharacterSelectionScreen.getInstance().selSorr(CharacterState.OPPONENT);
                 }
                 if (line.contains("selThi")) {
-                    RenderCharacterSelectionScreen.getInstance().selThing('o');
+                    RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.equalsIgnoreCase("lastMess")) {
                 sendData(MainWindow.getInstance().last);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                MainWindow.getInstance().triggerFury('o');
+                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
