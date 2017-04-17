@@ -79,7 +79,7 @@ import java.util.logging.Logger;
  * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, options and stats integrated into menu
  * 23/11/10 -30- fixed story scene and added pause, skip, resume :D
  * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
- * 04/12/10 -32- One story scene to rule them all, bwa ha ha, added scene select as well :)
+ * 04/12/10 -32- One story scene to rule them all, bwa ha ha, added scene select as isWithinRange :)
  * 07/12/10 -33- Added background animation thread
  * 10/12/10 -34- Added Ravage, implemented characters balance scheme, fixed bug in story scene thread
  * Sidenote 14/12/10: Joined Twitter ^_^

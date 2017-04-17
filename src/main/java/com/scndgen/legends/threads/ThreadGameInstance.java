@@ -273,8 +273,8 @@ public class ThreadGameInstance implements Runnable, ActionListener {
             RenderGameplay.getInstance().showLoseLabel();
             loseMus.play();
         }
-        RenderStageSelect.getInstance().setSelectedStage(false);
-        RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
+        RenderStageSelect.getInstance().newInstance();
+        RenderCharacterSelectionScreen.getInstance().newInstance();
         RenderGameplay.getInstance().drawAchievements();
     }
 
@@ -390,12 +390,13 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     /**
      * Cancel the game mid fight
      */
-    public void terminateThread() {
+    public void terminateGameplay() {
         isPaused = false;
         gameRunning = false;
         isGameOver = true;
         instance = false;
-        RenderCharacterSelectionScreen.getInstance().getPlayers().resetCharacters();
+        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderStageSelect.getInstance().newInstance();
         RenderGameplay.getInstance().closeAudio();
     }
 

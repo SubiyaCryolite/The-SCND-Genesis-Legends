@@ -67,7 +67,8 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
 
     @Override
     public void newInstance() {
-
+        super.newInstance();
+        getPlayers().resetCharacters();
     }
 
     public void loadAssets() {
@@ -87,30 +88,22 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         createBackBuffer();
         loadAssets();
         g2d.setFont(normalFont);
-
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, 852, 480);
-
-
         g2d.drawImage(bg3, 0, 0, this);
-
         g2d.drawImage(fg1, xCordCloud, 0, this);
         g2d.drawImage(fg2, xCordCloud2, 0, this);
         g2d.drawImage(fg3, 0, 0, this);
-
         if (p1Opac < (1.0f - opacInc)) {
             p1Opac = p1Opac + opacInc;
         }
-
         if (opacChar < (1.0f - (opacInc * 2))) {
             opacChar = opacChar + (opacInc * 2);
         }
-
         g2d.setColor(Color.BLACK);
         g2d.setComposite(makeComposite(0.70f));
         g2d.fillRect(0, 0, 853, 480);
         g2d.setComposite(makeComposite(1.0f));
-
         //characters preview DYNAMIC change
         if (characterSelected != true) {
             g2d.setComposite(makeComposite(p1Opac));
@@ -118,7 +111,6 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
             g2d.setComposite(makeComposite(1.0f));
             g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, this);
         }
-
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
         if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
             g2d.setComposite(makeComposite(p1Opac));
@@ -126,133 +118,60 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
             g2d.setComposite(makeComposite(1.0f));
             g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, this);
         }
-
-
         //if characters selected draw FIXED prev
         if (characterSelected) {
             g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, this);
             g2d.drawImage(caption[selectedCharIndex], 40, 380, this);
         }
-
         //if opp selected, draw FIXED prev
         if (opponentSelected) {
             g2d.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap, this);
             g2d.drawImage(caption[selectedOppIndex], 553, 380, this);
         }
-
-        //all char caps in this segment
-        {
-
-            g2d.drawImage(charHold, 311, 0, this);
-
-            if (well()) {
-                if (characterSelected != true) {
-                    g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
-                }
-
-                if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
-                    g2d.drawImage(oppBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
+        g2d.drawImage(charHold, 311, 0, this);
+        for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
+            for (int column = 0; column < columns; column++) {
+                int computedPosition = (columns * row) + column;
+                if (computedPosition < numOfCharacters) {
+                    boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
+                    boolean validRow = rowIndex == row;
+                    boolean validColumn = columnIndex == column;
+                    boolean notAllCharactersSelect = bothArentSelected();
+                    if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
+                    {
+                        if (characterSelected != true) {
+                            g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                        }
+                        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer)) {
+                            g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                        }
+                        g2d.setComposite(makeComposite(opacChar));
+                        g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                        charPrevLoicIndex = computedPosition;
+                        g2d.setComposite(makeComposite(1.0f));
+                    } else {
+                        g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    }
                 }
             }
-
-            col = 0;
-            for (int i = 0; i < (thumbnailNormal.length / 3); i++) {
-                {
-                    g2d.drawImage(thumbnailBlurred[col], hPos, firstLine + (vSpacer * i), this);
-                    //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                    {
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[col], hPos, firstLine + (vSpacer * i), this);
-                        charPrevLoicIndex = col;
-                        g2d.setComposite(makeComposite(1.0f));
-                    }
-                    col++;
-                }
-
-                {
-                    g2d.drawImage(thumbnailBlurred[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
-                    //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                    {
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[col], hPos + (hSpacer * 1), firstLine + (vSpacer * i), this);
-                        charPrevLoicIndex = col;
-                        g2d.setComposite(makeComposite(1.0f));
-                    }
-                    col++;
-                }
-
-                {
-                    g2d.drawImage(thumbnailBlurred[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
-                    //normal
-                    if (bothArentSelected() && hIndex == 3 && vIndex == i && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                    {
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
-                        charPrevLoicIndex = col;
-                        g2d.setComposite(makeComposite(1.0f));
-                    }
-                    col++;
-                }
-                lastRow = i;
-            }
-
-            int rem = thumbnailBlurred.length % 3;
-
-            if (rem == 1) {
-                g2d.drawImage(thumbnailBlurred[col], hPos, firstLine, this);
-                //normal
-                if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                {
-                    g2d.setComposite(makeComposite(opacChar));
-                    g2d.drawImage(thumbnailNormal[col], hPos, firstLine, this);
-                    charPrevLoicIndex = col;
-                    g2d.setComposite(makeComposite(1.0f));
-                }
-            } else if (rem == 2) {
-                {
-                    g2d.drawImage(thumbnailBlurred[col], hPos, firstLine, this);
-                    //normal
-                    if (bothArentSelected() && hIndex == 1 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                    {
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[col], hPos, firstLine, this);
-                        charPrevLoicIndex = col;
-                        g2d.setComposite(makeComposite(1.0f));
-                    }
-                    col++;
-                }
-
-                {
-                    g2d.drawImage(thumbnailBlurred[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
-                    //normal
-                    if (bothArentSelected() && hIndex == 2 && vIndex == lastRow && allPlayers[((vIndex * 3) + hIndex) - 1] == 0)//clear
-                    {
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[col + 1], hPos + hSpacer, firstLine + vSpacer, this);
-                        charPrevLoicIndex = col + 1;
-                        g2d.setComposite(makeComposite(1.0f));
-                    }
-                    col++;
-                }
-            }
-
-            if (characterSelected && opponentSelected) {
-                g2d.drawImage(fight, 0, 0, this);
-                g2d.setFont(bigFont);
-                g2d.setColor(Color.WHITE);
-                g2d.drawString("<< " + Language.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(146) + " >>")) / 2, 360);
-                g2d.drawString("<< " + Language.getInstance().getLine(147) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(147) + " >>")) / 2, 390);
-            }
+        }
+        if (characterSelected && opponentSelected) {
+            //TODO show select stage instead
+            g2d.drawImage(fight, 0, 0, this);
+            g2d.setFont(bigFont);
+            g2d.setColor(Color.WHITE);
+            g2d.drawString("<< " + Language.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(146) + " >>")) / 2, 360);
+            g2d.drawString("<< " + Language.getInstance().getLine(147) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(147) + " >>")) / 2, 390);
         }
         g2d.setFont(normalFont);
         g2d.setColor(Color.white);
         if (characterSelected == false) {
+            //select character
             g2d.drawImage(charDescPic, 0, 0, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 4 + x, 18);
         }
         if (characterSelected && opponentSelected == false) {
+            //select opponent
             g2d.drawImage(oppDescPic, 452, 450, this);
             g2d.drawString(statsChar[charPrevLoicIndex], 852 - g2d.getFontMetrics(normalFont).stringWidth(statsChar[charPrevLoicIndex]) + x, 468);
         }

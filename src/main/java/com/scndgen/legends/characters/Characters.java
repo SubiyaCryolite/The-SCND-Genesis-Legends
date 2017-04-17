@@ -125,8 +125,8 @@ public class Characters {
     /**
      * SET damage multipliers, used to strengthen/weaken attacks
      *
-     * @param characterState      the person calling the method
-     * @param thisMuch the number to alter by
+     * @param characterState the person calling the method
+     * @param thisMuch       the number to alter by
      */
     public static void setDamageCounter(CharacterState characterState, int thisMuch) {
         if (characterState == CharacterState.CHARACTER) {
@@ -302,8 +302,10 @@ public class Characters {
      * resets every characters
      */
     public void resetCharacters() {
-        opponent.resetLimits();
-        character.resetLimits();
+        if (opponent != null)
+            opponent.resetLimits();
+        if (character != null)
+            character.resetLimits();
         RenderCharacterSelectionScreen.getInstance().setCharacterSelected(false);
         RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
     }

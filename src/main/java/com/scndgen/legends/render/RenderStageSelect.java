@@ -267,7 +267,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     /**
      * Horizontal index
      *
-     * @return hIndex
+     * @return columnIndex
      */
     public int getHindex() {
         return hIndex;
@@ -283,7 +283,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     /**
      * Vertical index
      *
-     * @return vIndex
+     * @return rowIndex
      */
     public int getVindex() {
         return vIndex;
@@ -371,6 +371,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     }
 
     public void newInstance() {
+        super.newInstance();
     }
 
 }

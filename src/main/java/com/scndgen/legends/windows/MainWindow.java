@@ -92,7 +92,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private Image ico16, ico22, ico24, ico32, ico48, ico72, ico96, ico128, ico256;
     private MainWindow gameWindow;
     private AudioPlayback backgroundMusic;
-    private int topY, topX, columns, vspacer, hspacer, rows;
 
     private MainWindow(String nameOfUser, String mode) {
         instance = this;
@@ -167,8 +166,10 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (mode.equals(lanHost)) {
             setContentPane(drawWait);
         } else if (mode.equals(storyMode)) {
+            RenderStoryMenu.getInstance().newInstance();
             setContentPane(RenderStoryMenu.getInstance());
         } else {
+            RenderCharacterSelectionScreen.getInstance().newInstance();
             setContentPane(RenderCharacterSelectionScreen.getInstance());
         }
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -230,6 +231,8 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             public void run() {
                 try {
                     do {
+                        this.sleep(33);
+                        if (!JenesisGamePad.getInstance().canPoll()) continue;
                         JenesisGamePad.getInstance().poll();
                         //update bottons
                         buttonPressed = JenesisGamePad.getInstance().getButtons();
@@ -277,7 +280,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                         hatDir = JenesisGamePad.getInstance().getXYStickDir();
                         hatDir = JenesisGamePad.getInstance().getZRZStickDir();
                         buttonPressed = JenesisGamePad.getInstance().getButtons();
-                        this.sleep(33);
                     } while (true);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
@@ -447,11 +449,12 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      */
     public void backToCharSelect() {
         gameRunning = false;
+        RenderCharacterSelectionScreen.getInstance().newInstance();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         mode = Mode.CHAR_SELECT_SCREEN;
         RenderGameplay.getInstance().cleanAssets();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-        RenderCharacterSelectionScreen.getInstance().refreshSelections();
+        RenderCharacterSelectionScreen.getInstance().newInstance();
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
         backgroundMusic.play();
         reSize("menu");
@@ -464,9 +467,9 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void backToCharSelect2() {
         gameRunning = false;
         RenderGameplay.getInstance().getGameInstance().isPaused = false;
-        RenderGameplay.getInstance().getGameInstance().terminateThread();
+        RenderGameplay.getInstance().getGameInstance().terminateGameplay();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-        RenderCharacterSelectionScreen.getInstance().refreshSelections();
+        RenderCharacterSelectionScreen.getInstance().newInstance();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         RenderGameplay.getInstance().cleanAssets();
         RenderCharacterSelectionScreen.getInstance().systemNotice("Canceled Match");
@@ -679,7 +682,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                     }
                 } else {
                     quickVibrate(0.4f, 1000);
-                    RenderCharacterSelectionScreen.getInstance().selectChar();
+                    RenderCharacterSelectionScreen.getInstance().selectCharacter();
                 }
             } else if (mode == Mode.STORY_SELECT_SCREEN) {
                 RenderStoryMenu.getInstance().selectStage();
@@ -694,7 +697,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 }
             }
         }
-        
+
     }
 
     /**
@@ -704,7 +707,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
             if (getGameMode().equalsIgnoreCase(singlePlayer)) {
                 {
-                    RenderCharacterSelectionScreen.getInstance().refreshSelections();
+                    RenderCharacterSelectionScreen.getInstance().newInstance();
                     RenderCharacterSelectionScreen.getInstance().backToMenu();
                 }
             }
@@ -714,7 +717,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         } else if (mode == Mode.STORY_SELECT_SCREEN && !getIsGameRunning()) {
             RenderStoryMenu.getInstance().backToMainMenu();
         }
-        
+
     }
 
     /**
@@ -724,13 +727,13 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (menuLatencyElapsed) {
             if (mode == Mode.CHAR_SELECT_SCREEN) {
                 if (getGameMode().equalsIgnoreCase(singlePlayer)) {
-                    RenderCharacterSelectionScreen.getInstance().refreshSelections();
+                    RenderCharacterSelectionScreen.getInstance().newInstance();
                 }
             } else if (getIsGameRunning()) {
                 RenderGameplay.getInstance().unQueMove();
             }
         }
-        
+
     }
 
     public void triggerFury(CharacterState who) {
@@ -744,7 +747,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (menuLatencyElapsed)
             if (getIsGameRunning())
                 RenderGameplay.getInstance().attack();
-        
+
     }
 
     @Override
@@ -831,7 +834,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                     RenderCharacterSelectionScreen.getInstance().beginGame();
                 }
             } else {
-                RenderCharacterSelectionScreen.getInstance().selectChar();
+                RenderCharacterSelectionScreen.getInstance().selectCharacter();
             }
         }
         if (mode == Mode.STORY_SELECT_SCREEN && withinMenuPanel) {
@@ -871,26 +874,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     @Override
     public void mouseDragged(MouseEvent m) {
-    }
-
-    /**
-     * To make sure the caption is animated once,
-     * this method checks if the selected caption has changed
-     *
-     * @param x
-     * @param y
-     */
-    public void animateCap(int x, int y) {
-        int tmpx = x;
-        int tmpy = y;
-
-        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
-        {
-        } else {
-            storedX = tmpx;
-            storedY = tmpy;
-            RenderCharacterSelectionScreen.getInstance().animateCaption();
-        }
     }
 
     /**
@@ -965,20 +948,24 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     /**
      * Attempts to map selected characters using mouse
      */
-    private void sortCharPosLoc(int xPos, int yPos) {
-        topY = RenderCharacterSelectionScreen.getInstance().getStartY() + mouseYoffset;
-        topX = RenderCharacterSelectionScreen.getInstance().getStartX();
-        columns = RenderCharacterSelectionScreen.getInstance().getNumberOfCharColumns();
-        vspacer = RenderCharacterSelectionScreen.getInstance().getCharHSpacer();
-        hspacer = RenderCharacterSelectionScreen.getInstance().getCharVSpacer();
-        rows = RenderCharacterSelectionScreen.getInstance().getCharRows();
-
-        if (xPos > topX && xPos < (topX + (hspacer * columns)) && (yPos > topY) && (yPos < topY + (vspacer * (rows + 1)))) {
-            int vIndex = (yPos - topY) / vspacer;
-            int hIndex = (((xPos - topX) / hspacer) + 1);
+    private void sortCharPosLoc(int mouseX, int mouseY) {
+        int topY = RenderCharacterSelectionScreen.getInstance().getTopY() + mouseYoffset;
+        int topX = RenderCharacterSelectionScreen.getInstance().getTopX();
+        int columns = RenderCharacterSelectionScreen.getInstance().getColumns();
+        int captionHeight = RenderCharacterSelectionScreen.getInstance().getCaptionHeight();
+        int captionWidth = RenderCharacterSelectionScreen.getInstance().getCaptionWidth();
+        int rows = RenderCharacterSelectionScreen.getInstance().getRows();
+        if (mouseX > topX && mouseX < (topX + (captionWidth * columns)) && (mouseY > topY) && (mouseY < topY + (captionHeight * (rows + 1)))) {
+            int vIndex = (mouseY - topY) / captionHeight;
+            int hIndex = (mouseX - topX) / captionWidth;
             RenderCharacterSelectionScreen.getInstance().setHindex(hIndex);
             RenderCharacterSelectionScreen.getInstance().setVindex(vIndex);
-            animateCap(hIndex, vIndex);
+            if (hIndex != storedX || vIndex != storedY) //same vals, do nothing
+            {
+                storedX = hIndex;
+                storedY = vIndex;
+                RenderCharacterSelectionScreen.getInstance().animateCaption();
+            }
             withinCharPanel = true;
         } else {
             RenderCharacterSelectionScreen.getInstance().setHindex(99);
@@ -988,18 +975,18 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Attemptsto map selected characters using mouse
+     * Attempts to map selected characters using mouse
      */
-    private void sortStagePosLoc(int xPos, int yPos) {
-        topY = RenderStoryMenu.getInstance().getStartY() + mouseYoffset;
-        topX = RenderStoryMenu.getInstance().getStartX();
-        columns = RenderStoryMenu.getInstance().getNumberOfCharColumns();
-        vspacer = RenderStoryMenu.getInstance().getCharHSpacer();
-        hspacer = RenderStoryMenu.getInstance().getCharVSpacer();
-        rows = RenderStoryMenu.getInstance().getCharRows();
-        if (xPos > topX && xPos < (topX + (hspacer * columns)) && (yPos > topY) && (yPos < topY + (vspacer * (rows + 1)))) {
-            int vIndex = (yPos - topY) / vspacer;
-            int hIndex = (((xPos - topX) / hspacer) + 1);
+    private void sortStagePosLoc(int mouseX, int mouseY) {
+        int topY = RenderStoryMenu.getInstance().getStartY() + mouseYoffset;
+        int topX = RenderStoryMenu.getInstance().getStartX();
+        int columns = RenderStoryMenu.getInstance().getNumberOfCharColumns();
+        int vspacer = RenderStoryMenu.getInstance().getCharHSpacer();
+        int hspacer = RenderStoryMenu.getInstance().getCharVSpacer();
+        int rows = RenderStoryMenu.getInstance().getCharRows();
+        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows + 1)))) {
+            int vIndex = (mouseY - topY) / vspacer;
+            int hIndex = (((mouseX - topX) / hspacer) + 1);
             RenderStoryMenu.getInstance().setHindex(hIndex);
             RenderStoryMenu.getInstance().setVindex(vIndex);
             animateCap2x(hIndex, vIndex);
@@ -1015,20 +1002,19 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     /**
      * Attempts to map selected characters using mouse
      */
-    private void sortCharPosLoc2(int xPos, int yPos) {
-        topY = RenderStageSelect.getInstance().getStartY() + mouseYoffset;
-        topX = RenderStageSelect.getInstance().getStartX();
-        columns = RenderStageSelect.getInstance().getNumberOfCharColumns();
-        vspacer = RenderStageSelect.getInstance().getCharHSpacer();
-        hspacer = RenderStageSelect.getInstance().getCharVSpacer();
-        rows = RenderStageSelect.getInstance().getCharRows();
-
-        if (xPos > topX && xPos < (topX + (hspacer * columns)) && (yPos > topY) && (yPos < topY + (vspacer * (rows + 1)))) {
-            int vIndex = (yPos - topY) / vspacer;
-            int hIndex = (((xPos - topX) / hspacer) + 1);
+    private void sortCharPosLoc2(int mouseX, int mouseY) {
+        int topY = RenderStageSelect.getInstance().getStartY() + mouseYoffset;
+        int topX = RenderStageSelect.getInstance().getStartX();
+        int columns = RenderStageSelect.getInstance().getNumberOfCharColumns();
+        int vspacer = RenderStageSelect.getInstance().getCharHSpacer();
+        int hspacer = RenderStageSelect.getInstance().getCharVSpacer();
+        int rows = RenderStageSelect.getInstance().getCharRows();
+        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows + 1)))) {
+            int vIndex = (mouseY - topY) / vspacer;
+            int hIndex = (((mouseX - topX) / hspacer) + 1);
             //System.out.println("within char pan dog");
-            //System.out.println("Row "+vIndex);
-            //System.out.println("Column "+hIndex);
+            //System.out.println("Row "+rowIndex);
+            //System.out.println("Column "+columnIndex);
             RenderStageSelect.getInstance().setHindex(hIndex);
             RenderStageSelect.getInstance().setVindex(vIndex);
             //RenderCharacterSelectionScreen.getInstance().setItem();
@@ -1167,6 +1153,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 sendToClient("as1wds2_" + LoginScreen.getInstance().timePref);
                 isWaiting = false;
                 drawWait.stopRepaint();
+                RenderCharacterSelectionScreen.getInstance().newInstance();
                 setContentPane(RenderCharacterSelectionScreen.getInstance());
                 mode = Mode.CHAR_SELECT_SCREEN;//RenderCharacterSelectionScreen.getInstance().animCloud();
                 RenderCharacterSelectionScreen.getInstance().animateCharSelect();

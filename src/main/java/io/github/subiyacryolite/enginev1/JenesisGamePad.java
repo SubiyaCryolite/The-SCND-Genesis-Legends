@@ -221,6 +221,10 @@ public class JenesisGamePad {
 
     // ----------------- polling and getting data ------------------
 
+    public boolean canPoll() {
+        return (controller != null);
+    }
+
     /**
      * update the component values in the controller
      */

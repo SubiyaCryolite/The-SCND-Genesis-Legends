@@ -36,13 +36,19 @@ import io.github.subiyacryolite.enginev1.JenesisMode;
 public abstract class StageSelect extends JenesisMode {
 
     protected Stage hoveredStage = Stage.IBEX_HILL;
-    protected int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
-    protected StageSelection mode = StageSelection.NORMAL;
+    protected int lastRow, charYcap = 0, charXcap = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
+    protected StageSelection mode;
     protected int ambientMusicIndex = 0;
     protected int numberOfStages;
-    protected boolean selectedStage = false;
+    protected boolean selectedStage;
     protected final String[] stagePrevLox;
 
+    public void newInstance()
+    {
+        hoveredStage = Stage.IBEX_HILL;
+        mode = StageSelection.NORMAL;
+        selectedStage = false;
+    }
 
     public StageSelect() {
         stagePrevLox = new String[Stage.values().length];

@@ -285,7 +285,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * Horizontal index
      *
-     * @return hIndex
+     * @return columnIndex
      */
     public final int getHindex() {
         return hIndex;
@@ -301,7 +301,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * Vertical index
      *
-     * @return vIndex
+     * @return rowIndex
      */
     public final int getVindex() {
         return vIndex;

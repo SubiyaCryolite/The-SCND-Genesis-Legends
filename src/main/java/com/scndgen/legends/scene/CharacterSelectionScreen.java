@@ -2,8 +2,8 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
 
 /**
  * Created by ifunga on 14/04/2017.
@@ -29,20 +30,32 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     protected static int storyBoards;
     protected final com.scndgen.legends.characters.Characters players = new com.scndgen.legends.characters.Characters();
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
-    protected int numOfCharacters = Characters.values().length;
-    protected int col, currentSlot = 0, lastRow, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105, horizColumns = 3, verticalRows = 3;
+    protected final int numOfCharacters = Characters.values().length;
+    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, columnIndex = 1, x = 0, y = 0, rowIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
     protected JenesisImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
     protected Characters opponent, characters;
-    protected int[] allPlayers = new int[LoginScreen.getInstance().charNames.length];
     protected int oppPrevLoc, charPrevLoc;
-    protected boolean characterSelected = false, opponentSelected = false, isAnimatorNotRuning = true;
+    protected boolean characterSelected, opponentSelected, animatorThreadRunning;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
-    protected Object source;
     //private static StageSelect charVisual;
     protected AudioPlayback sound, sound2, error;
+    protected final int columns = 3;
+    protected final int rows = numOfCharacters / columns;
+    protected boolean canSelectCharacter;
+    protected final Hashtable<Integer, Characters> characterLookup = new Hashtable<>();
 
+    public void newInstance() {
+        canSelectCharacter = true;
+        characterSelected = false;
+        opponentSelected = false;
+        refreshSelections();
+        characterLookup.clear();
+        for (Characters c : Characters.values()) {
+            characterLookup.put(c.index(), c);
+        }
+    }
 
     /**
      * Initialises the characters select panel
@@ -162,13 +175,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      */
     public static int[] getAISlot() {
         int[] array = {};
-        //when doing well, all attacks
+        //when doing isWithinRange, all attacks
         if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 1.00) {
             array = arr1;
-        } //when doing well, all attacks + 2 buffs
+        } //when doing isWithinRange, all attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.75 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 1.00) {
             array = arr2;
-        } //when doing well, 4 attacks + 2 buffs
+        } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
                 MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
@@ -176,7 +189,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             } else {
                 array = arr3;
             }
-        } //when doing well, 4 buffs + 2 moves
+        } //when doing isWithinRange, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
                 MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
@@ -184,7 +197,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             } else {
                 array = arr4;
             }
-        } //first fury, when doing well, 4 buffs + 2 moves
+        } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
                 MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
@@ -240,10 +253,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Disables all buttons, used in online and story modes
      */
-    public void disableAll() {
-        for (int u = 0; u < allPlayers.length; u++) {
-            allPlayers[u] = 1;
-        }
+    public void preventCharacterSelection() {
+        canSelectCharacter = false;
     }
 
     public com.scndgen.legends.characters.Characters getPlayers() {
@@ -252,14 +263,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        source = ae.getSource();
+
     }
 
     /**
      * Goes back to main menu
      */
     public void backToMenu() {
-        refreshSelections();
+        newInstance();
         //cancel hosting
         if (MainWindow.getInstance().getGameMode().equals(MainWindow.lanHost)) {
             MainWindow.getInstance().closeTheServer();
@@ -289,13 +300,9 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Refresh selections
      */
-    public void refreshSelections() {
+    private void refreshSelections() {
         charPrevLoc = 0;
         oppPrevLoc = 0;
-        //MainWindow.getInstance().repaintCharSel();
-        for (int u = 0; u < allPlayers.length; u++) {
-            allPlayers[u] = 0; // 0 means free, 1 means selected
-        }
         characterSelected = false;
         opponentSelected = false;
         //selectedCharIndex=0;
@@ -337,14 +344,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 characterSelected = true;
                 characters = Characters.RAILA;
                 getPlayers().prepare(characters);
-                allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+                charPrevLoc = selectedCharIndex = characters.index();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                     MainWindow.getInstance().sendToClient("selRai_jkxc");
-                    disableAll();
+                    preventCharacterSelection();
                 }
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                     MainWindow.getInstance().sendToServer("selRai_jkxc");
-                    disableAll();
+                    preventCharacterSelection();
                 }
             }
         } else if (type == CharacterState.OPPONENT && opponentSelected == false) {
@@ -355,7 +362,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.RAILA;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -374,15 +381,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 characterSelected = true;
                 characters = Characters.SUBIYA;
                 getPlayers().prepare(characters);
-                allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+                charPrevLoc = selectedCharIndex = characters.index();
                 charDesc = getPlayers().getCharacter().getDescSmall();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                     MainWindow.getInstance().sendToClient("selSub_jkxc");
-                    disableAll();
+                    preventCharacterSelection();
                 }
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                     MainWindow.getInstance().sendToServer("selSub_jkxc");
-                    disableAll();
+                    preventCharacterSelection();
                 }
             }
         }
@@ -394,7 +401,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.SUBIYA;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -412,15 +419,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             characterSelected = true;
             characters = Characters.LYNX;
             getPlayers().prepare(characters);
-            allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+            charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selLyn_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selLyn_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
         if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
@@ -430,7 +437,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.LYNX;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -448,15 +455,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             characterSelected = true;
             characters = Characters.AISHA;
             getPlayers().prepare(characters);
-            allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+            charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selAlx_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selAlx_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -467,7 +474,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.AISHA;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -485,15 +492,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             characterSelected = true;
             characters = Characters.ADE;
             getPlayers().prepare(characters);
-            allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+            charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selAde_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selAde_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -504,7 +511,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.ADE;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -522,15 +529,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             characterSelected = true;
             characters = Characters.RAVAGE;
             getPlayers().prepare(characters);
-            allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+            charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selRav_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selRav_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -541,7 +548,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.RAVAGE;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -561,14 +568,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(characters);
             charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            allPlayers[6] = 1;
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selJon_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selJon_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -579,7 +585,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.JONAH;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -597,15 +603,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             characterSelected = true;
             characters = Characters.ADAM;
             getPlayers().prepare(characters);
-            allPlayers[characters.index()] = charPrevLoc = selectedCharIndex = characters.index();
+            charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selAdam_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selAdam_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -616,7 +622,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.NOVA_ADAM;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -636,15 +642,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(characters);
             charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //MainWindow.getInstance().repaintCharSel();
-            allPlayers[8] = 1;
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selNOVAAdam_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selNOVAAdam_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -655,7 +659,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.NOVA_ADAM;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -675,15 +679,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(characters);
             charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //MainWindow.getInstance().repaintCharSel();
-            allPlayers[9] = 1;
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selAzaria_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selAzaria_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -694,7 +696,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.AZARIA;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -714,15 +716,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(characters);
             charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //MainWindow.getInstance().repaintCharSel();
-            allPlayers[10] = 1;
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selSorr_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selSorr_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -732,7 +732,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             sound2.play();
             opponentSelected = true;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -752,15 +752,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             getPlayers().prepare(characters);
             charPrevLoc = selectedCharIndex = characters.index();
             charDesc = getPlayers().getCharacter().getDescSmall();
-            //MainWindow.getInstance().repaintCharSel();
-            allPlayers[11] = 1;
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("selThi_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                 MainWindow.getInstance().sendToServer("selThi_jkxc");
-                disableAll();
+                preventCharacterSelection();
             }
         }
 
@@ -771,7 +769,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.THING;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
 
         if (type == CharacterState.BOSS && opponentSelected == false) // when selecting opponent as boss
@@ -781,7 +779,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             opponentSelected = true;
             opponent = Characters.THING;
             getPlayers().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = allPlayers[2] = opponent.index();
+            selectedOppIndex = oppPrevLoc = opponent.index();
         }
     }
 
@@ -790,43 +788,37 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     }
 
     public void animateCharSelect() {
+        if (animatorThreadRunning) return;
         new Thread() {
-
             @Override
-            @SuppressWarnings("static-access")
             public void run() {
                 this.setName("Characters select bg animation thread");
-                if (isAnimatorNotRuning) {
-                    do {
-                        isAnimatorNotRuning = false;
-                        try {
-                            for (int x = 0; x > (-1440 + 852); x++) {
-                                {
-                                    this.sleep(0033);
-                                    this.setName("What am I doing");
-                                    xCordCloud = xCordCloud - 3;
-                                    xCordCloud2 = xCordCloud2 - 5;
-                                    if (xCordCloud < -960) {
-                                        xCordCloud = 852;
-                                    }
-                                    if (xCordCloud2 < -960) {
-                                        xCordCloud2 = 852;
-                                    }
-                                }
+                do {
+                    animatorThreadRunning = true;
+                    try {
+                        for (int x = 0; x > (-1440 + 852); x++) {
+                            this.sleep(0033);
+                            xCordCloud = xCordCloud - 3;
+                            xCordCloud2 = xCordCloud2 - 5;
+                            if (xCordCloud < -960) {
+                                xCordCloud = 852;
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            if (xCordCloud2 < -960) {
+                                xCordCloud2 = 852;
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    while (MainWindow.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
                 }
-
+                while (MainWindow.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
+                animatorThreadRunning = false;
             }
         }.start();
     }
 
     public void setItem() {
-        currentSlot = (verticalRows * vIndex) + hIndex;
+        currentSlot = (rows * rowIndex) + columnIndex;
         System.out.println("Current Slot: " + currentSlot);
     }
 
@@ -834,28 +826,44 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * Characters select screen, move up
      */
     public void moveUp() {
-        upMove();
+        if (rowIndex > 0)
+            rowIndex = rowIndex - 1;
+        else
+            rowIndex = rows - 1;
+        capAnim();
     }
 
     /**
      * Characters select screen, move down
      */
     public void moveDown() {
-        downMove();
+        if (rowIndex < rows)
+            rowIndex = rowIndex + 1;
+        else
+            rowIndex = 0;
+        capAnim();
     }
 
     /**
      * Characters select screen, move right
      */
     public void moveRight() {
-        rightMove();
+        if (columnIndex < columns)
+            columnIndex = columnIndex + 1;
+        else
+            columnIndex = 0;
+        capAnim();
     }
 
     /**
      * Characters select screen, move left
      */
     public void moveLeft() {
-        leftMove();
+        if (columnIndex > 0)
+            columnIndex = columnIndex - 1;
+        else
+            columnIndex = columns - 1;
+        capAnim();
     }
 
     /**
@@ -863,8 +871,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return number of columns
      */
-    public int getNumberOfCharColumns() {
-        return horizColumns;
+    public int getColumns() {
+        return columns;
     }
 
     /**
@@ -872,7 +880,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return spacer
      */
-    public int getCharHSpacer() {
+    public int getCaptionHeight() {
         return vSpacer;
     }
 
@@ -881,7 +889,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return spacer
      */
-    public int getCharVSpacer() {
+    public int getCaptionWidth() {
         return hSpacer;
     }
 
@@ -890,7 +898,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return starting x coordinate
      */
-    public int getStartX() {
+    public int getTopX() {
         return hPos;
     }
 
@@ -899,7 +907,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return starting y
      */
-    public int getStartY() {
+    public int getTopY() {
         return firstLine;
     }
 
@@ -908,8 +916,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      *
      * @return number of rows
      */
-    public int getCharRows() {
-        return verticalRows;
+    public int getRows() {
+        return rows;
     }
 
     /**
@@ -922,152 +930,52 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Selects characters
      */
-    public void selectChar() {
-        int horz = getHindex();
-        int vert = getVindex();
-
-        if (horz == 1 && vert == 0) {
-            if (allPlayers[0] == 0) {
-                if (characterSelected == false) {
-                    selRaila(CharacterState.CHARACTER);
-                } else {
-                    selRaila(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
+    public void selectCharacter() {
+        if (!canSelectCharacter) {
+            errorSound();
+            return;
         }
-
-        if (horz == 2 && vert == 0) {
-            if (allPlayers[1] == 0) {
-                if (characterSelected == false) {
-                    selSubiya(CharacterState.CHARACTER);
-                } else {
-                    selSubiya(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 3 && vert == 0) {
-            if (allPlayers[2] == 0) {
-                if (characterSelected == false) {
-                    selLynx(CharacterState.CHARACTER);
-                } else {
-                    selLynx(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 1 && vert == 1) {
-            if (allPlayers[3] == 0) {
-                if (characterSelected == false) {
-                    selAisha(CharacterState.CHARACTER);
-                } else {
-                    selAisha(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 2 && vert == 1) {
-            if (allPlayers[4] == 0) {
-                if (characterSelected == false) {
-                    selRav(CharacterState.CHARACTER);
-                } else {
-                    selRav(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 3 && vert == 1) {
-            if (allPlayers[5] == 0) {
-                if (characterSelected == false) {
-                    selAde(CharacterState.CHARACTER);
-                } else {
-                    selAde(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 1 && vert == 2) {
-            if (allPlayers[6] == 0) {
-                if (characterSelected == false) {
-                    selJon(CharacterState.CHARACTER);
-                } else {
-                    selJon(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 2 && vert == 2) {
-            if (allPlayers[7] == 0) {
-                if (characterSelected == false) {
-                    selAdam(CharacterState.CHARACTER);
-                } else {
-                    selAdam(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 3 && vert == 2) {
-            if (allPlayers[8] == 0) {
-                if (characterSelected == false) {
-                    selNOVAAdam(CharacterState.CHARACTER);
-                } else {
-                    selNOVAAdam(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 1 && vert == 3) {
-            if (allPlayers[9] == 0) {
-                if (characterSelected == false) {
-                    selAza(CharacterState.CHARACTER);
-                } else {
-                    selAza(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 2 && vert == 3) {
-            if (allPlayers[10] == 0) {
-                if (characterSelected == false) {
-                    selSorr(CharacterState.CHARACTER);
-                } else {
-                    selSorr(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
-        }
-
-        if (horz == 3 && vert == 3) {
-            if (allPlayers[11] == 0) {
-                if (characterSelected == false) {
-                    selThing(CharacterState.CHARACTER);
-                } else {
-                    selThing(CharacterState.OPPONENT);
-                }
-            } else {
-                errorSound();
-            }
+        int row = getHindex();
+        int column = getVindex();
+        int computedPosition = (columns * column) + row;
+        Characters character = characterLookup.get(computedPosition);
+        switch (character) {
+            case SUBIYA:
+                selSubiya(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case RAILA:
+                selRaila(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case LYNX:
+                selLynx(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case AISHA:
+                selAisha(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case ADE:
+                selAde(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case RAVAGE:
+                selRav(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case JONAH:
+                selJon(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case ADAM:
+                selAdam(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case NOVA_ADAM:
+                selNOVAAdam(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case AZARIA:
+                selAza(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case SORROWE:
+                selSorr(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
+            case THING:
+                selThing(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                break;
         }
     }
 
@@ -1080,89 +988,36 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         System.out.println("Error sound");
     }
 
-
-    /**
-     * Move up
-     */
-    public void upMove() {
-        if (vIndex > 0) {
-            vIndex = vIndex - 1;
-        } else {
-            vIndex = verticalRows;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move down
-     */
-    public void downMove() {
-        if (vIndex < verticalRows) {
-            vIndex = vIndex + 1;
-        } else {
-            vIndex = 0;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move right
-     */
-    public void rightMove() {
-        if (hIndex < horizColumns) {
-            hIndex = hIndex + 1;
-        } else {
-            hIndex = 1;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move left
-     */
-    public void leftMove() {
-        if (hIndex > 1) {
-            hIndex = hIndex - 1;
-        } else {
-            hIndex = horizColumns;
-        }
-
-        capAnim();
-    }
-
     /**
      * Horizontal index
      *
-     * @return hIndex
+     * @return columnIndex
      */
     public int getHindex() {
-        return hIndex;
+        return columnIndex;
     }
 
     /**
      * Set horizontal index
      */
     public void setHindex(int value) {
-        hIndex = value;
+        columnIndex = value;
     }
 
     /**
      * Vertical index
      *
-     * @return vIndex
+     * @return rowIndex
      */
     public int getVindex() {
-        return vIndex;
+        return rowIndex;
     }
 
     /**
      * Set vertical index
      */
     public void setVindex(int value) {
-        vIndex = value;
+        rowIndex = value;
     }
 
     /**
@@ -1177,14 +1032,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Checks if within number of Characters
      */
-    public boolean well() {
+    public boolean isWithinRange() {
         boolean ans = false;
-        int whichChar = ((vIndex * 3) + hIndex) - 1;
+        int whichChar = ((rowIndex * columns) + columnIndex) - 1;
         if (whichChar <= numOfCharacters) {
             ans = true;
-            //System.out.println("Dude: "+whichChar);
         }
-
         return ans;
     }
 

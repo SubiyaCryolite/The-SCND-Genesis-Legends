@@ -428,7 +428,7 @@ public abstract class Gameplay extends JenesisMode {
         } catch (Exception e) {
         }
 
-        for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as well as Black n White flashy Anime effect
+        for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetChar = shakeyOffsetChar + 1;
@@ -447,7 +447,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     public void shakeOppCharLB() {
-        for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as well as Black n White flashy Anime effect
+        for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < loop2; i++) {
                 shakeyOffsetOpp = shakeyOffsetOpp + 1;
