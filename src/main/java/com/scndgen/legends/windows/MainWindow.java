@@ -474,7 +474,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         backgroundMusic.play();
         reSize("menu");
         focus();
-        RenderStageSelect.getInstance().defValue();
+        RenderStageSelect.getInstance().defaultStageValues();
         if (getGameMode().equalsIgnoreCase(storyMode)) {
             RenderCharacterSelectionScreen.getInstance().backToMenu();
         }
@@ -688,7 +688,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 if (getGameMode().equalsIgnoreCase(lanClient) == false) {
                     if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.66f, 1000);
-                        RenderStageSelect.getInstance().selectStage();
+                        RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
                     }
                 }
             }
@@ -837,7 +837,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             RenderStoryMenu.getInstance().selectStage();
         }
         if (mode == Mode.STAGE_SELECT_SCREEN && withinCharPanel) {
-            RenderStageSelect.getInstance().selectStage();
+            RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
         } else if (getIsGameRunning()) {
             if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
                 if (m.getButton() == MouseEvent.BUTTON1) {

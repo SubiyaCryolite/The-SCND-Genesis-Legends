@@ -57,7 +57,7 @@ public class JenesisCanvas extends Application {
             @Override
             public void handle(long now) {
                 if (game.getMode() != null && !game.isSwitchingModes())
-                    game.getMode().renderScene(gameCanvas.getGraphicsContext2D(), gameCanvas.getHeight(), gameCanvas.getWidth());
+                    game.getMode().render(gameCanvas.getGraphicsContext2D(), gameCanvas.getHeight(), gameCanvas.getWidth());
                 else
                     game.drawLoadingAnimation(gameCanvas.getGraphicsContext2D(), gameCanvas.getHeight(), gameCanvas.getWidth());
             }

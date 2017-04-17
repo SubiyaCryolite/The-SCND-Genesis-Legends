@@ -23,6 +23,7 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
@@ -228,8 +229,8 @@ public abstract class StoryMenu extends JenesisMode {
      *
      * @param here - stage the player is on
      */
-    public void setCurrMode(int here) {
-        currMode = here;
+    public void setCurrMode(Stage here) {
+        currMode = here.getIndex();
     }
 
     /**

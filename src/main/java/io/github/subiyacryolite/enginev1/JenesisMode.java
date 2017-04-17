@@ -134,18 +134,25 @@ public abstract class JenesisMode extends JPanel {
     public void moveDown() {
     }
 
-    public void renderScene(GraphicsContext gc, double w, double h) {
+    public void render(final GraphicsContext gc, final double w, final double h) {
     }
 
-    public void keyReleased(KeyEvent keyEvent) {
+    public void update(final long delta) {
+    }
+
+    public void keyReleased(final KeyEvent keyEvent) {
 
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
+    public void keyPressed(final KeyEvent keyEvent) {
 
     }
 
-    public void mouseMoved(MouseEvent mouseEvent) {
+    public void mouseMoved(final MouseEvent mouseEvent) {
+
+    }
+
+    public void mouseClicked(final MouseEvent mouseEvent) {
 
     }
 }

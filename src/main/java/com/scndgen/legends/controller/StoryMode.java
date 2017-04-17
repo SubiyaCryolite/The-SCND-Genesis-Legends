@@ -23,6 +23,7 @@ package com.scndgen.legends.controller;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
@@ -68,23 +69,23 @@ public class StoryMode implements Runnable {
         instance = new StoryMode();
     }
 
-    public void story(int stage, boolean start) {
+    public void story(int scene, boolean start) {
         thread = new Thread(this);
         thread.setName("Story scene thread");
         thread.setPriority(5);
-        MainWindow.getInstance().getStory().setCurrMode(stage);
+        MainWindow.getInstance().getStory().setCurrMode(Stage.RANDOM); //TODO see effects of this
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
         tlkSpeed = WindowOptions.txtSpeed;
         notAsked = true;
         opt = -1;
-        switch (stage) {
+        switch (scene) {
             case 0:
                 time = 181;
                 stat = "nrml";
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
-                RenderStageSelect.getInstance().stage1();
+                RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 break;
             case 1:
                 time = 181;
@@ -92,7 +93,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRaila('o');
-                RenderStageSelect.getInstance().stage100();
+                RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 break;
             case 2:
                 time = 30;
@@ -100,7 +101,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAisha('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selLynx('o');
-                RenderStageSelect.getInstance().stage5();
+                RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 break;
             case 3:
                 time = 181;
@@ -108,7 +109,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selSubiya('o');
-                RenderStageSelect.getInstance().stage4();
+                RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 break;
             case 4:
                 time = 45;
@@ -116,7 +117,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRav('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selAde('o');
-                RenderStageSelect.getInstance().stage7();
+                RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 5:
                 time = 45;
@@ -125,7 +126,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selJon('o');
-                RenderStageSelect.getInstance().stage7();
+                RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 6:
                 time = 181;
@@ -133,7 +134,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAza('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                RenderStageSelect.getInstance().stage10();
+                RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 7:
                 time = 181;
@@ -141,7 +142,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selRav('o');
-                RenderStageSelect.getInstance().stage2();
+                RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 break;
             case 8:
                 time = 181;
@@ -149,7 +150,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selLynx('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selAdam('o');
-                RenderStageSelect.getInstance().stage10();
+                RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 9:
                 time = 60;
@@ -157,7 +158,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selRaila('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selSorr('o');
-                RenderStageSelect.getInstance().stage10();
+                RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 10:
                 time = 90;
@@ -165,7 +166,7 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selSubiya('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selNOVAAdam('o');
-                RenderStageSelect.getInstance().stage11();
+                RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 break;
             case 11:
                 time = 181;
@@ -173,11 +174,11 @@ public class StoryMode implements Runnable {
                 RenderCharacterSelectionScreen.getInstance().selAdam('c');
                 RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
                 RenderCharacterSelectionScreen.getInstance().selThing('x');
-                RenderStageSelect.getInstance().stage13();
+                RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }
         if (start) {
-            startStoryMode(stage);
+            startStoryMode(scene);
         }
     }
 

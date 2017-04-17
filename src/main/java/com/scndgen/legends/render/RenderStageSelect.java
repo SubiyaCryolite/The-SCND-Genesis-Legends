@@ -23,6 +23,7 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.scene.StageSelect;
 import com.scndgen.legends.windows.MainWindow;
@@ -32,6 +33,7 @@ import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Hashtable;
 
 public class RenderStageSelect extends StageSelect implements JenesisRender {
 
@@ -57,30 +59,31 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     private Image[] stageCap = new Image[numberOfStages];
     private Image[] stagePrev = new Image[numberOfStages];
     private Font normalFont, bigFont;
-    private String[] stageNameStr;
-    private int oldId = -1;
+    private final Hashtable<Stage, String> stageNameStr;
+    private int hoveredStageIndex = -1;
 
     public RenderStageSelect() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
         Language lang = Language.getInstance();
-        stageNameStr = new String[]{lang.getLine(152),
-                lang.getLine(153),
-                lang.getLine(154),
-                lang.getLine(155),
-                lang.getLine(156),
-                lang.getLine(157),
-                lang.getLine(158),
-                lang.getLine(159),
-                lang.getLine(160),
-                lang.getLine(161),
-                lang.getLine(162),
-                lang.getLine(163),
-                lang.getLine(369),
-                lang.getLine(370),
-                lang.getLine(371),
-                lang.getLine(164)};
-        numberOfStages = stageNameStr.length;
+        stageNameStr = new Hashtable<>();
+        stageNameStr.put(Stage.IBEX_HILL, "");
+        stageNameStr.put(Stage.CHELSTON_CITY_DOCKS, lang.getLine(153));
+        stageNameStr.put(Stage.DESERT_RUINS, lang.getLine(154));
+        stageNameStr.put(Stage.CHELSTON_CITY_STREETS, lang.getLine(155));
+        stageNameStr.put(Stage.IBEX_HILL_NIGHT, lang.getLine(156));
+        stageNameStr.put(Stage.SCORCHED_RUINS, lang.getLine(157));
+        stageNameStr.put(Stage.FROZEN_WILDERNESS, lang.getLine(158));
+        stageNameStr.put(Stage.DISTANT_ISLE, lang.getLine(162));
+        stageNameStr.put(Stage.HIDDEN_CAVE, lang.getLine(159));
+        stageNameStr.put(Stage.AFRICAN_VILLAGE, lang.getLine(160));
+        stageNameStr.put(Stage.APOCALYPTO, lang.getLine(161));
+        stageNameStr.put(Stage.DISTANT_ISLE_NIGHT, lang.getLine(163));
+        stageNameStr.put(Stage.DESERT_RUINS_NIGHT, lang.getLine(369));
+        stageNameStr.put(Stage.SCORCHED_RUINS_NIGHT, lang.getLine(370));
+        stageNameStr.put(Stage.RANDOM, lang.getLine(164));
+        stageNameStr.put(Stage.HIDDEN_CAVE_NIGHT, lang.getLine(371));
+        numberOfStages = Stage.values().length;
 
         verticalRows = (numberOfStages / 3);
         stageCap = new Image[numberOfStages];
@@ -113,7 +116,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         loadAssets();
         if (selectedStage) {
             g2d.setColor(Color.BLACK);
-            g2d.drawImage(stagePrev[stageSelIndex], charXcap + x, charYcap, this);
+            g2d.drawImage(stagePrev[hoveredStage.getIndex()], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(0.7f));
             g2d.fillRect(0, 0, 852, 480);
             g2d.setComposite(makeComposite(1.0f));
@@ -138,7 +141,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
                 opacity = opacity + 0.02f;
             }
             g2d.setComposite(makeComposite(opacity));
-            g2d.drawImage(stagePrev[stageSelIndex], charXcap + x, charYcap, this);
+            g2d.drawImage(stagePrev[hoveredStage.getIndex()], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
             lastRow = 0;
             {
@@ -169,7 +172,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
 
                 if (well()) {
                     {
-                        showStageName(stageSelIndex);
+                        showStageName(hoveredStage);
                         g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                     }
                 }
@@ -183,25 +186,23 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     private void loadCaps() {
         selectedStage = false;
         try {
+            charBack = imageLoader.loadImage("images/selStage.png");
+            loading = imageLoader.loadImage("images/appletprogress.gif");
             for (int i = 0; i < stagePrevLox.length; i++) {
                 stageCap[i] = imageLoader.loadImage("images/t_" + stagePrevLox[i] + ".png");
+                stagePrev[i] = imageLoader.loadImage("images/prev/" + stagePrevLox[i] + ".jpg");
             }
         } catch (Exception e) {
             System.err.println(e);
         }
-        charBack = imageLoader.loadImage("images/selStage.png");
-        loading = imageLoader.loadImage("images/appletprogress.gif");
-        for (int vd = 0; vd < stagePrevLox.length; vd++) {
-            stagePrev[vd] = imageLoader.loadImage("images/prev/" + stagePrevLox[vd] + ".jpg");
-        }
     }
 
-    private void showStageName(int id) {
-        if (id != oldId) {
+    private void showStageName(Stage stage) {
+        if (stage.getIndex() != hoveredStageIndex) {
             capAnim();
-            systemNotice(stageNameStr[id]);
-            oldId = id;
-            if (oldId == stageNameStr.length - 1) {
+            systemNotice(stageNameStr.get(stage));
+            hoveredStageIndex = stage.getIndex();
+            if (hoveredStageIndex == Stage.RANDOM.getIndex()) {
                 mode = StageSelection.RANDOM;
             } else {
                 mode = StageSelection.NORMAL;

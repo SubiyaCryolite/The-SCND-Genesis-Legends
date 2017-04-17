@@ -1,5 +1,6 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -155,50 +156,53 @@ public class NetworkClient implements Runnable {
                 System.out.println("aquired time is " + MainWindow.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
-                if (line.contains("stage1")) {
-                    RenderStageSelect.getInstance().stage1();
+                if (line.contains("selectIbexHill")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 }
-                if (line.contains("stage2")) {
-                    RenderStageSelect.getInstance().stage2();
+                if (line.contains("selectChelsonCityDocks")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 }
-                if (line.contains("stage3")) {
-                    RenderStageSelect.getInstance().stage3();
+                if (line.contains("selectDesertRuins")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS);
                 }
-                if (line.contains("stage4")) {
-                    RenderStageSelect.getInstance().stage4();
+                if (line.contains("selectChelstonCityStreets")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 }
-                if (line.contains("stage5")) {
-                    RenderStageSelect.getInstance().stage5();
+                if (line.contains("selectIbexHillNight")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 }
-                if (line.contains("stage6")) {
-                    RenderStageSelect.getInstance().stage6();
+                if (line.contains("selectScorchedRuins")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS);
                 }
-                if (line.contains("stage7")) {
-                    RenderStageSelect.getInstance().stage7();
+                if (line.contains("selectDistantSnowField")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 }
-                if (line.contains("stage100")) {
-                    RenderStageSelect.getInstance().stage100();
+                if (line.contains("selectDistantIsle")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 }
-                if (line.contains("stage8")) {
-                    RenderStageSelect.getInstance().stage8();
+                if (line.contains("selectHiddenCave")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE);
                 }
-                if (line.contains("stage9")) {
-                    RenderStageSelect.getInstance().stage9();
+                if (line.contains("selectHiddenCaveNight")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE_NIGHT);
                 }
-                if (line.contains("stage10")) {
-                    RenderStageSelect.getInstance().stage10();
+                if (line.contains("selectAfricanVillage")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.AFRICAN_VILLAGE);
                 }
-                if (line.contains("stage11")) {
-                    RenderStageSelect.getInstance().stage11();
+                if (line.contains("selectApocalypto")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 }
-                if (line.contains("stage12")) {
-                    RenderStageSelect.getInstance().stage12();
+                if (line.contains("selectDistantIsleNight")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 }
-                if (line.contains("stage13")) {
-                    RenderStageSelect.getInstance().stage13();
+                if (line.contains("selectRandomStage")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.RANDOM);
                 }
-                if (line.contains("stage14")) {
-                    RenderStageSelect.getInstance().stage14();
+                if (line.contains("selectDesertRuinsNight")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
+                }
+                if (line.contains("selectScorchedRuinsNight")) {
+                    RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
                 }
             } //start game
             else if (line.endsWith("gameStart7%^&")) {

@@ -282,10 +282,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             if (RenderGameplay.getInstance().getGameInstance().time > 180) {
                 g2d.drawImage(numberPix[11], (int) (386), 0, this);
             } else {
-
-                g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time1], (int) (356), 0, this);
-                g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time2], (int) ((356) + 40), 0, this);
-                g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time3], (int) ((356) + 80), 0, this);
+                if (times.length > RenderGameplay.getInstance().getGameInstance().time1)
+                    g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time1], (int) (356), 0, this);
+                if (times.length > RenderGameplay.getInstance().getGameInstance().time2)
+                    g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time2], (int) ((356) + 40), 0, this);
+                if (times.length > RenderGameplay.getInstance().getGameInstance().time3)
+                    g2d.drawImage(times[RenderGameplay.getInstance().getGameInstance().time3], (int) ((356) + 80), 0, this);
             }
 
 

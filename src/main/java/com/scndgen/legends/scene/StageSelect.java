@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.scene;
 
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
@@ -34,13 +35,34 @@ import io.github.subiyacryolite.enginev1.JenesisMode;
  */
 public abstract class StageSelect extends JenesisMode {
 
-    protected int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, stageSelIndex = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
+    protected Stage hoveredStage = Stage.IBEX_HILL;
+    protected int lastRow, currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
     protected StageSelection mode = StageSelection.NORMAL;
     protected int ambientMusicIndex = 0;
-    protected int source;
     protected int numberOfStages;
     protected boolean selectedStage = false;
-    protected String[] stagePrevLox = new String[]{"bgBG1", "bgBG2", "bgBG3", "bgBG4", "bgBG5", "bgBG6", "bgBG7", "bgBG8", "bgBG9", "bgBG10", "bgBG100", "bgBG11", "bgBG13", "bgBG14", "bgBG15", "bgBG12"};
+    protected final String[] stagePrevLox;
+
+
+    public StageSelect() {
+        stagePrevLox = new String[Stage.values().length];
+        stagePrevLox[Stage.IBEX_HILL.getIndex()] = "bgBG1";
+        stagePrevLox[Stage.CHELSTON_CITY_DOCKS.getIndex()] = "bgBG2";
+        stagePrevLox[Stage.DESERT_RUINS.getIndex()] = "bgBG3";
+        stagePrevLox[Stage.CHELSTON_CITY_STREETS.getIndex()] = "bgBG4";
+        stagePrevLox[Stage.IBEX_HILL_NIGHT.getIndex()] = "bgBG5";
+        stagePrevLox[Stage.SCORCHED_RUINS.getIndex()] = "bgBG6";
+        stagePrevLox[Stage.FROZEN_WILDERNESS.getIndex()] = "bgBG7";
+        stagePrevLox[Stage.DISTANT_ISLE.getIndex()] = "bgBG100";
+        stagePrevLox[Stage.HIDDEN_CAVE.getIndex()] = "bgBG8";
+        stagePrevLox[Stage.AFRICAN_VILLAGE.getIndex()] = "bgBG9";
+        stagePrevLox[Stage.APOCALYPTO.getIndex()] = "bgBG10";
+        stagePrevLox[Stage.DISTANT_ISLE_NIGHT.getIndex()] = "bgBG11";
+        stagePrevLox[Stage.DESERT_RUINS_NIGHT.getIndex()] = "bgBG13";
+        stagePrevLox[Stage.SCORCHED_RUINS_NIGHT.getIndex()] = "bgBG14";
+        stagePrevLox[Stage.RANDOM.getIndex()] = "bgBG12";
+        stagePrevLox[Stage. HIDDEN_CAVE_NIGHT.getIndex()] = "bgBG15";
+    }
 
     /**
      * SHows loading screen
@@ -49,17 +71,17 @@ public abstract class StageSelect extends JenesisMode {
         selectedStage = true;
     }
 
-    public void selectStage() {
+    public void selectStage(Stage stage) {
+        hoveredStage = stage;
         if (mode == StageSelection.NORMAL) {
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                source = stageSelIndex;
                 nowLoading();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                     MainWindow.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
-            source = (int) (Math.random() * (numberOfStages - 1));
+            hoveredStage = Stage.values()[(int) (Math.random() * (numberOfStages - 1))];
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 nowLoading();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
@@ -67,143 +89,62 @@ public abstract class StageSelect extends JenesisMode {
                 }
             }
         }
-
-        if (source == 0) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage1();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage1_vgdt");
-                }
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+            switch (hoveredStage) {
+                case IBEX_HILL:
+                    selectIbexHill();
+                    break;
+                case CHELSTON_CITY_DOCKS:
+                    selectChelsonCityDocks();
+                    break;
+                case DESERT_RUINS:
+                    selectDesertRuins();
+                    break;
+                case CHELSTON_CITY_STREETS:
+                    selectChelstonCityStreets();
+                    break;
+                case IBEX_HILL_NIGHT:
+                    selectIbexHillNight();
+                    break;
+                case SCORCHED_RUINS:
+                    selectScorchedRuins();
+                    break;
+                case FROZEN_WILDERNESS:
+                    selectDistantSnowField();
+                    break;
+                case DISTANT_ISLE:
+                    selectDistantIsle();
+                    break;
+                case HIDDEN_CAVE:
+                    selectHiddenCave();
+                    break;
+                case HIDDEN_CAVE_NIGHT:
+                    selectHiddenCaveNight();
+                    break;
+                case AFRICAN_VILLAGE:
+                    selectAfricanVillage();
+                    break;
+                case APOCALYPTO:
+                    selectApocalypto();
+                    break;
+                case DISTANT_ISLE_NIGHT:
+                    selectDistantIsleNight();
+                    break;
+                case RANDOM:
+                    selectRandomStage();
+                    break;
+                case DESERT_RUINS_NIGHT:
+                    selectDesertRuinsNight();
+                    break;
+                case SCORCHED_RUINS_NIGHT:
+                    selectScorchedRuinsNight();
+                    break;
+            }
+            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
+                MainWindow.getInstance().sendToClient(hoveredStage.getShortCode());
             }
         }
-
-        if (source == 1) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage2();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage2_vgdt");
-                }
-            }
-        }
-
-        if (source == 2) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage3();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage3_vgdt");
-                }
-            }
-        }
-
-        if (source == 3) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage4();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage4_vgdt");
-                }
-            }
-        }
-
-        if (source == 4) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage5();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage5_vgdt");
-                }
-            }
-        }
-
-        if (source == 5) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage6();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage6_vgdt");
-                }
-            }
-        }
-
-        if (source == 6) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage7();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage7_vgdt");
-                }
-            }
-        }
-
-        if (source == 10) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage100();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage100_vgdt");
-                }
-            }
-        }
-
-        if (source == 7) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage8();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage8_vgdt");
-                }
-            }
-        }
-
-        if (source == 8) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage9();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage9_vgdt");
-                }
-            }
-        }
-
-        if (source == 9) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage10();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage10_vgdt");
-                }
-            }
-        }
-
-        if (source == 11) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage11();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage11_vgdt");
-                }
-            }
-        }
-
-        if (source == 12) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage12();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage12_vgdt");
-                }
-            }
-        }
-
-        if (source == 13) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage13();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage13_vgdt");
-                }
-            }
-        }
-
-        if (source == 14) {
-            if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                stage14();
-                if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                    MainWindow.getInstance().sendToClient("stage14_vgdt");
-                }
-            }
-        }
-
-        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("watch")) {
+        if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("watch")) {
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 MainWindow.getInstance().sendToClient("gameStart7%^&");
             }
@@ -211,8 +152,7 @@ public abstract class StageSelect extends JenesisMode {
         }
     }
 
-    public void defValue() {
-        setStage(0);
+    public void defaultStageValues() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -231,16 +171,15 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Ibex Hill- day
      */
-    public void stage1() //
+    private void selectIbexHill() //
     {
-        defValue();
+        defaultStageValues();
     }
 
     /**
      * Chelston City docks
      */
-    public void stage2() {
-        setStage(1);
+    private void selectChelsonCityDocks() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -259,8 +198,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * The Ruined Hall
      */
-    public void stage3() {
-        setStage(2);
+    private void selectDesertRuins() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 5;
@@ -279,8 +217,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Chelston City - Streets
      */
-    public void stage4() {
-        setStage(3);
+    private void selectChelstonCityStreets() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -299,8 +236,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Ibex Hill - Night
      */
-    public void stage5() {
-        setStage(4);
+    private void selectIbexHillNight() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -319,8 +255,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Scorched Ruins
      */
-    public void stage6() {
-        setStage(5);
+    private void selectScorchedRuins() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 5;
@@ -339,8 +274,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Frozen Wilderness
      */
-    public void stage7() {
-        setStage(6);
+    private void selectDistantSnowField() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 10;
         RenderGameplay.getInstance().fgxInc = 5;
@@ -359,8 +293,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Distant Isle
      */
-    public void stage100() {
-        setStage(10);
+    private void selectDistantIsle() {
         RenderGameplay.getInstance().fgx = -40;
         RenderGameplay.getInstance().fgy = 20;
         RenderGameplay.getInstance().fgxInc = 2;
@@ -376,8 +309,7 @@ public abstract class StageSelect extends JenesisMode {
         getReady();
     }
 
-    public void stage12() {
-        setStage(12);
+    private void selectRandomStage() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -396,8 +328,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Distant Isle night
      */
-    public void stage11() {
-        setStage(11);
+    private void selectDistantIsleNight() {
         RenderGameplay.getInstance().fgx = -40;
         RenderGameplay.getInstance().fgy = 20;
         RenderGameplay.getInstance().fgxInc = 2;
@@ -416,8 +347,23 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Hidden Cave
      */
-    public void stage8() {
-        setStage(7);
+    private void selectHiddenCave() {
+        RenderGameplay.getInstance().fgx = 0;
+        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().fgxInc = 1;
+        RenderGameplay.getInstance().fgyInc = 1;
+        RenderGameplay.getInstance().animLoops = 20;
+        RenderGameplay.getInstance().animDirection = "none";
+        RenderGameplay.getInstance().verticalMove = "no";
+        RenderGameplay.getInstance().animLayer = "none";
+        RenderGameplay.getInstance().delay = 66;
+        RenderGameplay.getInstance().ambSpeed1 = 0;
+        RenderGameplay.getInstance().ambSpeed2 = 0;
+        ambientMusicIndex = 2;
+        getReady();
+    }
+
+    private void selectHiddenCaveNight() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -436,8 +382,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * African Village
      */
-    public void stage9() {
-        setStage(8);
+    private void selectAfricanVillage() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -456,8 +401,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * The Apocalypse
      */
-    public void stage10() {
-        setStage(9);
+    private void selectApocalypto() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 5;
@@ -473,8 +417,7 @@ public abstract class StageSelect extends JenesisMode {
         getReady();
     }
 
-    public void stage13() {
-        setStage(13);
+    private void selectDesertRuinsNight() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 5;
@@ -490,8 +433,7 @@ public abstract class StageSelect extends JenesisMode {
         getReady();
     }
 
-    public void stage14() {
-        setStage(14);
+    private void selectScorchedRuinsNight() {
         RenderGameplay.getInstance().fgx = 0;
         RenderGameplay.getInstance().fgy = 0;
         RenderGameplay.getInstance().fgxInc = 1;
@@ -512,16 +454,7 @@ public abstract class StageSelect extends JenesisMode {
      * @return stage
      */
     public String getStage() {
-        return stagePrevLox[stageSelIndex];
-    }
-
-    /**
-     * Sets the stage
-     *
-     * @param where
-     */
-    public void setStage(int where) {
-        stageSelIndex = where;
+        return stagePrevLox[hoveredStage.getIndex()];
     }
 
     private void getReady() {
@@ -578,11 +511,15 @@ public abstract class StageSelect extends JenesisMode {
      */
     public boolean well() {
         boolean ans = false;
-        int xV = (vIndex * 3) + hIndex;
-        if (xV <= numberOfStages) {
+        int stageToSelect = (vIndex * 3) + hIndex;
+        if (stageToSelect <= numberOfStages) {
             ans = true;
-            stageSelIndex = xV - 1;
+            hoveredStage = Stage.values()[stageToSelect - 1];
         }
         return ans;
+    }
+
+    public Stage getHoveredStage() {
+        return hoveredStage;
     }
 }
