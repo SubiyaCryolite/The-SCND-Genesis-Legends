@@ -22,6 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
@@ -139,7 +140,7 @@ public abstract class Character {
         return highQualitySprites[i];
     }
 
-    public abstract void attack(String attack, int forWho);
+    public abstract void attack(String attack, CharacterState forWho);
 
     /**
      * Gets the move set of the characters

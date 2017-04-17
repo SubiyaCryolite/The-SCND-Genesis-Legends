@@ -31,7 +31,7 @@ public abstract class Attack {
     public String attackStr;
     public String attackIdentifier = "00";
     public int overlay = 0;
-    public int victim = 0;
+    public CharacterState victim = CharacterState.CHARACTER;
     public int attack;
     public Character opponent;
 
@@ -39,13 +39,12 @@ public abstract class Attack {
      * Attack sorter
      *
      * @param attack - the move to execute
-     * @param target - who's attacking
      */
-    public void attack(int attack, int target, CharacterState source, CharacterState destination) {
+    public void attack(int attack, CharacterState source, CharacterState destination) {
         this.attack = attack;
-        victim = target;
+        victim = destination;
         if (attack > 8) {
-            target = 999; //override for pose
+            destination=CharacterState.SELF;
         }
         if (attack == 0) {
             RenderGameplay.getInstance().setSprites(source, 9, 11);
@@ -100,7 +99,7 @@ public abstract class Attack {
         if (attack == 12) {
             attackIdentifier = "12";
         }
-        doThis(target, source, destination);
+        doThis(source, destination);
         action();
         //regenerative moves update char, so overide forWho?
     }
@@ -108,16 +107,15 @@ public abstract class Attack {
     /**
      * call specific attack
      *
-     * @param whoDoneIt who is active
      */
-    public void doThis(int whoDoneIt, CharacterState attack, CharacterState target) {
+    public void doThis(CharacterState attack, CharacterState target) {
         if (attack == CharacterState.CHARACTER) {
             CharacterOverlayDisabled();
         } else {
             CharacterOverlayEnabled();
         }
 
-        if (whoDoneIt == 999) {
+        if (target == CharacterState.SELF) {
             RenderGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)

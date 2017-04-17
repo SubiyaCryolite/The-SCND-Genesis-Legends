@@ -23,8 +23,8 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -123,7 +123,7 @@ public abstract class Gameplay extends JenesisMode {
     protected boolean lagFactor = true;
     protected float currentXShear = 0, currentYShear = 0;
     protected boolean isFree = true, isFree2 = true;
-    protected CharacterState dude;
+    protected CharacterState characterState;
     protected String sysNot = "";
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String ach1 = "", ach2 = "", ach3 = "", ach4 = "";
@@ -1019,7 +1019,7 @@ public abstract class Gameplay extends JenesisMode {
      * limit break, wee!!!
      */
     public void limitBreak(CharacterState who) {
-        dude = who;
+        characterState = who;
         new Thread() {
 
             @Override
@@ -1027,7 +1027,7 @@ public abstract class Gameplay extends JenesisMode {
                 if (getBreak() == 1000) {
                     //&& getGameInstance().getRecoveryUnitsChar()>289
                     //runs on local
-                    if (dude == CharacterState.CHARACTER && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
+                    if (characterState == CharacterState.CHARACTER && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
                         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient)) {
                             MainWindow.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
@@ -1054,7 +1054,7 @@ public abstract class Gameplay extends JenesisMode {
                                 shakeOppCharLB();
                                 comboPicArrayPosOpp = i;
                                 furyComboOpacity = 1.0f;
-                                lifePhysUpdateSimple(2, 100, "");
+                                lifePhysUpdateSimple(CharacterState.OPPONENT, 100, "");
                             }
                         }
                         MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
@@ -1069,7 +1069,7 @@ public abstract class Gameplay extends JenesisMode {
                         limitRunning = true;
                         resetBreak();
                         setAttackType("normal", CharacterState.CHARACTER);
-                    } else if (dude == CharacterState.OPPONENT && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
+                    } else if (characterState == CharacterState.OPPONENT && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
                         setAttackType("fury", CharacterState.OPPONENT);
                         limitRunning = false;
                         try {
@@ -1086,7 +1086,7 @@ public abstract class Gameplay extends JenesisMode {
                                 setSprites(CharacterState.CHARACTER, 0, 11);
                                 shakeCharLB();
                                 comboPicArrayPosOpp = i;
-                                lifePhysUpdateSimple(1, 100, "");
+                                lifePhysUpdateSimple(CharacterState.CHARACTER, 100, "");
                             }
                         }
                         MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
@@ -1113,9 +1113,9 @@ public abstract class Gameplay extends JenesisMode {
      * @param ThisMuch - the life to add/subtract
      * @param attacker - who inflicted damage
      */
-    public void lifePhysUpdateSimple(int forWho, int ThisMuch, String attacker) {
+    public void lifePhysUpdateSimple(CharacterState forWho, int ThisMuch, String attacker) {
 
-        if (forWho == 1) //Attack from player
+        if (forWho == CharacterState.CHARACTER) //Attack from player
         {
             damageChar = ThisMuch;
             activePerson = attacker;
@@ -1132,7 +1132,7 @@ public abstract class Gameplay extends JenesisMode {
             perCent = Math.round(lifePlain);
         }
 
-        if (forWho == 2) //Attack from CPU pponent 1
+        if (forWho == CharacterState.OPPONENT || forWho == CharacterState.BOSS) //Attack from CPU pponent 1
         {
             damageOpp = ThisMuch;
             activePerson = attacker;

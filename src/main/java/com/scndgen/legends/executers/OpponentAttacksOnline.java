@@ -70,7 +70,7 @@ public class OpponentAttacksOnline implements Runnable {
             int[] commands = {command1, command2, command3, command4};
             for (int index = 0; index < commands.length; index++) {
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                MainWindow.getInstance().getAttackOpponent().attack(commands[index], 1, CharacterState.OPPONENT, CharacterState.CHARACTER);
+                MainWindow.getInstance().getAttackOpponent().attack(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER);
                 RenderGameplay.getInstance().shakeCharLB();
                 RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();

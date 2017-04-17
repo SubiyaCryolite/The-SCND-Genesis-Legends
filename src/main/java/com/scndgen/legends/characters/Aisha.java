@@ -58,7 +58,7 @@ public class Aisha extends Character {
     }
 
     @Override
-    public void attack(String attack, int forWho) {
+    public void attack(String attack, CharacterState forWho) {
         switch (attack) {
             case "00":
                 attackStr = physical[0];
@@ -120,7 +120,7 @@ public class Aisha extends Character {
                 //girls have a healing bonus of 5 XD
                 damage = 82;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
@@ -134,7 +134,7 @@ public class Aisha extends Character {
                 attackStr = status[1];
                 damage = 84;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
@@ -148,7 +148,7 @@ public class Aisha extends Character {
                 attackStr = status[2];
                 damage = 78;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
@@ -162,7 +162,7 @@ public class Aisha extends Character {
                 attackStr = status[3];
                 damage = 80;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {

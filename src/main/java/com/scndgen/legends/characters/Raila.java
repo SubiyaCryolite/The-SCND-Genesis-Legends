@@ -65,7 +65,7 @@ public class Raila extends Character {
     }
 
     @Override
-    public void attack(String attack, int forWho) {
+    public void attack(String attack, CharacterState forWho) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
@@ -122,7 +122,7 @@ public class Raila extends Character {
                 attackStr = status[0];
                 damage = 72;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
@@ -136,7 +136,7 @@ public class Raila extends Character {
                 attackStr = status[1];
                 damage = 79;
                 RenderGameplay.getInstance().setStatIndex(1);
-                if (forWho == 2) {
+                if (forWho == CharacterState.OPPONENT) {
                     RenderGameplay.getInstance().updatePlayerLife(damage);
                     RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
                 } else {
@@ -151,7 +151,7 @@ public class Raila extends Character {
                     sound3.play();
                     attackStr = status[2];
                     RenderGameplay.getInstance().setStatIndex(3);
-                    if (forWho == 2) {
+                    if (forWho == CharacterState.OPPONENT) {
                         RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "STRENGTHENED", Colors.getColor("blue"));
                         RenderGameplay.getInstance().alterDamageCounter(CharacterState.OPPONENT, +1);
                     } else {
@@ -169,7 +169,7 @@ public class Raila extends Character {
                     sound3.play();
                     attackStr = status[3];
                     RenderGameplay.getInstance().setStatIndex(4);
-                    if (forWho == 2) {
+                    if (forWho == CharacterState.OPPONENT) {
                         //as a player(2) yo8u attack the opponent(1)
                         RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "WEAKENED!!!", Colors.getColor("red"));
                         RenderGameplay.getInstance().alterDamageCounter(CharacterState.CHARACTER, -1);

@@ -69,7 +69,7 @@ public class CharacterAttacksOnline implements Runnable {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
             MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
-            MainWindow.getInstance().getAttacksChar().attack(action[index], 2, CharacterState.CHARACTER, CharacterState.OPPONENT);
+            MainWindow.getInstance().getAttacksChar().attack(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT);
             RenderGameplay.getInstance().shakeOppCharLB();
             RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
             MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();

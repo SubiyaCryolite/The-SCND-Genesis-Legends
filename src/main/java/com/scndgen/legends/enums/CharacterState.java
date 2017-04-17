@@ -6,5 +6,6 @@ package com.scndgen.legends.enums;
 public enum CharacterState {
     CHARACTER,
     OPPONENT,
-    BOSS
+    BOSS,
+    SELF
 }
