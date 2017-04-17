@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Characters;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
@@ -35,7 +35,7 @@ public class Raila extends Character {
         //strings
         descSmall = "Raila - a fighter specialised in celestia combat";
         name = "Raila";
-        characters = Characters.RAILA;
+        characterEnum = CharacterEnum.RAILA;
         //ints
         points = 2500;
         life = 25600;

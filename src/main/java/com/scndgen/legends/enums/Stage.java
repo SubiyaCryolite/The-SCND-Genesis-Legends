@@ -34,11 +34,11 @@ public enum Stage {
         return name;
     }
 
-    public final String getShortCode() {
+    public final String shortCode() {
         return shortCode;
     }
 
-    public int getIndex() {
+    public int index() {
         return index;
     }
 

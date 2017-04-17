@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Characters;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
@@ -34,7 +34,7 @@ public class Azaria extends Character {
     public Azaria() {
         descSmall = "Azaria - Specialised in general combat and the water element";
         name = "Azaria";
-        characters = Characters.AZARIA;
+        characterEnum = CharacterEnum.AZARIA;
         isNotMale();
         bragRights = new String[]{"They grow up so fast, ready for a spanking little boy", "You won't be so happy after this fight", "You have potential to be great, but you gotta beat me to get there", "Lets show these men what we can do, no holding back!!!", "Filth! be gone", "Your attacks are cute. Cute becomes dumb in an instant", "You're the weakest of the group, just run away", "NovaAdam, I won't let you pass", "I'll stop you NovaAdam, you're power isn't absolute", "Let's do this", "You chose the wrong side little girl", "Blasphemy!!"};
         physical = new String[]{"Right Slash", "Left Slash", "Jaw Breaker", "Skull Smasher"};

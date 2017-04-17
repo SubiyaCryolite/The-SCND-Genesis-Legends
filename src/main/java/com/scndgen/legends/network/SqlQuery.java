@@ -63,7 +63,7 @@ public class SqlQuery extends JFrame implements ActionListener {
         levels = new int[]{1, 5, 10, 50, 100, 200};
         levelsStr = new String[]{"King of the Hill", "Top 5", "Top 10", "Top 50", "Top 100", "Top 200"};
         notInitislied = true;
-        tblColumns = new String[]{"No", "Name", "Rating", "Country", "Version", "Code", "Matches", "Wins", "Loss", "Characters", "Points"};
+        tblColumns = new String[]{"No", "Name", "Rating", "Country", "Version", "Code", "Matches", "Wins", "Loss", "CharacterEnum", "Points"};
 
         sortBy = new JLabel("Sort by: ");
         sorters = new String[]{"userPoints", "rating", "userWin", "userLoss"};

@@ -26,7 +26,7 @@ import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
 
-import static com.scndgen.legends.enums.Characters.RAVAGE;
+import static com.scndgen.legends.enums.CharacterEnum.RAVAGE;
 
 /**
  * @author ndana
@@ -37,7 +37,7 @@ public class Ravage extends Character {
         //strings
         descSmall = "Ravage - a fighter specialised in brute force via the Earth element";
         name = "Ravage";
-        characters = RAVAGE;
+        characterEnum = RAVAGE;
         //ints
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};

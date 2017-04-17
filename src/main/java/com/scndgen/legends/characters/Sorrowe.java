@@ -25,7 +25,7 @@ import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
 
-import static com.scndgen.legends.enums.Characters.SORROWE;
+import static com.scndgen.legends.enums.CharacterEnum.SORROWE;
 
 /**
  * Sorrowe's class
@@ -40,7 +40,7 @@ public class Sorrowe extends Character {
     public Sorrowe() {
         descSmall = "Sorrowe - Specialised in celestia combat and the flame element";
         name = "Sorrowe";
-        characters = SORROWE;
+        characterEnum = SORROWE;
         isNotMale();
         bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout time", "Weakling !!", "You're incredibly annoying", "Don't go easy on me", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare me", "Let's do this", "Ugh, disgusting"};
         physical = new String[]{"Lashing", "Whip-nado", "Lash assault", "Snared"};

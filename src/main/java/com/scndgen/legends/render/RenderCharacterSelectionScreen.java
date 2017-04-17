@@ -24,7 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.enums.Characters;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -37,7 +37,7 @@ import java.awt.*;
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the characters and opponent
+ * This class creates a graphical preview of the characterEnum and opponent
  */
 public class RenderCharacterSelectionScreen extends CharacterSelectionScreen implements JenesisRender {
 
@@ -104,7 +104,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         g2d.setComposite(makeComposite(0.70f));
         g2d.fillRect(0, 0, 853, 480);
         g2d.setComposite(makeComposite(1.0f));
-        //characters preview DYNAMIC change
+        //characterEnum preview DYNAMIC change
         if (characterSelected != true) {
             g2d.setComposite(makeComposite(p1Opac));
             g2d.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap, this);
@@ -118,7 +118,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
             g2d.setComposite(makeComposite(1.0f));
             g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, this);
         }
-        //if characters selected draw FIXED prev
+        //if characterEnum selected draw FIXED prev
         if (characterSelected) {
             g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, this);
             g2d.drawImage(caption[selectedCharIndex], 40, 380, this);
@@ -189,18 +189,18 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = imageLoader.loadImage("images/charInfoO.png");
         charDescPic = imageLoader.loadImage("images/charInfoC.png");
-        loadUiContent(Characters.RAILA);
-        loadUiContent(Characters.SUBIYA);
-        loadUiContent(Characters.LYNX);
-        loadUiContent(Characters.AISHA);
-        loadUiContent(Characters.RAVAGE);
-        loadUiContent(Characters.ADE);
-        loadUiContent(Characters.JONAH);
-        loadUiContent(Characters.NOVA_ADAM);
-        loadUiContent(Characters.ADAM);
-        loadUiContent(Characters.AZARIA);
-        loadUiContent(Characters.SORROWE);
-        loadUiContent(Characters.THING);
+        loadUiContent(CharacterEnum.RAILA);
+        loadUiContent(CharacterEnum.SUBIYA);
+        loadUiContent(CharacterEnum.LYNX);
+        loadUiContent(CharacterEnum.AISHA);
+        loadUiContent(CharacterEnum.RAVAGE);
+        loadUiContent(CharacterEnum.ADE);
+        loadUiContent(CharacterEnum.JONAH);
+        loadUiContent(CharacterEnum.NOVA_ADAM);
+        loadUiContent(CharacterEnum.ADAM);
+        loadUiContent(CharacterEnum.AZARIA);
+        loadUiContent(CharacterEnum.SORROWE);
+        loadUiContent(CharacterEnum.THING);
         charBack = imageLoader.loadImage("images/selChar.png");
         oppBack = imageLoader.loadImage("images/selOpp.png");
         charHold = imageLoader.loadImage("images/charHold.png");
@@ -215,12 +215,12 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         charDesc[0] = Raila.class.getName();
     }
 
-    public void loadUiContent(Characters characters) {
-        thumbnailNormal[characters.index()] = imageLoader.loadImage("images/" + characters.data() + "/cap.png");
-        thumbnailBlurred[characters.index()] = imageLoader.loadImage("images/" + characters.data() + "/capB.png");
-        caption[characters.index()] = imageLoader.loadImage("images/" + characters.data() + "/name.png");
-        portrait[characters.index()] = imageLoader.loadImage("images/" + characters.data() + "/Prev.png");
-        portraitFlipped[characters.index()] = imageLoader.loadImage("images/" + characters.data() + "/PrevO.png");
+    public void loadUiContent(CharacterEnum characterEnum) {
+        thumbnailNormal[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/PrevO.png");
     }
 
 

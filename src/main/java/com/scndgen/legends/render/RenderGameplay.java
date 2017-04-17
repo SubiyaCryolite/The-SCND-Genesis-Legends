@@ -23,8 +23,8 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.MainWindow;
@@ -175,7 +175,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     g2d.drawImage(ambient2, amb2x, amb2y, this);
                 }
 
-                /** characters sprite on below, opponent on top
+                /** characterEnum sprite on below, opponent on top
                  * "Java Tip 32: You'll flip over Java images -- literally! - JavaWorld"
                  * http://www.javaworld.com/javaworld/javatips/jw-javatip32.html?page=2
                  */
@@ -608,8 +608,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 characterPortraits = new VolatileImage[charNames.length];
 
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
-                    for (Characters characters : Characters.values()) {
-                        characterPortraits[characters.index()] = pix.loadVolatileImage("images/" + characters.data() + "/cap.png", 48, 48, this);
+                    for (CharacterEnum characterEnum : CharacterEnum.values()) {
+                        characterPortraits[characterEnum.index()] = pix.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
                     }
                 } else {
                     for (int p = 0; p < charNames.length; p++) {
@@ -1065,7 +1065,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     /**
      * Animate attacks in graphics context
      *
-     * @param thischar - active characters
+     * @param thischar - active characterEnum
      */
     public void AnimatePhyAttax(CharacterState thischar) {
         if (thischar == CharacterState.CHARACTER || thischar == CharacterState.OPPONENT) {

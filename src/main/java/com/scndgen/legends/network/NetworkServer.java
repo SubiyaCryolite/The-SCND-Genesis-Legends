@@ -139,7 +139,7 @@ public class NetworkServer implements Runnable {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
                 MainWindow.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
-            } //Characters
+            } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);
                 if (line.contains("selSub")) {

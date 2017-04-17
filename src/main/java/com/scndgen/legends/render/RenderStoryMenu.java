@@ -37,7 +37,7 @@ import java.awt.*;
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the characters and opponent
+ * This class creates a graphical preview of the characterEnum and opponent
  */
 public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 
@@ -176,7 +176,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         }
 
         //charBack = imageLoader.loadImage("images/selstory.png");
-        loading = pix.loadImage("images/appletprogress.gif");
+        loading = pix.loadImage("images/loading.gif");
         charBack = pix.loadImage("images/Story/frame.png");
         int x = (int) (Math.random() * 4);
         switch (x) {

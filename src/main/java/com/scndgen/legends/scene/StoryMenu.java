@@ -25,6 +25,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -39,6 +40,8 @@ public abstract class StoryMenu extends JenesisMode {
     protected boolean[] hiddenStage;
     protected boolean loadingNow;
     protected int currMode = LoginScreen.getInstance().stage;
+    protected int storedX = 99, storedY = 99;
+    protected boolean withinMenuPanel;
 
     public StoryMenu() {
         setLayout(new BorderLayout());
@@ -49,7 +52,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Characters have been selected, true if only one is selected
+     * @return false if both CharacterEnum have been selected, true if only one is selected
      */
     public static boolean bothArentSelected() {
         boolean answer = true;
@@ -118,7 +121,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Gets the number of columns in the characters select screen
+     * Gets the number of columns in the characterEnum select screen
      *
      * @return number of columns
      */
@@ -230,11 +233,11 @@ public abstract class StoryMenu extends JenesisMode {
      * @param here - stage the player is on
      */
     public void setCurrMode(Stage here) {
-        currMode = here.getIndex();
+        currMode = here.index();
     }
 
     /**
-     * Get the storyboard size for the characters
+     * Get the storyboard size for the characterEnum
      *
      * @return the number of levels
      */
@@ -269,7 +272,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Checks if within number of Characters
+     * Checks if within number of CharacterEnum
      */
     public boolean well() {
         boolean ans = false;
@@ -319,5 +322,52 @@ public abstract class StoryMenu extends JenesisMode {
             systemNotice("Scene " + (id + 1));
             oldId = id;
         }
+    }
+
+    public void mouseMoved(int mouseX, int mouseY) {
+        int topY = RenderStoryMenu.getInstance().getStartY() ;
+        int topX = RenderStoryMenu.getInstance().getStartX();
+        int columns = RenderStoryMenu.getInstance().getNumberOfCharColumns();
+        int vspacer = RenderStoryMenu.getInstance().getCharHSpacer();
+        int hspacer = RenderStoryMenu.getInstance().getCharVSpacer();
+        int rows = RenderStoryMenu.getInstance().getCharRows();
+        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * rows))) {
+            int vIndex = (mouseY - topY) / vspacer;
+            int hIndex = (((mouseX - topX) / hspacer) + 1);
+            RenderStoryMenu.getInstance().setHindex(hIndex);
+            RenderStoryMenu.getInstance().setVindex(vIndex);
+            animateCap2x(hIndex, vIndex);
+            withinMenuPanel = true;
+        } else {
+            RenderStoryMenu.getInstance().setHindex(99);
+            RenderStoryMenu.getInstance().setVindex(99);
+            withinMenuPanel = false;
+        }
+    }
+
+
+    /**
+     * To make sure the caption is animated once,
+     * this method checks if the selected caption has changed
+     *
+     * @param x
+     * @param y
+     */
+    public void animateCap2x(int x, int y) {
+        int tmpx = x;
+        int tmpy = y;
+
+        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
+        {
+        } else {
+            storedX = tmpx;
+            storedY = tmpy;
+            RenderStoryMenu.getInstance().animateCaption();
+        }
+    }
+
+    public boolean getWithinMenuPanel()
+    {
+        return withinMenuPanel;
     }
 }

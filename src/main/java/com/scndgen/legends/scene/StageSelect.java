@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.scene;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -28,46 +29,78 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
+import java.util.Hashtable;
+
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the characters and opponent
+ * This class creates a graphical preview of the characterEnum and opponent
  */
 public abstract class StageSelect extends JenesisMode {
 
     protected Stage hoveredStage = Stage.IBEX_HILL;
-    protected int lastRow, charYcap = 0, charXcap = 0, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
+    protected int charYcap = 0, charXcap = 0, column, x = 0, y = 0, row = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
     protected StageSelection mode;
     protected int ambientMusicIndex = 0;
-    protected int numberOfStages;
+    protected final int numberOfStages = Stage.values().length;
+    protected final int columns = 3;
+    protected final int rows = numberOfStages / columns;
     protected boolean selectedStage;
-    protected final String[] stagePrevLox;
+    protected final Hashtable<Integer, Stage> stageLookup = new Hashtable<>();
+    protected final Hashtable<Stage, String> lookupStageNames = new Hashtable<>();
+    protected final String[] stagePreviews = new String[Stage.values().length];
+    protected boolean withinCharPanel;
+    protected int storedX;
+    protected int storedY;
 
-    public void newInstance()
-    {
+    public void newInstance() {
         hoveredStage = Stage.IBEX_HILL;
         mode = StageSelection.NORMAL;
         selectedStage = false;
+        stageLookup.clear();
+        for (Stage stage : Stage.values()) {
+            stageLookup.put(stage.index(), stage);
+        }
+        //===============================================================
+        stagePreviews[Stage.IBEX_HILL.index()] = "bgBG1";
+        stagePreviews[Stage.CHELSTON_CITY_DOCKS.index()] = "bgBG2";
+        stagePreviews[Stage.DESERT_RUINS.index()] = "bgBG3";
+        stagePreviews[Stage.CHELSTON_CITY_STREETS.index()] = "bgBG4";
+        stagePreviews[Stage.IBEX_HILL_NIGHT.index()] = "bgBG5";
+        stagePreviews[Stage.SCORCHED_RUINS.index()] = "bgBG6";
+        stagePreviews[Stage.FROZEN_WILDERNESS.index()] = "bgBG7";
+        stagePreviews[Stage.DISTANT_ISLE.index()] = "bgBG100";
+        stagePreviews[Stage.HIDDEN_CAVE.index()] = "bgBG8";
+        stagePreviews[Stage.AFRICAN_VILLAGE.index()] = "bgBG9";
+        stagePreviews[Stage.APOCALYPTO.index()] = "bgBG10";
+        stagePreviews[Stage.DISTANT_ISLE_NIGHT.index()] = "bgBG11";
+        stagePreviews[Stage.DESERT_RUINS_NIGHT.index()] = "bgBG13";
+        stagePreviews[Stage.SCORCHED_RUINS_NIGHT.index()] = "bgBG14";
+        stagePreviews[Stage.RANDOM.index()] = "bgBG12";
+        stagePreviews[Stage.HIDDEN_CAVE_NIGHT.index()] = "bgBG15";
+        //===============================================================
+        Language language = Language.getInstance();
+        lookupStageNames.clear();
+        lookupStageNames.put(Stage.IBEX_HILL, language.getLine(152));
+        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.getLine(153));
+        lookupStageNames.put(Stage.DESERT_RUINS, language.getLine(154));
+        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.getLine(155));
+        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.getLine(156));
+        lookupStageNames.put(Stage.SCORCHED_RUINS, language.getLine(157));
+        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.getLine(158));
+        lookupStageNames.put(Stage.DISTANT_ISLE, language.getLine(162));
+        lookupStageNames.put(Stage.HIDDEN_CAVE, language.getLine(159));
+        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.getLine(160));
+        lookupStageNames.put(Stage.APOCALYPTO, language.getLine(161));
+        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.getLine(163));
+        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.getLine(369));
+        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.getLine(370));
+        lookupStageNames.put(Stage.RANDOM, language.getLine(164));
+        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.getLine(371));
     }
 
     public StageSelect() {
-        stagePrevLox = new String[Stage.values().length];
-        stagePrevLox[Stage.IBEX_HILL.getIndex()] = "bgBG1";
-        stagePrevLox[Stage.CHELSTON_CITY_DOCKS.getIndex()] = "bgBG2";
-        stagePrevLox[Stage.DESERT_RUINS.getIndex()] = "bgBG3";
-        stagePrevLox[Stage.CHELSTON_CITY_STREETS.getIndex()] = "bgBG4";
-        stagePrevLox[Stage.IBEX_HILL_NIGHT.getIndex()] = "bgBG5";
-        stagePrevLox[Stage.SCORCHED_RUINS.getIndex()] = "bgBG6";
-        stagePrevLox[Stage.FROZEN_WILDERNESS.getIndex()] = "bgBG7";
-        stagePrevLox[Stage.DISTANT_ISLE.getIndex()] = "bgBG100";
-        stagePrevLox[Stage.HIDDEN_CAVE.getIndex()] = "bgBG8";
-        stagePrevLox[Stage.AFRICAN_VILLAGE.getIndex()] = "bgBG9";
-        stagePrevLox[Stage.APOCALYPTO.getIndex()] = "bgBG10";
-        stagePrevLox[Stage.DISTANT_ISLE_NIGHT.getIndex()] = "bgBG11";
-        stagePrevLox[Stage.DESERT_RUINS_NIGHT.getIndex()] = "bgBG13";
-        stagePrevLox[Stage.SCORCHED_RUINS_NIGHT.getIndex()] = "bgBG14";
-        stagePrevLox[Stage.RANDOM.getIndex()] = "bgBG12";
-        stagePrevLox[Stage. HIDDEN_CAVE_NIGHT.getIndex()] = "bgBG15";
+
     }
 
     /**
@@ -87,7 +120,7 @@ public abstract class StageSelect extends JenesisMode {
                 }
             }
         } else {
-            hoveredStage = Stage.values()[(int) (Math.random() * (numberOfStages - 1))];
+            hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
                 nowLoading();
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
@@ -147,7 +180,7 @@ public abstract class StageSelect extends JenesisMode {
                     break;
             }
             if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost)) {
-                MainWindow.getInstance().sendToClient(hoveredStage.getShortCode());
+                MainWindow.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
         if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.singlePlayer) || MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanHost) || MainWindow.getInstance().getGameMode().equalsIgnoreCase("watch")) {
@@ -171,7 +204,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 4;
         RenderGameplay.getInstance().ambSpeed2 = 3;
         ambientMusicIndex = 0;
-        getReady();
     }
 
     /**
@@ -198,7 +230,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 1;
-        getReady();
     }
 
     /**
@@ -217,7 +248,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 2;
-        getReady();
     }
 
     /**
@@ -236,7 +266,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 3;
-        getReady();
     }
 
     /**
@@ -255,7 +284,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 4;
         RenderGameplay.getInstance().ambSpeed2 = 3;
         ambientMusicIndex = 4;
-        getReady();
     }
 
     /**
@@ -274,7 +302,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 5;
-        getReady();
     }
 
     /**
@@ -293,7 +320,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 6;
-        getReady();
     }
 
     /**
@@ -312,7 +338,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
         ambientMusicIndex = 0;
-        getReady();
     }
 
     private void selectRandomStage() {
@@ -328,7 +353,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 3;
-        getReady();
     }
 
     /**
@@ -347,7 +371,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
         ambientMusicIndex = 1;
-        getReady();
     }
 
     /**
@@ -366,7 +389,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 2;
-        getReady();
     }
 
     private void selectHiddenCaveNight() {
@@ -382,7 +404,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 2;
-        getReady();
     }
 
     /**
@@ -401,7 +422,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 3;
-        getReady();
     }
 
     /**
@@ -420,7 +440,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 4;
-        getReady();
     }
 
     private void selectDesertRuinsNight() {
@@ -436,7 +455,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
         ambientMusicIndex = 1;
-        getReady();
     }
 
     private void selectScorchedRuinsNight() {
@@ -452,7 +470,6 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().ambSpeed1 = 0;
         RenderGameplay.getInstance().ambSpeed2 = 0;
         ambientMusicIndex = 3;
-        getReady();
     }
 
 
@@ -460,37 +477,20 @@ public abstract class StageSelect extends JenesisMode {
      * @return stage
      */
     public String getStage() {
-        return stagePrevLox[hoveredStage.getIndex()];
-    }
-
-    private void getReady() {
-        RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
-        RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
-        RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
+        return stagePreviews[hoveredStage.index()];
     }
 
     public void start() {
-        getReady();
-
-        new Thread() {
-
-            @Override
-            @SuppressWarnings("static-access")
-            public void run() {
-                try {
-                    this.sleep(1000);
-                    MainWindow.getInstance().newGame();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
+        RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
+        RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
+        RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
+        MainWindow.getInstance().newGame();
     }
 
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Characters have been selected, true if only one is selected
+     * @return false if both CharacterEnum have been selected, true if only one is selected
      */
     public boolean bothArentSelected() {
         boolean answer = true;
@@ -513,19 +513,200 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     /**
-     * Checks if within number of Characters
+     * Checks if within number of CharacterEnum
      */
-    public boolean well() {
+    public boolean isHoveredOverStage() {
         boolean ans = false;
-        int stageToSelect = (vIndex * 3) + hIndex;
-        if (stageToSelect <= numberOfStages) {
+        int computedStage = (row * columns) + column;
+        if (computedStage <= numberOfStages) {
             ans = true;
-            hoveredStage = Stage.values()[stageToSelect - 1];
+            hoveredStage = stageLookup.get(computedStage);
         }
         return ans;
     }
 
     public Stage getHoveredStage() {
         return hoveredStage;
+    }
+
+    /**
+     * Horizontal index
+     *
+     * @return columnIndex
+     */
+    public int getHindex() {
+        return column;
+    }
+
+    /**
+     * Set horizontal index
+     */
+    public void setRow(int value) {
+        column = value;
+    }
+
+    /**
+     * Vertical index
+     *
+     * @return rowIndex
+     */
+    public int getVindex() {
+        return row;
+    }
+
+    /**
+     * Set vertical index
+     */
+    public void setColumn(int value) {
+        row = value;
+    }
+
+    public boolean getWithinCharPanel() {
+        return withinCharPanel;
+    }
+
+    public void mouseMoved(int mouseX, int mouseY) {
+        int topY = getStartY();
+        int topX = getStartX();
+        int columns = getColumns();
+        int vspacer = getCharHSpacer();
+        int hspacer = getCharVSpacer();
+        int rows = getRows();
+        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows)))) {
+            int row = (mouseY - topY) / vspacer;
+            int column = (mouseX - topX) / hspacer;
+            System.out.printf("Row %s :: Column %s\n", row, column);
+            setRow(row);
+            setColumn(column);
+            //RenderCharacterSelectionScreen.getInstance().setItem();
+            animateCap2(row, column);
+            withinCharPanel = true;
+        } else {
+            //System.out.println("Outa char pan dog");
+            RenderCharacterSelectionScreen.getInstance().setHindex(99);
+            RenderCharacterSelectionScreen.getInstance().setVindex(99);
+            withinCharPanel = false;
+        }
+    }
+
+
+    /**
+     * To make sure the caption is animated once,
+     * this method checks if the selected caption has changed
+     *
+     * @param x
+     * @param y
+     */
+    private void animateCap2(int x, int y) {
+        int tmpx = x;
+        int tmpy = y;
+
+        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
+        {
+        } else {
+            storedX = tmpx;
+            storedY = tmpy;
+            RenderCharacterSelectionScreen.getInstance().animateCaption();
+        }
+    }
+
+
+    /**
+     * Move up
+     */
+    public void moveUp() {
+        if (row > 0)
+            row -= 1;
+        else
+            row = rows;
+        capAnim();
+    }
+
+    /**
+     * Move down
+     */
+    public void moveDown() {
+        if (row < rows)
+            row = row + 1;
+        else
+            row = 0;
+        capAnim();
+    }
+
+    /**
+     * Move right
+     */
+    public void moveRight() {
+        if (column < columns)
+            column += 1;
+        else
+            column = 0;
+        capAnim();
+    }
+
+    /**
+     * Move left
+     */
+    public void moveLeft() {
+        if (column > 0)
+            column -= 1;
+        else
+            column = columns - 1;
+        capAnim();
+    }
+
+
+    /**
+     * Gets the number of columns in the characterEnum select screen
+     *
+     * @return number of columns
+     */
+    public int getColumns() {
+        return columns;
+    }
+
+    /**
+     * Gets the char caption spacer
+     *
+     * @return spacer
+     */
+    public int getCharHSpacer() {
+        return vSpacer;
+    }
+
+    /**
+     * Gets the char caption spacer
+     *
+     * @return spacer
+     */
+    public int getCharVSpacer() {
+        return hSpacer;
+    }
+
+    /**
+     * Get starting x coordinate
+     *
+     * @return starting x coordinate
+     */
+    public int getStartX() {
+        return hPos;
+    }
+
+    /**
+     * Returns the starting Y coordinate
+     *
+     * @return starting y
+     */
+    public int getStartY() {
+        return firstLine;
+    }
+
+    /**
+     * Get number of char rows
+     *
+     * @return number of rows
+     */
+    public int getRows() {
+        return rows;
     }
 }

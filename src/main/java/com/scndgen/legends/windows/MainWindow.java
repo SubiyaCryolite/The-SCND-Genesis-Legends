@@ -57,12 +57,12 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public static String lanClient = "lanClient";
     public static String singlePlayer = "singlePlayer";
     public static String storyMode = "StoryMenu";
-    public static int tTime;
+    public static int frameRate;
     private static MainWindow instance;
     public int hostTime;
     public boolean inStoryPane;
-    public boolean gameRunning = false, withinMenuPanel, freeToSave = true, withinCharPanel = false, controller = false;
-    public int item = 0, storedX = 99, storedY = 99, xyzStickDir;
+    public boolean gameRunning = false, withinMenuPanel, freeToSave = true, controller = false;
+    public int item = 0, xyzStickDir;
     public Mode mode = Mode.EMPTY;
     public OpponentAttacksOnline playerHost2, playerClient1;
     public CharacterAttacksOnline playerHost1, playerClient2;
@@ -75,7 +75,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private NetworkServer server;
     private InetAddress ServerAddress;
     private int leftyXOffset, onlineClients = 0, hatDir;
-    private boolean messageSent = false, isWaiting = true, isNotRepainting = true, menuLatencyElapsed = true;
+    private boolean messageSent = false, isWaiting = true, isPainting, menuLatencyElapsed = true;
     //client
     private NetworkClient client;
     private JTextField txtServerName = new JTextField(20);
@@ -445,7 +445,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Back to characters select screen, when match is over
+     * Back to characterEnum select screen, when match is over
      */
     public void backToCharSelect() {
         gameRunning = false;
@@ -462,7 +462,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Back to characters select screen,, when match is cancelled
+     * Back to characterEnum select screen,, when match is cancelled
      */
     public void backToCharSelect2() {
         gameRunning = false;
@@ -674,7 +674,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             else if (isWaiting && gameMode.equals(lanHost)) {
                 closeTheServer();
             } else if (mode == Mode.CHAR_SELECT_SCREEN) {
-                //if both Characters are selected
+                //if both CharacterEnum are selected
                 if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
                     if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.6f, 1000);
@@ -827,7 +827,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     @Override
     public void mouseClicked(MouseEvent m) {
-        if (mode == Mode.CHAR_SELECT_SCREEN && withinCharPanel) {
+        if (mode == Mode.CHAR_SELECT_SCREEN && RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) {
             if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
                 if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                     quickVibrate(0.6f, 1000);
@@ -840,7 +840,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (mode == Mode.STORY_SELECT_SCREEN && withinMenuPanel) {
             RenderStoryMenu.getInstance().selectStage();
         }
-        if (mode == Mode.STAGE_SELECT_SCREEN && withinCharPanel) {
+        if (mode == Mode.STAGE_SELECT_SCREEN && RenderStageSelect.getInstance().getWithinCharPanel()) {
             RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
         } else if (getIsGameRunning()) {
             if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
@@ -876,200 +876,42 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void mouseDragged(MouseEvent m) {
     }
 
-    /**
-     * To make sure the caption is animated once,
-     * this method checks if the selected caption has changed
-     *
-     * @param x
-     * @param y
-     */
-    public void animateCap2(int x, int y) {
-        int tmpx = x;
-        int tmpy = y;
-
-        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
-        {
-        } else {
-            storedX = tmpx;
-            storedY = tmpy;
-            RenderCharacterSelectionScreen.getInstance().animateCaption();
-        }
-    }
-
-    /**
-     * To make sure the caption is animated once,
-     * this method checks if the selected caption has changed
-     *
-     * @param x
-     * @param y
-     */
-    public void animateCap2x(int x, int y) {
-        int tmpx = x;
-        int tmpy = y;
-
-        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
-        {
-        } else {
-            storedX = tmpx;
-            storedY = tmpy;
-            RenderStoryMenu.getInstance().animateCaption();
-        }
-    }
-
-    public void superRepaint() {
-        repaint();
-        //getGlassPane().repaint();
-    }
-
     private void superRepaintThread() {
-        if (isNotRepainting) {
-            isNotRepainting = false;
-            new Thread() {
-
-                final int sleepTime = 1000 / tTime;
-
-                @SuppressWarnings({"static-access", "SleepWhileHoldingLock", "CallToThreadDumpStack"})
-                @Override
-                public void run() {
-                    do {
-                        try {
-                            superRepaint();
-                            this.setName("Super awesome repaint thread");
-                            this.sleep(sleepTime);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                    } while (1 != 0);
-                }
-            }.start();
-        }
-    }
-
-    /**
-     * Attempts to map selected characters using mouse
-     */
-    private void sortCharPosLoc(int mouseX, int mouseY) {
-        int topY = RenderCharacterSelectionScreen.getInstance().getTopY() + mouseYoffset;
-        int topX = RenderCharacterSelectionScreen.getInstance().getTopX();
-        int columns = RenderCharacterSelectionScreen.getInstance().getColumns();
-        int captionHeight = RenderCharacterSelectionScreen.getInstance().getCaptionHeight();
-        int captionWidth = RenderCharacterSelectionScreen.getInstance().getCaptionWidth();
-        int rows = RenderCharacterSelectionScreen.getInstance().getRows();
-        if (mouseX > topX && mouseX < (topX + (captionWidth * columns)) && (mouseY > topY) && (mouseY < topY + (captionHeight * (rows + 1)))) {
-            int vIndex = (mouseY - topY) / captionHeight;
-            int hIndex = (mouseX - topX) / captionWidth;
-            RenderCharacterSelectionScreen.getInstance().setHindex(hIndex);
-            RenderCharacterSelectionScreen.getInstance().setVindex(vIndex);
-            if (hIndex != storedX || vIndex != storedY) //same vals, do nothing
-            {
-                storedX = hIndex;
-                storedY = vIndex;
-                RenderCharacterSelectionScreen.getInstance().animateCaption();
+        if (isPainting) return;
+        isPainting = true;
+        new Thread() {
+            final int sleepTime = 1000 / frameRate;
+            @Override
+            public void run() {
+                do {
+                    try {
+                        repaint();
+                        this.setName("Super awesome repaint thread");
+                        this.sleep(sleepTime);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } while (true);
             }
-            withinCharPanel = true;
-        } else {
-            RenderCharacterSelectionScreen.getInstance().setHindex(99);
-            RenderCharacterSelectionScreen.getInstance().setVindex(99);
-            withinCharPanel = false;
-        }
-    }
-
-    /**
-     * Attempts to map selected characters using mouse
-     */
-    private void sortStagePosLoc(int mouseX, int mouseY) {
-        int topY = RenderStoryMenu.getInstance().getStartY() + mouseYoffset;
-        int topX = RenderStoryMenu.getInstance().getStartX();
-        int columns = RenderStoryMenu.getInstance().getNumberOfCharColumns();
-        int vspacer = RenderStoryMenu.getInstance().getCharHSpacer();
-        int hspacer = RenderStoryMenu.getInstance().getCharVSpacer();
-        int rows = RenderStoryMenu.getInstance().getCharRows();
-        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows + 1)))) {
-            int vIndex = (mouseY - topY) / vspacer;
-            int hIndex = (((mouseX - topX) / hspacer) + 1);
-            RenderStoryMenu.getInstance().setHindex(hIndex);
-            RenderStoryMenu.getInstance().setVindex(vIndex);
-            animateCap2x(hIndex, vIndex);
-            withinMenuPanel = true;
-            ;
-        } else {
-            RenderStoryMenu.getInstance().setHindex(99);
-            RenderStoryMenu.getInstance().setVindex(99);
-            withinMenuPanel = false;
-        }
-    }
-
-    /**
-     * Attempts to map selected characters using mouse
-     */
-    private void sortCharPosLoc2(int mouseX, int mouseY) {
-        int topY = RenderStageSelect.getInstance().getStartY() + mouseYoffset;
-        int topX = RenderStageSelect.getInstance().getStartX();
-        int columns = RenderStageSelect.getInstance().getNumberOfCharColumns();
-        int vspacer = RenderStageSelect.getInstance().getCharHSpacer();
-        int hspacer = RenderStageSelect.getInstance().getCharVSpacer();
-        int rows = RenderStageSelect.getInstance().getCharRows();
-        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows + 1)))) {
-            int vIndex = (mouseY - topY) / vspacer;
-            int hIndex = (((mouseX - topX) / hspacer) + 1);
-            //System.out.println("within char pan dog");
-            //System.out.println("Row "+rowIndex);
-            //System.out.println("Column "+columnIndex);
-            RenderStageSelect.getInstance().setHindex(hIndex);
-            RenderStageSelect.getInstance().setVindex(vIndex);
-            //RenderCharacterSelectionScreen.getInstance().setItem();
-            animateCap2(hIndex, vIndex);
-            withinCharPanel = true;
-        } else {
-            //System.out.println("Outa char pan dog");
-            RenderCharacterSelectionScreen.getInstance().setHindex(99);
-            RenderCharacterSelectionScreen.getInstance().setVindex(99);
-            withinCharPanel = false;
-        }
+        }.start();
     }
 
     @Override
     public void mouseMoved(MouseEvent m) {
         if (mode == Mode.CHAR_SELECT_SCREEN) {
-            sortCharPosLoc(m.getX(), m.getY());
+            RenderCharacterSelectionScreen.getInstance().mouseMoved(m.getX(), m.getY());
         }
-
         if (mode == Mode.STORY_SELECT_SCREEN) {
-            sortStagePosLoc(m.getX(), m.getY());
+            RenderStoryMenu.getInstance().mouseMoved(m.getX(), m.getY());
         }
-
         if (mode == Mode.STAGE_SELECT_SCREEN) {
             //if you're a client stay still
             if (getGameMode().equalsIgnoreCase(lanClient) == false) {
-                sortCharPosLoc2(m.getX(), m.getY());
+                RenderStageSelect.getInstance().mouseMoved(m.getX(), m.getY());
             }
         } else if (getIsGameRunning()) {
-            //when fighting
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false && RenderGameplay.getInstance().isDnladng()) {
-                //browse moves
-                if (m.getX() > (29 + leftyXOffset) && m.getX() < (436 + leftyXOffset)) {
-                    if (m.getY() > (int) (373 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (390 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
-                        item = 0;
-                    }
-
-                    if (m.getY() > (int) (390 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (407 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
-                        item = 1;
-                    }
-
-                    if (m.getY() > (int) (407 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (420 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
-                        item = 2;
-                    }
-
-                    if (m.getY() > (int) (420 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset && m.getY() < (int) (435 * RenderGameplay.getInstance().getscaleY()) + mouseYoffset) {
-                        item = 3;
-                    }
-
-                    RenderGameplay.getInstance().thisItem(item);
-                }
-            }
+            RenderGameplay.getInstance().mouseMoved(m.getX(), m.getY());
         }
-        //System.out.println("Mouse X:"+m.getX());
-        //System.out.println("Mouse y:"+m.getY());
     }
 
     @Override
@@ -1137,17 +979,13 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void focus() {
         requestFocusInWindow();
         setFocusable(true);
-        //System.out.println("Window focused");
     }
 
     /**
      * When a player is found
      */
     public void playerFound() {
-        //System.out.println("CharacterState found");
-
         int ansx = JOptionPane.showConfirmDialog(null, userName + " , someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
         switch (ansx) {
             case JOptionPane.YES_OPTION: {
                 sendToClient("as1wds2_" + LoginScreen.getInstance().timePref);

@@ -23,8 +23,8 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -73,7 +73,7 @@ public abstract class Gameplay extends JenesisMode {
     protected String scenePic = "images/bgBG2.png";
     protected String attackPicSrc = "images/trans.png";
     protected String[] storyPicArrStr;
-    protected Characters[] charNames = LoginScreen.charNames;
+    protected CharacterEnum[] charNames = LoginScreen.charNames;
     protected String attackPicOppSrc = "images/trans.png";
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInf = new StringBuilder("");
@@ -237,7 +237,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Get the Characters
+     * Get the CharacterEnum
      */
     protected void setCharMoveset() {
         MainWindow.getInstance().getAttacksChar().getOpponent().setCharMoveset();
@@ -587,9 +587,8 @@ public abstract class Gameplay extends JenesisMode {
         statIndexChar = 0;
         statIndexOpp = 0;
         oppBarYOffset = 435;
-        paneCord = (int) (306);
-        menuBarY = (int) (360);
-
+        paneCord = 306;
+        menuBarY = 360;
         threadsNotRunningYet = false;
         if (WindowOptions.graphics.equalsIgnoreCase("High")) {
             specialEffect = true;
@@ -636,7 +635,7 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * Gets the damage multiplier
      *
-     * @param who - which characters
+     * @param who - which characterEnum
      * @return damage multiplier
      */
     public int getDamageDealt(CharacterState who) {
@@ -711,7 +710,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Get the characters multiplier
+     * Get the characterEnum multiplier
      *
      * @return the damage multiplier
      */
@@ -910,18 +909,18 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Get the Characters life, these methods should be float as they are used in divisions
+     * Get the CharacterEnum life, these methods should be float as they are used in divisions
      *
-     * @return Characters life
+     * @return CharacterEnum life
      */
     public float getCharLife() {
         return (float) life;
     }
 
     /**
-     * Get the Characters max life, these methods should be float as they are used in divisions
+     * Get the CharacterEnum max life, these methods should be float as they are used in divisions
      *
-     * @return Characters maximum life
+     * @return CharacterEnum maximum life
      */
     public float getCharMaxLife() {
         return (float) maXlife;
@@ -1107,7 +1106,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Updates the life of Characters
+     * Updates the life of CharacterEnum
      *
      * @param forWho   - the person affected
      * @param ThisMuch - the life to add/subtract
@@ -1269,7 +1268,7 @@ public abstract class Gameplay extends JenesisMode {
         clasherRunnign = value;
     }
 
-    public Characters[] getCharNames() {
+    public CharacterEnum[] getCharNames() {
         return charNames;
     }
 
@@ -1315,5 +1314,26 @@ public abstract class Gameplay extends JenesisMode {
 
     public void setAmb2y(int amb2y) {
         this.amb2y = amb2y;
+    }
+
+    public void mouseMoved(int mouseX, int mouseY) {
+        //when fighting
+        if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false && isDnladng()) {
+            //browse moves
+            if (mouseX > (29 + (leftyXOffset * getscaleX())) && mouseX < (436 + (leftyXOffset * getscaleX()))) {
+                if (mouseY > (int) (373 * getscaleY()) && mouseY < (int) (390 * getscaleY())) {
+                    RenderGameplay.getInstance().thisItem(0);
+                }
+                if (mouseY > (int) (390 * getscaleY()) && mouseY < (int) (407 * getscaleY())) {
+                    RenderGameplay.getInstance().thisItem(1);
+                }
+                if (mouseY > (int) (407 * getscaleY()) && mouseY < (int) (420 * getscaleY())) {
+                    RenderGameplay.getInstance().thisItem(2);
+                }
+                if (mouseY > (int) (420 * getscaleY()) && mouseY < (int) (435 * getscaleY())) {
+                    RenderGameplay.getInstance().thisItem(3);
+                }
+            }
+        }
     }
 }

@@ -22,8 +22,8 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -34,7 +34,7 @@ import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
 
 /**
- * Basic characters template
+ * Basic characterEnum template
  *
  * @author ndana
  */
@@ -49,7 +49,7 @@ public abstract class Character {
     public float[] weakness;
     public float actionRecoverRate, hpRecovRate;
     protected AudioPlayback sound3;
-    protected Characters characters = Characters.SUBIYA;
+    protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     //imgs
     private VolatileImage[] highQualitySprites;
     private Image[] lowQualitySprites;
@@ -72,26 +72,26 @@ public abstract class Character {
         return isMale;
     }
 
-    public Characters getEnum() {
-        return characters;
+    public CharacterEnum getEnum() {
+        return characterEnum;
     }
 
     private void sortQue() {
         pix = new JenesisImageLoader();
         spriteLocation = new String[12];
-        spriteLocation[0] = "images/" + characters.data() + "/D.png";  //1
-        spriteLocation[1] = "images/" + characters.data() + "/M1.png"; //2
-        spriteLocation[2] = "images/" + characters.data() + "/M2.png"; //3
-        spriteLocation[3] = "images/" + characters.data() + "/M3.png"; //4
-        spriteLocation[4] = "images/" + characters.data() + "/M4.png"; //5
-        spriteLocation[5] = "images/" + characters.data() + "/M5.png"; //6
-        spriteLocation[6] = "images/" + characters.data() + "/M6.png"; //7
-        spriteLocation[7] = "images/" + characters.data() + "/M7.png"; //8
-        spriteLocation[8] = "images/" + characters.data() + "/M8.png"; //9
-        spriteLocation[9] = "images/" + characters.data() + "/N.png"; //10
-        spriteLocation[10] = "images/" + characters.data() + "/P.png"; //11
+        spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
+        spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
+        spriteLocation[2] = "images/" + characterEnum.data() + "/M2.png"; //3
+        spriteLocation[3] = "images/" + characterEnum.data() + "/M3.png"; //4
+        spriteLocation[4] = "images/" + characterEnum.data() + "/M4.png"; //5
+        spriteLocation[5] = "images/" + characterEnum.data() + "/M5.png"; //6
+        spriteLocation[6] = "images/" + characterEnum.data() + "/M6.png"; //7
+        spriteLocation[7] = "images/" + characterEnum.data() + "/M7.png"; //8
+        spriteLocation[8] = "images/" + characterEnum.data() + "/M8.png"; //9
+        spriteLocation[9] = "images/" + characterEnum.data() + "/N.png"; //10
+        spriteLocation[10] = "images/" + characterEnum.data() + "/P.png"; //11
         spriteLocation[11] = "images/trans.png"; //12
-        System.out.println("FROM CHARACTER CLASS " + characters.data());
+        System.out.println("FROM CHARACTER CLASS " + characterEnum.data());
     }
 
     public int getNumberOfSprites() {
@@ -143,7 +143,7 @@ public abstract class Character {
     public abstract void attack(String attack, CharacterState forWho);
 
     /**
-     * Gets the move set of the characters
+     * Gets the move set of the characterEnum
      *
      * @return array of physical attacks
      */
@@ -177,18 +177,18 @@ public abstract class Character {
     }
 
     /**
-     * Returns the Characters description. Used in menus
+     * Returns the CharacterEnum description. Used in menus
      *
-     * @return The Characters description
+     * @return The CharacterEnum description
      */
     public String getDescSmall() {
         return descSmall;
     }
 
     /**
-     * Gets characters to characters battle taunts
+     * Gets characterEnum to characterEnum battle taunts
      *
-     * @param indx, the characters
+     * @param indx, the characterEnum
      * @return bragging text
      */
     public String getBraggingRights(int indx) {
@@ -196,16 +196,16 @@ public abstract class Character {
     }
 
     /**
-     * Shall return the Characters life
+     * Shall return the CharacterEnum life
      *
-     * @return characters life
+     * @return characterEnum life
      */
     public int getLife() {
         return life;
     }
 
     /**
-     * Get the Characters recovery rate
+     * Get the CharacterEnum recovery rate
      *
      * @return activity recovery rate
      */
@@ -214,7 +214,7 @@ public abstract class Character {
     }
 
     /**
-     * Get the Characters hp recover rate
+     * Get the CharacterEnum hp recover rate
      *
      * @return hp recovery rate
      */
@@ -223,16 +223,16 @@ public abstract class Character {
     }
 
     /**
-     * Gets the characters name
+     * Gets the characterEnum name
      *
-     * @return characters name
+     * @return characterEnum name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Set Characters AI, opponent 1
+     * Set CharacterEnum AI, opponent 1
      */
     public void setAiProf() {
         RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours1, 1);
@@ -243,7 +243,7 @@ public abstract class Character {
     }
 
     /**
-     * Set Characters AI, opponent 2
+     * Set CharacterEnum AI, opponent 2
      */
     public void setAiProf2() {
         RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours1, 1);
@@ -254,7 +254,7 @@ public abstract class Character {
     }
 
     /**
-     * Set Characters AI, player 2
+     * Set CharacterEnum AI, player 2
      */
     public void setAiProf3() {
         RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours1, 1);
@@ -270,7 +270,7 @@ public abstract class Character {
 
     /**
      * Added 19/January/2011 by SubiyaCryolite
-     * resets the Characters limits after each fight
+     * resets the CharacterEnum limits after each fight
      */
     public void resetLimits() {
         for (int index = 0; index < limit.length; index++) {

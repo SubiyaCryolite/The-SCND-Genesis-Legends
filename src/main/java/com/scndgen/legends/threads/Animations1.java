@@ -38,7 +38,7 @@ public class Animations1 implements Runnable {
 
     public Animations1() {
         thread = new Thread(this);
-        thread.setName("Animator thread 1 - Characters");
+        thread.setName("Animator thread 1 - CharacterEnum");
         thread.start();
         factor = 30 - (8 + (WindowOptions.whichOne() * 2));
         System.out.println("Fury factor: " + factor);

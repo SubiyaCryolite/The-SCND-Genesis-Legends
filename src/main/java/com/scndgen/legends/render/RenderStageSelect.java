@@ -33,7 +33,6 @@ import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Hashtable;
 
 public class RenderStageSelect extends StageSelect implements JenesisRender {
 
@@ -53,39 +52,16 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             "Doug Kaufman - Elvish theme",
             "Mattias Westlund - Breaking the Chains",
             "Aleksi Aubry-Carlson - Battle Music"};
-    private Image charBack, loading;
-    private int horizColumns = 3, verticalRows;
+    private Image captionHighlight, loading;
     private JenesisImageLoader imageLoader;
     private Image[] stageCap = new Image[numberOfStages];
     private Image[] stagePrev = new Image[numberOfStages];
-    private Font normalFont, bigFont;
-    private final Hashtable<Stage, String> stageNameStr;
+    private Font normalFont;
     private int hoveredStageIndex = -1;
 
     public RenderStageSelect() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
-        Language lang = Language.getInstance();
-        stageNameStr = new Hashtable<>();
-        stageNameStr.put(Stage.IBEX_HILL, "");
-        stageNameStr.put(Stage.CHELSTON_CITY_DOCKS, lang.getLine(153));
-        stageNameStr.put(Stage.DESERT_RUINS, lang.getLine(154));
-        stageNameStr.put(Stage.CHELSTON_CITY_STREETS, lang.getLine(155));
-        stageNameStr.put(Stage.IBEX_HILL_NIGHT, lang.getLine(156));
-        stageNameStr.put(Stage.SCORCHED_RUINS, lang.getLine(157));
-        stageNameStr.put(Stage.FROZEN_WILDERNESS, lang.getLine(158));
-        stageNameStr.put(Stage.DISTANT_ISLE, lang.getLine(162));
-        stageNameStr.put(Stage.HIDDEN_CAVE, lang.getLine(159));
-        stageNameStr.put(Stage.AFRICAN_VILLAGE, lang.getLine(160));
-        stageNameStr.put(Stage.APOCALYPTO, lang.getLine(161));
-        stageNameStr.put(Stage.DISTANT_ISLE_NIGHT, lang.getLine(163));
-        stageNameStr.put(Stage.DESERT_RUINS_NIGHT, lang.getLine(369));
-        stageNameStr.put(Stage.SCORCHED_RUINS_NIGHT, lang.getLine(370));
-        stageNameStr.put(Stage.RANDOM, lang.getLine(164));
-        stageNameStr.put(Stage.HIDDEN_CAVE_NIGHT, lang.getLine(371));
-        numberOfStages = Stage.values().length;
-
-        verticalRows = (numberOfStages / 3);
         stageCap = new Image[numberOfStages];
         stagePrev = new Image[numberOfStages];
     }
@@ -114,9 +90,12 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     public void paintComponent(Graphics g) {
         createBackBuffer();
         loadAssets();
+        if (opacity < 0.98f) {
+            opacity = opacity + 0.02f;
+        }
         if (selectedStage) {
             g2d.setColor(Color.BLACK);
-            g2d.drawImage(stagePrev[hoveredStage.getIndex()], charXcap + x, charYcap, this);
+            g2d.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(0.7f));
             g2d.fillRect(0, 0, 852, 480);
             g2d.setComposite(makeComposite(1.0f));
@@ -126,87 +105,59 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
             g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
-        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) && selectedStage == false) {
+        } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) && !selectedStage) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
             g2d.setColor(Color.WHITE);
-            g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(bigFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
+            g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(normalFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
         } else if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.lanClient) == false) {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
-            //characters preview DYNAMIC change
-            if (opacity < 0.98f) {
-                opacity = opacity + 0.02f;
-            }
             g2d.setComposite(makeComposite(opacity));
-            g2d.drawImage(stagePrev[hoveredStage.getIndex()], charXcap + x, charYcap, this);
+            g2d.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap, this);
             g2d.setComposite(makeComposite(1.0f));
-            lastRow = 0;
-            {
-                g2d.setComposite(makeComposite(5 * 0.1F));
-                g2d.fillRoundRect(283, 0, 285, 480, 30, 30);
-                g2d.setComposite(makeComposite(10 * 0.1F));
-
-                int col = 0;
-                for (int i = 0; i < (stageCap.length / 3); i++) {
-                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * i), this);
-                    col++;
-                    g2d.drawImage(stageCap[col], hPos + hSpacer, firstLine + (vSpacer * i), this);
-                    col++;
-                    g2d.drawImage(stageCap[col], hPos + (hSpacer * 2), firstLine + (vSpacer * i), this);
-                    col++;
-                    lastRow = i;
+            g2d.setComposite(makeComposite(5 * 0.1F));
+            g2d.fillRoundRect(283, 0, 285, 480, 30, 30);
+            g2d.setComposite(makeComposite(10 * 0.1F));
+            for (int row = 0; row < rows; row++) {
+                for (int column = 0; column < columns; column++) {
+                    int computedPosition = (row * columns) + column;
+                    g2d.drawImage(stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                 }
-
-                int rem = stageCap.length % 3;
-
-                if (rem == 1) {
-                    //System.out.println("Remainder 11");
-                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                } else if (rem == 2) {
-                    g2d.drawImage(stageCap[col], hPos, firstLine + (vSpacer * (lastRow + 1)), this);
-                    g2d.drawImage(stageCap[col + 1], hPos + hSpacer, firstLine + (vSpacer * (lastRow + 1)), this);
-                }
-
-                if (well()) {
-                    {
-                        showStageName(hoveredStage);
-                        g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
-                    }
-                }
+            }
+            if (isHoveredOverStage()) {
+                showStageName(hoveredStage);
+                g2d.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
             }
         }
         JenesisGlassPane.getInstance().overlay(g2d, this);
         g.drawImage(volatileImg, 0, 0, this);
     }
 
-
     private void loadCaps() {
-        selectedStage = false;
         try {
-            charBack = imageLoader.loadImage("images/selStage.png");
-            loading = imageLoader.loadImage("images/appletprogress.gif");
-            for (int i = 0; i < stagePrevLox.length; i++) {
-                stageCap[i] = imageLoader.loadImage("images/t_" + stagePrevLox[i] + ".png");
-                stagePrev[i] = imageLoader.loadImage("images/prev/" + stagePrevLox[i] + ".jpg");
+            captionHighlight = imageLoader.loadImage("images/stageCaptionHighlight.png");
+            loading = imageLoader.loadImage("images/loading.gif");
+            for (int index = 0; index < stagePreviews.length; index++) {
+                stageCap[index] = imageLoader.loadImage("images/t_" + stagePreviews[index] + ".png");
+                stagePrev[index] = imageLoader.loadImage("images/prev/" + stagePreviews[index] + ".jpg");
             }
-        } catch (Exception e) {
-            System.err.println(e);
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
         }
     }
 
     private void showStageName(Stage stage) {
-        if (stage.getIndex() != hoveredStageIndex) {
-            capAnim();
-            systemNotice(stageNameStr.get(stage));
-            hoveredStageIndex = stage.getIndex();
-            if (hoveredStageIndex == Stage.RANDOM.getIndex()) {
-                mode = StageSelection.RANDOM;
-            } else {
-                mode = StageSelection.NORMAL;
-            }
+        if (stage.index() == hoveredStageIndex) return;
+        capAnim();
+        systemNotice(lookupStageNames.get(stage));
+        hoveredStageIndex = stage.index();
+        if (hoveredStageIndex == Stage.RANDOM.index()) {
+            mode = StageSelection.RANDOM;
+        } else {
+            mode = StageSelection.NORMAL;
         }
     }
 
@@ -214,141 +165,6 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
         return ambientMusic[ambientMusicIndex];
     }
 
-    /**
-     * Move up
-     */
-    public void moveUp() {
-        if (vIndex > 0) {
-            vIndex = vIndex - 1;
-        } else {
-            vIndex = verticalRows;
-        }
-        capAnim();
-    }
-
-    /**
-     * Move down
-     */
-    public void moveDown() {
-        if (vIndex < verticalRows) {
-            vIndex = vIndex + 1;
-        } else {
-            vIndex = 0;
-        }
-        capAnim();
-    }
-
-    /**
-     * Move right
-     */
-    public void moveRight() {
-        if (hIndex < horizColumns) {
-            hIndex = hIndex + 1;
-        } else {
-            hIndex = 1;
-        }
-
-        capAnim();
-    }
-
-    /**
-     * Move left
-     */
-    public void moveLeft() {
-        if (hIndex > 1) {
-            hIndex = hIndex - 1;
-        } else {
-            hIndex = horizColumns;
-        }
-        capAnim();
-    }
-
-
-    /**
-     * Horizontal index
-     *
-     * @return columnIndex
-     */
-    public int getHindex() {
-        return hIndex;
-    }
-
-    /**
-     * Set horizontal index
-     */
-    public void setHindex(int value) {
-        hIndex = value;
-    }
-
-    /**
-     * Vertical index
-     *
-     * @return rowIndex
-     */
-    public int getVindex() {
-        return vIndex;
-    }
-
-    /**
-     * Set vertical index
-     */
-    public void setVindex(int value) {
-        vIndex = value;
-    }
-
-    /**
-     * Gets the number of columns in the characters select screen
-     *
-     * @return number of columns
-     */
-    public int getNumberOfCharColumns() {
-        return horizColumns;
-    }
-
-    /**
-     * Gets the char caption spacer
-     *
-     * @return spacer
-     */
-    public int getCharHSpacer() {
-        return vSpacer;
-    }
-
-    /**
-     * Gets the char caption spacer
-     *
-     * @return spacer
-     */
-    public int getCharVSpacer() {
-        return hSpacer;
-    }
-
-    /**
-     * Get starting x coordinate
-     *
-     * @return starting x coordinate
-     */
-    public int getStartX() {
-        return hPos;
-    }
-
-    /**
-     * Returns the starting Y coordinate
-     *
-     * @return starting y
-     */
-    public int getStartY() {
-        return firstLine;
-    }
-
-    /**
-     * Get number of char rows
-     *
-     * @return number of rows
-     */
-    public int getCharRows() {
-        return verticalRows;
-    }
 
     public String[] getAmbientMusic() {
         return ambientMusic;

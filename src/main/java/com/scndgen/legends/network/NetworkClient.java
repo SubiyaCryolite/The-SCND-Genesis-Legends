@@ -112,7 +112,7 @@ public class NetworkClient implements Runnable {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
                 MainWindow.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
-            } //Characters
+            } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
                     RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
@@ -157,52 +157,52 @@ public class NetworkClient implements Runnable {
                 System.out.println("aquired time is " + MainWindow.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
-                if (line.equals(Stage.IBEX_HILL.getShortCode())) {
+                if (line.equals(Stage.IBEX_HILL.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 }
-                if (line.equals(Stage.CHELSTON_CITY_DOCKS.getShortCode())) {
+                if (line.equals(Stage.CHELSTON_CITY_DOCKS.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 }
-                if (line.equals(Stage.DESERT_RUINS.getShortCode())) {
+                if (line.equals(Stage.DESERT_RUINS.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS);
                 }
-                if (line.equals(Stage.CHELSTON_CITY_STREETS.getShortCode())) {
+                if (line.equals(Stage.CHELSTON_CITY_STREETS.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 }
-                if (line.equals(Stage.IBEX_HILL_NIGHT.getShortCode())) {
+                if (line.equals(Stage.IBEX_HILL_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 }
-                if (line.equals(Stage.SCORCHED_RUINS.getShortCode())) {
+                if (line.equals(Stage.SCORCHED_RUINS.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS);
                 }
-                if (line.equals(Stage.FROZEN_WILDERNESS.getShortCode())) {
+                if (line.equals(Stage.FROZEN_WILDERNESS.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 }
-                if (line.equals(Stage.DISTANT_ISLE.getShortCode())) {
+                if (line.equals(Stage.DISTANT_ISLE.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 }
-                if (line.equals(Stage.HIDDEN_CAVE.getShortCode())) {
+                if (line.equals(Stage.HIDDEN_CAVE.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE);
                 }
-                if (line.equals(Stage.HIDDEN_CAVE_NIGHT.getShortCode())) {
+                if (line.equals(Stage.HIDDEN_CAVE_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE_NIGHT);
                 }
-                if (line.equals(Stage.AFRICAN_VILLAGE.getShortCode())) {
+                if (line.equals(Stage.AFRICAN_VILLAGE.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.AFRICAN_VILLAGE);
                 }
-                if (line.equals(Stage.APOCALYPTO.getShortCode())) {
+                if (line.equals(Stage.APOCALYPTO.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 }
-                if (line.equals(Stage.DISTANT_ISLE_NIGHT.getShortCode())) {
+                if (line.equals(Stage.DISTANT_ISLE_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 }
-                if (line.equals(Stage.RANDOM.getShortCode())) {
+                if (line.equals(Stage.RANDOM.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.RANDOM);
                 }
-                if (line.equals(Stage.DESERT_RUINS_NIGHT.getShortCode())) {
+                if (line.equals(Stage.DESERT_RUINS_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 }
-                if (line.equals(Stage.SCORCHED_RUINS_NIGHT.getShortCode())) {
+                if (line.equals(Stage.SCORCHED_RUINS_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
                 }
             } //start game

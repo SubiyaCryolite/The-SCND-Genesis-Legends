@@ -25,7 +25,7 @@ import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
 
-import static com.scndgen.legends.enums.Characters.SUBIYA;
+import static com.scndgen.legends.enums.CharacterEnum.SUBIYA;
 
 /**
  * @author ndana
@@ -36,7 +36,7 @@ public class Subiya extends Character {
         //strings
         descSmall = "Subiya - a fighter specialised in melee combat";
         name = "Subiya";
-        characters = SUBIYA;
+        characterEnum = SUBIYA;
         //string arrays
         bragRights = new String[]{"Lets do this!!", "Sorry bro, it had to be done", "Students always surpass their masters", "Hate to beat down on a lady", "PAYBACK TIME !!!", "You're definately strong, just not strong enough", "I hope you're nothing like your brother", "How does it feel to fall from grace", "Is this how far you've fallen", "Forgive me, I must defeat you", "I'll admit, you're rather beutiful", "What is that thing?!"};
         physical = new String[]{"Thunder Clap", "Knee Strike", "Thunder Clap", "Knee Strike EX2"};
