@@ -23,8 +23,7 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
@@ -54,7 +53,7 @@ import java.util.logging.Logger;
 public abstract class Gameplay extends JenesisMode {
     protected String activePerson; // person who performed an attack, name shall show in battle info status area
     protected int perCent = 100, perCent2 = 100;
-    protected Characters selectedChar, selectedOpp;
+    protected com.scndgen.legends.characters.Characters selectedChar, selectedOpp;
     protected int done = 0; // if gameover
     protected String[] attackArray = new String[8];//up to 8 moves can be qued
     protected int comboCounter = 0; //must be negative one to reach index 0, app wide counter, enable you to que attacks of different kinds
@@ -74,7 +73,7 @@ public abstract class Gameplay extends JenesisMode {
     protected String scenePic = "images/bgBG2.png";
     protected String attackPicSrc = "images/trans.png";
     protected String[] storyPicArrStr;
-    protected Character[] charNames = LoginScreen.charNames;
+    protected Characters[] charNames = LoginScreen.charNames;
     protected String attackPicOppSrc = "images/trans.png";
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInf = new StringBuilder("");
@@ -238,7 +237,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Get the Character
+     * Get the Characters
      */
     protected void setCharMoveset() {
         MainWindow.getInstance().getAttacksChar().getOpponent().setCharMoveset();
@@ -637,7 +636,7 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * Gets the damage multiplier
      *
-     * @param who - which character
+     * @param who - which characters
      * @return damage multiplier
      */
     public int getDamageDealt(CharacterState who) {
@@ -712,7 +711,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Get the character multiplier
+     * Get the characters multiplier
      *
      * @return the damage multiplier
      */
@@ -808,10 +807,10 @@ public abstract class Gameplay extends JenesisMode {
         life = maXlife;
         oppLife = oppMaxLife;
         limitBreak = 5;
-        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(Characters.getDamageMultiplier(CharacterState.CHARACTER));
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setDamageMultiplier(com.scndgen.legends.characters.Characters.getDamageMultiplier(CharacterState.CHARACTER));
         RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().setCelestiaMultiplier(10);
         RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setCelestiaMultiplier(10);
-        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(Characters.getDamageMultiplier(CharacterState.OPPONENT));
+        RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().setDamageMultiplier(com.scndgen.legends.characters.Characters.getDamageMultiplier(CharacterState.OPPONENT));
     }
 
     /**
@@ -856,7 +855,7 @@ public abstract class Gameplay extends JenesisMode {
             //change curent index
             comboCounter = comboCounter - 1;
             int moi = Integer.parseInt(attackArray[comboCounter]);
-            Characters.alterPoints2(moi);
+            com.scndgen.legends.characters.Characters.alterPoints2(moi);
             System.out.println("UNQUED " + moi);
         }
     }
@@ -890,8 +889,8 @@ public abstract class Gameplay extends JenesisMode {
         lifePlain = Math.round(daNum); // round off
         lifeTotalPlain = Math.round(getCharLife()); // for text
         perCent = Math.round(lifePlain);
-        Characters.setCurrLifeOpp(perCent2);
-        Characters.setCurrLifeChar(perCent);
+        com.scndgen.legends.characters.Characters.setCurrLifeOpp(perCent2);
+        com.scndgen.legends.characters.Characters.setCurrLifeChar(perCent);
     }
 
     /**
@@ -906,23 +905,23 @@ public abstract class Gameplay extends JenesisMode {
         lifePlain2 = Math.round(daNum2); // round off
         lifeTotalPlain2 = Math.round(getOppLife()); // for text
         perCent2 = Math.round(lifePlain2);
-        Characters.setCurrLifeOpp(perCent2);
-        Characters.setCurrLifeChar(perCent);
+        com.scndgen.legends.characters.Characters.setCurrLifeOpp(perCent2);
+        com.scndgen.legends.characters.Characters.setCurrLifeChar(perCent);
     }
 
     /**
-     * Get the Character life, these methods should be float as they are used in divisions
+     * Get the Characters life, these methods should be float as they are used in divisions
      *
-     * @return Character life
+     * @return Characters life
      */
     public float getCharLife() {
         return (float) life;
     }
 
     /**
-     * Get the Character max life, these methods should be float as they are used in divisions
+     * Get the Characters max life, these methods should be float as they are used in divisions
      *
-     * @return Character maximum life
+     * @return Characters maximum life
      */
     public float getCharMaxLife() {
         return (float) maXlife;
@@ -1108,7 +1107,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * Updates the life of Character
+     * Updates the life of Characters
      *
      * @param forWho   - the person affected
      * @param ThisMuch - the life to add/subtract
@@ -1270,7 +1269,7 @@ public abstract class Gameplay extends JenesisMode {
         clasherRunnign = value;
     }
 
-    public Character[] getCharNames() {
+    public Characters[] getCharNames() {
         return charNames;
     }
 

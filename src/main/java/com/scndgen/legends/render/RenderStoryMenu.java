@@ -37,7 +37,7 @@ import java.awt.*;
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the character and opponent
+ * This class creates a graphical preview of the characters and opponent
  */
 public class RenderStoryMenu extends StoryMenu implements JenesisRender {
 

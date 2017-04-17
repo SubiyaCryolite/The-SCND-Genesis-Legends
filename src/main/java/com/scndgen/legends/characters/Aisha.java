@@ -22,19 +22,21 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
+
+import static com.scndgen.legends.enums.Characters.AISHA;
 
 /**
  * @author ndana
  */
-public class Aisha extends com.scndgen.legends.characters.Character {
+public class Aisha extends Character {
 
     public Aisha() {
         //strings
         descSmall = "Aisha - a fighter specialised in sword combat";
         name = "Aisha";
-        character = com.scndgen.legends.enums.Character.AISHA;
+        characters = AISHA;
         isNotMale();
         //string arrays
         bragRights = new String[]{"Show me what you got Rai", "Prove you aren't just a waste of space ;D", "Fun fact! My single blade beats both of yours.", "Let's do this", "I'll keep slicing you till you're a pile of dirt!", "You fight with skill and grace, but thats not enough to stop me", "You won't be able to touch me!!!", "So you're the legend. Lets see what you got", "Wow!! So thats what you really look like", "Girl power! WOOT! WOOT!", "I won't go easy on you little girl", "Unbelievable!!"};

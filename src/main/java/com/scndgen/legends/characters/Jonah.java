@@ -22,19 +22,21 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
+
+import static com.scndgen.legends.enums.Characters.JONAH;
 
 /**
  * @author ndana
  */
-public class Jonah extends com.scndgen.legends.characters.Character {
+public class Jonah extends Character {
 
     public Jonah() {
         //strings
         descSmall = "Jonah - a fighter specialised in Force combat";
         name = "Jonah";
-        character = com.scndgen.legends.enums.Character.JONAH;
+        characters = JONAH;
         //string arrays
         bragRights = new String[]{"I don't like fighting weakling, this'll be over soon", "Do me a favour.....die", "I'm not my brother, I'll destroy you", "You're no match for me", "Time for some tough love brother", "Sorry Ade, it can't be helped", "Let's do this", "NovaAdam, prove you're more than just talk", "So this is your true form.....I'LL DESTROY IT!!!!", "Out of my way!!! I've got stronger opponents to destroy", "You talk big for a tiny girl", "Terrible, just terrible"};
         physical = new String[]{"One!", "Two!!", "Ou!!!", "Jaw Breaker"};
@@ -47,7 +49,6 @@ public class Jonah extends com.scndgen.legends.characters.Character {
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         //ints
         life = 29760;
-        hitPoints = 70;
         limit = new int[]{0, 0, 0, 0, 0};
         //doubles
         actionRecoverRate = 2.08f;//2.10;

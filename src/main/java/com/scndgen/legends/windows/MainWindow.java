@@ -443,7 +443,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Back to character select screen, when match is over
+     * Back to characters select screen, when match is over
      */
     public void backToCharSelect() {
         gameRunning = false;
@@ -459,7 +459,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Back to character select screen,, when match is cancelled
+     * Back to characters select screen,, when match is cancelled
      */
     public void backToCharSelect2() {
         gameRunning = false;
@@ -671,7 +671,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             else if (isWaiting && gameMode.equals(lanHost)) {
                 closeTheServer();
             } else if (mode == Mode.CHAR_SELECT_SCREEN) {
-                //if both Character are selected
+                //if both Characters are selected
                 if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
                     if ((getGameMode().equalsIgnoreCase(singlePlayer) || getGameMode().equalsIgnoreCase(lanHost))) {
                         quickVibrate(0.6f, 1000);
@@ -963,7 +963,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Attempts to map selected character using mouse
+     * Attempts to map selected characters using mouse
      */
     private void sortCharPosLoc(int xPos, int yPos) {
         topY = RenderCharacterSelectionScreen.getInstance().getStartY() + mouseYoffset;
@@ -988,7 +988,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Attemptsto map selected character using mouse
+     * Attemptsto map selected characters using mouse
      */
     private void sortStagePosLoc(int xPos, int yPos) {
         topY = RenderStoryMenu.getInstance().getStartY() + mouseYoffset;
@@ -1013,7 +1013,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     /**
-     * Attempts to map selected character using mouse
+     * Attempts to map selected characters using mouse
      */
     private void sortCharPosLoc2(int xPos, int yPos) {
         topY = RenderStageSelect.getInstance().getStartY() + mouseYoffset;

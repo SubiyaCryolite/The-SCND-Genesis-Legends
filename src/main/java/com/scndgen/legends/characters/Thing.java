@@ -22,14 +22,14 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Character;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.render.RenderGameplay;
 
 /**
  * @author ndana
  */
-public class Thing extends com.scndgen.legends.characters.Character {
+public class Thing extends Character {
 
     private int bonus;
 
@@ -62,15 +62,14 @@ public class Thing extends com.scndgen.legends.characters.Character {
         points = 1800;
         damage = 0;
         if (y == 0) {
-            character = Character.THING;
+            characters = Characters.THING;
             life = 40000;
             bonus = 0;
         } else {
-            character = Character.THING;
+            characters = Characters.THING;
             life = 60000;
             bonus = 5;
         }
-        hitPoints = 70;
         limit = new int[]{0, 0, 0, 0, 0};
 
         //doubles

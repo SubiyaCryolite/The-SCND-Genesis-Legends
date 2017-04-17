@@ -43,7 +43,7 @@ public class Characters {
     private String characterName, opponentName;
     private com.scndgen.legends.characters.Character character, opponent;
 
-    //called when character damaged
+    //called when characters damaged
     public static void setCurrLifeChar(int life) {
         currCharLife = life;
         //percentages
@@ -190,7 +190,7 @@ public class Characters {
         return opponent;
     }
 
-    public void prepare(com.scndgen.legends.enums.Character character) {
+    public void prepare(com.scndgen.legends.enums.Characters characters) {
 
         minOppLife = 100;
         currOppLife = 100;
@@ -198,7 +198,7 @@ public class Characters {
         currCharLife = 100;
         setDamageCounter(CharacterState.CHARACTER, 12);
 
-        switch (character) {
+        switch (characters) {
             case SUBIYA:
                 this.character = new Subiya();
                 break;
@@ -237,21 +237,21 @@ public class Characters {
                 break;
         }
 
-        characterName = character.name();
-        RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(character.index());
+        characterName = characters.name();
+        RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(characters.index());
         activityRecoverRateChar = this.character.getRecovSpeed();
         setPoints(this.character.getPoints());
         RenderGameplay.getInstance().setLife(this.character.getLife());
         RenderGameplay.getInstance().setMaxLife(this.character.getLife());
     }
 
-    public void prepareO(com.scndgen.legends.enums.Character character) {
+    public void prepareO(com.scndgen.legends.enums.Characters characters) {
         minOppLife = 100;
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
         setDamageCounter(CharacterState.OPPONENT, 12);
-        switch (character) {
+        switch (characters) {
             case SUBIYA:
                 opponent = new Subiya();
                 break;
@@ -289,8 +289,8 @@ public class Characters {
                 opponent = new Thing(0);
                 break;
         }
-        opponentName = character.name();
-        RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(character.index());
+        opponentName = characters.name();
+        RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characters.index());
         activityRecoveryRateOpp = opponent.getRecovSpeed();
         RenderGameplay.getInstance().setOppLife(opponent.getLife());
         RenderGameplay.getInstance().setOppMaxLife(opponent.getLife());
@@ -299,7 +299,7 @@ public class Characters {
 
     /**
      * Added 19/jan/2011 by SubiyaCryolite -
-     * resets every character
+     * resets every characters
      */
     public void resetCharacters() {
         opponent.resetLimits();

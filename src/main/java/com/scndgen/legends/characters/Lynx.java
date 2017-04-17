@@ -22,19 +22,21 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
+
+import static com.scndgen.legends.enums.Characters.LYNX;
 
 /**
  * @author ndana
  */
-public class Lynx extends com.scndgen.legends.characters.Character {
+public class Lynx extends Character {
 
     public Lynx() {
         //strings
         descSmall = "Lynx - a fighter specialised in dual blade combat";
         name = "Lynx";
-        character = com.scndgen.legends.enums.Character.LYNX;
+        characters = LYNX;
         //string arrays
         bragRights = new String[]{"Don't expect me to go easy on ya!", "Show me what you've learnt", "Let's do this", "This'll be fun. Don't hold back Aisha!!!", "I don't take kindly to scum", "A worthy opponent, lets do this!!!", "This'll be over quick, brace yourself", "The sword of Genesis, show me its strength", "So this is an awakened one, I'll show no mercy", "It's an honour to battle you", "I don't wanna fight a little girl", "Abomination much?"};
         physical = new String[]{"Blade Barrage", "Dual Slice", "Basic Slice", "Fatal DESCENT"};
@@ -47,7 +49,6 @@ public class Lynx extends com.scndgen.legends.characters.Character {
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         //ints
         life = 30400;
-        hitPoints = 70;
         limit = new int[]{0, 0, 0, 0, 0};
         //doubles
         actionRecoverRate = 2.20f;//1.75;

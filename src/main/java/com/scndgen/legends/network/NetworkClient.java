@@ -112,7 +112,7 @@ public class NetworkClient implements Runnable {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
                 MainWindow.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
-            } //Character
+            } //Characters
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
                     RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);

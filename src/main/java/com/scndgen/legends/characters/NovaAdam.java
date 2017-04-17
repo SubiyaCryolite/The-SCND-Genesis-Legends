@@ -22,19 +22,21 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
+
+import static com.scndgen.legends.enums.Characters.NOVA_ADAM;
 
 /**
  * @author ndana
  */
-public class NovaAdam extends com.scndgen.legends.characters.Character {
+public class NovaAdam extends Character {
 
     public NovaAdam() {
         //strings
         descSmall = "Nova Adam - an awakened Celestia Being specialised in celestia combat";
         name = "NovaAdam";
-        character = com.scndgen.legends.enums.Character.NOVA_ADAM;
+        characters = NOVA_ADAM;
         //string arrays
         bragRights = new String[]{"Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "*blank stare* Dude"};
         physical = new String[]{"Dark Flame", "Dark Rush", "Dark Slice", "Dark Ascent"};

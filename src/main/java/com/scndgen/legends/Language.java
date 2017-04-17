@@ -68,7 +68,7 @@ public final class Language {
      * @param l
      */
     public void setLanguage(int l) {
-        infile = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "scnd_lang_ex.xml";
+        infile = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "translations.xml";
         s = t = "";
         try {
             inR = new BufferedReader(new InputStreamReader(new FileInputStream(infile), "UTF8"));
@@ -141,8 +141,8 @@ public final class Language {
     private void writeLanguageFile() {
         try {
             cl = getClass().getClassLoader();
-            fin = cl.getResourceAsStream("src/scnd_lang_ex.xml");
-            fout = new FileOutputStream(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "scnd_lang_ex.xml");
+            fin = cl.getResourceAsStream("xml/translations.xml");
+            fout = new FileOutputStream(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "translations.xml");
             b = new byte[1024];
             noOfBytes = 0;
             while ((noOfBytes = fin.read(b)) != -1) {

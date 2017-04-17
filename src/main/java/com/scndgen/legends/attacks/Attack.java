@@ -151,14 +151,14 @@ public abstract class Attack {
     }
 
     /**
-     * Disable the character overlay
+     * Disable the characters overlay
      */
     public void CharacterOverlayDisabled() {
         overlayEnabled = false;
     }
 
     /**
-     * Enable character overlay
+     * Enable characters overlay
      */
     public void CharacterOverlayEnabled() {
         overlayEnabled = true;

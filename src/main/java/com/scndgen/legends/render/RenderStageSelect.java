@@ -136,7 +136,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             g2d.setFont(normalFont);
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
-            //character preview DYNAMIC change
+            //characters preview DYNAMIC change
             if (opacity < 0.98f) {
                 opacity = opacity + 0.02f;
             }
@@ -297,7 +297,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     }
 
     /**
-     * Gets the number of columns in the character select screen
+     * Gets the number of columns in the characters select screen
      *
      * @return number of columns
      */

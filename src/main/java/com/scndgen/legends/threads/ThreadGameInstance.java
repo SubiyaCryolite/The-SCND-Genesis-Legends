@@ -108,7 +108,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            //---------recover Character activity bar
+            //---------recover Characters activity bar
             if (sampleChar <= limitChar && incrementActivityBar) {
                 sampleCharDB = sampleCharDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharRecoverySpeed());
                 sampleChar = Integer.parseInt("" + Math.round(sampleCharDB) + "");
@@ -164,18 +164,18 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     }
 
     /**
-     * Get the Character recovery units
+     * Get the Characters recovery units
      *
-     * @return Character recovery units
+     * @return Characters recovery units
      */
     public int getRecoveryUnitsChar() {
         return sampleChar;
     }
 
     /**
-     * Set the Character recovery units
+     * Set the Characters recovery units
      *
-     * @param thisNum - Character recovery units
+     * @param thisNum - Characters recovery units
      */
     public void setRecoveryUnitsChar(int thisNum) {
         sampleCharDB = (int) Float.parseFloat("" + thisNum + "");
@@ -183,9 +183,9 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     }
 
     /**
-     * Gets the Character recovery units
+     * Gets the Characters recovery units
      *
-     * @return Character recovery units
+     * @return Characters recovery units
      */
     public int getLimitChar() {
         return limitChar;

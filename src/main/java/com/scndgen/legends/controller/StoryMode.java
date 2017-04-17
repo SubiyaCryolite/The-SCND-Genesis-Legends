@@ -228,7 +228,7 @@ public class StoryMode implements Runnable {
                 firstRun = false;
                 //set difficulty
                 //LoginScreen.difficultyDyn=500;
-                //Character.setDamageCounter(CharacterState.OPPONENT,14);
+                //Characters.setDamageCounter(CharacterState.OPPONENT,14);
 
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(0);

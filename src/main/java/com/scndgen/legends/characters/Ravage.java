@@ -22,24 +22,24 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Character;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
+
+import static com.scndgen.legends.enums.Characters.RAVAGE;
 
 /**
  * @author ndana
  */
-public class Ravage extends com.scndgen.legends.characters.Character {
+public class Ravage extends Character {
 
     public Ravage() {
         //strings
         descSmall = "Ravage - a fighter specialised in brute force via the Earth element";
         name = "Ravage";
-        character = Character.RAVAGE;
+        characters = RAVAGE;
         //ints
         life = 32000;
-        hitPoints = 60;
         limit = new int[]{0, 0, 0, 0, 0};
         bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold back NovaAdam", "Goodie, no holding back, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
         physical = new String[]{"Strike", "Impale", "Stone Summon", "Deadly Snare"};

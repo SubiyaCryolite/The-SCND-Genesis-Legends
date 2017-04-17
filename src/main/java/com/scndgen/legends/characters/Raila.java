@@ -22,24 +22,23 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
 /**
  * @author ndana
  */
-public class Raila extends com.scndgen.legends.characters.Character {
+public class Raila extends Character {
 
     public Raila() {
         //strings
         descSmall = "Raila - a fighter specialised in celestia combat";
         name = "Raila";
-        character = Character.RAILA;
+        characters = Characters.RAILA;
         //ints
         points = 2500;
         life = 25600;
-        hitPoints = 60;
         limit = new int[]{0, 0, 0, 0, 0};
         //string arrays
         bragRights = new String[]{"Let's do this", "I won't go easy on you bro", "Let's do this cuz", "This'll be fun", "You scum, prepare to be owned", "You're powers are intersting. Lets see how you do against my speed", "You're definately the better looking twin, though, you won't look so good afterwards", "NovaAdam, the stiuff of legend, show me your power", "An awakened being? Lets do this!!!!", "One of te original Saints, show me your power!!", "Genius  vs Genius , this'll be fun", "What in the world?"};

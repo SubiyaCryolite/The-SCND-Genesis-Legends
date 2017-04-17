@@ -23,8 +23,8 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.enums.Character;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.MainWindow;
@@ -36,8 +36,6 @@ import io.github.subiyacryolite.enginev1.JenesisRender;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.VolatileImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Ifunga Ndana
@@ -47,15 +45,11 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private Animations1 animations1;
     private Animations2 animations2;
     private Animations3 animations3;
-    private Font bigFont, normalFont;
+    private Font largeFont, normalFont;
     private Font notSelected;
-    private Font statusFont;
-    private VolatileImage charSpec, blankPortrait;
-    private VolatileImage infoPic, stat1, stat2, stat3, stat4;
+    private VolatileImage  stat1, stat2, stat3, stat4;
     private VolatileImage ambient1, ambient2, foreGround;
-    private GradientPaint queBar = new GradientPaint(0, 0, Color.YELLOW, 255, 10, Color.RED, false);
     private GradientPaint gradient1 = new GradientPaint(xLocal, 10, Color.YELLOW, 255, 10, Color.RED, true);
-    private GradientPaint gradient2 = new GradientPaint(xLocal, 10, Color.white, 255, 10, Color.blue, true);
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
     private VolatileImage flashy;
     private Image[] moveCat, numberPix;
@@ -83,8 +77,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     public void loadAssets() {
         if (!loadAssets) return;
         notSelected = LoginScreen.getInstance().getMyFont(12);
-        statusFont = LoginScreen.getInstance().getMyFont(28);
-        bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.bigTxtSize);
+        largeFont = LoginScreen.getInstance().getMyFont(LoginScreen.bigTxtSize);
         normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
         setCharMoveset();
         LoginScreen.getInstance().defHeight = LoginScreen.getInstance().getGameHeight();
@@ -182,7 +175,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     g2d.drawImage(ambient2, amb2x, amb2y, this);
                 }
 
-                /** character sprite on below, opponent on top
+                /** characters sprite on below, opponent on top
                  * "Java Tip 32: You'll flip over Java images -- literally! - JavaWorld"
                  * http://www.javaworld.com/javaworld/javatips/jw-javatip32.html?page=2
                  */
@@ -301,7 +294,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 g2d.drawImage(curr, itemX + leftyXOffset, itemY, this);
 
                 if (fontSizes[0] == LoginScreen.bigTxtSize) {
-                    g2d.setFont(bigFont);
+                    g2d.setFont(largeFont);
                 } else {
                     g2d.setFont(normalFont);
                 }
@@ -309,21 +302,21 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
 
                 if (fontSizes[1] == LoginScreen.bigTxtSize) {
-                    g2d.setFont(bigFont);
+                    g2d.setFont(largeFont);
                 } else {
                     g2d.setFont(normalFont);
                 }
                 g2d.drawString(currentColumn[1], (yTEST + leftyXOffset), ((366) + fontSizes[0] + 2 + fontSizes[1]));
 
                 if (fontSizes[2] == LoginScreen.bigTxtSize) {
-                    g2d.setFont(bigFont);
+                    g2d.setFont(largeFont);
                 } else {
                     g2d.setFont(normalFont);
                 }
                 g2d.drawString(currentColumn[2], (yTEST + leftyXOffset), ((366) + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2]));
 
                 if (fontSizes[3] == LoginScreen.bigTxtSize) {
-                    g2d.setFont(bigFont);
+                    g2d.setFont(largeFont);
                 } else {
                     g2d.setFont(normalFont);
                 }
@@ -457,79 +450,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
     }
 
-    /**
-     * Playing around with animate sprites
-     *
-     * @param whichOne move
-     * @param loop     loop animation or not
-     */
-    public void specialEffect(int whichOne, boolean loop) {
-        final int thisOne = whichOne;
-        final boolean isLoop = loop;
-
-        new Thread() {
-
-            @SuppressWarnings({"static-access", "static-access", "SleepWhileHoldingLock"})
-            @Override
-            public void run() {
-                if (animCharFree) {
-                    try {
-                        animCharFree = false;
-
-
-                        //anim1
-                        if (thisOne == 1) {
-                            for (int u = 0; u < attackAnim1.length; u++) {
-                                charSpec = attackAnim1[u];
-                                if (isLoop) {
-                                    this.sleep(animTime / (attackAnim1.length * 2));
-                                } else {
-                                    this.sleep(animTime / attackAnim1.length);
-                                }
-                            }
-
-                            if (isLoop) {
-                                for (int u = attackAnim1.length - 1; u > -1; u--) {
-                                    charSpec = attackAnim1[u];
-                                    this.sleep(animTime / (attackAnim1.length * 2));
-                                }
-                            }
-                        }
-
-                        //anim1
-                        if (thisOne == 2) {
-                            for (int u = 0; u < attackAnim2.length; u++) {
-                                charSpec = attackAnim2[u];
-                                if (isLoop) {
-                                    this.sleep(animTime / (attackAnim2.length * 2));
-                                } else {
-                                    this.sleep(animTime / attackAnim2.length);
-                                }
-                            }
-
-                            if (isLoop) {
-                                for (int u = attackAnim2.length - 1; u > -1; u--) {
-                                    charSpec = attackAnim2[u];
-                                    this.sleep(animTime / (attackAnim2.length * 2));
-                                }
-                            }
-                        }
-                        animCharFree = true;
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Gameplay.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
-    }
-
     private void checkFuryStatus() {
         if (RenderGameplay.getInstance().getBreak() == 1000) {
             fury = fury1;
         } else {
             fury = fury2;
         }
-
         if (RenderGameplay.getInstance().getGameInstance().isGameOver == true) {
             //slow mo!!!!
         }
@@ -537,7 +463,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     public void setOpponentDamage(int oneA, int twoA, int threeA, int fourA) {
         comicText();
-
         nrmlDamageSound();
         attackSoundOpp();
         hurtSoundOpp();
@@ -683,8 +608,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 characterPortraits = new VolatileImage[charNames.length];
 
                 if (MainWindow.getInstance().getGameMode().equalsIgnoreCase(MainWindow.storyMode)) {
-                    for (Character character : Character.values()) {
-                        characterPortraits[character.index()] = pix.loadVolatileImage("images/" + character.data() + "/cap.png", 48, 48, this);
+                    for (Characters characters : Characters.values()) {
+                        characterPortraits[characters.index()] = pix.loadVolatileImage("images/" + characters.data() + "/cap.png", 48, 48, this);
                     }
                 } else {
                     for (int p = 0; p < charNames.length; p++) {
@@ -961,14 +886,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      */
     private void attackSoundChar() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
-            randSoundIntChar = (int) (Math.random() * AudioPlayback.maleHurt.length * 2);
-            if (randSoundIntChar < AudioPlayback.maleHurt.length) {
+            randSoundIntChar = (int) (Math.random() * AudioPlayback.MALE_HURT.length * 2);
+            if (randSoundIntChar < AudioPlayback.MALE_HURT.length) {
                 attackChar = new AudioPlayback(AudioPlayback.maleAttack(randSoundIntChar), false);
                 attackChar.play();
             }
         } else {
-            randSoundIntChar = (int) (Math.random() * AudioPlayback.femaleHurt.length * 2);
-            if (randSoundIntChar < AudioPlayback.femaleHurt.length) {
+            randSoundIntChar = (int) (Math.random() * AudioPlayback.FEMALE_HURT.length * 2);
+            if (randSoundIntChar < AudioPlayback.FEMALE_HURT.length) {
                 attackChar = new AudioPlayback(AudioPlayback.femaleAttack(randSoundIntChar), false);
                 attackChar.play();
             }
@@ -977,14 +902,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     protected void attackSoundOpp() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
-            randSoundIntOpp = (int) (Math.random() * AudioPlayback.maleHurt.length * 2);
-            if (randSoundIntOpp < AudioPlayback.maleHurt.length) {
+            randSoundIntOpp = (int) (Math.random() * AudioPlayback.MALE_HURT.length * 2);
+            if (randSoundIntOpp < AudioPlayback.MALE_HURT.length) {
                 attackOpp = new AudioPlayback(AudioPlayback.maleAttack(randSoundIntOpp), false);
                 attackOpp.play();
             }
         } else {
-            randSoundIntOpp = (int) (Math.random() * AudioPlayback.femaleHurt.length * 2);
-            if (randSoundIntOpp < AudioPlayback.femaleHurt.length) {
+            randSoundIntOpp = (int) (Math.random() * AudioPlayback.FEMALE_HURT.length * 2);
+            if (randSoundIntOpp < AudioPlayback.FEMALE_HURT.length) {
                 attackOpp = new AudioPlayback(AudioPlayback.femaleAttack(randSoundIntOpp), false);
                 attackOpp.play();
             }
@@ -993,14 +918,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     protected void hurtSoundChar() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
-            randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.maleAttacks.length * 2);
-            if (randSoundIntCharHurt < AudioPlayback.maleAttacks.length) {
+            randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.MALE_ATTACKS.length * 2);
+            if (randSoundIntCharHurt < AudioPlayback.MALE_ATTACKS.length) {
                 hurtChar = new AudioPlayback(AudioPlayback.maleHurt(randSoundIntCharHurt), false);
                 hurtChar.play();
             }
         } else {
-            randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.femaleAttacks.length * 2);
-            if (randSoundIntCharHurt < AudioPlayback.femaleAttacks.length) {
+            randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.FEMALE_ATTACKS.length * 2);
+            if (randSoundIntCharHurt < AudioPlayback.FEMALE_ATTACKS.length) {
                 hurtChar = new AudioPlayback(AudioPlayback.femaleHurt(randSoundIntCharHurt), false);
                 hurtChar.play();
             }
@@ -1009,14 +934,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     public void hurtSoundOpp() {
         if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
-            randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.maleAttacks.length * 2);
-            if (randSoundIntOppHurt < AudioPlayback.maleAttacks.length) {
+            randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.MALE_ATTACKS.length * 2);
+            if (randSoundIntOppHurt < AudioPlayback.MALE_ATTACKS.length) {
                 hurtOpp = new AudioPlayback(AudioPlayback.maleHurt(randSoundIntOppHurt), false);
                 hurtOpp.play();
             }
         } else {
-            randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.femaleAttacks.length * 2);
-            if (randSoundIntOppHurt < AudioPlayback.femaleAttacks.length) {
+            randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.FEMALE_ATTACKS.length * 2);
+            if (randSoundIntOppHurt < AudioPlayback.FEMALE_ATTACKS.length) {
                 hurtOpp = new AudioPlayback(AudioPlayback.femaleHurt(randSoundIntOppHurt), false);
                 hurtOpp.play();
             }
@@ -1124,7 +1049,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * Clear char port
      */
     public void charPortBlank() {
-        characterPortrait = blankPortrait;
+        characterPortrait = null;
     }
 
     /**
@@ -1140,7 +1065,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     /**
      * Animate attacks in graphics context
      *
-     * @param thischar - active character
+     * @param thischar - active characters
      */
     public void AnimatePhyAttax(CharacterState thischar) {
         if (thischar == CharacterState.CHARACTER || thischar == CharacterState.OPPONENT) {

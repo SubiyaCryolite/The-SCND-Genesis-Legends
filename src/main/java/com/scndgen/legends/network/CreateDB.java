@@ -58,7 +58,6 @@ public class CreateDB {
     private String[] levelsStr;
     private boolean initSuccess, notInitislied;
     private float avrg;
-
     public CreateDB() {
         try {
             try {
@@ -71,9 +70,7 @@ public class CreateDB {
                 System.err.println(exl);
             }
             initSuccess = true;
-
             stmt = con.createStatement();
-
             stmt.executeUpdate("CREATE TABLE  user(id VARCHAR(30) NOT NULL, rating INTEGER, userName VARCHAR(50), userCountry VARCHAR(50), gameVersion VARCHAR(20), versionInt INTEGER, userTotalMatches INTEGER, userWin INTEGER, userLoss INTEGER, favCharacter INTEGER, userPoints INT, PRIMARY KEY (id) );");
             System.out.println("Created DB");
         } catch (Exception e) {

@@ -26,11 +26,11 @@ import java.io.InputStream;
 
 public class AudioPlayback implements Runnable {
 
-    public static String[] maleHurt = {"audio/from_Ardentryst/male/attack/Pain4.mp3",
+    public static final String[] MALE_HURT = {"audio/from_Ardentryst/male/attack/Pain4.mp3",
             "audio/from_Ardentryst/male/attack/death_16.mp3",
             "audio/from_Ardentryst/male/attack/Pain5.mp3",
             "audio/from_Ardentryst/male/attack/Pain7.mp3"};
-    public static String[] maleAttacks = {"audio/from_Ardentryst/male/pain/death_11.mp3",
+    public static final String[] MALE_ATTACKS = {"audio/from_Ardentryst/male/pain/death_11.mp3",
             "audio/from_Ardentryst/male/pain/death_14.mp3",
             "audio/from_Ardentryst/male/pain/death_17.mp3",
             "audio/from_Ardentryst/male/pain/Pain2.mp3",
@@ -40,13 +40,13 @@ public class AudioPlayback implements Runnable {
             "audio/from_Ardentryst/male/pain/death_18.mp3",
             "audio/from_Ardentryst/male/pain/Pain3.mp3",
             "audio/from_Ardentryst/male/pain/Pain8.mp3"};
-    public static String[] femaleAttacks = {"audio/from_Ardentryst/female/attack/NYX_JUMP1.mp3",
+    public static final String[] FEMALE_ATTACKS = {"audio/from_Ardentryst/female/attack/NYX_JUMP1.mp3",
             "audio/from_Ardentryst/female/attack/NYX_JUMP2.mp3",
             "audio/from_Ardentryst/female/attack/NYX_JUMP3.mp3",
             "audio/from_Ardentryst/female/attack/NYX_JUMP4.mp3",
             "audio/from_Ardentryst/female/attack/NYX_JUMP5.mp3",
             "audio/from_Ardentryst/female/attack/NYX_JUMP6.mp3"};
-    public static String[] femaleHurt = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.mp3",
+    public static final String[] FEMALE_HURT = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.mp3",
             "audio/from_Ardentryst/female/pain/NYX_PAIN5.mp3",
             "audio/from_Ardentryst/female/pain/NYX_PAIN6.mp3"};
     private String filenameM;
@@ -68,19 +68,19 @@ public class AudioPlayback implements Runnable {
     }
 
     public static String maleAttack(int x) {
-        return maleHurt[x];
+        return MALE_HURT[x];
     }
 
     public static String maleHurt(int x) {
-        return maleAttacks[x];
+        return MALE_ATTACKS[x];
     }
 
     public static String femaleAttack(int x) {
-        return femaleHurt[x];
+        return FEMALE_HURT[x];
     }
 
     public static String femaleHurt(int x) {
-        return femaleAttacks[x];
+        return FEMALE_ATTACKS[x];
     }
 
     public static String tutorialSound() {

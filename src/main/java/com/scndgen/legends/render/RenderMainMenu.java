@@ -252,7 +252,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
 
 
     /**
-     * Get menu images for use in character select screen
+     * Get menu images for use in characters select screen
      *
      * @return pictures
      */

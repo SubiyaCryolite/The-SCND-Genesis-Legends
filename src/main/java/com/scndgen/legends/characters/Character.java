@@ -22,6 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -32,7 +33,7 @@ import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
 
 /**
- * Basic character template
+ * Basic characters template
  *
  * @author ndana
  */
@@ -41,13 +42,13 @@ public abstract class Character {
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status, bragRights;
     //ints
-    public int points, life, hitPoints, damage, celestiaMultiplier, damageMultiplier;
+    public int points, life, damage, celestiaMultiplier, damageMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     //floats
     public float[] weakness;
     public float actionRecoverRate, hpRecovRate;
     protected AudioPlayback sound3;
-    protected com.scndgen.legends.enums.Character character = com.scndgen.legends.enums.Character.SUBIYA;
+    protected Characters characters = Characters.SUBIYA;
     //imgs
     private VolatileImage[] highQualitySprites;
     private Image[] lowQualitySprites;
@@ -70,26 +71,26 @@ public abstract class Character {
         return isMale;
     }
 
-    public com.scndgen.legends.enums.Character getEnum() {
-        return character;
+    public Characters getEnum() {
+        return characters;
     }
 
     private void sortQue() {
         pix = new JenesisImageLoader();
         spriteLocation = new String[12];
-        spriteLocation[0] = "images/" + character.data() + "/D.png";  //1
-        spriteLocation[1] = "images/" + character.data() + "/M1.png"; //2
-        spriteLocation[2] = "images/" + character.data() + "/M2.png"; //3
-        spriteLocation[3] = "images/" + character.data() + "/M3.png"; //4
-        spriteLocation[4] = "images/" + character.data() + "/M4.png"; //5
-        spriteLocation[5] = "images/" + character.data() + "/M5.png"; //6
-        spriteLocation[6] = "images/" + character.data() + "/M6.png"; //7
-        spriteLocation[7] = "images/" + character.data() + "/M7.png"; //8
-        spriteLocation[8] = "images/" + character.data() + "/M8.png"; //9
-        spriteLocation[9] = "images/" + character.data() + "/N.png"; //10
-        spriteLocation[10] = "images/" + character.data() + "/P.png"; //11
+        spriteLocation[0] = "images/" + characters.data() + "/D.png";  //1
+        spriteLocation[1] = "images/" + characters.data() + "/M1.png"; //2
+        spriteLocation[2] = "images/" + characters.data() + "/M2.png"; //3
+        spriteLocation[3] = "images/" + characters.data() + "/M3.png"; //4
+        spriteLocation[4] = "images/" + characters.data() + "/M4.png"; //5
+        spriteLocation[5] = "images/" + characters.data() + "/M5.png"; //6
+        spriteLocation[6] = "images/" + characters.data() + "/M6.png"; //7
+        spriteLocation[7] = "images/" + characters.data() + "/M7.png"; //8
+        spriteLocation[8] = "images/" + characters.data() + "/M8.png"; //9
+        spriteLocation[9] = "images/" + characters.data() + "/N.png"; //10
+        spriteLocation[10] = "images/" + characters.data() + "/P.png"; //11
         spriteLocation[11] = "images/trans.png"; //12
-        System.out.println("FROM CHARACTER CLASS " + character.data());
+        System.out.println("FROM CHARACTER CLASS " + characters.data());
     }
 
     public int getNumberOfSprites() {
@@ -141,7 +142,7 @@ public abstract class Character {
     public abstract void attack(String attack, int forWho);
 
     /**
-     * Gets the move set of the character
+     * Gets the move set of the characters
      *
      * @return array of physical attacks
      */
@@ -175,18 +176,18 @@ public abstract class Character {
     }
 
     /**
-     * Returns the Character description. Used in menus
+     * Returns the Characters description. Used in menus
      *
-     * @return The Character description
+     * @return The Characters description
      */
     public String getDescSmall() {
         return descSmall;
     }
 
     /**
-     * Gets character to character battle taunts
+     * Gets characters to characters battle taunts
      *
-     * @param indx, the character
+     * @param indx, the characters
      * @return bragging text
      */
     public String getBraggingRights(int indx) {
@@ -194,16 +195,16 @@ public abstract class Character {
     }
 
     /**
-     * Shall return the Character life
+     * Shall return the Characters life
      *
-     * @return character life
+     * @return characters life
      */
     public int getLife() {
         return life;
     }
 
     /**
-     * Get the Character recovery rate
+     * Get the Characters recovery rate
      *
      * @return activity recovery rate
      */
@@ -212,7 +213,7 @@ public abstract class Character {
     }
 
     /**
-     * Get the Character hp recover rate
+     * Get the Characters hp recover rate
      *
      * @return hp recovery rate
      */
@@ -221,25 +222,16 @@ public abstract class Character {
     }
 
     /**
-     * Gets the character name
+     * Gets the characters name
      *
-     * @return character name
+     * @return characters name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Get the Character hit points
-     *
-     * @return Hit Points
-     */
-    public int getHitPoints() {
-        return hitPoints;
-    }
-
-    /**
-     * Set Character AI, opponent 1
+     * Set Characters AI, opponent 1
      */
     public void setAiProf() {
         RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours1, 1);
@@ -250,7 +242,7 @@ public abstract class Character {
     }
 
     /**
-     * Set Character AI, opponent 2
+     * Set Characters AI, opponent 2
      */
     public void setAiProf2() {
         RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours1, 1);
@@ -261,7 +253,7 @@ public abstract class Character {
     }
 
     /**
-     * Set Character AI, player 2
+     * Set Characters AI, player 2
      */
     public void setAiProf3() {
         RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours1, 1);
@@ -277,7 +269,7 @@ public abstract class Character {
 
     /**
      * Added 19/January/2011 by SubiyaCryolite
-     * resets the Character limits after each fight
+     * resets the Characters limits after each fight
      */
     public void resetLimits() {
         for (int index = 0; index < limit.length; index++) {

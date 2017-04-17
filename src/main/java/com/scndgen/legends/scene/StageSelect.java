@@ -31,7 +31,7 @@ import io.github.subiyacryolite.enginev1.JenesisMode;
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the character and opponent
+ * This class creates a graphical preview of the characters and opponent
  */
 public abstract class StageSelect extends JenesisMode {
 
@@ -484,7 +484,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Character have been selected, true if only one is selected
+     * @return false if both Characters have been selected, true if only one is selected
      */
     public boolean bothArentSelected() {
         boolean answer = true;
@@ -507,7 +507,7 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     /**
-     * Checks if within number of Character
+     * Checks if within number of Characters
      */
     public boolean well() {
         boolean ans = false;

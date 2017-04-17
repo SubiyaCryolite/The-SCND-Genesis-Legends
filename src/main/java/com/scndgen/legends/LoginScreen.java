@@ -22,7 +22,7 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.drawing.DrawUserLogin;
-import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainMenu;
 import com.scndgen.legends.windows.MainWindow;
@@ -71,9 +71,9 @@ import java.util.logging.Logger;
  * 18/10/10 - implemented in-game chat, utf8 encoding, stats screen, achievement structure, game/profile save 0.0.7.3
  * 21/10/10 - added overworld map, began navigation and screen control 0.0.7.7
  * 23/10/10 - added collision detection algorythm for overworld 0.0.8.0
- * 27/10/10 - added new menu, transition, character classess, remved command panel 0.0.8.4
+ * 27/10/10 - added new menu, transition, characters classess, remved command panel 0.0.8.4
  * 30/10/10 -added scene menu, server-client embeddedin menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
- * 03/11/10 -24- added new Character, Aisha 0.0.8.8
+ * 03/11/10 -24- added new Characters, Aisha 0.0.8.8
  * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
  * 17/11/10 -26- better about screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
  * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, options and stats integrated into menu
@@ -81,9 +81,9 @@ import java.util.logging.Logger;
  * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
  * 04/12/10 -32- One story scene to rule them all, bwa ha ha, added scene select as well :)
  * 07/12/10 -33- Added background animation thread
- * 10/12/10 -34- Added Ravage, implemented character balance scheme, fixed bug in story scene thread
+ * 10/12/10 -34- Added Ravage, implemented characters balance scheme, fixed bug in story scene thread
  * Sidenote 14/12/10: Joined Twitter ^_^
- * 15/12/10 -35- Added character Ade, Added quit game, resume, exit to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
+ * 15/12/10 -35- Added characters Ade, Added quit game, resume, exit to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
  * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
  * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
  * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
@@ -101,7 +101,7 @@ import java.util.logging.Logger;
 
 public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
-    public static final Character[] charNames = Character.values();
+    public static final Characters[] charNames = Characters.values();
     public static int difficultyBase = 8000, difficultyScale = 1333;
     public static String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
@@ -1319,7 +1319,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     }
 
     /**
-     * Increments character usage, to determine usage
+     * Increments characters usage, to determine usage
      *
      * @param dude
      */
@@ -1328,7 +1328,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     }
 
     /**
-     * Returns an int, corresponding to the index of the name of the most popular character
+     * Returns an int, corresponding to the index of the name of the most popular characters
      *
      * @return index of most popular opponent
      */

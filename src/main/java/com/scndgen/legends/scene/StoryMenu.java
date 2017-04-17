@@ -49,7 +49,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * When both playes are selected, this prevents movement.
      *
-     * @return false if both Character have been selected, true if only one is selected
+     * @return false if both Characters have been selected, true if only one is selected
      */
     public static boolean bothArentSelected() {
         boolean answer = true;
@@ -118,7 +118,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Gets the number of columns in the character select screen
+     * Gets the number of columns in the characters select screen
      *
      * @return number of columns
      */
@@ -234,7 +234,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Get the storyboard size for the character
+     * Get the storyboard size for the characters
      *
      * @return the number of levels
      */
@@ -269,7 +269,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Checks if within number of Character
+     * Checks if within number of Characters
      */
     public boolean well() {
         boolean ans = false;

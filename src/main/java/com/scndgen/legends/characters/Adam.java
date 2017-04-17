@@ -22,21 +22,21 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.Character;
+import com.scndgen.legends.enums.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 
 /**
  * @author ndana
  */
-public class Adam extends com.scndgen.legends.characters.Character {
+public class Adam extends Character {
 
     public Adam() {
         //strings
         attackStr = "";
         descSmall = "Adam - a Celestia Being specialised in celestia combat";
         name = "Adam";
-        character = Character.ADAM;
+        characters = Characters.ADAM;
         //string arrays
         bragRights = new String[]{"Worthless little boy", "You're so weak, it's not even funny", "Standards truly have fallen", "Ladies first...to the grave that is", "I'm not in the mood for your nonsense", "My best desciple, don't dissapoint me", "Show me your skill Jonah", "Lets do this", "Oh look, its me", "Azaria, I'll show you no mercy", "You might have what it takes to surpass me", "So that what it looks like"};
         physical = new String[]{"Silver Flame", "Silver Rush", "Silver Slice", "Silver Ascent"};
@@ -51,7 +51,6 @@ public class Adam extends com.scndgen.legends.characters.Character {
         points = 1800;
         damage = 0;
         life = 35200;
-        hitPoints = 70;
         limit = new int[]{0, 0, 0, 0, 0};
         //doubles
         actionRecoverRate = 1.60f;//2.10;

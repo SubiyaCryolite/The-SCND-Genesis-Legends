@@ -49,7 +49,6 @@ public class Ade extends Character {
         //ints
         points = 2200;
         life = 33600;
-        hitPoints = 70;
         limit = new int[]{0, 0, 0, 0, 0};
 
         //doubles
