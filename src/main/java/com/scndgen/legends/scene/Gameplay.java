@@ -23,6 +23,9 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.attacks.Attack;
+import com.scndgen.legends.attacks.AttackOpponent;
+import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
@@ -144,6 +147,9 @@ public abstract class Gameplay extends JenesisMode {
     protected boolean nextEnabled = true, backEnabled = true;
     protected int charOp = 10, comicBookTextIndex = 0;
     protected int limitBreak;
+    protected AttackOpponent attackOpponent;
+    protected AttackPlayer attackPlayer;
+    private Attack attacksChar;
 
     protected Gameplay() {
     }
@@ -234,7 +240,7 @@ public abstract class Gameplay extends JenesisMode {
      * Get the CharacterEnum
      */
     protected void setCharMoveset() {
-        MainWindow.getInstance().getAttacksChar().getOpponent().setCharMoveset();
+        getAttacksChar().getOpponent().setCharMoveset();
     }
 
     /**
@@ -286,7 +292,7 @@ public abstract class Gameplay extends JenesisMode {
      * Get the move selected by the player
      */
     protected String getSelMove(int move) {
-        String txt = MainWindow.getInstance().getAttacksChar().getOpponent().getMoveQued(move);
+        String txt = getAttacksChar().getOpponent().getMoveQued(move);
 
         return txt;
     }
@@ -535,7 +541,7 @@ public abstract class Gameplay extends JenesisMode {
                 RenderGameplay.getInstance().disableSelection();
                 GameInstance.getInstance().triggerCharAttack();
                 if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
-                    MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                    getAttacksChar().CharacterOverlayDisabled();
             } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
@@ -550,7 +556,7 @@ public abstract class Gameplay extends JenesisMode {
                 GameInstance.getInstance().triggerCharAttack();
                 GameInstance.getInstance().setRecoveryUnitsChar(0);
                 if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
-                    MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                    getAttacksChar().CharacterOverlayDisabled();
             }
         }
     }
@@ -800,7 +806,6 @@ public abstract class Gameplay extends JenesisMode {
         MainWindow.getInstance().setGameRunning();
         perCent = 100;
         perCent2 = 100;
-        MainWindow.getInstance().reSize("game");
     }
 
     /**
@@ -995,7 +1000,7 @@ public abstract class Gameplay extends JenesisMode {
                             if (GameInstance.getInstance().gameOver == false) {
                                 furySound();
                                 hurtSoundOpp();
-                                MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                                getAttacksChar().CharacterOverlayDisabled();
                                 setSprites(CharacterState.CHARACTER, i, 11);
                                 setSprites(CharacterState.OPPONENT, 0, 11);
                                 shakeOppCharLB();
@@ -1004,7 +1009,7 @@ public abstract class Gameplay extends JenesisMode {
                                 lifePhysUpdateSimple(CharacterState.OPPONENT, 100, "");
                             }
                         }
-                        MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
+                        getAttacksChar().CharacterOverlayEnabled();
                         try {
                             JenesisGamePad.getInstance().setRumbler(false, 0.0f);
                         } catch (Exception e) {
@@ -1025,7 +1030,7 @@ public abstract class Gameplay extends JenesisMode {
                         }
                         for (int i = 1; i < 9; i++) {
                             if (GameInstance.getInstance().gameOver == false) {
-                                MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
+                                getAttacksChar().CharacterOverlayEnabled();
                                 furySound();
                                 hurtSoundChar();
                                 GameInstance.getInstance().setRecoveryUnitsOpp(0);
@@ -1036,7 +1041,7 @@ public abstract class Gameplay extends JenesisMode {
                                 lifePhysUpdateSimple(CharacterState.CHARACTER, 100, "");
                             }
                         }
-                        MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                        getAttacksChar().CharacterOverlayDisabled();
                         try {
                             JenesisGamePad.getInstance().setRumbler(false, 0.0f);
                         } catch (Exception e) {
@@ -1279,5 +1284,15 @@ public abstract class Gameplay extends JenesisMode {
                 }
             }
         }
+    }
+
+
+    public AttackOpponent getAttackOpponent() {
+        return attackOpponent;
+    }
+
+
+    public AttackPlayer getAttacksChar() {
+        return attackPlayer;
     }
 }

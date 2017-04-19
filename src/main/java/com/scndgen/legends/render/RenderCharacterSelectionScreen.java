@@ -134,26 +134,25 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
             for (int column = 0; column < columns; column++) {
                 int computedPosition = (columns * row) + column;
-                if (computedPosition < numOfCharacters) {
-                    boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
-                    boolean validRow = rowIndex == row;
-                    boolean validColumn = columnIndex == column;
-                    boolean notAllCharactersSelect = bothArentSelected();
-                    if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
-                    {
-                        if (characterSelected != true) {
-                            g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
-                        }
-                        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
-                            g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
-                        }
-                        g2d.setComposite(makeComposite(opacChar));
-                        g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
-                        charPrevLoicIndex = computedPosition;
-                        g2d.setComposite(makeComposite(1.0f));
-                    } else {
-                        g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                if (computedPosition >= numOfCharacters) continue;
+                boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
+                boolean validRow = rowIndex == row;
+                boolean validColumn = columnIndex == column;
+                boolean notAllCharactersSelect = bothArentSelected();
+                if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
+                {
+                    if (characterSelected != true) {
+                        g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                     }
+                    if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+                        g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    }
+                    g2d.setComposite(makeComposite(opacChar));
+                    g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    charPrevLoicIndex = computedPosition;
+                    g2d.setComposite(makeComposite(1.0f));
+                } else {
+                    g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                 }
             }
         }

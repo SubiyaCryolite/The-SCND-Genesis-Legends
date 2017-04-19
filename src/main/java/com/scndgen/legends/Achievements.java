@@ -26,7 +26,7 @@ import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.MainWindow;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import java.util.ArrayList;
 
@@ -130,7 +130,7 @@ public class Achievements {
         if (Characters.getInstance().getCharMinLife() <= 79 && RenderGameplay.getInstance().getPercent() >= 82 && isLocked[0]) {
             RenderGameplay.getInstance().setNotifiationPic(1); //categories + 1
             name.add(achievementName[0]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[0]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[0]);
             descriptions.add(achievemenDescription[0]);
             categories.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -142,7 +142,7 @@ public class Achievements {
         if (Characters.getInstance().getCharMinLife() <= 30 && RenderGameplay.getInstance().getPercent() >= 50 && isLocked[1]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[1]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[1]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[1]);
             descriptions.add(achievemenDescription[1]);
             categories.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -154,7 +154,7 @@ public class Achievements {
         if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 50) && isLocked[4]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[2]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[2]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[2]);
             descriptions.add(achievemenDescription[2]);
             categories.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -168,7 +168,7 @@ public class Achievements {
         if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 40) && isLocked[3]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[3]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[3]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[3]);
             descriptions.add(achievemenDescription[3]);
             categories.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -181,7 +181,7 @@ public class Achievements {
         if (((RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2()) >= 30) && isLocked[2]) {
             RenderGameplay.getInstance().setNotifiationPic(1); //categories + 1
             name.add(achievementName[4]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[4]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[4]);
             descriptions.add(achievemenDescription[4]);
             categories.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -193,7 +193,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && GameInstance.getInstance().gameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[5]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[5]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[5]);
             descriptions.add(achievemenDescription[5]);
             categories.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -205,7 +205,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[6]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[6]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[6]);
             descriptions.add(achievemenDescription[6]);
             categories.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -216,7 +216,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && isLocked[6]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[7]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[7]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[7]);
             descriptions.add(achievemenDescription[7]);
             categories.add(catType[1]);
             points.add(pointsArr[1] + bonus);
@@ -228,7 +228,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && (RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2() <= 30) && isLocked[7]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[8]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[8]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[8]);
             descriptions.add(achievemenDescription[8]);
             categories.add(catType[0]);
             points.add(pointsArr[0] + bonus);
@@ -240,7 +240,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && loginScreen.consecWins >= 5 && isLocked[8]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[9]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[9]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[9]);
             descriptions.add(achievemenDescription[9]);
             categories.add(catType[2]);
             points.add(pointsArr[2] + bonus);
@@ -253,7 +253,7 @@ public class Achievements {
         if (RenderGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && GameInstance.getInstance().gameOver && isLocked[9]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[10]);
-            MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[10]);
+            JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(83) + ": " + achievementName[10]);
             descriptions.add(achievemenDescription[10]);
             categories.add(catType[2]);
             points.add(pointsArr[2] + bonus);

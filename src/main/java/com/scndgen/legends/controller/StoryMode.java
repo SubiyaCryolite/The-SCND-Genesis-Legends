@@ -73,7 +73,7 @@ public class StoryMode implements Runnable {
 
     public void story(int scene, boolean start) {
         thread = new Thread(this);
-        thread.setName("Story scene thread");
+        thread.setName("story scene thread");
         thread.setPriority(5);
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
         tlkSpeed = WindowOptions.txtSpeed;
@@ -209,7 +209,7 @@ public class StoryMode implements Runnable {
     public void run() {
         try {
             System.out.println("Stage " + RenderStoryMenu.getInstance().getStage());
-            MainWindow.getInstance().storyGame();
+            MainWindow.getInstance().startStoryMatch();
             storyIn();
             firstRun = false;
 

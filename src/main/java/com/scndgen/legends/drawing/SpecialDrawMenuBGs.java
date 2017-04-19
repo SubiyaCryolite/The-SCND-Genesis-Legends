@@ -43,19 +43,19 @@ public class SpecialDrawMenuBGs extends JPanel {
         int x = (int) (Math.random() * 5);
         switch (x) {
             case 0:
-                bufferedImage = imageLoader.loadBufferedImage("images/Story/blur/s4.png");
+                bufferedImage = imageLoader.loadBufferedImage("images/story/blur/s4.png");
                 break;
             case 1:
-                bufferedImage = imageLoader.loadBufferedImage("images/Story/blur/s5.png");
+                bufferedImage = imageLoader.loadBufferedImage("images/story/blur/s5.png");
                 break;
             case 2:
-                bufferedImage = imageLoader.loadBufferedImage("images/Story/blur/s6.png");
+                bufferedImage = imageLoader.loadBufferedImage("images/story/blur/s6.png");
                 break;
             case 3:
-                bufferedImage = imageLoader.loadBufferedImage("images/Story/blur/s11.png");
+                bufferedImage = imageLoader.loadBufferedImage("images/story/blur/s11.png");
                 break;
             default:
-                bufferedImage = imageLoader.loadBufferedImage("images/Story/blur/s6.png");
+                bufferedImage = imageLoader.loadBufferedImage("images/story/blur/s6.png");
                 break;
         }
     }

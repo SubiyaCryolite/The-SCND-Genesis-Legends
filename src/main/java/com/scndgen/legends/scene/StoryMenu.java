@@ -32,10 +32,12 @@ import java.awt.*;
 
 public abstract class StoryMenu extends JenesisMode {
 
-    protected int lastRow, charYcap = 0, charXcap = 0, storySelIndex = 99, hIndex = 1, x = 0, y = 0, vIndex = 0, vSpacer = 52, hSpacer = 92, hPos = 299, firstLine = 105;
-    protected int mode, scenes, columns = 3, rows;
+    protected int charYcap = 0, charXcap = 0, hoveredStoryIndex = 99, row = 1, x = 0, y = 0, column = 0, vSpacer = 52, hSpacer = 92, commonXCoord = 299, commonYCoord = 105;
+    protected final int columns = 3;
+    protected final int scenes = StoryMode.getInstance().max;
+    protected final int rows = scenes / columns;
     protected int oldId = -1;
-    protected boolean[] hiddenStage;
+    protected boolean[] unlockedStage;
     protected boolean loadingNow;
     protected int currentScene = LoginScreen.getInstance().stage;
     protected int storedX = 99, storedY = 99;
@@ -84,37 +86,37 @@ public abstract class StoryMenu extends JenesisMode {
      * Move up
      */
     public void moveUp() {
-        if (vIndex > 0) {
-            vIndex = vIndex - 1;
+        if (column > 0) {
+            column = column - 1;
         } else {
-            vIndex = rows;
+            column = rows;
         }
         capAnim();
     }
 
     public void moveDown() {
-        if (vIndex < rows - 1) {
-            vIndex = vIndex + 1;
+        if (column < rows - 1) {
+            column = column + 1;
         } else {
-            vIndex = 0;
+            column = 0;
         }
         capAnim();
     }
 
     public void moveRight() {
-        if (hIndex < columns) {
-            hIndex = hIndex + 1;
+        if (row < columns) {
+            row = row + 1;
         } else {
-            hIndex = 1;
+            row = 1;
         }
         capAnim();
     }
 
     public void moveLeft() {
-        if (hIndex > 1) {
-            hIndex = hIndex - 1;
+        if (row > 1) {
+            row = row - 1;
         } else {
-            hIndex = columns;
+            row = columns;
         }
         capAnim();
     }
@@ -152,7 +154,7 @@ public abstract class StoryMenu extends JenesisMode {
      * @return starting x coordinate
      */
     public int getStartX() {
-        return hPos;
+        return commonXCoord;
     }
 
     /**
@@ -161,7 +163,7 @@ public abstract class StoryMenu extends JenesisMode {
      * @return starting y
      */
     public int getStartY() {
-        return firstLine;
+        return commonYCoord;
     }
 
     /**
@@ -182,7 +184,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void storyProcceed() {
-        getStoryInstance().story(storySelIndex, true);
+        getStoryInstance().story(hoveredStoryIndex, true);
     }
 
     public void back() {
@@ -194,7 +196,7 @@ public abstract class StoryMenu extends JenesisMode {
      * Find out the stage the player is on
      */
     public void resetCurrentStage() {
-        mode = LoginScreen.getInstance().stage;
+        currentScene = LoginScreen.getInstance().stage;
     }
 
     public void backToMainMenu() {
@@ -220,7 +222,7 @@ public abstract class StoryMenu extends JenesisMode {
             //dont mess up progress
             //if the player has advanced
             //and theres still more stages
-            if (currentScene > mode) {
+            if (currentScene > currentScene) {
                 LoginScreen.getInstance().stage = currentScene;
             }
         }
@@ -237,14 +239,14 @@ public abstract class StoryMenu extends JenesisMode {
 
 
     public void startGame(int mode) {
-        if (hiddenStage[mode]) {
-            if (storySelIndex < StoryMode.getInstance().max + 1) {
-                storySelIndex = mode;
+        if (unlockedStage[mode]) {
+            if (hoveredStoryIndex < StoryMode.getInstance().max + 1) {
+                hoveredStoryIndex = mode;
             } else {
-                storySelIndex = mode - 1;
+                hoveredStoryIndex = mode - 1;
             }
 
-            getStoryInstance().story(storySelIndex, false);
+            getStoryInstance().story(hoveredStoryIndex, false);
             {
                 loadingNow = true;
                 storyProcceed();
@@ -258,20 +260,19 @@ public abstract class StoryMenu extends JenesisMode {
      * @param where
      */
     public void setstory(int where) {
-        storySelIndex = where;
+        hoveredStoryIndex = where;
     }
 
     /**
      * Checks if within number of CharacterEnum
      */
-    public boolean well() {
+    public boolean isUnlocked() {
         boolean ans = false;
-        int xV = (vIndex * 3) + hIndex;
-        if (xV <= scenes) {
+        int computedPosition = (row * columns) + column;
+        if (computedPosition < scenes) {
             ans = true;
-            storySelIndex = xV - 1;
+            hoveredStoryIndex = computedPosition;
         }
-
         return ans;
     }
 
@@ -281,14 +282,14 @@ public abstract class StoryMenu extends JenesisMode {
      * @return columnIndex
      */
     public final int getHindex() {
-        return hIndex;
+        return row;
     }
 
     /**
      * Set horizontal index
      */
     public final void setHindex(int value) {
-        hIndex = value;
+        row = value;
     }
 
     /**
@@ -297,19 +298,19 @@ public abstract class StoryMenu extends JenesisMode {
      * @return rowIndex
      */
     public final int getVindex() {
-        return vIndex;
+        return column;
     }
 
     /**
      * Set vertical index
      */
     public final void setVindex(int value) {
-        vIndex = value;
+        column = value;
     }
 
     protected void showstoryName(int id) {
         if (id != oldId) {
-            systemNotice("Scene " + (id + 1));
+            primaryNotice("Scene " + (id + 1));
             oldId = id;
         }
     }
@@ -323,7 +324,7 @@ public abstract class StoryMenu extends JenesisMode {
         int rows = getCharRows();
         if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * rows))) {
             int vIndex = (mouseY - topY) / vspacer;
-            int hIndex = (((mouseX - topX) / hspacer) + 1);
+            int hIndex = (mouseX - topX) / hspacer ;
             setHindex(hIndex);
             setVindex(vIndex);
             animateCap2x(hIndex, vIndex);

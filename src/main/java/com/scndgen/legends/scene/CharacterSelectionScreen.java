@@ -315,7 +315,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selRaila(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(84));
+        primaryNotice(Language.getInstance().getLine(84));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             {
@@ -354,7 +354,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void selSubiya(CharacterState type) {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
-            systemNotice(Language.getInstance().getLine(85));
+            primaryNotice(Language.getInstance().getLine(85));
             {
                 sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
                 sound.play();
@@ -391,7 +391,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selLynx(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(86));
+        primaryNotice(Language.getInstance().getLine(86));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -427,7 +427,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAisha(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(87));
+        primaryNotice(Language.getInstance().getLine(87));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -464,7 +464,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAde(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(88));
+        primaryNotice(Language.getInstance().getLine(88));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -501,7 +501,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selRav(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(89));
+        primaryNotice(Language.getInstance().getLine(89));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -538,7 +538,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selJon(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(90));
+        primaryNotice(Language.getInstance().getLine(90));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -575,7 +575,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAdam(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(91));
+        primaryNotice(Language.getInstance().getLine(91));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -612,7 +612,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selNOVAAdam(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(92));
+        primaryNotice(Language.getInstance().getLine(92));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -649,7 +649,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAza(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(93));
+        primaryNotice(Language.getInstance().getLine(93));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -686,7 +686,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selSorr(CharacterState type) {
-        systemNotice(Language.getInstance().getLine(94));
+        primaryNotice(Language.getInstance().getLine(94));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -722,7 +722,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selThing(CharacterState type) {
-        systemNotice("..........");
+        primaryNotice("..........");
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);

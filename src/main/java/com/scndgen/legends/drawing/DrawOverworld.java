@@ -341,14 +341,14 @@ public class DrawOverworld extends JenesisMode {
         if (direction == 'u') {
             if (geoScan(charBoxT)) {
                 status = false;
-                systemNotice("Not safe to walk");
+                primaryNotice("Not safe to walk");
             }
         }
 
         if (direction == 'l') {
             if (geoScan(charBoxL)) {
                 status = false;
-                systemNotice("Not safe to walk");
+                primaryNotice("Not safe to walk");
             }
         }
 
@@ -356,14 +356,14 @@ public class DrawOverworld extends JenesisMode {
             if (geoScan(charBoxR)) //if intersects is true flag
             {
                 status = false;
-                systemNotice("Not safe to walk");
+                primaryNotice("Not safe to walk");
             }
         }
 
         if (direction == 'd') {
             if (geoScan(charBoxB)) {
                 status = false;
-                systemNotice("Not safe to walk");
+                primaryNotice("Not safe to walk");
             }
         }
 

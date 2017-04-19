@@ -120,9 +120,10 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             g2d.setComposite(makeComposite(5 * 0.1F));
             g2d.fillRoundRect(283, 0, 285, 480, 30, 30);
             g2d.setComposite(makeComposite(10 * 0.1F));
-            for (int row = 0; row < rows; row++) {
+            for (int row = 0; row <= rows; row++) {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
+                    if (computedPosition >= stageCap.length) continue;
                     g2d.drawImage(stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
                 }
             }
@@ -151,7 +152,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
     private void showStageName(Stage stage) {
         if (stage.index() == hoveredStageIndex) return;
         capAnim();
-        systemNotice(lookupStageNames.get(stage));
+        primaryNotice(lookupStageNames.get(stage));
         hoveredStageIndex = stage.index();
         if (hoveredStageIndex == Stage.RANDOM.index()) {
             mode = StageSelection.RANDOM;

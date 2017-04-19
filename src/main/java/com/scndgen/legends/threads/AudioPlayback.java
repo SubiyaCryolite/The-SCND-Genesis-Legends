@@ -49,19 +49,21 @@ public class AudioPlayback implements Runnable {
     public static final String[] FEMALE_HURT = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.mp3",
             "audio/from_Ardentryst/female/pain/NYX_PAIN5.mp3",
             "audio/from_Ardentryst/female/pain/NYX_PAIN6.mp3"};
-    private String filenameM;
-    private ClassLoader classloader = getClass().getClassLoader();
+    private String fileName;
     private Player player;
-    private Thread thread;
-    private InputStream inputStream;
+    private final Thread thread;
 
     public AudioPlayback() {
         //dummy, grant access to methods
+        // run in new thread to play in background
+        thread = new Thread(this);
+        thread.setPriority(1);
     }
 
     public AudioPlayback(String filename, boolean loop) {
+        this();
         try {
-            filenameM = filename;
+            fileName = filename;
         } catch (Exception e) {
             //e.printStackTrace(System.err);
         }
@@ -154,37 +156,27 @@ public class AudioPlayback implements Runnable {
     public void close() {
         if (thread != null) {
             thread.stop();
-            thread = null;
         }
     }
 
     public boolean isPlaying() {
         boolean dude = false;
-
         if (player != null) {
             dude = true;
         }
-
         return dude;
     }
 
     // play the MP3 file to the sound card
     public void play() {
-        try {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
             if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
-
-                classloader = getClass().getClassLoader();
-                inputStream = classloader.getResourceAsStream(filenameM);
                 player = new Player(inputStream);
-
-                // run in new thread to play in background
-                thread = new Thread(this);
-                thread.setPriority(1);
                 thread.setName("Music Thread");
                 thread.start();
             }
         } catch (Exception e) {
-            System.out.println("Problem playing file " + filenameM);
+            System.out.println("Problem playing file " + fileName);
             System.out.println(e);
         }
     }

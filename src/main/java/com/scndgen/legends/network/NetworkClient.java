@@ -9,6 +9,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.MainWindow;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -112,7 +113,7 @@ public class NetworkClient implements Runnable {
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                MainWindow.getInstance().systemNotice(line.replaceAll(" xc_97_mb", ""));
+                JenesisGlassPane.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {

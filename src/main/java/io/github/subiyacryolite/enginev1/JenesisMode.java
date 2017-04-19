@@ -33,8 +33,8 @@ public abstract class JenesisMode extends JPanel {
      *
      * @param message - the message to display
      */
-    public final void systemNotice(String message) {
-        JenesisGlassPane.getInstance().systemNotice(message);
+    public final void primaryNotice(String message) {
+        JenesisGlassPane.getInstance().primaryNotice(message);
     }
 
     /**
@@ -42,8 +42,8 @@ public abstract class JenesisMode extends JPanel {
      *
      * @param message - the message to display
      */
-    public final void systemNotice2(String message) {
-        JenesisGlassPane.getInstance().systemNotice2(message);
+    public final void secondaryNotice(String message) {
+        JenesisGlassPane.getInstance().secondaryNotice(message);
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class JenesisMode extends JPanel {
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
             file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
             if (ImageIO.write(bufferedImage, "png", file))
-                systemNotice(Language.getInstance().getLine(170));
+                primaryNotice(Language.getInstance().getLine(170));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -137,7 +137,12 @@ public abstract class JenesisMode extends JPanel {
     public void render(final GraphicsContext gc, final double w, final double h) {
     }
 
-    public void update(final long delta) {
+    public final void update(final long delta) {
+        logic(delta);
+    }
+
+
+    protected void logic(final long delta) {
     }
 
     public void keyReleased(final KeyEvent keyEvent) {
@@ -155,4 +160,10 @@ public abstract class JenesisMode extends JPanel {
     public void mouseClicked(final MouseEvent mouseEvent) {
 
     }
+
+    protected void isDelta60fps(long value)
+    {}
+
+    protected void isDelta30fps(long value)
+    {}
 }

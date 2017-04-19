@@ -23,8 +23,6 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
-import com.scndgen.legends.attacks.AttackOpponent;
-import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
@@ -41,6 +39,7 @@ import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,8 +63,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public CharacterAttacksOnline playerHost1, playerClient2;
     public String ServerName;
     public String last, UserName;
-    private AttackOpponent attackOpponent;
-    private AttackPlayer attackPlayer;
     private boolean[] buttonPressed;
     //sever
     private NetworkServer server;
@@ -198,6 +195,8 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     }
 
     public void stopBackgroundMusic() {
+        if (backgroundMusic == null) return;
+        backgroundMusic.stop();
         backgroundMusic.close();
     }
 
@@ -329,59 +328,28 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         focus();
     }
 
-    public AttackOpponent getAttackOpponent() {
-        return attackOpponent;
-    }
-
-
-    public AttackPlayer getAttacksChar() {
-        return attackPlayer;
-    }
-
     public void newGame() {
         mode = Mode.STANDARD_GAMEPLAY;
-        attackOpponent = new AttackOpponent();
-        attackPlayer = new AttackPlayer();
         stopBackgroundMusic();
         RenderGameplay.getInstance().newInstance();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
-        reSize("game");
 
     }
 
-    /**
-     * Repack frame
-     */
-    public void reSize(String mode) {
-        if (mode.equalsIgnoreCase("game")) {
-            resize(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
-        } else {
-            resize(852, 480);
-        }
-
-        pack();
-        setLocationRelativeTo(null);
-    }
-
-    public void storyGame() {
-        //bgMusclose();
-        attackOpponent = new AttackOpponent();
-        attackPlayer = new AttackPlayer();
+    public void startStoryMatch() {
         mode = Mode.STANDARD_GAMEPLAY;
         stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
-        reSize("game");
     }
 
     /**
      * Goes back to main menu
      */
     public void backToMenuScreen() {
-        MainMenu.getMenu().showModes();
-        backgroundMusic.stop();
-        backgroundMusic.close();
+        JenesisWindow.getMenu().showModes();
+        stopBackgroundMusic();
         dispose();
         RenderGameplay.getInstance().cleanAssets();
         focus();
@@ -392,14 +360,10 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      */
     public void nextStage() {
         //bgMusclose();
-        attackOpponent = new AttackOpponent();
-        attackPlayer = new AttackPlayer();
         mode = Mode.STANDARD_GAMEPLAY;
         stopBackgroundMusic();
         setContentPane(RenderGameplay.getInstance());
         RenderGameplay.getInstance().startFight();
-        reSize("game");
-
     }
 
     /**
@@ -449,7 +413,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         RenderCharacterSelectionScreen.getInstance().newInstance();
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
         backgroundMusic.play();
-        reSize("menu");
         focus();
     }
 
@@ -464,11 +427,10 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         RenderCharacterSelectionScreen.getInstance().newInstance();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         RenderGameplay.getInstance().cleanAssets();
-        RenderCharacterSelectionScreen.getInstance().systemNotice("Canceled Match");
+        RenderCharacterSelectionScreen.getInstance().primaryNotice("Canceled Match");
         mode = Mode.CHAR_SELECT_SCREEN;
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
         backgroundMusic.play();
-        reSize("menu");
         focus();
         RenderStageSelect.getInstance().defaultStageValues();
         if (getGameMode() == SubMode.STORY_MODE) {
@@ -492,24 +454,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         client.closeClient();
         System.out.println("Closed client");
         backToMenuScreen();
-    }
-
-    /**
-     * Display message in sys overlay via game instance
-     *
-     * @param mess - the message to display
-     */
-    public void systemNotice(String mess) {
-        RenderGameplay.getInstance().systemNotice(mess);
-    }
-
-    /**
-     * Display message in sys overlay via game instance
-     *
-     * @param mess - the message to display
-     */
-    public void systemNotice2(String mess) {
-        RenderGameplay.getInstance().systemNotice2(mess);
     }
 
     /**

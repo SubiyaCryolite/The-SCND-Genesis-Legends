@@ -23,6 +23,8 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.attacks.AttackOpponent;
+import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
@@ -64,6 +66,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private VolatileImage[] storyPicArr, stats;
     private VolatileImage characterPortrait, storyPic;
     private Color currentColor = (Color.RED);
+
 
     private RenderGameplay() {
         setLayout(new BorderLayout());
@@ -153,14 +156,14 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, this);
                 }
 
-                if (MainWindow.getInstance().getAttacksChar().isOverlayDisabled()) {
+                if (getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, this);
                 }
 
                 g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), this);
 
 
-                if (!MainWindow.getInstance().getAttacksChar().isOverlayDisabled()) {
+                if (!getAttacksChar().isOverlayDisabled()) {
                     g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, this);
                 }
 
@@ -610,7 +613,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 storyPicArr = new VolatileImage[13];
                 for (int u = 0; u < 11; u++) {
-                    storyPicArr[u] = imageLoader.loadVolatileImage("images/Story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                    storyPicArr[u] = imageLoader.loadVolatileImage("images/story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
                 }
                 storyPic = storyPicArr[0];
             }
@@ -688,6 +691,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
     public void newInstance() {
         super.newInstance();
+        attackOpponent = new AttackOpponent();
+        attackPlayer = new AttackPlayer();
         damageLayerOpacity = 0;
         one = 10;
         two = 10;

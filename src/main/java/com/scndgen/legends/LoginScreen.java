@@ -24,7 +24,7 @@ package com.scndgen.legends;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.MainMenu;
+import io.github.subiyacryolite.enginev1.JenesisWindow;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -82,7 +82,7 @@ import java.util.logging.Logger;
  * 07/12/10 -33- Added background animation thread
  * 10/12/10 -34- Added Ravage, implemented characterEnum balance scheme, fixed bug in story scene thread
  * Sidenote 14/12/10: Joined Twitter ^_^
- * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, EXIT to gameplay. New achievement pics, mod to systemNotice(), better figures, sexy transparent HUD
+ * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, EXIT to gameplay. New achievement pics, mod to primaryNotice(), better figures, sexy transparent HUD
  * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
  * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
  * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
@@ -144,7 +144,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private Box box = new Box(BoxLayout.Y_AXIS);
     private WindowUpdate newy = null;
     private RandomAccessFile rand;
-    private MainMenu startApp;
+    private JenesisWindow startApp;
     private String IPAdd;
     private Image image;
     private SystemTray tray;
@@ -646,7 +646,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      *
      * @return
      */
-    public MainMenu getMenu() {
+    public JenesisWindow getMenu() {
         return startApp;
     }
 
@@ -668,7 +668,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         if (source == enter) {
             closeWindow();
-            startApp = new MainMenu(strUser, this);
+            startApp = new JenesisWindow(strUser, this);
         }
 
         if (source == newAccount) {
@@ -692,7 +692,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         if (source == userAccount) {
             closeWindow();
-            startApp = new MainMenu(strUser, this);
+            startApp = new JenesisWindow(strUser, this);
         }
     }
 
@@ -1356,7 +1356,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         if (keyCode == KeyEvent.VK_ENTER) {
             closeWindow();
-            startApp = new MainMenu(strUser, this);
+            startApp = new JenesisWindow(strUser, this);
         }
     }
 

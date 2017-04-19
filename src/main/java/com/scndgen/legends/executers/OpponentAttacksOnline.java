@@ -24,7 +24,6 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.MainWindow;
 
 public class OpponentAttacksOnline implements Runnable {
     private Thread timer;
@@ -70,11 +69,11 @@ public class OpponentAttacksOnline implements Runnable {
         try {
             int[] commands = {command1, command2, command3, command4};
             for (int index = 0; index < commands.length; index++) {
-                MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                MainWindow.getInstance().getAttackOpponent().attack(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER);
+                RenderGameplay.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                RenderGameplay.getInstance().getAttackOpponent().attack(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER);
                 RenderGameplay.getInstance().shakeCharLB();
                 RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
-                MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
+                RenderGameplay.getInstance().getAttacksChar().CharacterOverlayEnabled();
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

@@ -34,6 +34,7 @@ import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
+import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -347,7 +348,7 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().setPoints(achievements.getNewUserPoints());
         //save profile
         LoginScreen.getInstance().saveConfigFile();
-        MainWindow.getInstance().systemNotice("Saved File");
+        JenesisGlassPane.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
         if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
@@ -439,17 +440,16 @@ public class GameInstance implements Runnable, ActionListener {
         if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
         thread = new Thread(this);
         thread.setName("MAIN GAME LOGIC THREAD");
         thread.start();
-        MainWindow.getInstance().reSize("menu");
         count2 = 0;
     }
 
     public void musNotice() {
-        MainWindow.getInstance().systemNotice2(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
+        JenesisGlassPane.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
     }
 
     /**
@@ -458,7 +458,7 @@ public class GameInstance implements Runnable, ActionListener {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

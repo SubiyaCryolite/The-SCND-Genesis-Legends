@@ -122,7 +122,7 @@ public class JenesisGlassPane {
      *
      * @param message to display
      */
-    public void systemNotice(String message) {
+    public void primaryNotice(String message) {
         primaryNotification = message;
         increasePrimaryOpacity = true;
         fadeOutPrimaryNotification = false;
@@ -135,7 +135,7 @@ public class JenesisGlassPane {
      *
      * @param message to display
      */
-    public void systemNotice2(String message) {
+    public void secondaryNotice(String message) {
         secondaryNotification = message;
         increaseSecondaryOpacity = true;
         fadeOutSecondaryNotification = false;

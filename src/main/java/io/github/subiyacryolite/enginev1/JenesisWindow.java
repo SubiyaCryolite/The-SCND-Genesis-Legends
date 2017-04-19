@@ -19,7 +19,7 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.windows;
+package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
@@ -29,7 +29,7 @@ import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
+import com.scndgen.legends.windows.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.net.URI;
 /**
  * @author Ndana
  */
-public class MainMenu extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class JenesisWindow extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
     public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
@@ -56,7 +56,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     private int compassDir, compassDir2, last = 13;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public MainMenu(String dude, LoginScreen px) {
+    public JenesisWindow(String dude, LoginScreen px) {
         p = px;
         startup = new AudioPlayback(AudioPlayback.startUpSound(), false);
         startup.play();
@@ -99,7 +99,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
         refreshWindow();
     }
 
-    public static MainMenu getMenu() {
+    public static JenesisWindow getMenu() {
         return p.getMenu();
     }
 
@@ -118,7 +118,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
     }
 
     public final void sytemNotice(String moi) {
-        RenderMainMenu.getInstance().systemNotice(moi);
+        RenderMainMenu.getInstance().primaryNotice(moi);
     }
 
     @Override
@@ -141,11 +141,11 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                 scan = new NetworkScanLan();
             } else if (destination == SubMode.LAN_HOST) {
                 terminateThis();
-                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(107));
+                RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(107));
                 MainWindow.newInstance(strUser, destination);
             } else if (destination == SubMode.SINGLE_PLAYER) {
                 terminateThis();
-                RenderMainMenu.getInstance().systemNotice(Language.getInstance().getLine(108));
+                RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(108));
                 MainWindow.newInstance(strUser, destination);
             } else if (destination == SubMode.STORY_MODE) {
                 terminateThis();
@@ -459,7 +459,7 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
      * Create a client game
      */
     public void joinGame() {
-        MainWindow.newInstance(com.scndgen.legends.windows.MainMenu.getUserName(), SubMode.LAN_CLIENT);
+        MainWindow.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
     }
 
     private void refreshWindow() {

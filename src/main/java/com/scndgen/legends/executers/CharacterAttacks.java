@@ -24,7 +24,6 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.MainWindow;
 
 public class CharacterAttacks implements Runnable {
 
@@ -44,14 +43,14 @@ public class CharacterAttacks implements Runnable {
         GameInstance.getInstance().setRecoveryUnitsChar(0);
         if (GameInstance.getInstance().gameOver == false) {
             for (int o = 0; o < 4; o++) {
-                MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
-                MainWindow.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), CharacterState.CHARACTER, CharacterState.OPPONENT);
+                RenderGameplay.getInstance().getAttacksChar().CharacterOverlayEnabled();
+                RenderGameplay.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), CharacterState.CHARACTER, CharacterState.OPPONENT);
                 RenderGameplay.getInstance().shakeOppCharLB();
                 RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
                 if ((o + 1) == RenderGameplay.getInstance().getNumOfAttacks()) {
                     break;
                 }
-                MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
+                RenderGameplay.getInstance().getAttacksChar().CharacterOverlayDisabled();
             }
         }
         if (RenderGameplay.getInstance().getDone() != 1)// if game still running enable menus
