@@ -81,7 +81,7 @@ public class DrawWaiting extends JenesisMode {
     @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
-        g2d = volatileImg.createGraphics();
+        g2d = volatileImage.createGraphics();
         g2d.setRenderingHints(renderHints);
         g2d.setFont(normalFont);
         g2d.drawImage(pic1, 0, 0, this);
@@ -94,7 +94,7 @@ public class DrawWaiting extends JenesisMode {
         g2d.drawString(Language.getInstance().getLine(169), 20, 376);
         g2d.drawString(Language.getInstance().getLine(131), 20, 390);
         JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
     public void stopRepaint() {

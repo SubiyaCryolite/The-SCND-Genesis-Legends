@@ -17,10 +17,10 @@ import java.awt.*;
 public class RenderMainMenu extends MainMenu implements JenesisRender {
 
     private static RenderMainMenu instance;
-    private JenesisImageLoader pix = new JenesisImageLoader();
-    private Image sgLogo, ndanaSol;
+    private JenesisImageLoader imageLoader = new JenesisImageLoader();
+    private Image gameLogo, companyLogo;
     private Image pointer;
-    private Image fg, foreGroundA, pic1, foreGroundB;
+    private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
 
     public static synchronized RenderMainMenu getInstance() {
         if (instance == null)
@@ -30,40 +30,44 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
 
     @Override
     public void newInstance() {
-
+        super.newInstance();
     }
 
     @Override
     public void loadAssets() {
         if (!loadAssets) return;
-        font1 = LoginScreen.getInstance().getMyFont(fontSize);
-        ndanaSol = pix.loadImage("logo/ndana_sol.png");
-        sgLogo = pix.loadImage("images/sglogo.png");
-        pointer = pix.loadImage("images/pointer.png");
-        //0 to 8hrs :: Morning
+        menuFont = LoginScreen.getInstance().getMyFont(fontSize);
+        companyLogo = imageLoader.loadImage("logo/ndana_sol.png");
+        gameLogo = imageLoader.loadImage("images/sglogo.png");
+        pointer = imageLoader.loadImage("images/pointer.png");
         if (time >= 0 && time <= 9) {
-            pic1 = pix.loadImage("images/blur/bgBG1.png");
-            fg = pix.loadImage("images/blur/bgBG1fg.png");
-            foreGroundA = pix.loadImage("images/blur/bgBG1a.png");
-            foreGroundB = pix.loadImage("images/blur/bgBG1b.png");
-        } //9hrs to 16hrs :: Afternoon
-        else if (time > 9 && time <= 16) {
-            pic1 = pix.loadImage("images/blur/bgBG6.png");
-            fg = pix.loadImage("images/blur/bgBG6fg.png");
-            foreGroundA = pix.loadImage("images/blur/bgBG6a.png");
-            foreGroundB = pix.loadImage("images/blur/bgBG6b.png");
-        } //17 to 24hrs :: Evening
-        else if (time > 16 && time <= 24) {
-            pic1 = pix.loadImage("images/blur/bgBG5.png");
-            fg = pix.loadImage("images/blur/bgBG5fg.png");
-            foreGroundA = pix.loadImage("images/blur/bgBG5a.png");
-            foreGroundB = pix.loadImage("images/blur/bgBG5b.png");
+            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG1.png");
+            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG1fg.png");
+            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG1a.png");
+            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG1b.png");
+        } else if (time > 9 && time <= 16) {
+            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG6.png");
+            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG6fg.png");
+            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG6a.png");
+            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG6b.png");
+        } else if (time > 16 && time <= 24) {
+            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG5.png");
+            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG5fg.png");
+            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG5a.png");
+            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG5b.png");
         }
         loadAssets = false;
     }
 
     @Override
     public void cleanAssets() {
+        gameLogo.flush();
+        companyLogo.flush();
+        pointer.flush();
+        foregroundPixelated.flush();
+        particlesLayer1.flush();
+        backgroundPixelated.flush();
+        particlesLayer2.flush();
         loadAssets = true;
     }
 
@@ -72,20 +76,20 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         createBackBuffer();
         loadAssets();
         g2d.setComposite(makeComposite(1));
-        if (fadeOutFeedback && (feedBackOpac > 0.0f)) {
-            feedBackOpac = feedBackOpac - 0.025f;
+        if (fadeOutFeedback && (logoFadeOpacity > 0.0f)) {
+            logoFadeOpacity = logoFadeOpacity - 0.025f;
         }
-        g2d.drawImage(pic1, 0, 0, this);
-        g2d.drawImage(fg, 0, 0, this);
-        g2d.drawImage(foreGroundB, xCordCloud, yCordCloud, this);
-        g2d.drawImage(foreGroundA, xCordCloud2, yCordCloud2, this);
+        g2d.drawImage(backgroundPixelated, 0, 0, this);
+        g2d.drawImage(foregroundPixelated, 0, 0, this);
+        g2d.drawImage(particlesLayer2, cloudOnePositionX, yCordCloud, this);
+        g2d.drawImage(particlesLayer1, cloudTwoPositionX, yCordCloud2, this);
         g2d.setColor(Color.BLACK);
         g2d.setComposite(makeComposite(0.50f));
         g2d.fillRect(0, 0, screenWidth, screenHeight);
         g2d.setComposite(makeComposite(1.0f));
-        g2d.drawImage(sgLogo, 0, 0, this);
+        g2d.drawImage(gameLogo, 0, 0, this);
         g2d.setColor(Color.WHITE);
-        g2d.setFont(font1);
+        g2d.setFont(menuFont);
         if (overlay == Overlay.PRIMARY) {
             menuItemIndex = 0;
             if (menuIndex == menuItemIndex) {
@@ -157,7 +161,6 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
             }
             menuItemIndex++;
 
-
             if (menuIndex == menuItemIndex) {
                 menuItmStr = SubMode.CONTROLS;
                 g2d.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15, this);
@@ -196,7 +199,7 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
 
         JenesisGlassPane.getInstance().overlay(g2d, this);
         g2d.drawString("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
-        g2d.setComposite(makeComposite(feedBackOpac));
+        g2d.setComposite(makeComposite(logoFadeOpacity));
         mess = "Press 'F' to provide Feedback";
         g2d.drawString(mess, 590, 14);
         mess = "Press 'B' to visit our Blog";
@@ -215,38 +218,38 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
         if (overlay == Overlay.TUTORIAL) {
             tutorial.draw(g2d, this);
         }
-        if (xCordCloud < -960) {
-            xCordCloud = screenWidth;
+        if (cloudOnePositionX < -960) {
+            cloudOnePositionX = screenWidth;
         } else {
-            xCordCloud = xCordCloud - 1;
+            cloudOnePositionX = cloudOnePositionX - 1;
         }
-        if (xCordCloud2 < -960) {
-            xCordCloud2 = screenWidth;
+        if (cloudTwoPositionX < -960) {
+            cloudTwoPositionX = screenWidth;
         } else {
-            xCordCloud2 = xCordCloud2 - 2;
+            cloudTwoPositionX = cloudTwoPositionX - 2;
         }
-        if (xCordCloud3 < -960) {
-            xCordCloud3 = screenWidth;
+        if (cloudThreePositionX < -960) {
+            cloudThreePositionX = screenWidth;
         } else {
-            xCordCloud3 = xCordCloud3 - 3;
+            cloudThreePositionX = cloudThreePositionX - 3;
         }
-        if (openOpac > 0.0f) {
-            if (openOpac <= 1.0f) {
-                g2d.setComposite(makeComposite(openOpac));
+        if (opactity > 0.0f) {
+            if (opactity <= 1.0f) {
+                g2d.setComposite(makeComposite(opactity));
             }
             g2d.setColor(Color.white);
             g2d.fillRect(0, 0, 852, 480);
-            if (openOpac > 2.0f) {
+            if (opactity > 2.0f) {
                 g2d.setComposite(makeComposite(1.0f));
-            } else if (openOpac <= 2.0f && openOpac > 1.0f) {
-                g2d.setComposite(makeComposite(openOpac - 1.0f));
+            } else if (opactity <= 2.0f && opactity > 1.0f) {
+                g2d.setComposite(makeComposite(opactity - 1.0f));
             } else {
                 g2d.setComposite(makeComposite(0f));
             }
-            g2d.drawImage(ndanaSol, 0, 0, this);
-            openOpac = openOpac - 0.0125f;
+            g2d.drawImage(companyLogo, 0, 0, this);
+            opactity = opactity - 0.0125f;
         }
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
 
@@ -256,6 +259,6 @@ public class RenderMainMenu extends MainMenu implements JenesisRender {
      * @return pictures
      */
     public Image[] getPics() {
-        return new Image[]{pic1, foreGroundA, foreGroundB, fg};
+        return new Image[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
     }
 }

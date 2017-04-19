@@ -23,6 +23,7 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Achievements;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacks;
@@ -47,12 +48,12 @@ import java.util.logging.Logger;
  *
  * @author Ifunga Ndana
  */
-public class ThreadGameInstance implements Runnable, ActionListener {
+public class GameInstance implements Runnable, ActionListener {
 
-    public static boolean isGameOver, isPaused, gameRunning;
-    public static int time, count2;
-    public static boolean instance, storySequence;
-    private static boolean incrementActivityBar = true, incrementActivityBarOpp = true;
+    public boolean isGameOver, isPaused, gameRunning;
+    public int time, count2;
+    public boolean instance, storySequence;
+    private boolean incrementActivityBar = true, incrementActivityBarOpp = true;
     private final Gameplay gameplay;
     public int taskComplete;
     public int taskRun = 0;
@@ -86,7 +87,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
     private int timeOut;
 
     //indicates if game is running, CONTROLS game over screen and Achievements which require wins
-    public ThreadGameInstance(int forWho, Gameplay gameplay) {
+    public GameInstance(int forWho, Gameplay gameplay) {
         this.gameplay = gameplay;
         musicStr = RenderStageSelect.getInstance().getTrack();
         newInstance();
@@ -106,19 +107,19 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                 gameplay.matchStatus();
                 ach.scan();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             //---------recover CharacterEnum activity bar
             if (sampleChar <= limitChar && incrementActivityBar) {
-                sampleCharDB = sampleCharDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharRecoverySpeed());
+                sampleCharDB = sampleCharDB + (Characters.getInstance().getCharRecoverySpeed());
                 sampleChar = Integer.parseInt("" + Math.round(sampleCharDB) + "");
             }
 
             //---------recover opponents activity bar
 
             if (sampleOpp <= limitOpp && incrementActivityBarOpp && storySequence == false) {
-                sampleOppDB = sampleOppDB + (RenderCharacterSelectionScreen.getInstance().getPlayers().getOppRecoverySpeed());
+                sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && storySequence == false) {
                 if (MainWindow.getInstance().getGameMode()== SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
@@ -289,7 +290,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         try {
             thread.sleep(thisTime);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -333,7 +334,7 @@ public class ThreadGameInstance implements Runnable, ActionListener {
                     try {
                         this.sleep(1000);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(ThreadGameInstance.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
                     playTimeCounter = playTimeCounter + 1;
@@ -371,12 +372,12 @@ public class ThreadGameInstance implements Runnable, ActionListener {
         if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (gameplay.hasWon()) {
-                MainWindow.getInstance().getStory().incrementMode();
+                RenderStoryMenu.getInstance().incrementMode();
                 winMus.play();
             } else {
                 loseMus.play();
             }
-            MainWindow.getInstance().getStory().storyProcceed();
+            RenderStoryMenu.getInstance().storyProcceed();
             MainWindow.getInstance().nextStage();
         } else {
             //javax.swing.JOptionPane.showMessageDialog(null, "Done");

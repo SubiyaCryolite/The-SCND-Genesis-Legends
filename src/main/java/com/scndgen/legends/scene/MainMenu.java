@@ -50,7 +50,7 @@ public abstract class MainMenu extends JenesisMode {
     protected Overlay overlay = Overlay.PRIMARY;
     protected int menuItemIndex, menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
-    protected int xCordCloud = 0, yCordCloud = 0, xCordCloud2 = 0, yCordCloud2 = 20, xCordCloud3 = 0, yCordCloud3 = 40;
+    protected int cloudOnePositionX = 0, yCordCloud = 0, cloudTwoPositionX = 0, yCordCloud2 = 20, cloudThreePositionX = 0, yCordCloud3 = 40;
     protected String stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
     protected SubMode menuItmStr;
     protected int timeInt = 0;
@@ -59,11 +59,11 @@ public abstract class MainMenu extends JenesisMode {
     protected OverlayAchievementLocker achachievementLocker;
     protected String mess;
     protected boolean fadeOutFeedback;
-    protected float feedBackOpac = 1.0f;
+    protected float logoFadeOpacity = 1.0f;
     protected String[] menuItem;
     protected int offset = 10;
     protected Calendar cal;
-    protected Font font1, font2 = new Font("SansSerif", Font.PLAIN, spacer);
+    protected Font menuFont, font2 = new Font("SansSerif", Font.PLAIN, spacer);
     protected String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     protected Image[] achs;
     protected float gWin, gLoss, denom, progression;
@@ -71,7 +71,7 @@ public abstract class MainMenu extends JenesisMode {
     //---blur op
     protected int size;
     protected float[] data;
-    protected float sigma, openOpac;
+    protected float sigma, opactity;
     protected float twoSigmaSquare;
     protected float sigmaRoot;
     protected float total;
@@ -80,8 +80,8 @@ public abstract class MainMenu extends JenesisMode {
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public MainMenu() {
-        openOpac = 3.0f;
-        feedBackOpac = 1.0f;
+        opactity = 3.0f;
+        logoFadeOpacity = 1.0f;
         fadeOutFeedback = false;
         menuItem = new String[(menuEntries + 2) * 2];
         achachievementLocker = new OverlayAchievementLocker();
@@ -126,7 +126,7 @@ public abstract class MainMenu extends JenesisMode {
             public void run() {
                 try {
                     fadeOutFeedback = false;
-                    feedBackOpac = 1.0f;
+                    logoFadeOpacity = 1.0f;
                     this.sleep(15000);
                     fadeOutFeedback = true;
                 } catch (Exception e) {
@@ -276,5 +276,10 @@ public abstract class MainMenu extends JenesisMode {
             kernel = new Kernel(1, size, data);
         }
         return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+    }
+
+    public void newInstance()
+    {
+        loadAssets=true;
     }
 }

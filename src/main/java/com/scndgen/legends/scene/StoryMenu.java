@@ -64,6 +64,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void newInstance() {
+        loadAssets = true;
         StoryMode.getInstance().newInstance();
         opacity = 1.0f;
     }
@@ -324,7 +325,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void mouseMoved(int mouseX, int mouseY) {
-        int topY = getStartY() ;
+        int topY = getStartY();
         int topX = getStartX();
         int columns = getNumberOfCharColumns();
         int vspacer = getCharHSpacer();
@@ -365,8 +366,7 @@ public abstract class StoryMenu extends JenesisMode {
         }
     }
 
-    public boolean getWithinMenuPanel()
-    {
+    public boolean getWithinMenuPanel() {
         return withinMenuPanel;
     }
 }

@@ -23,6 +23,7 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
@@ -69,7 +70,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
     @Override
     public void newInstance() {
         super.newInstance();
-        getPlayers().resetCharacters();
+        Characters.getInstance().resetCharacters();
     }
 
     public void loadAssets() {
@@ -182,7 +183,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
             x = x + 2;
         }
         JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
     private void loadCaps() {

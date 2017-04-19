@@ -55,16 +55,14 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             "Aleksi Aubry-Carlson - Battle Music"};
     private Image captionHighlight, loading;
     private JenesisImageLoader imageLoader;
-    private Image[] stageCap = new Image[numberOfStages];
-    private Image[] stagePrev = new Image[numberOfStages];
+    private final Image[] stageCap = new Image[numberOfStages];
+    private final Image[] stagePrev = new Image[numberOfStages];
     private Font normalFont;
     private int hoveredStageIndex = -1;
 
     public RenderStageSelect() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black, 1));
-        stageCap = new Image[numberOfStages];
-        stagePrev = new Image[numberOfStages];
     }
 
     public static synchronized RenderStageSelect getInstance() {
@@ -134,7 +132,7 @@ public class RenderStageSelect extends StageSelect implements JenesisRender {
             }
         }
         JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
     private void loadCaps() {

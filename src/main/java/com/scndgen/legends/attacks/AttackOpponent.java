@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.characters.Characters;
 
 public class AttackOpponent extends Attack {
 
@@ -29,6 +29,6 @@ public class AttackOpponent extends Attack {
      * Creates an opponent object
      */
     public AttackOpponent() {
-        opponent = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent();
+        opponent = Characters.getInstance().getOpponent();
     }
 }

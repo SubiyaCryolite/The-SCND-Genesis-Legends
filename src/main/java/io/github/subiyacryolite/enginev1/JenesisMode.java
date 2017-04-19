@@ -19,7 +19,7 @@ import java.io.File;
 public abstract class JenesisMode extends JPanel {
 
     protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-    protected VolatileImage volatileImg;
+    protected VolatileImage volatileImage;
     protected GraphicsEnvironment ge;
     protected GraphicsConfiguration gc;
     protected Graphics2D g2d;
@@ -67,13 +67,13 @@ public abstract class JenesisMode extends JPanel {
      * Hardware acceleration
      */
     protected final void createBackBuffer() {
-        if (volatileImg == null) {
+        if (volatileImage == null) {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
             gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-            volatileImg = gc.createCompatibleVolatileImage(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
-            volatileImg.setAccelerationPriority(1.0f);
-            g2d = volatileImg.createGraphics();
+            volatileImage = gc.createCompatibleVolatileImage(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            volatileImage.setAccelerationPriority(1.0f);
+            g2d = volatileImage.createGraphics();
             g2d.setRenderingHints(renderHints); //activate aliasing
         }
     }
@@ -83,7 +83,7 @@ public abstract class JenesisMode extends JPanel {
      */
     public final void captureScreenShot() {
         try {
-            BufferedImage bufferedImage = volatileImg.getSnapshot();
+            BufferedImage bufferedImage = volatileImage.getSnapshot();
             File file;
             if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists())
                 new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();

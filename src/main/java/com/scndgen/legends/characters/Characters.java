@@ -34,18 +34,29 @@ import com.scndgen.legends.render.RenderGameplay;
  */
 public class Characters {
 
-    public static String[] moveMusicOpp = new String[8];
-    public static String[] moveMusicChar = new String[8];
-    public static int[] pointsArr = new int[12];
-    public static String[] typeArray = new String[4];
+    public String[] moveMusicOpp = new String[8];
+    public String[] moveMusicChar = new String[8];
+    public int[] pointsArr = new int[12];
+    public String[] typeArray = new String[4];
     //AIRCON 12 GLOWING HOT GIMP 2.6.8
-    private static int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
+    private int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
     private float activityRecoverRateChar, activityRecoveryRateOpp;
     private String characterName, opponentName;
     private com.scndgen.legends.characters.Character character, opponent;
+    private static Characters instance;
+
+    public static synchronized Characters getInstance() {
+        if (instance == null)
+            instance = new Characters();
+        return instance;
+    }
+
+    private Characters() {
+
+    }
 
     //called when characterEnum damaged
-    public static void setCurrLifeChar(int life) {
+    public void setCurrLifeChar(int life) {
         currCharLife = life;
         //percentages
         if (life < minCharlife) {
@@ -55,7 +66,7 @@ public class Characters {
     }
 
     //called when opp damaged
-    public static void setCurrLifeOpp(int life) {
+    public void setCurrLifeOpp(int life) {
         currOppLife = life;
 
         //percentages
@@ -65,7 +76,7 @@ public class Characters {
     }
 
     //called when opp damaged
-    public static void setCurrLifeOpp2(int life) {
+    public void setCurrLifeOpp2(int life) {
         currOppLife2 = life;
 
         //percentages
@@ -75,7 +86,7 @@ public class Characters {
     }
 
     //called when opp damaged
-    public static void setCurrLifeChar2(int life) {
+    public void setCurrLifeChar2(int life) {
         currCharLife3 = life;
 
         //percentages
@@ -84,39 +95,39 @@ public class Characters {
         }
     }
 
-    public static float getCharMinLife() {
+    public float getCharMinLife() {
         return (float) minCharlife;
     }
 
-    public static float getCharCurrLife() {
+    public float getCharCurrLife() {
         return (float) currCharLife;
     }
 
-    public static float getOppMinLife() {
+    public float getOppMinLife() {
         return (float) minOppLife;
     }
 
-    public static float getOppCurrLife() {
+    public float getOppCurrLife() {
         return (float) currOppLife;
     }
 
-    public static float getPoints() {
+    public float getPoints() {
         return (float) points / maxPoints;
     }
 
-    public static void setPoints(int amount) {
+    public void setPoints(int amount) {
         points = amount;
         maxPoints = amount;
     }
 
-    public static void alterPoints(int thisMuch) {
+    public void alterPoints(int thisMuch) {
         points = points - thisMuch;
     }
 
     /*
      *
      */
-    public static void alterPoints2(int index) {
+    public void alterPoints2(int index) {
         if (RenderGameplay.getInstance().getNumOfAttacks() > 1) {
             RenderGameplay.getInstance().setNumOfAttacks(1);
             points = points + pointsArr[index];
@@ -129,7 +140,7 @@ public class Characters {
      * @param characterState the person calling the method
      * @param thisMuch       the number to alter by
      */
-    public static void setDamageCounter(CharacterState characterState, int thisMuch) {
+    public void setDamageCounter(CharacterState characterState, int thisMuch) {
         if (characterState == CharacterState.CHARACTER) {
             damageMultiplierOpp = thisMuch;
         }
@@ -139,7 +150,7 @@ public class Characters {
         }
     }
 
-    public static int getDamageMultiplier(CharacterState per) {
+    public int getDamageMultiplier(CharacterState per) {
         int myInt = 0;
 
         if (per == CharacterState.CHARACTER) {

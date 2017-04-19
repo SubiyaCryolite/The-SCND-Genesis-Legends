@@ -25,7 +25,6 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.threads.ThreadGameInstance;
 import com.scndgen.legends.windows.MainWindow;
 
 import java.util.logging.Level;
@@ -74,10 +73,10 @@ public class OpponentAttacks implements Runnable {
         aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot();
         range = aiMoves.length - 1;
 
-        if (ThreadGameInstance.isGameOver == false) {
+        if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story scene bug
-                if (ThreadGameInstance.storySequence == false && ThreadGameInstance.isGameOver == false) {
+                if (RenderGameplay.getInstance().getGameInstance().storySequence == false && RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
                     MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], CharacterState.OPPONENT, CharacterState.CHARACTER);
                     RenderGameplay.getInstance().shakeCharLB();

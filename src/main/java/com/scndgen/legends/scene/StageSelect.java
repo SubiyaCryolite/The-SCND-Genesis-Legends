@@ -53,8 +53,11 @@ public abstract class StageSelect extends JenesisMode {
     protected boolean withinCharPanel;
     protected int storedX;
     protected int storedY;
+    protected String fgLocation;
+    protected String bgLocation;
 
     public void newInstance() {
+        loadAssets = true;
         hoveredStage = Stage.IBEX_HILL;
         mode = StageSelection.NORMAL;
         selectedStage = false;
@@ -482,10 +485,19 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     public void start() {
-        RenderGameplay.getInstance().activeStage = Integer.parseInt(getStage().substring(4));
-        RenderGameplay.getInstance().bgLocation = "images/" + getStage() + ".png";
-        RenderGameplay.getInstance().fgLocation = "images/" + getStage() + "fg.png";
+        bgLocation = "images/bgBG" + hoveredStage.filePrefix() + ".png";
+        fgLocation = "images/bgBG" + hoveredStage.filePrefix() + "fg.png";
         MainWindow.getInstance().newGame();
+    }
+
+    public String getBgLocation()
+    {
+        return bgLocation;
+    }
+
+    public String getFgLocation()
+    {
+        return fgLocation;
     }
 
     /**

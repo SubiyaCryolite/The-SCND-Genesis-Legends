@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.attacks;
 
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.characters.Characters;
 
 public class AttackPlayer extends Attack {
 
@@ -29,6 +29,6 @@ public class AttackPlayer extends Attack {
      * Constructor
      */
     public AttackPlayer() {
-        opponent = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter();
+        opponent = Characters.getInstance().getCharacter();
     }
 }

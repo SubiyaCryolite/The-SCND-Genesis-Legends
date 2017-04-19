@@ -151,7 +151,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
             }
         }
         JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
     public void loadAssets() {

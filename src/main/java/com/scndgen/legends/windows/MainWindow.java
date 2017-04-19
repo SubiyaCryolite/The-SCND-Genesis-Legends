@@ -37,9 +37,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.threads.ThreadGameInstance;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 
@@ -289,10 +287,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }.start();
     }
 
-    public StoryMenu getStory() {
-        return RenderStoryMenu.getInstance();
-    }
-
     public void main(String[] args) {
         gameWindow = new MainWindow("Punk", SubMode.SINGLE_PLAYER);
     }
@@ -528,7 +522,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         int u = JOptionPane.showConfirmDialog(null, "Are you sure you wanna quit?", "Dude!?", JOptionPane.YES_NO_OPTION);
         if (u == JOptionPane.YES_OPTION) {
             if (getGameMode() == SubMode.STORY_MODE) {
-                getStory().getStoryInstance().firstRun = true;
+                RenderStoryMenu.getInstance().getStoryInstance().firstRun = true;
             }
             //unpause if match was paused
             if (RenderGameplay.getInstance().getGameInstance().isPaused) {
@@ -644,16 +638,16 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private void accept() {
         if (menuLatencyElapsed) {
             if (getIsGameRunning()) {
-                if (ThreadGameInstance.isPaused == false) {
+                if (RenderGameplay.getInstance().getGameInstance().isPaused == false) {
                     //in game, no story sequence
-                    if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
+                    if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == false) {
                         RenderGameplay.getInstance().moveSelected();
                     } //in game, during story sequence
-                    else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == true) {
-                        getStory().getStoryInstance().skipDialogue();
+                    else if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == true) {
+                        RenderStoryMenu.getInstance().getStoryInstance().skipDialogue();
                     } //story scene -- after text
-                    else if (ThreadGameInstance.isGameOver == false && getStory().getStoryInstance().doneShowingText) {
-                        getStory().getStoryInstance().skipDialogue();
+                    else if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderStoryMenu.getInstance().getStoryInstance().doneShowingText) {
+                        RenderStoryMenu.getInstance().getStoryInstance().skipDialogue();
                     } else {
                         //if person presses twice the stage increments twice
                         //this prevents that
@@ -811,7 +805,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         if (gameRunning) {
-            if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && ThreadGameInstance.storySequence == false) {
+            if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == false) {
                 int count = mwe.getWheelRotation();
                 if (count >= 0) {
                     RenderGameplay.getInstance().prevAnimation();
@@ -841,7 +835,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (mode == Mode.STAGE_SELECT_SCREEN && RenderStageSelect.getInstance().getWithinCharPanel()) {
             RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
         } else if (getIsGameRunning()) {
-            if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
+            if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == false) {
                 if (m.getButton() == MouseEvent.BUTTON1) {
                     if (m.getX() > (29 + leftyXOffset) && m.getX() < (220 + leftyXOffset) && (m.getY() > 358)) {
                         RenderGameplay.getInstance().moveSelected();
@@ -943,17 +937,17 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     private void pause() {
         if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.STORY_MODE) {
-            if (ThreadGameInstance.isPaused == false) {
+            if (RenderGameplay.getInstance().getGameInstance().isPaused == false) {
                 RenderGameplay.getInstance().getGameInstance().pauseGame();
                 RenderGameplay.getInstance().pauseThreads();
-                if (ThreadGameInstance.storySequence == true) {
-                    getStory().getStoryInstance().pauseDialogue();
+                if (RenderGameplay.getInstance().getGameInstance().storySequence == true) {
+                    RenderStoryMenu.getInstance().getStoryInstance().pauseDialogue();
                 }
             } else {
                 RenderGameplay.getInstance().start();
                 RenderGameplay.getInstance().resumeThreads();
-                if (ThreadGameInstance.storySequence == true) {
-                    getStory().getStoryInstance().resumeDialogue();
+                if (RenderGameplay.getInstance().getGameInstance().storySequence == true) {
+                    RenderStoryMenu.getInstance().getStoryInstance().resumeDialogue();
                 }
             }
         }

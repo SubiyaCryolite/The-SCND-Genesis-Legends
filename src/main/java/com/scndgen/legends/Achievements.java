@@ -126,7 +126,7 @@ public class Achievements {
      * Scan for conditions
      */
     public void scan() {
-        if (Characters.getCharMinLife() <= 79 && RenderGameplay.getInstance().getPercent() >= 82 && isLocked[0]) {
+        if (Characters.getInstance().getCharMinLife() <= 79 && RenderGameplay.getInstance().getPercent() >= 82 && isLocked[0]) {
             RenderGameplay.getInstance().setNotifiationPic(1); //categories + 1
             name.add(achievementName[0]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[0]);
@@ -138,7 +138,7 @@ public class Achievements {
             isLocked[0] = false;
         }
 
-        if (Characters.getCharMinLife() <= 30 && RenderGameplay.getInstance().getPercent() >= 50 && isLocked[1]) {
+        if (Characters.getInstance().getCharMinLife() <= 30 && RenderGameplay.getInstance().getPercent() >= 50 && isLocked[1]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[1]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[1]);

@@ -23,8 +23,10 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
@@ -49,7 +51,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private Font largeFont, normalFont;
     private Font notSelected;
     private VolatileImage stat1, stat2, stat3, stat4;
-    private VolatileImage ambient1, ambient2, foreGround;
+    private VolatileImage stageParticleslayer1, stageParticleslayer2, foreGround;
     private GradientPaint gradient1 = new GradientPaint(xLocal, 10, Color.YELLOW, 255, 10, Color.RED, true);
     private GradientPaint gradient3 = new GradientPaint(0, 0, Color.YELLOW, 100, 100, Color.RED, true);
     private VolatileImage flashy;
@@ -57,12 +59,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private VolatileImage[] characterPortraits;
     private AudioPlayback sound, ambientMusic, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
     private Image[] comboPicArray, comicPicArray, times, statsPicChar = new Image[5], statsPicOpp = new Image[5];
-    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, bgPic, damLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
+    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
     private Image[] charSprites, oppSprites;
     private VolatileImage[] attackAnim2, attackAnim1;
     private VolatileImage[] storyPicArr, stats;
     private VolatileImage characterPortrait, storyPic;
-    private Color CurrentColor = (Color.RED);
+    private Color currentColor = (Color.RED);
 
     private RenderGameplay() {
         setLayout(new BorderLayout());
@@ -95,7 +97,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             //get ip from game
             client = MainWindow.getInstance().getClient();
         }
-        charPointInc = RenderCharacterSelectionScreen.getInstance().getPlayers().getPoints();
+        charPointInc = Characters.getInstance().getPoints();
         loadAssets = false;
     }
 
@@ -119,7 +121,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         loadAssets();
         if (imagesCharChached != true) {
             g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
-        } else if (ThreadGameInstance.storySequence) {
+        } else if (RenderGameplay.getInstance().getGameInstance().storySequence) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
@@ -147,15 +149,15 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             g2d.drawString(battleInf.toString(), ((852 - g2d.getFontMetrics().stringWidth(battleInf.toString())) / 2), 450);
             g2d.setComposite(makeComposite(10 * 0.1f));
 
-        } else if (ThreadGameInstance.isGameOver == false && ThreadGameInstance.storySequence == false) {
-            g2d.drawImage(bgPic, 0, 0, this);
+        } else if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == false) {
+            g2d.drawImage(stageBackground, 0, 0, this);
             g2d.setFont(notSelected);
             if (RenderGameplay.getInstance().getCharLife() >= 0) {
                 if (animLayer.equalsIgnoreCase("both")) {
-                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                    g2d.drawImage(stageParticleslayer2, amb2x, amb2y, this);
                 } else if (animLayer.equalsIgnoreCase("back")) {
-                    g2d.drawImage(ambient1, amb1x, amb1y, this);
-                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                    g2d.drawImage(stageParticleslayer1, amb1x, amb1y, this);
+                    g2d.drawImage(stageParticleslayer2, amb2x, amb2y, this);
                 }
 
                 if (MainWindow.getInstance().getAttacksChar().isOverlayDisabled()) {
@@ -170,10 +172,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 }
 
                 if (animLayer.equalsIgnoreCase("both")) {
-                    g2d.drawImage(ambient1, amb1x, amb1y, this);
+                    g2d.drawImage(stageParticleslayer1, amb1x, amb1y, this);
                 } else if (animLayer.equalsIgnoreCase("forg")) {
-                    g2d.drawImage(ambient1, amb1x, amb1y, this);
-                    g2d.drawImage(ambient2, amb2x, amb2y, this);
+                    g2d.drawImage(stageParticleslayer1, amb1x, amb1y, this);
+                    g2d.drawImage(stageParticleslayer2, amb2x, amb2y, this);
                 }
 
                 /** characterEnum sprite on below, opponent on top
@@ -291,7 +293,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     opac = opac + 0.05f;
                 }
                 g2d.setComposite(makeComposite(opac));
-                g2d.setColor(CurrentColor);
+                g2d.setColor(currentColor);
                 g2d.drawImage(curr, itemX + leftyXOffset, itemY, this);
 
                 if (fontSizes[0] == LoginScreen.bigTxtSize) {
@@ -390,7 +392,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         //-----------ENDS ATTACKS QUEING UP--------------
 
         //when paused
-        if (ThreadGameInstance.isPaused == true) {
+        if (RenderGameplay.getInstance().getGameInstance().isPaused == true) {
             g2d.setColor(Color.BLACK);
             g2d.setComposite(makeComposite(5 * 0.1f));//initial val between 1 and 10
             g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
@@ -402,7 +404,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
 
         //when gameover
-        if (ThreadGameInstance.isGameOver == true) {
+        if (RenderGameplay.getInstance().getGameInstance().isGameOver == true) {
             g2d.setColor(Color.WHITE);
             g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
             g2d.setColor(Color.BLACK);
@@ -422,7 +424,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         //global overlay
         JenesisGlassPane.getInstance().overlay(g2d, this);
 
-        g.drawImage(volatileImg, 0, 0, this);
+        g.drawImage(volatileImage, 0, 0, this);
     }
 
     /**
@@ -519,10 +521,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         if (imagesNumChached == false) {
             JenesisImageLoader pix = new JenesisImageLoader();
             counterPane = pix.loadImage("images/countPane.png");
-            if (activeStage != 100) {
-                foreGround = pix.loadVolatileImage(fgLocation, 852, 480, this);
+            if (RenderStageSelect.getInstance().getHoveredStage() != Stage.DISTANT_ISLE) {
+                foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 852, 480, this);
             } else {
-                foreGround = pix.loadVolatileImage(fgLocation, 960, 480, this);
+                foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 960, 480, this);
             }
             num0 = pix.loadImage("images/fig/0.png");
             num1 = pix.loadImage("images/fig/1.png");
@@ -565,17 +567,17 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         if (imagesCharChached == false) {
             try {
                 JenesisImageLoader pix = new JenesisImageLoader();
-                RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().loadMeHigh(this);
-                RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().loadMeHigh(this);
+                Characters.getInstance().getCharacter().loadMeHigh(this);
+                Characters.getInstance().getOpponent().loadMeHigh(this);
 
                 charSprites = new VolatileImage[12];
-                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
-                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(i);
+                for (int i = 0; i < Characters.getInstance().getCharacter().getNumberOfSprites(); i++) {
+                    charSprites[i] = Characters.getInstance().getCharacter().getHighQualitySprite(i);
                 }
 
                 oppSprites = new VolatileImage[12];
-                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
-                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getHighQualitySprite(i);
+                for (int i = 0; i < Characters.getInstance().getOpponent().getNumberOfSprites(); i++) {
+                    oppSprites[i] = Characters.getInstance().getOpponent().getHighQualitySprite(i);
                 }
 
                 comboPicArray = new Image[9];
@@ -583,15 +585,15 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     comboPicArray[u] = pix.loadImage("images/screenTxt/" + u + ".png");
                 }
                 comboPicArray[7] = pix.loadImage("images/screenTxt/7.png");
-                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
+                comboPicArray[8] = Characters.getInstance().getCharacter().getHighQualitySprite(11);
 
                 comicPicArray = new Image[10];
-                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
+                comicPicArray[0] = Characters.getInstance().getCharacter().getHighQualitySprite(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
                     comicPicArray[bx] = pix.loadImage("images/screenComic/" + (bx - 1) + ".png");
                 }
 
-                menuHold = pix.loadImage("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getEnum().data() + "/menu.png");
+                menuHold = pix.loadImage("images/" + Characters.getInstance().getCharacter().getEnum().data() + "/menu.png");
                 damLayer = pix.loadImage("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
 
                 time0 = pix.loadImage("images/fig/0.png");
@@ -619,15 +621,15 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 }
                 Image transBuf = pix.loadImage("images/trans.png", 5, 5);
                 hpHolder = pix.loadImage("images/hpHolder.png");
-                bgPic = pix.loadImage(bgLocation, 852, 480);
+                stageBackground = pix.loadImage(RenderStageSelect.getInstance().getBgLocation(), 852, 480);
                 phys = pix.loadImage("images/t_physical.png");
                 cel = pix.loadImage("images/t_celestia.png");
                 itm = pix.loadImage("images/t_item.png");
                 fury1 = pix.loadImage("images/fury.gif");
                 fury2 = pix.loadImage("images/furyo.png");
                 fury = fury2;
-                ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
-                ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
+                stageParticleslayer1 = pix.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png", 852, 480, this);
+                stageParticleslayer2 = pix.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png", 852, 480, this);
                 if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     storyPicArr = new VolatileImage[13];
                     for (int u = 0; u < 11; u++) {
@@ -669,28 +671,28 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         if (imagesCharChached == false) {
             try {
                 JenesisImageLoader pix = new JenesisImageLoader();
-                RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().loadMeLow();
-                RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().loadMeLow();
+                Characters.getInstance().getCharacter().loadMeLow();
+                Characters.getInstance().getOpponent().loadMeLow();
                 charSprites = new Image[12];
-                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getNumberOfSprites(); i++) {
-                    charSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getLowQualitySprite(i);
+                for (int i = 0; i < Characters.getInstance().getCharacter().getNumberOfSprites(); i++) {
+                    charSprites[i] = Characters.getInstance().getCharacter().getLowQualitySprite(i);
                 }
                 oppSprites = new Image[12];
-                for (int i = 0; i < RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getNumberOfSprites(); i++) {
-                    oppSprites[i] = RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().getLowQualitySprite(i);
+                for (int i = 0; i < Characters.getInstance().getOpponent().getNumberOfSprites(); i++) {
+                    oppSprites[i] = Characters.getInstance().getOpponent().getLowQualitySprite(i);
                 }
                 comboPicArray = new Image[9];
                 for (int u = 0; u < 6; u++) {
                     comboPicArray[u] = pix.loadImage("images/screenTxt/" + u + ".png");
                 }
                 comboPicArray[7] = pix.loadImage("images/screenTxt/7.png");
-                comboPicArray[8] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
+                comboPicArray[8] = Characters.getInstance().getCharacter().getHighQualitySprite(11);
                 comicPicArray = new Image[10];
-                comicPicArray[0] = RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().getHighQualitySprite(11);
+                comicPicArray[0] = Characters.getInstance().getCharacter().getHighQualitySprite(11);
                 for (int bx = 1; bx < numOfComicPics + 1; bx++) {
                     comicPicArray[bx] = pix.loadImage("images/screenComic/" + (bx - 1) + ".png");
                 }
-                menuHold = pix.loadImage("images/" + RenderCharacterSelectionScreen.getInstance().getPlayers().getCharName() + "/menu.png");
+                menuHold = pix.loadImage("images/" + Characters.getInstance().getCharName() + "/menu.png");
                 damLayer = pix.loadImage("images/damage1.png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight());
                 time0 = pix.loadImage("images/fig/0.png");
                 time1 = pix.loadImage("images/fig/1.png");
@@ -715,15 +717,15 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 }
                 Image transBuf = pix.loadImage("images/trans.png", 5, 5);
                 hpHolder = pix.loadImage("images/hpHolder.png");
-                bgPic = pix.loadImage(bgLocation, 852, 480);
+                stageBackground = pix.loadImage(RenderStageSelect.getInstance().getBgLocation(), 852, 480);
                 phys = pix.loadImage("images/t_physical.png");
                 cel = pix.loadImage("images/t_celestia.png");
                 itm = pix.loadImage("images/t_item.png");
                 fury1 = pix.loadImage("images/fury.gif");
                 fury2 = pix.loadImage("images/furyo.png");
                 fury = fury2;
-                ambient1 = pix.loadVolatileImage("images/bgBG" + activeStage + "a.png", 852, 480, this);
-                ambient2 = pix.loadVolatileImage("images/bgBG" + activeStage + "b.png", 852, 480, this);
+                stageParticleslayer1 = pix.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png", 852, 480, this);
+                stageParticleslayer2 = pix.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png", 852, 480, this);
                 if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     storyPicArr = new VolatileImage[11];
                     for (int u = 0; u < 11; u++) {
@@ -886,7 +888,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * Attack sounds
      */
     private void attackSoundChar() {
-        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
+        if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntChar = (int) (Math.random() * AudioPlayback.MALE_HURT.length * 2);
             if (randSoundIntChar < AudioPlayback.MALE_HURT.length) {
                 attackChar = new AudioPlayback(AudioPlayback.maleAttack(randSoundIntChar), false);
@@ -902,7 +904,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     protected void attackSoundOpp() {
-        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
+        if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioPlayback.MALE_HURT.length * 2);
             if (randSoundIntOpp < AudioPlayback.MALE_HURT.length) {
                 attackOpp = new AudioPlayback(AudioPlayback.maleAttack(randSoundIntOpp), false);
@@ -918,7 +920,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     protected void hurtSoundChar() {
-        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getOpponent().isMale()) {
+        if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioPlayback.MALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioPlayback.MALE_ATTACKS.length) {
                 hurtChar = new AudioPlayback(AudioPlayback.maleHurt(randSoundIntCharHurt), false);
@@ -934,7 +936,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     public void hurtSoundOpp() {
-        if (RenderCharacterSelectionScreen.getInstance().getPlayers().getCharacter().isMale()) {
+        if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioPlayback.MALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioPlayback.MALE_ATTACKS.length) {
                 hurtOpp = new AudioPlayback(AudioPlayback.maleHurt(randSoundIntOppHurt), false);
@@ -1002,8 +1004,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     public synchronized void playBGSound() {
-        if (ambientMusic == null)
-            ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".mp3", true);
+        if (ambientMusic != null) {
+            ambientMusic.stop();
+        }
+        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".mp3", true);
         ambientMusic.play();
     }
 
@@ -1058,7 +1062,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      *
      * @param here - index of pic
      */
-    public void charPortSet(int here) {
+    public void setCharacterPortrait(int here) {
         characterPortrait = characterPortraits[here];
     }
 
@@ -1088,7 +1092,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * Makes text white, meaning its OK to select a move
      */
     public void enableSelection() {
-        CurrentColor = Color.WHITE;
+        currentColor = Color.WHITE;
         safeToSelect = true;
     }
 
@@ -1096,7 +1100,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
      * Makes text red, meaning its NOT OK to select a move
      */
     public void disableSelection() {
-        CurrentColor = Color.RED;
+        currentColor = Color.RED;
         safeToSelect = false;
     }
 
