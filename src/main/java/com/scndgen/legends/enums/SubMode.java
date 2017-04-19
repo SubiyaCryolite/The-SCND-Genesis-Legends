@@ -4,6 +4,7 @@ package com.scndgen.legends.enums;
  * Created by ifung on 17/04/2017.
  */
 public enum SubMode {
+    MAIN_MENU,
     BLANK,
     LAN_CLIENT,
     SINGLE_PLAYER,

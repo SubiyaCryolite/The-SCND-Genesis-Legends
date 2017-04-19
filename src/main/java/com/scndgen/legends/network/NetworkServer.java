@@ -5,7 +5,7 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ClashSystem;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import java.io.DataInputStream;
@@ -48,7 +48,7 @@ public class NetworkServer implements Runnable {
     private void InitServer() {
         try {
             serverIsRunning = true;
-            server = new ServerSocket(MainWindow.PORT, 1);
+            server = new ServerSocket(JenesisPanel.PORT, 1);
             System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -63,7 +63,7 @@ public class NetworkServer implements Runnable {
         try {
             connection = server.accept();
             System.out.println(connection.getInetAddress().getHostName());
-            MainWindow.getInstance().playerFound();
+            JenesisPanel.getInstance().playerFound();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -90,7 +90,7 @@ public class NetworkServer implements Runnable {
             try {
                 getStreams();
                 readMessage();
-                thread.sleep(MainWindow.serverLatency);
+                thread.sleep(JenesisPanel.serverLatency);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
@@ -119,7 +119,7 @@ public class NetworkServer implements Runnable {
             if (line.endsWith("quit")) {
                 closeServer();
             } else if (line.endsWith("player_QSLV")) {
-                MainWindow.getInstance().playerFound();
+                JenesisPanel.getInstance().playerFound();
             } else if (line.endsWith("attack")) {
 
                 //1111 attack
@@ -130,8 +130,8 @@ public class NetworkServer implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
-                if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
-                    MainWindow.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
+                if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
 
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
@@ -181,10 +181,10 @@ public class NetworkServer implements Runnable {
                     RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.equalsIgnoreCase("lastMess")) {
-                sendData(MainWindow.getInstance().last);
+                sendData(JenesisPanel.getInstance().last);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
@@ -205,7 +205,7 @@ public class NetworkServer implements Runnable {
      */
     public void sendData(String mess) {
         try {
-            MainWindow.getInstance().last = mess;
+            JenesisPanel.getInstance().last = mess;
             output.writeUTF(mess);
             output.flush();
         } catch (Exception e) {

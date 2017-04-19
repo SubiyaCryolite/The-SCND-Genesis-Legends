@@ -31,7 +31,7 @@ import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
@@ -209,7 +209,7 @@ public class StoryMode implements Runnable {
     public void run() {
         try {
             System.out.println("Stage " + RenderStoryMenu.getInstance().getStage());
-            MainWindow.getInstance().startStoryMatch();
+            JenesisPanel.getInstance().startStoryMatch();
             storyIn();
             firstRun = false;
 

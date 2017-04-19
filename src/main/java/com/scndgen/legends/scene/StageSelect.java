@@ -27,7 +27,7 @@ import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
 import java.util.Hashtable;
@@ -117,22 +117,22 @@ public abstract class StageSelect extends JenesisMode {
     public void selectStage(Stage stage) {
         hoveredStage = stage;
         if (mode == StageSelection.NORMAL) {
-            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                    MainWindow.getInstance().sendToClient("loadingGVSHA");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
-            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                    MainWindow.getInstance().sendToClient("loadingGVSHA");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE || MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE || JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
             switch (hoveredStage) {
                 case IBEX_HILL:
                     selectIbexHill();
@@ -183,13 +183,13 @@ public abstract class StageSelect extends JenesisMode {
                     selectScorchedRuinsNight();
                     break;
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient(hoveredStage.shortCode());
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE || MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST || MainWindow.getInstance().getGameMode() == SubMode.WATCH) {
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("gameStart7%^&");
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE || JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST || JenesisPanel.getInstance().getGameMode() == SubMode.WATCH) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("gameStart7%^&");
             }
             start();
         }
@@ -487,7 +487,7 @@ public abstract class StageSelect extends JenesisMode {
     public void start() {
         bgLocation = "images/bgBG" + hoveredStage.filePrefix() + ".png";
         fgLocation = "images/bgBG" + hoveredStage.filePrefix() + "fg.png";
-        MainWindow.getInstance().newGame();
+        JenesisPanel.getInstance().newGame();
     }
 
     public String getBgLocation()

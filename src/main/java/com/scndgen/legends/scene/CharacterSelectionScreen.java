@@ -10,12 +10,10 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
@@ -64,9 +62,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * Initialises the characterEnum select panel
      */
     public CharacterSelectionScreen() {
-        setLayout(new BorderLayout());
         attacks = new int[4];
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
     /**
@@ -169,7 +165,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
@@ -177,7 +173,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //when doing isWithinRange, 4 buffs + 2 moves
         else if (RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderGameplay.getInstance().getOppLife() / RenderGameplay.getInstance().getOppMaxLife() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4;
@@ -185,7 +181,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5;
@@ -253,14 +249,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void backToMenu() {
         newInstance();
         //cancel hosting
-        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-            MainWindow.getInstance().closeTheServer();
-        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-            MainWindow.getInstance().closeTheClient();
-        } else if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            JenesisPanel.getInstance().closeTheServer();
+        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+            JenesisPanel.getInstance().closeTheClient();
+        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
             RenderStoryMenu.getInstance().getStoryInstance().skipDialogue();
         }
-        MainWindow.getInstance().backToMenuScreen();
+        JenesisPanel.getInstance().backToMenuScreen();
         RenderGameplay.getInstance().closeAudio();
     }
 
@@ -268,10 +264,10 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * Starts a new game
      */
     public void beginGame() {
-        if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST || MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER_TAG) {
-            MainWindow.getInstance().selectStage();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("watchStageSel_xcbD");
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST || JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER_TAG) {
+            JenesisPanel.getInstance().selectStage();
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("watchStageSel_xcbD");
             }
         }
 
@@ -325,19 +321,19 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 characterEnum = CharacterEnum.RAILA;
                 Characters.getInstance().prepare(characterEnum);
                 charPrevLoc = selectedCharIndex = characterEnum.index();
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                    MainWindow.getInstance().sendToClient("selRai_jkxc");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().sendToClient("selRai_jkxc");
                     preventCharacterSelection();
                 }
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                    MainWindow.getInstance().sendToServer("selRai_jkxc");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                    JenesisPanel.getInstance().sendToServer("selRai_jkxc");
                     preventCharacterSelection();
                 }
             }
         } else if (type == CharacterState.OPPONENT && opponentSelected == false) {
             sound2 = new AudioPlayback(AudioPlayback.charSelectSound(), false);
             sound2.play();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             }
             opponentSelected = true;
             opponent = CharacterEnum.RAILA;
@@ -363,12 +359,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 Characters.getInstance().prepare(characterEnum);
                 charPrevLoc = selectedCharIndex = characterEnum.index();
                 charDesc = Characters.getInstance().getCharacter().getDescSmall();
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                    MainWindow.getInstance().sendToClient("selSub_jkxc");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().sendToClient("selSub_jkxc");
                     preventCharacterSelection();
                 }
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                    MainWindow.getInstance().sendToServer("selSub_jkxc");
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                    JenesisPanel.getInstance().sendToServer("selSub_jkxc");
                     preventCharacterSelection();
                 }
             }
@@ -401,12 +397,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selLyn_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selLyn_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selLyn_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selLyn_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -437,12 +433,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selAlx_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selAlx_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selAlx_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selAlx_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -474,12 +470,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selAde_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selAde_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selAde_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selAde_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -511,12 +507,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selRav_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selRav_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selRav_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selRav_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -548,12 +544,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selJon_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selJon_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selJon_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selJon_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -585,12 +581,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selAdam_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selAdam_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selAdam_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selAdam_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -622,12 +618,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selNOVAAdam_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selNOVAAdam_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selNOVAAdam_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selNOVAAdam_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -659,12 +655,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selAzaria_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selAzaria_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selAzaria_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selAzaria_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -696,12 +692,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selSorr_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selSorr_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selSorr_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selSorr_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -732,12 +728,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                MainWindow.getInstance().sendToClient("selThi_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().sendToClient("selThi_jkxc");
                 preventCharacterSelection();
             }
-            if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                MainWindow.getInstance().sendToServer("selThi_jkxc");
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                JenesisPanel.getInstance().sendToServer("selThi_jkxc");
                 preventCharacterSelection();
             }
         }
@@ -791,7 +787,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                         e.printStackTrace(System.err);
                     }
                 }
-                while (MainWindow.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
+                while (JenesisPanel.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
                 animatorThreadRunning = false;
             }
         }.start();

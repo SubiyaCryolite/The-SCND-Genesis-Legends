@@ -40,7 +40,7 @@ public class OverWorld extends JFrame implements ActionListener, KeyListener {
         map = new DrawOverworld(this);
         daWindow = new JFrame();
         daWindow.setTitle("SCND GENESIS: LEGENDS - Overworld");
-        daWindow.add(map);
+        //daWindow.add(map);
         daWindow.setUndecorated(true);
         daWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         daWindow.pack();
@@ -104,7 +104,7 @@ public class OverWorld extends JFrame implements ActionListener, KeyListener {
 
     public void refresh() {
         if (daWindow.isVisible()) {
-            map.repaint();
+           // map.repaint();
         }
     }
 }

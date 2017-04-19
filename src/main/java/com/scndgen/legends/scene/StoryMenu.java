@@ -24,11 +24,8 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
-
-import javax.swing.*;
-import java.awt.*;
 
 public abstract class StoryMenu extends JenesisMode {
 
@@ -42,12 +39,6 @@ public abstract class StoryMenu extends JenesisMode {
     protected int currentScene = LoginScreen.getInstance().stage;
     protected int storedX = 99, storedY = 99;
     protected boolean withinMenuPanel;
-
-    public StoryMenu() {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
-
-    }
 
     /**
      * When both playes are selected, this prevents movement.
@@ -189,7 +180,7 @@ public abstract class StoryMenu extends JenesisMode {
 
     public void back() {
         getStoryInstance().firstRun = true;
-        MainWindow.getInstance().backToMenuScreen();
+        JenesisPanel.getInstance().backToMenuScreen();
     }
 
     /**

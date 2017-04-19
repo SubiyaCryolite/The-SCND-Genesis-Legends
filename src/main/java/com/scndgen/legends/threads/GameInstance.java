@@ -32,7 +32,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
@@ -106,7 +106,7 @@ public class GameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (enemyAiRunning == false && runOpponentAtb && storySequence == false) {
-                if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     enemyAiRunning = true;
                     executorAI.attack();
                 }
@@ -243,12 +243,12 @@ public class GameInstance implements Runnable, ActionListener {
     public void gameOver() {
         gameRunning = false;
         gameOver = true;
-        MainWindow.getInstance().freeToSave = true;
+        JenesisPanel.getInstance().freeToSave = true;
         RenderGameplay.getInstance().closeAudio();
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         achievements.scan();
         //if not story scene, increment char usage
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex());
         }
         if (RenderGameplay.getInstance().hasWon()) {
@@ -350,7 +350,7 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().saveConfigFile();
         JenesisGlassPane.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (RenderGameplay.getInstance().hasWon()) {
                 RenderStoryMenu.getInstance().incrementMode();
@@ -359,12 +359,12 @@ public class GameInstance implements Runnable, ActionListener {
                 loseMusic.play();
             }
             RenderStoryMenu.getInstance().storyProcceed();
-            MainWindow.getInstance().nextStage();
+            JenesisPanel.getInstance().nextStage();
         } else {
             if (mo == 0) {
-                MainWindow.getInstance().backToMenuScreen();
+                JenesisPanel.getInstance().backToMenuScreen();
             } else if (mo == 1) {
-                MainWindow.getInstance().backToCharSelect();
+                JenesisPanel.getInstance().backToCharSelect();
             }
         }
     }
@@ -414,12 +414,12 @@ public class GameInstance implements Runnable, ActionListener {
     public void newInstance() {
         executorAI = new OpponentAttacks();
         achievements = LoginScreen.getInstance().getAch();
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
             storySequence = true;
             time = StoryMode.getInstance().time;
         } //if LAN, client uses hosts time preset
-        else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-            time = MainWindow.getInstance().hostTime;
+        else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+            time = JenesisPanel.getInstance().hostTime;
         } else {
             time = WindowOptions.time;
         }
@@ -437,7 +437,7 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().newGame = true;
         winMusic = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMusic = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
             JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));

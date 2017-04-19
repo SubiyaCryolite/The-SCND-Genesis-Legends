@@ -36,7 +36,7 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ClashingOpponent;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -366,15 +366,15 @@ public abstract class Gameplay extends JenesisMode {
 
 
     public void clash(int dude, CharacterState homie) {
-        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-            MainWindow.getInstance().sendToServer("clashing^T&T^&T&^");
-        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-            MainWindow.getInstance().sendToClient("clashing^T&T^&T&^");
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+            JenesisPanel.getInstance().sendToServer("clashing^T&T^&T&^");
+        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            JenesisPanel.getInstance().sendToClient("clashing^T&T^&T&^");
         }
         if (RenderGameplay.getInstance().getBreak() == 1000 && safeToSelect && clasherRunnign == false) {
             new ClashSystem(dude, homie);
             clasherRunnign = true;
-            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 oppAttack = new ClashingOpponent();
                 System.out.println("clash ai");
             }
@@ -386,22 +386,17 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     public void sendToClient(String message) {
-        MainWindow.getInstance().sendToClient(message);
-        //protected MainWindow.getInstance().NetworkClient client;
+        JenesisPanel.getInstance().sendToClient(message);
+        //protected JenesisPanel.getInstance().NetworkClient client;
     }
 
     public void sendToServer(String message) {
-        MainWindow.getInstance().sendToServer(message);
+        JenesisPanel.getInstance().sendToServer(message);
     }
 
 
     public String getFavChar(int here) {
         return charNames[here].name();
-    }
-
-    @Override
-    public Dimension getSize() {
-        return new Dimension(getGameWidth(), getGameHeight()); //16:9
     }
 
     /**
@@ -525,10 +520,10 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void attack() {
         if (numOfAttacks > 0) {
-            if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 RenderGameplay.getInstance().disableSelection();
                 GameInstance.getInstance().triggerCharAttack();
-            } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+            } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
                 setSprites(CharacterState.CHARACTER, 9, 11);
@@ -542,7 +537,7 @@ public abstract class Gameplay extends JenesisMode {
                 GameInstance.getInstance().triggerCharAttack();
                 if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
                     getAttacksChar().CharacterOverlayDisabled();
-            } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
                 setSprites(CharacterState.CHARACTER, 9, 11);
@@ -803,7 +798,7 @@ public abstract class Gameplay extends JenesisMode {
         GameInstance.getInstance().newInstance();
         startDrawing = 1;
         comboCounter = 0;
-        MainWindow.getInstance().setGameRunning();
+        JenesisPanel.getInstance().setGameRunning();
         perCent = 100;
         perCent2 = 100;
     }
@@ -981,10 +976,10 @@ public abstract class Gameplay extends JenesisMode {
                     //runs on local
                     if (characterState == CharacterState.CHARACTER && limitRunning && GameInstance.getInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
-                        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                            MainWindow.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
-                        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                            MainWindow.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
+                        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                            JenesisPanel.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
+                        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                            JenesisPanel.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
                         comboCounter = 0;

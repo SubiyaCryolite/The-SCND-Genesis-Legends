@@ -27,8 +27,8 @@ import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
@@ -61,7 +61,6 @@ public class DrawWaiting extends JenesisMode {
             while (enumeration.hasMoreElements()) {
                 networkInterface = (NetworkInterface) enumeration.nextElement();
                 //System.out.println(networkInterface.toString());
-
                 enumeration1 = networkInterface.getInetAddresses();
                 while (enumeration1.hasMoreElements()) {
                     ia = (InetAddress) enumeration1.nextElement();
@@ -75,17 +74,28 @@ public class DrawWaiting extends JenesisMode {
         }
         pic1 = imageLoader.loadImage("images/menus/waiting.jpg");
         pic2 = imageLoader.loadImage("images/menus/loading.gif");
-        setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        createBackBuffer();
-        g2d = volatileImage.createGraphics();
-        g2d.setRenderingHints(renderHints);
+    public void newInstance() {
+
+    }
+
+    @Override
+    public void loadAssets() {
+
+    }
+
+    @Override
+    public void cleanAssets() {
+
+    }
+
+    @Override
+    public void paintComponent(Graphics2D g2d, ImageObserver io) {
         g2d.setFont(normalFont);
-        g2d.drawImage(pic1, 0, 0, this);
-        g2d.drawImage(pic2, 100, 100, this);
+        g2d.drawImage(pic1, 0, 0, io);
+        g2d.drawImage(pic2, 100, 100, io);
         g2d.setColor(Color.WHITE);
         g2d.drawString(Language.getInstance().getLine(167), 20, 300);
         g2d.drawString("\'" + name + "\',", 20, 314);
@@ -93,8 +103,7 @@ public class DrawWaiting extends JenesisMode {
         g2d.drawString(Language.getInstance().getLine(168), 20, 360);
         g2d.drawString(Language.getInstance().getLine(169), 20, 376);
         g2d.drawString(Language.getInstance().getLine(131), 20, 390);
-        JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImage, 0, 0, this);
+        JenesisGlassPane.getInstance().overlay(g2d, io);
     }
 
     public void stopRepaint() {

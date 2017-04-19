@@ -25,7 +25,7 @@ import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 
 /**
  * @author ndana
@@ -98,7 +98,7 @@ public class ClashSystem implements Runnable {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "GOT EM !!!", Colors.getColor("blue"));
-                MainWindow.getInstance().triggerFury(CharacterState.CHARACTER);
+                JenesisPanel.getInstance().triggerFury(CharacterState.CHARACTER);
             } else {
                 RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "EVADED YA!!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
@@ -111,7 +111,7 @@ public class ClashSystem implements Runnable {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "GOT YA !!!", Colors.getColor("blue"));
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
             } else {
                 RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "EVADED !!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
@@ -122,10 +122,10 @@ public class ClashSystem implements Runnable {
     }
 
     public void plrClashing() {
-        if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
-            MainWindow.getInstance().sendToServer("oppClsh" + plyClashPerc);
-        } else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_HOST) {
-            MainWindow.getInstance().sendToClient("oppClsh" + plyClashPerc);
+        if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
+            JenesisPanel.getInstance().sendToServer("oppClsh" + plyClashPerc);
+        } else if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_HOST) {
+            JenesisPanel.getInstance().sendToClient("oppClsh" + plyClashPerc);
         }
         plyrClash = plyrClash + 1;
         plyClashPerc = (plyrClash / (plyrClash + oppClash)) * 100;

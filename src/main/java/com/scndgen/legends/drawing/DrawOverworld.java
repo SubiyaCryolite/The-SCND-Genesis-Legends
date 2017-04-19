@@ -30,6 +30,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.ImageObserver;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,12 +118,12 @@ public class DrawOverworld extends JenesisMode {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        createBackBuffer();
-        g2d.drawImage(netWork, xCord, yCord, this);
-        g2d.drawImage(drawSpr, xCordChar, yCordChar, this); //245,240
-        g2d.drawImage(hills, xCord, yCord, this);
-        g2d.drawImage(userPic, xCordCloud, yCordCloud, this);
+    public void paintComponent(Graphics2D g2d, ImageObserver io) {
+        loadAssets();
+        g2d.drawImage(netWork, xCord, yCord, io);
+        g2d.drawImage(drawSpr, xCordChar, yCordChar, io); //245,240
+        g2d.drawImage(hills, xCord, yCord, io);
+        g2d.drawImage(userPic, xCordCloud, yCordCloud, io);
         g2d.setColor(Color.BLACK);
         g2d.drawString("X: " + (xCord), 700, 24);
         g2d.drawString("Y: " + (yCord), 700, 38);
@@ -147,7 +148,7 @@ public class DrawOverworld extends JenesisMode {
             g2d.setComposite(makeComposite(10 * 0.1F));
             //this code was used in my collision detection tests
         }
-        JenesisGlassPane.getInstance().overlay(g2d, this);
+        JenesisGlassPane.getInstance().overlay(g2d, io);
     }
 
     private Image loadIcon(String imageName) {
@@ -255,6 +256,21 @@ public class DrawOverworld extends JenesisMode {
                 yCordChar = yCordChar + moveSpec;
             }
         }
+    }
+
+    @Override
+    public void newInstance() {
+
+    }
+
+    @Override
+    public void loadAssets() {
+
+    }
+
+    @Override
+    public void cleanAssets() {
+
     }
 
     public void moveUp() {

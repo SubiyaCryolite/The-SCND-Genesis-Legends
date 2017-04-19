@@ -32,19 +32,19 @@ import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.threads.*;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
 
 /**
  * @author Ifunga Ndana
  */
-public class RenderGameplay extends Gameplay implements JenesisRender {
+public class RenderGameplay extends Gameplay  {
     private static RenderGameplay instance;
     private Animations1 animations1;
     private Animations2 animations2;
@@ -69,8 +69,6 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
 
     private RenderGameplay() {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createLineBorder(Color.black, 1));
     }
 
     public static synchronized RenderGameplay getInstance() {
@@ -88,12 +86,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         LoginScreen.getInstance().defHeight = LoginScreen.getInstance().getGameHeight();
         cacheNumPix();
         loadSprites();
-        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-            server = MainWindow.getInstance().getServer();
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            server = JenesisPanel.getInstance().getServer();
         }
-        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             //get ip from game
-            client = MainWindow.getInstance().getClient();
+            client = JenesisPanel.getInstance().getClient();
         }
         charPointInc = Characters.getInstance().getPoints();
         loadAssets = false;
@@ -113,9 +111,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        /* Fixed performance issues, got rid off geometry and replaced with static VolatileImage s -----facepalm*/
-        createBackBuffer();
+    public void paintComponent(Graphics2D g2d, ImageObserver io) {
         loadAssets();
         if (GameInstance.getInstance().storySequence) {
             g2d.setColor(Color.BLACK);
@@ -125,7 +121,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 opacityPic = opacityPic + 0.02f;
             }
             g2d.setComposite(makeComposite(opacityPic));
-            g2d.drawImage(storyPic, 0, 0, this);
+            g2d.drawImage(storyPic, 0, 0, io);
             g2d.setComposite(makeComposite(10 * 0.1f));
 
             g2d.setComposite(makeComposite(0.5f));
@@ -141,37 +137,37 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 opacityTxt = opacityTxt + 0.02f;
             }
             g2d.setComposite(makeComposite(opacityTxt));
-            g2d.drawImage(characterPortrait, ((852 - g2d.getFontMetrics().stringWidth(battleInformation.toString())) / 2) - 50, 424, this);
+            g2d.drawImage(characterPortrait, ((852 - g2d.getFontMetrics().stringWidth(battleInformation.toString())) / 2) - 50, 424, io);
             g2d.drawString(battleInformation.toString(), ((852 - g2d.getFontMetrics().stringWidth(battleInformation.toString())) / 2), 450);
             g2d.setComposite(makeComposite(10 * 0.1f));
 
         } else if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-            g2d.drawImage(stageBackground, 0, 0, this);
+            g2d.drawImage(stageBackground, 0, 0, io);
             g2d.setFont(notSelected);
             if (RenderGameplay.getInstance().getCharLife() >= 0) {
                 if (animLayer.equalsIgnoreCase("both")) {
-                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, this);
+                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, io);
                 } else if (animLayer.equalsIgnoreCase("back")) {
-                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, this);
-                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, this);
+                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, io);
+                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, io);
                 }
 
                 if (getAttacksChar().isOverlayDisabled()) {
-                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, this);
+                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, io);
                 }
 
-                g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), this);
+                g2d.drawImage(oppSprites[oppMeleeSpriteStatus], LoginScreen.getGameWidth(), (int) (oppYcord), (int) (oppXcord), LoginScreen.getInstance().getGameHeight(), (int) oppYcord, (int) (oppXcord), LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight(), io);
 
 
                 if (!getAttacksChar().isOverlayDisabled()) {
-                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, this);
+                    g2d.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter, io);
                 }
 
                 if (animLayer.equalsIgnoreCase("both")) {
-                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, this);
+                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, io);
                 } else if (animLayer.equalsIgnoreCase("forg")) {
-                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, this);
-                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, this);
+                    g2d.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY, io);
+                    g2d.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY, io);
                 }
 
                 /** characterEnum sprite on below, opponent on top
@@ -181,20 +177,20 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 if ((RenderGameplay.getInstance().getCharLife() / RenderGameplay.getInstance().getCharMaxLife()) < 0.66f) {
                     damageLayerOpacity = 6.66f - ((RenderGameplay.getInstance().getCharLife() / RenderGameplay.getInstance().getCharMaxLife()) * 10);
                 }
-                g2d.drawImage(foreGround, foreGroundPositionX, foreGroundPositionY, this);
+                g2d.drawImage(foreGround, foreGroundPositionX, foreGroundPositionY, io);
                 g2d.setComposite(makeComposite((float) damageLayerOpacity * 0.1f));
-                g2d.drawImage(damageLayer, 0, 0, this);
+                g2d.drawImage(damageLayer, 0, 0, io);
                 g2d.setComposite(makeComposite(1.0f));
 
-                g2d.drawImage(menuHold, leftHandXAxisOffset, menuBarY, this);
+                g2d.drawImage(menuHold, leftHandXAxisOffset, menuBarY, io);
 
                 for (int xB = 0; xB < 4; xB++) {
-                    g2d.drawImage(quePic1, (xB * 70 + 5 + leftHandXAxisOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
+                    g2d.drawImage(quePic1, (xB * 70 + 5 + leftHandXAxisOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), io);
                 }
 
                 if (RenderGameplay.getInstance().comboCounter >= 1) {
                     for (int xV = 0; xV < RenderGameplay.getInstance().comboCounter; xV++) {
-                        g2d.drawImage(quePic2, (xV * 70 + 5 + leftHandXAxisOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), this);
+                        g2d.drawImage(quePic2, (xV * 70 + 5 + leftHandXAxisOffset), (int) (LoginScreen.getInstance().getGameYScale() * 440), io);
                     }
                 }
 
@@ -203,7 +199,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     comicBookTextOpacity = comicBookTextOpacity - 0.0125f;
                 }
                 g2d.setComposite(makeComposite(comicBookTextOpacity));
-                g2d.drawImage(comicBookText[comicBookTextIndex], 170, 112 + basicY + comicBookTextPositionY, this);
+                g2d.drawImage(comicBookText[comicBookTextIndex], 170, 112 + basicY + comicBookTextPositionY, io);
                 g2d.setComposite(makeComposite(1.0f));
                 comicBookTextPositionY = comicBookTextPositionY + 3;
 
@@ -224,7 +220,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     statusEffectCharacterOpacity = statusEffectCharacterOpacity - 0.02f;
                 }
                 g2d.setComposite(makeComposite(statusEffectCharacterOpacity));
-                g2d.drawImage(statusEffectSprites[statIndexChar], 150 + uiShakeEffectOffsetCharacter, 100 + basicY - uiShakeEffectOffsetCharacter + statusEffectCharacterYCoord, this);
+                g2d.drawImage(statusEffectSprites[statIndexChar], 150 + uiShakeEffectOffsetCharacter, 100 + basicY - uiShakeEffectOffsetCharacter + statusEffectCharacterYCoord, io);
                 g2d.setComposite(makeComposite(1.0f));
                 statusEffectCharacterYCoord = statusEffectCharacterYCoord + 1;
 
@@ -233,48 +229,48 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                     statusEffectOpponentOpacity = statusEffectOpponentOpacity - 0.02f;
                 }
                 g2d.setComposite(makeComposite(statusEffectOpponentOpacity));
-                g2d.drawImage(statusEffectSprites[statIndexOpp], 602 + uiShakeEffectOffsetOpponent, 100 + basicY - uiShakeEffectOffsetOpponent + statusEffectOpponentYCoord, this);
+                g2d.drawImage(statusEffectSprites[statIndexOpp], 602 + uiShakeEffectOffsetOpponent, 100 + basicY - uiShakeEffectOffsetOpponent + statusEffectOpponentYCoord, io);
                 g2d.setComposite(makeComposite(1.0f));
                 statusEffectOpponentYCoord = statusEffectOpponentYCoord + 1;
 
                 //---opponrnt activity bar + text
 
-                g2d.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (y + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent, this);
+                g2d.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (y + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent, io);
                 g2d.setColor(Color.WHITE);
                 g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getOppLife()) + " : " + RenderGameplay.getInstance().perCent2 + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
                 g2d.setColor(Color.BLACK);
-                g2d.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent, this);
+                g2d.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent, io);
                 g2d.setPaint(gradient1);
                 g2d.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, GameInstance.getInstance().getRecoveryUnitsOpp(), 6, 6, 6);
 
                 //------------player 1 HUD---------------------//
-                g2d.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter, this); // HOLDS hp
+                g2d.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter, io); // HOLDS hp
                 //outline
-                g2d.drawImage(hud1, (lbx2 - 498) + uiShakeEffectOffsetCharacter, (lby2 - 417) - uiShakeEffectOffsetCharacter, this);
+                g2d.drawImage(hud1, (lbx2 - 498) + uiShakeEffectOffsetCharacter, (lby2 - 417) - uiShakeEffectOffsetCharacter, io);
                 //inner
                 //g2d.setColor(Color.RED);
                 g2d.setPaint(gradient3);
                 g2d.fillArc(lbx2 - 493 + uiShakeEffectOffsetCharacter, lby2 - 412 - uiShakeEffectOffsetCharacter, 90, 90, 0, phyAngle());
                 //inner loop
                 g2d.setColor(Color.BLACK);
-                g2d.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter, this);
+                g2d.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter, io);
                 g2d.setColor(Color.WHITE);
                 g2d.drawString("HP: " + Math.round(RenderGameplay.getInstance().getCharLife()) + " : " + RenderGameplay.getInstance().perCent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
                 g2d.setComposite(makeComposite(10 * 0.1f)); //op back to normal for other drawings
             }
 
-            g2d.drawImage(counterPane, paneCord, 0, this);
+            g2d.drawImage(counterPane, paneCord, 0, io);
 
             if (GameInstance.getInstance().time > 180) {
-                g2d.drawImage(numberPix[11], (int) (386), 0, this);
+                g2d.drawImage(numberPix[11], (int) (386), 0, io);
             } else {
                 if (times.length > GameInstance.getInstance().time1)
-                    g2d.drawImage(times[GameInstance.getInstance().time1], 356, 0, this);
+                    g2d.drawImage(times[GameInstance.getInstance().time1], 356, 0, io);
                 if (times.length > GameInstance.getInstance().time2)
-                    g2d.drawImage(times[GameInstance.getInstance().time2], 356 + 40, 0, this);
+                    g2d.drawImage(times[GameInstance.getInstance().time2], 356 + 40, 0, io);
                 if (times.length > GameInstance.getInstance().time3)
-                    g2d.drawImage(times[GameInstance.getInstance().time3], 356 + 80, 0, this);
+                    g2d.drawImage(times[GameInstance.getInstance().time3], 356 + 80, 0, io);
             }
 
 
@@ -284,7 +280,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 }
                 g2d.setComposite(makeComposite(opac));
                 g2d.setColor(currentColor);
-                g2d.drawImage(curr, itemX + leftHandXAxisOffset, itemY, this);
+                g2d.drawImage(curr, itemX + leftHandXAxisOffset, itemY, io);
 
                 if (fontSizes[0] == LoginScreen.bigTxtSize) {
                     g2d.setFont(largeFont);
@@ -319,8 +315,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             }
 
             //limit break stuff
-            g2d.drawImage(fury, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), this);
-            g2d.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), this);
+            g2d.drawImage(fury, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), io);
+            g2d.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), io);
             g2d.setColor(Color.RED);
             g2d.fillRoundRect(12 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 132 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 12, getBreak() / 5, 12, 12);
             //COMBO
@@ -329,7 +325,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
                 furyComboOpacity = furyComboOpacity - 0.01f;
             }
             g2d.setComposite(makeComposite(furyComboOpacity));
-            g2d.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), this);
+            g2d.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), io);
             g2d.setComposite(makeComposite(1.0f));
             g2d.setFont(notSelected);
 
@@ -338,7 +334,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             if (clasherRunnign) {
                 g2d.setColor(Color.BLACK);
                 g2d.fillRoundRect(221, 395, 410, 20, 10, 10);
-                g2d.drawImage(flashy, (int) (ClashSystem.getInstance().plyClashPerc * 4) + 226, 385, this);
+                g2d.drawImage(flashy, (int) (ClashSystem.getInstance().plyClashPerc * 4) + 226, 385, io);
                 g2d.setColor(Color.RED);
                 g2d.fillRect((int) (626 - (ClashSystem.getInstance().oppClashPerc * 4)), 400, (int) ClashSystem.getInstance().oppClashPerc * 4, 10);
                 g2d.setColor(Color.YELLOW);
@@ -349,10 +345,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             {
                 g2d.setComposite(makeComposite(opponentDamageOpacity));
                 //opp damage imageLoader
-                g2d.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, this);
-                g2d.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, this);
-                g2d.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, this);
-                g2d.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, this);
+                g2d.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, io);
+                g2d.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, io);
+                g2d.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, io);
+                g2d.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter, io);
                 g2d.setComposite(makeComposite(1.0f));
                 if (opponentDamageOpacity >= 0.0f) {
                     opponentDamageOpacity = opponentDamageOpacity - 0.0125f;
@@ -364,10 +360,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
                 g2d.setComposite(makeComposite(playerDamageOpacity));
                 //char damage imageLoader
-                g2d.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, this);
-                g2d.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, this);
-                g2d.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, this);
-                g2d.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, this);
+                g2d.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, io);
+                g2d.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, io);
+                g2d.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, io);
+                g2d.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent, io);
                 g2d.setComposite(makeComposite(1.0f));
                 if (playerDamageOpacity >= 0.0f) {
                     playerDamageOpacity = playerDamageOpacity - 0.0125f;
@@ -401,7 +397,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             g2d.setComposite(makeComposite(8 * 0.1f));//initial val between 1 and 10
             g2d.fillRect(0, 210, getGameWidth(), 121);
             g2d.setComposite(makeComposite(10 * 0.1f));
-            g2d.drawImage(status, 0, 210, this);
+            g2d.drawImage(status, 0, 210, io);
             g2d.setColor(Color.WHITE);
             g2d.setFont(notSelected);
             g2d.drawString(achievementName, 400, 240); //+14
@@ -412,9 +408,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
 
         //global overlay
-        JenesisGlassPane.getInstance().overlay(g2d, this);
-
-        g.drawImage(volatileImage, 0, 0, this);
+        JenesisGlassPane.getInstance().overlay(g2d, io);
     }
 
     /**
@@ -511,9 +505,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         JenesisImageLoader pix = new JenesisImageLoader();
         counterPane = pix.loadImage("images/countPane.png");
         if (RenderStageSelect.getInstance().getHoveredStage() != Stage.DISTANT_ISLE) {
-            foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 852, 480, this);
+            //foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 852, 480, io);
         } else {
-            foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 960, 480, this);
+            //foreGround = pix.loadVolatileImage(RenderStageSelect.getInstance().getFgLocation(), 960, 480, io);
         }
         num0 = pix.loadImage("images/fig/0.png");
         num1 = pix.loadImage("images/fig/1.png");
@@ -547,8 +541,8 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
     private void loadSprites() {
         try {
             JenesisImageLoader imageLoader = new JenesisImageLoader();
-            Characters.getInstance().getCharacter().loadMeHigh(this);
-            Characters.getInstance().getOpponent().loadMeHigh(this);
+            //Characters.getInstance().getCharacter().loadMeHigh(this);
+            //Characters.getInstance().getOpponent().loadMeHigh(this);
 
             charSprites = new VolatileImage[12];
             for (int i = 0; i < Characters.getInstance().getCharacter().getNumberOfSprites(); i++) {
@@ -590,9 +584,9 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
 
             characterPortraits = new VolatileImage[charNames.length];
 
-            if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
-                    characterPortraits[characterEnum.index()] = imageLoader.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, this);
+                    //characterPortraits[characterEnum.index()] = imageLoader.loadVolatileImage("images/" + characterEnum.data() + "/cap.png", 48, 48, io);
                 }
             } else {
                 for (int p = 0; p < charNames.length; p++) {
@@ -608,12 +602,12 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             fury1 = imageLoader.loadImage("images/fury.gif");
             fury2 = imageLoader.loadImage("images/furyo.png");
             fury = fury2;
-            particlesLayer1 = imageLoader.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png", 852, 480, this);
-            particlesLayer2 = imageLoader.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png", 852, 480, this);
-            if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            //particlesLayer1 = imageLoader.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png", 852, 480, io);
+            //particlesLayer2 = imageLoader.loadVolatileImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png", 852, 480, io);
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 storyPicArr = new VolatileImage[13];
                 for (int u = 0; u < 11; u++) {
-                    storyPicArr[u] = imageLoader.loadVolatileImage("images/story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), this);
+                    //storyPicArr[u] = imageLoader.loadVolatileImage("images/story/s" + u + ".png", LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), io);
                 }
                 storyPic = storyPicArr[0];
             }
@@ -623,10 +617,10 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             oppBar = imageLoader.loadImage("images/oppBar.png");
             moveCat = new Image[]{phys, cel, itm};
             curr = moveCat[0];
-            stat1 = imageLoader.loadVolatileImage("images/stats/stat1.png", 90, 24, this);
-            stat2 = imageLoader.loadVolatileImage("images/stats/stat2.png", 90, 24, this);
-            stat3 = imageLoader.loadVolatileImage("images/stats/stat3.png", 90, 24, this);
-            stat4 = imageLoader.loadVolatileImage("images/stats/stat4.png", 90, 24, this);
+            //stat1 = imageLoader.loadVolatileImage("images/stats/stat1.png", 90, 24, io);
+            //stat2 = imageLoader.loadVolatileImage("images/stats/stat2.png", 90, 24, io);
+            //stat3 = imageLoader.loadVolatileImage("images/stats/stat3.png", 90, 24, io);
+            //stat4 = imageLoader.loadVolatileImage("images/stats/stat4.png", 90, 24, io);
             stats = new VolatileImage[]{stat1, stat2, stat3, stat4};
             hud1 = imageLoader.loadImage("images/hud1.png");
             hud2 = imageLoader.loadImage("images/hud2.png");

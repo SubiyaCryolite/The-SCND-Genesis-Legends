@@ -28,20 +28,19 @@ import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisRender;
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the characterEnum and opponent
  */
-public class RenderCharacterSelectionScreen extends CharacterSelectionScreen implements JenesisRender {
+public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
     private static RenderCharacterSelectionScreen instance;
     private final String[] charDesc = new String[numOfCharacters];
@@ -57,7 +56,6 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
     private RenderCharacterSelectionScreen() {
         opacInc = 0.025f;
         loadAssets = true;
-        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public static synchronized RenderCharacterSelectionScreen getInstance() {
@@ -86,16 +84,15 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        createBackBuffer();
+    public void paintComponent(Graphics2D g2d, ImageObserver io) {
         loadAssets();
         g2d.setFont(normalFont);
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, 852, 480);
-        g2d.drawImage(bg3, 0, 0, this);
-        g2d.drawImage(fg1, xCordCloud, 0, this);
-        g2d.drawImage(fg2, xCordCloud2, 0, this);
-        g2d.drawImage(fg3, 0, 0, this);
+        g2d.drawImage(bg3, 0, 0, io);
+        g2d.drawImage(fg1, xCordCloud, 0, io);
+        g2d.drawImage(fg2, xCordCloud2, 0, io);
+        g2d.drawImage(fg3, 0, 0, io);
         if (p1Opac < (1.0f - opacInc)) {
             p1Opac = p1Opac + opacInc;
         }
@@ -109,28 +106,28 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         //characterEnum preview DYNAMIC change
         if (characterSelected != true) {
             g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap, this);
+            g2d.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap, io);
             g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, this);
+            g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, io);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+        if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
             g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, this);
+            g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, io);
             g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, this);
+            g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, io);
         }
         //if characterEnum selected draw FIXED prev
         if (characterSelected) {
-            g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, this);
-            g2d.drawImage(caption[selectedCharIndex], 40, 380, this);
+            g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, io);
+            g2d.drawImage(caption[selectedCharIndex], 40, 380, io);
         }
         //if opp selected, draw FIXED prev
         if (opponentSelected) {
-            g2d.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap, this);
-            g2d.drawImage(caption[selectedOppIndex], 553, 380, this);
+            g2d.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap, io);
+            g2d.drawImage(caption[selectedOppIndex], 553, 380, io);
         }
-        g2d.drawImage(charHold, 311, 0, this);
+        g2d.drawImage(charHold, 311, 0, io);
         for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
             for (int column = 0; column < columns; column++) {
                 int computedPosition = (columns * row) + column;
@@ -142,23 +139,23 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
                 if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
                 {
                     if (characterSelected != true) {
-                        g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                        g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
                     }
-                    if (characterSelected && opponentSelected != true && MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
-                        g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+                        g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
                     }
                     g2d.setComposite(makeComposite(opacChar));
-                    g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
                     charPrevLoicIndex = computedPosition;
                     g2d.setComposite(makeComposite(1.0f));
                 } else {
-                    g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), this);
+                    g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
                 }
             }
         }
         if (characterSelected && opponentSelected) {
             //TODO show select stage instead
-            g2d.drawImage(fight, 0, 0, this);
+            g2d.drawImage(fight, 0, 0, io);
             g2d.setFont(bigFont);
             g2d.setColor(Color.WHITE);
             g2d.drawString("<< " + Language.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(146) + " >>")) / 2, 360);
@@ -168,21 +165,20 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen imp
         g2d.setColor(Color.white);
         if (characterSelected == false) {
             //select character
-            g2d.drawImage(charDescPic, 0, 0, this);
+            g2d.drawImage(charDescPic, 0, 0, io);
             g2d.drawString(statsChar[charPrevLoicIndex], 4 + x, 18);
         }
         if (characterSelected && opponentSelected == false) {
             //select opponent
-            g2d.drawImage(oppDescPic, 452, 450, this);
+            g2d.drawImage(oppDescPic, 452, 450, io);
             g2d.drawString(statsChar[charPrevLoicIndex], 852 - g2d.getFontMetrics(normalFont).stringWidth(statsChar[charPrevLoicIndex]) + x, 468);
         }
-        g2d.drawImage(p1, 0, 180, this);
-        g2d.drawImage(p2, 812, 180, this);
+        g2d.drawImage(p1, 0, 180, io);
+        g2d.drawImage(p2, 812, 180, io);
         if (x < 0) {
             x = x + 2;
         }
-        JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImage, 0, 0, this);
+        JenesisGlassPane.getInstance().overlay(g2d, io);
     }
 
     private void loadCaps() {

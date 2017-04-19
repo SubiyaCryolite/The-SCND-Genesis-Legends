@@ -8,7 +8,7 @@ import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import javax.swing.*;
@@ -43,18 +43,18 @@ public class NetworkClient implements Runnable {
     @Override
     public void run() {
 
-        MainWindow.getInstance().getInstance().ServerName = MainWindow.getInstance().getInstance().getServerName();
-        System.out.println(MainWindow.getInstance().getInstance().ServerName);
-        MainWindow.getInstance().getInstance().UserName = MainWindow.getInstance().getInstance().getServerUserName();
+        JenesisPanel.getInstance().getInstance().ServerName = JenesisPanel.getInstance().getInstance().getServerName();
+        System.out.println(JenesisPanel.getInstance().getInstance().ServerName);
+        JenesisPanel.getInstance().getInstance().UserName = JenesisPanel.getInstance().getInstance().getServerUserName();
         connectToServer(IPaddress);
         while (clientIsRunning) {
             getStreams();
             readMassage();
             try {
-                thread.sleep(MainWindow.getInstance().serverLatency);
+                thread.sleep(JenesisPanel.getInstance().serverLatency);
             } catch (InterruptedException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                MainWindow.getInstance().getInstance().backToCharSelect();
+                JenesisPanel.getInstance().getInstance().backToCharSelect();
             }
         }
 
@@ -68,7 +68,7 @@ public class NetworkClient implements Runnable {
     private void connectToServer(String hostname) {
         try {
             clientIsRunning = true;
-            socket = new Socket(InetAddress.getByName(hostname), MainWindow.getInstance().PORT);
+            socket = new Socket(InetAddress.getByName(hostname), JenesisPanel.getInstance().PORT);
             System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -102,11 +102,11 @@ public class NetworkClient implements Runnable {
                 int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
-                    MainWindow.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                    JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
-                if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-                    MainWindow.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
+                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                    JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
                 System.out.println("\n");
@@ -153,10 +153,10 @@ public class NetworkClient implements Runnable {
                     RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.endsWith("watchStageSel_xcbD")) {
-                MainWindow.getInstance().selectStage();
+                JenesisPanel.getInstance().selectStage();
             } else if (line.startsWith("as1wds2_")) {
-                MainWindow.getInstance().hostTime = Integer.parseInt(line.substring(8));
-                System.out.println("aquired time is " + MainWindow.getInstance().hostTime);
+                JenesisPanel.getInstance().hostTime = Integer.parseInt(line.substring(8));
+                System.out.println("aquired time is " + JenesisPanel.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
                 if (line.equals(Stage.IBEX_HILL.shortCode())) {
@@ -214,7 +214,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().nowLoading();
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                MainWindow.getInstance().triggerFury(CharacterState.OPPONENT);
+                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
@@ -223,10 +223,10 @@ public class NetworkClient implements Runnable {
             } //rejected
             else if (line.contains("getLost")) ;
             {
-                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + MainWindow.getInstance().isMessageSent() + " " + MainWindow.getInstance().getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
-                MainWindow.getInstance().sendToServer("quit");
-                MainWindow.getInstance().closeTheClient();
-                MainWindow.getInstance().backToMenuScreen();
+                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + JenesisPanel.getInstance().getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                JenesisPanel.getInstance().sendToServer("quit");
+                JenesisPanel.getInstance().closeTheClient();
+                JenesisPanel.getInstance().backToMenuScreen();
             }
         } catch (Exception ex) {
             System.err.println(ex);
@@ -242,7 +242,7 @@ public class NetworkClient implements Runnable {
      */
     public void sendData(String mess) {
         try {
-            MainWindow.getInstance().last = mess;
+            JenesisPanel.getInstance().last = mess;
             dataOutputStream.writeUTF(mess);
             dataOutputStream.flush();
         } catch (Exception exception) {

@@ -39,7 +39,7 @@ import java.net.URI;
 /**
  * @author Ndana
  */
-public class JenesisWindow extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class JenesisWindow extends JFrame implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
     public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
@@ -63,8 +63,7 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
         strUser = dude;
         setUndecorated(true);
         setLayout(new BorderLayout());
-        RenderMainMenu.getInstance().newInstance();
-        setContentPane(RenderMainMenu.getInstance());
+        setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         addMouseMotionListener(this);
@@ -99,7 +98,7 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
         refreshWindow();
     }
 
-    public static JenesisWindow getMenu() {
+    public static JenesisWindow getInstance() {
         return p.getMenu();
     }
 
@@ -121,9 +120,6 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
         RenderMainMenu.getInstance().primaryNotice(moi);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-    }
 
     /**
      * Select option in menu
@@ -139,32 +135,7 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
             SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
             if (destination == SubMode.LAN_CLIENT) {
                 scan = new NetworkScanLan();
-            } else if (destination == SubMode.LAN_HOST) {
-                terminateThis();
-                RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(107));
-                MainWindow.newInstance(strUser, destination);
-            } else if (destination == SubMode.SINGLE_PLAYER) {
-                terminateThis();
-                RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(108));
-                MainWindow.newInstance(strUser, destination);
-            } else if (destination == SubMode.STORY_MODE) {
-                terminateThis();
-                MainWindow.newInstance(strUser, SubMode.STORY_MODE);
-            } else if (destination == SubMode.OPTIONS) {
-                options = new WindowOptions();
-            } else if (destination == SubMode.STATS) {
-                RenderMainMenu.getInstance().setOverlay(Overlay.STATISTICS);
-            } else if (destination == SubMode.ACH) {
-                RenderMainMenu.getInstance().refreshStats();
-                RenderMainMenu.getInstance().setOverlay(Overlay.ACHIEVEMENTS);
-            } else if (destination == SubMode.ABOUT) {
-                about = new WindowAbout();
-            } else if (destination == SubMode.CONTROLS) {
-                controls = new WindowControls();
-            } else if (destination == SubMode.TUTORIAL) {
-                RenderMainMenu.getInstance().setOverlay(Overlay.TUTORIAL);
-                RenderMainMenu.getInstance().startTut();
-            } else if (destination == SubMode.LOGOUT) {
+            } if (destination == SubMode.LOGOUT) {
                 logOut();
             } else if (destination == SubMode.LEADERS) {
                 if (boardNotUp) {
@@ -173,6 +144,12 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
                 } else {
                     board.reappear();
                 }
+            } else if (destination == SubMode.ABOUT) {
+                about = new WindowAbout();
+            } else if (destination == SubMode.CONTROLS) {
+                controls = new WindowControls();
+            } else if (destination == SubMode.OPTIONS) {
+                options = new WindowOptions();
             }
             if (destination == SubMode.EXIT) {
                 exit();
@@ -182,135 +159,48 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
-        {
-            int count = mwe.getWheelRotation();
-
-            //down - positive values
-            if (count >= 0) {
-                RenderMainMenu.getInstance().goDown();
-            }
-            //up -negative values
-            if (count < 0) {
-                RenderMainMenu.getInstance().goUp();
-            }
-        }
+        JenesisPanel.getInstance().mouseWheelMoved(mwe);
     }
 
     @Override
     public void mouseClicked(MouseEvent m) {
-        int x = RenderMainMenu.getInstance().getXMenu();
-        int y = RenderMainMenu.getInstance().getYMenu() - 14;
-        int space = RenderMainMenu.getInstance().getSpacer();
-        if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
-            if (m.getX() >= 425) {
-                RenderMainMenu.getInstance().advanceTutorial();
-            } else {
-                RenderMainMenu.getInstance().reverseTutorial();
-            }
-        } else if ((m.getY() > y) && (m.getY() < (y + (space * last))) && m.getX() > x) {
-            if (m.getButton() == MouseEvent.BUTTON1) {
-                select();
-            }
-
-            //middle mouse
-            if (m.getButton() == MouseEvent.BUTTON2) {
-            }
-
-            //middle mouse
-            if (m.getButton() == MouseEvent.BUTTON3) {
-            }
-        }
+        JenesisPanel.getInstance().mouseClicked(m);
     }
 
     @Override
     public void mouseEntered(MouseEvent m) {
+        JenesisPanel.getInstance().mouseEntered(m);
     }
 
     @Override
     public void mouseDragged(MouseEvent m) {
+        JenesisPanel.getInstance().mouseDragged(m);
     }
 
     @Override
     public void mouseMoved(MouseEvent m) {
-        int x = RenderMainMenu.getInstance().getXMenu();
-        int y = RenderMainMenu.getInstance().getYMenu() - 14;
-        int space = RenderMainMenu.getInstance().getSpacer() - 2;
-        //menu space
-        if ((m.getX() > x) && (m.getX() < x + 200)) {
-            if ((m.getY() > space) && (m.getY() < (y + space))) {
-                RenderMainMenu.getInstance().setMenuPos(0);
-            }
-
-            if ((m.getY() > (y + space)) && (m.getY() < (y + (space * 2)))) {
-                RenderMainMenu.getInstance().setMenuPos(1);
-            }
-
-            if ((m.getY() > (y + (space * 2))) && (m.getY() < (y + (space * 3)))) {
-                RenderMainMenu.getInstance().setMenuPos(2);
-            }
-
-            if ((m.getY() > (y + (space * 3))) && (m.getY() < (y + (space * 4)))) {
-                RenderMainMenu.getInstance().setMenuPos(3);
-            }
-
-            if ((m.getY() > (y + (space * 4))) && (m.getY() < (y + (space * 5)))) {
-                RenderMainMenu.getInstance().setMenuPos(4);
-            }
-
-            if ((m.getY() > (y + (space * 5))) && (m.getY() < (y + (space * 6)))) {
-                RenderMainMenu.getInstance().setMenuPos(5);
-            }
-
-            if ((m.getY() > (y + (space * 7))) && (m.getY() < (y + (space * 8)))) {
-                RenderMainMenu.getInstance().setMenuPos(6);
-            }
-
-            if ((m.getY() > (y + (space * 8))) && (m.getY() < (y + (space * 9)))) {
-                RenderMainMenu.getInstance().setMenuPos(7);
-            }
-
-            if ((m.getY() > (y + (space * 9))) && (m.getY() < (y + (space * 10)))) {
-                RenderMainMenu.getInstance().setMenuPos(8);
-            }
-
-            if ((m.getY() > (y + (space * 10))) && (m.getY() < (y + (space * 11)))) {
-                RenderMainMenu.getInstance().setMenuPos(9);
-            }
-
-            if ((m.getY() > (y + (space * 11))) && (m.getY() < (y + (space * 12)))) {
-                RenderMainMenu.getInstance().setMenuPos(10);
-            }
-
-            if ((m.getY() > (y + (space * 12))) && (m.getY() < (y + (space * last)))) {
-                RenderMainMenu.getInstance().setMenuPos(11);
-            }
-
-            if ((m.getY() > (y + (space * 13))) && (m.getY() < (y + (space * last)))) {
-                RenderMainMenu.getInstance().setMenuPos(12);
-            }
-        }
-        //System.out.print("Mouse X:"+m.getX());
-        //System.out.println("Mouse y:"+m.getY());
+        JenesisPanel.getInstance().mouseMoved(m);
     }
 
     @Override
     public void mouseExited(MouseEvent m) {
+        JenesisPanel.getInstance().mouseExited(m);
     }
 
     @Override
     public void mousePressed(MouseEvent m) {
+        JenesisPanel.getInstance().mousePressed(m);
     }
 
     @Override
     public void mouseReleased(MouseEvent m) {
+        JenesisPanel.getInstance().mouseReleased(m);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        JenesisPanel.getInstance().keyPressed(e);
         int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
-            RenderMainMenu.getInstance().goDown();
-        }
         if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
             RenderMainMenu.getInstance().goUp();
         }
@@ -322,41 +212,6 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
         }
         if (keyCode == KeyEvent.VK_L) {
             provideFeedback('l');
-        }
-        if (keyCode == KeyEvent.VK_RIGHT) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().advanceTutorial();
-        }
-        if (keyCode == KeyEvent.VK_LEFT) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().reverseTutorial();
-        }
-        if (keyCode == KeyEvent.VK_1) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(0);
-        }
-        if (keyCode == KeyEvent.VK_2) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(3);
-        }
-        if (keyCode == KeyEvent.VK_3) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(11);
-        }
-        if (keyCode == KeyEvent.VK_4) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(20);
-        }
-        if (keyCode == KeyEvent.VK_5) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(27);
-        }
-        if (keyCode == KeyEvent.VK_6) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                RenderMainMenu.getInstance().sktpToTut(32);
-        }
-        if (keyCode == KeyEvent.VK_F12) {
-            RenderMainMenu.getInstance().captureScreenShot();
         }
         if (keyCode == KeyEvent.VK_ENTER) {
             select();
@@ -398,10 +253,12 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
 
     @Override
     public void keyReleased(KeyEvent e) {
+        JenesisPanel.getInstance().keyReleased(e);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        JenesisPanel.getInstance().keyTyped(e);
     }
 
     /**
@@ -416,20 +273,6 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
                 System.exit(0);
             }
         }
-    }
-
-    /**
-     * Repaints GUI
-     */
-    public void refresh() {
-        RenderMainMenu.getInstance().repaint();
-    }
-
-    /**
-     * Stops repainting GUI
-     */
-    public void stopPaint() {
-        RenderMainMenu.getInstance().StopRepaint();
     }
 
     /**
@@ -459,7 +302,7 @@ public class JenesisWindow extends JFrame implements ActionListener, KeyListener
      * Create a client game
      */
     public void joinGame() {
-        MainWindow.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
+        JenesisPanel.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
     }
 
     private void refreshWindow() {

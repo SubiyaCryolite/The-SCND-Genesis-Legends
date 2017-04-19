@@ -1159,8 +1159,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             bout = new BufferedOutputStream(fos, 1024);
             data = new byte[1024];
             x = 0;
-
-
             while ((x = in.read(data, 0, 1024)) >= 0) {
                 bout.write(data, 0, x);
 

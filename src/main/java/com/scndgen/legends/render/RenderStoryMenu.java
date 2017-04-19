@@ -27,20 +27,20 @@ import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.windows.MainWindow;
+import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
  * This class creates a graphical preview of the characterEnum and opponent
  */
-public class RenderStoryMenu extends StoryMenu implements JenesisRender {
+public class RenderStoryMenu extends StoryMenu {
 
     private static RenderStoryMenu instance;
     private AudioPlayback victorySound;
@@ -58,7 +58,6 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         for (int u = 0; u < unlockedStage.length; u++) {
             unlockedStage[u] = u <= currentScene;
         }
-        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public static synchronized RenderStoryMenu getInstance() {
@@ -68,24 +67,23 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        createBackBuffer();
+    public void paintComponent(Graphics2D g2d, ImageObserver io) {
         loadAssets();
         if (loadingNow) {
             g2d.setColor(Color.BLACK);
-            g2d.drawImage(storyPrev, charXcap + x, charYcap, this);
+            g2d.drawImage(storyPrev, charXcap + x, charYcap, io);
             g2d.setComposite(makeComposite(0.7f));
             g2d.fillRect(0, 0, 852, 480);
             g2d.setComposite(makeComposite(1.0f));
             g2d.setComposite(makeComposite(0.5f));
             g2d.fillRect(200, 0, 452, 480);
             g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(loading, 316, 183, this); //yCord = 286 - icoHeight
+            g2d.drawImage(loading, 316, 183, io); //yCord = 286 - icoHeight
             g2d.setColor(Color.WHITE);
-        } else if (MainWindow.getInstance().getGameMode() != SubMode.LAN_CLIENT) {
+        } else if (JenesisPanel.getInstance().getGameMode() != SubMode.LAN_CLIENT) {
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, 852, 480);
-            g2d.drawImage(storyPrev, charXcap + x, charYcap, this);
+            g2d.drawImage(storyPrev, charXcap + x, charYcap, io);
             g2d.setComposite(makeComposite(0.7f));
             g2d.fillRect(0, 0, 852, 480);
             g2d.setComposite(makeComposite(0.5f));
@@ -95,7 +93,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
                     if (computedPosition >= unlockedStage.length) continue;
-                    g2d.drawImage(unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), this);
+                    g2d.drawImage(unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), io);
                 }
             }
             g2d.setColor(Color.WHITE);
@@ -108,13 +106,12 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
                 if (opacity < 0.98f)
                     opacity = opacity + 0.02f;
                 g2d.setComposite(makeComposite(opacity));
-                g2d.drawImage(unlockedCaptions[hoveredStoryIndex], (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), this);
+                g2d.drawImage(unlockedCaptions[hoveredStoryIndex], (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), io);
                 g2d.setComposite(makeComposite(1.0f));
-                g2d.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), this);
+                g2d.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), io);
             }
         }
-        JenesisGlassPane.getInstance().overlay(g2d, this);
-        g.drawImage(volatileImage, 0, 0, this);
+        JenesisGlassPane.getInstance().overlay(g2d, io);
     }
 
     public void loadAssets() {

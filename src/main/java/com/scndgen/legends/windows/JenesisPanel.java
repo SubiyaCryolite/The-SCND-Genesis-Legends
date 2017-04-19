@@ -21,39 +21,40 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.OverWorld;
 import com.scndgen.legends.drawing.DrawWaiting;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.render.RenderStoryMenu;
+import com.scndgen.legends.render.*;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisWindow;
+import io.github.subiyacryolite.enginev1.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 import java.io.*;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
-public class MainWindow extends JFrame implements KeyListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class JenesisPanel extends JPanel {
 
     public static final int PORT = 5555;
     public static final int serverLatency = 500;
     public final static int frameRate = 60;
-    private static MainWindow instance;
+    private static JenesisPanel instance;
     public int hostTime;
     public boolean inStoryPane;
     public boolean gameRunning = false, withinMenuPanel, freeToSave = true, controller = false;
@@ -68,7 +69,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private NetworkServer server;
     private InetAddress ServerAddress;
     private int leftyXOffset, onlineClients = 0, hatDir;
-    private boolean messageSent = false, isWaiting = true, isPainting;
+    private boolean messageSent = false, isWaiting = true;
     //client
     private NetworkClient client;
     private JTextField txtServerName = new JTextField(20);
@@ -81,12 +82,14 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     private String userName;
     private DrawWaiting drawWait;
     private JenesisImageLoader pix;
-    private ArrayList imageList;
-    private Image ico16, ico22, ico24, ico32, ico48, ico72, ico96, ico128, ico256;
-    private MainWindow gameWindow;
     private AudioPlayback backgroundMusic;
+    private JenesisMode jenesisMode;
+    private VolatileImage volatileImage;
+    private GraphicsEnvironment ge;
+    private GraphicsConfiguration gc;
+    private Graphics2D g2d;
 
-    private MainWindow(String nameOfUser, SubMode subMode) {
+    private JenesisPanel(String nameOfUser, SubMode subMode) {
         instance = this;
         try {
             if (JenesisGamePad.getInstance().NUM_BUTTONS > 0) {
@@ -117,30 +120,7 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         if (getGameMode() == SubMode.LAN_CLIENT) {
             client = new NetworkClient(LoginScreen.getInstance().getIP());
         }
-        setUndecorated(true);
-        setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
-        ico16 = pix.loadImage("images/GameIco16.png");
-        ico22 = pix.loadImage("images/GameIco22.png");
-        ico24 = pix.loadImage("images/GameIco24.png");
-        ico32 = pix.loadImage("images/GameIco32.png");
-        ico48 = pix.loadImage("images/GameIco48.png");
-        ico72 = pix.loadImage("images/GameIco72.png");
-        ico96 = pix.loadImage("images/GameIco96.png");
-        ico128 = pix.loadImage("images/GameIco128.png");
-        ico256 = pix.loadImage("images/GameIco256.png");
-        imageList = new ArrayList();
-        imageList.add(ico16);
-        imageList.add(ico22);
-        imageList.add(ico24);
-        imageList.add(ico32);
-        imageList.add(ico48);
-        imageList.add(ico72);
-        imageList.add(ico96);
-        imageList.add(ico128);
-        imageList.add(ico256);
-        setIconImages(imageList);
         //seti(loadIconImage("images/GameIco.ico"));
-
         RenderStageSelect.getInstance().newInstance();
         if (subMode == SubMode.LAN_HOST) {
             isWaiting = true;
@@ -161,36 +141,26 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         } else if (subMode == SubMode.STORY_MODE) {
             RenderStoryMenu.getInstance().newInstance();
             setContentPane(RenderStoryMenu.getInstance());
+        } else if (subMode == SubMode.MAIN_MENU) {
+            RenderMainMenu.getInstance().newInstance();
+            setContentPane(RenderMainMenu.getInstance());
         } else {
             RenderCharacterSelectionScreen.getInstance().newInstance();
             setContentPane(RenderCharacterSelectionScreen.getInstance());
         }
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addWindowListener(this);
-        addMouseMotionListener(this);
-        addMouseListener(this);
-        addMouseWheelListener(this);
-        requestFocusInWindow();
-        setFocusable(true);
-        addKeyListener(this);
-        pack();
-        setLocationRelativeTo(null); // Centers JFrame on screen //
-        setResizable(false);
-        setVisible(true);
         if (gameMode == SubMode.LAN_CLIENT) {
             client.sendData("player_QSLV");
         }
-        superRepaintThread();
-        packWindow();
+        setPreferredSize(new Dimension(852, 480));
     }
 
-    public static synchronized MainWindow newInstance(String strUser, SubMode storyMode) {
+    public static synchronized JenesisPanel newInstance(String strUser, SubMode subMode) {
         if (instance == null)
-            instance = new MainWindow(strUser, storyMode);
+            instance = new JenesisPanel(strUser, subMode);
         return instance;
     }
 
-    public static MainWindow getInstance() {
+    public static JenesisPanel getInstance() {
         return instance;
     }
 
@@ -210,10 +180,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     public boolean isMessageSent() {
         return messageSent;
-    }
-
-    public void packWindow() {
-        pack();
     }
 
     /**
@@ -283,51 +249,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }.start();
     }
 
-    public void main(String[] args) {
-        gameWindow = new MainWindow("Punk", SubMode.SINGLE_PLAYER);
-    }
-
-    public void getRidOfTitleBar() {
-        setUndecorated(true);
-    }
-
-    public void getBackTitleBar() {
-        setUndecorated(false);
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-        focus();
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-        focus();
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-        focus();
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-        focus();
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-        focus();
-    }
-
     public void newGame() {
         mode = Mode.STANDARD_GAMEPLAY;
         stopBackgroundMusic();
@@ -348,9 +269,8 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
      * Goes back to main menu
      */
     public void backToMenuScreen() {
-        JenesisWindow.getMenu().showModes();
+        JenesisWindow.getInstance().showModes();
         stopBackgroundMusic();
-        dispose();
         RenderGameplay.getInstance().cleanAssets();
         focus();
     }
@@ -395,8 +315,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
     public void selectStage() {
         setContentPane(RenderStageSelect.getInstance());
         mode = Mode.STAGE_SELECT_SCREEN;
-        pack();
-        setLocationRelativeTo(null);
         focus();
     }
 
@@ -668,7 +586,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
 
     }
 
-    @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
@@ -681,9 +598,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }
         if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
             down();
-        }
-        if (keyCode == KeyEvent.VK_X) {
-            packWindow();
         }
         if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A) {
             left();
@@ -726,9 +640,48 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 trigger();
             }
         }
+        if (mode == Mode.MAIN_MENU) {
+            if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
+                RenderMainMenu.getInstance().goDown();
+            }
+            if (keyCode == KeyEvent.VK_RIGHT) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().advanceTutorial();
+            }
+            if (keyCode == KeyEvent.VK_LEFT) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().reverseTutorial();
+            }
+            if (keyCode == KeyEvent.VK_1) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(0);
+            }
+            if (keyCode == KeyEvent.VK_2) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(3);
+            }
+            if (keyCode == KeyEvent.VK_3) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(11);
+            }
+            if (keyCode == KeyEvent.VK_4) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(20);
+            }
+            if (keyCode == KeyEvent.VK_5) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(27);
+            }
+            if (keyCode == KeyEvent.VK_6) {
+                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
+                    RenderMainMenu.getInstance().sktpToTut(32);
+            }
+            if (keyCode == KeyEvent.VK_F12) {
+                RenderMainMenu.getInstance().captureScreenShot();
+            }
+        }
     }
 
-    @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         if (gameRunning) {
             if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
@@ -741,9 +694,19 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 }
             }
         }
+        if (mode == Mode.MAIN_MENU) {
+            int count = mwe.getWheelRotation();
+            //down - positive values
+            if (count >= 0) {
+                RenderMainMenu.getInstance().goDown();
+            }
+            //up -negative values
+            if (count < 0) {
+                RenderMainMenu.getInstance().goUp();
+            }
+        }
     }
 
-    @Override
     public void mouseClicked(MouseEvent m) {
         if (mode == Mode.CHAR_SELECT_SCREEN && RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) {
             if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
@@ -760,6 +723,47 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         }
         if (mode == Mode.STAGE_SELECT_SCREEN && RenderStageSelect.getInstance().getWithinCharPanel()) {
             RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
+        }
+        if (mode == Mode.MAIN_MENU) {
+            int x = RenderMainMenu.getInstance().getXMenu();
+            int y = RenderMainMenu.getInstance().getYMenu() - 14;
+            int space = RenderMainMenu.getInstance().getSpacer();
+            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
+                if (m.getX() >= 425) {
+                    RenderMainMenu.getInstance().advanceTutorial();
+                } else {
+                    RenderMainMenu.getInstance().reverseTutorial();
+                }
+            } else if ((m.getY() > y) && (m.getY() < (y + (space * 13))) && m.getX() > x) {
+                if (m.getButton() == MouseEvent.BUTTON1) {
+
+                    SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
+                    if (destination == SubMode.LAN_HOST) {
+                        RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(107));
+                        JenesisWindow.getInstance().setContentPane(newInstance(JenesisWindow.strUser, destination));
+                    } else if (destination == SubMode.SINGLE_PLAYER) {
+                        RenderMainMenu.getInstance().primaryNotice(Language.getInstance().getLine(108));
+                        JenesisWindow.getInstance().setContentPane(newInstance(JenesisWindow.strUser, destination));
+                    } else if (destination == SubMode.STORY_MODE) {
+                        JenesisWindow.getInstance().setContentPane(newInstance(JenesisWindow.strUser, SubMode.STORY_MODE));
+                    } else if (destination == SubMode.STATS) {
+                        RenderMainMenu.getInstance().setOverlay(Overlay.STATISTICS);
+                    } else if (destination == SubMode.ACH) {
+                        RenderMainMenu.getInstance().refreshStats();
+                        RenderMainMenu.getInstance().setOverlay(Overlay.ACHIEVEMENTS);
+                    } else if (destination == SubMode.TUTORIAL) {
+                        RenderMainMenu.getInstance().setOverlay(Overlay.TUTORIAL);
+                        RenderMainMenu.getInstance().startTut();
+                    }
+                }
+                //middle mouse
+                if (m.getButton() == MouseEvent.BUTTON2) {
+                }
+
+                //middle mouse
+                if (m.getButton() == MouseEvent.BUTTON3) {
+                }
+            }
         } else if (getIsGameRunning()) {
             if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
                 if (m.getButton() == MouseEvent.BUTTON1) {
@@ -786,36 +790,12 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         focus();
     }
 
-    @Override
     public void mouseEntered(MouseEvent m) {
     }
 
-    @Override
     public void mouseDragged(MouseEvent m) {
     }
 
-    private void superRepaintThread() {
-        if (isPainting) return;
-        isPainting = true;
-        new Thread() {
-            final int sleepTime = 1000 / frameRate;
-
-            @Override
-            public void run() {
-                do {
-                    try {
-                        repaint();
-                        this.setName("Super awesome repaint thread");
-                        this.sleep(sleepTime);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                } while (true);
-            }
-        }.start();
-    }
-
-    @Override
     public void mouseMoved(MouseEvent m) {
         if (mode == Mode.CHAR_SELECT_SCREEN) {
             RenderCharacterSelectionScreen.getInstance().mouseMoved(m.getX(), m.getY());
@@ -828,28 +808,82 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
             if (getGameMode() != SubMode.LAN_CLIENT) {
                 RenderStageSelect.getInstance().mouseMoved(m.getX(), m.getY());
             }
+        }
+        if (mode == Mode.MAIN_MENU) {
+            int x = RenderMainMenu.getInstance().getXMenu();
+            int y = RenderMainMenu.getInstance().getYMenu() - 14;
+            int space = RenderMainMenu.getInstance().getSpacer() - 2;
+            //menu space
+            if ((m.getX() > x) && (m.getX() < x + 200)) {
+                if ((m.getY() > space) && (m.getY() < (y + space))) {
+                    RenderMainMenu.getInstance().setMenuPos(0);
+                }
+
+                if ((m.getY() > (y + space)) && (m.getY() < (y + (space * 2)))) {
+                    RenderMainMenu.getInstance().setMenuPos(1);
+                }
+
+                if ((m.getY() > (y + (space * 2))) && (m.getY() < (y + (space * 3)))) {
+                    RenderMainMenu.getInstance().setMenuPos(2);
+                }
+
+                if ((m.getY() > (y + (space * 3))) && (m.getY() < (y + (space * 4)))) {
+                    RenderMainMenu.getInstance().setMenuPos(3);
+                }
+
+                if ((m.getY() > (y + (space * 4))) && (m.getY() < (y + (space * 5)))) {
+                    RenderMainMenu.getInstance().setMenuPos(4);
+                }
+
+                if ((m.getY() > (y + (space * 5))) && (m.getY() < (y + (space * 6)))) {
+                    RenderMainMenu.getInstance().setMenuPos(5);
+                }
+
+                if ((m.getY() > (y + (space * 7))) && (m.getY() < (y + (space * 8)))) {
+                    RenderMainMenu.getInstance().setMenuPos(6);
+                }
+
+                if ((m.getY() > (y + (space * 8))) && (m.getY() < (y + (space * 9)))) {
+                    RenderMainMenu.getInstance().setMenuPos(7);
+                }
+
+                if ((m.getY() > (y + (space * 9))) && (m.getY() < (y + (space * 10)))) {
+                    RenderMainMenu.getInstance().setMenuPos(8);
+                }
+
+                if ((m.getY() > (y + (space * 10))) && (m.getY() < (y + (space * 11)))) {
+                    RenderMainMenu.getInstance().setMenuPos(9);
+                }
+
+                if ((m.getY() > (y + (space * 11))) && (m.getY() < (y + (space * 12)))) {
+                    RenderMainMenu.getInstance().setMenuPos(10);
+                }
+
+                if ((m.getY() > (y + (space * 12))) && (m.getY() < (y + (space * 13)))) {
+                    RenderMainMenu.getInstance().setMenuPos(11);
+                }
+
+                if ((m.getY() > (y + (space * 13))) && (m.getY() < (y + (space * 13)))) {
+                    RenderMainMenu.getInstance().setMenuPos(12);
+                }
+            }
         } else if (getIsGameRunning()) {
             RenderGameplay.getInstance().mouseMoved(m.getX(), m.getY());
         }
     }
 
-    @Override
     public void mouseExited(MouseEvent m) {
     }
 
-    @Override
     public void mousePressed(MouseEvent m) {
     }
 
-    @Override
     public void mouseReleased(MouseEvent m) {
     }
 
-    @Override
     public void keyReleased(KeyEvent e) {
     }
 
-    @Override
     public void keyTyped(KeyEvent e) {
     }
 
@@ -914,8 +948,6 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
                 setContentPane(RenderCharacterSelectionScreen.getInstance());
                 mode = Mode.CHAR_SELECT_SCREEN;//RenderCharacterSelectionScreen.getInstance().animCloud();
                 RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-                pack();
-                setLocationRelativeTo(null); // Centers JFrame on screen //
                 break;
             }
         }
@@ -937,4 +969,72 @@ public class MainWindow extends JFrame implements KeyListener, WindowListener, M
         client.sendData(thisTxt);
     }
 
+    protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
+
+    /**
+     * Hardware acceleration
+     */
+    protected final void createBackBuffer() {
+        if (volatileImage == null) {
+            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            System.out.println("Accelerateable memory!!!!!!!!!!! " + ge.getDefaultScreenDevice().getAvailableAcceleratedMemory());
+            gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+            volatileImage = gc.createCompatibleVolatileImage(LoginScreen.getInstance().getGameWidth(), LoginScreen.getInstance().getGameHeight());
+            volatileImage.setAccelerationPriority(1.0f);
+            g2d = volatileImage.createGraphics();
+            g2d.setRenderingHints(renderHints); //activate aliasing
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        createBackBuffer();
+        if (jenesisMode == null) return;
+        jenesisMode.loadAssets();
+        jenesisMode.paintComponent((Graphics2D) g, this);
+        g.drawImage(volatileImage, 0, 0, this);
+    }
+
+    private void setContentPane(final JenesisMode mode) {
+        this.jenesisMode = mode;
+    }
+
+    /**
+     * Gets screenshot
+     */
+    public final void captureScreenShot() {
+        try {
+            BufferedImage bufferedImage = volatileImage.getSnapshot();
+            File file;
+            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists())
+                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
+            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
+            if (ImageIO.write(bufferedImage, "png", file))
+                JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().getLine(170));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Generates unique ID for screens
+     *
+     * @return unique ID
+     */
+    public final String generateUID() {
+        String random_name = "scndgen-legends_";
+        StringBuilder userIDBuff = new StringBuilder(random_name);
+        String[] letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        userIDBuff.append("").append(Math.round(Math.random() * 100)).append("_");
+        int v1 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        int v2 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        int v3 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
+        userIDBuff.append(letters[v1]);
+        userIDBuff.append(letters[v2]);
+        userIDBuff.append(letters[v3]);
+        userIDBuff.append("_").append(Math.round(Math.random() * 10000)).append("");
+        random_name = userIDBuff.toString();
+
+        return random_name;
+    }
 }
