@@ -116,8 +116,7 @@ public final class Language {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 
@@ -153,7 +152,7 @@ public final class Language {
             System.out.println("Extracted lang file");
 
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 }

@@ -132,12 +132,12 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
                 LoginScreen.getInstance().getInstance().saveConfigFile();
                 JOptionPane.showMessageDialog(null, Language.getInstance().getLine(99), Language.getInstance().getLine(102), JOptionPane.PLAIN_MESSAGE);
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace(System.err);
                 notInitislied = true;
                 JOptionPane.showMessageDialog(null, Language.getInstance().getLine(100), Language.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
             JOptionPane.showMessageDialog(null, Language.getInstance().getLine(100), Language.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
             notInitislied = true;
         }

@@ -23,7 +23,6 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.windows.MainWindow;
 import io.github.subiyacryolite.enginev1.JenesisMode;
@@ -38,7 +37,7 @@ public abstract class StoryMenu extends JenesisMode {
     protected int oldId = -1;
     protected boolean[] hiddenStage;
     protected boolean loadingNow;
-    protected int currMode = LoginScreen.getInstance().stage;
+    protected int currentScene = LoginScreen.getInstance().stage;
     protected int storedX = 99, storedY = 99;
     protected boolean withinMenuPanel;
 
@@ -203,37 +202,28 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * When in story currMode, we go to the current level
+     * When in story currentScene, we go to the current level
      *
      * @return current level
      */
     public int getStage() {
-        return currMode;
+        return currentScene;
     }
 
     /**
      * When you win a match, move to the next level
      */
     public void incrementMode() {
-        if (currMode < StoryMode.getInstance().max) {
-            currMode = currMode + 1;
+        if (currentScene < StoryMode.getInstance().max) {
+            currentScene = currentScene + 1;
 
             //dont mess up progress
             //if the player has advanced
             //and theres still more stages
-            if (currMode > mode) {
-                LoginScreen.getInstance().stage = currMode;
+            if (currentScene > mode) {
+                LoginScreen.getInstance().stage = currentScene;
             }
         }
-    }
-
-    /**
-     * Set the stage the player is on
-     *
-     * @param here - stage the player is on
-     */
-    public void setCurrMode(Stage here) {
-        currMode = here.index();
     }
 
     /**

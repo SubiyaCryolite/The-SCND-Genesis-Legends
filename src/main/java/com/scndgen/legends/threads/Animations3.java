@@ -57,7 +57,6 @@ public class Animations3 implements Runnable {
                     thread.sleep(0016);
                     RenderGameplay.getInstance().setParticlesLayer1PositionY(RenderGameplay.getInstance().getParticlesLayer1PositionY() + RenderGameplay.getInstance().getAmbSpeed1());
                     RenderGameplay.getInstance().setParticlesLayer2PositionY(RenderGameplay.getInstance().getParticlesLayer2PositionY() + RenderGameplay.getInstance().getAmbSpeed2());
-
                     if (RenderGameplay.getInstance().getParticlesLayer1PositionY() > 480) {
                         RenderGameplay.getInstance().setParticlesLayer1PositionY(-480);
                     }
@@ -65,7 +64,6 @@ public class Animations3 implements Runnable {
                         RenderGameplay.getInstance().setParticlesLayer2PositionY(-480);
                     }
                 }
-
             } catch (InterruptedException ex) {
                 Logger.getLogger(DrawOverworld.class.getName()).log(Level.SEVERE, null, ex);
             }

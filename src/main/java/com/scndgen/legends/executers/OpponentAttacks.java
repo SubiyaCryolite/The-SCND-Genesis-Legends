@@ -62,7 +62,7 @@ public class OpponentAttacks implements Runnable {
             }
             executingTheCommandsAI();
             GameInstance.getInstance().setRecoveryUnitsOpp(0);
-            GameInstance.getInstance().aiRunning = false;
+            GameInstance.getInstance().enemyAiRunning = false;
             timer.suspend();
         } while (1 != 0);
     }
@@ -71,10 +71,10 @@ public class OpponentAttacks implements Runnable {
         aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot();
         range = aiMoves.length - 1;
 
-        if (GameInstance.getInstance().isGameOver == false) {
+        if (GameInstance.getInstance().gameOver == false) {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story scene bug
-                if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().isGameOver == false) {
+                if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().gameOver == false) {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
                     MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], CharacterState.OPPONENT, CharacterState.CHARACTER);
                     RenderGameplay.getInstance().shakeCharLB();

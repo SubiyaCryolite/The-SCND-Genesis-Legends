@@ -52,7 +52,7 @@ public class JenesisImageLoader {
             URL url = classLoader.getResource(imageName);
             return new ImageIcon(url).getImage();
         } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }
@@ -74,7 +74,7 @@ public class JenesisImageLoader {
             int height = (int) (LoginScreen.getInstance().getGameYScale() * h);
             return Toolkit.getDefaultToolkit().createImage(url).getScaledInstance(width, height, imageQual);
         } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }
@@ -92,7 +92,7 @@ public class JenesisImageLoader {
             System.out.println("Processing imageLoader........" + imageName);
             return ImageIO.read(resource);
         } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }
@@ -110,7 +110,7 @@ public class JenesisImageLoader {
             System.out.println("Processing imageLoader........" + imageName);
             return Toolkit.getDefaultToolkit().createImage(url);
         } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }
@@ -144,7 +144,7 @@ public class JenesisImageLoader {
             bufferedImage.flush();
             return volatileImage;
         } catch (Exception e) {
-            System.err.println(e); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
         throw new IllegalArgumentException("Unable to load image: " + imageName);
     }

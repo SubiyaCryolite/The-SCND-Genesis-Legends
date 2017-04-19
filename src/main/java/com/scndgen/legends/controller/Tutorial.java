@@ -845,7 +845,7 @@ public class Tutorial implements Runnable {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 }

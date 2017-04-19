@@ -38,7 +38,7 @@ public class Adam extends Character {
         name = "Adam";
         characterEnum = CharacterEnum.ADAM;
         //string arrays
-        bragRights = new String[]{"Worthless little boy", "You're so weak, it's not even funny", "Standards truly have fallen", "Ladies first...to the grave that is", "I'm not in the mood for your nonsense", "My best desciple, don't dissapoint me", "Show me your skill Jonah", "Lets do this", "Oh look, its me", "Azaria, I'll show you no mercy", "You might have what it takes to surpass me", "So that what it looks like"};
+        bragRights = new String[]{"Worthless little boy", "You're so weak, it's not even funny", "Standards truly have fallen", "Ladies first...to the grave that is", "I'm not in the mood for your nonsense", "My best desciple, don't dissapoint achievements", "Show achievements your skill Jonah", "Lets do this", "Oh look, its achievements", "Azaria, I'll show you no mercy", "You might have what it takes to surpass achievements", "So that what it looks like"};
         physical = new String[]{"Silver Flame", "Silver Rush", "Silver Slice", "Silver Ascent"};
         celestia = new String[]{"Celestia Blitz", "Celestia Torrent", "Celestia Blaze", "Celestia Frost"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};

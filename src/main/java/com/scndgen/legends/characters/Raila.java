@@ -41,7 +41,7 @@ public class Raila extends Character {
         life = 25600;
         limit = new int[]{0, 0, 0, 0, 0};
         //string arrays
-        bragRights = new String[]{"Let's do this", "I won't go easy on you bro", "Let's do this cuz", "This'll be fun", "You scum, prepare to be owned", "You're powers are intersting. Lets see how you do against my speed", "You're definately the better looking twin, though, you won't look so good afterwards", "NovaAdam, the stiuff of legend, show me your power", "An awakened being? Lets do this!!!!", "One of te original Saints, show me your power!!", "Genius  vs Genius , this'll be fun", "What in the world?"};
+        bragRights = new String[]{"Let's do this", "I won't go easy on you bro", "Let's do this cuz", "This'll be fun", "You scum, prepare to be owned", "You're powers are intersting. Lets see how you do against my speed", "You're definately the better looking twin, though, you won't look so good afterwards", "NovaAdam, the stiuff of legend, show achievements your power", "An awakened being? Lets do this!!!!", "One of te original Saints, show achievements your power!!", "Genius  vs Genius , this'll be fun", "What in the world?"};
         physical = new String[]{"Strike", "Chant", "Blue Embrace", "Blue Blitz"};
         celestia = new String[]{"Nova Storm", "Eternal Flame", "Frozen Breeze", "Dark Cloud"};
         status = new String[]{"Heal Plus", "Heal EX", "Energy Juice", "Weaken Opponent"};

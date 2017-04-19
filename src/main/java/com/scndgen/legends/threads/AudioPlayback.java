@@ -63,7 +63,7 @@ public class AudioPlayback implements Runnable {
         try {
             filenameM = filename;
         } catch (Exception e) {
-            //e.printStackTrace();
+            //e.printStackTrace(System.err);
         }
     }
 
@@ -197,7 +197,7 @@ public class AudioPlayback implements Runnable {
         try {
             player.play();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 
@@ -205,7 +205,7 @@ public class AudioPlayback implements Runnable {
         try {
             thread.suspend();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 
@@ -213,7 +213,7 @@ public class AudioPlayback implements Runnable {
         try {
             thread.stop();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 
@@ -221,7 +221,7 @@ public class AudioPlayback implements Runnable {
         try {
             thread.resume();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
     }
 }

@@ -47,7 +47,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
     private AudioPlayback menuSound;
     private Font headerFont, normalFont;
     private Image charBack, loading;
-    private Image[] storyCap, storyCapUn, storyCapBlur;
+    private Image[] storyCap, unlockedCaptions, storyCapBlur;
     private Image storyPrev;
 
     private RenderStoryMenu() {
@@ -57,7 +57,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         rows = (scenes / 3);
         storyCapBlur = new Image[scenes];
         storyCap = new Image[scenes];
-        storyCapUn = new Image[scenes];
+        unlockedCaptions = new Image[scenes];
         hiddenStage = new boolean[scenes];
         mode = LoginScreen.getInstance().stage;
         for (int u = 0; u < hiddenStage.length; u++) {
@@ -145,7 +145,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
                 if (opacity < 0.98f)
                     opacity = opacity + 0.02f;
                 g2d.setComposite(makeComposite(opacity));
-                g2d.drawImage(storyCapUn[storySelIndex], (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
+                g2d.drawImage(unlockedCaptions[storySelIndex], (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
                 g2d.setComposite(makeComposite(1.0f));
                 g2d.drawImage(charBack, (hPos - hSpacer) + (hSpacer * hIndex), firstLine + (vSpacer * vIndex), this);
             }
@@ -158,47 +158,41 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         if (!loadAssets) return;
         victorySound = new AudioPlayback(AudioPlayback.soundGameOver(), true);
         menuSound = new AudioPlayback("audio/menu-select.mp3", true);
-        JenesisImageLoader pix = new JenesisImageLoader();
+        JenesisImageLoader imageLoader = new JenesisImageLoader();
         RenderStageSelect.getInstance().setSelectedStage(false);
         try {
             for (int i = 0; i < scenes; i++) {
-                storyCap[i] = pix.loadImage("images/Story/locked/x" + (i + 1) + ".png");
-            }
-
-            for (int i = 0; i < scenes; i++) {
-                storyCapUn[i] = pix.loadImage("images/Story/x" + (i + 1) + ".png");
-            }
-
-            for (int i = 0; i < scenes; i++) {
-                storyCapBlur[i] = pix.loadImage("images/Story/blur/t_" + i + ".png");
+                storyCap[i] = imageLoader.loadImage("images/Story/locked/x" + (i + 1) + ".png");
+                unlockedCaptions[i] = imageLoader.loadImage("images/Story/x" + (i + 1) + ".png");
+                storyCapBlur[i] = imageLoader.loadImage("images/Story/blur/t_" + i + ".png");
             }
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
 
         //charBack = imageLoader.loadImage("images/selstory.png");
-        loading = pix.loadImage("images/loading.gif");
-        charBack = pix.loadImage("images/Story/frame.png");
+        loading = imageLoader.loadImage("images/loading.gif");
+        charBack = imageLoader.loadImage("images/Story/frame.png");
         int x = (int) (Math.random() * 4);
         switch (x) {
             case 0: {
-                storyPrev = pix.loadBufferedImage("images/Story/blur/s4.png");
+                storyPrev = imageLoader.loadBufferedImage("images/Story/blur/s4.png");
             }
             break;
 
             case 1: {
-                storyPrev = pix.loadBufferedImage("images/Story/blur/s5.png");
+                storyPrev = imageLoader.loadBufferedImage("images/Story/blur/s5.png");
             }
             break;
 
             case 2: {
-                storyPrev = pix.loadBufferedImage("images/Story/blur/s6.png");
+                storyPrev = imageLoader.loadBufferedImage("images/Story/blur/s6.png");
 
             }
             break;
 
             default: {
-                storyPrev = pix.loadBufferedImage("images/Story/blur/s6.png");
+                storyPrev = imageLoader.loadBufferedImage("images/Story/blur/s6.png");
 
             }
             break;
@@ -214,7 +208,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         for (Image image : storyCap) {
             image.flush();
         }
-        for (Image image : storyCapUn) {
+        for (Image image : unlockedCaptions) {
             image.flush();
         }
         for (Image image : storyCapBlur) {
@@ -238,7 +232,7 @@ public class RenderStoryMenu extends StoryMenu implements JenesisRender {
         resetCurrentStage();
 
         //check if more stages
-        if (currMode < StoryMode.getInstance().max) {
+        if (currentScene < StoryMode.getInstance().max) {
             answer = true;
         } //if won last 'final' match
         else if (RenderGameplay.getInstance().hasWon()) {

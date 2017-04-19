@@ -992,7 +992,7 @@ public abstract class Gameplay extends JenesisMode {
                         }
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
-                            if (GameInstance.getInstance().isGameOver == false) {
+                            if (GameInstance.getInstance().gameOver == false) {
                                 furySound();
                                 hurtSoundOpp();
                                 MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
@@ -1024,7 +1024,7 @@ public abstract class Gameplay extends JenesisMode {
                         } catch (Exception e) {
                         }
                         for (int i = 1; i < 9; i++) {
-                            if (GameInstance.getInstance().isGameOver == false) {
+                            if (GameInstance.getInstance().gameOver == false) {
                                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                                 furySound();
                                 hurtSoundChar();
@@ -1262,7 +1262,7 @@ public abstract class Gameplay extends JenesisMode {
 
     public void mouseMoved(int mouseX, int mouseY) {
         //when fighting
-        if (GameInstance.getInstance().isGameOver == false && GameInstance.getInstance().storySequence == false && isDnladng()) {
+        if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false && isDnladng()) {
             //browse moves
             if (mouseX > (29 + (leftHandXAxisOffset * getscaleX())) && mouseX < (436 + (leftHandXAxisOffset * getscaleX()))) {
                 if (mouseY > (int) (373 * getscaleY()) && mouseY < (int) (390 * getscaleY())) {

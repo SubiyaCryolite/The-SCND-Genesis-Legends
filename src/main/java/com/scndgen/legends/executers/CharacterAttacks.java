@@ -42,7 +42,7 @@ public class CharacterAttacks implements Runnable {
         //each attack will check if they are in the battle que.... if they are they execute
         GameInstance.getInstance().pauseActivityRegen();
         GameInstance.getInstance().setRecoveryUnitsChar(0);
-        if (GameInstance.getInstance().isGameOver == false) {
+        if (GameInstance.getInstance().gameOver == false) {
             for (int o = 0; o < 4; o++) {
                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 MainWindow.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), CharacterState.CHARACTER, CharacterState.OPPONENT);

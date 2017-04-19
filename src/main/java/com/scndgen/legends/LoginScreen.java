@@ -47,7 +47,7 @@ import java.util.logging.Logger;
  * http://www.scndgenesis.50webs.com
  * The battle system is inspired by Final Fantasy XIII and conventional 2D Fighters
  * The game has a handdrawn comic book graphical style similar to the comic and has other anime style effects
- * Feel free to tell me what you think ABOUT the game and comic ifungandana(at)gmail.com
+ * Feel free to tell achievements what you think ABOUT the game and comic ifungandana(at)gmail.com
  * Year - Month - date
  * for every enhancement add 0.0.0.1
  * for every milestone and 0.0.0.3
@@ -178,7 +178,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private LoginScreen() throws FileNotFoundException {
         changeTheLookAndFeel(2);
 
-        createDB();
+        createDatabaseIfNotExists();
         createDBStructure();
 
         activLang = 0;
@@ -376,7 +376,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         return thisPic.timeCal(x);
     }
 
-    private void createDB() {
+    private void createDatabaseIfNotExists() {
         db = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen");
         if (!new File(db.getAbsolutePath() + File.separator + "scndsave.db").exists()) {
             try {
@@ -384,7 +384,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 new File(db.getAbsolutePath() + File.separator + "scndsave.db").createNewFile();
                 System.err.println("Creating database");
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(System.err);
             }
         }
     }
@@ -397,7 +397,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             stat = conn.createStatement();
             stat.executeUpdate("drop table if exists scndsave;");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -422,7 +422,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                     + "controller VARCHAR(24),lang VARCHAR(24),isLefty VARCHAR(3),PRIMARY KEY (usrCode))");
             stat.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
 
         try {
@@ -458,8 +458,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 //                searchIndex++;
 //            }
         } catch (Exception e) {
-            System.out.println(ansc);
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -596,7 +595,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             stat.close();
             thisPic.repaint();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -616,7 +615,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             rs.close();
             stat.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
         if (numberOfAccounts == 0) {
             noUsers = true;
@@ -816,7 +815,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                     }
                 } catch (Exception e) {
                     System.out.println("Couldn't access the file" + e);
-                    e.printStackTrace();
+                    e.printStackTrace(System.err);
                 }
             }
         }.start();
@@ -965,7 +964,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
              * Phew !!!!
              */
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
 
     }
@@ -1173,7 +1172,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
 
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
         }
 
         return managedToDownload;
@@ -1300,7 +1299,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
                     } catch (Exception e) {
                         System.err.println("What " + e);
-                        e.printStackTrace();
+                        e.printStackTrace(System.err);
                     }
                 } else {
                     System.out.println("Download Percent: " + musicPerc + "%");

@@ -159,7 +159,7 @@ public class DrawOverworld extends JenesisMode {
                 return Toolkit.getDefaultToolkit().getImage(url);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // keep for dev to see missing files
+            e.printStackTrace(System.err); // keep for dev to see missing files
         }
 
         throw new IllegalArgumentException("Unable to load image: " + imageName);

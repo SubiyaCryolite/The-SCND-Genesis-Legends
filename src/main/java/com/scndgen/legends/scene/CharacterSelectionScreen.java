@@ -253,11 +253,11 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void backToMenu() {
         newInstance();
         //cancel hosting
-        if (MainWindow.getInstance().getGameMode().equals(MainWindow.lanHost)) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
             MainWindow.getInstance().closeTheServer();
-        } else if (MainWindow.getInstance().getGameMode().equals(MainWindow.lanClient)) {
+        } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             MainWindow.getInstance().closeTheClient();
-        } else if (MainWindow.getInstance().getGameMode().equals(MainWindow.storyMode)) {
+        } else if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
             RenderStoryMenu.getInstance().getStoryInstance().skipDialogue();
         }
         MainWindow.getInstance().backToMenuScreen();
@@ -788,7 +788,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        e.printStackTrace(System.err);
                     }
                 }
                 while (MainWindow.getInstance().mode == Mode.CHAR_SELECT_SCREEN);

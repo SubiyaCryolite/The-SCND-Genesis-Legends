@@ -85,7 +85,7 @@ public class NetworkClient implements Runnable {
             dataInputStream = new DataInputStream(socket.getInputStream());
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 

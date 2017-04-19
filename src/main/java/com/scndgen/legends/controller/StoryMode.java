@@ -46,7 +46,7 @@ public class StoryMode implements Runnable {
     private static StoryMode instance;
     public boolean notAsked, firstRun = true, doneShowingText = false;
     public String stat = "";
-    public int max = 11;
+    public final int max = 11;
     public int time;
     private AudioPlayback storyMus;
     private String storyText;
@@ -75,7 +75,6 @@ public class StoryMode implements Runnable {
         thread = new Thread(this);
         thread.setName("Story scene thread");
         thread.setPriority(5);
-        RenderStoryMenu.getInstance().setCurrMode(Stage.RANDOM);
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
         tlkSpeed = WindowOptions.txtSpeed;
         notAsked = true;

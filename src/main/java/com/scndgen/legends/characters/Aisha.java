@@ -39,7 +39,7 @@ public class Aisha extends Character {
         characterEnum = AISHA;
         isNotMale();
         //string arrays
-        bragRights = new String[]{"Show me what you got Rai", "Prove you aren't just a waste of space ;D", "Fun fact! My single blade beats both of yours.", "Let's do this", "I'll keep slicing you till you're a pile of dirt!", "You fight with skill and grace, but thats not enough to stop me", "You won't be able to touch me!!!", "So you're the legend. Lets see what you got", "Wow!! So thats what you really look like", "Girl power! WOOT! WOOT!", "I won't go easy on you little girl", "Unbelievable!!"};
+        bragRights = new String[]{"Show achievements what you got Rai", "Prove you aren't just a waste of space ;D", "Fun fact! My single blade beats both of yours.", "Let's do this", "I'll keep slicing you till you're a pile of dirt!", "You fight with skill and grace, but thats not enough to stop achievements", "You won't be able to touch achievements!!!", "So you're the legend. Lets see what you got", "Wow!! So thats what you really look like", "Girl power! WOOT! WOOT!", "I won't go easy on you little girl", "Unbelievable!!"};
         physical = new String[]{"Phantom Strike", "Phantom Rush", "Dead Rising", "Silver Slash"};
         celestia = new String[]{"Violet Flame", "Violet Rush", "Violet Revolution", "Violet Blitz"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Wound Spray"};

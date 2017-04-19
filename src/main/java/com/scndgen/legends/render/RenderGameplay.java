@@ -142,7 +142,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
             g2d.drawString(battleInformation.toString(), ((852 - g2d.getFontMetrics().stringWidth(battleInformation.toString())) / 2), 450);
             g2d.setComposite(makeComposite(10 * 0.1f));
 
-        } else if (GameInstance.getInstance().isGameOver == false && GameInstance.getInstance().storySequence == false) {
+        } else if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
             g2d.drawImage(stageBackground, 0, 0, this);
             g2d.setFont(notSelected);
             if (RenderGameplay.getInstance().getCharLife() >= 0) {
@@ -379,7 +379,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         //-----------ENDS ATTACKS QUEING UP--------------
 
         //when paused
-        if (GameInstance.getInstance().isPaused == true) {
+        if (GameInstance.getInstance().gamePaused == true) {
             g2d.setColor(Color.BLACK);
             g2d.setComposite(makeComposite(5 * 0.1f));//initial val between 1 and 10
             g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
@@ -391,7 +391,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         }
 
         //when gameover
-        if (GameInstance.getInstance().isGameOver == true) {
+        if (GameInstance.getInstance().gameOver == true) {
             g2d.setColor(Color.WHITE);
             g2d.fillRect(0, 0, getGameWidth(), getGameHeight());
             g2d.setColor(Color.BLACK);
@@ -446,7 +446,7 @@ public class RenderGameplay extends Gameplay implements JenesisRender {
         } else {
             fury = fury2;
         }
-        if (GameInstance.getInstance().isGameOver == true) {
+        if (GameInstance.getInstance().gameOver == true) {
             //slow mo!!!!
         }
     }

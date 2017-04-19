@@ -34,9 +34,7 @@ import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * @author Ndana
@@ -390,11 +388,8 @@ public class MainMenu extends JFrame implements ActionListener, KeyListener, Mou
                         }
                     }
                     desktop.browse(uri);
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                } catch (URISyntaxException use) {
-                    use.printStackTrace();
-
+                } catch (Exception e) {
+                    e.printStackTrace(System.err);
                 }
             }
         }
