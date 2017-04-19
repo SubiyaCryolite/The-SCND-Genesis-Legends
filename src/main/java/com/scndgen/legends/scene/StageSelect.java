@@ -196,8 +196,8 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     public void defaultStageValues() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 10;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 10;
@@ -222,8 +222,8 @@ public abstract class StageSelect extends JenesisMode {
      * Chelston City docks
      */
     private void selectChelsonCityDocks() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -240,8 +240,8 @@ public abstract class StageSelect extends JenesisMode {
      * The Ruined Hall
      */
     private void selectDesertRuins() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 5;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 4;
@@ -258,8 +258,8 @@ public abstract class StageSelect extends JenesisMode {
      * Chelston City - Streets
      */
     private void selectChelstonCityStreets() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -276,8 +276,8 @@ public abstract class StageSelect extends JenesisMode {
      * Ibex Hill - Night
      */
     private void selectIbexHillNight() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 10;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 10;
@@ -294,8 +294,8 @@ public abstract class StageSelect extends JenesisMode {
      * Scorched Ruins
      */
     private void selectScorchedRuins() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 5;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 4;
@@ -312,8 +312,8 @@ public abstract class StageSelect extends JenesisMode {
      * Frozen Wilderness
      */
     private void selectDistantSnowField() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 10;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 10;
         RenderGameplay.getInstance().fgxInc = 5;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 4;
@@ -330,8 +330,8 @@ public abstract class StageSelect extends JenesisMode {
      * Distant Isle
      */
     private void selectDistantIsle() {
-        RenderGameplay.getInstance().fgx = -40;
-        RenderGameplay.getInstance().fgy = 20;
+        RenderGameplay.getInstance().foreGroundPositionX = -40;
+        RenderGameplay.getInstance().foreGroundPositionY = 20;
         RenderGameplay.getInstance().fgxInc = 2;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -345,8 +345,8 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     private void selectRandomStage() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -363,8 +363,8 @@ public abstract class StageSelect extends JenesisMode {
      * Distant Isle night
      */
     private void selectDistantIsleNight() {
-        RenderGameplay.getInstance().fgx = -40;
-        RenderGameplay.getInstance().fgy = 20;
+        RenderGameplay.getInstance().foreGroundPositionX = -40;
+        RenderGameplay.getInstance().foreGroundPositionY = 20;
         RenderGameplay.getInstance().fgxInc = 2;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -381,8 +381,8 @@ public abstract class StageSelect extends JenesisMode {
      * Hidden Cave
      */
     private void selectHiddenCave() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -396,8 +396,8 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     private void selectHiddenCaveNight() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -414,8 +414,8 @@ public abstract class StageSelect extends JenesisMode {
      * African Village
      */
     private void selectAfricanVillage() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;
@@ -432,8 +432,8 @@ public abstract class StageSelect extends JenesisMode {
      * The Apocalypse
      */
     private void selectApocalypto() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 5;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 4;
@@ -447,8 +447,8 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     private void selectDesertRuinsNight() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 5;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 4;
@@ -462,8 +462,8 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     private void selectScorchedRuinsNight() {
-        RenderGameplay.getInstance().fgx = 0;
-        RenderGameplay.getInstance().fgy = 0;
+        RenderGameplay.getInstance().foreGroundPositionX = 0;
+        RenderGameplay.getInstance().foreGroundPositionY = 0;
         RenderGameplay.getInstance().fgxInc = 1;
         RenderGameplay.getInstance().fgyInc = 1;
         RenderGameplay.getInstance().animLoops = 20;

@@ -25,6 +25,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.MainWindow;
 
 import java.util.logging.Level;
@@ -59,12 +60,9 @@ public class OpponentAttacks implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(OpponentAttacks.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             executingTheCommandsAI();
-
-            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
-            RenderGameplay.getInstance().getGameInstance().aiRunning = false;
-
+            GameInstance.getInstance().setRecoveryUnitsOpp(0);
+            GameInstance.getInstance().aiRunning = false;
             timer.suspend();
         } while (1 != 0);
     }
@@ -73,10 +71,10 @@ public class OpponentAttacks implements Runnable {
         aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot();
         range = aiMoves.length - 1;
 
-        if (RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
+        if (GameInstance.getInstance().isGameOver == false) {
             for (int o = 0; o < ((LoginScreen.difficultyBase - LoginScreen.getInstance().difficultyDyn) / LoginScreen.difficultyScale); o++) {
                 //fix story scene bug
-                if (RenderGameplay.getInstance().getGameInstance().storySequence == false && RenderGameplay.getInstance().getGameInstance().isGameOver == false) {
+                if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().isGameOver == false) {
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
                     MainWindow.getInstance().getAttackOpponent().attack(aiMoves[Integer.parseInt("" + Math.round(Math.random() * range))], CharacterState.OPPONENT, CharacterState.CHARACTER);
                     RenderGameplay.getInstance().shakeCharLB();

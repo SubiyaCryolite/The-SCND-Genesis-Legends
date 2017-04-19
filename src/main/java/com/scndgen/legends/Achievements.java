@@ -25,6 +25,7 @@ import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.MainWindow;
 
 import java.util.ArrayList;
@@ -189,7 +190,7 @@ public class Achievements {
             isLocked[2] = false;
         }
 
-        if (RenderGameplay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && RenderGameplay.getInstance().getGameInstance().isGameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
+        if (RenderGameplay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && GameInstance.getInstance().isGameOver && RenderGameplay.getInstance().hasWon() && isLocked[5]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[5]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[5]);
@@ -201,7 +202,7 @@ public class Achievements {
             isLocked[5] = false;
         }
 
-        if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver) {
+        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().isGameOver) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[6]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[6]);
@@ -212,7 +213,7 @@ public class Achievements {
             currentPoints = currentPoints + pointsArr[0] + bonus;
         }
 
-        if (RenderGameplay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[6]) {
+        if (RenderGameplay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().isGameOver && isLocked[6]) {
             RenderGameplay.getInstance().setNotifiationPic(3); //categories + 1
             name.add(achievementName[7]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[7]);
@@ -224,7 +225,7 @@ public class Achievements {
             isLocked[6] = false;
         }
 
-        if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && (RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2() <= 30) && isLocked[7]) {
+        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().isGameOver && (RenderGameplay.getInstance().getPercent() - RenderGameplay.getInstance().getPercent2() <= 30) && isLocked[7]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[8]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[8]);
@@ -236,7 +237,7 @@ public class Achievements {
             isLocked[7] = false;
         }
 
-        if (RenderGameplay.getInstance().hasWon() && RenderGameplay.getInstance().getGameInstance().isGameOver && loginScreen.consecWins >= 5 && isLocked[8]) {
+        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().isGameOver && loginScreen.consecWins >= 5 && isLocked[8]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[9]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[9]);
@@ -249,7 +250,7 @@ public class Achievements {
             isLocked[8] = false;
         }
 
-        if (RenderGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && RenderGameplay.getInstance().getGameInstance().isGameOver && isLocked[9]) {
+        if (RenderGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && GameInstance.getInstance().isGameOver && isLocked[9]) {
             RenderGameplay.getInstance().setNotifiationPic(2); //categories + 1
             name.add(achievementName[10]);
             MainWindow.getInstance().systemNotice(Language.getInstance().getLine(83) + ": " + achievementName[10]);

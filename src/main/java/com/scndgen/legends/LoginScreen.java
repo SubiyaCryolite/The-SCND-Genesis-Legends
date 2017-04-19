@@ -25,7 +25,6 @@ import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.MainMenu;
-import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -114,7 +113,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     public int isLeftyInt, win, loss;
     public boolean connected = true, isDownloadingMusic = false;
     public boolean controller = true;
-    public String graffix, currentTrack, fileNameMus, upToDate, autoUpdate, downloadedAudio, fileName = configLoc + "scndupd.xml";
+    public String currentTrack, fileNameMus, upToDate, autoUpdate, downloadedAudio, fileName = configLoc + "scndupd.xml";
     public String isLefty, usrCode, controllerStr, strUser, strPoint, strPlayTime, matchCountStr;
     public int[] ach;
     public int[] classArr;
@@ -411,8 +410,8 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "scndsave.db");
             stat = conn.createStatement();
             stat.executeUpdate("CREATE TABLE IF NOT EXISTS scndsave(name VARCHAR(24),usrCode VARCHAR(42),points VARCHAR(24),"
-                    + "time VARCHAR(24),matches VARCHAR(24),ach1 VARCHAR(24),ach2 VARCHAR(24),ach3 VARCHAR(24),"
-                    + "ach4 VARCHAR(24),ach5 VARCHAR(24),ach6 VARCHAR(24),ach7 VARCHAR(24),ach8 VARCHAR(24),ach9 VARCHAR(24),"
+                    + "time VARCHAR(24),matches VARCHAR(24),achievementName VARCHAR(24),achievementDescription VARCHAR(24),achievementClass VARCHAR(24),"
+                    + "achievementPoints VARCHAR(24),ach5 VARCHAR(24),ach6 VARCHAR(24),ach7 VARCHAR(24),ach8 VARCHAR(24),ach9 VARCHAR(24),"
                     + "ach10 VARCHAR(24),ach11 VARCHAR(24),win VARCHAR(24),loss VARCHAR(24),"
                     + "frames INT,sound VARCHAR(3),difficulty VARCHAR(24),modeN VARCHAR(24),"
                     + "prefTime INT,graffix VARCHAR(5),upToDate VARCHAR(3),autoUpdate VARCHAR(3),"
@@ -427,37 +426,37 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         }
 
         try {
-            foundAch = new boolean[12];
-            stat = conn.createStatement();
-            rs = stat.executeQuery("PRAGMA table_info('scndsave')");
-            while (rs.next()) {
-                searchIndex = 0;
-                ansc = rs.getString(2);
-                if (ansc.contains("ACH")) {
-                    for (int ix = 12; ix <= 22; ix++) {
-                        //System.err.println("Checking ACH" + ix + " in " + ansc);
-                        if (ansc.equalsIgnoreCase("ACH" + ix)) {
-                            System.out.println(ansc + " equals ACH" + ix + " thus exisits");
-                            if (foundAch[ix - 12] != true) {
-                                System.out.println("Found ACH" + ix);
-                                foundAch[ix - 12] = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            searchIndex = 0;
-            for (int ix = 12; ix < 23; ix++) {
-                //if not found alter the table
-                if (foundAch[searchIndex] != true) {
-                    ansc = "ALTER TABLE scndsave ADD ACH" + ix + " VARCHAR(24) default 'g7h%'";
-                    stat = conn.createStatement();
-                    stat.executeUpdate(ansc);
-                    stat.close();
-                }
-                searchIndex++;
-            }
+//            foundAch = new boolean[12];
+//            stat = conn.createStatement();
+//            rs = stat.executeQuery("PRAGMA table_info('scndsave')");
+//            while (rs.next()) {
+//                searchIndex = 0;
+//                ansc = rs.getString(2);
+//                if (ansc.contains("ACH")) {
+//                    for (int ix = 12; ix <= 22; ix++) {
+//                        //System.err.println("Checking ACH" + ix + " in " + ansc);
+//                        if (ansc.equalsIgnoreCase("ACH" + ix)) {
+//                            System.out.println(ansc + " equals ACH" + ix + " thus exisits");
+//                            if (foundAch[ix - 12] != true) {
+//                                System.out.println("Found ACH" + ix);
+//                                foundAch[ix - 12] = true;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            searchIndex = 0;
+//            for (int ix = 12; ix < 23; ix++) {
+//                //if not found alter the table
+//                if (foundAch[searchIndex] != true) {
+//                    ansc = "ALTER TABLE scndsave ADD ACH" + ix + " VARCHAR(24) default 'g7h%'";
+//                    stat = conn.createStatement();
+//                    stat.executeUpdate(ansc);
+//                    stat.close();
+//                }
+//                searchIndex++;
+//            }
         } catch (Exception e) {
             System.out.println(ansc);
             e.printStackTrace();
@@ -523,12 +522,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 WindowOptions.time = timePref;
                 jenesisLog(timePref);
 
-                graffix = rs.getString("graffix");
-                WindowOptions.graphics = graffix;
-                jenesisLog(graffix);
-
                 frames = rs.getInt("frames");
-                MainWindow.frameRate = frames;
                 jenesisLog(frames);
 
                 upToDate = rs.getString("upToDate");
@@ -929,7 +923,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
             newCode();
             stat = conn.createStatement();
-            stat.executeUpdate("INSERT INTO scndsave (name, usrCode, points, time, matches, ach1, ach2, ach3, ach4, ach5, ach6, ach7, ach8, ach9, ach10, ach11, win, loss, frames, sound, difficulty, modeN, prefTime, graffix, upToDate, autoUpdate, musicFiles, char0, char1, char2, char3, char4, char5, char6, char7, char8, char9, char10, comicT, rez, rating, countryStr, controller, lang, isLefty) VALUES ('" + m + "', '" + usrCode + "', '" + scndCipher("" + 100) + "', '" + 0 + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', 60, 'on', '" + scndCipher("" + 3500) + "', '" + scndCipher("" + 0) + "', " + 181 + ", 'High', 'no', 'yes', 'yes', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 2) + "', '" + scndCipher("" + 1) + "', '" + scndCipher("" + 60) + "', 'countryStr', 'false', '" + scndCipher("" + 0) + "', 'no');");
+            stat.executeUpdate("INSERT INTO scndsave (name, usrCode, points, time, matches, achievementName, achievementDescription, achievementClass, achievementPoints, ach5, ach6, ach7, ach8, ach9, ach10, ach11, win, loss, frames, sound, difficulty, modeN, prefTime, graffix, upToDate, autoUpdate, musicFiles, char0, char1, char2, char3, char4, char5, char6, char7, char8, char9, char10, comicT, rez, rating, countryStr, controller, lang, isLefty) VALUES ('" + m + "', '" + usrCode + "', '" + scndCipher("" + 100) + "', '" + 0 + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', 60, 'on', '" + scndCipher("" + 3500) + "', '" + scndCipher("" + 0) + "', " + 181 + ", 'High', 'no', 'yes', 'yes', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 2) + "', '" + scndCipher("" + 1) + "', '" + scndCipher("" + 60) + "', 'countryStr', 'false', '" + scndCipher("" + 0) + "', 'no');");
             JOptionPane.showMessageDialog(null, "New account created \nYou can now login");
 
         } catch (Exception e) {
@@ -949,15 +943,15 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             stat.executeUpdate("UPDATE scndsave SET name='" + strUser + "',"
                     + " points='" + scndCipher(strPoint) + "',"
                     + " time='" + strPlayTime + "', matches='" + scndCipher(matchCountStr) + "',"
-                    + " ach1='" + scndCipher("" + ach[0]) + "', ach2='" + scndCipher("" + ach[1]) + "',"
-                    + " ach3='" + scndCipher("" + ach[2]) + "', ach4='" + scndCipher("" + ach[3]) + "',"
+                    + " achievementName='" + scndCipher("" + ach[0]) + "', achievementDescription='" + scndCipher("" + ach[1]) + "',"
+                    + " achievementClass='" + scndCipher("" + ach[2]) + "', achievementPoints='" + scndCipher("" + ach[3]) + "',"
                     + " ach5='" + scndCipher("" + ach[4]) + "', ach6='" + scndCipher("" + ach[5]) + "', "
                     + " ach7='" + scndCipher("" + ach[6]) + "', ach8='" + scndCipher("" + ach[7]) + "',"
                     + " ach9='" + scndCipher("" + ach[8]) + "', ach10='" + scndCipher("" + ach[9]) + "',"
                     + " ach11='" + scndCipher("" + ach[10]) + "', win='" + scndCipher("" + win) + "',"
                     + " loss='" + scndCipher("" + loss) + "', frames=" + frames + ","
                     + " sound='" + soundStatus + "', difficulty='" + scndCipher("" + difficultyStat) + "',"
-                    + " modeN='" + scndCipher("" + stage) + "', prefTime=" + timePref + ", graffix='" + graffix + "',"
+                    + " modeN='" + scndCipher("" + stage) + "', prefTime=" + timePref + ", graffix='',"
                     + " upToDate='" + upToDate + "', autoUpdate='" + autoUpdate + "', musicFiles='" + downloadedAudio + "',"
                     + " char0='" + scndCipher("" + charUsage[0]) + "', char1='" + scndCipher("" + charUsage[1]) + "', char2='" + scndCipher("" + charUsage[2]) + "',"
                     + " char3='" + scndCipher("" + charUsage[3]) + "', char4='" + scndCipher("" + charUsage[4]) + "', char5='" + scndCipher("" + charUsage[5]) + "',"

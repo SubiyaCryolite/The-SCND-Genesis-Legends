@@ -23,7 +23,6 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.drawing.DrawOverworld;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,37 +41,35 @@ public class Animations3 implements Runnable {
 
     @Override
     public void run() {
-        if (WindowOptions.graphics.equalsIgnoreCase("High")) {
-            do {
-                try {
-                    if (RenderGameplay.getInstance().getVerticalMove().equalsIgnoreCase("no")) {
-                        thread.sleep(0016);
-                        RenderGameplay.getInstance().setAmb1x(RenderGameplay.getInstance().getAmb1x() - RenderGameplay.getInstance().getAmbSpeed1());
-                        RenderGameplay.getInstance().setAmb2x(RenderGameplay.getInstance().getAmb2x() - RenderGameplay.getInstance().getAmbSpeed2());
-                        if (RenderGameplay.getInstance().getAmb1x() < -960) {
-                            RenderGameplay.getInstance().setAmb1x(852);
-                        }
-                        if (RenderGameplay.getInstance().getAmb2x() < (-960)) {
-                            RenderGameplay.getInstance().setAmb2x(852);
-                        }
-                    } else {
-                        thread.sleep(0016);
-                        RenderGameplay.getInstance().setAmb1y(RenderGameplay.getInstance().getAmb1y() + RenderGameplay.getInstance().getAmbSpeed1());
-                        RenderGameplay.getInstance().setAmb2y(RenderGameplay.getInstance().getAmb2y() + RenderGameplay.getInstance().getAmbSpeed2());
-
-                        if (RenderGameplay.getInstance().getAmb1y() > 480) {
-                            RenderGameplay.getInstance().setAmb1y(-480);
-                        }
-                        if (RenderGameplay.getInstance().getAmb2y() > 480) {
-                            RenderGameplay.getInstance().setAmb2y(-480);
-                        }
+        do {
+            try {
+                if (RenderGameplay.getInstance().getVerticalMove().equalsIgnoreCase("no")) {
+                    thread.sleep(0016);
+                    RenderGameplay.getInstance().setParticlesLayer1PositionX(RenderGameplay.getInstance().getParticlesLayer1PositionX() - RenderGameplay.getInstance().getAmbSpeed1());
+                    RenderGameplay.getInstance().setParticlesLayer2PositionX(RenderGameplay.getInstance().getParticlesLayer2PositionX() - RenderGameplay.getInstance().getAmbSpeed2());
+                    if (RenderGameplay.getInstance().getParticlesLayer1PositionX() < -960) {
+                        RenderGameplay.getInstance().setParticlesLayer1PositionX(852);
                     }
+                    if (RenderGameplay.getInstance().getParticlesLayer2PositionX() < (-960)) {
+                        RenderGameplay.getInstance().setParticlesLayer2PositionX(852);
+                    }
+                } else {
+                    thread.sleep(0016);
+                    RenderGameplay.getInstance().setParticlesLayer1PositionY(RenderGameplay.getInstance().getParticlesLayer1PositionY() + RenderGameplay.getInstance().getAmbSpeed1());
+                    RenderGameplay.getInstance().setParticlesLayer2PositionY(RenderGameplay.getInstance().getParticlesLayer2PositionY() + RenderGameplay.getInstance().getAmbSpeed2());
 
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(DrawOverworld.class.getName()).log(Level.SEVERE, null, ex);
+                    if (RenderGameplay.getInstance().getParticlesLayer1PositionY() > 480) {
+                        RenderGameplay.getInstance().setParticlesLayer1PositionY(-480);
+                    }
+                    if (RenderGameplay.getInstance().getParticlesLayer2PositionY() > 480) {
+                        RenderGameplay.getInstance().setParticlesLayer2PositionY(-480);
+                    }
                 }
-            } while (1 != 0);
-        }
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DrawOverworld.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } while (1 != 0);
     }
 
     public boolean isRunning() {

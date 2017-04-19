@@ -40,7 +40,7 @@ public class Animations1 implements Runnable {
         thread = new Thread(this);
         thread.setName("Animator thread 1 - CharacterEnum");
         thread.start();
-        factor = 30 - (8 + (WindowOptions.whichOne() * 2));
+        factor = 30 - (8 + (WindowOptions.resolveDifficulty() * 2));
         System.out.println("Fury factor: " + factor);
     }
 

@@ -34,7 +34,6 @@ import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ClashingOpponent;
 import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.MainWindow;
-import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 
@@ -63,9 +62,9 @@ public abstract class Gameplay extends JenesisMode {
     protected int startDrawing = 0, menuBarY;
     protected float angRot = 20;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
-    protected int amb1x = 0, amb1y = 0, amb2x = 0, amb2y = 0;
+    protected int particlesLayer1PositionX = 0, particlesLayer1PositionY = 0, particlesLayer2PositionX = 0, particlesLayer2PositionY = 0;
     protected int numOfComicPics = 9;
-    protected int fgx, fgy, fgxInc, fgyInc, animLoops, delay;
+    protected int foreGroundPositionX, foreGroundPositionY, fgxInc, fgyInc, animLoops, delay;
     protected String animDirection = "vert", verticalMove = "no";
     protected int oppXcord = 10;
     protected int playerDamageXLoc, opponentDamageXLoc, numOfAttacks = 0;
@@ -75,11 +74,11 @@ public abstract class Gameplay extends JenesisMode {
     protected CharacterEnum[] charNames = LoginScreen.charNames;
     protected String attackPicOppSrc = "images/trans.png";
     protected int ambSpeed1, ambSpeed2, paneCord;
-    protected StringBuilder battleInf = new StringBuilder("");
+    protected StringBuilder battleInformation = new StringBuilder("");
     protected int count = 0, fpsInt = 0, fpsIntStat;
     protected String[] physical, celestia, item, special, current;
     protected String[] currentColumn;
-    protected int currentCols = 0;
+    protected int currentColumnIndex = 0;
     protected boolean safeToSelect = true;
     protected String animLayer = "";
     protected boolean clasherRunnign = false, dnladng;
@@ -88,7 +87,6 @@ public abstract class Gameplay extends JenesisMode {
     protected long lifePlain, lifeTotalPlain, lifePlain2, lifeTotalPlain2;
     protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
     protected boolean fancyBWAnimeEffectEnabled;
-    protected GameInstance fpsGen;
     protected boolean isMoveQued, gameOver;
     protected int thisInt; //max damage that can be dealt by Celestia Physics
     protected int damageC, damageO;
@@ -103,7 +101,7 @@ public abstract class Gameplay extends JenesisMode {
     protected int x2 = 560, comX = 380, comY = 100;
     protected int xLocal = 470;
     protected int y2 = 435;
-    protected int statIndexOpp, statIndexChar, statsPosYChar, statsPosYOpp, shakeyOffsetChar = 1, shakeyOffsetOpp = 1, basicX = 0, basicY = 0;
+    protected int statIndexOpp, statIndexChar, statusEffectCharacterYCoord, statusEffectOpponentYCoord, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
     protected boolean shaky1 = true;
     protected ClashingOpponent oppAttack = null;
     protected int animTime = 400, itemX = 0, itemY = 0;
@@ -113,8 +111,8 @@ public abstract class Gameplay extends JenesisMode {
     protected int lby2 = 420;
     protected String characterAttackType = "normal", opponentAttackType = "normal", statusChar = "", statusOpp = "";
     protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
-    protected float statusOpChar, statusOpOpp;
-    protected int itemindex = 0, furyBarY = 0;
+    protected float statusEffectCharacterOpacity, statusEffectOpponentOpacity;
+    protected int itemIndex = 0, furyBarY = 0;
     @SuppressWarnings("StaticNonFinalUsedInInitialization")
     protected int[] fontSizes = {LoginScreen.bigTxtSize, LoginScreen.normalTxtSize, LoginScreen.normalTxtSize, LoginScreen.normalTxtSize};
     protected int attackInt = 0;
@@ -125,15 +123,13 @@ public abstract class Gameplay extends JenesisMode {
     protected CharacterState characterState;
     protected String sysNot = "";
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
-    protected String ach1 = "", ach2 = "", ach3 = "", ach4 = "";
+    protected String achievementName = "", achievementDescription = "", achievementClass = "", achievementPoints = "";
     protected int move = 0;
     protected NetworkServer server;
     protected NetworkClient client;
-    protected boolean specialEffect;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
-    protected boolean imagesNumChached = false, imagesCharChached = false;
     protected int x = 2;
-    protected int oppBarYOffset, leftyXOffset, y = 0;
+    protected int oppBarYOffset, leftHandXAxisOffset, y = 0;
     protected float opacityTxt = 10, opacityPic = 0.0f;
     protected boolean limitRunning = true, animCharFree = true;
     protected float angleRaw, charPointInc;
@@ -142,11 +138,11 @@ public abstract class Gameplay extends JenesisMode {
     protected int comboPicArrayPosOpp = 8;
     protected String manipulateThis;
     protected int one, two, three, four, oneO, twoO, threeO, fourO;
-    protected int comicY, opponentDamageYLoc, playerDamageYLoc, yTEST = 25, yTESTinit = 25;
+    protected int comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord, yTEST = 25, yTESTinit = 25;
     protected float opac = 1.0f;
-    protected float damOpInc;
+    protected float damageLayerOpacity;
     protected boolean nextEnabled = true, backEnabled = true;
-    protected int charOp = 10, comicPicArrayPos = 0;
+    protected int charOp = 10, comicBookTextIndex = 0;
     protected int limitBreak;
 
     protected Gameplay() {
@@ -164,13 +160,13 @@ public abstract class Gameplay extends JenesisMode {
     public void setStatusPic(CharacterState who, String stat, Color c) {
 
         if (who == CharacterState.CHARACTER) {
-            statusOpChar = 1.0f;
-            statsPosYChar = 0;
+            statusEffectCharacterOpacity = 1.0f;
+            statusEffectCharacterYCoord = 0;
             statIndexChar = statIndex;
         }
         if (who == CharacterState.OPPONENT) {
-            statusOpOpp = 1.0f;
-            statsPosYOpp = 0;
+            statusEffectOpponentOpacity = 1.0f;
+            statusEffectOpponentYCoord = 0;
             statIndexOpp = statIndex;
         }
     }
@@ -193,16 +189,15 @@ public abstract class Gameplay extends JenesisMode {
     public void drawAchievements() {
         try {
             int howMany = Achievements.getInstance().getAcievementsTriggered();
-            RenderGameplay.getInstance().getGameInstance().setTimeOut(howMany);
+            GameInstance.getInstance().setTimeOut(howMany);
             do {
                 for (int u = 0; u < howMany; u++) {
-                    String[] thisOne = Achievements.getInstance().getName(u);
-                    ach1 = thisOne[0]; //name
-                    ach2 = thisOne[1]; //desc
-                    ach3 = thisOne[2]; //class
-                    ach4 = thisOne[3]; //points
-
-                    System.out.println("Triggered " + ach1 + "\n" + ach2 + "\n" + ach3 + "\n" + ach4);
+                    String[] achievementInfo = Achievements.getInstance().getName(u);
+                    achievementName = achievementInfo[0]; //name
+                    achievementDescription = achievementInfo[1]; //desc
+                    achievementClass = achievementInfo[2]; //class
+                    achievementPoints = achievementInfo[3]; //points
+                    System.out.println("Triggered " + achievementName + "\n" + achievementDescription + "\n" + achievementClass + "\n" + achievementPoints);
 
                     try {
                         Thread.sleep(2300);
@@ -210,7 +205,7 @@ public abstract class Gameplay extends JenesisMode {
                         Logger.getLogger(Gameplay.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } while (RenderGameplay.getInstance().getGameInstance().instance);
+            } while (GameInstance.getInstance().isRunning);
         } catch (Exception e) {
             //nothin
         }
@@ -220,10 +215,10 @@ public abstract class Gameplay extends JenesisMode {
      * Navigate down in the menu
      */
     public void downItem() {
-        if (itemindex < 3) {
-            itemindex = itemindex + 1;
+        if (itemIndex < 3) {
+            itemIndex = itemIndex + 1;
         } else {
-            itemindex = 0;
+            itemIndex = 0;
         }
 
         //default size
@@ -232,7 +227,7 @@ public abstract class Gameplay extends JenesisMode {
         }
 
         //increase font size
-        fontSizes[itemindex] = LoginScreen.bigTxtSize;
+        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
     }
 
     /**
@@ -254,18 +249,18 @@ public abstract class Gameplay extends JenesisMode {
         celestia = celestiaS;
         item = itemS;
         currentColumn = physical;
-        currentCols = 0;
+        currentColumnIndex = 0;
     }
 
     /**
      * Resolves column names
      */
     protected void resolveText() {
-        if (currentCols == 0) {
+        if (currentColumnIndex == 0) {
             currentColumn = physical;
-        } else if (currentCols == 1) {
+        } else if (currentColumnIndex == 1) {
             currentColumn = celestia;
-        } else if (currentCols == 2) {
+        } else if (currentColumnIndex == 2) {
             currentColumn = item;
         }
     }
@@ -430,12 +425,12 @@ public abstract class Gameplay extends JenesisMode {
         for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < loop2; i++) {
-                shakeyOffsetChar = shakeyOffsetChar + 1;
+                uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter + 1;
                 RenderGameplay.getInstance().slowDown(shakingChar);
             }
 
             for (int i = 0; i < loop2; i++) {
-                shakeyOffsetChar = shakeyOffsetChar - 1;
+                uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter - 1;
                 RenderGameplay.getInstance().slowDown(shakingChar);
             }
         }
@@ -449,12 +444,12 @@ public abstract class Gameplay extends JenesisMode {
         for (int h = 0; h < loop1; h++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < loop2; i++) {
-                shakeyOffsetOpp = shakeyOffsetOpp + 1;
+                uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent + 1;
                 RenderGameplay.getInstance().slowDown(shakingChar);
             }
 
             for (int i = 0; i < loop2; i++) {
-                shakeyOffsetOpp = shakeyOffsetOpp - 1;
+                uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent - 1;
                 RenderGameplay.getInstance().slowDown(shakingChar);
             }
         }
@@ -466,22 +461,22 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void thisItem(int item) {
         {
-            itemindex = item;
+            itemIndex = item;
         }
         for (int u = 0; u < fontSizes.length; u++) {
             fontSizes[u] = LoginScreen.normalTxtSize;
         }
-        fontSizes[itemindex] = LoginScreen.bigTxtSize;
+        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
     }
 
     /**
      * Navigate up in the menu
      */
     public void upItem() {
-        if (itemindex > 0) {
-            itemindex = itemindex - 1;
+        if (itemIndex > 0) {
+            itemIndex = itemIndex - 1;
         } else {
-            itemindex = 3;
+            itemIndex = 3;
         }
 
         //default size
@@ -490,7 +485,7 @@ public abstract class Gameplay extends JenesisMode {
         }
 
         //increase font size
-        fontSizes[itemindex] = LoginScreen.bigTxtSize;
+        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
     }
 
 
@@ -526,7 +521,7 @@ public abstract class Gameplay extends JenesisMode {
         if (numOfAttacks > 0) {
             if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 RenderGameplay.getInstance().disableSelection();
-                RenderGameplay.getInstance().getGameInstance().triggerCharAttack();
+                GameInstance.getInstance().triggerCharAttack();
             } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
                 RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
@@ -538,7 +533,7 @@ public abstract class Gameplay extends JenesisMode {
                 client.sendData(attackStr);
                 //attack on local
                 RenderGameplay.getInstance().disableSelection();
-                RenderGameplay.getInstance().getGameInstance().triggerCharAttack();
+                GameInstance.getInstance().triggerCharAttack();
                 if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
             } else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_HOST) {
@@ -552,8 +547,8 @@ public abstract class Gameplay extends JenesisMode {
                 server.sendData(attackStr);
                 //attack on local
                 RenderGameplay.getInstance().disableSelection();
-                RenderGameplay.getInstance().getGameInstance().triggerCharAttack();
-                RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
+                GameInstance.getInstance().triggerCharAttack();
+                GameInstance.getInstance().setRecoveryUnitsChar(0);
                 if (RenderGameplay.getInstance().done != 1)// if game still running enable menus
                     MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
             }
@@ -566,21 +561,16 @@ public abstract class Gameplay extends JenesisMode {
         dnladng = false;
         opponentDamageXLoc = 150;
         playerDamageXLoc = 575;
-        statusOpOpp = 0.0f;
-        statusOpChar = 0.0f;
+        statusEffectOpponentOpacity = 0.0f;
+        statusEffectCharacterOpacity = 0.0f;
         statIndexChar = 0;
         statIndexOpp = 0;
         oppBarYOffset = 435;
         paneCord = 306;
         menuBarY = 360;
         threadsNotRunningYet = false;
-        if (WindowOptions.graphics.equalsIgnoreCase("High")) {
-            specialEffect = true;
-        } else {
-            specialEffect = false;
-        }
         currentColumn = physical;
-        itemindex = 0;
+        itemIndex = 0;
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
@@ -650,9 +640,6 @@ public abstract class Gameplay extends JenesisMode {
         maXlife = Life;
     }
 
-    public boolean isGameRunning() {
-        return fpsGen != null;
-    }
     //------------- end action listers -------------
     //------------- start methods ------------------
 
@@ -734,10 +721,9 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void matchStatus() {
         if (gameOver == false) {
-            if (oppLife < 0 || life < 0 || (RenderGameplay.getInstance().getGameInstance().time <= 0 && RenderGameplay.getInstance().getGameInstance().time <= 180)) {
+            if (oppLife < 0 || life < 0 || (GameInstance.getInstance().time <= 0 && GameInstance.getInstance().time <= 180)) {
                 if ((float) oppLife / (float) oppMaxLife > (float) life / (float) maXlife || (float) oppLife / (float) oppMaxLife < (float) life / (float) maXlife) {
-                    getGameInstance().gameOver();
-
+                    GameInstance.getInstance().gameOver();
                 }
             }
             //save life at gameover
@@ -791,8 +777,6 @@ public abstract class Gameplay extends JenesisMode {
         oppLife = oppMaxLife;
         limitBreak = 5;
         Characters.getInstance().getCharacter().setDamageMultiplier(Characters.getInstance().getDamageMultiplier(CharacterState.CHARACTER));
-        Characters.getInstance().getCharacter().setCelestiaMultiplier(10);
-        Characters.getInstance().getOpponent().setCelestiaMultiplier(10);
         Characters.getInstance().getOpponent().setDamageMultiplier(Characters.getInstance().getDamageMultiplier(CharacterState.OPPONENT));
     }
 
@@ -802,7 +786,7 @@ public abstract class Gameplay extends JenesisMode {
      * @param amount - time duration
      */
     public void slowDown(int amount) {
-        getGameInstance().sleepy(amount);
+        GameInstance.getInstance().sleepy(amount);
     }
 
     /**
@@ -810,17 +794,13 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void startFight() {
         resetGame();
-        fpsGen = new GameInstance(1, this);
+        GameInstance.getInstance().newInstance();
         startDrawing = 1;
         comboCounter = 0;
         MainWindow.getInstance().setGameRunning();
         perCent = 100;
         perCent2 = 100;
         MainWindow.getInstance().reSize("game");
-    }
-
-    public GameInstance getGameInstance() {
-        return fpsGen;
     }
 
     /**
@@ -914,7 +894,7 @@ public abstract class Gameplay extends JenesisMode {
      * Resume paused game
      */
     public void start() {
-        fpsGen.resumeGame();
+        GameInstance.getInstance().resumeGame();
     }
 
     /**
@@ -930,22 +910,6 @@ public abstract class Gameplay extends JenesisMode {
 
         if (per == CharacterState.OPPONENT && Characters.getInstance().getCharacter().getDamageMultiplier() > 0 && Characters.getInstance().getCharacter().getDamageMultiplier() < 20) {
             Characters.getInstance().getCharacter().setDamageMultiplier(Characters.getInstance().getCharacter().getDamageMultiplier() + thisMuch);
-        }
-    }
-
-    /**
-     * Alter celestia multipliers, used to strengthen/weaken celestia attacks
-     *
-     * @param per      the person calling the method
-     * @param thisMuch the number to alter by
-     */
-    public void alterCelestiaCounter(CharacterState per, int thisMuch) {
-        if (per == CharacterState.CHARACTER && Characters.getInstance().getOpponent().getCelestiaMultiplier() > 0 && Characters.getInstance().getOpponent().getCelestiaMultiplier() < 16) {
-            Characters.getInstance().getOpponent().setCelestiaMultiplier(Characters.getInstance().getOpponent().getCelestiaMultiplier() + thisMuch);
-        }
-
-        if (per == CharacterState.OPPONENT && Characters.getInstance().getCharacter().getCelestiaMultiplier() > 0 && Characters.getInstance().getCharacter().getCelestiaMultiplier() < 16) {
-            Characters.getInstance().getCharacter().setCelestiaMultiplier(Characters.getInstance().getCharacter().getCelestiaMultiplier() + thisMuch);
         }
     }
 
@@ -1008,9 +972,9 @@ public abstract class Gameplay extends JenesisMode {
             @Override
             public void run() {
                 if (getBreak() == 1000) {
-                    //&& getGameInstance().getRecoveryUnitsChar()>289
+                    //&& GameInstance.getInstance().getRecoveryUnitsChar()>289
                     //runs on local
-                    if (characterState == CharacterState.CHARACTER && limitRunning && getGameInstance().getRecoveryUnitsChar() > 289) {
+                    if (characterState == CharacterState.CHARACTER && limitRunning && GameInstance.getInstance().getRecoveryUnitsChar() > 289) {
                         limitRunning = false;
                         if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
                             MainWindow.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
@@ -1019,8 +983,8 @@ public abstract class Gameplay extends JenesisMode {
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
                         comboCounter = 0;
-                        getGameInstance().pauseActivityRegen();
-                        getGameInstance().setRecoveryUnitsChar(0);
+                        GameInstance.getInstance().pauseActivityRegen();
+                        GameInstance.getInstance().setRecoveryUnitsChar(0);
                         try {
                             JenesisGamePad.getInstance().setRumbler(true, 0.8f);
                         } catch (Exception ex) {
@@ -1028,7 +992,7 @@ public abstract class Gameplay extends JenesisMode {
                         }
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
-                            if (getGameInstance().isGameOver == false) {
+                            if (GameInstance.getInstance().isGameOver == false) {
                                 furySound();
                                 hurtSoundOpp();
                                 MainWindow.getInstance().getAttacksChar().CharacterOverlayDisabled();
@@ -1046,13 +1010,13 @@ public abstract class Gameplay extends JenesisMode {
                         } catch (Exception e) {
                         }
                         comboPicArrayPosOpp = 8;
-                        getGameInstance().resumeActivityRegen();
+                        GameInstance.getInstance().resumeActivityRegen();
                         setSprites(CharacterState.CHARACTER, 9, 11);
                         setSprites(CharacterState.OPPONENT, 9, 11);
                         limitRunning = true;
                         resetBreak();
                         setAttackType("normal", CharacterState.CHARACTER);
-                    } else if (characterState == CharacterState.OPPONENT && limitRunning && getGameInstance().getRecoveryUnitsOpp() > 289) {
+                    } else if (characterState == CharacterState.OPPONENT && limitRunning && GameInstance.getInstance().getRecoveryUnitsOpp() > 289) {
                         setAttackType("fury", CharacterState.OPPONENT);
                         limitRunning = false;
                         try {
@@ -1060,11 +1024,11 @@ public abstract class Gameplay extends JenesisMode {
                         } catch (Exception e) {
                         }
                         for (int i = 1; i < 9; i++) {
-                            if (getGameInstance().isGameOver == false) {
+                            if (GameInstance.getInstance().isGameOver == false) {
                                 MainWindow.getInstance().getAttacksChar().CharacterOverlayEnabled();
                                 furySound();
                                 hurtSoundChar();
-                                getGameInstance().setRecoveryUnitsOpp(0);
+                                GameInstance.getInstance().setRecoveryUnitsOpp(0);
                                 setSprites(CharacterState.OPPONENT, i, 11);
                                 setSprites(CharacterState.CHARACTER, 0, 11);
                                 shakeCharLB();
@@ -1192,20 +1156,20 @@ public abstract class Gameplay extends JenesisMode {
         return delay;
     }
 
-    public int getFgx() {
-        return fgx;
+    public int getForeGroundPositionX() {
+        return foreGroundPositionX;
     }
 
-    public void setFgx(int fgx) {
-        this.fgx = fgx;
+    public void setForeGroundPositionX(int foreGroundPositionX) {
+        this.foreGroundPositionX = foreGroundPositionX;
     }
 
-    public int getFgy() {
-        return fgy;
+    public int getForeGroundPositionY() {
+        return foreGroundPositionY;
     }
 
-    public void setFgy(int fgy) {
-        this.fgy = fgy;
+    public void setForeGroundPositionY(int foreGroundPositionY) {
+        this.foreGroundPositionY = foreGroundPositionY;
     }
 
     public int getFgxInc() {
@@ -1264,43 +1228,43 @@ public abstract class Gameplay extends JenesisMode {
         return ambSpeed2;
     }
 
-    public int getAmb1x() {
-        return amb1x;
+    public int getParticlesLayer1PositionX() {
+        return particlesLayer1PositionX;
     }
 
-    public void setAmb1x(int amb1x) {
-        this.amb1x = amb1x;
+    public void setParticlesLayer1PositionX(int particlesLayer1PositionX) {
+        this.particlesLayer1PositionX = particlesLayer1PositionX;
     }
 
-    public int getAmb2x() {
-        return amb2x;
+    public int getParticlesLayer2PositionX() {
+        return particlesLayer2PositionX;
     }
 
-    public void setAmb2x(int amb2x) {
-        this.amb2x = amb2x;
+    public void setParticlesLayer2PositionX(int particlesLayer2PositionX) {
+        this.particlesLayer2PositionX = particlesLayer2PositionX;
     }
 
-    public int getAmb1y() {
-        return amb1y;
+    public int getParticlesLayer1PositionY() {
+        return particlesLayer1PositionY;
     }
 
-    public void setAmb1y(int amb1y) {
-        this.amb1y = amb1y;
+    public void setParticlesLayer1PositionY(int particlesLayer1PositionY) {
+        this.particlesLayer1PositionY = particlesLayer1PositionY;
     }
 
-    public int getAmb2y() {
-        return amb2y;
+    public int getParticlesLayer2PositionY() {
+        return particlesLayer2PositionY;
     }
 
-    public void setAmb2y(int amb2y) {
-        this.amb2y = amb2y;
+    public void setParticlesLayer2PositionY(int particlesLayer2PositionY) {
+        this.particlesLayer2PositionY = particlesLayer2PositionY;
     }
 
     public void mouseMoved(int mouseX, int mouseY) {
         //when fighting
-        if (RenderGameplay.getInstance().getGameInstance().isGameOver == false && RenderGameplay.getInstance().getGameInstance().storySequence == false && isDnladng()) {
+        if (GameInstance.getInstance().isGameOver == false && GameInstance.getInstance().storySequence == false && isDnladng()) {
             //browse moves
-            if (mouseX > (29 + (leftyXOffset * getscaleX())) && mouseX < (436 + (leftyXOffset * getscaleX()))) {
+            if (mouseX > (29 + (leftHandXAxisOffset * getscaleX())) && mouseX < (436 + (leftHandXAxisOffset * getscaleX()))) {
                 if (mouseY > (int) (373 * getscaleY()) && mouseY < (int) (390 * getscaleY())) {
                     RenderGameplay.getInstance().thisItem(0);
                 }

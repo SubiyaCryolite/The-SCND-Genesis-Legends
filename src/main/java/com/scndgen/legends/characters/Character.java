@@ -43,7 +43,7 @@ public abstract class Character {
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status, bragRights;
     //ints
-    public int points, life, damage, celestiaMultiplier, damageMultiplier;
+    public int points, life, damage, damageMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     //floats
     public float[] weakness;
@@ -75,6 +75,8 @@ public abstract class Character {
     public CharacterEnum getEnum() {
         return characterEnum;
     }
+
+    protected final int celestiaMultiplier =10;
 
     private void sortQue() {
         pix = new JenesisImageLoader();
@@ -280,10 +282,6 @@ public abstract class Character {
 
     public final int getCelestiaMultiplier() {
         return celestiaMultiplier;
-    }
-
-    public final void setCelestiaMultiplier(int value) {
-        celestiaMultiplier = value;
     }
 
     public final int getDamageMultiplier() {

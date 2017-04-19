@@ -32,7 +32,6 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
-import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.windows.MainWindow;
 import com.scndgen.legends.windows.WindowOptions;
 
@@ -52,9 +51,8 @@ public class GameInstance implements Runnable, ActionListener {
 
     public boolean isGameOver, isPaused, gameRunning;
     public int time, count2;
-    public boolean instance, storySequence;
+    public boolean storySequence;
     private boolean incrementActivityBar = true, incrementActivityBarOpp = true;
-    private final Gameplay gameplay;
     public int taskComplete;
     public int taskRun = 0;
     public int feeCol;
@@ -85,26 +83,23 @@ public class GameInstance implements Runnable, ActionListener {
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
     private int timeOut;
+    private static GameInstance instance;
 
-    //indicates if game is running, CONTROLS game over screen and Achievements which require wins
-    public GameInstance(int forWho, Gameplay gameplay) {
-        this.gameplay = gameplay;
-        musicStr = RenderStageSelect.getInstance().getTrack();
-        newInstance();
+    public static synchronized GameInstance getInstance() {
+        if (instance == null)
+            instance = new GameInstance();
+        return instance;
     }
 
     /**
      * The main game instance thread
      */
-    @SuppressWarnings("static-access")
     @Override
     public void run() {
-
         do {
-            instance = true;
             try {
                 thread.sleep(33); // fps
-                gameplay.matchStatus();
+                RenderGameplay.getInstance().matchStatus();
                 ach.scan();
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +117,7 @@ public class GameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (aiRunning == false && incrementActivityBarOpp && storySequence == false) {
-                if (MainWindow.getInstance().getGameMode()== SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
+                if (MainWindow.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     aiRunning = true;
                     executorAI.attack();
                 }
@@ -265,10 +260,10 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
         ach.scan();
         //if not story scene, increment char usage
-        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE == false) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex());
         }
-        if (gameplay.hasWon()) {
+        if (RenderGameplay.getInstance().hasWon()) {
             RenderGameplay.getInstance().showWinLabel();
             winMus.play();
         } else {
@@ -361,7 +356,6 @@ public class GameInstance implements Runnable, ActionListener {
      * This thread executes when a game is over, designed to free unused memory
      */
     public void closingThread(int mo) {
-        instance = false;
         //update profile operations
         LoginScreen.getInstance().incrementMatchCount();
         LoginScreen.getInstance().setPoints(ach.getNewUserPoints());
@@ -369,9 +363,9 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().saveConfigFile();
         MainWindow.getInstance().systemNotice("Saved File");
         thread.stop(); //stop this thread
-        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
-            if (gameplay.hasWon()) {
+            if (RenderGameplay.getInstance().hasWon()) {
                 RenderStoryMenu.getInstance().incrementMode();
                 winMus.play();
             } else {
@@ -396,7 +390,6 @@ public class GameInstance implements Runnable, ActionListener {
         isPaused = false;
         gameRunning = false;
         isGameOver = true;
-        instance = false;
         RenderCharacterSelectionScreen.getInstance().newInstance();
         RenderStageSelect.getInstance().newInstance();
         RenderGameplay.getInstance().closeAudio();
@@ -432,14 +425,14 @@ public class GameInstance implements Runnable, ActionListener {
     }
 
 
-    private void newInstance() {
+    public void newInstance() {
         executorAI = new OpponentAttacks();
         ach = LoginScreen.getInstance().getAch();
-        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE) {
             storySequence = true;
             time = StoryMode.getInstance().time;
         } //if LAN, client uses hosts time preset
-        else if (MainWindow.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
+        else if (MainWindow.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             time = MainWindow.getInstance().hostTime;
         } else {
             time = WindowOptions.time;
@@ -461,7 +454,7 @@ public class GameInstance implements Runnable, ActionListener {
         LoginScreen.getInstance().newGame = true;
         winMus = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMus = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (MainWindow.getInstance().getGameMode()== SubMode.STORY_MODE == false) {
+        if (MainWindow.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
             MainWindow.getInstance().systemNotice(MainWindow.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
@@ -501,4 +494,5 @@ public class GameInstance implements Runnable, ActionListener {
     public void setTimeOut(int timeOut) {
         this.timeOut = timeOut;
     }
+
 }

@@ -23,6 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.MainWindow;
 
 public class CharacterAttacksOnline implements Runnable {
@@ -59,7 +60,7 @@ public class CharacterAttacksOnline implements Runnable {
             //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
             executingTheCommands();
-            RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsChar(0);
+            GameInstance.getInstance().setRecoveryUnitsChar(0);
         } else if (executionType == 'l') {//limit break
             RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
         }

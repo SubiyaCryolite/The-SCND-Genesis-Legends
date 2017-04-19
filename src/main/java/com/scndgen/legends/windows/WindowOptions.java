@@ -37,35 +37,34 @@ import java.awt.event.*;
 public class WindowOptions extends JFrame implements ActionListener, ItemListener, KeyListener {
 
     public static int txtSpeed = 200, one;
-    public static int diff0 = 0,
+    public static final int diff0 = 0,
             diff1 = 1000,
             diff2 = 2500,
             diff3 = 3500,
             diff4 = 4500,
             diff5 = 6000;
-    public static String graphics;
     public static int time;
     public int[] txtSpeedArr = new int[]{50, 100, 200, 250};
     public boolean downloadingMusic, isSoundOn = true;
     public int[] Arr = {diff0, diff1, diff2, diff3, diff4, diff5};
     public String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
     private Object source;
-    private JToggleButton[] ratings;
-    private JToggleButton soundOn, soundOff, updateOn, updateOff, star1, star2, star3, star4, star5;
+    private JToggleButton[] btnRating;
+    private JToggleButton btnSoundOn, btnSoundOff, btnUpdateOn, btnAutoUpdate, star1, star2, star3, star4, star5;
     private ButtonGroup soundBG, updateOptions;
-    private JLabel ratingL, opLabel1, opLabel2, opLabel3, opLabel4, opLabel5, opLabel6, opLabel7, opLabel8, opLabel9, opLabel10, opLabel11;
-    private JComboBox diffSett, resSett, langSett;
+    private JLabel ratingL, lblOption1, oplblOption2, opLabel3, lblOption4, lblOption6, opLabel7, opLabel8, opLabel9, opLabel10, opLabel11;
+    private JComboBox diffSett, cmbResolution, cmbLanguage;
     private String[] comicTxtFreqStr;
     private String[] mode;
     private String[] diffSettOpt;
     private JCheckBox cont;
-    private JPanel panGameRating, pan2l, pan3, panDifficulty, panSound, panTimeDur, panTextSpeed, panGraffix, panFrameRate, opPanelSave, panUpdates, panComicText, panController, panLefty, panLanguage, panMusic;
+    private JPanel pnlGameRating, pnl2l, pan3, panDifficulty, panSound, panTimeDur, panTextSpeed, panFrameRate, opPanelSave, panUpdates, panComicText, panController, panLefty, panLanguage, panMusic;
     private Box box;
-    private JComboBox lefty, timeDur, txtSpeedCombo, graphicsCombo, frameR, comicT;
+    private JComboBox lefty, cmbTimeDuration, cmbTextSpeed, cmbFrameRate, cmbComicTextOccurence;
     private String[] times = {"infinite", "180", "150", "120", "90", "60", "30"};
     private String[] frames = {"25", "30", "40", "60", "75", "120"};
     private String[] preset;
-    private JButton reset, save, updateButton, audio;
+    private JButton btnReset, save, updateButton, audio;
     private int gameRating;
     private SpecialDrawMenuBGs logoPic;
     private Font normalFont;
@@ -87,9 +86,9 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
         gameRating = 0;
 
-        reset = new JButton(Language.getInstance().getLine(31));
-        reset.setPreferredSize(new Dimension(64, 32));
-        reset.addActionListener(this);
+        btnReset = new JButton(Language.getInstance().getLine(31));
+        btnReset.setPreferredSize(new Dimension(64, 32));
+        btnReset.addActionListener(this);
 
         audio = new JButton("Download Audio Files Now");
         audio.addActionListener(this);
@@ -110,24 +109,24 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         star5.setToolTipText("5 out of 5");
         star5.addActionListener(this);
 
-        ratings = new JToggleButton[]{star1, star2, star3, star4, star5};
-        pan2l = new JPanel(new FlowLayout());
-        pan2l.add(reset);
-        pan2l.add(ratings[0]);
-        pan2l.add(ratings[1]);
-        pan2l.add(ratings[2]);
-        pan2l.add(ratings[3]);
-        pan2l.add(ratings[4]);
+        btnRating = new JToggleButton[]{star1, star2, star3, star4, star5};
+        pnl2l = new JPanel(new FlowLayout());
+        pnl2l.add(btnReset);
+        pnl2l.add(btnRating[0]);
+        pnl2l.add(btnRating[1]);
+        pnl2l.add(btnRating[2]);
+        pnl2l.add(btnRating[3]);
+        pnl2l.add(btnRating[4]);
 
         panMusic = new JPanel(new FlowLayout());
         panMusic.add(audio);
 
         ratingL = new JLabel(Language.getInstance().getLine(5) + gameRating + "/10");
         alterJLabel(ratingL);
-        panGameRating = new JPanel(new GridLayout(1, 2));
-        panGameRating.add(ratingL);
-        pan2l.setOpaque(false);
-        panGameRating.add(pan2l);
+        pnlGameRating = new JPanel(new GridLayout(1, 2));
+        pnlGameRating.add(ratingL);
+        pnl2l.setOpaque(false);
+        pnlGameRating.add(pnl2l);
 
         /*
         countries = Locale.getISOCountries();
@@ -136,82 +135,72 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
          */
 
         diffSett = new JComboBox(diffSettOpt);
-        diffSett.setSelectedIndex(whichOne());
+        diffSett.setSelectedIndex(resolveDifficulty());
         diffSett.addActionListener(this);
-        opLabel1 = new JLabel(Language.getInstance().getLine(6));
+        lblOption1 = new JLabel(Language.getInstance().getLine(6));
         panDifficulty = new JPanel(new GridLayout(1, 2));
-        panDifficulty.add(opLabel1);
+        panDifficulty.add(lblOption1);
         panDifficulty.add(diffSett);
 
         /*
-        resSett = new JComboBox(reso);
-        resSett.setSelectedIndex(LoginScreen.scalePos);
-        resSett.addActionListener(this);
+        cmbResolution = new JComboBox(reso);
+        cmbResolution.setSelectedIndex(LoginScreen.scalePos);
+        cmbResolution.addActionListener(this);
         opLabel10 = new JLabel("Screen resolution: ");
         panLefty = new JPanel(new GridLayout(1, 2));
         panLefty.add(opLabel10);
-        panLefty.add(resSett);*/
+        panLefty.add(cmbResolution);*/
 
-        txtSpeedCombo = new JComboBox(mode);
-        txtSpeedCombo.setSelectedIndex(2);
-        txtSpeedCombo.addActionListener(this);
-        opLabel4 = new JLabel(Language.getInstance().getLine(7));
+        cmbTextSpeed = new JComboBox(mode);
+        cmbTextSpeed.setSelectedIndex(2);
+        cmbTextSpeed.addActionListener(this);
+        lblOption4 = new JLabel(Language.getInstance().getLine(7));
         panTextSpeed = new JPanel(new GridLayout(1, 2));
-        panTextSpeed.add(opLabel4);
-        panTextSpeed.add(txtSpeedCombo);
+        panTextSpeed.add(lblOption4);
+        panTextSpeed.add(cmbTextSpeed);
 
-        opLabel5 = new JLabel(Language.getInstance().getLine(8));
-        graphicsCombo = new JComboBox(preset);
-        graphics = LoginScreen.getInstance().graffix;
-        graphicsCombo.setSelectedItem(LoginScreen.getInstance().graffix);
-        graphicsCombo.addActionListener(this);
-        graphicsCombo.setToolTipText(Language.getInstance().getLine(9));
-        panGraffix = new JPanel(new GridLayout(1, 2));
-        panGraffix.add(opLabel5);
-        panGraffix.add(graphicsCombo);
-
-        frameR = new JComboBox(frames);
-        frameR.addActionListener(this);
-        frameR.setSelectedItem(LoginScreen.getInstance().frames + "");
-        opLabel6 = new JLabel(Language.getInstance().getLine(10));
+        cmbFrameRate = new JComboBox(frames);
+        cmbFrameRate.addActionListener(this);
+        cmbFrameRate.setSelectedItem(LoginScreen.getInstance().frames + "");
+        lblOption6 = new JLabel(Language.getInstance().getLine(10));
         panFrameRate = new JPanel(new GridLayout(1, 2));
-        panFrameRate.add(opLabel6);
-        panFrameRate.add(frameR);
+        panFrameRate.add(lblOption6);
+        panFrameRate.add(cmbFrameRate);
 
-        opLabel2 = new JLabel(Language.getInstance().getLine(11));
-        soundOn = new JToggleButton(Language.getInstance().getLine(12));
-        soundOff = new JToggleButton(Language.getInstance().getLine(13));
-        soundOn.addActionListener(this);
-        soundOff.addActionListener(this);
+        oplblOption2 = new JLabel(Language.getInstance().getLine(11));
+        btnSoundOn = new JToggleButton(Language.getInstance().getLine(12));
+        btnSoundOff = new JToggleButton(Language.getInstance().getLine(13));
+        btnSoundOn.addActionListener(this);
+        btnSoundOff.addActionListener(this);
 
         if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
-            soundOn.setSelected(true); //on by default
+            btnSoundOn.setSelected(true); //on by default
         } else {
-            soundOff.setSelected(true);
+            btnSoundOff.setSelected(true);
         }
         soundBG = new ButtonGroup();
-        soundBG.add(soundOn);
-        soundBG.add(soundOff);
+        soundBG.add(btnSoundOn);
+        soundBG.add(btnSoundOff);
 
         panSound = new JPanel(new GridLayout(1, 3));
-        panSound.add(opLabel2);
-        panSound.add(soundOn);
-        panSound.add(soundOff);
+        panSound.add(oplblOption2);
+        panSound.add(btnSoundOn);
+        panSound.add(btnSoundOff);
         panSound.setOpaque(false);
 
         opLabel3 = new JLabel(Language.getInstance().getLine(14));
-        timeDur = new JComboBox(times);
-        timeDur.setSelectedItem("" + LoginScreen.getInstance().timePref);
-        timeDur.addActionListener(this);
+        cmbTimeDuration = new JComboBox(times);
+        cmbTimeDuration.setSelectedItem("" + LoginScreen.getInstance().timePref);
+        cmbTimeDuration.addActionListener(this);
         panTimeDur = new JPanel(new GridLayout(1, 2));
         panTimeDur.add(opLabel3);
-        panTimeDur.add(timeDur);
+        panTimeDur.add(cmbTimeDuration);
 
         opLabel7 = new JLabel(Language.getInstance().getLine(15));
-        updateOn = new JToggleButton(Language.getInstance().getLine(12));
-        updateOff = new JToggleButton(Language.getInstance().getLine(13));
-        updateOn.addActionListener(this);
-        updateOff.addActionListener(this);
+        btnUpdateOn = new JToggleButton(Language.getInstance().getLine(12));
+        btnAutoUpdate = new JToggleButton(Language.getInstance().getLine(13));
+        btnUpdateOn.addActionListener(this);
+        btnAutoUpdate.addActionListener(this);
 
 
         pan3 = new JPanel();
@@ -224,17 +213,17 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         pan3.add(nation);
          */
         if (LoginScreen.getInstance().autoUpdate.equalsIgnoreCase("yes")) {
-            updateOn.setSelected(true); //on by default
+            btnUpdateOn.setSelected(true); //on by default
         } else {
-            updateOff.setSelected(true);
+            btnAutoUpdate.setSelected(true);
         }
         updateOptions = new ButtonGroup();
-        updateOptions.add(updateOn);
-        updateOptions.add(updateOff);
+        updateOptions.add(btnUpdateOn);
+        updateOptions.add(btnAutoUpdate);
         panUpdates = new JPanel(new GridLayout(1, 2));
         panUpdates.add(opLabel7);
-        panUpdates.add(updateOn);
-        panUpdates.add(updateOff);
+        panUpdates.add(btnUpdateOn);
+        panUpdates.add(btnAutoUpdate);
 
         panLefty = new JPanel(new GridLayout(1, 2));
         lefty = new JComboBox(new String[]{Language.getInstance().getLine(172), Language.getInstance().getLine(171)});
@@ -244,13 +233,13 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panLefty.add(opLabel10);
         panLefty.add(lefty);
 
-        comicT = new JComboBox(comicTxtFreqStr);
-        comicT.setSelectedIndex(LoginScreen.getInstance().comicPicOcc);
-        comicT.addActionListener(this);
+        cmbComicTextOccurence = new JComboBox(comicTxtFreqStr);
+        cmbComicTextOccurence.setSelectedIndex(LoginScreen.getInstance().comicPicOcc);
+        cmbComicTextOccurence.addActionListener(this);
         opLabel8 = new JLabel(Language.getInstance().getLine(17));
         panComicText = new JPanel(new GridLayout(1, 2));
         panComicText.add(opLabel8);
-        panComicText.add(comicT);
+        panComicText.add(cmbComicTextOccurence);
 
         cont = new JCheckBox();
         cont.addItemListener(this);
@@ -264,13 +253,13 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panController.add(opLabel9);
         panController.add(cont);
 
-        langSett = new JComboBox(Language.getInstance().getSupportedLanguages());
-        langSett.setSelectedIndex(LoginScreen.getInstance().getSelLang());
-        langSett.addActionListener(this);
+        cmbLanguage = new JComboBox(Language.getInstance().getSupportedLanguages());
+        cmbLanguage.setSelectedIndex(LoginScreen.getInstance().getSelLang());
+        cmbLanguage.addActionListener(this);
         opLabel11 = new JLabel(Language.getInstance().getLine(19));
         panLanguage = new JPanel(new GridLayout(1, 2));
         panLanguage.add(opLabel11);
-        panLanguage.add(langSett);
+        panLanguage.add(cmbLanguage);
 
 
         save = new JButton(Language.getInstance().getLine(20));
@@ -281,7 +270,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
 
         panLanguage.setOpaque(false);
-        //panGameRating.setOpaque(false);
+        //pnlGameRating.setOpaque(false);
         panLefty.setOpaque(false);
         panFrameRate.setOpaque(false);
         panDifficulty.setOpaque(false);
@@ -295,12 +284,11 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
 
         alterJLabel(opLabel9);
-        alterJLabel(opLabel1);
-        alterJLabel(opLabel2);
+        alterJLabel(lblOption1);
+        alterJLabel(oplblOption2);
         alterJLabel(opLabel3);
-        alterJLabel(opLabel4);
-        alterJLabel(opLabel5);
-        alterJLabel(opLabel6);
+        alterJLabel(lblOption4);
+        alterJLabel(lblOption6);
         alterJLabel(opLabel7);
         alterJLabel(opLabel8);
         alterJLabel(opLabel9);
@@ -308,7 +296,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         alterJLabel(opLabel11);
 
         box.add(panLanguage);
-        //box.add(panGameRating);
+        //box.add(pnlGameRating);
         box.add(panLefty);
         //box.add(panFrameRate);
         box.add(panDifficulty);
@@ -340,7 +328,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
      *
      * @return difficulty array index
      */
-    public static int whichOne() {
+    public static int resolveDifficulty() {
         one = 0;
         //500,2500, 3500, 4500, 6500
 
@@ -371,9 +359,9 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         return one;
     }
 
-    public void alterJLabel(JLabel l) {
-        l.setForeground(Color.WHITE);
-        l.setFont(normalFont);
+    public void alterJLabel(JLabel jLabel) {
+        jLabel.setForeground(Color.WHITE);
+        jLabel.setFont(normalFont);
     }
 
     @Override
@@ -387,19 +375,18 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
     private void resetRating() {
         for (int u = 0; u < 5; u++) {
-            ratings[u].setEnabled(true);
+            btnRating[u].setEnabled(true);
         }
     }
 
     private void setRating(int num) {
         if (num > -1 && num < 6) {
-            for (int u = 0; u < ratings.length; u++) {
-                ratings[u].setEnabled(true);
+            for (int u = 0; u < btnRating.length; u++) {
+                btnRating[u].setEnabled(true);
             }
-
             //set new val
             for (int u = 0; u < num; u++) {
-                ratings[u].setEnabled(false);
+                btnRating[u].setEnabled(false);
             }
             gameRating = num;
             LoginScreen.getInstance().setGameRating(gameRating);
@@ -418,7 +405,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         source = ae.getSource();
 
         for (int um = 0; um < 5; um++) {
-            if (source == ratings[um]) {
+            if (source == btnRating[um]) {
                 setRating(um + 1);
             }
         }
@@ -441,53 +428,49 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
             LoginScreen.getInstance().setIsLefty(val);
         }
-        if (source == reset) {
+        if (source == btnReset) {
             resetRating();
-        } else if (source == frameR) {
-            LoginScreen.getInstance().frames = Integer.parseInt(frameR.getSelectedItem() + "");
-        } else if (source == comicT) {
-            LoginScreen.getInstance().comicPicOcc = comicT.getSelectedIndex();
-        } else if (source == resSett) {
-            LoginScreen.getInstance().scalePos = resSett.getSelectedIndex();
-        } else if (source == langSett) {
-            Language.getInstance().setLanguage(langSett.getSelectedIndex());
-            LoginScreen.getInstance().setActivLang(langSett.getSelectedIndex());
+        } else if (source == cmbFrameRate) {
+            LoginScreen.getInstance().frames = Integer.parseInt(cmbFrameRate.getSelectedItem() + "");
+        } else if (source == cmbComicTextOccurence) {
+            LoginScreen.getInstance().comicPicOcc = cmbComicTextOccurence.getSelectedIndex();
+        } else if (source == cmbResolution) {
+            LoginScreen.getInstance().scalePos = cmbResolution.getSelectedIndex();
+        } else if (source == cmbLanguage) {
+            Language.getInstance().setLanguage(cmbLanguage.getSelectedIndex());
+            LoginScreen.getInstance().setActivLang(cmbLanguage.getSelectedIndex());
         } else if (source == diffSett) {
             LoginScreen.getInstance().difficultyDyn = Arr[diffSett.getSelectedIndex()];
             LoginScreen.getInstance().difficultyStat = Arr[diffSett.getSelectedIndex()];
             System.out.println("Diff = " + Arr[diffSett.getSelectedIndex()]);
             System.out.println("Diff Range = " + (LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()]));
             System.out.println("Diff Range Rate = " + ((LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()])) / LoginScreen.difficultyScale);
-        } else if (source == txtSpeedCombo) {
-            txtSpeed = txtSpeedArr[txtSpeedCombo.getSelectedIndex()];
-        } else if (source == soundOn) {
+        } else if (source == cmbTextSpeed) {
+            txtSpeed = txtSpeedArr[cmbTextSpeed.getSelectedIndex()];
+        } else if (source == btnSoundOn) {
             LoginScreen.getInstance().soundStatus = "on";
-        } else if (source == soundOff) {
+        } else if (source == btnSoundOff) {
             LoginScreen.getInstance().soundStatus = "off";
-        } else if (source == updateOn) {
+        } else if (source == btnUpdateOn) {
             LoginScreen.getInstance().autoUpdate = "yes";
-        } else if (source == updateOff) {
+        } else if (source == btnAutoUpdate) {
             LoginScreen.getInstance().autoUpdate = "no";
-        } else if (source == graphicsCombo) {
-            graphics = "" + graphicsCombo.getSelectedItem();
-            LoginScreen.getInstance().graffix = "" + graphicsCombo.getSelectedItem();
-        } else if (source == timeDur) {
-            if (timeDur.getSelectedItem() == "infinite") {
+        } else if (source == cmbTimeDuration) {
+            if (cmbTimeDuration.getSelectedItem() == "infinite") {
                 time = 182; //above limit
-            } else if (timeDur.getSelectedItem() == "180") {
+            } else if (cmbTimeDuration.getSelectedItem() == "180") {
                 time = 180;
-            } else if (timeDur.getSelectedItem() == "150") {
+            } else if (cmbTimeDuration.getSelectedItem() == "150") {
                 time = 150;
-            } else if (timeDur.getSelectedItem() == "120") {
+            } else if (cmbTimeDuration.getSelectedItem() == "120") {
                 time = 120;
-            } else if (timeDur.getSelectedItem() == "90") {
+            } else if (cmbTimeDuration.getSelectedItem() == "90") {
                 time = 90;
-            } else if (timeDur.getSelectedItem() == "60") {
+            } else if (cmbTimeDuration.getSelectedItem() == "60") {
                 time = 60;
-            } else if (timeDur.getSelectedItem() == "30") {
+            } else if (cmbTimeDuration.getSelectedItem() == "30") {
                 time = 30;
             }
-
             LoginScreen.getInstance().timePref = time;
         } else if (source == save) {
             //LoginScreen.getInstance().setCountryCode(nation.getSelectedItem() + "");

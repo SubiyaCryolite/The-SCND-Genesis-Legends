@@ -23,6 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.MainWindow;
 
 public class OpponentAttacksOnline implements Runnable {
@@ -56,7 +57,7 @@ public class OpponentAttacksOnline implements Runnable {
                 RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
                 RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
                 executingTheCommandsAI(command1, command2, command3, command4);
-                RenderGameplay.getInstance().getGameInstance().setRecoveryUnitsOpp(0);
+                GameInstance.getInstance().setRecoveryUnitsOpp(0);
             } else if (executionType == 'l') {//limit break
                 RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
             }
