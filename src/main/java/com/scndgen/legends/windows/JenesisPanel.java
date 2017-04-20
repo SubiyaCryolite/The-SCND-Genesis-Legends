@@ -37,19 +37,22 @@ import com.scndgen.legends.render.*;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.*;
 import java.net.InetAddress;
 
-public class JenesisPanel extends JPanel {
+public class JenesisPanel extends Pane {
 
     public static final int PORT = 5555;
     public static final int serverLatency = 500;
@@ -151,7 +154,7 @@ public class JenesisPanel extends JPanel {
         if (gameMode == SubMode.LAN_CLIENT) {
             client.sendData("player_QSLV");
         }
-        setPreferredSize(new Dimension(852, 480));
+        setPrefSize(852, 480);
     }
 
     public static synchronized JenesisPanel newInstance(String strUser, SubMode subMode) {
@@ -587,42 +590,42 @@ public class JenesisPanel extends JPanel {
     }
 
     public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
+        KeyCode keyCode = e.getCode();
+        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
             up();
         }
-        if (keyCode == KeyEvent.VK_M) {
+        if (keyCode == KeyCode.M) {
             if (isWaiting && gameMode == SubMode.LAN_HOST) {
                 world = new OverWorld();
             }
         }
-        if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
+        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
             down();
         }
-        if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A) {
+        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
             left();
         }
-        if (keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_D) {
+        if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
             right();
         }
-        if (keyCode == KeyEvent.VK_BACK_SPACE) {
+        if (keyCode == KeyCode.BACK_SPACE) {
             back();
         }
-        if (keyCode == KeyEvent.VK_ENTER) {
+        if (keyCode == KeyCode.ENTER) {
             accept();
         }
-        if (keyCode == KeyEvent.VK_ESCAPE) {
+        if (keyCode == KeyCode.ESCAPE) {
             escape();
         }
-        if (keyCode == KeyEvent.VK_F4) {
+        if (keyCode == KeyCode.F4) {
             LoginScreen.getInstance().getMenu().exit();
         }
-        if (keyCode == KeyEvent.VK_F5) {
+        if (keyCode == KeyCode.F5) {
             if (getIsGameRunning()) {
                 cancelMatch();
             }
         }
-        if (keyCode == KeyEvent.VK_F12) {
+        if (keyCode == KeyCode.F12) {
             if (mode == Mode.CHAR_SELECT_SCREEN) {
                 RenderCharacterSelectionScreen.getInstance().captureScreenShot();
             } else if (mode == Mode.STORY_SELECT_SCREEN) {
@@ -633,50 +636,51 @@ public class JenesisPanel extends JPanel {
                 RenderGameplay.getInstance().captureScreenShot();
             }
         } else if (getIsGameRunning()) {
-            if (keyCode == KeyEvent.VK_L) {
+            if (keyCode == KeyCode.L) {
                 triggerFury(CharacterState.CHARACTER);
             }
-            if (keyCode == KeyEvent.VK_SPACE) {
+            if (keyCode == KeyCode.SPACE) {
                 trigger();
             }
         }
         if (mode == Mode.MAIN_MENU) {
-            if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
+
+            if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
                 RenderMainMenu.getInstance().goDown();
             }
-            if (keyCode == KeyEvent.VK_RIGHT) {
+            if (keyCode == KeyCode.RIGHT) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().advanceTutorial();
             }
-            if (keyCode == KeyEvent.VK_LEFT) {
+            if (keyCode == KeyCode.LEFT) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().reverseTutorial();
             }
-            if (keyCode == KeyEvent.VK_1) {
+            if (keyCode == KeyCode.DIGIT1) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(0);
             }
-            if (keyCode == KeyEvent.VK_2) {
+            if (keyCode == KeyCode.DIGIT2) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(3);
             }
-            if (keyCode == KeyEvent.VK_3) {
+            if (keyCode == KeyCode.DIGIT3) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(11);
             }
-            if (keyCode == KeyEvent.VK_4) {
+            if (keyCode == KeyCode.DIGIT4) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(20);
             }
-            if (keyCode == KeyEvent.VK_5) {
+            if (keyCode == KeyCode.DIGIT5) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(27);
             }
-            if (keyCode == KeyEvent.VK_6) {
+            if (keyCode == KeyCode.DIGIT6) {
                 if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
                     RenderMainMenu.getInstance().sktpToTut(32);
             }
-            if (keyCode == KeyEvent.VK_F12) {
+            if (keyCode == KeyCode.F12) {
                 RenderMainMenu.getInstance().captureScreenShot();
             }
         }
@@ -708,6 +712,7 @@ public class JenesisPanel extends JPanel {
     }
 
     public void mouseClicked(MouseEvent m) {
+        MouseButton mb = m.getButton();
         if (mode == Mode.CHAR_SELECT_SCREEN && RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) {
             if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
                 if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST) {
@@ -735,7 +740,7 @@ public class JenesisPanel extends JPanel {
                     RenderMainMenu.getInstance().reverseTutorial();
                 }
             } else if ((m.getY() > y) && (m.getY() < (y + (space * 13))) && m.getX() > x) {
-                if (m.getButton() == MouseEvent.BUTTON1) {
+                if (m.getButton() == MouseButton.PRIMARY) {
 
                     SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
                     if (destination == SubMode.LAN_HOST) {
@@ -757,16 +762,16 @@ public class JenesisPanel extends JPanel {
                     }
                 }
                 //middle mouse
-                if (m.getButton() == MouseEvent.BUTTON2) {
+                if (m.getButton() == MouseButton.SECONDARY) {
                 }
 
                 //middle mouse
-                if (m.getButton() == MouseEvent.BUTTON3) {
+                if (m.getButton() == MouseButton.MIDDLE) {
                 }
             }
         } else if (getIsGameRunning()) {
             if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-                if (m.getButton() == MouseEvent.BUTTON1) {
+                if (m.getButton() == MouseButton.PRIMARY) {
                     if (m.getX() > (29 + leftyXOffset) && m.getX() < (220 + leftyXOffset) && (m.getY() > 358)) {
                         RenderGameplay.getInstance().moveSelected();
                     }
@@ -779,10 +784,10 @@ public class JenesisPanel extends JPanel {
                         triggerFury(CharacterState.CHARACTER);
                     }
                 }
-                if (m.getButton() == MouseEvent.BUTTON2) {
+                if (m.getButton() == MouseButton.MIDDLE) {
                     triggerFury(CharacterState.CHARACTER);
                 }
-                if (m.getButton() == MouseEvent.BUTTON3) {
+                if (m.getButton() == MouseButton.SECONDARY) {
                     RenderGameplay.getInstance().unQueMove();
                 }
             }
@@ -808,68 +813,11 @@ public class JenesisPanel extends JPanel {
             if (getGameMode() != SubMode.LAN_CLIENT) {
                 RenderStageSelect.getInstance().mouseMoved(m.getX(), m.getY());
             }
-        }
-        if (mode == Mode.MAIN_MENU) {
-            int x = RenderMainMenu.getInstance().getXMenu();
-            int y = RenderMainMenu.getInstance().getYMenu() - 14;
-            int space = RenderMainMenu.getInstance().getSpacer() - 2;
-            //menu space
-            if ((m.getX() > x) && (m.getX() < x + 200)) {
-                if ((m.getY() > space) && (m.getY() < (y + space))) {
-                    RenderMainMenu.getInstance().setMenuPos(0);
-                }
-
-                if ((m.getY() > (y + space)) && (m.getY() < (y + (space * 2)))) {
-                    RenderMainMenu.getInstance().setMenuPos(1);
-                }
-
-                if ((m.getY() > (y + (space * 2))) && (m.getY() < (y + (space * 3)))) {
-                    RenderMainMenu.getInstance().setMenuPos(2);
-                }
-
-                if ((m.getY() > (y + (space * 3))) && (m.getY() < (y + (space * 4)))) {
-                    RenderMainMenu.getInstance().setMenuPos(3);
-                }
-
-                if ((m.getY() > (y + (space * 4))) && (m.getY() < (y + (space * 5)))) {
-                    RenderMainMenu.getInstance().setMenuPos(4);
-                }
-
-                if ((m.getY() > (y + (space * 5))) && (m.getY() < (y + (space * 6)))) {
-                    RenderMainMenu.getInstance().setMenuPos(5);
-                }
-
-                if ((m.getY() > (y + (space * 7))) && (m.getY() < (y + (space * 8)))) {
-                    RenderMainMenu.getInstance().setMenuPos(6);
-                }
-
-                if ((m.getY() > (y + (space * 8))) && (m.getY() < (y + (space * 9)))) {
-                    RenderMainMenu.getInstance().setMenuPos(7);
-                }
-
-                if ((m.getY() > (y + (space * 9))) && (m.getY() < (y + (space * 10)))) {
-                    RenderMainMenu.getInstance().setMenuPos(8);
-                }
-
-                if ((m.getY() > (y + (space * 10))) && (m.getY() < (y + (space * 11)))) {
-                    RenderMainMenu.getInstance().setMenuPos(9);
-                }
-
-                if ((m.getY() > (y + (space * 11))) && (m.getY() < (y + (space * 12)))) {
-                    RenderMainMenu.getInstance().setMenuPos(10);
-                }
-
-                if ((m.getY() > (y + (space * 12))) && (m.getY() < (y + (space * 13)))) {
-                    RenderMainMenu.getInstance().setMenuPos(11);
-                }
-
-                if ((m.getY() > (y + (space * 13))) && (m.getY() < (y + (space * 13)))) {
-                    RenderMainMenu.getInstance().setMenuPos(12);
-                }
-            }
         } else if (getIsGameRunning()) {
             RenderGameplay.getInstance().mouseMoved(m.getX(), m.getY());
         }
+        if (jenesisMode != null)
+            jenesisMode.mouseMoved(m);
     }
 
     public void mouseExited(MouseEvent m) {
@@ -930,8 +878,8 @@ public class JenesisPanel extends JPanel {
     }
 
     public void focus() {
-        requestFocusInWindow();
-        setFocusable(true);
+        setFocusTraversable(true);
+        setFocused(true);
     }
 
     /**
@@ -986,13 +934,12 @@ public class JenesisPanel extends JPanel {
         }
     }
 
-    @Override
     public void paintComponent(Graphics g) {
         createBackBuffer();
         if (jenesisMode == null) return;
         jenesisMode.loadAssets();
-        jenesisMode.paintComponent((Graphics2D) g, this);
-        g.drawImage(volatileImage, 0, 0, this);
+        //jenesisMode.paintComponent(g2d, this);
+        //g.drawImage(volatileImage, 0, 0, this);
     }
 
     private void setContentPane(final JenesisMode mode) {

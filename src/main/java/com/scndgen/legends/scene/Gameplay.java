@@ -1260,7 +1260,7 @@ public abstract class Gameplay extends JenesisMode {
         this.particlesLayer2PositionY = particlesLayer2PositionY;
     }
 
-    public void mouseMoved(int mouseX, int mouseY) {
+    public void mouseMoved(double mouseX, double mouseY) {
         //when fighting
         if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false && isDnladng()) {
             //browse moves

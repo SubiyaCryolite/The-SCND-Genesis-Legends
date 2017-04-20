@@ -33,23 +33,21 @@ public class OverWorld extends JFrame implements ActionListener, KeyListener {
 
     private static DrawOverworld map;
     private static OverWorld world;
-    private JFrame daWindow;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public OverWorld() {
         map = new DrawOverworld(this);
-        daWindow = new JFrame();
-        daWindow.setTitle("SCND GENESIS: LEGENDS - Overworld");
-        //daWindow.add(map);
-        daWindow.setUndecorated(true);
-        daWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        daWindow.pack();
-        daWindow.requestFocusInWindow();
-        daWindow.setFocusable(true);
-        daWindow.addKeyListener(this);
-        daWindow.setLocationRelativeTo(null); // Centers JFrame on screen //
-        daWindow.setResizable(false);
-        daWindow.setVisible(true);
+        setTitle("SCND GENESIS: LEGENDS - Overworld");
+        //add(map);
+        setUndecorated(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pack();
+        requestFocusInWindow();
+        setFocusable(true);
+        addKeyListener(this);
+        setLocationRelativeTo(null); // Centers JFrame on screen //
+        setResizable(false);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -90,7 +88,7 @@ public class OverWorld extends JFrame implements ActionListener, KeyListener {
         }
 
         if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_SPACE || keyCode == KeyEvent.VK_ENTER) {
-            daWindow.dispose();
+            dispose();
         }
     }
 
@@ -103,7 +101,7 @@ public class OverWorld extends JFrame implements ActionListener, KeyListener {
     }
 
     public void refresh() {
-        if (daWindow.isVisible()) {
+        if (isVisible()) {
            // map.repaint();
         }
     }

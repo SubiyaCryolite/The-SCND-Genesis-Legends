@@ -306,7 +306,7 @@ public abstract class StoryMenu extends JenesisMode {
         }
     }
 
-    public void mouseMoved(int mouseX, int mouseY) {
+    public void mouseMoved(double mouseX, double mouseY) {
         int topY = getStartY();
         int topX = getStartX();
         int columns = getNumberOfCharColumns();
@@ -314,8 +314,8 @@ public abstract class StoryMenu extends JenesisMode {
         int hspacer = getCharVSpacer();
         int rows = getCharRows();
         if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * rows))) {
-            int vIndex = (mouseY - topY) / vspacer;
-            int hIndex = (mouseX - topX) / hspacer ;
+            int vIndex = Math.round(Math.round((mouseY - topY) / vspacer));
+            int hIndex = Math.round(Math.round((mouseX - topX) / hspacer));
             setHindex(hIndex);
             setVindex(vIndex);
             animateCap2x(hIndex, vIndex);

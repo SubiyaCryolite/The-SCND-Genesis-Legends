@@ -490,13 +490,11 @@ public abstract class StageSelect extends JenesisMode {
         JenesisPanel.getInstance().newGame();
     }
 
-    public String getBgLocation()
-    {
+    public String getBgLocation() {
         return bgLocation;
     }
 
-    public String getFgLocation()
-    {
+    public String getFgLocation() {
         return fgLocation;
     }
 
@@ -578,7 +576,7 @@ public abstract class StageSelect extends JenesisMode {
         return withinCharPanel;
     }
 
-    public void mouseMoved(int mouseX, int mouseY) {
+    public void mouseMoved(double mouseX, double mouseY) {
         int topY = getStartY();
         int topX = getStartX();
         int columns = getColumns();
@@ -586,8 +584,8 @@ public abstract class StageSelect extends JenesisMode {
         int hspacer = getCharVSpacer();
         int rows = getRows();
         if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows)))) {
-            int row = (mouseY - topY) / vspacer;
-            int column = (mouseX - topX) / hspacer;
+            int row = Math.round(Math.round((mouseY - topY) / vspacer));
+            int column = Math.round(Math.round((mouseX - topX) / hspacer));
             System.out.printf("Row %s :: Column %s\n", row, column);
             setRow(row);
             setColumn(column);

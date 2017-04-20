@@ -1057,7 +1057,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         return withinCharPanel;
     }
 
-    public void mouseMoved(int mouseX, int mouseY) {
+    public void mouseMoved(double mouseX, double mouseY) {
         int topY = getTopY();
         int topX = getTopX();
         int columns = getColumns();
@@ -1065,8 +1065,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         int captionWidth = getCaptionWidth();
         int rows = getRows();
         if (mouseX > topX && mouseX < (topX + (captionWidth * columns)) && (mouseY > topY) && (mouseY < topY + (captionHeight * rows))) {
-            int vIndex = (mouseY - topY) / captionHeight;
-            int hIndex = (mouseX - topX) / captionWidth;
+            int vIndex = Math.round(Math.round((mouseY - topY) / captionHeight));
+            int hIndex = Math.round(Math.round((mouseX - topX) / captionWidth));
             setHindex(hIndex);
             setVindex(vIndex);
             if (hIndex != storedX || vIndex != storedY) //same vals, do nothing
