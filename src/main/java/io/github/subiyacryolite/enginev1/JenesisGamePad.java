@@ -3,7 +3,7 @@ package io.github.subiyacryolite.enginev1;
  * Originally from JenesisGamePad.java
  * Andrew Davison, October 2006, ad@fivedots.coe.psu.ac.th
  * <p>
- * This controller supports a game pad with two
+ * This usingController supports a game pad with two
  * analog sticks with axes (x,y) and (z,rz), 12 buttons, a
  * D-Pad acting as a point-of-view (POV) hat, and a
  * single rumbler.
@@ -55,7 +55,7 @@ public class JenesisGamePad {
 
     private JenesisGamePad() {
         try {
-            if (LoginScreen.getInstance().controller) {
+            if (LoginScreen.getInstance().usingController) {
                 controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
                 controllers = controllerEnvironment.getControllers();
                 if (controllers.length == 0) {
@@ -69,7 +69,7 @@ public class JenesisGamePad {
                 if (controllerFound) {
                     controller = findGamePad(controllers);
                     controllerName = controller.getName();
-                    System.out.printf("Game controller: %s, %s\n", controllerName, controller.getType());
+                    System.out.printf("Game usingController: %s, %s\n", controllerName, controller.getType());
                     findCompIndices(controller);
                     findRumblers(controller);
                 }
@@ -89,7 +89,7 @@ public class JenesisGamePad {
 
     /**
      * Search the array of controllers until a suitable game pad
-     * controller is found (either of type GAMEPAD or STICK).
+     * usingController is found (either of type GAMEPAD or STICK).
      *
      * @author Andrew Davison
      */
@@ -115,7 +115,7 @@ public class JenesisGamePad {
     /**
      * Store the indices for the analogue sticks axes
      * (x,y) and (z,rz), POV hat, and
-     * button components of the controller.
+     * button components of the usingController.
      *
      * @author Andrew Davison
      */
@@ -195,7 +195,7 @@ public class JenesisGamePad {
     private boolean isButton(Component c) {
         if (!c.isAnalog() && !c.isRelative()) {    // digital and absolute
             String className = c.getIdentifier().getClass().getName();
-            // System.out.println(c.getName() + " identifier: " + className);
+            // System.out.println(c.getUserName() + " identifier: " + className);
             if (className.endsWith("Button")) {
                 return true;
             }
@@ -226,7 +226,7 @@ public class JenesisGamePad {
     }
 
     /**
-     * update the component values in the controller
+     * update the component values in the usingController
      */
     public void poll() {
         if (controller != null)

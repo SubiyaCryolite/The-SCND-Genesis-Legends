@@ -3,19 +3,22 @@ package io.github.subiyacryolite.enginev1;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
 
 /**
  * Created by ifunga on 14/04/2017.
  */
-public abstract class JenesisMode  {
+public abstract class JenesisMode {
 
     protected int screenWidth = 852;
     protected int screenHeight = 480;
     protected float opacity;
     protected boolean loadAssets = true;
+    protected long lastDelta;
+    protected long diff;
+    private long accumulator16ms;
+    private long accumulator33ms;
 
     /**
      * System notice in overlay
@@ -35,31 +38,6 @@ public abstract class JenesisMode  {
         JenesisGlassPane.getInstance().secondaryNotice(message);
     }
 
-    /**
-     * Transparency
-     * e.g AlphaComposite(10*0.1f)
-     *
-     * @param alpha, value from 10 to 0
-     * @return
-     */
-    public final AlphaComposite makeComposite(float alpha) {
-        int type = AlphaComposite.SRC_OVER;
-        if (alpha >= 0.0f && alpha <= 1.0f) {
-            //nothing
-        } else {
-            alpha = 0.0f;
-        }
-        return (AlphaComposite.getInstance(type, alpha));
-    }
-
-
-    /**
-     * Gets screenshot
-     */
-    public final void captureScreenShot() {
-
-    }
-
     public void moveLeft() {
     }
 
@@ -72,13 +50,21 @@ public abstract class JenesisMode  {
     public void moveDown() {
     }
 
-    public void render(final GraphicsContext gc, final double w, final double h) {
+    public void accept() {
     }
+
+    public void cancel() {
+    }
+
+    public abstract void render(final GraphicsContext gc, final double w, final double h);
 
     public final void update(final long delta) {
+        lastDelta = delta;
+        diff = lastDelta == 0 ? 0 : delta - lastDelta;
+        accumulator16ms += delta;
+        accumulator33ms += delta;
         logic(delta);
     }
-
 
     protected void logic(final long delta) {
     }
@@ -99,11 +85,21 @@ public abstract class JenesisMode  {
 
     }
 
-    protected void isDelta60fps(long value)
-    {}
+    protected boolean isDelta60fps() {
+        if (accumulator16ms >= 1.6e+7) {
+            accumulator16ms = 0;
+            return true;
+        }
+        return false;
+    }
 
-    protected void isDelta30fps(long value)
-    {}
+    protected boolean isDelta30fps() {
+        if (accumulator33ms >= 1.6e+7) {
+            accumulator33ms = 0;
+            return true;
+        }
+        return false;
+    }
 
     public abstract void newInstance();
 
@@ -111,5 +107,11 @@ public abstract class JenesisMode  {
 
     public abstract void cleanAssets();
 
-    public abstract void paintComponent(Graphics2D g2d, ImageObserver io);
+    public Font getMyFont(float size) {
+        try {
+            return Font.loadFont(getClass().getResourceAsStream("font/Sawasdee.ttf"), size);
+        } catch (Exception re) {
+            return new javafx.scene.text.Font("Sans", size);
+        }
+    }
 }

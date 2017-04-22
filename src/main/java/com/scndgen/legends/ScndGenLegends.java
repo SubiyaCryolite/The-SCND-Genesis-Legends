@@ -5,7 +5,9 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
+import io.github.subiyacryolite.enginev1.JenesisEngine;
 import io.github.subiyacryolite.enginev1.JenesisGame;
+import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
@@ -14,32 +16,49 @@ import javafx.scene.input.MouseEvent;
  */
 public class ScndGenLegends extends JenesisGame {
 
+    private static ScndGenLegends instance;
+
+    public static ScndGenLegends getInstance() {
+        return instance;
+    }
+
+    public static void main(String[] main) {
+        JenesisEngine.applicationStage = ScndGenLegends.class;
+        Application.launch(JenesisEngine.class);
+    }
+
     public ScndGenLegends() {
-        setSize(1280, 720);
+        instance = this;
+        setSize(852, 480);
         switchMode(Mode.MAIN_MENU);
     }
 
     public void switchMode(Mode mode) {
         setSwitchingModes(true);
-        switch (mode) {
-            case MAIN_MENU:
-                RenderMainMenu.getInstance().newInstance();
-                setMode(RenderMainMenu.getInstance());
-                break;
-            case STORY_SELECT_SCREEN:
-                RenderStoryMenu.getInstance().newInstance();
-                setMode(RenderStoryMenu.getInstance());
-                break;
-            case CHAR_SELECT_SCREEN:
-                RenderCharacterSelectionScreen.getInstance().newInstance();
-                setMode(RenderCharacterSelectionScreen.getInstance());
-                break;
-            case STAGE_SELECT_SCREEN:
-                RenderStageSelect.getInstance().newInstance();
-                setMode(RenderStageSelect.getInstance());
-                break;
+        try {
+            switch (mode) {
+                case MAIN_MENU:
+                    RenderMainMenu.getInstance().newInstance();
+                    setMode(RenderMainMenu.getInstance());
+                    break;
+                case STORY_SELECT_SCREEN:
+                    RenderStoryMenu.getInstance().newInstance();
+                    setMode(RenderStoryMenu.getInstance());
+                    break;
+                case CHAR_SELECT_SCREEN:
+                    RenderCharacterSelectionScreen.getInstance().newInstance();
+                    setMode(RenderCharacterSelectionScreen.getInstance());
+                    break;
+                case STAGE_SELECT_SCREEN:
+                    RenderStageSelect.getInstance().newInstance();
+                    setMode(RenderStageSelect.getInstance());
+                    break;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+        } finally {
+            setSwitchingModes(false);
         }
-        setSwitchingModes(false);
     }
 
     @Override
@@ -65,4 +84,5 @@ public class ScndGenLegends extends JenesisGame {
         if (getMode() != null && !isSwitchingModes())
             getMode().mouseClicked(mouseEvent);
     }
+
 }

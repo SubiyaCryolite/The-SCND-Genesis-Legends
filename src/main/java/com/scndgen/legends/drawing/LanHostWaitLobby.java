@@ -26,9 +26,11 @@ import com.scndgen.legends.LoginScreen;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
@@ -38,7 +40,7 @@ import java.util.Enumeration;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class DrawWaiting extends JenesisMode {
+public class LanHostWaitLobby extends JenesisMode {
 
     private static float opac = 10;
     private static int y = 0;
@@ -52,9 +54,8 @@ public class DrawWaiting extends JenesisMode {
     private NetworkInterface networkInterface;
     private Enumeration enumeration1;
 
-    @SuppressWarnings("static-access")
-    public DrawWaiting() {
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+    public LanHostWaitLobby() {
+        normalFont = getMyFont(LoginScreen.normalTxtSize);
         imageLoader = new JenesisImageLoader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
@@ -92,18 +93,18 @@ public class DrawWaiting extends JenesisMode {
     }
 
     @Override
-    public void paintComponent(Graphics2D g2d, ImageObserver io) {
-        g2d.setFont(normalFont);
-        g2d.drawImage(pic1, 0, 0, io);
-        g2d.drawImage(pic2, 100, 100, io);
-        g2d.setColor(Color.WHITE);
-        g2d.drawString(Language.getInstance().getLine(167), 20, 300);
-        g2d.drawString("\'" + name + "\',", 20, 314);
-        g2d.drawString("Or use \'" + ip + "\',", 20, 328);
-        g2d.drawString(Language.getInstance().getLine(168), 20, 360);
-        g2d.drawString(Language.getInstance().getLine(169), 20, 376);
-        g2d.drawString(Language.getInstance().getLine(131), 20, 390);
-        JenesisGlassPane.getInstance().overlay(g2d, io);
+    public void render(GraphicsContext gc, double x, double y) {
+        gc.setFont(normalFont);
+        gc.drawImage(pic1, 0, 0);
+        gc.drawImage(pic2, 100, 100);
+        gc.setFill(Color.WHITE);
+        gc.fillText(Language.getInstance().get(167), 20, 300);
+        gc.fillText("\'" + name + "\',", 20, 314);
+        gc.fillText("Or use \'" + ip + "\',", 20, 328);
+        gc.fillText(Language.getInstance().get(168), 20, 360);
+        gc.fillText(Language.getInstance().get(169), 20, 376);
+        gc.fillText(Language.getInstance().get(131), 20, 390);
+        JenesisGlassPane.getInstance().overlay(gc);
     }
 
     public void stopRepaint() {

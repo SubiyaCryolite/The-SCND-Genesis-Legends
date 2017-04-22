@@ -31,9 +31,12 @@ import com.scndgen.legends.scene.CharacterSelectionScreen;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
+import static com.sun.javafx.tk.Toolkit.getToolkit;
 
 /**
  * @author: Ifunga Ndana
@@ -84,50 +87,50 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     }
 
     @Override
-    public void paintComponent(Graphics2D g2d, ImageObserver io) {
+    public void render(final GraphicsContext gc, final double w, final double h) {
         loadAssets();
-        g2d.setFont(normalFont);
-        g2d.setColor(Color.white);
-        g2d.fillRect(0, 0, 852, 480);
-        g2d.drawImage(bg3, 0, 0, io);
-        g2d.drawImage(fg1, xCordCloud, 0, io);
-        g2d.drawImage(fg2, xCordCloud2, 0, io);
-        g2d.drawImage(fg3, 0, 0, io);
+        gc.setFont(normalFont);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, 852, 480);
+        gc.drawImage(bg3, 0, 0);
+        gc.drawImage(fg1, xCordCloud, 0);
+        gc.drawImage(fg2, xCordCloud2, 0);
+        gc.drawImage(fg3, 0, 0);
         if (p1Opac < (1.0f - opacInc)) {
             p1Opac = p1Opac + opacInc;
         }
         if (opacChar < (1.0f - (opacInc * 2))) {
             opacChar = opacChar + (opacInc * 2);
         }
-        g2d.setColor(Color.BLACK);
-        g2d.setComposite(makeComposite(0.70f));
-        g2d.fillRect(0, 0, 853, 480);
-        g2d.setComposite(makeComposite(1.0f));
+        gc.setFill(Color.BLACK);
+        gc.setGlobalAlpha(0.70f);
+        gc.fillRect(0, 0, 853, 480);
+        gc.setGlobalAlpha(1.0f);
         //characterEnum preview DYNAMIC change
         if (characterSelected != true) {
-            g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap, io);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(caption[charPrevLoicIndex], 40 - x, 400, io);
+            gc.setGlobalAlpha((p1Opac));
+            gc.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap);
+            gc.setGlobalAlpha((1.0f));
+            gc.drawImage(caption[charPrevLoicIndex], 40 - x, 400);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
         if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
-            g2d.setComposite(makeComposite(p1Opac));
-            g2d.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap, io);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(caption[charPrevLoicIndex], 553 + x, 400, io);
+            gc.setGlobalAlpha((p1Opac));
+            gc.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap);
+            gc.setGlobalAlpha((1.0f));
+            gc.drawImage(caption[charPrevLoicIndex], 553 + x, 400);
         }
         //if characterEnum selected draw FIXED prev
         if (characterSelected) {
-            g2d.drawImage(portrait[charPrevLoc], charXcap, charYcap, io);
-            g2d.drawImage(caption[selectedCharIndex], 40, 380, io);
+            gc.drawImage(portrait[charPrevLoc], charXcap, charYcap);
+            gc.drawImage(caption[selectedCharIndex], 40, 380);
         }
         //if opp selected, draw FIXED prev
         if (opponentSelected) {
-            g2d.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap, io);
-            g2d.drawImage(caption[selectedOppIndex], 553, 380, io);
+            gc.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
+            gc.drawImage(caption[selectedOppIndex], 553, 380);
         }
-        g2d.drawImage(charHold, 311, 0, io);
+        gc.drawImage(charHold, 311, 0);
         for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
             for (int column = 0; column < columns; column++) {
                 int computedPosition = (columns * row) + column;
@@ -139,51 +142,51 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
                 {
                     if (characterSelected != true) {
-                        g2d.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                        gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
                     if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
-                        g2d.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                        gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
-                    g2d.setComposite(makeComposite(opacChar));
-                    g2d.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                    gc.setGlobalAlpha((opacChar));
+                    gc.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     charPrevLoicIndex = computedPosition;
-                    g2d.setComposite(makeComposite(1.0f));
+                    gc.setGlobalAlpha((1.0f));
                 } else {
-                    g2d.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                    gc.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row));
                 }
             }
         }
         if (characterSelected && opponentSelected) {
-            //TODO show select stage instead
-            g2d.drawImage(fight, 0, 0, io);
-            g2d.setFont(bigFont);
-            g2d.setColor(Color.WHITE);
-            g2d.drawString("<< " + Language.getInstance().getLine(146) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(146) + " >>")) / 2, 360);
-            g2d.drawString("<< " + Language.getInstance().getLine(147) + " >>", (852 - g2d.getFontMetrics(bigFont).stringWidth("<< " + Language.getInstance().getLine(147) + " >>")) / 2, 390);
+            //TODO show select lastStoryScene instead
+            gc.drawImage(fight, 0, 0);
+            gc.setFont(bigFont);
+            gc.setFill(Color.WHITE);
+            gc.fillText("<< " + Language.getInstance().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(146) + " >>", gc.getFont())) / 2, 360);
+            gc.fillText("<< " + Language.getInstance().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(147) + " >>", gc.getFont())) / 2, 390);
         }
-        g2d.setFont(normalFont);
-        g2d.setColor(Color.white);
+        gc.setFont(normalFont);
+        gc.setFill(Color.WHITE);
         if (characterSelected == false) {
             //select character
-            g2d.drawImage(charDescPic, 0, 0, io);
-            g2d.drawString(statsChar[charPrevLoicIndex], 4 + x, 18);
+            gc.drawImage(charDescPic, 0, 0);
+            gc.fillText(statsChar[charPrevLoicIndex], 4 + x, 18);
         }
         if (characterSelected && opponentSelected == false) {
             //select opponent
-            g2d.drawImage(oppDescPic, 452, 450, io);
-            g2d.drawString(statsChar[charPrevLoicIndex], 852 - g2d.getFontMetrics(normalFont).stringWidth(statsChar[charPrevLoicIndex]) + x, 468);
+            gc.drawImage(oppDescPic, 452, 450);
+            gc.fillText(statsChar[charPrevLoicIndex], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[charPrevLoicIndex], normalFont) + x, 468);
         }
-        g2d.drawImage(p1, 0, 180, io);
-        g2d.drawImage(p2, 812, 180, io);
+        gc.drawImage(p1, 0, 180);
+        gc.drawImage(p2, 812, 180);
         if (x < 0) {
             x = x + 2;
         }
-        JenesisGlassPane.getInstance().overlay(g2d, io);
+        JenesisGlassPane.getInstance().overlay(gc);
     }
 
     private void loadCaps() {
-        bigFont = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        bigFont = getMyFont(LoginScreen.extraTxtSize);
+        normalFont = getMyFont(LoginScreen.normalTxtSize);
         oppDescPic = imageLoader.loadImage("images/charInfoO.png");
         charDescPic = imageLoader.loadImage("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
@@ -222,17 +225,17 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
 
 
     private void loadDesc() {
-        statsChar[0] = Language.getInstance().getLine(134);
-        statsChar[1] = Language.getInstance().getLine(135);
-        statsChar[2] = Language.getInstance().getLine(136);
-        statsChar[3] = Language.getInstance().getLine(137);
-        statsChar[4] = Language.getInstance().getLine(138);
-        statsChar[5] = Language.getInstance().getLine(139);
-        statsChar[6] = Language.getInstance().getLine(140);
-        statsChar[7] = Language.getInstance().getLine(141);
-        statsChar[8] = Language.getInstance().getLine(142);
-        statsChar[9] = Language.getInstance().getLine(143);
-        statsChar[10] = Language.getInstance().getLine(144);
-        statsChar[11] = Language.getInstance().getLine(145);
+        statsChar[0] = Language.getInstance().get(134);
+        statsChar[1] = Language.getInstance().get(135);
+        statsChar[2] = Language.getInstance().get(136);
+        statsChar[3] = Language.getInstance().get(137);
+        statsChar[4] = Language.getInstance().get(138);
+        statsChar[5] = Language.getInstance().get(139);
+        statsChar[6] = Language.getInstance().get(140);
+        statsChar[7] = Language.getInstance().get(141);
+        statsChar[8] = Language.getInstance().get(142);
+        statsChar[9] = Language.getInstance().get(143);
+        statsChar[10] = Language.getInstance().get(144);
+        statsChar[11] = Language.getInstance().get(145);
     }
 }

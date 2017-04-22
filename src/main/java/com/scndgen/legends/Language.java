@@ -54,7 +54,7 @@ public final class Language {
      * @param dex - index of global text array
      * @return line of text
      */
-    public String getLine(int dex) {
+    public String get(int dex) {
         try {
             return text[dex];
         } catch (Exception e) {

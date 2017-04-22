@@ -21,11 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.drawing.DrawOverworld;
 import com.scndgen.legends.render.RenderGameplay;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author ndana
@@ -65,7 +61,7 @@ public class Animations3 implements Runnable {
                     }
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(DrawOverworld.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace(System.err);
             }
         } while (1 != 0);
     }

@@ -55,18 +55,18 @@ text files, human-readable headers or in the appropriate machine-
 readable metadata fields within text or binary files as long as those
 fields can be easily viewed by the user.
 
-2) The font name complies with the following:
-(a) The Original Version must retain its name, unmodified.
+2) The font userName complies with the following:
+(a) The Original Version must retain its userName, unmodified.
 (b) Modified Versions which are Substantially Changed must be renamed to
-avoid use of the name of the Original Version or similar names entirely.
+avoid use of the userName of the Original Version or similar names entirely.
 (c) Modified Versions which are not Substantially Changed must be
-renamed to both (i) retain the name of the Original Version and (ii) add
+renamed to both (i) retain the userName of the Original Version and (ii) add
 additional naming elements to distinguish the Modified Version from the
-Original Version. The name of such Modified Versions must be the name of
-the Original Version, with "derivative X" where X represents the name of
-the new work, appended to that name.
+Original Version. The userName of such Modified Versions must be the userName of
+the Original Version, with "derivative X" where X represents the userName of
+the new work, appended to that userName.
 
-3) The name(s) of the Copyright Holder(s) and any contributor to the
+3) The userName(s) of the Copyright Holder(s) and any contributor to the
 Font Software shall not be used to promote, endorse or advertise any
 Modified Version, except (i) as required by this licence, (ii) to
 acknowledge the contribution(s) of the Copyright Holder(s) or (iii) with

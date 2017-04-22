@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.GameState;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
@@ -43,55 +44,49 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
             diff3 = 3500,
             diff4 = 4500,
             diff5 = 6000;
-    public static int time;
     public int[] txtSpeedArr = new int[]{50, 100, 200, 250};
-    public boolean downloadingMusic, isSoundOn = true;
     public int[] Arr = {diff0, diff1, diff2, diff3, diff4, diff5};
     public String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
     private Object source;
     private JToggleButton[] btnRating;
-    private JToggleButton btnSoundOn, btnSoundOff, btnUpdateOn, btnAutoUpdate, star1, star2, star3, star4, star5;
-    private ButtonGroup soundBG, updateOptions;
-    private JLabel ratingL, lblOption1, oplblOption2, opLabel3, lblOption4, lblOption6, opLabel7, opLabel8, opLabel9, opLabel10, opLabel11;
-    private JComboBox diffSett, cmbResolution, cmbLanguage;
+    private JToggleButton btnSoundOn, btnSoundOff, star1, star2, star3, star4, star5;
+    private ButtonGroup soundBG;
+    private JLabel ratingL, lblOption1, oplblOption2, opLabel3, lblOption4, opLabel8, opLabel9, opLabel10, opLabel11;
+    private JComboBox diffSett, cmbLanguage;
     private String[] comicTxtFreqStr;
     private String[] mode;
     private String[] diffSettOpt;
     private JCheckBox cont;
-    private JPanel pnlGameRating, pnl2l, pan3, panDifficulty, panSound, panTimeDur, panTextSpeed, panFrameRate, opPanelSave, panUpdates, panComicText, panController, panLefty, panLanguage, panMusic;
+    private JPanel pnlGameRating, pnl2l, pan3, panDifficulty, panSound, panTimeDur, panTextSpeed, opPanelSave, panComicText, panController, panLefty, panLanguage;
     private Box box;
-    private JComboBox lefty, cmbTimeDuration, cmbTextSpeed, cmbFrameRate, cmbComicTextOccurence;
+    private JComboBox lefty, cmbTimeDuration, cmbTextSpeed, cmbComicTextOccurence;
     private String[] times = {"infinite", "180", "150", "120", "90", "60", "30"};
     private String[] frames = {"25", "30", "40", "60", "75", "120"};
     private String[] preset;
-    private JButton btnReset, save, updateButton, audio;
+    private JButton btnReset, save, updateButton;
     private int gameRating;
     private SpecialDrawMenuBGs logoPic;
-    private Font normalFont;
+    //private Font normalFont;
 
     /**
      * Constructor
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowOptions() {
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize - 2);
         box = new Box(BoxLayout.Y_AXIS);
         box.setOpaque(false);
 
         logoPic = new SpecialDrawMenuBGs();
-        comicTxtFreqStr = new String[]{Language.getInstance().getLine(1), Language.getInstance().getLine(2), Language.getInstance().getLine(3), Language.getInstance().getLine(4)};
-        mode = new String[]{Language.getInstance().getLine(22), Language.getInstance().getLine(23), Language.getInstance().getLine(24), Language.getInstance().getLine(25)};
-        diffSettOpt = new String[]{Language.getInstance().getLine(26), Language.getInstance().getLine(27), Language.getInstance().getLine(28), Language.getInstance().getLine(29), Language.getInstance().getLine(30)};
-        preset = new String[]{Language.getInstance().getLine(32), Language.getInstance().getLine(33)};
+        comicTxtFreqStr = new String[]{Language.getInstance().get(1), Language.getInstance().get(2), Language.getInstance().get(3), Language.getInstance().get(4)};
+        mode = new String[]{Language.getInstance().get(22), Language.getInstance().get(23), Language.getInstance().get(24), Language.getInstance().get(25)};
+        diffSettOpt = new String[]{Language.getInstance().get(26), Language.getInstance().get(27), Language.getInstance().get(28), Language.getInstance().get(29), Language.getInstance().get(30)};
+        preset = new String[]{Language.getInstance().get(32), Language.getInstance().get(33)};
 
         gameRating = 0;
 
-        btnReset = new JButton(Language.getInstance().getLine(31));
+        btnReset = new JButton(Language.getInstance().get(31));
         btnReset.setPreferredSize(new Dimension(64, 32));
         btnReset.addActionListener(this);
-
-        audio = new JButton("Download Audio Files Now");
-        audio.addActionListener(this);
 
         star1 = new JToggleButton("★");
         star1.setToolTipText("1 out of 5");
@@ -118,10 +113,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         pnl2l.add(btnRating[3]);
         pnl2l.add(btnRating[4]);
 
-        panMusic = new JPanel(new FlowLayout());
-        panMusic.add(audio);
-
-        ratingL = new JLabel(Language.getInstance().getLine(5) + gameRating + "/10");
+        ratingL = new JLabel(Language.getInstance().get(5) + gameRating + "/10");
         alterJLabel(ratingL);
         pnlGameRating = new JPanel(new GridLayout(1, 2));
         pnlGameRating.add(ratingL);
@@ -131,13 +123,13 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         /*
         countries = Locale.getISOCountries();
         nation = new JComboBox(countries);
-        nation.setSelectedItem(LoginScreen.getInstance().getCCode());
+        nation.setSelectedItem(LoginScreen.getInstance().getCountry());
          */
 
         diffSett = new JComboBox(diffSettOpt);
         diffSett.setSelectedIndex(resolveDifficulty());
         diffSett.addActionListener(this);
-        lblOption1 = new JLabel(Language.getInstance().getLine(6));
+        lblOption1 = new JLabel(Language.getInstance().get(6));
         panDifficulty = new JPanel(new GridLayout(1, 2));
         panDifficulty.add(lblOption1);
         panDifficulty.add(diffSett);
@@ -154,30 +146,19 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         cmbTextSpeed = new JComboBox(mode);
         cmbTextSpeed.setSelectedIndex(2);
         cmbTextSpeed.addActionListener(this);
-        lblOption4 = new JLabel(Language.getInstance().getLine(7));
+        lblOption4 = new JLabel(Language.getInstance().get(7));
         panTextSpeed = new JPanel(new GridLayout(1, 2));
         panTextSpeed.add(lblOption4);
         panTextSpeed.add(cmbTextSpeed);
 
-        cmbFrameRate = new JComboBox(frames);
-        cmbFrameRate.addActionListener(this);
-        cmbFrameRate.setSelectedItem(LoginScreen.getInstance().frames + "");
-        lblOption6 = new JLabel(Language.getInstance().getLine(10));
-        panFrameRate = new JPanel(new GridLayout(1, 2));
-        panFrameRate.add(lblOption6);
-        panFrameRate.add(cmbFrameRate);
-
-        oplblOption2 = new JLabel(Language.getInstance().getLine(11));
-        btnSoundOn = new JToggleButton(Language.getInstance().getLine(12));
-        btnSoundOff = new JToggleButton(Language.getInstance().getLine(13));
+        oplblOption2 = new JLabel(Language.getInstance().get(11));
+        btnSoundOn = new JToggleButton(Language.getInstance().get(12));
+        btnSoundOff = new JToggleButton(Language.getInstance().get(13));
         btnSoundOn.addActionListener(this);
         btnSoundOff.addActionListener(this);
+        btnSoundOn.setSelected(GameState.getInstance().getLogin().getSoundStatus()); //on by default
+        btnSoundOff.setSelected(!GameState.getInstance().getLogin().getSoundStatus());
 
-        if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
-            btnSoundOn.setSelected(true); //on by default
-        } else {
-            btnSoundOff.setSelected(true);
-        }
         soundBG = new ButtonGroup();
         soundBG.add(btnSoundOn);
         soundBG.add(btnSoundOff);
@@ -188,23 +169,16 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panSound.add(btnSoundOff);
         panSound.setOpaque(false);
 
-        opLabel3 = new JLabel(Language.getInstance().getLine(14));
+        opLabel3 = new JLabel(Language.getInstance().get(14));
         cmbTimeDuration = new JComboBox(times);
-        cmbTimeDuration.setSelectedItem("" + LoginScreen.getInstance().timePref);
+        cmbTimeDuration.setSelectedItem("" + GameState.getInstance().getLogin().getTimeLimit());
         cmbTimeDuration.addActionListener(this);
         panTimeDur = new JPanel(new GridLayout(1, 2));
         panTimeDur.add(opLabel3);
         panTimeDur.add(cmbTimeDuration);
 
-        opLabel7 = new JLabel(Language.getInstance().getLine(15));
-        btnUpdateOn = new JToggleButton(Language.getInstance().getLine(12));
-        btnAutoUpdate = new JToggleButton(Language.getInstance().getLine(13));
-        btnUpdateOn.addActionListener(this);
-        btnAutoUpdate.addActionListener(this);
-
-
         pan3 = new JPanel();
-        updateButton = new JButton(Language.getInstance().getLine(16));
+        updateButton = new JButton(Language.getInstance().get(16));
         updateButton.addActionListener(this);
         pan3.add(updateButton);
         /*
@@ -212,57 +186,42 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         pan3.add(countryCode);
         pan3.add(nation);
          */
-        if (LoginScreen.getInstance().autoUpdate.equalsIgnoreCase("yes")) {
-            btnUpdateOn.setSelected(true); //on by default
-        } else {
-            btnAutoUpdate.setSelected(true);
-        }
-        updateOptions = new ButtonGroup();
-        updateOptions.add(btnUpdateOn);
-        updateOptions.add(btnAutoUpdate);
-        panUpdates = new JPanel(new GridLayout(1, 2));
-        panUpdates.add(opLabel7);
-        panUpdates.add(btnUpdateOn);
-        panUpdates.add(btnAutoUpdate);
 
         panLefty = new JPanel(new GridLayout(1, 2));
-        lefty = new JComboBox(new String[]{Language.getInstance().getLine(172), Language.getInstance().getLine(171)});
-        lefty.setSelectedIndex(LoginScreen.getInstance().getIsLeftyInt());
+        lefty = new JComboBox(new String[]{Language.getInstance().get(172), Language.getInstance().get(171)});
+        lefty.setSelectedIndex(GameState.getInstance().getLogin().isLeftHanded() ? 0 : 1);
         lefty.addActionListener(this);
-        opLabel10 = new JLabel(Language.getInstance().getLine(173));
+        opLabel10 = new JLabel(Language.getInstance().get(173));
         panLefty.add(opLabel10);
         panLefty.add(lefty);
 
         cmbComicTextOccurence = new JComboBox(comicTxtFreqStr);
-        cmbComicTextOccurence.setSelectedIndex(LoginScreen.getInstance().comicPicOcc);
+        cmbComicTextOccurence.setSelectedIndex(GameState.getInstance().getLogin().getComicEffectOccurence());
         cmbComicTextOccurence.addActionListener(this);
-        opLabel8 = new JLabel(Language.getInstance().getLine(17));
+        opLabel8 = new JLabel(Language.getInstance().get(17));
         panComicText = new JPanel(new GridLayout(1, 2));
         panComicText.add(opLabel8);
         panComicText.add(cmbComicTextOccurence);
 
         cont = new JCheckBox();
         cont.addItemListener(this);
-        if (LoginScreen.getInstance().controller) {
-            cont.setSelected(true);
-        } else {
-            cont.setSelected(false);
-        }
-        opLabel9 = new JLabel(Language.getInstance().getLine(18));
+        cont.setSelected(GameState.getInstance().getLogin().getUsingController());
+        cont.setSelected(false);
+        opLabel9 = new JLabel(Language.getInstance().get(18));
         panController = new JPanel(new GridLayout(1, 2));
         panController.add(opLabel9);
         panController.add(cont);
 
         cmbLanguage = new JComboBox(Language.getInstance().getSupportedLanguages());
-        cmbLanguage.setSelectedIndex(LoginScreen.getInstance().getSelLang());
+        cmbLanguage.setSelectedIndex(GameState.getInstance().getLogin().getCurrentLanguage());
         cmbLanguage.addActionListener(this);
-        opLabel11 = new JLabel(Language.getInstance().getLine(19));
+        opLabel11 = new JLabel(Language.getInstance().get(19));
         panLanguage = new JPanel(new GridLayout(1, 2));
         panLanguage.add(opLabel11);
         panLanguage.add(cmbLanguage);
 
 
-        save = new JButton(Language.getInstance().getLine(20));
+        save = new JButton(Language.getInstance().get(20));
         save.addActionListener(this);
 
         opPanelSave = new JPanel(new FlowLayout());
@@ -272,12 +231,10 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panLanguage.setOpaque(false);
         //pnlGameRating.setOpaque(false);
         panLefty.setOpaque(false);
-        panFrameRate.setOpaque(false);
         panDifficulty.setOpaque(false);
         panSound.setOpaque(false);
         panTimeDur.setOpaque(false);
         panTextSpeed.setOpaque(false);
-        panUpdates.setOpaque(false);
         panComicText.setOpaque(false);
         //panController.setOpaque(false)
         opPanelSave.setOpaque(false);
@@ -288,8 +245,6 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         alterJLabel(oplblOption2);
         alterJLabel(opLabel3);
         alterJLabel(lblOption4);
-        alterJLabel(lblOption6);
-        alterJLabel(opLabel7);
         alterJLabel(opLabel8);
         alterJLabel(opLabel9);
         alterJLabel(opLabel10);
@@ -308,7 +263,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         //box.add(panController);
         box.add(opPanelSave);
 
-        setTitle(Language.getInstance().getLine(34));
+        setTitle(Language.getInstance().get(34));
         setUndecorated(true);
         setContentPane(logoPic);
         add(box);
@@ -320,7 +275,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
-        setRating(LoginScreen.getInstance().getGameRating() / 20);
+        setRating(GameState.getInstance().getLogin().getGameRating() / 20);
     }
 
     /**
@@ -332,27 +287,27 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         one = 0;
         //500,2500, 3500, 4500, 6500
 
-        if (LoginScreen.getInstance().difficultyStat == diff0) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff0) {
             one = 0;
         }
 
-        if (LoginScreen.getInstance().difficultyStat == diff1) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff1) {
             one = 1;
         }
 
-        if (LoginScreen.getInstance().difficultyStat == diff2) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff2) {
             one = 2;
         }
 
-        if (LoginScreen.getInstance().difficultyStat == diff3) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff3) {
             one = 3;
         }
 
-        if (LoginScreen.getInstance().difficultyStat == diff4) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff4) {
             one = 4;
         }
 
-        if (LoginScreen.getInstance().difficultyStat == diff5) {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff5) {
             one = 5;
         }
 
@@ -361,16 +316,12 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
 
     public void alterJLabel(JLabel jLabel) {
         jLabel.setForeground(Color.WHITE);
-        jLabel.setFont(normalFont);
+        //jLabel.setFont(normalFont);
     }
 
     @Override
     public void itemStateChanged(ItemEvent ie) {
-        if (ie.getStateChange() == ItemEvent.SELECTED) {
-            LoginScreen.getInstance().controllerStr = "true";
-        } else {
-            LoginScreen.getInstance().controllerStr = "false";
-        }
+        GameState.getInstance().getLogin().setUsingController(ie.getStateChange() == ItemEvent.SELECTED);
     }
 
     private void resetRating() {
@@ -389,9 +340,9 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 btnRating[u].setEnabled(false);
             }
             gameRating = num;
-            LoginScreen.getInstance().setGameRating(gameRating);
-            ratingL.setText(Language.getInstance().getLine(35) + gameRating + "/5");
-            LoginScreen.getInstance().saveConfigFile();
+            GameState.getInstance().getLogin().setGameRating(gameRating);
+            ratingL.setText(Language.getInstance().get(35) + gameRating + "/5");
+            GameState.getInstance().saveConfigFile();
         }
     }
 
@@ -409,73 +360,48 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 setRating(um + 1);
             }
         }
-
-        if (source == audio) {
-            if (!downloadingMusic) {
-                LoginScreen.getInstance().downloadMusic();
-                downloadingMusic = true;
-            }
-        }
-
         if (source == lefty) {
-            String val = "";
-
-            if (lefty.getSelectedIndex() == 0) {
-                val = "no";
-            } else {
-                val = "yes";
-            }
-
-            LoginScreen.getInstance().setIsLefty(val);
+            GameState.getInstance().getLogin().setLeftHanded(lefty.getSelectedIndex() != 0);
         }
         if (source == btnReset) {
             resetRating();
-        } else if (source == cmbFrameRate) {
-            LoginScreen.getInstance().frames = Integer.parseInt(cmbFrameRate.getSelectedItem() + "");
         } else if (source == cmbComicTextOccurence) {
-            LoginScreen.getInstance().comicPicOcc = cmbComicTextOccurence.getSelectedIndex();
-        } else if (source == cmbResolution) {
-            LoginScreen.getInstance().scalePos = cmbResolution.getSelectedIndex();
+            GameState.getInstance().getLogin().setComicEffectOccurence(cmbComicTextOccurence.getSelectedIndex());
         } else if (source == cmbLanguage) {
             Language.getInstance().setLanguage(cmbLanguage.getSelectedIndex());
-            LoginScreen.getInstance().setActivLang(cmbLanguage.getSelectedIndex());
+            GameState.getInstance().getLogin().setCurrentLanguage(cmbLanguage.getSelectedIndex());
         } else if (source == diffSett) {
-            LoginScreen.getInstance().difficultyDyn = Arr[diffSett.getSelectedIndex()];
-            LoginScreen.getInstance().difficultyStat = Arr[diffSett.getSelectedIndex()];
+            GameState.getInstance().getLogin().setDifficultyDyn(Arr[diffSett.getSelectedIndex()]);
+            GameState.getInstance().getLogin().setDifficulty(Arr[diffSett.getSelectedIndex()]);
             System.out.println("Diff = " + Arr[diffSett.getSelectedIndex()]);
             System.out.println("Diff Range = " + (LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()]));
             System.out.println("Diff Range Rate = " + ((LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()])) / LoginScreen.difficultyScale);
         } else if (source == cmbTextSpeed) {
             txtSpeed = txtSpeedArr[cmbTextSpeed.getSelectedIndex()];
         } else if (source == btnSoundOn) {
-            LoginScreen.getInstance().soundStatus = "on";
+            GameState.getInstance().getLogin().setSoundStatus(true);
         } else if (source == btnSoundOff) {
-            LoginScreen.getInstance().soundStatus = "off";
-        } else if (source == btnUpdateOn) {
-            LoginScreen.getInstance().autoUpdate = "yes";
-        } else if (source == btnAutoUpdate) {
-            LoginScreen.getInstance().autoUpdate = "no";
+            GameState.getInstance().getLogin().setSoundStatus(false);
         } else if (source == cmbTimeDuration) {
             if (cmbTimeDuration.getSelectedItem() == "infinite") {
-                time = 182; //above limit
+                GameState.getInstance().getLogin().setTimeLimit(1000);
             } else if (cmbTimeDuration.getSelectedItem() == "180") {
-                time = 180;
+                GameState.getInstance().getLogin().setTimeLimit(180);
             } else if (cmbTimeDuration.getSelectedItem() == "150") {
-                time = 150;
+                GameState.getInstance().getLogin().setTimeLimit(150);
             } else if (cmbTimeDuration.getSelectedItem() == "120") {
-                time = 120;
+                GameState.getInstance().getLogin().setTimeLimit(120);
             } else if (cmbTimeDuration.getSelectedItem() == "90") {
-                time = 90;
+                GameState.getInstance().getLogin().setTimeLimit(90);
             } else if (cmbTimeDuration.getSelectedItem() == "60") {
-                time = 60;
+                GameState.getInstance().getLogin().setTimeLimit(60);
             } else if (cmbTimeDuration.getSelectedItem() == "30") {
-                time = 30;
+                GameState.getInstance().getLogin().setTimeLimit(30);
             }
-            LoginScreen.getInstance().timePref = time;
         } else if (source == save) {
-            //LoginScreen.getInstance().setCountryCode(nation.getSelectedItem() + "");
-            LoginScreen.getInstance().saveConfigFile();
-            setVisible(false);
+            //GameState.getInstance().getLogin().setCountry(nation.getSelectedItem() + "");
+            GameState.getInstance().saveConfigFile();
+            dispose();
         }
     }
 

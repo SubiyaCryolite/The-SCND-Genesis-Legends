@@ -22,9 +22,11 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
+import static com.sun.javafx.tk.Toolkit.getToolkit;
+
 
 /**
  * From page 226 Filthy Rich Clients
@@ -53,11 +55,10 @@ public class JenesisGlassPane {
     /**
      * Adds overlay to drawing commands, overlay at bottom
      *
-     * @param graphics2D,    the Graphics2D object
-     * @param imageObserver, the image observer object
+     * @param gc, the Graphics2D object
      */
-    public void overlay(Graphics2D graphics2D, ImageObserver imageObserver) {
-        graphics2D.setColor(Color.black);
+    public void overlay(GraphicsContext gc) {
+        gc.setFill(Color.BLACK);
         if (increasePrimaryOpacity && primaryOpacity < 0.99f) {//fade up
             primaryOpacity = primaryOpacity + 0.01f;
         } else {
@@ -71,12 +72,12 @@ public class JenesisGlassPane {
                 primaryOpacity = primaryOpacity - 0.01f;
             }
         }
-        graphics2D.setComposite(makeComposite(primaryOpacity / 2.5f));
-        graphics2D.fillRoundRect((gameWidth - 5 - 5 - graphics2D.getFontMetrics().stringWidth(primaryNotification)), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
-        graphics2D.setComposite(makeComposite(primaryOpacity));
-        graphics2D.setColor(Color.white);
-        graphics2D.drawString(primaryNotification, (gameWidth - 5 - graphics2D.getFontMetrics().stringWidth(primaryNotification)), 70);
-        graphics2D.setComposite(makeComposite(1.0f));
+        gc.setGlobalAlpha((primaryOpacity / 2.5f));
+        gc.fillRoundRect((gameWidth - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
+        gc.setGlobalAlpha((primaryOpacity));
+        gc.setFill(Color.WHITE);
+        gc.fillText(primaryNotification, (gameWidth - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 70);
+        gc.setGlobalAlpha((1.0f));
 
         if (increaseSecondaryOpacity && secondaryOpacity < 0.99f) {//fade up
             secondaryOpacity = secondaryOpacity + 0.01f;
@@ -91,30 +92,13 @@ public class JenesisGlassPane {
                 secondaryOpacity = secondaryOpacity - 0.01f;
             }
         }
-        graphics2D.setColor(Color.black);
-        graphics2D.setComposite(makeComposite(secondaryOpacity / 2.5f));
-        graphics2D.fillRoundRect((gameWidth - 5 - 5 - graphics2D.getFontMetrics().stringWidth(secondaryNotification)), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
-        graphics2D.setComposite(makeComposite(secondaryOpacity));
-        graphics2D.setColor(Color.white);
-        graphics2D.drawString(secondaryNotification, (gameWidth - 5 - graphics2D.getFontMetrics().stringWidth(secondaryNotification)), 50);
-        graphics2D.setComposite(makeComposite(1.0F));
-    }
-
-    /**
-     * Transparency
-     * e.g AlphaComposite(10*0.1f)
-     *
-     * @param alpha, value from 10 to 0
-     * @return alpha composite
-     */
-    public AlphaComposite makeComposite(float alpha) {
-        int type = AlphaComposite.SRC_OVER;
-        if (alpha >= 0.0f && alpha <= 1.0f) {
-            //nothing
-        } else {
-            alpha = 0.0f;
-        }
-        return (AlphaComposite.getInstance(type, alpha));
+        gc.setFill(Color.BLACK);
+        gc.setGlobalAlpha((secondaryOpacity / 2.5f));
+        gc.fillRoundRect((gameWidth - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
+        gc.setGlobalAlpha((secondaryOpacity));
+        gc.setFill(Color.WHITE);
+        gc.fillText(secondaryNotification, (gameWidth - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 50);
+        gc.setGlobalAlpha((1.0F));
     }
 
     /**

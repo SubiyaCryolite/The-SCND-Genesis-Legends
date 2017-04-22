@@ -26,26 +26,24 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.URI;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * @author Ndana
  */
-public class JenesisWindow extends JFrame implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class JenesisWindow {
 
     public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
     public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
     private static LoginScreen p;
-    public int[] ach = new int[5];
-    public int[] classArr = new int[5];
     private WindowControls controls;
     private WindowOptions options;
     private WindowAbout about;
@@ -61,41 +59,25 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
         startup = new AudioPlayback(AudioPlayback.startUpSound(), false);
         startup.play();
         strUser = dude;
-        setUndecorated(true);
-        setLayout(new BorderLayout());
-        setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
-        addMouseMotionListener(this);
-        addMouseListener(this);
-        addMouseWheelListener(this);
-        requestFocusInWindow();
-        setFocusable(true);
-        addKeyListener(this);
-        pack();
-        setLocationRelativeTo(null); // Centers JFrame on screen //
-        setResizable(false);
-        setVisible(true);
+        //setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
         try {
             if (JenesisGamePad.getInstance().controllerFound) {
                 controller = true;
                 buttonz = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
                 pollController();
             }
-            if (this.p.controller) {
-
+            if (this.p.usingController) {
                 if (JenesisGamePad.getInstance().statusInt == 1) {
-                    sytemNotice(JenesisGamePad.getInstance().controllerName + " " + Language.getInstance().getLine(103));
+                    sytemNotice(JenesisGamePad.getInstance().controllerName + " " + Language.getInstance().get(103));
                 } else if (JenesisGamePad.getInstance().statusInt == 0) {
-                    sytemNotice(Language.getInstance().getLine(104));
+                    sytemNotice(Language.getInstance().get(104));
                 } else if (JenesisGamePad.getInstance().statusInt == 2) {
-                    sytemNotice(Language.getInstance().getLine(105));
+                    sytemNotice(Language.getInstance().get(105));
                 }
             }
         } catch (Error ex) {
-            sytemNotice(Language.getInstance().getLine(106));
+            sytemNotice(Language.getInstance().get(106));
         }
-        refreshWindow();
     }
 
     public static JenesisWindow getInstance() {
@@ -112,7 +94,6 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
     }
 
     public void logOut() {
-        dispose();
         p.showWindow();
     }
 
@@ -130,12 +111,13 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
             if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
                 RenderMainMenu.getInstance().stopTutorial();
             }
-            RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY);
+            RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
         } else {
             SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
             if (destination == SubMode.LAN_CLIENT) {
                 scan = new NetworkScanLan();
-            } if (destination == SubMode.LOGOUT) {
+            }
+            if (destination == SubMode.LOGOUT) {
                 logOut();
             } else if (destination == SubMode.LEADERS) {
                 if (boardNotUp) {
@@ -157,106 +139,52 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
         }
     }
 
-    @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         JenesisPanel.getInstance().mouseWheelMoved(mwe);
     }
 
-    @Override
     public void mouseClicked(MouseEvent m) {
         JenesisPanel.getInstance().mouseClicked(m);
     }
 
-    @Override
     public void mouseEntered(MouseEvent m) {
         JenesisPanel.getInstance().mouseEntered(m);
     }
 
-    @Override
     public void mouseDragged(MouseEvent m) {
         JenesisPanel.getInstance().mouseDragged(m);
     }
 
-    @Override
     public void mouseMoved(MouseEvent m) {
         JenesisPanel.getInstance().mouseMoved(m);
     }
 
-    @Override
     public void mouseExited(MouseEvent m) {
         JenesisPanel.getInstance().mouseExited(m);
     }
 
-    @Override
     public void mousePressed(MouseEvent m) {
         JenesisPanel.getInstance().mousePressed(m);
     }
 
-    @Override
     public void mouseReleased(MouseEvent m) {
         JenesisPanel.getInstance().mouseReleased(m);
     }
 
-    @Override
+
     public void keyPressed(KeyEvent e) {
         JenesisPanel.getInstance().keyPressed(e);
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
-            RenderMainMenu.getInstance().goUp();
-        }
-        if (keyCode == KeyEvent.VK_F) {
-            provideFeedback('f');
-        }
-        if (keyCode == KeyEvent.VK_B) {
-            provideFeedback('b');
-        }
-        if (keyCode == KeyEvent.VK_L) {
-            provideFeedback('l');
-        }
-        if (keyCode == KeyEvent.VK_ENTER) {
+        KeyCode keyCode = e.getCode();
+        if (keyCode == KeyCode.ENTER) {
             select();
         }
     }
 
-    private void provideFeedback(char code) {
-        if (Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                URI uri = null;
-                try {
-                    switch (code) {
-                        case 'f': {
-                            uri = new URI("https://docs.google.com/spreadsheet/viewform?formkey=dGppbVViZHE5QWxZYkRBazZNcUtTRHc6MQ");
-                        }
-                        break;
-                        case 'b': {
-                            uri = new URI("https://subiyacryolite.github.io/");
-                        }
-                        break;
-                        case 'l': {
-                            uri = new URI("http://www.facebook.com/pages/THE-SCND-GENESIS/111839318834780");
-                        }
-                        break;
 
-                        default: {
-                            uri = new URI("http://www.scndgen.com");
-                        }
-                    }
-                    desktop.browse(uri);
-                } catch (Exception e) {
-                    e.printStackTrace(System.err);
-                }
-            }
-        }
-        p.trayMessage("Thanks", "Thank you for your support!!");
-    }
-
-    @Override
     public void keyReleased(KeyEvent e) {
         JenesisPanel.getInstance().keyReleased(e);
     }
 
-    @Override
     public void keyTyped(KeyEvent e) {
         JenesisPanel.getInstance().keyTyped(e);
     }
@@ -265,11 +193,11 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
      * Exit game
      */
     public void exit() {
-        int x = JOptionPane.showConfirmDialog(null, Language.getInstance().getLine(110), "Exit", JOptionPane.YES_NO_OPTION);
-        if (x == JOptionPane.YES_OPTION) {
-            int b = JOptionPane.showConfirmDialog(null, Language.getInstance().getLine(111), "Seriously", JOptionPane.YES_NO_OPTION);
-            if (b == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, Language.getInstance().getLine(112), "Later", JOptionPane.INFORMATION_MESSAGE);
+        int exit = JOptionPane.showConfirmDialog(null, Language.getInstance().get(110), "Exit", JOptionPane.YES_NO_OPTION);
+        if (exit == JOptionPane.YES_OPTION) {
+            int seriously = JOptionPane.showConfirmDialog(null, Language.getInstance().get(111), "Seriously", JOptionPane.YES_NO_OPTION);
+            if (seriously == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, Language.getInstance().get(112), "Later", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
         }
@@ -281,7 +209,6 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
     public void terminateThis() {
         RenderMainMenu.getInstance().StopRepaint();
         isActive = false;
-        dispose();
     }
 
     /**
@@ -295,7 +222,6 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
             }
         } catch (Exception e) {
         }
-        setVisible(true);
     }
 
     /**
@@ -305,62 +231,32 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
         JenesisPanel.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
     }
 
-    private void refreshWindow() {
-        new Thread() {
-
-            @Override
-            @SuppressWarnings({"static-access", "SleepWhileHoldingLock"})
-            public void run() {
-                while (true) {
-                    try {
-                        this.sleep(16);
-                        repaint();
-                    } catch (Exception e) {
-                    }
-                }
-            }
-        }.start();
-    }
-
     private void pollController() {
         new Thread() {
-
             @Override
             @SuppressWarnings({"static-access", "SleepWhileHoldingLock"})
             public void run() {
                 try {
                     do {
                         JenesisGamePad.getInstance().poll();
-
                         compassDir2 = JenesisGamePad.getInstance().getXYStickDir();
                         if (compassDir2 == JenesisGamePad.getInstance().NORTH) {
                             RenderMainMenu.getInstance().goUp();
                         } else if (compassDir2 == JenesisGamePad.getInstance().SOUTH) {
                             RenderMainMenu.getInstance().goDown();
                         }
-
-                        //update bottons
                         buttonz = JenesisGamePad.getInstance().getButtons();
-
-
-                        // get POV hat compass direction
                         compassDir = JenesisGamePad.getInstance().getHatDir();
-                        {
-                            if (compassDir == JenesisGamePad.getInstance().SOUTH) {
-                                if (doneChilling) {
-                                    RenderMainMenu.getInstance().goDown();
-                                }
-                                menuLatency();
-                            }
-
-                            if (compassDir == JenesisGamePad.getInstance().NORTH) {
-                                if (doneChilling) {
-                                    RenderMainMenu.getInstance().goUp();
-                                }
-                                menuLatency();
-                            }
+                        if (compassDir == JenesisGamePad.getInstance().SOUTH) {
+                            if (doneChilling)
+                                RenderMainMenu.getInstance().goDown();
+                            menuLatency();
                         }
-
+                        if (compassDir == JenesisGamePad.getInstance().NORTH) {
+                            if (doneChilling)
+                                RenderMainMenu.getInstance().goUp();
+                            menuLatency();
+                        }
                         if (buttonz[2]) {
                             if (doneChilling) {
                                 quickVibrate(0.4f, 1000);
@@ -368,7 +264,6 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
                             }
                             menuLatency();
                         }
-
                         if (buttonz[3]) {
                             if (doneChilling) {
                                 quickVibrate(0.8f, 1000);
@@ -376,13 +271,8 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
                             }
                             menuLatency();
                         }
-
-                        // get compass direction for the two analog sticks
                         compassDir = JenesisGamePad.getInstance().getXYStickDir();
-
                         compassDir = JenesisGamePad.getInstance().getZRZStickDir();
-
-
                         this.sleep(66);
                     } while (isActive);
                 } catch (Exception e) {
@@ -392,7 +282,7 @@ public class JenesisWindow extends JFrame implements KeyListener, MouseListener,
     }
 
     /**
-     * Responsible for latency in game menus(controller)
+     * Responsible for latency in game menus(usingController)
      */
     private void menuLatency() {
         new Thread() {

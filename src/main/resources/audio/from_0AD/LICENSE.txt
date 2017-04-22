@@ -12,7 +12,7 @@ Briefly, this means:
   in the credits screen of a game or a video, or in a text file accompanying
   the files). The attribution must include:
   * A link to http://creativecommons.org/licenses/by-sa/3.0/
-  * The name "Wildfire Games" as the original author
+  * The userName "Wildfire Games" as the original author
   * A link to http://www.wildfiregames.com/
 
 * If you distribute one of these files, you must release it (and any

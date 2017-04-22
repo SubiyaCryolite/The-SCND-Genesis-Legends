@@ -22,6 +22,7 @@
 package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Achievements;
+import com.scndgen.legends.GameState;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
@@ -33,7 +34,6 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.windows.JenesisPanel;
-import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
 import java.awt.event.ActionEvent;
@@ -50,14 +50,13 @@ import java.util.logging.Logger;
 public class GameInstance implements Runnable, ActionListener {
 
     public boolean gameOver, gamePaused, gameRunning;
-    public int time, count2;
+    public int timeLimit, count2;
     public boolean storySequence;
     private boolean runCharacterAtb = true, runOpponentAtb = true;
     public boolean isRunning = false;
     public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
     public boolean aiAttack = false, enemyAiRunning = false;
-    public Achievements achievements;
     public AudioPlayback loseMusic, winMusic;
     private Thread thread;
     private int sampleChar;
@@ -89,7 +88,7 @@ public class GameInstance implements Runnable, ActionListener {
             try {
                 thread.sleep(33); // fps
                 RenderGameplay.getInstance().matchStatus();
-                achievements.scan();
+                Achievements.getInstance().scan();
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -113,15 +112,15 @@ public class GameInstance implements Runnable, ActionListener {
             }
 
 
-            if ((time <= 180 && storySequence == false)) {
+            if ((timeLimit <= 180 && storySequence == false)) {
 
                 if (count < 1000) //continue till we make a second
                 {
                     count = count + speedFactor;
                 } else {
                     try {
-                        time = time - 1;
-                        timeStr = "" + time + "";
+                        timeLimit = timeLimit - 1;
+                        timeStr = "" + timeLimit + "";
                         count = 0.0f;
 
 
@@ -245,11 +244,11 @@ public class GameInstance implements Runnable, ActionListener {
         gameOver = true;
         JenesisPanel.getInstance().freeToSave = true;
         RenderGameplay.getInstance().closeAudio();
-        LoginScreen.getInstance().setCurrentPlayTime(playTimeCounter);
-        achievements.scan();
+        GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
+        Achievements.getInstance().scan();
         //if not story scene, increment char usage
         if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
-            LoginScreen.getInstance().incrementCharUsage(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex());
+            GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
         }
         if (RenderGameplay.getInstance().hasWon()) {
             RenderGameplay.getInstance().showWinLabel();
@@ -266,7 +265,7 @@ public class GameInstance implements Runnable, ActionListener {
     /**
      * Thread sleep method
      *
-     * @param thisTime - the time to sleep
+     * @param thisTime - the timeLimit to sleep
      */
     @SuppressWarnings("static-access")
     public void sleepy(int thisTime) {
@@ -303,11 +302,11 @@ public class GameInstance implements Runnable, ActionListener {
     }
 
     /**
-     * This method records play time
+     * This method records play timeLimit
      */
     private void recordPlayTime() {
         matchDuration = 0;
-        playTimeCounter = LoginScreen.getInstance().getCurrentPlayTime();
+        playTimeCounter = GameState.getInstance().getLogin().getPlayTime();
         new Thread() {
 
             @Override
@@ -331,23 +330,14 @@ public class GameInstance implements Runnable, ActionListener {
     }
 
     /**
-     * Get this context
-     *
-     * @return
-     */
-    public Achievements achievements() {
-        return achievements;
-    }
-
-    /**
      * This thread executes when a game is over, designed to free unused memory
      */
     public void closingThread(int mo) {
         //update profile operations
         LoginScreen.getInstance().incrementMatchCount();
-        LoginScreen.getInstance().setPoints(achievements.getNewUserPoints());
+        GameState.getInstance().getLogin().setPoints(Achievements.getInstance().getNewUserPoints());
         //save profile
-        LoginScreen.getInstance().saveConfigFile();
+        GameState.getInstance().saveConfigFile();
         JenesisGlassPane.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
         if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
@@ -413,15 +403,15 @@ public class GameInstance implements Runnable, ActionListener {
 
     public void newInstance() {
         executorAI = new OpponentAttacks();
-        achievements = LoginScreen.getInstance().getAch();
+        Achievements.getInstance().newInstance();
         if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
             storySequence = true;
-            time = StoryMode.getInstance().time;
-        } //if LAN, client uses hosts time preset
+            timeLimit = StoryMode.getInstance().time;
+        } //if LAN, client uses hosts timeLimit preset
         else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
-            time = JenesisPanel.getInstance().hostTime;
+            timeLimit = JenesisPanel.getInstance().hostTime;
         } else {
-            time = WindowOptions.time;
+            timeLimit = GameState.getInstance().getLogin().getTimeLimit();
         }
         gameRunning = true;
         recordPlayTime();
@@ -433,8 +423,7 @@ public class GameInstance implements Runnable, ActionListener {
         limitOpp = 290;
         gamePaused = false;
         gameOver = false;
-        achievements.newInstance();
-        LoginScreen.getInstance().newGame = true;
+        LoginScreen.getInstance().newMatch = true;
         winMusic = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMusic = new AudioPlayback(AudioPlayback.loseSound(), false);
         if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {

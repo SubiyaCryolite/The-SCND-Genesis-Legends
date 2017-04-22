@@ -71,7 +71,7 @@ public class CreateDB {
             }
             initSuccess = true;
             stmt = con.createStatement();
-            stmt.executeUpdate("CREATE TABLE  user(id VARCHAR(30) NOT NULL, rating INTEGER, userName VARCHAR(50), userCountry VARCHAR(50), gameVersion VARCHAR(20), versionInt INTEGER, userTotalMatches INTEGER, userWin INTEGER, userLoss INTEGER, favCharacter INTEGER, userPoints INT, PRIMARY KEY (id) );");
+            stmt.executeUpdate("CREATE TABLE  user(id VARCHAR(30) NOT NULL, rating INTEGER, userName VARCHAR(50), userCountry VARCHAR(50), gameVersion VARCHAR(20), versionInt INTEGER, userTotalMatches INTEGER, userWin INTEGER, userLoss INTEGER, favCharacter INTEGER, userPoints INT, PRIMARY_MENU KEY (id) );");
             System.out.println("Created DB");
         } catch (Exception e) {
             e.printStackTrace(System.err);

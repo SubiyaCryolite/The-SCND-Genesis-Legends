@@ -7,12 +7,14 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.input.MouseEvent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -254,7 +256,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             JenesisPanel.getInstance().closeTheClient();
         } else if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
-            RenderStoryMenu.getInstance().getStoryInstance().skipDialogue();
+            RenderStoryMenu.getInstance().getStoryInstance().accept();
         }
         JenesisPanel.getInstance().backToMenuScreen();
         RenderGameplay.getInstance().closeAudio();
@@ -311,7 +313,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selRaila(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(84));
+        primaryNotice(Language.getInstance().get(84));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             {
@@ -350,7 +352,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public void selSubiya(CharacterState type) {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
-            primaryNotice(Language.getInstance().getLine(85));
+            primaryNotice(Language.getInstance().get(85));
             {
                 sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
                 sound.play();
@@ -387,7 +389,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selLynx(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(86));
+        primaryNotice(Language.getInstance().get(86));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -423,7 +425,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAisha(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(87));
+        primaryNotice(Language.getInstance().get(87));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -460,7 +462,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAde(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(88));
+        primaryNotice(Language.getInstance().get(88));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -497,7 +499,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selRav(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(89));
+        primaryNotice(Language.getInstance().get(89));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -534,7 +536,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selJon(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(90));
+        primaryNotice(Language.getInstance().get(90));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -571,7 +573,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAdam(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(91));
+        primaryNotice(Language.getInstance().get(91));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -608,7 +610,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selNOVAAdam(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(92));
+        primaryNotice(Language.getInstance().get(92));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -645,7 +647,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selAza(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(93));
+        primaryNotice(Language.getInstance().get(93));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -682,7 +684,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
      */
     public void selSorr(CharacterState type) {
-        primaryNotice(Language.getInstance().getLine(94));
+        primaryNotice(Language.getInstance().get(94));
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound = new AudioPlayback(AudioPlayback.charSelectSound(), false);
@@ -1080,6 +1082,18 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
             setHindex(99);
             setVindex(99);
             withinCharPanel = false;
+        }
+    }
+
+    public void mouseClicked(MouseEvent me) {
+        if (!RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) return;
+        if (getCharacterSelected() && getOpponentSelected()) {
+            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                JenesisPanel.getInstance().quickVibrate(0.6f, 1000);
+                beginGame();
+            }
+        } else {
+            selectCharacter();
         }
     }
 }

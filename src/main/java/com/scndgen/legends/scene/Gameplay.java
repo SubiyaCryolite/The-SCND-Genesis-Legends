@@ -220,7 +220,7 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * Navigate down in the menu
      */
-    public void downItem() {
+    public void moveDown() {
         if (itemIndex < 3) {
             itemIndex = itemIndex + 1;
         } else {
@@ -473,18 +473,16 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * Navigate up in the menu
      */
-    public void upItem() {
+    public void moveUp() {
         if (itemIndex > 0) {
             itemIndex = itemIndex - 1;
         } else {
             itemIndex = 3;
         }
-
         //default size
         for (int u = 0; u < fontSizes.length; u++) {
             fontSizes[u] = LoginScreen.normalTxtSize;
         }
-
         //increase font size
         fontSizes[itemIndex] = LoginScreen.bigTxtSize;
     }
@@ -642,7 +640,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     //------------- end action listers -------------
-    //------------- start methods ------------------
+    //------------- initiate methods ------------------
 
     /**
      * Gets the games current version
@@ -722,7 +720,7 @@ public abstract class Gameplay extends JenesisMode {
      */
     public void matchStatus() {
         if (gameOver == false) {
-            if (oppLife < 0 || life < 0 || (GameInstance.getInstance().time <= 0 && GameInstance.getInstance().time <= 180)) {
+            if (oppLife < 0 || life < 0 || (GameInstance.getInstance().timeLimit <= 0 && GameInstance.getInstance().timeLimit <= 180)) {
                 if ((float) oppLife / (float) oppMaxLife > (float) life / (float) maXlife || (float) oppLife / (float) oppMaxLife < (float) life / (float) maXlife) {
                     GameInstance.getInstance().gameOver();
                 }
@@ -784,7 +782,7 @@ public abstract class Gameplay extends JenesisMode {
     /**
      * Slow down game
      *
-     * @param amount - time duration
+     * @param amount - timeLimit duration
      */
     public void slowDown(int amount) {
         GameInstance.getInstance().sleepy(amount);
@@ -935,7 +933,7 @@ public abstract class Gameplay extends JenesisMode {
             @Override
             public void run() {
                 int icrement = inc;
-                setName("Fury bar increment stage");
+                setName("Fury bar increment lastStoryScene");
                 for (int o = 0; o < icrement; o++) {
                     if (limitBreak < limitTop) {
                         try {

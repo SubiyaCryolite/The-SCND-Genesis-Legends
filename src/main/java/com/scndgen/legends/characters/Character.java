@@ -21,17 +21,14 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import javafx.scene.image.Image;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.awt.image.VolatileImage;
 
 /**
  * Basic characterEnum template
@@ -51,8 +48,7 @@ public abstract class Character {
     protected AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     //imgs
-    private VolatileImage[] highQualitySprites;
-    private Image[] lowQualitySprites;
+    private Image[] highQualitySprites;
     private JenesisImageLoader pix;
     //string
     private String[] spriteLocation;
@@ -76,7 +72,7 @@ public abstract class Character {
         return characterEnum;
     }
 
-    protected final int celestiaMultiplier =10;
+    protected final int celestiaMultiplier = 10;
 
     private void sortQue() {
         pix = new JenesisImageLoader();
@@ -100,45 +96,24 @@ public abstract class Character {
         return spriteLocation.length;
     }
 
-    public void loadMeHigh(ImageObserver obs) {
+    public void loadMeHigh() {
         sortQue();
-        highQualitySprites = new VolatileImage[12];
-        highQualitySprites[0] = pix.loadVolatileImage(spriteLocation[0], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs);  //1
-        highQualitySprites[1] = pix.loadVolatileImage(spriteLocation[1], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //2
-        highQualitySprites[2] = pix.loadVolatileImage(spriteLocation[2], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //3
-        highQualitySprites[3] = pix.loadVolatileImage(spriteLocation[3], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //4
-        highQualitySprites[4] = pix.loadVolatileImage(spriteLocation[4], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //5
-        highQualitySprites[5] = pix.loadVolatileImage(spriteLocation[5], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //6
-        highQualitySprites[6] = pix.loadVolatileImage(spriteLocation[6], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //7
-        highQualitySprites[7] = pix.loadVolatileImage(spriteLocation[7], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //8
-        highQualitySprites[8] = pix.loadVolatileImage(spriteLocation[8], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //9
-        highQualitySprites[9] = pix.loadVolatileImage(spriteLocation[9], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //10
-        highQualitySprites[10] = pix.loadVolatileImage(spriteLocation[10], LoginScreen.getInstance().getdefSpriteWidth(), LoginScreen.getInstance().getdefSpriteHeight(), obs); //11
-        highQualitySprites[11] = pix.loadVolatileImage(spriteLocation[11], 32, 32, obs); //12
+        highQualitySprites = new Image[12];
+        highQualitySprites[0] = pix.loadImage(spriteLocation[0]);  //1
+        highQualitySprites[1] = pix.loadImage(spriteLocation[1]); //2
+        highQualitySprites[2] = pix.loadImage(spriteLocation[2]); //3
+        highQualitySprites[3] = pix.loadImage(spriteLocation[3]); //4
+        highQualitySprites[4] = pix.loadImage(spriteLocation[4]); //5
+        highQualitySprites[5] = pix.loadImage(spriteLocation[5]); //6
+        highQualitySprites[6] = pix.loadImage(spriteLocation[6]); //7
+        highQualitySprites[7] = pix.loadImage(spriteLocation[7]); //8
+        highQualitySprites[8] = pix.loadImage(spriteLocation[8]); //9
+        highQualitySprites[9] = pix.loadImage(spriteLocation[9]); //10
+        highQualitySprites[10] = pix.loadImage(spriteLocation[10]); //11
+        highQualitySprites[11] = pix.loadImage(spriteLocation[11]); //12
     }
 
-    public void loadMeLow() {
-        sortQue();
-        lowQualitySprites = new Image[12];
-        lowQualitySprites[0] = pix.loadImage(spriteLocation[0]);  //1
-        lowQualitySprites[1] = pix.loadImage(spriteLocation[1]); //2
-        lowQualitySprites[2] = pix.loadImage(spriteLocation[2]); //3
-        lowQualitySprites[3] = pix.loadImage(spriteLocation[3]); //4
-        lowQualitySprites[4] = pix.loadImage(spriteLocation[4]); //5
-        lowQualitySprites[5] = pix.loadImage(spriteLocation[5]); //6
-        lowQualitySprites[6] = pix.loadImage(spriteLocation[6]); //7
-        lowQualitySprites[7] = pix.loadImage(spriteLocation[7]); //8
-        lowQualitySprites[8] = pix.loadImage(spriteLocation[8]); //9
-        lowQualitySprites[9] = pix.loadImage(spriteLocation[9]); //10
-        lowQualitySprites[10] = pix.loadImage(spriteLocation[10]); //11
-        lowQualitySprites[11] = pix.loadImage(spriteLocation[11]); //12
-    }
-
-    public Image getLowQualitySprite(int i) {
-        return lowQualitySprites[i];
-    }
-
-    public VolatileImage getHighQualitySprite(int i) {
+    public Image getSprite(int i) {
         return highQualitySprites[i];
     }
 

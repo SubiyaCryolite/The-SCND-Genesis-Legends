@@ -47,12 +47,12 @@ public class WindowUpdate extends JFrame implements ActionListener {
     private Box box = new Box(BoxLayout.Y_AXIS);
     private String updateVer, text;
     private String[] updateArr;
-    private Font normalFont;
+    //private Font normalFont;
     private String fname;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowUpdate(String updateVerStr, String fname, String[] updates, LoginScreen p) {
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        //normalFont = getMyFont(LoginScreen.normalTxtSize);
         updateVer = updateVerStr;
         updateArr = updates;
         logo = new JPanel();
@@ -60,14 +60,14 @@ public class WindowUpdate extends JFrame implements ActionListener {
         logoPic = new SpecialDrawMenuBGs();
         logo.add(logoPic);
 
-        text = "The SCND Genesis: Legends " + updateVer + " " + Language.getInstance().getLine(58) + " "
+        text = "The SCND Genesis: Legends " + updateVer + " " + Language.getInstance().get(58) + " "
                 + "\nhttp://www.sourceforge.com/projects/scndgen/files/executable/" + fname + "/download"
-                + "\n\n" + Language.getInstance().getLine(59) + ": \n"
+                + "\n\n" + Language.getInstance().get(59) + ": \n"
                 + stringBuilder(updates)
                 + "\n\nThe SCND Genesis: Legends copyright © " + WindowAbout.year() + " Ifunga Ndana.";
 
         txt = new JTextArea("", 2, 2);
-        txt.setFont(normalFont);
+        //txt.setFont(normalFont);
         txt.append(text);
         txt.setEditable(false);
         txt.setLineWrap(true);
@@ -78,11 +78,11 @@ public class WindowUpdate extends JFrame implements ActionListener {
         textHolder = new JPanel();
         textHolder.add(scroller);
 
-        get = new JButton(Language.getInstance().getLine(416));
-        get.setFont(normalFont);
+        get = new JButton(Language.getInstance().get(416));
+        //get.setFont(normalFont);
         get.addActionListener(this);
-        ok = new JButton(Language.getInstance().getLine(417));
-        ok.setFont(normalFont);
+        ok = new JButton(Language.getInstance().get(417));
+        //ok.setFont(normalFont);
         ok.addActionListener(this);
         bottom = new JPanel();
         bottom.add(get);
@@ -91,7 +91,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
         box.add(scroller);
         box.add(bottom);
 
-        setTitle(updateVer + " " + Language.getInstance().getLine(60));
+        setTitle(updateVer + " " + Language.getInstance().get(60));
         add(box);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

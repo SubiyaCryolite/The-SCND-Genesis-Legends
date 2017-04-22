@@ -21,11 +21,17 @@
  **************************************************************************/
 package com.scndgen.legends.scene;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.input.MouseEvent;
+
+import javax.swing.*;
 
 public abstract class StoryMenu extends JenesisMode {
 
@@ -36,9 +42,11 @@ public abstract class StoryMenu extends JenesisMode {
     protected int oldId = -1;
     protected boolean[] unlockedStage;
     protected boolean loadingNow;
-    protected int currentScene = LoginScreen.getInstance().stage;
+    protected int currentScene = LoginScreen.getInstance().lastStoryScene;
     protected int storedX = 99, storedY = 99;
     protected boolean withinMenuPanel;
+    protected AudioPlayback victorySound;
+    protected AudioPlayback menuSound;
 
     /**
      * When both playes are selected, this prevents movement.
@@ -184,10 +192,10 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * Find out the stage the player is on
+     * Find out the lastStoryScene the player is on
      */
     public void resetCurrentStage() {
-        currentScene = LoginScreen.getInstance().stage;
+        currentScene = LoginScreen.getInstance().lastStoryScene;
     }
 
     public void backToMainMenu() {
@@ -204,7 +212,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     /**
-     * When you win a match, move to the next level
+     * When you wins a match, move to the next level
      */
     public void incrementMode() {
         if (currentScene < StoryMode.getInstance().max) {
@@ -214,7 +222,7 @@ public abstract class StoryMenu extends JenesisMode {
             //if the player has advanced
             //and theres still more stages
             if (currentScene > currentScene) {
-                LoginScreen.getInstance().stage = currentScene;
+                LoginScreen.getInstance().lastStoryScene = currentScene;
             }
         }
     }
@@ -350,5 +358,47 @@ public abstract class StoryMenu extends JenesisMode {
 
     public boolean getWithinMenuPanel() {
         return withinMenuPanel;
+    }
+
+
+    /**
+     * Are there more stages?????
+     *
+     * @return
+     */
+    public boolean moreStages() {
+        boolean answer = false;
+        resetCurrentStage();
+
+        //check if more stages
+        if (currentScene < StoryMode.getInstance().max) {
+            answer = true;
+        } //if won last 'final' match
+        else if (RenderGameplay.getInstance().hasWon()) {
+            //incrementMode();
+            //go back to user difficulty
+            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficulty;
+            victorySound.play();
+            JOptionPane.showMessageDialog(null, Language.getInstance().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
+            answer = false;
+        }
+
+        return answer;
+    }
+
+    public void selectScene() {
+        for (int i = 0; i <= StoryMode.getInstance().max; i++) {
+            if (hoveredStoryIndex == i) {
+                startGame(i);
+                menuSound.play();
+                break;
+            }
+        }
+    }
+
+
+    public void mouseClicked(MouseEvent me) {
+        if (!withinMenuPanel) return;
+        selectScene();
     }
 }

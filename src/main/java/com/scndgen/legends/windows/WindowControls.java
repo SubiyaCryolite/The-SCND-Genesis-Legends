@@ -22,7 +22,6 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
 
 import javax.swing.*;
@@ -44,44 +43,44 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
     private JButton ok;
     private SpecialDrawMenuBGs logoPic;
     private Box box;
-    private Font normalFont;
+    //private Font normalFont;
     private JPanel p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17;
     private JLabel lLabel, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20;
     private JLabel mLabel, m1, m2, m3, m4, m5, m6, m8, m7, m9, m10;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowControls() {
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize - 2);
+        //normalFont = getMyFont(LoginScreen.normalTxtSize - 2);
         logoPic = new SpecialDrawMenuBGs();
 
         box = new Box(BoxLayout.Y_AXIS);
         box.setOpaque(false);
 
-        ok = new JButton(Language.getInstance().getLine(36));
+        ok = new JButton(Language.getInstance().get(36));
         ok.addActionListener(this);
         bottom = new JPanel();
         bottom.add(ok);
 
-        lLabel = new JLabel(Language.getInstance().getLine(37));
-        l1 = new JLabel(" " + Language.getInstance().getLine(38));
-        l2 = new JLabel(Language.getInstance().getLine(40));
-        l17 = new JLabel(" " + Language.getInstance().getLine(39));
-        l18 = new JLabel(Language.getInstance().getLine(41));
-        l3 = new JLabel(" " + Language.getInstance().getLine(42));
+        lLabel = new JLabel(Language.getInstance().get(37));
+        l1 = new JLabel(" " + Language.getInstance().get(38));
+        l2 = new JLabel(Language.getInstance().get(40));
+        l17 = new JLabel(" " + Language.getInstance().get(39));
+        l18 = new JLabel(Language.getInstance().get(41));
+        l3 = new JLabel(" " + Language.getInstance().get(42));
         l4 = new JLabel("F12");
-        l5 = new JLabel(" " + Language.getInstance().getLine(43));
+        l5 = new JLabel(" " + Language.getInstance().get(43));
         l6 = new JLabel("ESC");
-        l7 = new JLabel(" " + Language.getInstance().getLine(44));
+        l7 = new JLabel(" " + Language.getInstance().get(44));
         l8 = new JLabel("L");
-        l9 = new JLabel(" " + Language.getInstance().getLine(45));
+        l9 = new JLabel(" " + Language.getInstance().get(45));
         l10 = new JLabel("Left");
-        l11 = new JLabel(" " + Language.getInstance().getLine(46));
+        l11 = new JLabel(" " + Language.getInstance().get(46));
         l12 = new JLabel("Right");
-        l13 = new JLabel(" " + Language.getInstance().getLine(47));
+        l13 = new JLabel(" " + Language.getInstance().get(47));
         l14 = new JLabel("Up");
-        l15 = new JLabel(" " + Language.getInstance().getLine(48));
-        l16 = new JLabel(Language.getInstance().getLine(49));
-        l19 = new JLabel(" " + Language.getInstance().getLine(50));
+        l15 = new JLabel(" " + Language.getInstance().get(48));
+        l16 = new JLabel(Language.getInstance().get(49));
+        l19 = new JLabel(" " + Language.getInstance().get(50));
         l20 = new JLabel("F4");
 
         p9 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -129,36 +128,36 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
         p17.add(l20);
 
         //Mouse
-        mLabel = new JLabel(Language.getInstance().getLine(51));
+        mLabel = new JLabel(Language.getInstance().get(51));
         p13 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p13.add(mLabel);
 
-        m1 = new JLabel(Language.getInstance().getLine(52));
-        m2 = new JLabel(" " + Language.getInstance().getLine(45));
+        m1 = new JLabel(Language.getInstance().get(52));
+        m2 = new JLabel(" " + Language.getInstance().get(45));
         p10 = new JPanel(new GridLayout(1, 2));
         p10.add(m2);
         p10.add(m1);
 
-        m3 = new JLabel(Language.getInstance().getLine(53));
-        m4 = new JLabel(" " + Language.getInstance().getLine(46));
+        m3 = new JLabel(Language.getInstance().get(53));
+        m4 = new JLabel(" " + Language.getInstance().get(46));
         p11 = new JPanel(new GridLayout(1, 2));
         p11.add(m4);
         p11.add(m3);
 
-        m5 = new JLabel(Language.getInstance().getLine(54));
-        m6 = new JLabel(" " + Language.getInstance().getLine(38));
+        m5 = new JLabel(Language.getInstance().get(54));
+        m6 = new JLabel(" " + Language.getInstance().get(38));
         p12 = new JPanel(new GridLayout(1, 2));
         p12.add(m6);
         p12.add(m5);
 
-        m7 = new JLabel(Language.getInstance().getLine(55));
-        m8 = new JLabel(" " + Language.getInstance().getLine(44));
+        m7 = new JLabel(Language.getInstance().get(55));
+        m8 = new JLabel(" " + Language.getInstance().get(44));
         p14 = new JPanel(new GridLayout(1, 2));
         p14.add(m8);
         p14.add(m7);
 
-        m9 = new JLabel(Language.getInstance().getLine(56));
-        m10 = new JLabel(" " + Language.getInstance().getLine(39));
+        m9 = new JLabel(Language.getInstance().get(56));
+        m10 = new JLabel(" " + Language.getInstance().get(39));
         p16 = new JPanel(new GridLayout(1, 2));
         p16.add(m10);
         p16.add(m9);
@@ -244,7 +243,7 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
 
         box.add(bottom);
 
-        setTitle(Language.getInstance().getLine(57));
+        setTitle(Language.getInstance().get(57));
         setContentPane(logoPic);
         add(box, BorderLayout.CENTER);
         setUndecorated(true);
@@ -263,7 +262,7 @@ public class WindowControls extends JFrame implements ActionListener, KeyListene
     }
 
     public void alterJLabel(JLabel l) {
-        l.setFont(normalFont);
+        //l.setFont(normalFont);
         l.setForeground(Color.WHITE);
     }
 

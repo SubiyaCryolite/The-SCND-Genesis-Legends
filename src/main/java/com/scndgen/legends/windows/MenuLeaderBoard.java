@@ -54,13 +54,13 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
     private ResultSet rs;
 
     public MenuLeaderBoard() {
-        super(Language.getInstance().getLine(98));
+        super(Language.getInstance().get(98));
         if (notLoaded) {
-            upload = new JButton(Language.getInstance().getLine(97));
+            upload = new JButton(Language.getInstance().get(97));
             upload.addActionListener(this);
-            view = new JButton(Language.getInstance().getLine(96));
+            view = new JButton(Language.getInstance().get(96));
             view.addActionListener(this);
-            close = new JButton(Language.getInstance().getLine(95));
+            close = new JButton(Language.getInstance().get(95));
             close.addActionListener(this);
             line1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
             line1.add(view);
@@ -123,22 +123,22 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
                 try {
                     //if exists error shall be thrown
                     System.out.println("Brand new");
-                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCCode() + "', '" + RenderGameplay.getInstance().getVersionStr() + "', " + RenderGameplay.getInstance().getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", " + LoginScreen.getInstance().getInstance().win + ", " + LoginScreen.getInstance().getInstance().loss + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
+                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCountry() + "', '" + RenderGameplay.getInstance().getVersionStr() + "', " + RenderGameplay.getInstance().getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().wins + LoginScreen.getInstance().getInstance().losses) + ", " + LoginScreen.getInstance().getInstance().wins + ", " + LoginScreen.getInstance().getInstance().losses + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
                 } catch (Exception e) {
                     System.out.println("Override old record");
-                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCCode() + "', gameVersion='" + RenderGameplay.getInstance().getVersionStr() + "', versionInt=" + RenderGameplay.getInstance().getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().win + LoginScreen.getInstance().getInstance().loss) + ", userWin=" + LoginScreen.getInstance().getInstance().win + ", userLoss=" + LoginScreen.getInstance().getInstance().loss + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
+                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCountry() + "', gameVersion='" + RenderGameplay.getInstance().getVersionStr() + "', versionInt=" + RenderGameplay.getInstance().getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().wins + LoginScreen.getInstance().getInstance().losses) + ", userWin=" + LoginScreen.getInstance().getInstance().wins + ", userLoss=" + LoginScreen.getInstance().getInstance().losses + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
 
                 }
                 LoginScreen.getInstance().getInstance().saveConfigFile();
-                JOptionPane.showMessageDialog(null, Language.getInstance().getLine(99), Language.getInstance().getLine(102), JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, Language.getInstance().get(99), Language.getInstance().get(102), JOptionPane.PLAIN_MESSAGE);
             } catch (Exception e) {
                 e.printStackTrace(System.err);
                 notInitislied = true;
-                JOptionPane.showMessageDialog(null, Language.getInstance().getLine(100), Language.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, Language.getInstance().get(100), Language.getInstance().get(101), JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            JOptionPane.showMessageDialog(null, Language.getInstance().getLine(100), Language.getInstance().getLine(101), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getInstance().get(100), Language.getInstance().get(101), JOptionPane.ERROR_MESSAGE);
             notInitislied = true;
         }
     }

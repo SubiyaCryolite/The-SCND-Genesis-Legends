@@ -24,10 +24,9 @@ package com.scndgen.legends;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderGameplay;
-import io.github.subiyacryolite.enginev1.JenesisWindow;
-import com.scndgen.legends.windows.WindowOptions;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.URL;
-import java.sql.*;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,12 +83,12 @@ import java.util.logging.Logger;
  * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, EXIT to gameplay. New achievement pics, mod to primaryNotice(), better figures, sexy transparent HUD
  * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
  * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
- * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and start menu screen
+ * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and initiate menu screen
  * 01/1/11 -38- Thread optimisations. wee
  * 04/1/11 -39- Fixed story scene bugs, adding GPL headerz gon opensource
  * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
  * 14/1/11 -41- Integrated STATS into main menu, pending for connections can be cancelled
- * 15/1/11 -42- Backwards compatibility for new save items, fixed time
+ * 15/1/11 -42- Backwards compatibility for new save items, fixed timeLimit
  * 15/1/11 -43- Changelog moved to WindowAbout.java in text3
  * 13/2/11 -44- I'm baaaaack, changelog in WindowAbout is clientSide only, codies go here
  * 13/2/11 -44- Fixed bug, reset move to physical at new match
@@ -101,38 +99,18 @@ import java.util.logging.Logger;
 public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     public static final CharacterEnum[] charNames = CharacterEnum.values();
-    public static int difficultyBase = 8000, difficultyScale = 1333;
-    public static String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
+    public int difficultyBase = 8000, difficultyScale = 1333;
+    public static final String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
     private static LoginScreen instance;
-    public int frames, activLang;
-    public boolean ans, newGame = true;
-    public int comicPicOcc, difficultyStat, difficultyDyn, stage;
-    public int timePref;
-    public String whoCalled, networkStatus, soundStatus = "on", currentFile;
-    public int isLeftyInt, win, loss;
-    public boolean connected = true, isDownloadingMusic = false;
-    public boolean controller = true;
-    public String currentTrack, fileNameMus, upToDate, autoUpdate, downloadedAudio, fileName = configLoc + "scndupd.xml";
-    public String isLefty, usrCode, controllerStr, strUser, strPoint, strPlayTime, matchCountStr;
-    public int[] ach;
+    public boolean ans, newMatch = true;
+    public int difficultyDyn;
+    public String whoCalled, networkStatus;
+    public boolean connected = true;
+    public String fileName = configLoc + "scndupd.xml";
     public int[] classArr;
-    public float musicPerc;
-    public long currentTrackSize, trackSize;
-    public int consecWinsTmp, consecWins;
-    public int scalePos;
-    public float scaleY;
-    public float scaleX;
-    public int defSpriteWidth, defSpriteHeight;
-    public int updates, defWidth, defHeight;
-    private String random_name, newAcc;
-    private int v1x, v2x, v3x;
-    private StringBuilder userIDBuff;
-    private String[] letters;
-    private ResultSet rs;
-    private Statement stat;
-    private Connection conn;
-    private PreparedStatement prep;
+    public int updates;
+    private String  newAcc;
     private Object source;
     private JPanel pan1, pan2, pan4;
     private DrawUserLogin thisPic;
@@ -151,65 +129,24 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private PopupMenu popup;
     private MenuItem defaultItem;
     private TrayIcon trayIcon;
-    private URL url;
-    private BufferedInputStream in;
-    private FileOutputStream fos;
-    private BufferedOutputStream bout;
-    private File out;
-    private byte[] data;
-    private int numberOfAccounts, x, gameRating;
-    private BufferedReader br;
     private String[] updatesArr, countries;
-    private int[] charUsage = new int[charNames.length];
-    private int[] widthz;
-    private int[] heightz;
-    private float[] resScaleY;
     private Achievements achObj;
-    private float[] resScaleX;
     private boolean noUsers, oldFile, newFile;
-    private File db;
     private boolean[] foundAch;
     private int searchIndex;
-    private String ansc, webVersion, countryStr, sx, tx = "", updateFileURL = "http://scndgen.sourceforge.net/game/scndupd.xml";
-    //private String ansc, webVersion, countryStr, sx, tx = "", updateFileURL = "http://localhost/scnd/game2/scndupd.xml";
+    private String ansc, webVersion, sx, tx = "", updateFileURL = "http://scndgen.sourceforge.net/game/scndupd.xml";
+    //private String ansc, webVersion, country, sx, tx = "", updateFileURL = "http://localhost/scnd/game2/scndupd.xml";
     private String fname;
 
     @SuppressWarnings("LeakingThisInConstructor")
     private LoginScreen() throws FileNotFoundException {
-        changeTheLookAndFeel(2);
-
-        createDatabaseIfNotExists();
-        createDBStructure();
-
-        activLang = 0;
-        consecWinsTmp = 0;
-        consecWins = 0;
-        scalePos = 2;
-        widthz = new int[]{720, 852, 1024, 1280, 1680, 1920};
-        heightz = new int[]{405, 480, 576, 720, 1050, 1080};
-        resScaleY = new float[]{0.8437f, 1.0f, 1.2f, 1.5f, 2.1875f, 2.25f};
-        scaleY = 1;
-        resScaleX = new float[]{0.8450f, 1.0f, 1.1976f, 1.5023f, 1.9718f, 2.2535f};
-        scaleX = 1;
-        defSpriteWidth = 852;
-        defSpriteHeight = 480;
-        controllerStr = "true";
-        strUser = "no user";
-        strPoint = "0";
-        strPlayTime = "0";
-        matchCountStr = "0";
         countries = Locale.getISOCountries();
-
-        loadTray();
-        //trayMessage("Welcome", "Welcome to The SCND Genesis: Legends" + RenderGameplay.getVersionStr());
         pan1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
         pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         userName = new JLabel("User Name: ");
         login = new JTextField("", 10);
         pan2.add(userName);
         pan2.add(login);
-
         pan4 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         enter = new JButton("Load Selected Account");
         enter.addActionListener(this);
@@ -224,43 +161,19 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         add(box);
         createUserCombo();
         thisPic = new DrawUserLogin(this);
-        {
-            achObj = new Achievements(this);
-            ach = new int[achObj.achievementName.length];
-            classArr = new int[ach.length];
-
-            //make all achievents zero first
-            for (int y = 0; y < ach.length; y++) {
-                ach[y] = 0;
-            }
-            //achievement classes
-            classArr[0] = 1;
-            classArr[1] = 2;
-            classArr[2] = 1;
-            classArr[3] = 2;
-            classArr[4] = 3;
-            classArr[5] = 3;
-            classArr[6] = 2;
-            classArr[7] = 1;
-            classArr[8] = 1;
-            classArr[9] = 1;
-            classArr[10] = 1;
-            /*
-            classArr[11] = 2;
-            classArr[12] = 0;
-            classArr[13] = 1;
-            classArr[14] = 2;
-            classArr[15] = 1;
-            classArr[16] = 1;
-            classArr[17] = 0;
-            classArr[18] = 1;
-            classArr[19] = 2;
-            classArr[20] = 2;
-            classArr[21] = 2;*/
-        }
-        readDB(users.getSelectedItem() + "");
-        pan1.add(thisPic);
-
+        achObj = new Achievements(this);
+        classArr = new int[11];
+        classArr[0] = 1;
+        classArr[1] = 2;
+        classArr[2] = 1;
+        classArr[3] = 2;
+        classArr[4] = 3;
+        classArr[5] = 3;
+        classArr[6] = 2;
+        classArr[7] = 1;
+        classArr[8] = 1;
+        classArr[9] = 1;
+        classArr[10] = 1;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         pack();
@@ -271,6 +184,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
         newVersionOutThere("");
     }
+
 
     /**
      * Get screen width
@@ -302,332 +216,20 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     }
 
     /**
-     * Get screen height
-     *
-     * @return height
-     */
-    public int getGameHeight() {
-        return heightz[scalePos];
-    }
-
-    /**
-     * Get native resolution of game sprites
-     *
-     * @return
-     */
-    public int getdefSpriteWidth() {
-        return defSpriteWidth;
-    }
-
-    /**
-     * Get the games rating
-     *
-     * @return rating
-     */
-    public int getGameRating() {
-        System.out.println("Current game rating: " + gameRating);
-        return gameRating;
-    }
-
-    /**
-     * Set the game rating
-     */
-    public void setGameRating(int num) {
-        gameRating = num * 20;
-    }
-
-    /**
-     * Get native resolution of game sprites
-     *
-     * @return
-     */
-    public float getGameYScale() {
-        return resScaleY[scalePos];
-    }
-
-    /**
-     * Is this opponent left handed?
-     *
-     * @return
-     */
-    public String isLefty() {
-        return isLefty;
-    }
-
-    /**
-     * Get native resolution of game sprites
-     *
-     * @return
-     */
-    public float getGameXScale() {
-        return resScaleX[scalePos];
-    }
-
-    /**
-     * Get native resolution of game sprites
-     *
-     * @return
-     */
-    public int getdefSpriteHeight() {
-        return defSpriteHeight;
-    }
-
-    public String timeCal(String x) {
-        return thisPic.timeCal(x);
-    }
-
-    private void createDatabaseIfNotExists() {
-        db = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen");
-        if (!new File(db.getAbsolutePath() + File.separator + "scndsave.db").exists()) {
-            try {
-                db.mkdirs();
-                new File(db.getAbsolutePath() + File.separator + "scndsave.db").createNewFile();
-                System.err.println("Creating database");
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
-        }
-    }
-
-    /**
-     * Erase all user accounts
-     */
-    private void clearDB() {
-        try {
-            stat = conn.createStatement();
-            stat.executeUpdate("drop table if exists scndsave;");
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
-    /**
-     * Create the DB Structure
-     */
-    private void createDBStructure() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "scndsave.db");
-            stat = conn.createStatement();
-            stat.executeUpdate("CREATE TABLE IF NOT EXISTS scndsave(name VARCHAR(24),usrCode VARCHAR(42),points VARCHAR(24),"
-                    + "time VARCHAR(24),matches VARCHAR(24),achievementName VARCHAR(24),achievementDescription VARCHAR(24),achievementClass VARCHAR(24),"
-                    + "achievementPoints VARCHAR(24),ach5 VARCHAR(24),ach6 VARCHAR(24),ach7 VARCHAR(24),ach8 VARCHAR(24),ach9 VARCHAR(24),"
-                    + "ach10 VARCHAR(24),ach11 VARCHAR(24),win VARCHAR(24),loss VARCHAR(24),"
-                    + "frames INT,sound VARCHAR(3),difficulty VARCHAR(24),modeN VARCHAR(24),"
-                    + "prefTime INT,graffix VARCHAR(5),upToDate VARCHAR(3),autoUpdate VARCHAR(3),"
-                    + "musicFiles VARCHAR(3),char0 VARCHAR(24),char1 VARCHAR(24),char2 VARCHAR(24),"
-                    + "char3 VARCHAR(24),char4 VARCHAR(24),char5 VARCHAR(24),char6 VARCHAR(24),"
-                    + "char7 VARCHAR(24),char8 VARCHAR(24),char9 VARCHAR(24),char10 VARCHAR(24),"
-                    + "comicT VARCHAR(24),rez VARCHAR(24),rating VARCHAR(24),countryStr VARCHAR(24),"
-                    + "controller VARCHAR(24),lang VARCHAR(24),isLefty VARCHAR(3),PRIMARY KEY (usrCode))");
-            stat.close();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-
-        try {
-//            foundAch = new boolean[12];
-//            stat = conn.createStatement();
-//            rs = stat.executeQuery("PRAGMA table_info('scndsave')");
-//            while (rs.next()) {
-//                searchIndex = 0;
-//                ansc = rs.getString(2);
-//                if (ansc.contains("ACH")) {
-//                    for (int ix = 12; ix <= 22; ix++) {
-//                        //System.err.println("Checking ACH" + ix + " in " + ansc);
-//                        if (ansc.equalsIgnoreCase("ACH" + ix)) {
-//                            System.out.println(ansc + " equals ACH" + ix + " thus exisits");
-//                            if (foundAch[ix - 12] != true) {
-//                                System.out.println("Found ACH" + ix);
-//                                foundAch[ix - 12] = true;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            searchIndex = 0;
-//            for (int ix = 12; ix < 23; ix++) {
-//                //if not found alter the table
-//                if (foundAch[searchIndex] != true) {
-//                    ansc = "ALTER TABLE scndsave ADD ACH" + ix + " VARCHAR(24) default 'g7h%'";
-//                    stat = conn.createStatement();
-//                    stat.executeUpdate(ansc);
-//                    stat.close();
-//                }
-//                searchIndex++;
-//            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
-    private void jenesisLog(Object c) {
-        System.err.println("log :: " + c.toString());
-    }
-
-    /**
-     * Called whenever accessing user accounts
-     *
-     * @param u user to scan
-     */
-    private void readDB(String u) {
-        try {
-            stat = conn.createStatement();
-            rs = stat.executeQuery("SELECT * FROM scndsave WHERE name='" + u + "';");
-            while (rs.next()) {
-                strUser = u;
-                jenesisLog(strUser);
-
-                usrCode = rs.getString("usrCode");
-                jenesisLog(usrCode);
-
-                strPoint = scndDecipher(rs.getString("points"));
-                jenesisLog(strPoint);
-
-                strPlayTime = "" + rs.getInt("time");
-                jenesisLog(strPlayTime);
-
-                matchCountStr = "" + Integer.parseInt(scndDecipher(rs.getString("matches")));
-                jenesisLog(matchCountStr);
-
-                win = Integer.parseInt(scndDecipher(rs.getString("win")));
-                jenesisLog(win);
-
-                loss = Integer.parseInt(scndDecipher(rs.getString("loss")));
-                jenesisLog(loss);
-
-                soundStatus = rs.getString("sound");
-                jenesisLog(soundStatus);
-
-                difficultyStat = Integer.parseInt(scndDecipher(rs.getString("difficulty")));
-                difficultyDyn = difficultyStat;
-                jenesisLog(difficultyStat);
-
-                stage = Integer.parseInt(scndDecipher(rs.getString("modeN")));
-                jenesisLog(stage);
-
-                ach[0] = Integer.parseInt(scndDecipher(rs.getString("ach1")));
-                ach[1] = Integer.parseInt(scndDecipher(rs.getString("ach2")));
-                ach[2] = Integer.parseInt(scndDecipher(rs.getString("ach3")));
-                ach[3] = Integer.parseInt(scndDecipher(rs.getString("ach4")));
-                ach[4] = Integer.parseInt(scndDecipher(rs.getString("ach5")));
-                ach[5] = Integer.parseInt(scndDecipher(rs.getString("ach6")));
-                ach[6] = Integer.parseInt(scndDecipher(rs.getString("ach7")));
-                ach[7] = Integer.parseInt(scndDecipher(rs.getString("ach8")));
-
-
-                timePref = rs.getInt("prefTime");
-                WindowOptions.time = timePref;
-                jenesisLog(timePref);
-
-                frames = rs.getInt("frames");
-                jenesisLog(frames);
-
-                upToDate = rs.getString("upToDate");
-                jenesisLog(upToDate);
-                //autoUpdate = rs.getString("autoUpdate");
-                autoUpdate = "autoUpdate";
-
-                downloadedAudio = rs.getString("musicFiles");
-                jenesisLog(downloadedAudio);
-
-                for (int uV = 0; uV < 10; uV++) {
-                    try {
-                        charUsage[uV] = Integer.parseInt(rs.getString("char" + uV));
-                        jenesisLog(charUsage[uV]);
-                    } catch (Exception e) {
-                        charUsage[uV] = 0;
-                    }
-                }
-
-                //>>>>>>>>>>>>>>>>>>> for indexes above 10
-                for (int uB = 10; uB < charNames.length; uB++) {
-                    try {
-                        charUsage[uB] = Integer.parseInt(rs.getString("char" + uB));
-                    } catch (Exception e) {
-                        charUsage[uB] = 0;
-                    }
-                }
-                ach[8] = Integer.parseInt(scndDecipher(rs.getString("ach9")));
-                jenesisLog(ach[8]);
-
-                ach[9] = Integer.parseInt(scndDecipher(rs.getString("ach10")));
-                jenesisLog(ach[9]);
-
-                ach[10] = Integer.parseInt(scndDecipher(rs.getString("ach11")));
-                jenesisLog(ach[10]);
-
-                comicPicOcc = Integer.parseInt(scndDecipher(rs.getString("comicT")));
-                jenesisLog(comicPicOcc);
-
-                activLang = Integer.parseInt(scndDecipher(rs.getString("lang")));
-                scalePos = Integer.parseInt(scndDecipher(rs.getString("rez")));
-
-                countryStr = rs.getString("countryStr");
-
-                isLefty = rs.getString("isLefty");
-                if (isLefty.equalsIgnoreCase("no")) {
-                    isLeftyInt = 0; //no
-                } else {
-                    isLeftyInt = 1; //yes
-                }
-
-                try {
-                    gameRating = Integer.parseInt(rs.getString("rating"));
-                } catch (Exception e) {
-                    gameRating = 300;
-                }
-
-                try {
-                    controllerStr = rs.getString("controller");
-                    if (controllerStr.equalsIgnoreCase("true")) {
-                        controller = true;
-                    } else {
-                        controllerStr = "false";
-                        controller = false;
-                    }
-                } catch (Exception e) {
-                    controller = false;
-                }
-            }
-            rs.close();
-            stat.close();
-            thisPic.repaint();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
-    /**
      * Create a combo box with all users listed
      */
     private void createUserCombo() {
         users = new JComboBox();
-        numberOfAccounts = 0;
-        try {
-            stat = conn.createStatement();
-            rs = stat.executeQuery("SELECT name FROM scndsave ORDER BY time DESC;");
-            while (rs.next()) {
-                users.addItem("" + rs.getString("name"));
-                numberOfAccounts++;
-            }
-            rs.close();
-            stat.close();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+        for (GameSave gs : GameState.getInstance().getGameSaves()) {
+            users.addItem(gs.toString());
         }
-        if (numberOfAccounts == 0) {
+        if (GameState.getInstance().getGameSaves().size() == 0) {
             noUsers = true;
             login.setText("");
-
             enter.setEnabled(false);
             pan4.remove(enter);
-            //no users!!!!!
         } else {
             noUsers = false;
-            System.out.println("file exists!!!!");
-
             box.remove(pan2);
             pan4.removeAll();
             pan4.setLayout(new GridLayout(3, 1));
@@ -650,10 +252,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         return startApp;
     }
 
-    public int getSelLang() {
-        return activLang;
-    }
-
     @Override
     public void actionPerformed(ActionEvent ae) {
         source = ae.getSource();
@@ -662,28 +260,26 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             System.exit(0);
         }
 
-        if (source == users) {
-            readDB(users.getSelectedItem() + "");
-        }
-
         if (source == enter) {
             closeWindow();
             startApp = new JenesisWindow(strUser, this);
         }
 
         if (source == newAccount) {
-            if (numberOfAccounts == 0) {
+            if (GameState.getInstance().getGameSaves().size() == 0) {
                 //if password
                 if (login.getText().length() >= 1 && login.getText().length() <= 24) {
-                    createConfigFile(login.getText());
+                    createUserCombo();
+                    enter.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 CharacterEnum long");
                 }
-            } else if (numberOfAccounts > 0) {
+            } else {
                 //extra account
                 newAcc = JOptionPane.showInputDialog(null, "Enter new account name", "Enter account name", JOptionPane.INFORMATION_MESSAGE);
                 if (newAcc.length() >= 1 && newAcc.length() <= 24) {
-                    createConfigFile(newAcc);
+                    createUserCombo();
+                    enter.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Username should be between\n1 and 24 CharacterEnum long");
                 }
@@ -693,47 +289,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         if (source == userAccount) {
             closeWindow();
             startApp = new JenesisWindow(strUser, this);
-        }
-    }
-
-    /**
-     * @author Java2s
-     * @see {http://www.java2s.com/Code/Java/Swing-JFC/HowtochangethelookandfeelofSwingapplications.htm}
-     * Changes the look and feel. It requires the
-     * Java Runtime Environment version 6 update 18
-     * or higher to work. If the JRE is below update 18
-     * it resorts to the default Java metal look and feel
-     */
-    private void changeTheLookAndFeel(int num) {
-        switch (num) {
-            case 0: {
-                try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                    SwingUtilities.updateComponentTreeUI(this);
-                } catch (Exception fail) {
-                    changeTheLookAndFeel(1);
-                }
-            }
-            break;
-
-            case 1: {
-                try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                    SwingUtilities.updateComponentTreeUI(this);
-                } catch (Exception ex) {
-                }
-            }
-            break;
-
-            case 2: {
-                try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                    SwingUtilities.updateComponentTreeUI(this);
-                } catch (Exception el) {
-                    changeTheLookAndFeel(0);
-                }
-            }
-            break;
         }
     }
 
@@ -763,8 +318,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                     //download the file
                     if (downloadUpdateFile(updateFileURL, fileName)) {
                         //read the file
-                        try {
-                            br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
+                        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"))) {
                             do {
                                 sx = br.readLine();
                                 if (sx != null) {
@@ -821,249 +375,28 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         }.start();
     }
 
-    public void setIsLefty(String val) {
-        isLefty = val;
-        if (isLefty.equalsIgnoreCase("no")) {
-            isLeftyInt = 0; //no
-        } else {
-            isLeftyInt = 1; //yes
-        }
-    }
-
-    public int getIsLeftyInt() {
-        return isLeftyInt;
-    }
-
     /**
      * the number Achievements unlocked
      */
     public int getUnlockedAch() {
         int counter = 0;
-
-
-        for (int y = 0; y
-                < ach.length; y++) {
+        for (int y = 0; y < ach.length; y++) {
             if (ach[y] > 0) {
                 counter = counter + 1;
             }
         }
         return counter;
-
-
-    }
-
-    /**
-     * Set the country code
-     *
-     * @param me
-     */
-    public void setCountryCode(String me) {
-        countryStr = me;
-
-
-    }
-
-    public void setActivLang(int x) {
-        activLang = x;
-        Language.getInstance().setLanguage(activLang);
-    }
-
-    /**
-     * get the country code
-     *
-     * @return
-     */
-    public String getCCode() {
-        return countryStr;
-
-
     }
 
     /**
      * The number Achievements unlocked
      */
-    public int getATriggeredAchiev() {
+    public int getNumberOfTimesAchivementTriggered() {
         int counter = 0;
-
-
-        for (int y = 0; y
-                < ach.length; y++) {
+        for (int y = 0; y < ach.length; y++) {
             counter = counter + ach[y];
-
-
         }
-
         return counter;
-
-
-    }
-
-    private void newCode() {
-        random_name = "scnd_";
-        userIDBuff = new StringBuilder(random_name);
-
-        letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-
-        userIDBuff.append("").append(Math.round(Math.random() * 100)).append("_");
-        v1x = Integer.parseInt("" + Math.round((Math.random() * (letters.length - 1))));
-        v2x = Integer.parseInt("" + Math.round((Math.random() * (letters.length - 1))));
-        v3x = Integer.parseInt("" + Math.round((Math.random() * (letters.length - 1))));
-        userIDBuff.append(letters[v1x]);
-        userIDBuff.append(letters[v2x]);
-        userIDBuff.append(letters[v3x]);
-        userIDBuff.append("_").append(Math.round(Math.random() * 10000)).append("");
-        random_name = userIDBuff.toString();
-
-        usrCode = random_name;
-    }
-
-    private void createConfigFile(String m) {
-        try {
-
-            newCode();
-            stat = conn.createStatement();
-            stat.executeUpdate("INSERT INTO scndsave (name, usrCode, points, time, matches, achievementName, achievementDescription, achievementClass, achievementPoints, ach5, ach6, ach7, ach8, ach9, ach10, ach11, win, loss, frames, sound, difficulty, modeN, prefTime, graffix, upToDate, autoUpdate, musicFiles, char0, char1, char2, char3, char4, char5, char6, char7, char8, char9, char10, comicT, rez, rating, countryStr, controller, lang, isLefty) VALUES ('" + m + "', '" + usrCode + "', '" + scndCipher("" + 100) + "', '" + 0 + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', 60, 'on', '" + scndCipher("" + 3500) + "', '" + scndCipher("" + 0) + "', " + 181 + ", 'High', 'no', 'yes', 'yes', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 0) + "', '" + scndCipher("" + 2) + "', '" + scndCipher("" + 1) + "', '" + scndCipher("" + 60) + "', 'countryStr', 'false', '" + scndCipher("" + 0) + "', 'no');");
-            JOptionPane.showMessageDialog(null, "New account created \nYou can now login");
-
-        } catch (Exception e) {
-            System.out.println(">>> loadsave: Could not write ");
-        }
-
-
-        createUserCombo();
-        readDB(m);
-        thisPic.repaint();
-        enter.setEnabled(true);
-    }
-
-    public void saveConfigFile() {
-        try {
-            stat = conn.createStatement();
-            stat.executeUpdate("UPDATE scndsave SET name='" + strUser + "',"
-                    + " points='" + scndCipher(strPoint) + "',"
-                    + " time='" + strPlayTime + "', matches='" + scndCipher(matchCountStr) + "',"
-                    + " achievementName='" + scndCipher("" + ach[0]) + "', achievementDescription='" + scndCipher("" + ach[1]) + "',"
-                    + " achievementClass='" + scndCipher("" + ach[2]) + "', achievementPoints='" + scndCipher("" + ach[3]) + "',"
-                    + " ach5='" + scndCipher("" + ach[4]) + "', ach6='" + scndCipher("" + ach[5]) + "', "
-                    + " ach7='" + scndCipher("" + ach[6]) + "', ach8='" + scndCipher("" + ach[7]) + "',"
-                    + " ach9='" + scndCipher("" + ach[8]) + "', ach10='" + scndCipher("" + ach[9]) + "',"
-                    + " ach11='" + scndCipher("" + ach[10]) + "', win='" + scndCipher("" + win) + "',"
-                    + " loss='" + scndCipher("" + loss) + "', frames=" + frames + ","
-                    + " sound='" + soundStatus + "', difficulty='" + scndCipher("" + difficultyStat) + "',"
-                    + " modeN='" + scndCipher("" + stage) + "', prefTime=" + timePref + ", graffix='',"
-                    + " upToDate='" + upToDate + "', autoUpdate='" + autoUpdate + "', musicFiles='" + downloadedAudio + "',"
-                    + " char0='" + scndCipher("" + charUsage[0]) + "', char1='" + scndCipher("" + charUsage[1]) + "', char2='" + scndCipher("" + charUsage[2]) + "',"
-                    + " char3='" + scndCipher("" + charUsage[3]) + "', char4='" + scndCipher("" + charUsage[4]) + "', char5='" + scndCipher("" + charUsage[5]) + "',"
-                    + " char6='" + scndCipher("" + charUsage[6]) + "', char7='" + scndCipher("" + charUsage[7]) + "', char8='" + scndCipher("" + charUsage[8]) + "',"
-                    + " char9='" + scndCipher("" + charUsage[9]) + "', char10='" + scndCipher("" + charUsage[10]) + "', "
-                    + " comicT='" + scndCipher("" + comicPicOcc) + "', rez='" + scndCipher("" + scalePos) + "',"
-                    + " rating='" + scndCipher("" + gameRating) + "', countryStr='" + countryStr + "', controller='" + controllerStr + "', lang='" + scndCipher("" + activLang) + "', "
-                    + " isLefty='" + isLefty + "' WHERE usrCode='" + usrCode + "';");
-            jenesisLog("Saved file");
-            /**
-             * Phew !!!!
-             */
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-
-    }
-
-    private String generateString(char[] sourceChar) {
-        StringBuilder sb = new StringBuilder("");
-
-
-        int limit = sourceChar.length;
-
-        //reassemble
-
-
-        for (int u = 0; u
-                < limit; u++) {
-            sb.append("").append(sourceChar[u]);
-
-
-        }
-
-        return sb.toString();
-
-
-    }
-
-    //returns ciphered string
-    private String scndCipher(String toCipher) {
-        int limit = toCipher.length();
-        StringBuilder epix = new StringBuilder();
-
-
-        for (int y = 0; y
-                < limit; y++) {
-            epix.append(cipherChar(toCipher.charAt(y)));
-        }
-        return epix.toString();
-    }
-
-    //deciphers ciphered string
-    private String scndDecipher(String textToDecipher) {
-        int limit = textToDecipher.length();
-        StringBuilder epix2 = new StringBuilder();
-        for (int i = 0; i
-                < limit; i += 4) {
-            epix2.append(deCipherChar(textToDecipher.substring(i, i + 4)));
-        }
-        return epix2.toString();
-    } //conver char to scnd cipher
-
-    private String cipherChar(char cv) {
-        String done = "";
-        if (cv == '1') {
-            done = "~er5";
-        } else if (cv == '2') {
-            done = "9!tw";
-        } else if (cv == '3') {
-            done = "dz@4";
-        } else if (cv == '4') {
-            done = "yt3h";
-        } else if (cv == '5') {
-            done = "1a:d";
-        } else if (cv == '6') {
-            done = "m;9s";
-        } else if (cv == '7') {
-            done = "-5cy";
-        } else if (cv == '8') {
-            done = "9-n0";
-        } else if (cv == '9') {
-            done = "2s?v";
-        } else if (cv == '0') {
-            done = "g7h%";
-        }
-        return done;
-    }
-
-    private char deCipherChar(String done) {
-        char cv = '0';
-        if (done.equalsIgnoreCase("~er5")) {
-            cv = '1';
-        } else if (done.equalsIgnoreCase("9!tw")) {
-            cv = '2';
-        } else if (done.equalsIgnoreCase("dz@4")) {
-            cv = '3';
-        } else if (done.equalsIgnoreCase("yt3h")) {
-            cv = '4';
-        } else if (done.equalsIgnoreCase("1a:d")) {
-            cv = '5';
-        } else if (done.equalsIgnoreCase("m;9s")) {
-            cv = '6';
-        } else if (done.equalsIgnoreCase("-5cy")) {
-            cv = '7';
-        } else if (done.equalsIgnoreCase("9-n0")) {
-            cv = '8';
-        } else if (done.equalsIgnoreCase("2s?v")) {
-            cv = '9';
-        } else if (done.equalsIgnoreCase("g7h%")) {
-            cv = '0';
-        }
-        return cv;
     }
 
     private void closeWindow() {
@@ -1078,38 +411,17 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         return achObj;
     }
 
-    public int getCurrentPlayTime() {
-        return Integer.parseInt(strPlayTime);
-    }
-
-    public void setCurrentPlayTime(int time) {
-        strPlayTime = "" + time;
-    }
-
-    public void incrementAchievement(int index) {
-        ach[index] = ach[index] + 1;
-        //increment move trigger
-    }
-
-    public int getPoints() {
-        return Integer.parseInt(strPoint);
-    }
-
-    public void setPoints(int value) {
-        strPoint = "" + value;
-    }
-
     public void incrementMatchCount() {
-        if (newGame) {
-            int y = Integer.parseInt(matchCountStr) + 1;
-            matchCountStr = "" + y;
-            newGame = false;
+        if (newMatch) {
+            int y = Integer.parseInt(numberOfMatches) + 1;
+            numberOfMatches = "" + y;
+            newMatch = false;
             if (RenderGameplay.getInstance().getCharLife() < RenderGameplay.getInstance().getOppLife()) {
-                loss = loss + 1;
+                losses = losses + 1;
                 consecWins = 0;
                 consecWinsTmp = 0;
             } else {
-                win = win + 1;
+                wins = wins + 1;
                 consecWins = consecWins + 1;
                 consecWinsTmp = consecWinsTmp + 1;
             }
@@ -1127,7 +439,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
             }
             System.out.println("Style points: " + total);
-            returnThis = total / getATriggeredAchiev();
+            returnThis = total / getUnlockedAch();
         } catch (Exception e) {
             System.out.println("new user, awesomenss is newbie");
             returnThis = 0;
@@ -1149,174 +461,25 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      */
     private boolean downloadUpdateFile(String urlStr, String file) {
         boolean managedToDownload = false;
-
-
-        try {
-            url = new URL(urlStr);
-            in = new BufferedInputStream(url.openStream());
-            out = new File(file);
-            fos = new FileOutputStream(out);
-            bout = new BufferedOutputStream(fos, 1024);
-            data = new byte[1024];
-            x = 0;
-            while ((x = in.read(data, 0, 1024)) >= 0) {
-                bout.write(data, 0, x);
-
-
+        int bufferSize = 1024;
+        File out = new File(file);
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new URL(urlStr).openStream());
+             FileOutputStream fileOutputStream = new FileOutputStream(out);
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream, bufferSize)) {
+            byte[] data = new byte[bufferSize];
+            int x;
+            while ((x = bufferedInputStream.read(data, 0, bufferSize)) >= 0) {
+                bufferedOutputStream.write(data, 0, x);
             }
-            bout.close();
-            in.close();
+            bufferedOutputStream.close();
+            bufferedInputStream.close();
             managedToDownload = true;
-
-
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-
         return managedToDownload;
-
-
     }
 
-    private void downloadMusicFile(String urlStr, String directory, String file, long size) {
-
-        final String urlF = urlStr, directoryF = directory, fileF = file;
-        final long sizeF = size;
-
-
-        try {
-            musicPerc = 0;
-            url = new URL(urlF);
-            in = new BufferedInputStream(url.openStream());
-            out = new File(directoryF + "/" + fileF);
-            currentFile = fileF;
-            trackSize = sizeF;
-            fos = new FileOutputStream(out);
-            bout = new BufferedOutputStream(fos, 1024);
-            data = new byte[1024];
-            x = 0;
-            System.out.println("Size of file " + trackSize);
-
-
-            while ((x = in.read(data, 0, 1024)) != -1) {
-                thisPic.repaint();
-                bout.write(data, 0, x);
-
-
-                long currSize = out.length();
-                //System.outR.println("Size in kb "+currSize);
-                musicPerc = Math.round(((float) currSize / (float) trackSize) * 100);
-                System.out.println("Download Percent: " + musicPerc + "%");
-                if (startApp != null) {
-                    startApp.sytemNotice("Downloading track " + musicPerc + "%");
-                }
-
-            }
-            bout.close();
-            in.close();
-            musicPerc = 100;
-
-
-        } catch (Exception e) {
-        }
-    }
-
-    public void downloadMusic() {
-        new Thread() {
-
-            public void run() {
-                if (startApp != null) {
-                    startApp.sytemNotice("Trying to download music bro");
-                }
-                //download the file
-                if (downloadUpdateFile(updateFileURL, fileName)) {
-                    //make audio directory
-                    String directory = "audio";
-
-
-                    new File(directory).mkdir();
-                    isDownloadingMusic = true;
-                    thisPic.repaint();
-                    //find outR the number of amnientMusicMetaData needed
-                    //read the file
-                    try {
-                        br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
-
-
-                        do {
-                            sx = br.readLine();
-
-
-                            if (sx != null) {
-                                tx = tx + sx + "";
-
-
-                            }
-                        } while (sx != null);
-                        br.close();
-
-
-                    } catch (IOException e) {
-                        System.out.println("Couldn't read update file");
-
-
-                    }
-
-                    try {
-                        int numOfTraxToDownload = Integer.parseInt(tx.substring(tx.indexOf("<totalTrax>") + 11, tx.indexOf("</totalTrax>")));
-                        System.out.println("We have " + numOfTraxToDownload + " Files to download");
-
-
-                        for (int u = 1; u
-                                <= numOfTraxToDownload; u++) {
-                            if (u < 10) {
-                                currentTrack = tx.substring(tx.indexOf("<amnientMusicMetaData" + u + ">") + 7, tx.indexOf("</amnientMusicMetaData" + u + ">"));
-                                fileNameMus = tx.substring(tx.indexOf("<name" + u + ">") + 7, tx.indexOf("</name" + u + ">"));
-                                currentTrackSize = Long.parseLong(tx.substring(tx.indexOf("<size" + u + ">") + 7, tx.indexOf("</size" + u + ">")));
-                                System.out.println("Parsed " + currentTrackSize);
-
-
-                            } else//float digit songs
-                            {
-                                currentTrack = tx.substring(tx.indexOf("<amnientMusicMetaData" + u + ">") + 8, tx.indexOf("</amnientMusicMetaData" + u + ">"));
-                                currentTrackSize = Long.parseLong(tx.substring(tx.indexOf("<size" + u + ">") + 8, tx.indexOf("</size" + u + ">")));
-                                fileNameMus = tx.substring(tx.indexOf("<name" + u + ">") + 8, tx.indexOf("</name" + u + ">"));
-
-
-                            }
-
-                            downloadMusicFile(currentTrack, directory, fileNameMus, currentTrackSize);
-
-
-                        }
-                        isDownloadingMusic = false;
-                        thisPic.repaint();
-                        downloadedAudio = "yes";
-                        saveConfigFile();
-
-
-                    } catch (Exception e) {
-                        System.err.println("What " + e);
-                        e.printStackTrace(System.err);
-                    }
-                } else {
-                    System.out.println("Download Percent: " + musicPerc + "%");
-                    if (startApp != null) {
-                        startApp.sytemNotice("Can't download audio files");
-                    }
-                }
-            }
-        }.start();
-    }
-
-    /**
-     * Increments characterEnum usage, to determine usage
-     *
-     * @param dude
-     */
-    public void incrementCharUsage(int dude) {
-        charUsage[dude] = charUsage[dude] + 1;
-    }
 
     /**
      * Returns an int, corresponding to the index of the name of the most popular characterEnum
@@ -1324,12 +487,12 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      * @return index of most popular opponent
      */
     public int mostPopularChar() {
-        int max = charUsage[0];
+        int max = characterUsage[0];
         int dex = 0;
         for (int u = 0; u
-                < charUsage.length; u++) {
-            if (charUsage[u] > max) {
-                max = charUsage[u];
+                < characterUsage.length; u++) {
+            if (characterUsage[u] > max) {
+                max = characterUsage[u];
                 dex = u;
             }
         }
@@ -1340,11 +503,11 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         float ans = 0;
         float count = 0;
         for (int u = 0; u
-                < charUsage.length; u++) {
-            count = count + charUsage[u];
+                < characterUsage.length; u++) {
+            count = count + characterUsage[u];
             //getting the total
         }
-        ans = ((float) charUsage[mostPopularChar()] / (float) count) * 100;
+        ans = ((float) characterUsage[mostPopularChar()] / (float) count) * 100;
         return Integer.parseInt("" + Math.round(ans));
     }
 
@@ -1364,38 +527,5 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-    }
-
-    public Font getMyFont(float s) {
-        Font fnt = null;
-        try {
-            fnt = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("font/Sawasdee.ttf"));
-            fnt = fnt.deriveFont(s + 2);
-        } catch (Exception re) {
-            fnt = new Font("Sans", Font.PLAIN, (int) s + 2);
-        }
-        return fnt;
-    }
-
-    public void trayMessage(String s, String m) {
-        //trayIcon.displayMessage(s, m, TrayIcon.MessageType.INFO);
-    }
-
-    private void loadTray() {
-        /*
-        if (SystemTray.isSupported()) {
-        imageLoader = new JenesisImageLoader();
-        tray = SystemTray.getSystemTray();
-        image = imageLoader.loadBufferedImage("images/GameIco16.png");
-        
-        popup = new PopupMenu();
-        trayIcon = new TrayIcon(image, "The SCND Genesis: Legends", null);
-        trayIcon.setToolTip("The SCND Genesis: Legends");
-        try {
-        tray.add(trayIcon);
-        } catch (Exception e) {
-        System.err.println("Whoopsie " + e.getMessage());
-        }
-        }*/
     }
 }

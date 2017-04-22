@@ -14,8 +14,13 @@ public abstract class JenesisGame {
     private final Color BACKGROUND_COLOR = Color.WHITE;
     private JenesisMode mode;
     private boolean switchingModes;
+    private boolean running;
     private double width;
     private double height;
+
+    public JenesisGame() {
+        running = true;
+    }
 
     public final JenesisMode getMode() {
         return mode;
@@ -77,4 +82,15 @@ public abstract class JenesisGame {
     public abstract void mouseMoved(MouseEvent mouseEvent);
 
     public abstract void mouseClicked(MouseEvent mouseEvent);
+
+    public void run() {
+        do {
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                e.printStackTrace(System.err);
+            }
+        }
+        while (running);
+    }
 }

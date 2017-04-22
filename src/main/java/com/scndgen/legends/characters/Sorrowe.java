@@ -42,7 +42,7 @@ public class Sorrowe extends Character {
         name = "Sorrowe";
         characterEnum = SORROWE;
         isNotMale();
-        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout time", "Weakling !!", "You're incredibly annoying", "Don't go easy on achievements", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare achievements", "Let's do this", "Ugh, disgusting"};
+        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout timeLimit", "Weakling !!", "You're incredibly annoying", "Don't go easy on achievements", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare achievements", "Let's do this", "Ugh, disgusting"};
         physical = new String[]{"Lashing", "Whip-nado", "Lash assault", "Snared"};
         celestia = new String[]{"Hell Falme", "Hell Judgement", "Hell Blast", "Hell Blade"};
         status = new String[]{"Heal", "Cura EX", "Health ++", "E-Juice"};

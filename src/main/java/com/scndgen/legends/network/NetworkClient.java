@@ -156,7 +156,7 @@ public class NetworkClient implements Runnable {
                 JenesisPanel.getInstance().selectStage();
             } else if (line.startsWith("as1wds2_")) {
                 JenesisPanel.getInstance().hostTime = Integer.parseInt(line.substring(8));
-                System.out.println("aquired time is " + JenesisPanel.getInstance().hostTime);
+                System.out.println("aquired timeLimit is " + JenesisPanel.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
                 if (line.equals(Stage.IBEX_HILL.shortCode())) {
@@ -207,7 +207,7 @@ public class NetworkClient implements Runnable {
                 if (line.equals(Stage.SCORCHED_RUINS_NIGHT.shortCode())) {
                     RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
                 }
-            } //start game
+            } //initiate game
             else if (line.endsWith("gameStart7%^&")) {
                 RenderStageSelect.getInstance().start();
             } else if (line.contains("loadingGVSHA")) {

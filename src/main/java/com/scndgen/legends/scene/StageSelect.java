@@ -29,6 +29,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.input.MouseEvent;
 
 import java.util.Hashtable;
 
@@ -85,22 +86,22 @@ public abstract class StageSelect extends JenesisMode {
         //===============================================================
         Language language = Language.getInstance();
         lookupStageNames.clear();
-        lookupStageNames.put(Stage.IBEX_HILL, language.getLine(152));
-        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.getLine(153));
-        lookupStageNames.put(Stage.DESERT_RUINS, language.getLine(154));
-        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.getLine(155));
-        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.getLine(156));
-        lookupStageNames.put(Stage.SCORCHED_RUINS, language.getLine(157));
-        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.getLine(158));
-        lookupStageNames.put(Stage.DISTANT_ISLE, language.getLine(162));
-        lookupStageNames.put(Stage.HIDDEN_CAVE, language.getLine(159));
-        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.getLine(160));
-        lookupStageNames.put(Stage.APOCALYPTO, language.getLine(161));
-        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.getLine(163));
-        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.getLine(369));
-        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.getLine(370));
-        lookupStageNames.put(Stage.RANDOM, language.getLine(164));
-        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.getLine(371));
+        lookupStageNames.put(Stage.IBEX_HILL, language.get(152));
+        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.get(153));
+        lookupStageNames.put(Stage.DESERT_RUINS, language.get(154));
+        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.get(155));
+        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.get(156));
+        lookupStageNames.put(Stage.SCORCHED_RUINS, language.get(157));
+        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.get(158));
+        lookupStageNames.put(Stage.DISTANT_ISLE, language.get(162));
+        lookupStageNames.put(Stage.HIDDEN_CAVE, language.get(159));
+        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.get(160));
+        lookupStageNames.put(Stage.APOCALYPTO, language.get(161));
+        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.get(163));
+        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.get(369));
+        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.get(370));
+        lookupStageNames.put(Stage.RANDOM, language.get(164));
+        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.get(371));
     }
 
     public StageSelect() {
@@ -478,7 +479,7 @@ public abstract class StageSelect extends JenesisMode {
 
 
     /**
-     * @return stage
+     * @return lastStoryScene
      */
     public String getStage() {
         return stagePreviews[hoveredStage.index()];
@@ -626,11 +627,11 @@ public abstract class StageSelect extends JenesisMode {
      * Move up
      */
     public void moveUp() {
-        if (row > 0)
-            row -= 1;
-        else
-            row = rows;
-        capAnim();
+            if (row > 0)
+                row -= 1;
+            else
+                row = rows;
+            capAnim();
     }
 
     /**
@@ -719,5 +720,11 @@ public abstract class StageSelect extends JenesisMode {
      */
     public int getRows() {
         return rows;
+    }
+
+    public void mouseClicked(MouseEvent me) {
+        if (getWithinCharPanel()) {
+            selectStage(getHoveredStage());
+        }
     }
 }

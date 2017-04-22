@@ -30,9 +30,13 @@ import com.scndgen.legends.scene.StageSelect;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
+import static com.sun.javafx.tk.Toolkit.getToolkit;
+
 
 public class RenderStageSelect extends StageSelect {
 
@@ -72,7 +76,7 @@ public class RenderStageSelect extends StageSelect {
     public void loadAssets() {
         if (!loadAssets) return;
         imageLoader = new JenesisImageLoader();
-        normalFont = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        normalFont = getMyFont(LoginScreen.normalTxtSize);
         loadCaps();
         loadAssets = false;
     }
@@ -83,52 +87,52 @@ public class RenderStageSelect extends StageSelect {
     }
 
     @Override
-    public void paintComponent(Graphics2D g2d, ImageObserver io) {
+    public void render(GraphicsContext gc, double x, double y) {
         loadAssets();
         if (opacity < 0.98f) {
             opacity = opacity + 0.02f;
         }
         if (selectedStage) {
-            g2d.setColor(Color.BLACK);
-            g2d.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap, io);
-            g2d.setComposite(makeComposite(0.7f));
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.setComposite(makeComposite(0.5f));
-            g2d.fillRect(200, 0, 452, 480);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(loading, 316, 183, io); //yCord = 286 - icoHeight
-            g2d.setColor(Color.WHITE);
-            g2d.drawString(Language.getInstance().getLine(165), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(165))) / 2, 200);
+            gc.setFill(Color.BLACK);
+            gc.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap);
+            gc.setGlobalAlpha((0.7f));
+            gc.fillRect(0, 0, 852, 480);
+            gc.setGlobalAlpha((1.0f));
+            gc.setGlobalAlpha((0.5f));
+            gc.fillRect(200, 0, 452, 480);
+            gc.setGlobalAlpha((1.0f));
+            gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
+            gc.setFill(Color.WHITE);
+            gc.fillText(Language.getInstance().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(165), gc.getFont())) / 2, 200);
         } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT && !selectedStage) {
-            g2d.setFont(normalFont);
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.setColor(Color.WHITE);
-            g2d.drawString(">> " + Language.getInstance().getLine(166) + " <<", (852 - g2d.getFontMetrics(normalFont).stringWidth(">> " + Language.getInstance().getLine(166) + " <<")) / 2, 300);
+            gc.setFont(normalFont);
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, 852, 480);
+            gc.setFill(Color.WHITE);
+            gc.fillText(">> " + Language.getInstance().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.getInstance().get(166) + " <<", gc.getFont())) / 2, 300);
         } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT == false) {
-            g2d.setFont(normalFont);
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.setComposite(makeComposite(opacity));
-            g2d.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap, io);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.setComposite(makeComposite(5 * 0.1F));
-            g2d.fillRoundRect(283, 0, 285, 480, 30, 30);
-            g2d.setComposite(makeComposite(10 * 0.1F));
+            gc.setFont(normalFont);
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, 852, 480);
+            gc.setGlobalAlpha((opacity));
+            gc.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap);
+            gc.setGlobalAlpha((1.0f));
+            gc.setGlobalAlpha((5 * 0.1F));
+            gc.fillRoundRect(283, 0, 285, 480, 30, 30);
+            gc.setGlobalAlpha((10 * 0.1F));
             for (int row = 0; row <= rows; row++) {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
                     if (computedPosition >= stageCap.length) continue;
-                    g2d.drawImage(stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                    gc.drawImage(stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row));
                 }
             }
             if (isHoveredOverStage()) {
                 showStageName(hoveredStage);
-                g2d.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row), io);
+                gc.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row));
             }
         }
-        JenesisGlassPane.getInstance().overlay(g2d, io);
+        JenesisGlassPane.getInstance().overlay(gc);
     }
 
     private void loadCaps() {

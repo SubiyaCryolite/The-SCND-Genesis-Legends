@@ -23,17 +23,19 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.ImageObserver;
+import static com.sun.javafx.tk.Toolkit.getToolkit;
+
 
 /**
  * @author: Ifunga Ndana
@@ -43,8 +45,6 @@ import java.awt.image.ImageObserver;
 public class RenderStoryMenu extends StoryMenu {
 
     private static RenderStoryMenu instance;
-    private AudioPlayback victorySound;
-    private AudioPlayback menuSound;
     private Font header, normal;
     private Image charBack, loading;
     private Image[] unlockedScene, unlockedCaptions, lockedScene;
@@ -67,57 +67,57 @@ public class RenderStoryMenu extends StoryMenu {
     }
 
     @Override
-    public void paintComponent(Graphics2D g2d, ImageObserver io) {
+    public void render(GraphicsContext gc, final double w, final double h) {
         loadAssets();
         if (loadingNow) {
-            g2d.setColor(Color.BLACK);
-            g2d.drawImage(storyPrev, charXcap + x, charYcap, io);
-            g2d.setComposite(makeComposite(0.7f));
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.setComposite(makeComposite(0.5f));
-            g2d.fillRect(200, 0, 452, 480);
-            g2d.setComposite(makeComposite(1.0f));
-            g2d.drawImage(loading, 316, 183, io); //yCord = 286 - icoHeight
-            g2d.setColor(Color.WHITE);
+            gc.setFill(Color.BLACK);
+            gc.drawImage(storyPrev, charXcap + x, charYcap);
+            gc.setGlobalAlpha((0.7f));
+            gc.fillRect(0, 0, 852, 480);
+            gc.setGlobalAlpha((1.0f));
+            gc.setGlobalAlpha((0.5f));
+            gc.fillRect(200, 0, 452, 480);
+            gc.setGlobalAlpha((1.0f));
+            gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
+            gc.setFill(Color.WHITE);
         } else if (JenesisPanel.getInstance().getGameMode() != SubMode.LAN_CLIENT) {
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.drawImage(storyPrev, charXcap + x, charYcap, io);
-            g2d.setComposite(makeComposite(0.7f));
-            g2d.fillRect(0, 0, 852, 480);
-            g2d.setComposite(makeComposite(0.5f));
-            g2d.fillRect(200, 0, 452, 480);
-            g2d.setComposite(makeComposite(1.0f));
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, 852, 480);
+            gc.drawImage(storyPrev, charXcap + x, charYcap);
+            gc.setGlobalAlpha((0.7f));
+            gc.fillRect(0, 0, 852, 480);
+            gc.setGlobalAlpha((0.5f));
+            gc.fillRect(200, 0, 452, 480);
+            gc.setGlobalAlpha((1.0f));
             for (int row = 0; row < rows; row++) {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
                     if (computedPosition >= unlockedStage.length) continue;
-                    g2d.drawImage(unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), io);
+                    gc.drawImage(unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
                 }
             }
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(header);
-            g2d.drawString(Language.getInstance().getLine(307), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(307))) / 2, 80);
-            g2d.setFont(normal);
-            g2d.drawString(Language.getInstance().getLine(368), (852 - g2d.getFontMetrics().stringWidth(Language.getInstance().getLine(368))) / 2, 380);
+            gc.setFill(Color.WHITE);
+            gc.setFont(header);
+            gc.fillText(Language.getInstance().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(307), gc.getFont()) / 2), 80);
+            gc.setFont(normal);
+            gc.fillText(Language.getInstance().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(368), gc.getFont()) / 2), 380);
             showstoryName(hoveredStoryIndex);
             if (isUnlocked() && unlockedStage[hoveredStoryIndex]) {
                 if (opacity < 0.98f)
                     opacity = opacity + 0.02f;
-                g2d.setComposite(makeComposite(opacity));
-                g2d.drawImage(unlockedCaptions[hoveredStoryIndex], (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), io);
-                g2d.setComposite(makeComposite(1.0f));
-                g2d.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column), io);
+                gc.setGlobalAlpha((opacity));
+                gc.drawImage(unlockedCaptions[hoveredStoryIndex], (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
+                gc.setGlobalAlpha((1.0f));
+                gc.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
             }
         }
-        JenesisGlassPane.getInstance().overlay(g2d, io);
+        JenesisGlassPane.getInstance().overlay(gc);
     }
 
     public void loadAssets() {
         if (!loadAssets) return;
-        header = LoginScreen.getInstance().getMyFont(LoginScreen.extraTxtSize);
-        normal = LoginScreen.getInstance().getMyFont(LoginScreen.normalTxtSize);
+        header = getMyFont(LoginScreen.extraTxtSize);
+        normal = getMyFont(LoginScreen.normalTxtSize);
         victorySound = new AudioPlayback(AudioPlayback.soundGameOver(), true);
         menuSound = new AudioPlayback("audio/menu-select.mp3", true);
         JenesisImageLoader imageLoader = new JenesisImageLoader();
@@ -137,16 +137,16 @@ public class RenderStoryMenu extends StoryMenu {
         int random = (int) (Math.random() * 4);
         switch (random) {
             case 0:
-                storyPrev = imageLoader.loadBufferedImage("images/story/blur/s4.png");
+                storyPrev = imageLoader.loadImage("images/story/blur/s4.png");
                 break;
             case 1:
-                storyPrev = imageLoader.loadBufferedImage("images/story/blur/s5.png");
+                storyPrev = imageLoader.loadImage("images/story/blur/s5.png");
                 break;
             case 2:
-                storyPrev = imageLoader.loadBufferedImage("images/story/blur/s6.png");
+                storyPrev = imageLoader.loadImage("images/story/blur/s6.png");
                 break;
             default:
-                storyPrev = imageLoader.loadBufferedImage("images/story/blur/s6.png");
+                storyPrev = imageLoader.loadImage("images/story/blur/s6.png");
                 break;
         }
         loadAssets = false;
@@ -155,18 +155,18 @@ public class RenderStoryMenu extends StoryMenu {
     public void cleanAssets() {
         header = null;
         normal = null;
-        charBack.flush();
-        loading.flush();
+        charBack = null;
+        loading = null;
         for (Image image : unlockedScene) {
-            image.flush();
+            image = null;
         }
         for (Image image : unlockedCaptions) {
-            image.flush();
+            image = null;
         }
         for (Image image : lockedScene) {
-            image.flush();
+            image = null;
         }
-        storyPrev.flush();
+        storyPrev = null;
         loadAssets = true;
     }
 
@@ -174,42 +174,5 @@ public class RenderStoryMenu extends StoryMenu {
         super.newInstance();
     }
 
-    /**
-     * Are there more stages?????
-     *
-     * @return
-     */
-    public boolean moreStages() {
-        boolean answer = false;
-        resetCurrentStage();
 
-        //check if more stages
-        if (currentScene < StoryMode.getInstance().max) {
-            answer = true;
-        } //if won last 'final' match
-        else if (RenderGameplay.getInstance().hasWon()) {
-            //incrementMode();
-            //go back to user difficulty
-            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficultyStat;
-            victorySound.play();
-            JOptionPane.showMessageDialog(null, Language.getInstance().getLine(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
-            answer = false;
-        }
-
-        return answer;
-    }
-
-    public void prepareStory() {
-        for (int i = 0; i <= StoryMode.getInstance().max; i++) {
-            if (hoveredStoryIndex == i) {
-                startGame(i);
-                menuSound.play();
-                break;
-            }
-        }
-    }
-
-    public void selectStage() {
-        prepareStory();
-    }
 }
