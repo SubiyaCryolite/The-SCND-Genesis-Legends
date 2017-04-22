@@ -70,7 +70,7 @@ public class CharacterAttacksOnline implements Runnable {
         for (int index = 0; index < action.length; index++) {
             RenderGameplay.getInstance().getAttacksChar().CharacterOverlayEnabled();
             RenderGameplay.getInstance().getAttacksChar().attack(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT);
-            RenderGameplay.getInstance().shakeOppCharLB();
+            RenderGameplay.getInstance().shakeOpponentLifeBar();
             RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
             RenderGameplay.getInstance().getAttacksChar().CharacterOverlayDisabled();
         }

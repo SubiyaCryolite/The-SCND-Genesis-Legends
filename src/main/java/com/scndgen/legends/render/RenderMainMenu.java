@@ -192,7 +192,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
         }
-        JenesisGlassPane.getInstance().overlay(gc);
+        JenesisGlassPane.getInstance().overlay(gc, w, h);
         gc.fillText("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
@@ -200,10 +200,10 @@ public class RenderMainMenu extends MainMenu {
         gc.setGlobalAlpha((1.0f));
         gc.setFill(Color.WHITE);
         if (overlay == Overlay.STATISTICS) {
-            achachievementLocker.drawStats(gc);
+            achachievementLocker.drawStats(gc, w, h);
         }
         if (overlay == Overlay.ACHIEVEMENTS) {
-            achachievementLocker.drawAch(gc);
+            achachievementLocker.drawAch(gc, w, h);
         }
         if (overlay == Overlay.TUTORIAL) {
             tutorial.draw(gc, w, h);

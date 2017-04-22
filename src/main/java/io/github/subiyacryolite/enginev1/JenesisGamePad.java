@@ -20,7 +20,7 @@ package io.github.subiyacryolite.enginev1;
  * The rumbler can be switched on/off, and its current status retrieved.
  */
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.state.GameState;
 import net.java.games.input.Component;
 import net.java.games.input.Component.POV;
 import net.java.games.input.Controller;
@@ -55,7 +55,7 @@ public class JenesisGamePad {
 
     private JenesisGamePad() {
         try {
-            if (LoginScreen.getInstance().usingController) {
+            if (GameState.getInstance().getLogin().getUsingController()) {
                 controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
                 controllers = controllerEnvironment.getControllers();
                 if (controllers.length == 0) {

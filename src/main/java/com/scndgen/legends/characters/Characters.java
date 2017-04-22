@@ -61,7 +61,7 @@ public class Characters {
         //percentages
         if (life < minCharlife) {
             minCharlife = life;
-            //System.out.println("min char life "+minCharlife);
+            //System.out.println("min char characterHp "+minCharlife);
         }
     }
 
@@ -253,7 +253,7 @@ public class Characters {
         RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(characterEnum.index());
         activityRecoverRateChar = this.character.getRecovSpeed();
         setPoints(this.character.getPoints());
-        RenderGameplay.getInstance().setLife(this.character.getLife());
+        RenderGameplay.getInstance().setCharacterHp(this.character.getLife());
         RenderGameplay.getInstance().setMaxLife(this.character.getLife());
     }
 
@@ -304,7 +304,7 @@ public class Characters {
         opponentName = characterEnum.name();
         RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getRecovSpeed();
-        RenderGameplay.getInstance().setOppLife(opponent.getLife());
+        RenderGameplay.getInstance().setOpponentHp(opponent.getLife());
         RenderGameplay.getInstance().setOppMaxLife(opponent.getLife());
         opponent.setAiProf();
     }

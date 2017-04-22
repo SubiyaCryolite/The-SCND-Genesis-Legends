@@ -23,11 +23,11 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StageSelect;
-import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
@@ -104,13 +104,13 @@ public class RenderStageSelect extends StageSelect {
             gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             gc.setFill(Color.WHITE);
             gc.fillText(Language.getInstance().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(165), gc.getFont())) / 2, 200);
-        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT && !selectedStage) {
+        } else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT && !selectedStage) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
             gc.setFill(Color.WHITE);
             gc.fillText(">> " + Language.getInstance().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.getInstance().get(166) + " <<", gc.getFont())) / 2, 300);
-        } else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT == false) {
+        } else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT == false) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
@@ -132,7 +132,7 @@ public class RenderStageSelect extends StageSelect {
                 gc.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row));
             }
         }
-        JenesisGlassPane.getInstance().overlay(gc);
+        JenesisGlassPane.getInstance().overlay(gc,x,y);
     }
 
     private void loadCaps() {

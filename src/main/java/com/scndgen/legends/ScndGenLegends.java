@@ -1,6 +1,7 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.render.RenderStageSelect;
@@ -17,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 public class ScndGenLegends extends JenesisGame {
 
     private static ScndGenLegends instance;
+    private SubMode subMode;
 
     public static ScndGenLegends getInstance() {
         return instance;
@@ -59,6 +61,14 @@ public class ScndGenLegends extends JenesisGame {
         } finally {
             setSwitchingModes(false);
         }
+    }
+
+    public SubMode getGameMode() {
+        return this.subMode;
+    }
+
+    public void setGameMode(SubMode subMode) {
+        this.subMode=subMode;
     }
 
     @Override

@@ -22,7 +22,6 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
@@ -33,6 +32,7 @@ import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.*;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.JenesisGamePad;
@@ -107,9 +107,9 @@ public class JenesisPanel extends Pane {
         gameMode = subMode;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
-        leftyXOffset = (LoginScreen.getInstance().isLeftHanded() != null && LoginScreen.getInstance().isLeftHanded().equalsIgnoreCase("no")) ? 548 : 0;
+        leftyXOffset = GameState.getInstance().getLogin().isLeftHanded() ? 548 : 0;
         if (getGameMode() == SubMode.LAN_CLIENT) {
-            client = new NetworkClient(LoginScreen.getInstance().getIP());
+            client = new NetworkClient(GameState.getInstance().getLanHostIp());
         }
         RenderStageSelect.getInstance().newInstance();
         switch (subMode) {
@@ -560,7 +560,7 @@ public class JenesisPanel extends Pane {
             escape();
         }
         if (keyCode == KeyCode.F4) {
-            LoginScreen.getInstance().getMenu().exit();
+            //exit();
         }
         if (keyCode == KeyCode.F5) {
             if (getIsGameRunning()) {
@@ -766,7 +766,7 @@ public class JenesisPanel extends Pane {
         int ansx = JOptionPane.showConfirmDialog(null, userName + " , someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         switch (ansx) {
             case JOptionPane.YES_OPTION: {
-                sendToClient("as1wds2_" + LoginScreen.getInstance().timeLimit);
+                sendToClient("as1wds2_" + GameState.getInstance().getLogin().getTimeLimit());
                 isWaiting = false;
                 lanHostWaitLobby.stopRepaint();
                 RenderCharacterSelectionScreen.getInstance().newInstance();

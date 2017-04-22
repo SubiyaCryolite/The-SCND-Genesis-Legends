@@ -1,5 +1,6 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
@@ -130,7 +131,7 @@ public class NetworkServer implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
-                if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
 

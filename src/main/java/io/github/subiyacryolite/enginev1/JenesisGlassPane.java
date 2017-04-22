@@ -21,7 +21,6 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev1;
 
-import com.scndgen.legends.LoginScreen;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -38,12 +37,10 @@ public class JenesisGlassPane {
     private static JenesisGlassPane instance;
     private String primaryNotification = "", secondaryNotification = "";
     private float primaryOpacity = 0.0f, secondaryOpacity = 0.0f;
-    private int gameWidth = 0;
     private float primaryTimeout, secondaryTimeout;
     private boolean increasePrimaryOpacity, fadeOutPrimaryNotification, increaseSecondaryOpacity, fadeOutSecondaryNotification;
 
     private JenesisGlassPane() {
-        gameWidth = LoginScreen.getGameWidth();
     }
 
     public static synchronized JenesisGlassPane getInstance() {
@@ -57,7 +54,7 @@ public class JenesisGlassPane {
      *
      * @param gc, the Graphics2D object
      */
-    public void overlay(GraphicsContext gc) {
+    public void overlay(GraphicsContext gc, double w, double h) {
         gc.setFill(Color.BLACK);
         if (increasePrimaryOpacity && primaryOpacity < 0.99f) {//fade up
             primaryOpacity = primaryOpacity + 0.01f;
@@ -73,10 +70,10 @@ public class JenesisGlassPane {
             }
         }
         gc.setGlobalAlpha((primaryOpacity / 2.5f));
-        gc.fillRoundRect((gameWidth - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
+        gc.fillRoundRect((w - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
         gc.setGlobalAlpha((primaryOpacity));
         gc.setFill(Color.WHITE);
-        gc.fillText(primaryNotification, (gameWidth - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 70);
+        gc.fillText(primaryNotification, (w - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 70);
         gc.setGlobalAlpha((1.0f));
 
         if (increaseSecondaryOpacity && secondaryOpacity < 0.99f) {//fade up
@@ -94,10 +91,10 @@ public class JenesisGlassPane {
         }
         gc.setFill(Color.BLACK);
         gc.setGlobalAlpha((secondaryOpacity / 2.5f));
-        gc.fillRoundRect((gameWidth - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
+        gc.fillRoundRect((w - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
         gc.setGlobalAlpha((secondaryOpacity));
         gc.setFill(Color.WHITE);
-        gc.fillText(secondaryNotification, (gameWidth - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 50);
+        gc.fillText(secondaryNotification, (w - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 50);
         gc.setGlobalAlpha((1.0F));
     }
 

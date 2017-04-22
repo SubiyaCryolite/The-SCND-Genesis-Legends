@@ -1,9 +1,10 @@
-package com.scndgen.legends;
+package com.scndgen.legends.state;
 
 import io.github.subiyacryolite.jds.*;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
 import io.github.subiyacryolite.jds.enums.JdsImplementation;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.sqlite.SQLiteConfig;
 
@@ -17,13 +18,16 @@ import java.util.List;
 public class GameState extends JdsEntity {
     private static GameState instance;
     private static JdsDataBase jdsDatabase;
-    private final SimpleListProperty<GameSave> gameSaves = new SimpleListProperty<>();
+    public static final int DIFFICULTY_BASE = 8000;
+    public static final int DIFFICULTY_SCALE = 1333;
+    private final SimpleListProperty<LoginState> loginStates = new SimpleListProperty<>(FXCollections.observableArrayList());
     private int currentGameSave;
     private boolean newAccount;
+    private String lanHostIp;
 
     private GameState() {
         instance = this;
-        map(GameSave.class, gameSaves);
+        map(LoginState.class, loginStates);
     }
 
     public static synchronized GameState getInstance() {
@@ -49,25 +53,26 @@ public class GameState extends JdsEntity {
         SQLiteConfig sqLiteConfig = new SQLiteConfig();
         sqLiteConfig.enforceForeignKeys(true);
         jdsDatabase = JdsDataBase.getImplementation(JdsImplementation.SQLITE);
-        jdsDatabase.setConnectionProperties(databaseIfNotExists, sqLiteConfig.toProperties());
+        jdsDatabase.setConnectionProperties("jdbc:sqlite:" +databaseIfNotExists, sqLiteConfig.toProperties());
+        jdsDatabase.init();
     }
 
     private static void bindClasses() {
-        JdsEntityClasses.map(GameSave.class);
+        JdsEntityClasses.map(LoginState.class);
         JdsEntityClasses.map(GameState.class);
     }
 
     private static String getEmbeddedDatabaseAndCreateIfNotExist() {
-        File databaseFileLocation = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen"+ File.separator + "legends");
+        File databaseFileLocation = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "legends");
         String fileLocation = databaseFileLocation.getAbsolutePath() + File.separator + "config.db";
-        if (!new File(fileLocation).exists()) {
-            try {
+        try {
+            if (!new File(fileLocation).exists()) {
                 databaseFileLocation.mkdirs();
                 new File(fileLocation).createNewFile();
                 System.err.println("Creating database");
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
             }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
         }
         return fileLocation;
     }
@@ -76,35 +81,35 @@ public class GameState extends JdsEntity {
         JdsSave.save(jdsDatabase, 1, this);
     }
 
-    public ObservableList<GameSave> getGameSaves() {
-        return gameSaves.get();
+    public ObservableList<LoginState> getLoginStates() {
+        return loginStates.get();
     }
 
-    public void setGameSaves(ObservableList<GameSave> gameSaves) {
-        this.gameSaves.clear();
-        if (gameSaves == null) return;
-        this.gameSaves.addAll(gameSaves);
+    public void setLoginStates(ObservableList<LoginState> loginStates) {
+        this.loginStates.clear();
+        if (loginStates == null) return;
+        this.loginStates.addAll(loginStates);
     }
 
-    public GameSave getLogin() {
-        if (gameSaves.size() == 0) {
+    public LoginState getLogin() {
+        if (loginStates.size() == 0) {
             currentGameSave = 0;
-            gameSaves.add(new GameSave());
+            getLoginStates().add(new LoginState());
             newAccount = true;
         }
-        return gameSaves.get(currentGameSave);
+        return getLoginStates().get(currentGameSave);
     }
 
-    public void setCurrentAccount(GameSave gameSave) {
-        for (int i = 0; i < gameSaves.size(); i++) {
-            if (gameSaves.get(i) == gameSave) {
+    public void setCurrentAccount(LoginState loginState) {
+        for (int i = 0; i < loginStates.size(); i++) {
+            if (loginStates.get(i) == loginState) {
                 currentGameSave = i;
                 return;
             }
         }
         //account didn't exist, so add it here
-        currentGameSave = gameSaves.size();
-        gameSaves.add(gameSave);
+        currentGameSave = loginStates.size();
+        getLoginStates().add(loginState);
     }
 
     public boolean isNewAccount() {
@@ -113,5 +118,13 @@ public class GameState extends JdsEntity {
 
     public void isNewAccount(boolean value) {
         newAccount = value;
+    }
+
+    public String getLanHostIp() {
+        return lanHostIp;
+    }
+
+    public void setLanHostIp(String value) {
+        lanHostIp = value;
     }
 }

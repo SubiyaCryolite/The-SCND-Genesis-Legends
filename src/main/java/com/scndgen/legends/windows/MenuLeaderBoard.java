@@ -22,16 +22,13 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.network.SqlQuery;
-import com.scndgen.legends.render.RenderGameplay;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -101,45 +98,13 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
             }
         }
         if (ae.getSource() == upload) {
-            upload();
+            uploadToServer();
         }
         if (ae.getSource() == close) {
             dispose();
         }
     }
 
-    private void upload() {
-        try {
-            try {
-                if (notInitislied) {
-                    Class.forName("com.mysql.jdbc.Driver").newInstance();
-                    database = "jdbc:mysql://" + dbName + "?" + passWd;
-                    con = DriverManager.getConnection(database);
-                    System.out.println("Connected to " + database);
-                    notInitislied = false;
-                }
-                stmt = con.createStatement();
-
-                try {
-                    //if exists error shall be thrown
-                    System.out.println("Brand new");
-                    stmt.executeUpdate("INSERT INTO user(id, rating, userName, userCountry, gameVersion, versionInt, userTotalMatches, userWin, userLoss, favCharacter, userPoints) VALUES ('" + LoginScreen.getInstance().usrCode + "', " + LoginScreen.getInstance().getInstance().getGameRating() + ", '" + LoginScreen.getInstance().strUser + "', '" + LoginScreen.getInstance().getInstance().getCountry() + "', '" + RenderGameplay.getInstance().getVersionStr() + "', " + RenderGameplay.getInstance().getVersionInt() + ", " + (LoginScreen.getInstance().getInstance().wins + LoginScreen.getInstance().getInstance().losses) + ", " + LoginScreen.getInstance().getInstance().wins + ", " + LoginScreen.getInstance().getInstance().losses + ", " + LoginScreen.getInstance().getInstance().mostPopularChar() + ", " + LoginScreen.getInstance().strPoint + ")");
-                } catch (Exception e) {
-                    System.out.println("Override old record");
-                    stmt.executeUpdate("UPDATE user SET id='" + LoginScreen.getInstance().usrCode + "', rating=" + LoginScreen.getInstance().getInstance().getGameRating() + ", userName='" + LoginScreen.getInstance().strUser + "', userCountry='" + LoginScreen.getInstance().getInstance().getCountry() + "', gameVersion='" + RenderGameplay.getInstance().getVersionStr() + "', versionInt=" + RenderGameplay.getInstance().getVersionInt() + ", userTotalMatches=" + (LoginScreen.getInstance().getInstance().wins + LoginScreen.getInstance().getInstance().losses) + ", userWin=" + LoginScreen.getInstance().getInstance().wins + ", userLoss=" + LoginScreen.getInstance().getInstance().losses + ", favCharacter=" + LoginScreen.getInstance().getInstance().mostPopularChar() + ", userPoints=" + LoginScreen.getInstance().strPoint + " WHERE id='" + LoginScreen.getInstance().usrCode + "'");
-
-                }
-                LoginScreen.getInstance().getInstance().saveConfigFile();
-                JOptionPane.showMessageDialog(null, Language.getInstance().get(99), Language.getInstance().get(102), JOptionPane.PLAIN_MESSAGE);
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-                notInitislied = true;
-                JOptionPane.showMessageDialog(null, Language.getInstance().get(100), Language.getInstance().get(101), JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            JOptionPane.showMessageDialog(null, Language.getInstance().get(100), Language.getInstance().get(101), JOptionPane.ERROR_MESSAGE);
-            notInitislied = true;
-        }
+    private void uploadToServer() {
     }
 }

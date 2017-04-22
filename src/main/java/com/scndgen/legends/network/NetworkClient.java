@@ -1,5 +1,6 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
@@ -102,10 +103,10 @@ public class NetworkClient implements Runnable {
                 int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
-                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
                     JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
@@ -223,7 +224,7 @@ public class NetworkClient implements Runnable {
             } //rejected
             else if (line.contains("getLost")) ;
             {
-                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + JenesisPanel.getInstance().getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
                 JenesisPanel.getInstance().sendToServer("quit");
                 JenesisPanel.getInstance().closeTheClient();
                 JenesisPanel.getInstance().backToMenuScreen();

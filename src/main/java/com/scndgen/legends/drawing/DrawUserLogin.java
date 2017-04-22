@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.GameState;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import javafx.scene.canvas.GraphicsContext;

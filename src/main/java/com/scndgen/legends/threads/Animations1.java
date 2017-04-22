@@ -23,7 +23,7 @@ package com.scndgen.legends.threads;
 
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.scene.Gameplay;
-import com.scndgen.legends.windows.WindowOptions;
+import com.scndgen.legends.state.GameState;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +40,7 @@ public class Animations1 implements Runnable {
         thread = new Thread(this);
         thread.setName("Animator thread 1 - CharacterEnum");
         thread.start();
-        factor = 30 - (8 + (WindowOptions.resolveDifficulty() * 2));
+        factor = 30 - (8 + (GameState.getInstance().getLogin().resolveDifficulty() * 2));
         System.out.println("Fury factor: " + factor);
     }
 

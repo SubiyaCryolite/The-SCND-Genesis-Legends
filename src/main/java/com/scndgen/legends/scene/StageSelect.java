@@ -22,6 +22,7 @@
 package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.enums.SubMode;
@@ -118,22 +119,22 @@ public abstract class StageSelect extends JenesisMode {
     public void selectStage(Stage stage) {
         hoveredStage = stage;
         if (mode == StageSelection.NORMAL) {
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE || JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
             switch (hoveredStage) {
                 case IBEX_HILL:
                     selectIbexHill();
@@ -184,12 +185,12 @@ public abstract class StageSelect extends JenesisMode {
                     selectScorchedRuinsNight();
                     break;
             }
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 JenesisPanel.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE || JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST || JenesisPanel.getInstance().getGameMode() == SubMode.WATCH) {
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getGameMode() == SubMode.WATCH) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
                 JenesisPanel.getInstance().sendToClient("gameStart7%^&");
             }
             start();

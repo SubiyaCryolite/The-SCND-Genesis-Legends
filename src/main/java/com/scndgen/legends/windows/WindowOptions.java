@@ -21,9 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.GameState;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
 
 import javax.swing.*;
@@ -37,15 +36,6 @@ import java.awt.event.*;
  */
 public class WindowOptions extends JFrame implements ActionListener, ItemListener, KeyListener {
 
-    public static int txtSpeed = 200, one;
-    public static final int diff0 = 0,
-            diff1 = 1000,
-            diff2 = 2500,
-            diff3 = 3500,
-            diff4 = 4500,
-            diff5 = 6000;
-    public int[] txtSpeedArr = new int[]{50, 100, 200, 250};
-    public int[] Arr = {diff0, diff1, diff2, diff3, diff4, diff5};
     public String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
     private Object source;
     private JToggleButton[] btnRating;
@@ -127,7 +117,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
          */
 
         diffSett = new JComboBox(diffSettOpt);
-        diffSett.setSelectedIndex(resolveDifficulty());
+        diffSett.setSelectedIndex(GameState.getInstance().getLogin().resolveDifficulty());
         diffSett.addActionListener(this);
         lblOption1 = new JLabel(Language.getInstance().get(6));
         panDifficulty = new JPanel(new GridLayout(1, 2));
@@ -156,8 +146,8 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         btnSoundOff = new JToggleButton(Language.getInstance().get(13));
         btnSoundOn.addActionListener(this);
         btnSoundOff.addActionListener(this);
-        btnSoundOn.setSelected(GameState.getInstance().getLogin().getSoundStatus()); //on by default
-        btnSoundOff.setSelected(!GameState.getInstance().getLogin().getSoundStatus());
+        btnSoundOn.setSelected(GameState.getInstance().getLogin().isAudioOn()); //on by default
+        btnSoundOff.setSelected(!GameState.getInstance().getLogin().isAudioOn());
 
         soundBG = new ButtonGroup();
         soundBG.add(btnSoundOn);
@@ -278,41 +268,6 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         setRating(GameState.getInstance().getLogin().getGameRating() / 20);
     }
 
-    /**
-     * Sorts difficulty
-     *
-     * @return difficulty array index
-     */
-    public static int resolveDifficulty() {
-        one = 0;
-        //500,2500, 3500, 4500, 6500
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff0) {
-            one = 0;
-        }
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff1) {
-            one = 1;
-        }
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff2) {
-            one = 2;
-        }
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff3) {
-            one = 3;
-        }
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff4) {
-            one = 4;
-        }
-
-        if (GameState.getInstance().getLogin().getDifficulty() == diff5) {
-            one = 5;
-        }
-
-        return one;
-    }
 
     public void alterJLabel(JLabel jLabel) {
         jLabel.setForeground(Color.WHITE);
@@ -371,17 +326,17 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
             Language.getInstance().setLanguage(cmbLanguage.getSelectedIndex());
             GameState.getInstance().getLogin().setCurrentLanguage(cmbLanguage.getSelectedIndex());
         } else if (source == diffSett) {
-            GameState.getInstance().getLogin().setDifficultyDyn(Arr[diffSett.getSelectedIndex()]);
-            GameState.getInstance().getLogin().setDifficulty(Arr[diffSett.getSelectedIndex()]);
-            System.out.println("Diff = " + Arr[diffSett.getSelectedIndex()]);
-            System.out.println("Diff Range = " + (LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()]));
-            System.out.println("Diff Range Rate = " + ((LoginScreen.difficultyBase - Arr[diffSett.getSelectedIndex()])) / LoginScreen.difficultyScale);
+            GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
+            GameState.getInstance().getLogin().setDifficulty(GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
+            System.out.println("Diff = " + GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
+            System.out.println("Diff Range = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())));
+            System.out.println("Diff Range Rate = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())) / GameState.DIFFICULTY_BASE);
         } else if (source == cmbTextSpeed) {
-            txtSpeed = txtSpeedArr[cmbTextSpeed.getSelectedIndex()];
+            GameState.getInstance().getLogin().setTxtSpeed(GameState.getInstance().getLogin().getTxtSpeedConstant(cmbTextSpeed.getSelectedIndex()));
         } else if (source == btnSoundOn) {
-            GameState.getInstance().getLogin().setSoundStatus(true);
+            GameState.getInstance().getLogin().setIsAudioOn(true);
         } else if (source == btnSoundOff) {
-            GameState.getInstance().getLogin().setSoundStatus(false);
+            GameState.getInstance().getLogin().setIsAudioOn(false);
         } else if (source == cmbTimeDuration) {
             if (cmbTimeDuration.getSelectedItem() == "infinite") {
                 GameState.getInstance().getLogin().setTimeLimit(1000);

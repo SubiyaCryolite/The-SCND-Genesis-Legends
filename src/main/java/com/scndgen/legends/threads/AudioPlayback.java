@@ -19,7 +19,7 @@
  *************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.state.GameState;
 import javazoom.jl.player.Player;
 
 import java.io.InputStream;
@@ -170,7 +170,7 @@ public class AudioPlayback implements Runnable {
     // play the MP3 file to the sound card
     public void play() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
-            if (LoginScreen.getInstance().soundStatus.equalsIgnoreCase("on")) {
+            if (GameState.getInstance().getLogin().isAudioOn()) {
                 player = new Player(inputStream);
                 thread.setName("Music Thread");
                 thread.start();

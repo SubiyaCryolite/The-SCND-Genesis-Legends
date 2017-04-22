@@ -1,5 +1,6 @@
-package com.scndgen.legends;
+package com.scndgen.legends.state;
 
+import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.CharacterEnum;
 import io.github.subiyacryolite.jds.JdsEntity;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
@@ -11,7 +12,16 @@ import javafx.beans.property.SimpleStringProperty;
  * Created by ifung on 22/04/2017.
  */
 @JdsEntityAnnotation(entityName = "Game Saves", entityId = 2)
-public class GameSave extends JdsEntity {
+public class LoginState extends JdsEntity {
+    private final int diff0 = 0,
+            diff1 = 1000,
+            diff2 = 2500,
+            diff3 = 3500,
+            diff4 = 4500,
+            diff5 = 6000;
+    private final int[] txtSpeedArr = new int[]{50, 100, 200, 250};
+    private final int[] difficultyArray = {diff0, diff1, diff2, diff3, diff4, diff5};
+    //
     private final SimpleStringProperty userName = new SimpleStringProperty("");
     private final SimpleStringProperty usrCode = new SimpleStringProperty("");
     private final SimpleIntegerProperty points = new SimpleIntegerProperty(0);
@@ -21,23 +31,25 @@ public class GameSave extends JdsEntity {
     private final SimpleStringProperty achievementDescription = new SimpleStringProperty("");
     private final SimpleStringProperty achievementClass = new SimpleStringProperty("");
     private final SimpleStringProperty achievementPoints = new SimpleStringProperty("");
-    private final SimpleStringProperty ach0 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach1 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach2 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach3 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach4 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach5 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach6 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach7 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach8 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach9 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach10 = new SimpleStringProperty("");
-    private final SimpleStringProperty ach11 = new SimpleStringProperty("");
+    private final SimpleIntegerProperty ach0 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach1 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach2 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach3 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach4 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach5 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach6 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach7 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach8 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach9 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach10 = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty ach11 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty wins = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty losses = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty frames = new SimpleIntegerProperty(0);
-    private final SimpleBooleanProperty soundStatus = new SimpleBooleanProperty(true);
-    private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty txtSpeed = new SimpleIntegerProperty(200);
+    private final SimpleBooleanProperty isAudioOn = new SimpleBooleanProperty(true);
+    private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(diff3);
+    private final SimpleIntegerProperty difficultyDynamic = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty lastStoryScene = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(0);
     private final SimpleStringProperty graffix = new SimpleStringProperty("");
@@ -64,45 +76,93 @@ public class GameSave extends JdsEntity {
     private final SimpleBooleanProperty leftHanded = new SimpleBooleanProperty(false);
     private final SimpleIntegerProperty consequtiveWins = new SimpleIntegerProperty(0);
 
-    public void incrementAchievement(int index) {
-        switch (index) {
-            case 0:
+    public void incrementAchievement(Achievements achievement) {
+        switch (achievement) {
+            case UPPER_HAND:
                 setAch0(getAch0() + 1);
                 break;
-            case 1:
+            case BEAT_THE_ODDS:
                 setAch1(getAch1() + 1);
                 break;
-            case 2:
+            case OWNAGE:
                 setAch2(getAch2() + 1);
                 break;
-            case 3:
+            case HEARTLESS:
                 setAch3(getAch3() + 1);
                 break;
-            case 4:
+            case MEANIE:
                 setAch4(getAch4() + 1);
                 break;
-            case 5:
+            case RAGE:
                 setAch5(getAch5() + 1);
                 break;
-            case 6:
+            case WINNER:
                 setAch6(getAch6() + 1);
                 break;
-            case 7:
+            case BUZZ_KILL:
                 setAch7(getAch7() + 1);
                 break;
-            case 8:
+            case CLOSE_CALL:
                 setAch8(getAch8() + 1);
                 break;
-            case 9:
+            case ON_A_ROLL:
                 setAch9(getAch9() + 1);
                 break;
-            case 10:
+            case HALF_WAY_THROUGH:
                 setAch10(getAch10() + 1);
                 break;
-            case 11:
+            case Ach12:
                 setAch11(getAch11() + 1);
                 break;
         }
+    }
+
+    public int getAchievementTriggers(Achievements achievement) {
+        switch (achievement) {
+            case UPPER_HAND:
+                return getAch0();
+            case BEAT_THE_ODDS:
+                return getAch1();
+            case OWNAGE:
+                return getAch2();
+            case HEARTLESS:
+                return getAch3();
+            case MEANIE:
+                return getAch4();
+            case RAGE:
+                return getAch5();
+            case WINNER:
+                return getAch6();
+            case BUZZ_KILL:
+                return getAch7();
+            case CLOSE_CALL:
+                return getAch8();
+            case ON_A_ROLL:
+                return getAch9();
+            case HALF_WAY_THROUGH:
+                return getAch10();
+            case Ach12:
+                return getAch11();
+        }
+        return 0;
+    }
+
+    public int getNumberOfTimesAchivementTriggered() {
+        int count = 0;
+        for (Achievements achievement : Achievements.values()) {
+            count += getAchievementTriggers(achievement);
+        }
+        return count;
+    }
+
+    public int getUnlockedAch() {
+        int counter = 0;
+        for (Achievements achievement : Achievements.values()) {
+            if (getAchievementTriggers(achievement) > 0) {
+                counter = counter + 1;
+            }
+        }
+        return counter;
     }
 
     public int getCharacterUsage(CharacterEnum characterEnum) {
@@ -249,99 +309,99 @@ public class GameSave extends JdsEntity {
         this.achievementPoints.set(achievementPoints);
     }
 
-    public String getAch0() {
+    public int getAch0() {
         return ach0.get();
     }
 
-    public void setAch0(final String ach0) {
+    public void setAch0(final int ach0) {
         this.ach0.set(ach0);
     }
 
-    public String getAch1() {
+    public int getAch1() {
         return ach1.get();
     }
 
-    public void setAch1(final String ach1) {
+    public void setAch1(final int ach1) {
         this.ach1.set(ach1);
     }
 
-    public String getAch2() {
+    public int getAch2() {
         return ach2.get();
     }
 
-    public void setAch2(final String ach2) {
+    public void setAch2(final int ach2) {
         this.ach2.set(ach2);
     }
 
-    public String getAch3() {
+    public int getAch3() {
         return ach3.get();
     }
 
-    public void setAch3(final String ach3) {
+    public void setAch3(final int ach3) {
         this.ach3.set(ach3);
     }
 
-    public String getAch4() {
+    public int getAch4() {
         return ach4.get();
     }
 
-    public void setAch4(final String ach4) {
+    public void setAch4(final int ach4) {
         this.ach4.set(ach4);
     }
 
-    public String getAch5() {
+    public int getAch5() {
         return ach5.get();
     }
 
-    public void setAch5(final String ach5) {
+    public void setAch5(final int ach5) {
         this.ach5.set(ach5);
     }
 
-    public String getAch6() {
+    public int getAch6() {
         return ach6.get();
     }
 
-    public void setAch6(final String ach6) {
+    public void setAch6(final int ach6) {
         this.ach6.set(ach6);
     }
 
-    public String getAch7() {
+    public int getAch7() {
         return ach7.get();
     }
 
-    public void setAch7(final String ach7) {
+    public void setAch7(final int ach7) {
         this.ach7.set(ach7);
     }
 
-    public String getAch8() {
+    public int getAch8() {
         return ach8.get();
     }
 
-    public void setAch8(final String ach8) {
+    public void setAch8(final int ach8) {
         this.ach8.set(ach8);
     }
 
-    public String getAch9() {
+    public int getAch9() {
         return ach9.get();
     }
 
-    public void setAch9(final String ach9) {
+    public void setAch9(final int ach9) {
         this.ach9.set(ach9);
     }
 
-    public String getAch10() {
+    public int getAch10() {
         return ach10.get();
     }
 
-    public void setAch10(final String ach10) {
+    public void setAch10(final int ach10) {
         this.ach10.set(ach10);
     }
 
-    public String getAch11() {
+    public int getAch11() {
         return ach11.get();
     }
 
-    public void setAch11(final String ach11) {
+    public void setAch11(final int ach11) {
         this.ach11.set(ach11);
     }
 
@@ -369,16 +429,24 @@ public class GameSave extends JdsEntity {
         this.frames.set(frames);
     }
 
+    public int getTxtSpeed() {
+        return txtSpeed.get();
+    }
+
+    public void setTxtSpeed(int txtSpeed) {
+        this.txtSpeed.set(txtSpeed);
+    }
+
     public SimpleIntegerProperty framesProperty() {
         return frames;
     }
 
-    public boolean getSoundStatus() {
-        return soundStatus.get();
+    public boolean isAudioOn() {
+        return isAudioOn.get();
     }
 
-    public void setSoundStatus(final boolean soundStatus) {
-        this.soundStatus.set(soundStatus);
+    public void setIsAudioOn(final boolean isAudioOn) {
+        this.isAudioOn.set(isAudioOn);
     }
 
     public int getDifficulty() {
@@ -387,6 +455,14 @@ public class GameSave extends JdsEntity {
 
     public void setDifficulty(final int difficulty) {
         this.difficulty.set(difficulty);
+    }
+
+    public int getDifficultyDynamic() {
+        return difficultyDynamic.get();
+    }
+
+    public void setDifficultyDynamic(final int difficultyDynamic) {
+        this.difficultyDynamic.set(difficultyDynamic);
     }
 
     public int getLastStoryScene() {
@@ -591,5 +667,81 @@ public class GameSave extends JdsEntity {
 
     public int getConsequtiveWins() {
         return this.consequtiveWins.get();
+    }
+
+    /**
+     * Sorts difficulty
+     *
+     * @return difficulty array index
+     */
+    public int resolveDifficulty() {
+        if (GameState.getInstance().getLogin().getDifficulty() == diff0)
+            return 0;
+        if (GameState.getInstance().getLogin().getDifficulty() == diff1)
+            return 1;
+        if (GameState.getInstance().getLogin().getDifficulty() == diff2)
+            return 2;
+        if (GameState.getInstance().getLogin().getDifficulty() == diff3)
+            return 3;
+        if (GameState.getInstance().getLogin().getDifficulty() == diff4)
+            return 4;
+        if (GameState.getInstance().getLogin().getDifficulty() == diff5)
+            return 5;
+        return -1;
+    }
+
+    public int getTxtSpeedConstant(int dex) {
+        return txtSpeedArr[dex];
+    }
+
+    public int getDifficultyConstant(int dex) {
+        return difficultyArray[dex];
+    }
+
+    public int mostPopularChar() {
+        int highest = 0;
+        for (CharacterEnum characterEnum : CharacterEnum.values()) {
+            if (getCharacterUsage(characterEnum) > highest) {
+                highest = getCharacterUsage(characterEnum);
+            }
+        }
+        return highest;
+    }
+
+    public CharacterEnum mostPopularCharEnum() {
+        int h = 0;
+        CharacterEnum highest = CharacterEnum.ADAM;
+        for (CharacterEnum characterEnum : CharacterEnum.values()) {
+            if (getCharacterUsage(characterEnum) > h) {
+                h = getCharacterUsage(characterEnum);
+                highest = characterEnum;
+            }
+        }
+        return highest;
+    }
+
+    public int mostPopularCharPercentage() {
+        float ans;
+        float count = 0;
+        for (CharacterEnum characterEnum : CharacterEnum.values()) {
+            count += getCharacterUsage(characterEnum);
+        }
+        ans = (mostPopularChar() / count) * 100;
+        return Math.round(ans);
+    }
+
+    public int userAwesomeness() {
+        int total = 0;
+        int returnThis;
+        try {
+            for (Achievements achievement : Achievements.values())
+                total += (getAchievementTriggers(achievement) * achievement.achievementCategory().points());
+            System.out.println("Style points: " + total);
+            returnThis = total / getUnlockedAch();
+        } catch (Exception e) {
+            System.out.println("new user, awesomeness is newbie");
+            returnThis = 0;
+        }
+        return returnThis;
     }
 }

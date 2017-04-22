@@ -104,7 +104,7 @@ public class LanHostWaitLobby extends JenesisMode {
         gc.fillText(Language.getInstance().get(168), 20, 360);
         gc.fillText(Language.getInstance().get(169), 20, 376);
         gc.fillText(Language.getInstance().get(131), 20, 390);
-        JenesisGlassPane.getInstance().overlay(gc);
+        JenesisGlassPane.getInstance().overlay(gc,x,y);
     }
 
     public void stopRepaint() {

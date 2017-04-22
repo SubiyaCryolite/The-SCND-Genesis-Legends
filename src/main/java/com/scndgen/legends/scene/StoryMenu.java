@@ -22,10 +22,10 @@
 package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
@@ -42,7 +42,7 @@ public abstract class StoryMenu extends JenesisMode {
     protected int oldId = -1;
     protected boolean[] unlockedStage;
     protected boolean loadingNow;
-    protected int currentScene = LoginScreen.getInstance().lastStoryScene;
+    protected int currentScene = GameState.getInstance().getLogin().getLastStoryScene();
     protected int storedX = 99, storedY = 99;
     protected boolean withinMenuPanel;
     protected AudioPlayback victorySound;
@@ -195,7 +195,7 @@ public abstract class StoryMenu extends JenesisMode {
      * Find out the lastStoryScene the player is on
      */
     public void resetCurrentStage() {
-        currentScene = LoginScreen.getInstance().lastStoryScene;
+        currentScene = GameState.getInstance().getLogin().getLastStoryScene();
     }
 
     public void backToMainMenu() {
@@ -222,7 +222,7 @@ public abstract class StoryMenu extends JenesisMode {
             //if the player has advanced
             //and theres still more stages
             if (currentScene > currentScene) {
-                LoginScreen.getInstance().lastStoryScene = currentScene;
+                GameState.getInstance().getLogin().setLastStoryScene(currentScene);
             }
         }
     }
@@ -377,7 +377,7 @@ public abstract class StoryMenu extends JenesisMode {
         else if (RenderGameplay.getInstance().hasWon()) {
             //incrementMode();
             //go back to user difficulty
-            LoginScreen.getInstance().difficultyDyn = LoginScreen.getInstance().difficulty;
+            GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficulty());
             victorySound.play();
             JOptionPane.showMessageDialog(null, Language.getInstance().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
             answer = false;

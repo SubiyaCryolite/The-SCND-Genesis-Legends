@@ -21,9 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
-import com.scndgen.legends.GameState;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
@@ -32,6 +32,7 @@ import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
@@ -92,10 +93,10 @@ public class RenderGameplay extends Gameplay {
         setCharMoveset();
         cacheNumPix();
         loadSprites();
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
             server = JenesisPanel.getInstance().getServer();
         }
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             //get ip from game
             client = JenesisPanel.getInstance().getClient();
         }
@@ -117,11 +118,11 @@ public class RenderGameplay extends Gameplay {
     }
 
     @Override
-    public void render(GraphicsContext gc, double x, double y) {
+    public void render(GraphicsContext gc, double width, double height) {
         loadAssets();
         if (GameInstance.getInstance().storySequence) {
             gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, x, y);
+            gc.fillRect(0, 0, width, height);
             if (opacityPic < 0.98f) {
                 opacityPic = opacityPic + 0.02f;
             }
@@ -130,7 +131,7 @@ public class RenderGameplay extends Gameplay {
             gc.setGlobalAlpha((10 * 0.1f));
 
             gc.setGlobalAlpha((0.5f));
-            gc.fillRoundRect(0, 424, x, 48, 48, 48); //mid minus half the font size (430-6)
+            gc.fillRoundRect(0, 424, width, 48, 48, 48); //mid minus half the font size (430-6)
             gc.setGlobalAlpha((10 * 0.1f));
 
             gc.setFill(Color.WHITE);
@@ -149,7 +150,7 @@ public class RenderGameplay extends Gameplay {
         } else if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
             gc.drawImage(stageBackground, 0, 0);
             gc.setFont(notSelected);
-            if (getCharLife() >= 0) {
+            if (getCharacterHp() >= 0) {
                 drawStageBackground(gc);
                 drawStageCharacters(gc);
                 drawStageForeground(gc);
@@ -177,9 +178,9 @@ public class RenderGameplay extends Gameplay {
 
                 //---opponrnt activity bar + text
 
-                gc.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (y + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                gc.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 gc.setFill(Color.WHITE);
-                gc.fillText("HP: " + Math.round(getOppLife()) + " : " + perCent2 + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                gc.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
                 gc.setFill(Color.BLACK);
                 gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
@@ -198,7 +199,7 @@ public class RenderGameplay extends Gameplay {
                 gc.setFill(Color.BLACK);
                 gc.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 gc.setFill(Color.WHITE);
-                gc.fillText("HP: " + Math.round(getCharLife()) + " : " + perCent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
+                gc.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
                 gc.setGlobalAlpha((10 * 0.1f)); //op back to normal for other drawings
             }
 
@@ -217,7 +218,7 @@ public class RenderGameplay extends Gameplay {
         if (GameInstance.getInstance().gamePaused == true) {
             gc.setFill(Color.BLACK);
             gc.setGlobalAlpha((5 * 0.1f));//initial val between 1 and 10
-            gc.fillRect(0, 0, getGameWidth(), getGameHeight());
+            gc.fillRect(0, 0, width, height);
             gc.setGlobalAlpha((10 * 0.1f));
             gc.setFill(Color.WHITE);
             gc.fillText(Language.getInstance().get(148), 400, 240);
@@ -228,10 +229,10 @@ public class RenderGameplay extends Gameplay {
         //when gameover
         if (GameInstance.getInstance().gameOver == true) {
             gc.setFill(Color.WHITE);
-            gc.fillRect(0, 0, getGameWidth(), getGameHeight());
+            gc.fillRect(0, 0, width, height);
             gc.setFill(Color.BLACK);
             gc.setGlobalAlpha((8 * 0.1f));//initial val between 1 and 10
-            gc.fillRect(0, 210, getGameWidth(), 121);
+            gc.fillRect(0, 210, width, 121);
             gc.setGlobalAlpha((10 * 0.1f));
             gc.drawImage(status, 0, 210);
             gc.setFill(Color.WHITE);
@@ -242,7 +243,7 @@ public class RenderGameplay extends Gameplay {
             gc.fillText(achievementPoints, 400, 282);
             gc.fillText("<< " + Language.getInstance().get(146) + " >>", 400, 296);
         }
-        JenesisGlassPane.getInstance().overlay(gc);
+        JenesisGlassPane.getInstance().overlay(gc, width, height);
     }
 
     private void drawStageBackground(GraphicsContext gc) {
@@ -275,8 +276,8 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawDamageLayer(GraphicsContext gc) {
-        if ((getCharLife() / getCharMaxLife()) < 0.66f) {
-            damageLayerOpacity = 6.66f - ((getCharLife() / getCharMaxLife()) * 10);
+        if ((getCharacterHp() / getCharacterMaximumHp()) < 0.66f) {
+            damageLayerOpacity = 6.66f - ((getCharacterHp() / getCharacterMaximumHp()) * 10);
         }
         gc.setGlobalAlpha(damageLayerOpacity * 0.1f);
         gc.drawImage(damageLayer, 0, 0);
@@ -587,7 +588,7 @@ public class RenderGameplay extends Gameplay {
             times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
 
             characterPortraits = new Image[charNames.length];
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
                     characterPortraits[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
                 }
@@ -607,7 +608,7 @@ public class RenderGameplay extends Gameplay {
             fury = fury2;
             particlesLayer1 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
             particlesLayer2 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
-            if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
                 storyPicArr = new Image[13];
                 for (int u = 0; u < 11; u++) {
                     storyPicArr[u] = imageLoader.loadImage("images/story/s" + u + ".png");

@@ -21,9 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.Achievements;
-import com.scndgen.legends.GameState;
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.Achievement;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.SubMode;
@@ -33,11 +32,10 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +45,7 @@ import java.util.logging.Logger;
  *
  * @author Ifunga Ndana
  */
-public class GameInstance implements Runnable, ActionListener {
+public class GameInstance implements Runnable {
 
     public boolean gameOver, gamePaused, gameRunning;
     public int timeLimit, count2;
@@ -58,6 +56,7 @@ public class GameInstance implements Runnable, ActionListener {
     public int time1 = 10, time2 = 10, time3 = 10;
     public boolean aiAttack = false, enemyAiRunning = false;
     public AudioPlayback loseMusic, winMusic;
+    private boolean newMatch;
     private Thread thread;
     private int sampleChar;
     private float sampleCharDB;
@@ -70,7 +69,6 @@ public class GameInstance implements Runnable, ActionListener {
     private CharacterAttacks executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
-    private int timeOut;
     private static GameInstance instance;
 
     public static synchronized GameInstance getInstance() {
@@ -88,7 +86,7 @@ public class GameInstance implements Runnable, ActionListener {
             try {
                 thread.sleep(33); // fps
                 RenderGameplay.getInstance().matchStatus();
-                Achievements.getInstance().scan();
+                Achievement.getInstance().scan();
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -105,7 +103,7 @@ public class GameInstance implements Runnable, ActionListener {
                 sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (enemyAiRunning == false && runOpponentAtb && storySequence == false) {
-                if (JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
+                if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
                     enemyAiRunning = true;
                     executorAI.attack();
                 }
@@ -245,9 +243,9 @@ public class GameInstance implements Runnable, ActionListener {
         JenesisPanel.getInstance().freeToSave = true;
         RenderGameplay.getInstance().closeAudio();
         GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
-        Achievements.getInstance().scan();
+        Achievement.getInstance().scan();
         //if not story scene, increment char usage
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
         }
         if (RenderGameplay.getInstance().hasWon()) {
@@ -334,13 +332,13 @@ public class GameInstance implements Runnable, ActionListener {
      */
     public void closingThread(int mo) {
         //update profile operations
-        LoginScreen.getInstance().incrementMatchCount();
-        GameState.getInstance().getLogin().setPoints(Achievements.getInstance().getNewUserPoints());
+        incrementWinsOrLosses();
+        GameState.getInstance().getLogin().setPoints(Achievement.getInstance().getNewUserPoints());
         //save profile
         GameState.getInstance().saveConfigFile();
         JenesisGlassPane.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (RenderGameplay.getInstance().hasWon()) {
                 RenderStoryMenu.getInstance().incrementMode();
@@ -355,6 +353,20 @@ public class GameInstance implements Runnable, ActionListener {
                 JenesisPanel.getInstance().backToMenuScreen();
             } else if (mo == 1) {
                 JenesisPanel.getInstance().backToCharSelect();
+            }
+        }
+    }
+
+    private void incrementWinsOrLosses() {
+        if (newMatch) {
+            newMatch = false;
+            GameState.getInstance().getLogin().setNumberOfMatches(GameState.getInstance().getLogin().getNumberOfMatches() + 1);
+            if (RenderGameplay.getInstance().getCharacterHp() < RenderGameplay.getInstance().getOpponentHp()) {
+                GameState.getInstance().getLogin().setLosses(GameState.getInstance().getLogin().getLosses() + 1);
+                GameState.getInstance().getLogin().setConsequtiveWins(0);
+            } else {
+                GameState.getInstance().getLogin().setWins(GameState.getInstance().getLogin().getWins() + 1);
+                GameState.getInstance().getLogin().setConsequtiveWins(GameState.getInstance().getLogin().getConsequtiveWins() + 1);
             }
         }
     }
@@ -403,12 +415,12 @@ public class GameInstance implements Runnable, ActionListener {
 
     public void newInstance() {
         executorAI = new OpponentAttacks();
-        Achievements.getInstance().newInstance();
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE) {
+        Achievement.getInstance().newInstance();
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
             storySequence = true;
             timeLimit = StoryMode.getInstance().time;
         } //if LAN, client uses hosts timeLimit preset
-        else if (JenesisPanel.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+        else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
             timeLimit = JenesisPanel.getInstance().hostTime;
         } else {
             timeLimit = GameState.getInstance().getLogin().getTimeLimit();
@@ -423,10 +435,10 @@ public class GameInstance implements Runnable, ActionListener {
         limitOpp = 290;
         gamePaused = false;
         gameOver = false;
-        LoginScreen.getInstance().newMatch = true;
+        newMatch = true;
         winMusic = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMusic = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (JenesisPanel.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
             JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
@@ -452,14 +464,4 @@ public class GameInstance implements Runnable, ActionListener {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        //
-    }
-
-    public void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
-    }
-
 }

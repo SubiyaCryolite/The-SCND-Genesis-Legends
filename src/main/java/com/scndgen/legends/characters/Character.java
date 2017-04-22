@@ -173,9 +173,9 @@ public abstract class Character {
     }
 
     /**
-     * Shall return the CharacterEnum life
+     * Shall return the CharacterEnum characterHp
      *
-     * @return characterEnum life
+     * @return characterEnum characterHp
      */
     public int getLife() {
         return life;

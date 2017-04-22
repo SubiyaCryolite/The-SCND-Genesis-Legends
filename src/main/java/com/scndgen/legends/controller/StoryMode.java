@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.controller;
 
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
@@ -32,7 +33,6 @@ import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.JenesisPanel;
-import com.scndgen.legends.windows.WindowOptions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,7 +76,7 @@ public class StoryMode implements Runnable {
         thread.setName("story scene thread");
         thread.setPriority(5);
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
-        tlkSpeed = WindowOptions.txtSpeed;
+        tlkSpeed = GameState.getInstance().getLogin().getTxtSpeed();
         notAsked = true;
         opt = -1;
         RenderCharacterSelectionScreen.getInstance().newInstance();

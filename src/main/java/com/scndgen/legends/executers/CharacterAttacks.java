@@ -45,7 +45,7 @@ public class CharacterAttacks implements Runnable {
             for (int o = 0; o < 4; o++) {
                 RenderGameplay.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 RenderGameplay.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), CharacterState.CHARACTER, CharacterState.OPPONENT);
-                RenderGameplay.getInstance().shakeOppCharLB();
+                RenderGameplay.getInstance().shakeOpponentLifeBar();
                 RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
                 if ((o + 1) == RenderGameplay.getInstance().getNumOfAttacks()) {
                     break;

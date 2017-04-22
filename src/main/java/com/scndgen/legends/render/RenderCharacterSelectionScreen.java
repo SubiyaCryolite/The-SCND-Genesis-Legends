@@ -23,12 +23,12 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
@@ -114,7 +114,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
             gc.drawImage(caption[charPrevLoicIndex], 40 - x, 400);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+        if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
             gc.setGlobalAlpha((p1Opac));
             gc.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap);
             gc.setGlobalAlpha((1.0f));
@@ -144,7 +144,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                     if (characterSelected != true) {
                         gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
-                    if (characterSelected && opponentSelected != true && JenesisPanel.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+                    if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
                         gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
                     gc.setGlobalAlpha((opacChar));
@@ -181,7 +181,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         if (x < 0) {
             x = x + 2;
         }
-        JenesisGlassPane.getInstance().overlay(gc);
+        JenesisGlassPane.getInstance().overlay(gc,x,y);
     }
 
     private void loadCaps() {

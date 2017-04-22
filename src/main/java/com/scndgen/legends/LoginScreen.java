@@ -24,6 +24,8 @@ package com.scndgen.legends;
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.LoginState;
 import com.scndgen.legends.windows.WindowUpdate;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisWindow;
@@ -31,14 +33,9 @@ import io.github.subiyacryolite.enginev1.JenesisWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.*;
-import java.net.URL;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
 
 /**
  * This is a fighting game based on my webcomic THE SCND GENESIS
@@ -61,15 +58,15 @@ import java.util.logging.Logger;
  * 05/08/10 - All menus and panels under one roof 0.0.3.9
  * 09/08/10 - fixed MP3 plug-in 0.0.4.0
  * 15/08/10 - Added match timer and OPTIONS 0.0.4.1
- * 11/08/10 - Converted timertasks to threads, added arena select, fixed relative sound path 0.0.4.4
+ * 11/08/10 - Converted timer tasks to threads, added arena select, fixed relative sound path 0.0.4.4
  * 19/09/10 - caches all sprites, Serious thread optimizations, AI rewrites, SIGNIFICANT performance improvements 0.0.5.5
  * 22/09/10 - implemented LAN play!!!! Game chat, lobby system needed 0.0.6.5
  * 22/09/10 - implemented login screen, ciphering 0.0.6.7
  * 18/10/10 - implemented in-game chat, utf8 encoding, STATS screen, achievement structure, game/profile save 0.0.7.3
- * 21/10/10 - added overworld map, began navigation and screen control 0.0.7.7
+ * 21/10/10 - added over world map, began navigation and screen control 0.0.7.7
  * 23/10/10 - added collision detection algorythm for overworld 0.0.8.0
  * 27/10/10 - added new menu, transition, characterEnum classess, remved command panel 0.0.8.4
- * 30/10/10 -added scene menu, server-client embeddedin menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
+ * 30/10/10 -added scene menu, server-client embedded in menu, match making/lobby system ACTUALLY WORKS!!!!!! 0.0.8.7
  * 03/11/10 -24- added new CharacterEnum, Aisha 0.0.8.8
  * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
  * 17/11/10 -26- better ABOUT screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
@@ -96,22 +93,13 @@ import java.util.logging.Logger;
  * @author Ndana
  */
 
-public class LoginScreen extends JFrame implements ActionListener, KeyListener {
+public class LoginScreen extends JFrame {
 
     public static final CharacterEnum[] charNames = CharacterEnum.values();
-    public int difficultyBase = 8000, difficultyScale = 1333;
     public static final String configLoc = System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator;
     public static int normalTxtSize = 14, bigTxtSize = 20, extraTxtSize = 26;
     private static LoginScreen instance;
-    public boolean ans, newMatch = true;
-    public int difficultyDyn;
-    public String whoCalled, networkStatus;
-    public boolean connected = true;
-    public String fileName = configLoc + "scndupd.xml";
-    public int[] classArr;
-    public int updates;
-    private String  newAcc;
-    private Object source;
+    private String newAcc;
     private JPanel pan1, pan2, pan4;
     private DrawUserLogin thisPic;
     private JButton enter, quit, newAccount, userAccount;
@@ -129,18 +117,14 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private PopupMenu popup;
     private MenuItem defaultItem;
     private TrayIcon trayIcon;
-    private String[] updatesArr, countries;
-    private Achievements achObj;
     private boolean noUsers, oldFile, newFile;
     private boolean[] foundAch;
     private int searchIndex;
-    private String ansc, webVersion, sx, tx = "", updateFileURL = "http://scndgen.sourceforge.net/game/scndupd.xml";
     //private String ansc, webVersion, country, sx, tx = "", updateFileURL = "http://localhost/scnd/game2/scndupd.xml";
-    private String fname;
+
 
     @SuppressWarnings("LeakingThisInConstructor")
     private LoginScreen() throws FileNotFoundException {
-        countries = Locale.getISOCountries();
         pan1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         userName = new JLabel("User Name: ");
@@ -149,11 +133,8 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         pan2.add(login);
         pan4 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         enter = new JButton("Load Selected Account");
-        enter.addActionListener(this);
         quit = new JButton("Quit");
-        quit.addActionListener(this);
         newAccount = new JButton("Create a New Account");
-        newAccount.addActionListener(this);
         pan4.add(newAccount);
         box.add(pan1);
         box.add(pan2);
@@ -161,56 +142,14 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         add(box);
         createUserCombo();
         thisPic = new DrawUserLogin(this);
-        achObj = new Achievements(this);
-        classArr = new int[11];
-        classArr[0] = 1;
-        classArr[1] = 2;
-        classArr[2] = 1;
-        classArr[3] = 2;
-        classArr[4] = 3;
-        classArr[5] = 3;
-        classArr[6] = 2;
-        classArr[7] = 1;
-        classArr[8] = 1;
-        classArr[9] = 1;
-        classArr[10] = 1;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("The SCND Genesis: Legends" + RenderGameplay.getInstance().getVersionStr());
         pack();
-        addKeyListener(this);
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
-
-        newVersionOutThere("");
     }
 
-
-    /**
-     * Get screen width
-     *
-     * @return width
-     */
-    public static int getGameWidth() {
-        //return widthz[scalePos];
-        return 852;
-    }
-
-    public static void main(String[] args) {
-        try {
-            instance = new LoginScreen();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
-    }
-
-    /**
-     * Get this instance
-     *
-     * @return this instance
-     */
     public static LoginScreen getInstance() {
         return instance;
     }
@@ -220,10 +159,10 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      */
     private void createUserCombo() {
         users = new JComboBox();
-        for (GameSave gs : GameState.getInstance().getGameSaves()) {
+        for (LoginState gs : GameState.getInstance().getLoginStates()) {
             users.addItem(gs.toString());
         }
-        if (GameState.getInstance().getGameSaves().size() == 0) {
+        if (GameState.getInstance().getLoginStates().size() == 0) {
             noUsers = true;
             login.setText("");
             enter.setEnabled(false);
@@ -234,7 +173,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             pan4.removeAll();
             pan4.setLayout(new GridLayout(3, 1));
             enter.setEnabled(true);
-            users.addActionListener(this);
             pan4.add(newAccount);
             pan4.add(users);
             pan4.add(enter);
@@ -252,21 +190,9 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         return startApp;
     }
 
-    @Override
     public void actionPerformed(ActionEvent ae) {
-        source = ae.getSource();
-
-        if (source == quit) {
-            System.exit(0);
-        }
-
-        if (source == enter) {
-            closeWindow();
-            startApp = new JenesisWindow(strUser, this);
-        }
-
-        if (source == newAccount) {
-            if (GameState.getInstance().getGameSaves().size() == 0) {
+        if (ae.getSource() == newAccount) {
+            if (GameState.getInstance().getLoginStates().size() == 0) {
                 //if password
                 if (login.getText().length() >= 1 && login.getText().length() <= 24) {
                     createUserCombo();
@@ -285,118 +211,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
                 }
             }
         }
-
-        if (source == userAccount) {
-            closeWindow();
-            startApp = new JenesisWindow(strUser, this);
-        }
-    }
-
-    public String getNetworkStatus() {
-        return networkStatus;
-    }
-
-    public boolean isConnected() {
-        return connected;
-    }
-
-    /**
-     * Checks for new versions of the game
-     *
-     * @param caller - default on startup of player in menu
-     * @return true of false
-     */
-    private void newVersionOutThere(String caller) {
-        ans = true;
-        whoCalled = caller;
-
-        new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    //download the file
-                    if (downloadUpdateFile(updateFileURL, fileName)) {
-                        //read the file
-                        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"))) {
-                            do {
-                                sx = br.readLine();
-                                if (sx != null) {
-                                    tx = tx + sx + "";
-                                }
-                            } while (sx != null);
-                            br.close();
-                        } catch (IOException e) {
-                            System.out.println("Couldn't read update file");
-                        }
-                        webVersion = "";
-                        updatesArr = null;
-                        try {
-                            String start = "<latestVer>";
-                            System.out.println(tx);
-                            webVersion = tx.substring(tx.indexOf(start) + start.length(), tx.indexOf("</latestVer>"));
-                            System.out.println("Latest version: " + webVersion);
-
-                            start = "<fileName>";
-                            fname = tx.substring(tx.indexOf(start) + start.length(), tx.indexOf("</fileName>"));
-                            System.out.println("Latest version: " + fname);
-
-                            updates = Integer.parseInt(tx.substring(tx.indexOf("<updates>") + 9, tx.indexOf("</updates>")));
-                            updatesArr = new String[updates];
-
-                            for (int i = 0; i < updates; i++) {
-                                updatesArr[i] = "\n- " + tx.substring(tx.indexOf("<update" + (i + 1) + ">") + 9, tx.indexOf("</update" + (i + 1) + ">"));
-                            }
-                        } catch (Exception e) {
-                            System.err.println(e.toString());
-                        } //if latest version, just try and download music
-                        if (webVersion.equalsIgnoreCase(RenderGameplay.getInstance().getVersionStr())) {
-                            ans = false;
-                            if (whoCalled.equalsIgnoreCase("default")) {
-                                System.out.println("You are up to date");
-                            }
-                        } //show new version is available
-                        else {
-                            new Thread() {
-
-                                @Override
-                                public void run() {
-                                    newy = new WindowUpdate(webVersion, fname, updatesArr, instance);
-                                    ans = true;
-                                }
-                            }.start();
-                        }
-                    }
-                } catch (Exception e) {
-                    System.out.println("Couldn't access the file" + e);
-                    e.printStackTrace(System.err);
-                }
-            }
-        }.start();
-    }
-
-    /**
-     * the number Achievements unlocked
-     */
-    public int getUnlockedAch() {
-        int counter = 0;
-        for (int y = 0; y < ach.length; y++) {
-            if (ach[y] > 0) {
-                counter = counter + 1;
-            }
-        }
-        return counter;
-    }
-
-    /**
-     * The number Achievements unlocked
-     */
-    public int getNumberOfTimesAchivementTriggered() {
-        int counter = 0;
-        for (int y = 0; y < ach.length; y++) {
-            counter = counter + ach[y];
-        }
-        return counter;
     }
 
     private void closeWindow() {
@@ -407,46 +221,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
     }
 
-    public Achievements getAch() {
-        return achObj;
-    }
-
-    public void incrementMatchCount() {
-        if (newMatch) {
-            int y = Integer.parseInt(numberOfMatches) + 1;
-            numberOfMatches = "" + y;
-            newMatch = false;
-            if (RenderGameplay.getInstance().getCharLife() < RenderGameplay.getInstance().getOppLife()) {
-                losses = losses + 1;
-                consecWins = 0;
-                consecWinsTmp = 0;
-            } else {
-                wins = wins + 1;
-                consecWins = consecWins + 1;
-                consecWinsTmp = consecWinsTmp + 1;
-            }
-        }
-    }
-
-    public int userAwesomeness() {
-        int total = 0;
-        int returnThis = 0;
-        try {
-            for (int s = 0; s
-                    < ach.length; s++) {
-                total = total + (ach[s] * classArr[s]);
-
-
-            }
-            System.out.println("Style points: " + total);
-            returnThis = total / getUnlockedAch();
-        } catch (Exception e) {
-            System.out.println("new user, awesomenss is newbie");
-            returnThis = 0;
-        }
-        return returnThis;
-    }
-
     public String getIP() {
         System.out.println("getting " + IPAdd);
         return IPAdd;
@@ -454,78 +228,5 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
     public void setIP(String thisTxt) {
         IPAdd = thisTxt;
-    }
-
-    /**
-     * Downloads the update file
-     */
-    private boolean downloadUpdateFile(String urlStr, String file) {
-        boolean managedToDownload = false;
-        int bufferSize = 1024;
-        File out = new File(file);
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new URL(urlStr).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(out);
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream, bufferSize)) {
-            byte[] data = new byte[bufferSize];
-            int x;
-            while ((x = bufferedInputStream.read(data, 0, bufferSize)) >= 0) {
-                bufferedOutputStream.write(data, 0, x);
-            }
-            bufferedOutputStream.close();
-            bufferedInputStream.close();
-            managedToDownload = true;
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-        return managedToDownload;
-    }
-
-
-    /**
-     * Returns an int, corresponding to the index of the name of the most popular characterEnum
-     *
-     * @return index of most popular opponent
-     */
-    public int mostPopularChar() {
-        int max = characterUsage[0];
-        int dex = 0;
-        for (int u = 0; u
-                < characterUsage.length; u++) {
-            if (characterUsage[u] > max) {
-                max = characterUsage[u];
-                dex = u;
-            }
-        }
-        return dex;
-    }
-
-    public int mostPopularCharPercentage() {
-        float ans = 0;
-        float count = 0;
-        for (int u = 0; u
-                < characterUsage.length; u++) {
-            count = count + characterUsage[u];
-            //getting the total
-        }
-        ans = ((float) characterUsage[mostPopularChar()] / (float) count) * 100;
-        return Integer.parseInt("" + Math.round(ans));
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-
-        if (keyCode == KeyEvent.VK_ENTER) {
-            closeWindow();
-            startApp = new JenesisWindow(strUser, this);
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 }

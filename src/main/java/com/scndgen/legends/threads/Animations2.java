@@ -48,7 +48,7 @@ public class Animations2 implements Runnable {
                         RenderGameplay.getInstance().setForeGroundPositionY(RenderGameplay.getInstance().getForeGroundPositionY() + RenderGameplay.getInstance().getFgyInc());
                         thread.sleep(RenderGameplay.getInstance().getDelay());
                     }
-                    //loop2
+                    //lifeBarShakeInnerIterations
                     for (int o = 0; o <= RenderGameplay.getInstance().getAnimLoops(); o++) {
                         RenderGameplay.getInstance().setForeGroundPositionX(RenderGameplay.getInstance().getForeGroundPositionX() - RenderGameplay.getInstance().getFgxInc());
                         RenderGameplay.getInstance().setForeGroundPositionY(RenderGameplay.getInstance().getForeGroundPositionY() + RenderGameplay.getInstance().getFgyInc());

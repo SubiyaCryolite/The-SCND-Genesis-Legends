@@ -27,6 +27,7 @@ import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.*;
 import javafx.scene.input.KeyCode;
@@ -66,7 +67,7 @@ public class JenesisWindow {
                 buttonz = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
                 pollController();
             }
-            if (this.p.usingController) {
+            if (GameState.getInstance().getLogin().getUsingController()) {
                 if (JenesisGamePad.getInstance().statusInt == 1) {
                     sytemNotice(JenesisGamePad.getInstance().controllerName + " " + Language.getInstance().get(103));
                 } else if (JenesisGamePad.getInstance().statusInt == 0) {

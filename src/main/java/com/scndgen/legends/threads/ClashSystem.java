@@ -22,6 +22,7 @@
 package com.scndgen.legends.threads;
 
 import com.scndgen.legends.Colors;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
@@ -122,9 +123,9 @@ public class ClashSystem implements Runnable {
     }
 
     public void plrClashing() {
-        if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
+        if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
             JenesisPanel.getInstance().sendToServer("oppClsh" + plyClashPerc);
-        } else if (JenesisPanel.getInstance().getGameMode()== SubMode.LAN_HOST) {
+        } else if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_HOST) {
             JenesisPanel.getInstance().sendToClient("oppClsh" + plyClashPerc);
         }
         plyrClash = plyrClash + 1;
