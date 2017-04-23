@@ -28,8 +28,8 @@ import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StageSelect;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -104,17 +104,17 @@ public class RenderStageSelect extends StageSelect {
             gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             gc.setFill(Color.WHITE);
             gc.fillText(Language.getInstance().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(165), gc.getFont())) / 2, 200);
-        } else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT && !selectedStage) {
+        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT && !selectedStage) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
             gc.setFill(Color.WHITE);
             gc.fillText(">> " + Language.getInstance().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.getInstance().get(166) + " <<", gc.getFont())) / 2, 300);
-        } else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT == false) {
+        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT == false) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
-            gc.setGlobalAlpha((opacity));
+            gc.setGlobalAlpha(opacity);
             gc.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap);
             gc.setGlobalAlpha((1.0f));
             gc.setGlobalAlpha((5 * 0.1F));
@@ -132,7 +132,7 @@ public class RenderStageSelect extends StageSelect {
                 gc.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row));
             }
         }
-        JenesisGlassPane.getInstance().overlay(gc,x,y);
+        JenesisOverlay.getInstance().overlay(gc, x, y);
     }
 
     private void loadCaps() {

@@ -23,6 +23,7 @@ package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelection;
 import com.scndgen.legends.enums.SubMode;
@@ -30,6 +31,8 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Hashtable;
@@ -119,22 +122,22 @@ public abstract class StageSelect extends JenesisMode {
     public void selectStage(Stage stage) {
         hoveredStage = stage;
         if (mode == StageSelection.NORMAL) {
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 nowLoading();
-                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
             switch (hoveredStage) {
                 case IBEX_HILL:
                     selectIbexHill();
@@ -185,12 +188,12 @@ public abstract class StageSelect extends JenesisMode {
                     selectScorchedRuinsNight();
                     break;
             }
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 JenesisPanel.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getGameMode() == SubMode.WATCH) {
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.WATCH) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 JenesisPanel.getInstance().sendToClient("gameStart7%^&");
             }
             start();
@@ -489,7 +492,8 @@ public abstract class StageSelect extends JenesisMode {
     public void start() {
         bgLocation = "images/bgBG" + hoveredStage.filePrefix() + ".png";
         fgLocation = "images/bgBG" + hoveredStage.filePrefix() + "fg.png";
-        JenesisPanel.getInstance().newGame();
+        ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
+
     }
 
     public String getBgLocation() {
@@ -520,9 +524,6 @@ public abstract class StageSelect extends JenesisMode {
      */
     public void capAnim() {
         opacity = 0.0f;
-    }
-
-    public void animCloud() {
     }
 
     /**
@@ -578,31 +579,6 @@ public abstract class StageSelect extends JenesisMode {
         return withinCharPanel;
     }
 
-    public void mouseMoved(double mouseX, double mouseY) {
-        int topY = getStartY();
-        int topX = getStartX();
-        int columns = getColumns();
-        int vspacer = getCharHSpacer();
-        int hspacer = getCharVSpacer();
-        int rows = getRows();
-        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * (rows)))) {
-            int row = Math.round(Math.round((mouseY - topY) / vspacer));
-            int column = Math.round(Math.round((mouseX - topX) / hspacer));
-            System.out.printf("Row %s :: Column %s\n", row, column);
-            setRow(row);
-            setColumn(column);
-            //RenderCharacterSelectionScreen.getInstance().setItem();
-            animateCap2(row, column);
-            withinCharPanel = true;
-        } else {
-            //System.out.println("Outa char pan dog");
-            RenderCharacterSelectionScreen.getInstance().setHindex(99);
-            RenderCharacterSelectionScreen.getInstance().setVindex(99);
-            withinCharPanel = false;
-        }
-    }
-
-
     /**
      * To make sure the caption is animated once,
      * this method checks if the selected caption has changed
@@ -610,7 +586,7 @@ public abstract class StageSelect extends JenesisMode {
      * @param x
      * @param y
      */
-    private void animateCap2(int x, int y) {
+    private void animateCaption(int x, int y) {
         int tmpx = x;
         int tmpy = y;
 
@@ -627,18 +603,18 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Move up
      */
-    public void moveUp() {
-            if (row > 0)
-                row -= 1;
-            else
-                row = rows;
-            capAnim();
+    public void onUp() {
+        if (row > 0)
+            row -= 1;
+        else
+            row = rows;
+        capAnim();
     }
 
     /**
      * Move down
      */
-    public void moveDown() {
+    public void onDown() {
         if (row < rows)
             row = row + 1;
         else
@@ -649,7 +625,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Move right
      */
-    public void moveRight() {
+    public void onRight() {
         if (column < columns)
             column += 1;
         else
@@ -660,7 +636,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Move left
      */
-    public void moveLeft() {
+    public void onLeft() {
         if (column > 0)
             column -= 1;
         else
@@ -723,7 +699,60 @@ public abstract class StageSelect extends JenesisMode {
         return rows;
     }
 
-    public void mouseClicked(MouseEvent me) {
+    public void mouseClicked(MouseEvent mouseEvent) {
+        onAccept();
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
+            onUp();
+        }
+        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
+            onDown();
+        }
+        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
+            onLeft();
+        }
+        if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
+            onRight();
+        }
+        if (keyCode == KeyCode.BACK_SPACE) {
+            onBackCancel();
+        }
+        if (keyCode == KeyCode.ENTER) {
+            onAccept();
+        }
+        if (keyCode == KeyCode.ESCAPE) {
+            onBackCancel();
+        }
+    }
+
+    public void mouseMoved(MouseEvent mouseEvent) {
+        if (ScndGenLegends.getInstance().getSubMode() != SubMode.LAN_CLIENT) {
+            int topY = getStartY();
+            int topX = getStartX();
+            int columns = getColumns();
+            int vSpacer = getCharHSpacer();
+            int hSpacer = getCharVSpacer();
+            int rows = getRows();
+            if (mouseEvent.getX() > topX && mouseEvent.getX() < (topX + (hSpacer * columns)) && (mouseEvent.getY() > topY) && (mouseEvent.getY() < topY + (vSpacer * (rows)))) {
+                int row = Math.round(Math.round((mouseEvent.getY() - topY) / vSpacer));
+                int column = Math.round(Math.round((mouseEvent.getX() - topX) / hSpacer));
+                System.out.printf("Row %s :: Column %s\n", row, column);
+                setRow(row);
+                setColumn(column);
+                animateCaption(row, column);
+                withinCharPanel = true;
+            } else {
+                RenderCharacterSelectionScreen.getInstance().setHindex(99);
+                RenderCharacterSelectionScreen.getInstance().setVindex(99);
+                withinCharPanel = false;
+            }
+        }
+    }
+
+    public void onAccept() {
         if (getWithinCharPanel()) {
             selectStage(getHoveredStage());
         }

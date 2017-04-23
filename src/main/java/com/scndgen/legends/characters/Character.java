@@ -39,20 +39,17 @@ public abstract class Character {
 
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status, bragRights;
-    //ints
     public int points, life, damage, damageMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
-    //floats
     public float[] weakness;
-    public float actionRecoverRate, hpRecovRate;
+    public float atbRecoveryRate;
     protected AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
-    //imgs
     private Image[] highQualitySprites;
     private JenesisImageLoader pix;
-    //string
     private String[] spriteLocation;
     private boolean isMale;
+    private int numberOfSprites = 12;
 
     public Character() {
         bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
@@ -76,7 +73,7 @@ public abstract class Character {
 
     private void sortQue() {
         pix = new JenesisImageLoader();
-        spriteLocation = new String[12];
+        spriteLocation = new String[numberOfSprites];
         spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
         spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
         spriteLocation[2] = "images/" + characterEnum.data() + "/M2.png"; //3
@@ -93,12 +90,12 @@ public abstract class Character {
     }
 
     public int getNumberOfSprites() {
-        return spriteLocation.length;
+        return numberOfSprites;
     }
 
     public void loadMeHigh() {
         sortQue();
-        highQualitySprites = new Image[12];
+        highQualitySprites = new Image[numberOfSprites];
         highQualitySprites[0] = pix.loadImage(spriteLocation[0]);  //1
         highQualitySprites[1] = pix.loadImage(spriteLocation[1]); //2
         highQualitySprites[2] = pix.loadImage(spriteLocation[2]); //3
@@ -134,22 +131,17 @@ public abstract class Character {
      * @return The name of the qued move
      */
     public String getMoveQued(int move) {
-
         int yus = move - 1;
         String txt = "";
-
         if (yus < 4) {
             txt = physical[yus];
         }
-
         if (yus >= 4 && yus <= 7) {
             txt = celestia[yus - 4];
         }
-
         if (yus >= 8 && yus <= 11) {
             txt = status[yus - 8];
         }
-
         return txt;
     }
 
@@ -186,17 +178,8 @@ public abstract class Character {
      *
      * @return activity recovery rate
      */
-    public float getRecovSpeed() {
-        return actionRecoverRate;
-    }
-
-    /**
-     * Get the CharacterEnum hp recover rate
-     *
-     * @return hp recovery rate
-     */
-    public float getHPRecovRate() {
-        return hpRecovRate;
+    public float getAtbRecoveryRate() {
+        return atbRecoveryRate;
     }
 
     /**
@@ -217,28 +200,6 @@ public abstract class Character {
         RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours3, 3);
         RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours4, 4);
         RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours5, 5);
-    }
-
-    /**
-     * Set CharacterEnum AI, opponent 2
-     */
-    public void setAiProf2() {
-        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours1, 1);
-        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours2, 2);
-        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours3, 3);
-        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours4, 4);
-        RenderCharacterSelectionScreen.getInstance().setAISlot2(behaviours5, 5);
-    }
-
-    /**
-     * Set CharacterEnum AI, player 2
-     */
-    public void setAiProf3() {
-        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours1, 1);
-        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours2, 2);
-        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours3, 3);
-        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours4, 4);
-        RenderCharacterSelectionScreen.getInstance().setAISlot3(behaviours5, 5);
     }
 
     public int getPoints() {

@@ -17,6 +17,7 @@ public abstract class JenesisMode {
     protected boolean loadAssets = true;
     protected long lastDelta;
     protected long diff;
+    protected boolean isPaused;
     private long accumulator16ms;
     private long accumulator33ms;
 
@@ -26,7 +27,7 @@ public abstract class JenesisMode {
      * @param message - the message to display
      */
     public final void primaryNotice(String message) {
-        JenesisGlassPane.getInstance().primaryNotice(message);
+        JenesisOverlay.getInstance().primaryNotice(message);
     }
 
     /**
@@ -35,26 +36,29 @@ public abstract class JenesisMode {
      * @param message - the message to display
      */
     public final void secondaryNotice(String message) {
-        JenesisGlassPane.getInstance().secondaryNotice(message);
+        JenesisOverlay.getInstance().secondaryNotice(message);
     }
 
-    public void moveLeft() {
+    public void onLeft() {
     }
 
-    public void moveRight() {
+    public void onRight() {
     }
 
-    public void moveUp() {
+    public void onUp() {
     }
 
-    public void moveDown() {
+    public void onDown() {
     }
 
-    public void accept() {
+    public void onAccept() {
     }
 
-    public void cancel() {
+    public void onBackCancel() {
     }
+
+    public void onTogglePause()
+    {}
 
     public abstract void render(final GraphicsContext gc, final double w, final double h);
 

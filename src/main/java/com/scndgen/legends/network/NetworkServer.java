@@ -7,7 +7,7 @@ import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -131,7 +131,7 @@ public class NetworkServer implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
 
-                if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getSubMode()== SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().playerHost2 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
 
@@ -141,7 +141,7 @@ public class NetworkServer implements Runnable {
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                JenesisGlassPane.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
+                JenesisOverlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);

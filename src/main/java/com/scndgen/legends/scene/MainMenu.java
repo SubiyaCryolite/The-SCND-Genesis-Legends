@@ -30,6 +30,7 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.OverlayAchievementLocker;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
@@ -216,7 +217,7 @@ public abstract class MainMenu extends JenesisMode {
         hoveredMenuIndex = where;
     }
 
-    public void goDown() {
+    public void onDown() {
         if (hoveredMenuIndex < menuEntries && overlay == Overlay.PRIMARY_MENU) {
             hoveredMenuIndex = hoveredMenuIndex + 1;
         } else if (overlay == Overlay.ACHIEVEMENTS) {
@@ -226,7 +227,7 @@ public abstract class MainMenu extends JenesisMode {
         }
     }
 
-    public void goUp() {
+    public void onUp() {
         if (hoveredMenuIndex > 0 && overlay == Overlay.PRIMARY_MENU) {
             hoveredMenuIndex = hoveredMenuIndex - 1;
         } else if (overlay == Overlay.ACHIEVEMENTS) {
@@ -284,12 +285,45 @@ public abstract class MainMenu extends JenesisMode {
         loadAssets = true;
     }
 
-    public void keyPressed(KeyCode keyCode) {
+    public void keyPressed(KeyEvent ke) {
+        KeyCode keyCode = ke.getCode();
         if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
-            goUp();
+            onUp();
         }
         if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-            goDown();
+            onDown();
+        }
+        if (keyCode == KeyCode.RIGHT) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                advanceTutorial();
+        }
+        if (keyCode == KeyCode.LEFT) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                reverseTutorial();
+        }
+        if (keyCode == KeyCode.DIGIT1) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(0);
+        }
+        if (keyCode == KeyCode.DIGIT2) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(3);
+        }
+        if (keyCode == KeyCode.DIGIT3) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(11);
+        }
+        if (keyCode == KeyCode.DIGIT4) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(20);
+        }
+        if (keyCode == KeyCode.DIGIT5) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(27);
+        }
+        if (keyCode == KeyCode.DIGIT6) {
+            if (getOverlay() == Overlay.TUTORIAL)
+                sktpToTut(32);
         }
         if (keyCode == KeyCode.F) {
             provideFeedback('f');
@@ -314,16 +348,17 @@ public abstract class MainMenu extends JenesisMode {
             }
         } else if ((mouseEvent.getY() > y) && (mouseEvent.getY() < (y + (space * 13))) && mouseEvent.getX() > x) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-
                 SubMode destination = getMenuModeStr();
+                ScndGenLegends.getInstance().setSubMode(destination);
                 if (destination == SubMode.LAN_HOST) {
                     primaryNotice(Language.getInstance().get(107));
-                    //JenesisWindow.getInstance().setContentPane(newInstance(JenesisWindow.strUser, destination));
+                    ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
                 } else if (destination == SubMode.SINGLE_PLAYER) {
                     primaryNotice(Language.getInstance().get(108));
-                    //JenesisWindow.getInstance().setContentPane(newInstance(JenesisWindow.strUser, destination));
+                    ScndGenLegends.getInstance().setSubMode(destination);
+                    ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
                 } else if (destination == SubMode.STORY_MODE) {
-                    ScndGenLegends.getInstance().switchMode(Mode.STORY_SELECT_SCREEN);
+                    ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
                 } else if (destination == SubMode.STATS) {
                     setOverlay(Overlay.STATISTICS);
                 } else if (destination == SubMode.ACH) {

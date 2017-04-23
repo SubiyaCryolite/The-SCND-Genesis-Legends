@@ -33,11 +33,9 @@ import static com.scndgen.legends.enums.CharacterEnum.SUBIYA;
 public class Subiya extends Character {
 
     public Subiya() {
-        //strings
         descSmall = "Subiya - a fighter specialised in melee combat";
         name = "Subiya";
         characterEnum = SUBIYA;
-        //string arrays
         bragRights = new String[]{"Lets do this!!", "Sorry bro, it had to be done", "Students always surpass their masters", "Hate to beat down on a lady", "PAYBACK TIME !!!", "You're definately strong, just not strong enough", "I hope you're nothing like your brother", "How does it feel to fall from grace", "Is this how far you've fallen", "Forgive achievements, I must defeat you", "I'll admit, you're rather beutiful", "What is that thing?!"};
         physical = new String[]{"Thunder Clap", "Knee Strike", "Thunder Clap", "Knee Strike EX2"};
         celestia = new String[]{"Flaming Pillars", "Blaze", "Flaming Vortex", "Blazing Comet"};
@@ -47,16 +45,10 @@ public class Subiya extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-
-        //ints
         points = 2000;
         life = 27200;
         limit = new int[]{0, 0, 0, 0, 0};
-
-
-        //doubles
-        actionRecoverRate = 1.97f;//2.25;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 1.97f;//2.25;
     }
 
     @Override

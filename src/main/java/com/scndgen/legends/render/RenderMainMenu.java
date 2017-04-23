@@ -4,7 +4,7 @@ import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.MainMenu;
 import com.scndgen.legends.windows.WindowAbout;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -192,7 +192,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
         }
-        JenesisGlassPane.getInstance().overlay(gc, w, h);
+        JenesisOverlay.getInstance().overlay(gc, w, h);
         gc.fillText("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);

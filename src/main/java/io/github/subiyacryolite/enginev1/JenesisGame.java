@@ -22,7 +22,7 @@ public abstract class JenesisGame {
         running = true;
     }
 
-    public final JenesisMode getMode() {
+    public final JenesisMode getJenesisMode() {
         return mode;
     }
 

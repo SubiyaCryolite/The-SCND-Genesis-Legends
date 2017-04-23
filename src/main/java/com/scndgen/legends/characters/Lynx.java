@@ -33,11 +33,9 @@ import static com.scndgen.legends.enums.CharacterEnum.LYNX;
 public class Lynx extends Character {
 
     public Lynx() {
-        //strings
         descSmall = "Lynx - a fighter specialised in dual blade combat";
         name = "Lynx";
         characterEnum = LYNX;
-        //string arrays
         bragRights = new String[]{"Don't expect achievements to go easy on ya!", "Show achievements what you've learnt", "Let's do this", "This'll be fun. Don't hold back Aisha!!!", "I don't take kindly to scum", "A worthy opponent, lets do this!!!", "This'll be over quick, brace yourself", "The sword of Genesis, show achievements its strength", "So this is an awakened one, I'll show no mercy", "It's an honour to battle you", "I don't wanna fight a little girl", "Abomination much?"};
         physical = new String[]{"Blade Barrage", "Dual Slice", "Basic Slice", "Fatal DESCENT"};
         celestia = new String[]{"Deadly Crescent", "Double Impact", "Raging Torrent", "Optical Illusion"};
@@ -47,12 +45,9 @@ public class Lynx extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //ints
         life = 30400;
         limit = new int[]{0, 0, 0, 0, 0};
-        //doubles
-        actionRecoverRate = 2.20f;//1.75;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 2.20f;//1.75;
     }
 
     @Override

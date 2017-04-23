@@ -10,7 +10,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -103,10 +103,10 @@ public class NetworkClient implements Runnable {
                 int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                     JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
-                if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
                     JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
@@ -114,7 +114,7 @@ public class NetworkClient implements Runnable {
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                JenesisGlassPane.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
+                JenesisOverlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
@@ -154,7 +154,7 @@ public class NetworkClient implements Runnable {
                     RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.endsWith("watchStageSel_xcbD")) {
-                JenesisPanel.getInstance().selectStage();
+                RenderStageSelect.getInstance().onAccept();
             } else if (line.startsWith("as1wds2_")) {
                 JenesisPanel.getInstance().hostTime = Integer.parseInt(line.substring(8));
                 System.out.println("aquired timeLimit is " + JenesisPanel.getInstance().hostTime);
@@ -224,7 +224,7 @@ public class NetworkClient implements Runnable {
             } //rejected
             else if (line.contains("getLost")) ;
             {
-                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getGameMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getSubMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
                 JenesisPanel.getInstance().sendToServer("quit");
                 JenesisPanel.getInstance().closeTheClient();
                 JenesisPanel.getInstance().backToMenuScreen();

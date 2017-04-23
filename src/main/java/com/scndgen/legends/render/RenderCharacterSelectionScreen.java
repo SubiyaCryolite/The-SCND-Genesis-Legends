@@ -29,7 +29,7 @@ import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -114,7 +114,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
             gc.drawImage(caption[charPrevLoicIndex], 40 - x, 400);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+        if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
             gc.setGlobalAlpha((p1Opac));
             gc.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap);
             gc.setGlobalAlpha((1.0f));
@@ -144,7 +144,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                     if (characterSelected != true) {
                         gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
-                    if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER) {
+                    if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
                         gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
                     gc.setGlobalAlpha((opacChar));
@@ -174,14 +174,14 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         if (characterSelected && opponentSelected == false) {
             //select opponent
             gc.drawImage(oppDescPic, 452, 450);
-            gc.fillText(statsChar[charPrevLoicIndex], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[charPrevLoicIndex], normalFont) + x, 468);
+            gc.fillText(statsChar[charPrevLoicIndex], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[charPrevLoicIndex], gc.getFont()) + x, 468);
         }
         gc.drawImage(p1, 0, 180);
         gc.drawImage(p2, 812, 180);
         if (x < 0) {
             x = x + 2;
         }
-        JenesisGlassPane.getInstance().overlay(gc,x,y);
+        JenesisOverlay.getInstance().overlay(gc,x,y);
     }
 
     private void loadCaps() {

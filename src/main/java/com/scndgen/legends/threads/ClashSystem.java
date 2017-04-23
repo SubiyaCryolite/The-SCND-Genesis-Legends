@@ -84,7 +84,7 @@ public class ClashSystem implements Runnable {
             }
         }
         isClashOn = false;
-        RenderGameplay.getInstance().setClasherRunnign(false);
+        RenderGameplay.getInstance().setClasherRunning(false);
         clashWinner(person);
     }
 
@@ -123,9 +123,9 @@ public class ClashSystem implements Runnable {
     }
 
     public void plrClashing() {
-        if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_CLIENT) {
+        if (ScndGenLegends.getInstance().getSubMode()== SubMode.LAN_CLIENT) {
             JenesisPanel.getInstance().sendToServer("oppClsh" + plyClashPerc);
-        } else if (ScndGenLegends.getInstance().getGameMode()== SubMode.LAN_HOST) {
+        } else if (ScndGenLegends.getInstance().getSubMode()== SubMode.LAN_HOST) {
             JenesisPanel.getInstance().sendToClient("oppClsh" + plyClashPerc);
         }
         plyrClash = plyrClash + 1;

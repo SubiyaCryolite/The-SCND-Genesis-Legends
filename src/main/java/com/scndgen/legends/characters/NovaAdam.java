@@ -33,11 +33,9 @@ import static com.scndgen.legends.enums.CharacterEnum.NOVA_ADAM;
 public class NovaAdam extends Character {
 
     public NovaAdam() {
-        //strings
         descSmall = "Nova Adam - an awakened Celestia Being specialised in celestia combat";
         name = "NovaAdam";
         characterEnum = NOVA_ADAM;
-        //string arrays
         bragRights = new String[]{"Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "*blank stare* Dude"};
         physical = new String[]{"Dark Flame", "Dark Rush", "Dark Slice", "Dark Ascent"};
         celestia = new String[]{"Nova Blitz", "Nova Torrent", "Nova Blaze", "Nova Frost"};
@@ -47,12 +45,9 @@ public class NovaAdam extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //ints
         life = 38400;
         limit = new int[]{0, 0, 0, 0, 0};
-        //doubles
-        actionRecoverRate = 1.10f;//2.10;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 1.10f;//2.10;
     }
 
     @Override

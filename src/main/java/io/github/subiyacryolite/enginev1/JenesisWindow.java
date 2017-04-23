@@ -27,7 +27,6 @@ import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
-import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.*;
 import javafx.scene.input.KeyCode;
@@ -61,24 +60,6 @@ public class JenesisWindow {
         startup.play();
         strUser = dude;
         //setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
-        try {
-            if (JenesisGamePad.getInstance().controllerFound) {
-                controller = true;
-                buttonz = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
-                pollController();
-            }
-            if (GameState.getInstance().getLogin().getUsingController()) {
-                if (JenesisGamePad.getInstance().statusInt == 1) {
-                    sytemNotice(JenesisGamePad.getInstance().controllerName + " " + Language.getInstance().get(103));
-                } else if (JenesisGamePad.getInstance().statusInt == 0) {
-                    sytemNotice(Language.getInstance().get(104));
-                } else if (JenesisGamePad.getInstance().statusInt == 2) {
-                    sytemNotice(Language.getInstance().get(105));
-                }
-            }
-        } catch (Error ex) {
-            sytemNotice(Language.getInstance().get(106));
-        }
     }
 
     public static JenesisWindow getInstance() {
@@ -217,12 +198,6 @@ public class JenesisWindow {
      */
     public void showModes() {
         isActive = true;
-        try {
-            if (JenesisGamePad.getInstance().controllerFound) {
-                pollController();
-            }
-        } catch (Exception e) {
-        }
     }
 
     /**
@@ -230,95 +205,5 @@ public class JenesisWindow {
      */
     public void joinGame() {
         JenesisPanel.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
-    }
-
-    private void pollController() {
-        new Thread() {
-            @Override
-            @SuppressWarnings({"static-access", "SleepWhileHoldingLock"})
-            public void run() {
-                try {
-                    do {
-                        JenesisGamePad.getInstance().poll();
-                        compassDir2 = JenesisGamePad.getInstance().getXYStickDir();
-                        if (compassDir2 == JenesisGamePad.getInstance().NORTH) {
-                            RenderMainMenu.getInstance().goUp();
-                        } else if (compassDir2 == JenesisGamePad.getInstance().SOUTH) {
-                            RenderMainMenu.getInstance().goDown();
-                        }
-                        buttonz = JenesisGamePad.getInstance().getButtons();
-                        compassDir = JenesisGamePad.getInstance().getHatDir();
-                        if (compassDir == JenesisGamePad.getInstance().SOUTH) {
-                            if (doneChilling)
-                                RenderMainMenu.getInstance().goDown();
-                            menuLatency();
-                        }
-                        if (compassDir == JenesisGamePad.getInstance().NORTH) {
-                            if (doneChilling)
-                                RenderMainMenu.getInstance().goUp();
-                            menuLatency();
-                        }
-                        if (buttonz[2]) {
-                            if (doneChilling) {
-                                quickVibrate(0.4f, 1000);
-                                select();
-                            }
-                            menuLatency();
-                        }
-                        if (buttonz[3]) {
-                            if (doneChilling) {
-                                quickVibrate(0.8f, 1000);
-                                exit();
-                            }
-                            menuLatency();
-                        }
-                        compassDir = JenesisGamePad.getInstance().getXYStickDir();
-                        compassDir = JenesisGamePad.getInstance().getZRZStickDir();
-                        this.sleep(66);
-                    } while (isActive);
-                } catch (Exception e) {
-                }
-            }
-        }.start();
-    }
-
-    /**
-     * Responsible for latency in game menus(usingController)
-     */
-    private void menuLatency() {
-        new Thread() {
-
-            @Override
-            @SuppressWarnings("static-access")
-            public void run() {
-                try {
-                    doneChilling = false;
-                    this.sleep(166);
-                    doneChilling = true;
-                } catch (Exception e) {
-                }
-            }
-        }.start();
-    }
-
-    /**
-     * Vibrate
-     */
-    private void quickVibrate(float strength, int length) {
-        final float power = strength;
-        final int time = length;
-        new Thread() {
-
-            @SuppressWarnings("static-access")
-            @Override
-            public void run() {
-                try {
-                    JenesisGamePad.getInstance().setRumbler(true, power);
-                    this.sleep(time);
-                    JenesisGamePad.getInstance().setRumbler(false, 0.0f);
-                } catch (Exception e) {
-                }
-            }
-        }.start();
     }
 }

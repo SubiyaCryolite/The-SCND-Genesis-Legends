@@ -31,11 +31,8 @@ import com.scndgen.legends.render.RenderGameplay;
 public class Ade extends Character {
 
     public Ade() {
-        //strings
         descSmall = "Ade - a fighter utilising the air element";
         name = "Ade";
-
-        //string arrays
         bragRights = new String[]{"Be gone", "Weakling", "Pathetic", "Is this a joke", "Not you again", "Lets do this", "You have more sense than you're brother, give up now", "I won't hold back", "It's an honour to face you in this form", "Your title doesn't scare achievements, I'll still destroy you", "Sorrowe, don't get big headed", "This is it?"};
         physical = new String[]{"Tornado Blast", "Hurricane Sphere", "Hurricane Barrage", "Violent Burst"};
         celestia = new String[]{"Crush Down", "Vortex Blades", "Cursed Seal", "Dark Swirl"};
@@ -45,16 +42,10 @@ public class Ade extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-
-        //ints
         points = 2200;
         life = 33600;
         limit = new int[]{0, 0, 0, 0, 0};
-
-        //doubles
-        actionRecoverRate = 1.60f;//1.75;
-        hpRecovRate = 0.00018f;
-
+        atbRecoveryRate = 1.60f;
     }
 
     @Override

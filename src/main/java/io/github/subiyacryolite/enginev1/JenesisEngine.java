@@ -35,9 +35,9 @@ public class JenesisEngine extends Application {
             public void handle(long now) {
                 //canvas.getGraphicsContext2D().setGlobalBlendMode(BlendMode.ADD);
                 if (jenesisGame == null) return;
-                if (jenesisGame.getMode() != null && !jenesisGame.isSwitchingModes()) {
-                    jenesisGame.getMode().update(now);
-                    jenesisGame.getMode().render(canvas.getGraphicsContext2D(), canvas.getWidth(), canvas.getHeight());
+                if (jenesisGame.getJenesisMode() != null && !jenesisGame.isSwitchingModes()) {
+                    jenesisGame.getJenesisMode().update(now);
+                    jenesisGame.getJenesisMode().render(canvas.getGraphicsContext2D(), canvas.getWidth(), canvas.getHeight());
                 } else
                     jenesisGame.drawLoadingAnimation(canvas.getGraphicsContext2D(), canvas.getWidth(), canvas.getHeight());
             }

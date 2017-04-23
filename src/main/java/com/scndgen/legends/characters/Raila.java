@@ -32,15 +32,12 @@ import com.scndgen.legends.render.RenderGameplay;
 public class Raila extends Character {
 
     public Raila() {
-        //strings
         descSmall = "Raila - a fighter specialised in celestia combat";
         name = "Raila";
         characterEnum = CharacterEnum.RAILA;
-        //ints
         points = 2500;
         life = 25600;
         limit = new int[]{0, 0, 0, 0, 0};
-        //string arrays
         bragRights = new String[]{"Let's do this", "I won't go easy on you bro", "Let's do this cuz", "This'll be fun", "You scum, prepare to be owned", "You're powers are intersting. Lets see how you do against my speed", "You're definately the better looking twin, though, you won't look so good afterwards", "NovaAdam, the stiuff of legend, show achievements your power", "An awakened being? Lets do this!!!!", "One of te original Saints, show achievements your power!!", "Genius  vs Genius , this'll be fun", "What in the world?"};
         physical = new String[]{"Strike", "Chant", "Blue Embrace", "Blue Blitz"};
         celestia = new String[]{"Nova Storm", "Eternal Flame", "Frozen Breeze", "Dark Cloud"};
@@ -59,9 +56,7 @@ public class Raila extends Character {
         weakness[5] = 0.30f;    //ice
         weakness[6] = 0.70f;    //physical
         weakness[7] = 0.30f;    //fire
-        //doubles
-        actionRecoverRate = 2.5f;//2.5;
-        hpRecovRate = 0.000150f;
+        atbRecoveryRate = 2.5f;//2.5;
     }
 
     @Override

@@ -251,7 +251,7 @@ public class Characters {
 
         characterName = characterEnum.name();
         RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(characterEnum.index());
-        activityRecoverRateChar = this.character.getRecovSpeed();
+        activityRecoverRateChar = this.character.getAtbRecoveryRate();
         setPoints(this.character.getPoints());
         RenderGameplay.getInstance().setCharacterHp(this.character.getLife());
         RenderGameplay.getInstance().setMaxLife(this.character.getLife());
@@ -303,7 +303,7 @@ public class Characters {
         }
         opponentName = characterEnum.name();
         RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characterEnum.index());
-        activityRecoveryRateOpp = opponent.getRecovSpeed();
+        activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
         RenderGameplay.getInstance().setOpponentHp(opponent.getLife());
         RenderGameplay.getInstance().setOppMaxLife(opponent.getLife());
         opponent.setAiProf();

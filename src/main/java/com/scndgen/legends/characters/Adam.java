@@ -32,12 +32,10 @@ import com.scndgen.legends.render.RenderGameplay;
 public class Adam extends Character {
 
     public Adam() {
-        //strings
         attackStr = "";
         descSmall = "Adam - a Celestia Being specialised in celestia combat";
         name = "Adam";
         characterEnum = CharacterEnum.ADAM;
-        //string arrays
         bragRights = new String[]{"Worthless little boy", "You're so weak, it's not even funny", "Standards truly have fallen", "Ladies first...to the grave that is", "I'm not in the mood for your nonsense", "My best desciple, don't dissapoint achievements", "Show achievements your skill Jonah", "Lets do this", "Oh look, its achievements", "Azaria, I'll show you no mercy", "You might have what it takes to surpass achievements", "So that what it looks like"};
         physical = new String[]{"Silver Flame", "Silver Rush", "Silver Slice", "Silver Ascent"};
         celestia = new String[]{"Celestia Blitz", "Celestia Torrent", "Celestia Blaze", "Celestia Frost"};
@@ -47,14 +45,11 @@ public class Adam extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //ints
         points = 1800;
         damage = 0;
         life = 35200;
         limit = new int[]{0, 0, 0, 0, 0};
-        //doubles
-        actionRecoverRate = 1.60f;//2.10;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 1.60f;//2.10;
     }
 
     @Override

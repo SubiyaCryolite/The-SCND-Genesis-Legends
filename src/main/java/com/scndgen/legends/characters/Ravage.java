@@ -34,11 +34,9 @@ import static com.scndgen.legends.enums.CharacterEnum.RAVAGE;
 public class Ravage extends Character {
 
     public Ravage() {
-        //strings
         descSmall = "Ravage - a fighter specialised in brute force via the Earth element";
         name = "Ravage";
         characterEnum = RAVAGE;
-        //ints
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};
         bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold back NovaAdam", "Goodie, no holding back, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
@@ -50,9 +48,7 @@ public class Ravage extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //doubles
-        actionRecoverRate = 1.70f;//1.5;
-        hpRecovRate = 0.000150f;
+        atbRecoveryRate = 1.70f;//1.5;
         sound3 = new AudioPlayback(AudioPlayback.itemSound1(), false);
     }
 

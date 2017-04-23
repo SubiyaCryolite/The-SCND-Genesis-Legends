@@ -34,11 +34,9 @@ public class Thing extends Character {
     private int bonus;
 
     public Thing(int y) {
-        //strings
         attackStr = "";
         descSmall = "The Thing - Origins unknown";
         name = "The Thing";
-        //string arrays
         bragRights = new String[]{"....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....."};
         physical = new String[]{"Dash Strike", "Violent Thrust", "Epic Piercing", "Solar Flare"};
         celestia = new String[]{"Frost Bite", "Rock Rush", "Land Slide", "Solar Storm"};
@@ -57,8 +55,6 @@ public class Thing extends Character {
         weakness[5] = 0.30f;    //ice
         weakness[6] = 0.70f;    //physical
         weakness[7] = 0.30f;    //fire
-
-        //ints
         points = 1800;
         damage = 0;
         if (y == 0) {
@@ -71,10 +67,7 @@ public class Thing extends Character {
             bonus = 5;
         }
         limit = new int[]{0, 0, 0, 0, 0};
-
-        //doubles
-        actionRecoverRate = 0.85f;//2.10;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 0.85f;//2.10;
     }
 
     @Override

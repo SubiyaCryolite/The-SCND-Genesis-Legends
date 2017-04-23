@@ -21,18 +21,19 @@
  **************************************************************************/
 package com.scndgen.legends.controller;
 
-import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
-import com.scndgen.legends.windows.JenesisPanel;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -209,7 +210,7 @@ public class StoryMode implements Runnable {
     public void run() {
         try {
             System.out.println("Stage " + RenderStoryMenu.getInstance().getStage());
-            JenesisPanel.getInstance().startStoryMatch();
+            ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
             storyIn();
             firstRun = false;
 
@@ -1059,8 +1060,12 @@ public class StoryMode implements Runnable {
         thread.resume();
     }
 
-    public void accept() {
-        thread.stop();
-        storyOut(true);
+    public void onAccept() {
+        boolean ans1 = GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == true;
+        boolean ans2 = GameInstance.getInstance().gameOver == false && RenderStoryMenu.getInstance().getStoryInstance().doneShowingText;
+        if (ans1 && ans2) {
+            thread.stop();
+            storyOut(true);
+        }
     }
 }

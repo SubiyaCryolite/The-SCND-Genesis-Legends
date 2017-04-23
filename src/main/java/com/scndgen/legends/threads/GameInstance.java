@@ -25,6 +25,7 @@ import com.scndgen.legends.Achievement;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacks;
 import com.scndgen.legends.executers.OpponentAttacks;
@@ -34,10 +35,7 @@ import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 
 /**
  * This class ensures the game runs at a particular fps and initialises several
@@ -87,31 +85,23 @@ public class GameInstance implements Runnable {
                 thread.sleep(33); // fps
                 RenderGameplay.getInstance().matchStatus();
                 Achievement.getInstance().scan();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                ex.printStackTrace(System.err);
             }
-
-            //---------recover CharacterEnum activity bar
             if (sampleChar <= limitChar && runCharacterAtb) {
                 sampleCharDB = sampleCharDB + (Characters.getInstance().getCharRecoverySpeed());
                 sampleChar = Integer.parseInt("" + Math.round(sampleCharDB) + "");
             }
-
-            //---------recover opponents activity bar
-
             if (sampleOpp <= limitOpp && runOpponentAtb && storySequence == false) {
                 sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
                 sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
             } else if (enemyAiRunning == false && runOpponentAtb && storySequence == false) {
-                if (ScndGenLegends.getInstance().getGameMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                     enemyAiRunning = true;
                     executorAI.attack();
                 }
             }
-
-
             if ((timeLimit <= 180 && storySequence == false)) {
-
                 if (count < 1000) //continue till we make a second
                 {
                     count = count + speedFactor;
@@ -120,26 +110,23 @@ public class GameInstance implements Runnable {
                         timeLimit = timeLimit - 1;
                         timeStr = "" + timeLimit + "";
                         count = 0.0f;
-
-
                         if (timeStr.length() == 1) {
                             time1 = 10;
                             time2 = 10;
                             time3 = Integer.parseInt("" + timeStr.charAt(0));
                         }
-
                         if (timeStr.length() == 2) {
                             time1 = 10;
                             time2 = Integer.parseInt("" + timeStr.charAt(0));
                             time3 = Integer.parseInt("" + timeStr.charAt(1));
                         }
-
                         if (timeStr.length() == 3) {
                             time1 = Integer.parseInt("" + timeStr.charAt(0));
                             time2 = Integer.parseInt("" + timeStr.charAt(1));
                             time3 = Integer.parseInt("" + timeStr.charAt(2));
                         }
-                    } catch (NumberFormatException nfe) {
+                    } catch (Exception nfe) {
+                        nfe.printStackTrace(System.err);
                     }
                 }
             }
@@ -240,12 +227,11 @@ public class GameInstance implements Runnable {
     public void gameOver() {
         gameRunning = false;
         gameOver = true;
-        JenesisPanel.getInstance().freeToSave = true;
         RenderGameplay.getInstance().closeAudio();
         GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
         Achievement.getInstance().scan();
         //if not story scene, increment char usage
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
         }
         if (RenderGameplay.getInstance().hasWon()) {
@@ -330,15 +316,15 @@ public class GameInstance implements Runnable {
     /**
      * This thread executes when a game is over, designed to free unused memory
      */
-    public void closingThread(int mo) {
+    public void closingThread(boolean toCharacterSelect) {
         //update profile operations
         incrementWinsOrLosses();
         GameState.getInstance().getLogin().setPoints(Achievement.getInstance().getNewUserPoints());
         //save profile
         GameState.getInstance().saveConfigFile();
-        JenesisGlassPane.getInstance().primaryNotice("Saved File");
+        JenesisOverlay.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
             //nextStage if you've won
             if (RenderGameplay.getInstance().hasWon()) {
                 RenderStoryMenu.getInstance().incrementMode();
@@ -347,11 +333,11 @@ public class GameInstance implements Runnable {
                 loseMusic.play();
             }
             RenderStoryMenu.getInstance().storyProcceed();
-            JenesisPanel.getInstance().nextStage();
+            ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
         } else {
-            if (mo == 0) {
+            if (toCharacterSelect) {
                 JenesisPanel.getInstance().backToMenuScreen();
-            } else if (mo == 1) {
+            } else{
                 JenesisPanel.getInstance().backToCharSelect();
             }
         }
@@ -416,11 +402,11 @@ public class GameInstance implements Runnable {
     public void newInstance() {
         executorAI = new OpponentAttacks();
         Achievement.getInstance().newInstance();
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
             storySequence = true;
             timeLimit = StoryMode.getInstance().time;
         } //if LAN, client uses hosts timeLimit preset
-        else if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+        else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             timeLimit = JenesisPanel.getInstance().hostTime;
         } else {
             timeLimit = GameState.getInstance().getLogin().getTimeLimit();
@@ -438,10 +424,10 @@ public class GameInstance implements Runnable {
         newMatch = true;
         winMusic = new AudioPlayback(AudioPlayback.winSound(), false);
         loseMusic = new AudioPlayback(AudioPlayback.loseSound(), false);
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE == false) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            JenesisOverlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
         thread = new Thread(this);
         thread.setName("MAIN GAME LOGIC THREAD");
@@ -450,7 +436,7 @@ public class GameInstance implements Runnable {
     }
 
     public void musNotice() {
-        JenesisGlassPane.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
+        JenesisOverlay.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
     }
 
     /**
@@ -459,7 +445,7 @@ public class GameInstance implements Runnable {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            JenesisGlassPane.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            JenesisOverlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

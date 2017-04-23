@@ -27,7 +27,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -80,7 +80,7 @@ public class RenderStoryMenu extends StoryMenu {
             gc.setGlobalAlpha((1.0f));
             gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             gc.setFill(Color.WHITE);
-        } else if (ScndGenLegends.getInstance().getGameMode() != SubMode.LAN_CLIENT) {
+        } else if (ScndGenLegends.getInstance().getSubMode() != SubMode.LAN_CLIENT) {
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
             gc.drawImage(storyPrev, charXcap + x, charYcap);
@@ -111,7 +111,7 @@ public class RenderStoryMenu extends StoryMenu {
                 gc.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
             }
         }
-        JenesisGlassPane.getInstance().overlay(gc,x,y);
+        JenesisOverlay.getInstance().overlay(gc,x,y);
     }
 
     public void loadAssets() {

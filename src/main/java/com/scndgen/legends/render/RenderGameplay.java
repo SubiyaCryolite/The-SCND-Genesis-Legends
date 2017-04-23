@@ -29,14 +29,13 @@ import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -44,8 +43,6 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
-
-import javax.swing.*;
 
 import static com.sun.javafx.tk.Toolkit.getToolkit;
 
@@ -66,7 +63,6 @@ public class RenderGameplay extends Gameplay {
     private Image flashy;
     private Image[] moveCat, numberPix;
     private Image[] characterPortraits;
-    private AudioPlayback sound, ambientMusic, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
     private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
     private Image[] charSprites, oppSprites;
@@ -87,21 +83,21 @@ public class RenderGameplay extends Gameplay {
 
     public void loadAssets() {
         if (!loadAssets) return;
+        loadAssets = false;
         notSelected = getMyFont(12);
         largeFont = getMyFont(LoginScreen.bigTxtSize);
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         setCharMoveset();
         cacheNumPix();
         loadSprites();
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_HOST) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
             server = JenesisPanel.getInstance().getServer();
         }
-        if (ScndGenLegends.getInstance().getGameMode() == SubMode.LAN_CLIENT) {
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             //get ip from game
             client = JenesisPanel.getInstance().getClient();
         }
         charPointInc = Characters.getInstance().getPoints();
-        loadAssets = false;
     }
 
     public void cleanAssets() {
@@ -243,7 +239,7 @@ public class RenderGameplay extends Gameplay {
             gc.fillText(achievementPoints, 400, 282);
             gc.fillText("<< " + Language.getInstance().get(146) + " >>", 400, 296);
         }
-        JenesisGlassPane.getInstance().overlay(gc, width, height);
+        JenesisOverlay.getInstance().overlay(gc, width, height);
     }
 
     private void drawStageBackground(GraphicsContext gc) {
@@ -383,7 +379,7 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawClashes(GraphicsContext gc) {
-        if (clasherRunnign) {
+        if (clasherRunning) {
             gc.setFill(Color.BLACK);
             gc.fillRoundRect(221, 395, 410, 20, 10, 10);
             gc.drawImage(flashy, (int) (ClashSystem.getInstance().plyClashPerc * 4) + 226, 385);
@@ -514,11 +510,7 @@ public class RenderGameplay extends Gameplay {
         leftHandXAxisOffset = GameState.getInstance().getLogin().isLeftHanded() ? 0 : 548;
         JenesisImageLoader pix = new JenesisImageLoader();
         counterPane = pix.loadImage("images/countPane.png");
-        if (RenderStageSelect.getInstance().getHoveredStage() != Stage.DISTANT_ISLE) {
-            //foreGround = pix.loadImage(RenderStageSelect.getInstance().getFgLocation(), 852, 480);
-        } else {
-            //foreGround = pix.loadImage(RenderStageSelect.getInstance().getFgLocation(), 960, 480);
-        }
+        foreGround = pix.loadImage(RenderStageSelect.getInstance().getFgLocation());
         num0 = pix.loadImage("images/fig/0.png");
         num1 = pix.loadImage("images/fig/1.png");
         num2 = pix.loadImage("images/fig/2.png");
@@ -551,15 +543,15 @@ public class RenderGameplay extends Gameplay {
     private void loadSprites() {
         try {
             JenesisImageLoader imageLoader = new JenesisImageLoader();
-            //Characters.getInstance().getCharacter().loadMeHigh(this);
-            //Characters.getInstance().getOpponent().loadMeHigh(this);
+            Characters.getInstance().getCharacter().loadMeHigh();
+            Characters.getInstance().getOpponent().loadMeHigh();
 
-            charSprites = new Image[12];
-            for (int i = 0; i < Characters.getInstance().getCharacter().getNumberOfSprites(); i++)
+            charSprites = new Image[Characters.getInstance().getCharacter().getNumberOfSprites()];
+            for (int i = 0; i < charSprites.length; i++)
                 charSprites[i] = Characters.getInstance().getCharacter().getSprite(i);
 
-            oppSprites = new Image[12];
-            for (int i = 0; i < Characters.getInstance().getOpponent().getNumberOfSprites(); i++)
+            oppSprites = new Image[Characters.getInstance().getOpponent().getNumberOfSprites()];
+            for (int i = 0; i < oppSprites.length; i++)
                 oppSprites[i] = Characters.getInstance().getOpponent().getSprite(i);
 
             comboPicArray = new Image[9];
@@ -588,7 +580,7 @@ public class RenderGameplay extends Gameplay {
             times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
 
             characterPortraits = new Image[charNames.length];
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
                     characterPortraits[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
                 }
@@ -608,7 +600,7 @@ public class RenderGameplay extends Gameplay {
             fury = fury2;
             particlesLayer1 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
             particlesLayer2 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
-            if (ScndGenLegends.getInstance().getGameMode() == SubMode.STORY_MODE) {
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 storyPicArr = new Image[13];
                 for (int u = 0; u < 11; u++) {
                     storyPicArr[u] = imageLoader.loadImage("images/story/s" + u + ".png");
@@ -634,24 +626,14 @@ public class RenderGameplay extends Gameplay {
             System.out.println("loaded all char sprites imageLoader");
             //ensures method is only run once
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            e.printStackTrace(System.err);
         }
-    }
-
-    /**
-     * Flashy text at bottom of screen
-     *
-     * @param thisMessage
-     */
-    public void flashyText(String thisMessage) {
-        opacityTxt = 0.0f;
-        battleInformation = new StringBuilder(thisMessage);
     }
 
     /**
      * Go to next command menu column
      */
-    public void moveRight() {
+    public void onRight() {
         if (nextEnabled && backEnabled) {
             backEnabled = false;
             yTEST = yTESTinit;
@@ -670,7 +652,7 @@ public class RenderGameplay extends Gameplay {
     /**
      * Go to previous command menu column
      */
-    public void moveLeft() {
+    public void onLeft() {
         if (backEnabled && nextEnabled) {
             nextEnabled = false;
             yTEST = yTESTinit;
@@ -752,15 +734,6 @@ public class RenderGameplay extends Gameplay {
                 setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
             }
         }
-    }
-
-    /**
-     * Draws battle message at bottom of screen
-     *
-     * @param writeThis - what to display
-     */
-    public void showBattleMessage(String writeThis) {
-        flashyText(writeThis);
     }
 
     /**
@@ -858,27 +831,6 @@ public class RenderGameplay extends Gameplay {
             if (well == 1) {
                 setRandomPic();
             }
-        }
-    }
-
-    /**
-     * Selecting a move
-     */
-    public void accept() {
-        if (clasherRunnign) {
-            ClashSystem.getInstance().plrClashing();
-            System.out.println("Playr clashin");
-        } else if (safeToSelect) {
-            numOfAttacks = numOfAttacks + 1;
-            sound = new AudioPlayback(AudioPlayback.selectSound(), false);
-            sound.play();
-            move = (currentColumnIndex * 4) + itemIndex + 1;
-            attackArray[comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0
-            incrimentComboCounter();
-            checkStatus();
-            showBattleMessage("Qued up " + getSelMove(move));
-        } else {
-            RenderCharacterSelectionScreen.getInstance().errorSound();
         }
     }
 

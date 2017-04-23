@@ -23,7 +23,7 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import javafx.scene.canvas.GraphicsContext;
@@ -104,7 +104,7 @@ public class LanHostWaitLobby extends JenesisMode {
         gc.fillText(Language.getInstance().get(168), 20, 360);
         gc.fillText(Language.getInstance().get(169), 20, 376);
         gc.fillText(Language.getInstance().get(131), 20, 390);
-        JenesisGlassPane.getInstance().overlay(gc,x,y);
+        JenesisOverlay.getInstance().overlay(gc,x,y);
     }
 
     public void stopRepaint() {

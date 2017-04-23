@@ -32,20 +32,20 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
  *
  * @author ndana
  */
-public class JenesisGlassPane {
+public class JenesisOverlay {
 
-    private static JenesisGlassPane instance;
+    private static JenesisOverlay instance;
     private String primaryNotification = "", secondaryNotification = "";
     private float primaryOpacity = 0.0f, secondaryOpacity = 0.0f;
     private float primaryTimeout, secondaryTimeout;
     private boolean increasePrimaryOpacity, fadeOutPrimaryNotification, increaseSecondaryOpacity, fadeOutSecondaryNotification;
 
-    private JenesisGlassPane() {
+    private JenesisOverlay() {
     }
 
-    public static synchronized JenesisGlassPane getInstance() {
+    public static synchronized JenesisOverlay getInstance() {
         if (instance == null)
-            instance = new JenesisGlassPane();
+            instance = new JenesisOverlay();
         return instance;
     }
 

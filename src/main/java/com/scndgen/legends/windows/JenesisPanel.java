@@ -21,11 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.Language;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
-import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
@@ -35,8 +33,6 @@ import com.scndgen.legends.render.*;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
-import io.github.subiyacryolite.enginev1.JenesisGamePad;
-import io.github.subiyacryolite.enginev1.JenesisGlassPane;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import io.github.subiyacryolite.enginev1.JenesisWindow;
 import javafx.scene.input.KeyCode;
@@ -45,13 +41,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
-import java.io.*;
 import java.net.InetAddress;
 
 public class JenesisPanel extends Pane {
@@ -62,14 +55,12 @@ public class JenesisPanel extends Pane {
     private static JenesisPanel instance;
     public int hostTime;
     public boolean inStoryPane;
-    public boolean gameRunning = false, freeToSave = true, controller = false;
     public int item = 0, xyzStickDir;
     public Mode mode = Mode.EMPTY;
     public OpponentAttacksOnline playerHost2, playerClient1;
     public CharacterAttacksOnline playerHost1, playerClient2;
     public String ServerName;
     public String last, UserName;
-    private boolean[] buttonPressed;
     //sever
     private NetworkServer server;
     private InetAddress ServerAddress;
@@ -93,15 +84,6 @@ public class JenesisPanel extends Pane {
 
     private JenesisPanel(String nameOfUser, SubMode subMode) {
         instance = this;
-        try {
-            if (JenesisGamePad.getInstance().NUM_BUTTONS > 0) {
-                controller = true;
-                buttonPressed = new boolean[JenesisGamePad.getInstance().NUM_BUTTONS];
-                pollController();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace(System.err);
-        }
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), false);
         backgroundMusic.play();
         gameMode = subMode;
@@ -172,107 +154,13 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Polls game pads for dataInputStream data
-     */
-    private void pollController() {
-        new Thread() {
-
-            @SuppressWarnings({"SleepWhileHoldingLock", "static-access"})
-            public void run() {
-                try {
-                    do {
-                        this.sleep(33);
-                        if (!JenesisGamePad.getInstance().canPoll()) continue;
-                        JenesisGamePad.getInstance().poll();
-                        //update bottons
-                        buttonPressed = JenesisGamePad.getInstance().getButtons();
-                        // get compass direction for the two analog sticks
-                        xyzStickDir = JenesisGamePad.getInstance().getXYStickDir();
-                        if (xyzStickDir == JenesisGamePad.getInstance().NORTH) {
-                            up();
-                        } else if (xyzStickDir == JenesisGamePad.getInstance().SOUTH) {
-                            down();
-                        } else if (xyzStickDir == JenesisGamePad.getInstance().WEST) {
-                            left();
-                        } else if (xyzStickDir == JenesisGamePad.getInstance().EAST) {
-                            right();
-                        }
-                        // get POV hat compass direction
-                        hatDir = JenesisGamePad.getInstance().getHatDir();
-                        if (hatDir == JenesisGamePad.getInstance().SOUTH) {
-                            down();
-                        }
-                        if (hatDir == JenesisGamePad.getInstance().NORTH) {
-                            up();
-                        }
-                        if (hatDir == JenesisGamePad.getInstance().WEST) {
-                            left();
-                        }
-                        if (hatDir == JenesisGamePad.EAST) {
-                            right();
-                        }
-                        //button one
-                        if (buttonPressed[0]) {
-                            back();
-                        }
-                        if (buttonPressed[1]) {
-                            trigger();
-                        }
-                        if (buttonPressed[2]) {
-                            accept();
-                        }
-                        if (buttonPressed[3]) {
-                            escape();
-                        }
-                        if (buttonPressed[5]) {
-                            triggerFury(CharacterState.CHARACTER);
-                        }
-                        hatDir = JenesisGamePad.getInstance().getXYStickDir();
-                        hatDir = JenesisGamePad.getInstance().getZRZStickDir();
-                        buttonPressed = JenesisGamePad.getInstance().getButtons();
-                    } while (true);
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.err);
-                }
-            }
-        }.start();
-    }
-
-    public void newGame() {
-        mode = Mode.STANDARD_GAMEPLAY;
-        stopBackgroundMusic();
-        RenderGameplay.getInstance().newInstance();
-        setContentPane(RenderGameplay.getInstance());
-        RenderGameplay.getInstance().startFight();
-
-    }
-
-    public void startStoryMatch() {
-        mode = Mode.STANDARD_GAMEPLAY;
-        stopBackgroundMusic();
-        setContentPane(RenderGameplay.getInstance());
-        RenderGameplay.getInstance().startFight();
-    }
-
-    /**
      * Goes back to main menu
      */
     public void backToMenuScreen() {
         JenesisWindow.getInstance().showModes();
         stopBackgroundMusic();
-        RenderGameplay.getInstance().cleanAssets();
-        focus();
-    }
 
-    /**
-     * Increments to next lastStoryScene in story scene
-     */
-    public void nextStage() {
-        //bgMusclose();
-        mode = Mode.STANDARD_GAMEPLAY;
-        stopBackgroundMusic();
-        setContentPane(RenderGameplay.getInstance());
-        RenderGameplay.getInstance().startFight();
+        focus();
     }
 
     /**
@@ -283,35 +171,9 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Finds out if a match is running
-     *
-     * @return status of match
-     */
-    public boolean getIsGameRunning() {
-        return mode == Mode.STANDARD_GAMEPLAY;
-    }
-
-    /**
-     * Sets the game to running
-     */
-    public void setGameRunning() {
-        gameRunning = true;
-    }
-
-    /**
-     * Enables player to select a lastStoryScene
-     */
-    public void selectStage() {
-        setContentPane(RenderStageSelect.getInstance());
-        mode = Mode.STAGE_SELECT_SCREEN;
-        focus();
-    }
-
-    /**
      * Back to characterEnum select screen, when match is over
      */
     public void backToCharSelect() {
-        gameRunning = false;
         RenderCharacterSelectionScreen.getInstance().newInstance();
         setContentPane(RenderCharacterSelectionScreen.getInstance());
         mode = Mode.CHAR_SELECT_SCREEN;
@@ -327,7 +189,6 @@ public class JenesisPanel extends Pane {
      * Back to characterEnum select screen,, when match is cancelled
      */
     public void backToCharSelect2() {
-        gameRunning = false;
         GameInstance.getInstance().gamePaused = false;
         GameInstance.getInstance().terminateGameplay();
         RenderCharacterSelectionScreen.getInstance().animateCharSelect();
@@ -374,7 +235,7 @@ public class JenesisPanel extends Pane {
             }
             //unpause if match was paused
             if (GameInstance.getInstance().gamePaused) {
-                pause();
+                onTogglePause();
             }
             RenderStageSelect.getInstance().setSelectedStage(false);
             backToCharSelect2();
@@ -386,29 +247,11 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Vibrate
-     */
-    public void quickVibrate(float strength, int length) {
-        final float power = strength;
-        final int time = length;
-        new Thread() {
-            public void run() {
-                try {
-                    JenesisGamePad.getInstance().setRumbler(true, power);
-                    this.sleep(time);
-                    JenesisGamePad.getInstance().setRumbler(false, 0.0f);
-                } catch (Exception e) {
-                }
-            }
-        }.start();
-    }
-
-    /**
      * Contains universal up menu/game movements
      */
     private void up() {
         if (jenesisMode != null)
-            jenesisMode.moveUp();
+            jenesisMode.onUp();
     }
 
     /**
@@ -416,7 +259,7 @@ public class JenesisPanel extends Pane {
      */
     private void down() {
         if (jenesisMode != null)
-            jenesisMode.moveDown();
+            jenesisMode.onDown();
     }
 
     /**
@@ -424,7 +267,7 @@ public class JenesisPanel extends Pane {
      */
     private void left() {
         if (jenesisMode != null)
-            jenesisMode.moveLeft();
+            jenesisMode.onLeft();
     }
 
     /**
@@ -432,82 +275,31 @@ public class JenesisPanel extends Pane {
      */
     private void right() {
         if (jenesisMode != null)
-            jenesisMode.moveRight();
+            jenesisMode.onRight();
     }
 
     /**
-     * Handles universal accept functions
+     * Handles universal onAccept functions
      */
-    private void accept() {
-        if (getIsGameRunning()) {
-            if (GameInstance.getInstance().gamePaused == false) {
-                //in game, no story sequence
-                if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-                    RenderGameplay.getInstance().accept();
-                } //in game, during story sequence
-                else if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == true) {
-                    RenderStoryMenu.getInstance().getStoryInstance().accept();
-                } //story scene -- after text
-                else if (GameInstance.getInstance().gameOver == false && RenderStoryMenu.getInstance().getStoryInstance().doneShowingText) {
-                    RenderStoryMenu.getInstance().getStoryInstance().accept();
-                } else {
-                    //if person presses twice the lastStoryScene increments twice
-                    //this prevents that
-                    //it only free to save when its game over
-                    //one a save is used, it not free to save (i.e null)
-                    if (freeToSave) {
-                        freeToSave = false;
-                        if (getGameMode() == SubMode.SINGLE_PLAYER
-                                || getGameMode() == SubMode.LAN_CLIENT
-                                || getGameMode() == SubMode.LAN_HOST) {
-                            GameInstance.getInstance().closingThread(1);
-                        } else {
-                            GameInstance.getInstance().closingThread(0);
-                        }
-                    }
-                }
-            }
-        } //cancel hosting
-        else if (isWaiting && gameMode == SubMode.LAN_HOST) {
+    private void onAccept() {
+        if (isWaiting && gameMode == SubMode.LAN_HOST) {
             closeTheServer();
-        } else if (mode == Mode.CHAR_SELECT_SCREEN) {
-            //if both CharacterEnum are selected
-            if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected()) {
-                if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST) {
-                    quickVibrate(0.6f, 1000);
-                    RenderCharacterSelectionScreen.getInstance().beginGame();
-                }
-            } else {
-                quickVibrate(0.4f, 1000);
-                RenderCharacterSelectionScreen.getInstance().selectCharacter();
-            }
-        } else if (mode == Mode.STORY_SELECT_SCREEN) {
-            RenderStoryMenu.getInstance().selectScene();
-            quickVibrate(0.4f, 1000);
-        } else if (mode == Mode.STAGE_SELECT_SCREEN) {
-            //client should be able to meddle in lastStoryScene select
-            if (getGameMode() != SubMode.LAN_CLIENT) {
-                if (RenderCharacterSelectionScreen.getInstance().getCharacterSelected() && RenderCharacterSelectionScreen.getInstance().getOpponentSelected() && (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.LAN_HOST)) {
-                    quickVibrate(0.66f, 1000);
-                    RenderStageSelect.getInstance().selectStage(RenderStageSelect.getInstance().getHoveredStage());
-                }
-            }
         }
     }
 
     /**
-     * Handles universal UI escape
+     * Handles universal UI onBackCancel
      */
-    private void escape() {
+    private void onBackCancel() {
         if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
             if (getGameMode() == SubMode.SINGLE_PLAYER) {
                 RenderCharacterSelectionScreen.getInstance().newInstance();
                 RenderCharacterSelectionScreen.getInstance().backToMenu();
             }
         }
-        if (getIsGameRunning()) {
-            pause();
-        } else if (mode == Mode.STORY_SELECT_SCREEN && !getIsGameRunning()) {
+        if (mode == Mode.STANDARD_GAMEPLAY_START) {
+            onTogglePause();
+        } else if (mode == Mode.STORY_SELECT_SCREEN && mode != Mode.STANDARD_GAMEPLAY_START) {
             RenderStoryMenu.getInstance().backToMainMenu();
         }
     }
@@ -518,7 +310,7 @@ public class JenesisPanel extends Pane {
     private void back() {
         if (mode == Mode.CHAR_SELECT_SCREEN && getGameMode() == SubMode.SINGLE_PLAYER) {
             RenderCharacterSelectionScreen.getInstance().newInstance();
-        } else if (getIsGameRunning()) {
+        } else if (mode == Mode.STANDARD_GAMEPLAY_START) {
             RenderGameplay.getInstance().unQueMove();
         }
     }
@@ -531,7 +323,7 @@ public class JenesisPanel extends Pane {
      * Universal trigger
      */
     private void trigger() {
-        if (getIsGameRunning())
+        if (mode == Mode.STANDARD_GAMEPLAY_START)
             RenderGameplay.getInstance().attack();
 
     }
@@ -554,22 +346,19 @@ public class JenesisPanel extends Pane {
             back();
         }
         if (keyCode == KeyCode.ENTER) {
-            accept();
+            onAccept();
         }
         if (keyCode == KeyCode.ESCAPE) {
-            escape();
-        }
-        if (keyCode == KeyCode.F4) {
-            //exit();
+            onBackCancel();
         }
         if (keyCode == KeyCode.F5) {
-            if (getIsGameRunning()) {
+            if (mode == Mode.STANDARD_GAMEPLAY_START) {
                 cancelMatch();
             }
         }
         if (keyCode == KeyCode.F12) {
             //screenshot
-        } else if (getIsGameRunning()) {
+        } else if (mode == Mode.STANDARD_GAMEPLAY_START) {
             if (keyCode == KeyCode.L) {
                 triggerFury(CharacterState.CHARACTER);
             }
@@ -577,67 +366,26 @@ public class JenesisPanel extends Pane {
                 trigger();
             }
         }
-        if (mode == Mode.MAIN_MENU) {
-
-            if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-                RenderMainMenu.getInstance().goDown();
-            }
-            if (keyCode == KeyCode.RIGHT) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().advanceTutorial();
-            }
-            if (keyCode == KeyCode.LEFT) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().reverseTutorial();
-            }
-            if (keyCode == KeyCode.DIGIT1) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(0);
-            }
-            if (keyCode == KeyCode.DIGIT2) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(3);
-            }
-            if (keyCode == KeyCode.DIGIT3) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(11);
-            }
-            if (keyCode == KeyCode.DIGIT4) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(20);
-            }
-            if (keyCode == KeyCode.DIGIT5) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(27);
-            }
-            if (keyCode == KeyCode.DIGIT6) {
-                if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL)
-                    RenderMainMenu.getInstance().sktpToTut(32);
-            }
-        }
     }
 
     public void mouseWheelMoved(MouseWheelEvent mwe) {
-        if (gameRunning) {
+        if (mode == Mode.MAIN_MENU) {
+            int count = mwe.getWheelRotation();
+            if (count >= 0) {
+                RenderMainMenu.getInstance().onDown();
+            }
+            if (count < 0) {
+                RenderMainMenu.getInstance().onUp();
+            }
+        } else {
             if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
                 int count = mwe.getWheelRotation();
                 if (count >= 0) {
-                    RenderGameplay.getInstance().moveLeft();
+                    RenderGameplay.getInstance().onLeft();
                 }
                 if (count < 0) {
-                    RenderGameplay.getInstance().moveRight();
+                    RenderGameplay.getInstance().onRight();
                 }
-            }
-        }
-        if (mode == Mode.MAIN_MENU) {
-            int count = mwe.getWheelRotation();
-            //down - positive values
-            if (count >= 0) {
-                RenderMainMenu.getInstance().goDown();
-            }
-            //up -negative values
-            if (count < 0) {
-                RenderMainMenu.getInstance().goUp();
             }
         }
     }
@@ -646,17 +394,17 @@ public class JenesisPanel extends Pane {
         MouseButton mb = mouseEvent.getButton();
         if (jenesisMode != null)
             jenesisMode.mouseClicked(mouseEvent);
-        if (getIsGameRunning()) {
+        if (mode == Mode.STANDARD_GAMEPLAY_START) {
             if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     if (mouseEvent.getX() > (29 + leftyXOffset) && mouseEvent.getX() < (220 + leftyXOffset) && (mouseEvent.getY() > 358)) {
-                        RenderGameplay.getInstance().accept();
+                        RenderGameplay.getInstance().onAccept();
                     }
                     if (mouseEvent.getX() < (29 + leftyXOffset)) {
-                        RenderGameplay.getInstance().moveLeft();
+                        RenderGameplay.getInstance().onLeft();
                     }
                     if (mouseEvent.getX() > (220 + leftyXOffset) && mouseEvent.getX() < (305 + leftyXOffset)) {
-                        RenderGameplay.getInstance().moveRight();
+                        RenderGameplay.getInstance().onRight();
                     } else if ((mouseEvent.getX() > 25 && mouseEvent.getX() < 46) && (mouseEvent.getY() > 190 && mouseEvent.getY() < 270)) {
                         triggerFury(CharacterState.CHARACTER);
                     }
@@ -679,22 +427,6 @@ public class JenesisPanel extends Pane {
     }
 
     public void mouseMoved(MouseEvent m) {
-        if (mode == Mode.CHAR_SELECT_SCREEN) {
-            RenderCharacterSelectionScreen.getInstance().mouseMoved(m.getX(), m.getY());
-        }
-        if (mode == Mode.STORY_SELECT_SCREEN) {
-            RenderStoryMenu.getInstance().mouseMoved(m.getX(), m.getY());
-        }
-        if (mode == Mode.STAGE_SELECT_SCREEN) {
-            //if you're a client stay still
-            if (getGameMode() != SubMode.LAN_CLIENT) {
-                RenderStageSelect.getInstance().mouseMoved(m.getX(), m.getY());
-            }
-        } else if (getIsGameRunning()) {
-            RenderGameplay.getInstance().mouseMoved(m.getX(), m.getY());
-        }
-        if (jenesisMode != null)
-            jenesisMode.mouseMoved(m);
     }
 
     public void mouseExited(MouseEvent m) {
@@ -720,7 +452,7 @@ public class JenesisPanel extends Pane {
         gameIp = ip;
     }
 
-    private void pause() {
+    private void onTogglePause() {
         if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.STORY_MODE) {
             if (GameInstance.getInstance().gamePaused == false) {
                 GameInstance.getInstance().pauseGame();
@@ -736,22 +468,6 @@ public class JenesisPanel extends Pane {
                 }
             }
         }
-    }
-
-    void savefile(String outfil, String inhalt) {
-        try {
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outfil), "UTF8"));
-            out.write(inhalt);
-            out.close();
-        } catch (UnsupportedEncodingException e) {
-            System.out.println(">>> loadsave: no UTF-8 upport");
-        } catch (IOException e) {
-            System.out.println(">>> loadsave: Could not write " + outfil);
-        }
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public void focus() {
@@ -798,44 +514,5 @@ public class JenesisPanel extends Pane {
 
     private void setContentPane(final JenesisMode mode) {
         this.jenesisMode = mode;
-    }
-
-    /**
-     * Gets screenshot
-     */
-    public final void captureScreenShot() {
-        try {
-            BufferedImage bufferedImage = volatileImage.getSnapshot();
-            File file;
-            if (!new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").exists())
-                new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots").mkdirs();
-            file = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "screenshots" + File.separator + generateUID() + ".png");
-            if (ImageIO.write(bufferedImage, "png", file))
-                JenesisGlassPane.getInstance().primaryNotice(Language.getInstance().get(170));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Generates unique ID for screens
-     *
-     * @return unique ID
-     */
-    public final String generateUID() {
-        String random_name = "scndgen-legends_";
-        StringBuilder userIDBuff = new StringBuilder(random_name);
-        String[] letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-        userIDBuff.append("").append(Math.round(Math.random() * 100)).append("_");
-        int v1 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
-        int v2 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
-        int v3 = Integer.parseInt("" + Math.round((Math.random() * 24) + 1));
-        userIDBuff.append(letters[v1]);
-        userIDBuff.append(letters[v2]);
-        userIDBuff.append(letters[v3]);
-        userIDBuff.append("_").append(Math.round(Math.random() * 10000)).append("");
-        random_name = userIDBuff.toString();
-
-        return random_name;
     }
 }

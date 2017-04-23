@@ -22,7 +22,9 @@
 package com.scndgen.legends.scene;
 
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
@@ -84,7 +86,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * Move up
      */
-    public void moveUp() {
+    public void onUp() {
         if (column > 0) {
             column = column - 1;
         } else {
@@ -93,7 +95,7 @@ public abstract class StoryMenu extends JenesisMode {
         capAnim();
     }
 
-    public void moveDown() {
+    public void onDown() {
         if (column < rows - 1) {
             column = column + 1;
         } else {
@@ -102,7 +104,7 @@ public abstract class StoryMenu extends JenesisMode {
         capAnim();
     }
 
-    public void moveRight() {
+    public void onRight() {
         if (row < columns) {
             row = row + 1;
         } else {
@@ -111,7 +113,7 @@ public abstract class StoryMenu extends JenesisMode {
         capAnim();
     }
 
-    public void moveLeft() {
+    public void onLeft() {
         if (row > 1) {
             row = row - 1;
         } else {
@@ -314,24 +316,26 @@ public abstract class StoryMenu extends JenesisMode {
         }
     }
 
-    public void mouseMoved(double mouseX, double mouseY) {
-        int topY = getStartY();
-        int topX = getStartX();
-        int columns = getNumberOfCharColumns();
-        int vspacer = getCharHSpacer();
-        int hspacer = getCharVSpacer();
-        int rows = getCharRows();
-        if (mouseX > topX && mouseX < (topX + (hspacer * columns)) && (mouseY > topY) && (mouseY < topY + (vspacer * rows))) {
-            int vIndex = Math.round(Math.round((mouseY - topY) / vspacer));
-            int hIndex = Math.round(Math.round((mouseX - topX) / hspacer));
-            setHindex(hIndex);
-            setVindex(vIndex);
-            animateCap2x(hIndex, vIndex);
-            withinMenuPanel = true;
-        } else {
-            setHindex(99);
-            setVindex(99);
-            withinMenuPanel = false;
+    public void mouseMoved(MouseEvent me) {
+        if (ScndGenLegends.getInstance().getMode() == Mode.STORY_SELECT_SCREEN) {
+            int topY = getStartY();
+            int topX = getStartX();
+            int columns = getNumberOfCharColumns();
+            int vspacer = getCharHSpacer();
+            int hspacer = getCharVSpacer();
+            int rows = getCharRows();
+            if (me.getX() > topX && me.getX() < (topX + (hspacer * columns)) && (me.getY() > topY) && (me.getY() < topY + (vspacer * rows))) {
+                int vIndex = Math.round(Math.round((me.getY() - topY) / vspacer));
+                int hIndex = Math.round(Math.round((me.getX() - topX) / hspacer));
+                setHindex(hIndex);
+                setVindex(vIndex);
+                animateCap2x(hIndex, vIndex);
+                withinMenuPanel = true;
+            } else {
+                setHindex(99);
+                setVindex(99);
+                withinMenuPanel = false;
+            }
         }
     }
 
@@ -399,6 +403,10 @@ public abstract class StoryMenu extends JenesisMode {
 
     public void mouseClicked(MouseEvent me) {
         if (!withinMenuPanel) return;
+        selectScene();
+    }
+
+    public void onAccept() {
         selectScene();
     }
 }

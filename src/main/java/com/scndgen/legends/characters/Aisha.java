@@ -33,12 +33,10 @@ import static com.scndgen.legends.enums.CharacterEnum.AISHA;
 public class Aisha extends Character {
 
     public Aisha() {
-        //strings
         descSmall = "Aisha - a fighter specialised in sword combat";
         name = "Aisha";
         characterEnum = AISHA;
         isNotMale();
-        //string arrays
         bragRights = new String[]{"Show achievements what you got Rai", "Prove you aren't just a waste of space ;D", "Fun fact! My single blade beats both of yours.", "Let's do this", "I'll keep slicing you till you're a pile of dirt!", "You fight with skill and grace, but thats not enough to stop achievements", "You won't be able to touch achievements!!!", "So you're the legend. Lets see what you got", "Wow!! So thats what you really look like", "Girl power! WOOT! WOOT!", "I won't go easy on you little girl", "Unbelievable!!"};
         physical = new String[]{"Phantom Strike", "Phantom Rush", "Dead Rising", "Silver Slash"};
         celestia = new String[]{"Violet Flame", "Violet Rush", "Violet Revolution", "Violet Blitz"};
@@ -48,13 +46,9 @@ public class Aisha extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //ints
         life = 29440;
         limit = new int[]{0, 0, 0, 0, 0};
-        //doubles
-        actionRecoverRate = 2.14f;//1.90;
-        hpRecovRate = 0.00018f;
-
+        atbRecoveryRate = 2.14f;//1.90;
     }
 
     @Override

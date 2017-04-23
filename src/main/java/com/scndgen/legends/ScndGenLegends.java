@@ -2,10 +2,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderMainMenu;
-import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.render.RenderStoryMenu;
+import com.scndgen.legends.render.*;
 import io.github.subiyacryolite.enginev1.JenesisEngine;
 import io.github.subiyacryolite.enginev1.JenesisGame;
 import javafx.application.Application;
@@ -19,6 +16,7 @@ public class ScndGenLegends extends JenesisGame {
 
     private static ScndGenLegends instance;
     private SubMode subMode;
+    private Mode mode;
 
     public static ScndGenLegends getInstance() {
         return instance;
@@ -32,10 +30,11 @@ public class ScndGenLegends extends JenesisGame {
     public ScndGenLegends() {
         instance = this;
         setSize(852, 480);
-        switchMode(Mode.MAIN_MENU);
+        loadMode(Mode.MAIN_MENU);
     }
 
-    public void switchMode(Mode mode) {
+    public void loadMode(Mode mode) {
+        this.mode = mode;
         setSwitchingModes(true);
         try {
             switch (mode) {
@@ -55,6 +54,12 @@ public class ScndGenLegends extends JenesisGame {
                     RenderStageSelect.getInstance().newInstance();
                     setMode(RenderStageSelect.getInstance());
                     break;
+                case STANDARD_GAMEPLAY_START:
+                    //stopBackgroundMusic();
+                    RenderGameplay.getInstance().newInstance();
+                    setMode(RenderGameplay.getInstance());
+                    RenderGameplay.getInstance().startFight();
+                    break;
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -63,36 +68,40 @@ public class ScndGenLegends extends JenesisGame {
         }
     }
 
-    public SubMode getGameMode() {
+    public SubMode getSubMode() {
         return this.subMode;
     }
 
-    public void setGameMode(SubMode subMode) {
-        this.subMode=subMode;
+    public Mode getMode() {
+        return this.mode;
+    }
+
+    public void setSubMode(SubMode subMode) {
+        this.subMode = subMode;
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        if (getMode() != null && !isSwitchingModes())
-            getMode().keyReleased(keyEvent);
+        if (getJenesisMode() != null && !isSwitchingModes())
+            getJenesisMode().keyReleased(keyEvent);
     }
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        if (getMode() != null && !isSwitchingModes())
-            getMode().keyPressed(keyEvent);
+        if (getJenesisMode() != null && !isSwitchingModes())
+            getJenesisMode().keyPressed(keyEvent);
     }
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        if (getMode() != null && !isSwitchingModes())
-            getMode().mouseMoved(mouseEvent);
+        if (getJenesisMode() != null && !isSwitchingModes())
+            getJenesisMode().mouseMoved(mouseEvent);
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (getMode() != null && !isSwitchingModes())
-            getMode().mouseClicked(mouseEvent);
+        if (getJenesisMode() != null && !isSwitchingModes())
+            getJenesisMode().mouseClicked(mouseEvent);
     }
 
 }

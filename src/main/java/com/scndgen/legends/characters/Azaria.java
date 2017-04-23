@@ -45,13 +45,10 @@ public class Azaria extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        //ints
         points = 1800;
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};
-        //doubles
-        actionRecoverRate = 2.30f;//2.10;
-        hpRecovRate = 0.0002f;
+        atbRecoveryRate = 2.30f;//2.10;
     }
 
     @Override
