@@ -34,7 +34,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import javax.swing.*;
-import java.awt.event.MouseWheelEvent;
 
 /**
  * @author Ndana
@@ -121,36 +120,12 @@ public class JenesisWindow {
         }
     }
 
-    public void mouseWheelMoved(MouseWheelEvent mwe) {
-        JenesisPanel.getInstance().mouseWheelMoved(mwe);
-    }
-
     public void mouseClicked(MouseEvent m) {
         JenesisPanel.getInstance().mouseClicked(m);
     }
 
-    public void mouseEntered(MouseEvent m) {
-        JenesisPanel.getInstance().mouseEntered(m);
-    }
-
-    public void mouseDragged(MouseEvent m) {
-        JenesisPanel.getInstance().mouseDragged(m);
-    }
-
     public void mouseMoved(MouseEvent m) {
         JenesisPanel.getInstance().mouseMoved(m);
-    }
-
-    public void mouseExited(MouseEvent m) {
-        JenesisPanel.getInstance().mouseExited(m);
-    }
-
-    public void mousePressed(MouseEvent m) {
-        JenesisPanel.getInstance().mousePressed(m);
-    }
-
-    public void mouseReleased(MouseEvent m) {
-        JenesisPanel.getInstance().mouseReleased(m);
     }
 
 
@@ -160,15 +135,6 @@ public class JenesisWindow {
         if (keyCode == KeyCode.ENTER) {
             select();
         }
-    }
-
-
-    public void keyReleased(KeyEvent e) {
-        JenesisPanel.getInstance().keyReleased(e);
-    }
-
-    public void keyTyped(KeyEvent e) {
-        JenesisPanel.getInstance().keyTyped(e);
     }
 
     /**

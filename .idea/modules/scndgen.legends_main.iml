@@ -20,5 +20,6 @@
     <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-windows:2.0.6" level="project" />
     <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-osx:2.0.6" level="project" />
     <orderEntry type="library" name="Gradle: io.github.subiyacryolite:jds:1.170414" level="project" />
+    <orderEntry type="library" name="com.googlecode.soundlibs:vorbisspi:1.0.3.3" level="project" />
   </component>
 </module>

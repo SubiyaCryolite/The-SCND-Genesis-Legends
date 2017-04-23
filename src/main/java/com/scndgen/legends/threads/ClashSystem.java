@@ -99,7 +99,7 @@ public class ClashSystem implements Runnable {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "GOT EM !!!", Colors.getColor("blue"));
-                JenesisPanel.getInstance().triggerFury(CharacterState.CHARACTER);
+                RenderGameplay.getInstance().triggerFury(CharacterState.CHARACTER);
             } else {
                 RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "EVADED YA!!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();
@@ -112,7 +112,7 @@ public class ClashSystem implements Runnable {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
                 RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "GOT YA !!!", Colors.getColor("blue"));
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
             } else {
                 RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "EVADED !!!", Colors.getColor("red"));
                 RenderGameplay.getInstance().resetBreak();

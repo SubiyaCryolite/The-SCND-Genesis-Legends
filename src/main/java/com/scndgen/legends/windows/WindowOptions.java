@@ -339,7 +339,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
             GameState.getInstance().getLogin().setIsAudioOn(false);
         } else if (source == cmbTimeDuration) {
             if (cmbTimeDuration.getSelectedItem() == "infinite") {
-                GameState.getInstance().getLogin().setTimeLimit(1000);
+                GameState.getInstance().getLogin().setTimeLimit(GameState.MAX_TIME);
             } else if (cmbTimeDuration.getSelectedItem() == "180") {
                 GameState.getInstance().getLogin().setTimeLimit(180);
             } else if (cmbTimeDuration.getSelectedItem() == "150") {

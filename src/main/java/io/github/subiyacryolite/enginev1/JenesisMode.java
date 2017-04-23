@@ -17,6 +17,7 @@ public abstract class JenesisMode {
     protected boolean loadAssets = true;
     protected long lastDelta;
     protected long diff;
+    protected boolean validHover, validSecondaryHover, validThirdHover, validFourthHover;
     protected boolean isPaused;
     private long accumulator16ms;
     private long accumulator33ms;

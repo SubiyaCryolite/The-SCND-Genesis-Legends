@@ -5,6 +5,7 @@ import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisOverlay;
@@ -185,7 +186,7 @@ public class NetworkServer implements Runnable {
                 sendData(JenesisPanel.getInstance().last);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));

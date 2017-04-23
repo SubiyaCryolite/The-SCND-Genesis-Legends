@@ -14,6 +14,8 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.googlecode.soundlibs/vorbisspi
+    compile group: 'com.googlecode.soundlibs', name: 'vorbisspi', version: '1.0.3.3'
     compile 'mysql:mysql-connector-java:5.1.36'
     compile 'io.github.subiyacryolite:jds:1.170414'
     compile 'commons-codec:commons-codec:1.9'

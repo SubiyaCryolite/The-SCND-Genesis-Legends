@@ -1,8 +1,8 @@
 /*************************************************************************
  *  Compilation:  javac -classpath .:jl1.0.jar MP3.java         (OS X)
  *                javac -classpath .;jl1.0.jar MP3.java         (Windows)
- *  Execution:    java -classpath .:jl1.0.jar MP3 filename.mp3  (OS X / Linux)
- *                java -classpath .;jl1.0.jar MP3 filename.mp3  (Windows)
+ *  Execution:    java -classpath .:jl1.0.jar MP3 filename.ogg  (OS X / Linux)
+ *                java -classpath .;jl1.0.jar MP3 filename.ogg  (Windows)
  *
  *  Plays an MP3 file using the JLayer MP3 library.
  *
@@ -19,36 +19,33 @@
  *************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.state.GameState;
 import javazoom.jl.player.Player;
-
-import java.io.InputStream;
 
 public class AudioPlayback implements Runnable {
 
-    public static final String[] MALE_HURT = {"audio/from_Ardentryst/male/attack/Pain4.mp3",
-            "audio/from_Ardentryst/male/attack/death_16.mp3",
-            "audio/from_Ardentryst/male/attack/Pain5.mp3",
-            "audio/from_Ardentryst/male/attack/Pain7.mp3"};
-    public static final String[] MALE_ATTACKS = {"audio/from_Ardentryst/male/pain/death_11.mp3",
-            "audio/from_Ardentryst/male/pain/death_14.mp3",
-            "audio/from_Ardentryst/male/pain/death_17.mp3",
-            "audio/from_Ardentryst/male/pain/Pain2.mp3",
-            "audio/from_Ardentryst/male/pain/Pain6.mp3",
-            "audio/from_Ardentryst/male/pain/death_13.mp3",
-            "audio/from_Ardentryst/male/pain/death_15.mp3",
-            "audio/from_Ardentryst/male/pain/death_18.mp3",
-            "audio/from_Ardentryst/male/pain/Pain3.mp3",
-            "audio/from_Ardentryst/male/pain/Pain8.mp3"};
-    public static final String[] FEMALE_ATTACKS = {"audio/from_Ardentryst/female/attack/NYX_JUMP1.mp3",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP2.mp3",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP3.mp3",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP4.mp3",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP5.mp3",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP6.mp3"};
-    public static final String[] FEMALE_HURT = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.mp3",
-            "audio/from_Ardentryst/female/pain/NYX_PAIN5.mp3",
-            "audio/from_Ardentryst/female/pain/NYX_PAIN6.mp3"};
+    public static final String[] MALE_HURT = {"audio/from_Ardentryst/male/attack/Pain4.ogg",
+            "audio/from_Ardentryst/male/attack/death_16.ogg",
+            "audio/from_Ardentryst/male/attack/Pain5.ogg",
+            "audio/from_Ardentryst/male/attack/Pain7.ogg"};
+    public static final String[] MALE_ATTACKS = {"audio/from_Ardentryst/male/pain/death_11.ogg",
+            "audio/from_Ardentryst/male/pain/death_14.ogg",
+            "audio/from_Ardentryst/male/pain/death_17.ogg",
+            "audio/from_Ardentryst/male/pain/Pain2.ogg",
+            "audio/from_Ardentryst/male/pain/Pain6.ogg",
+            "audio/from_Ardentryst/male/pain/death_13.ogg",
+            "audio/from_Ardentryst/male/pain/death_15.ogg",
+            "audio/from_Ardentryst/male/pain/death_18.ogg",
+            "audio/from_Ardentryst/male/pain/Pain3.ogg",
+            "audio/from_Ardentryst/male/pain/Pain8.ogg"};
+    public static final String[] FEMALE_ATTACKS = {"audio/from_Ardentryst/female/attack/NYX_JUMP1.ogg",
+            "audio/from_Ardentryst/female/attack/NYX_JUMP2.ogg",
+            "audio/from_Ardentryst/female/attack/NYX_JUMP3.ogg",
+            "audio/from_Ardentryst/female/attack/NYX_JUMP4.ogg",
+            "audio/from_Ardentryst/female/attack/NYX_JUMP5.ogg",
+            "audio/from_Ardentryst/female/attack/NYX_JUMP6.ogg"};
+    public static final String[] FEMALE_HURT = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.ogg",
+            "audio/from_Ardentryst/female/pain/NYX_PAIN5.ogg",
+            "audio/from_Ardentryst/female/pain/NYX_PAIN6.ogg"};
     private String fileName;
     private Player player;
     private final Thread thread;
@@ -86,71 +83,71 @@ public class AudioPlayback implements Runnable {
     }
 
     public static String tutorialSound() {
-        return "audio/from_0AD/germanic_peace_1.mp3";
+        return "audio/from_0AD/germanic_peace_1.ogg";
     }
 
     public static String soundBack() {
-        return "audio/from_0AD/WeaponSwing.mp3";
+        return "audio/from_0AD/WeaponSwing.ogg";
     }
 
     public static String soundGameOver() {
-        return "audio/from_0AD/gen_loss_track.mp3";
+        return "audio/from_0AD/gen_loss_track.ogg";
     }
 
     public static String soundNext() {
-        return "audio/from_0AD/WeaponSwingHigh.mp3";
+        return "audio/from_0AD/WeaponSwingHigh.ogg";
     }
 
     public static String enemyAttck() {
-        return "audio/hitlow.mp3";
+        return "audio/hitlow.ogg";
     }
 
     public static String furyAttck() {
-        return "audio/hithard.mp3";
+        return "audio/hithard.ogg";
     }
 
     public static String playerAttack() {
-        return "audio/hitlow.mp3";
+        return "audio/hitlow.ogg";
     }
 
     public static String selectSound() {
-        return "audio/menu-small-select.mp3";
+        return "audio/menu-small-select.ogg";
     }
 
     public static String charSelectSound() {
-        return "audio/menu-back.mp3";
+        return "audio/menu-back.ogg";
     }
 
     public static String itemSound1() {
-        return "audio/itembox_get.mp3";
+        return "audio/itembox_get.ogg";
     }
 
     public static String itemSound2() {
-        return "audio/itembox_get.mp3";
+        return "audio/itembox_get.ogg";
     }
 
     public static String startUpSound() {
-        return "audio/Ryan Reilly - Victory.mp3";
+        return "audio/Ryan Reilly - Victory.ogg";
     }
 
     public static String flameSwoosh() {
-        return "audio/flame_whoosh.mp3";
+        return "audio/flame_whoosh.ogg";
     }
 
     public static String menuMus() {
-        return "audio/Doug Kaufman - The City Falls.mp3";
+        return "audio/Doug Kaufman - The City Falls.ogg";
     }
 
     public static String winSound() {
-        return "audio/Ryan Reilly - Victory.mp3";
+        return "audio/Ryan Reilly - Victory.ogg";
     }
 
     public static String loseSound() {
-        return "audio/Timothy Pinkham - Defeat.mp3";
+        return "audio/Timothy Pinkham - Defeat.ogg";
     }
 
     public static String storySound() {
-        return "audio/Ryan Reilly - Suspense.mp3";
+        return "audio/Ryan Reilly - Suspense.ogg";
     }
 
     public void close() {
@@ -169,16 +166,16 @@ public class AudioPlayback implements Runnable {
 
     // play the MP3 file to the sound card
     public void play() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
-            if (GameState.getInstance().getLogin().isAudioOn()) {
-                player = new Player(inputStream);
-                thread.setName("Music Thread");
-                thread.start();
-            }
-        } catch (Exception e) {
-            System.out.println("Problem playing file " + fileName);
-            System.out.println(e);
-        }
+//        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+//            if (GameState.getInstance().getLogin().isAudioOn()) {
+//                player = new Player(inputStream);
+//                thread.setName("Music Thread");
+//                thread.start();
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Problem playing file " + fileName);
+//            System.out.println(e);
+//        }
     }
 
     public void volume() {
@@ -187,7 +184,7 @@ public class AudioPlayback implements Runnable {
     @Override
     public void run() {
         try {
-            player.play();
+            //player.play();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

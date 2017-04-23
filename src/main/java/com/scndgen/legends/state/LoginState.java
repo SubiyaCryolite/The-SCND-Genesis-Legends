@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import static com.scndgen.legends.state.GameState.MAX_TIME;
+
 /**
  * Created by ifung on 22/04/2017.
  */
@@ -51,7 +53,7 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty difficultyDynamic = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty lastStoryScene = new SimpleIntegerProperty(0);
-    private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(MAX_TIME);
     private final SimpleStringProperty graffix = new SimpleStringProperty("");
     private final SimpleStringProperty upToDate = new SimpleStringProperty("");
     private final SimpleStringProperty autoUpdate = new SimpleStringProperty("");
@@ -743,5 +745,9 @@ public class LoginState extends JdsEntity {
             returnThis = 0;
         }
         return returnThis;
+    }
+
+    public boolean isTimeLimited() {
+        return getTimeLimit() != MAX_TIME;
     }
 }

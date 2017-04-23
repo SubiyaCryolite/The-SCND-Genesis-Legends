@@ -2,11 +2,13 @@ package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
@@ -55,7 +57,7 @@ public class NetworkClient implements Runnable {
                 thread.sleep(JenesisPanel.getInstance().serverLatency);
             } catch (InterruptedException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                JenesisPanel.getInstance().getInstance().backToCharSelect();
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
             }
         }
 
@@ -215,7 +217,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().nowLoading();
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));

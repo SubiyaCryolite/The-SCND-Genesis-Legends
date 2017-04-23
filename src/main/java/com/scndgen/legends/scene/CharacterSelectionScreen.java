@@ -8,7 +8,6 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -47,7 +46,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     protected final int rows = numOfCharacters / columns;
     protected boolean canSelectCharacter;
     protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
-    protected boolean withinCharPanel;
     protected int storedX;
     protected int storedY;
 
@@ -162,23 +160,23 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     public int[] getAISlot() {
         int[] array = {};
         //when doing isWithinRange, all attacks
-        if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() >= 1.00) {
+        if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 1.00) {
             array = arr1;
         } //when doing isWithinRange, all attacks + 2 buffs
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() >= 0.75 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() < 1.00) {
+        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.75 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 1.00) {
             array = arr2;
         } //when doing isWithinRange, 4 attacks + 2 buffs
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() >= 0.50 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() < 0.75) {
+        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.50 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 0.75) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr3;
             }
         } //when doing isWithinRange, 4 buffs + 2 moves
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() >= 0.25 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOppMaxLife() < 0.50) {
+        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.25 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 0.50) {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr4;
@@ -186,7 +184,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
             if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                JenesisPanel.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
                 array = new int[]{0, 0, 0, 0};
             } else {
                 array = arr5;
@@ -260,7 +258,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
             RenderStoryMenu.getInstance().getStoryInstance().onAccept();
         }
-        JenesisPanel.getInstance().backToMenuScreen();
+        ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
         RenderGameplay.getInstance().closeAudio();
     }
 
@@ -778,7 +776,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                         e.printStackTrace(System.err);
                     }
                 }
-                while (JenesisPanel.getInstance().mode == Mode.CHAR_SELECT_SCREEN);
+                while (ScndGenLegends.getInstance().getSubMode() == SubMode.MAIN_MENU);
                 animatorThreadRunning = false;
             }
         }.start();
@@ -945,7 +943,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * Plays error sound
      */
     public void errorSound() {
-        error = new AudioPlayback("audio/error.mp3", false);
+        error = new AudioPlayback("audio/error.ogg", false);
         error.play();
         System.out.println("Error sound");
     }
@@ -1044,10 +1042,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         this.selectedOppIndex = selectedOppIndex;
     }
 
-    public boolean getWithinCharPanel() {
-        return withinCharPanel;
-    }
-
     public void keyPressed(KeyEvent ke) {
         KeyCode keyCode = ke.getCode();
         if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
@@ -1091,23 +1085,30 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
                 storedY = vIndex;
                 animateCaption();
             }
-            withinCharPanel = true;
+            validHover = true;
         } else {
             setHindex(99);
             setVindex(99);
-            withinCharPanel = false;
+            validHover = false;
         }
     }
 
-    public void mouseClicked(MouseEvent me) {
-        onAccept();
+    public void mouseClicked(MouseEvent mouseEvent) {
+        switch (mouseEvent.getButton()) {
+            case PRIMARY:
+                if (validHover)
+                    onAccept();
+                break;
+            case SECONDARY:
+                break;
+            case MIDDLE:
+                break;
+        }
     }
 
     public void onAccept() {
-        if (!RenderCharacterSelectionScreen.getInstance().getWithinCharPanel()) return;
         if (getCharacterSelected() && getOpponentSelected()) {
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                //JenesisPanel.getInstance().quickVibrate(0.6f, 1000);
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER_TAG) {
                     ScndGenLegends.getInstance().loadMode(Mode.STAGE_SELECT_SCREEN);
                     if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {

@@ -21,29 +21,29 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
-import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
-import com.scndgen.legends.render.*;
+import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderStageSelect;
+import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import io.github.subiyacryolite.enginev1.JenesisWindow;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseWheelEvent;
 import java.awt.image.VolatileImage;
 import java.net.InetAddress;
 
@@ -56,7 +56,6 @@ public class JenesisPanel extends Pane {
     public int hostTime;
     public boolean inStoryPane;
     public int item = 0, xyzStickDir;
-    public Mode mode = Mode.EMPTY;
     public OpponentAttacksOnline playerHost2, playerClient1;
     public CharacterAttacksOnline playerHost1, playerClient2;
     public String ServerName;
@@ -86,7 +85,6 @@ public class JenesisPanel extends Pane {
         instance = this;
         backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), false);
         backgroundMusic.play();
-        gameMode = subMode;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
         leftyXOffset = GameState.getInstance().getLogin().isLeftHanded() ? 548 : 0;
@@ -94,32 +92,7 @@ public class JenesisPanel extends Pane {
             client = new NetworkClient(GameState.getInstance().getLanHostIp());
         }
         RenderStageSelect.getInstance().newInstance();
-        switch (subMode) {
-            case LAN_HOST:
-                server = new NetworkServer();
-                server.start();
-                isWaiting = true;
-                lanHostWaitLobby = new LanHostWaitLobby();
-                setContentPane(lanHostWaitLobby);
-                break;
-            case STORY_MODE:
-                RenderStoryMenu.getInstance().newInstance();
-                inStoryPane = true;
-                this.mode = Mode.STORY_SELECT_SCREEN;
-                RenderStoryMenu.getInstance().newInstance();
-                setContentPane(RenderStoryMenu.getInstance());
-                break;
-            case SINGLE_PLAYER:
-                this.mode = Mode.CHAR_SELECT_SCREEN;
-                RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-                break;
-            case MAIN_MENU:
-                RenderMainMenu.getInstance().newInstance();
-                setContentPane(RenderMainMenu.getInstance());
-                break;
-        }
         RenderCharacterSelectionScreen.getInstance().newInstance();
-        setContentPane(RenderCharacterSelectionScreen.getInstance());
         if (gameMode == SubMode.LAN_CLIENT)
             client.sendData("player_QSLV");
         setPrefSize(852, 480);
@@ -164,49 +137,6 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Kinda obvious
-     */
-    public void stopMenuMusic() {
-        //bgMusclose();
-    }
-
-    /**
-     * Back to characterEnum select screen, when match is over
-     */
-    public void backToCharSelect() {
-        RenderCharacterSelectionScreen.getInstance().newInstance();
-        setContentPane(RenderCharacterSelectionScreen.getInstance());
-        mode = Mode.CHAR_SELECT_SCREEN;
-        RenderGameplay.getInstance().cleanAssets();
-        RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-        RenderCharacterSelectionScreen.getInstance().newInstance();
-        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
-        backgroundMusic.play();
-        focus();
-    }
-
-    /**
-     * Back to characterEnum select screen,, when match is cancelled
-     */
-    public void backToCharSelect2() {
-        GameInstance.getInstance().gamePaused = false;
-        GameInstance.getInstance().terminateGameplay();
-        RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-        RenderCharacterSelectionScreen.getInstance().newInstance();
-        setContentPane(RenderCharacterSelectionScreen.getInstance());
-        RenderGameplay.getInstance().cleanAssets();
-        RenderCharacterSelectionScreen.getInstance().primaryNotice("Canceled Match");
-        mode = Mode.CHAR_SELECT_SCREEN;
-        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), true);
-        backgroundMusic.play();
-        focus();
-        RenderStageSelect.getInstance().defaultStageValues();
-        if (getGameMode() == SubMode.STORY_MODE) {
-            RenderCharacterSelectionScreen.getInstance().backToMenu();
-        }
-    }
-
-    /**
      * Closes hosting NetworkServer
      */
     public void closeTheServer() {
@@ -222,24 +152,6 @@ public class JenesisPanel extends Pane {
         client.closeClient();
         System.out.println("Closed client");
         backToMenuScreen();
-    }
-
-    /**
-     * Cancels match
-     */
-    public void cancelMatch() {
-        int u = JOptionPane.showConfirmDialog(null, "Are you sure you wanna quit?", "Dude!?", JOptionPane.YES_NO_OPTION);
-        if (u == JOptionPane.YES_OPTION) {
-            if (getGameMode() == SubMode.STORY_MODE) {
-                RenderStoryMenu.getInstance().getStoryInstance().firstRun = true;
-            }
-            //unpause if match was paused
-            if (GameInstance.getInstance().gamePaused) {
-                onTogglePause();
-            }
-            RenderStageSelect.getInstance().setSelectedStage(false);
-            backToCharSelect2();
-        }
     }
 
     public SubMode getGameMode() {
@@ -287,137 +199,11 @@ public class JenesisPanel extends Pane {
         }
     }
 
-    /**
-     * Handles universal UI onBackCancel
-     */
-    private void onBackCancel() {
-        if (mode == Mode.CHAR_SELECT_SCREEN || mode == Mode.STORY_SELECT_SCREEN) {
-            if (getGameMode() == SubMode.SINGLE_PLAYER) {
-                RenderCharacterSelectionScreen.getInstance().newInstance();
-                RenderCharacterSelectionScreen.getInstance().backToMenu();
-            }
-        }
-        if (mode == Mode.STANDARD_GAMEPLAY_START) {
-            onTogglePause();
-        } else if (mode == Mode.STORY_SELECT_SCREEN && mode != Mode.STANDARD_GAMEPLAY_START) {
-            RenderStoryMenu.getInstance().backToMainMenu();
-        }
-    }
-
-    /**
-     * Global back
-     */
-    private void back() {
-        if (mode == Mode.CHAR_SELECT_SCREEN && getGameMode() == SubMode.SINGLE_PLAYER) {
-            RenderCharacterSelectionScreen.getInstance().newInstance();
-        } else if (mode == Mode.STANDARD_GAMEPLAY_START) {
-            RenderGameplay.getInstance().unQueMove();
-        }
-    }
-
-    public void triggerFury(CharacterState characterState) {
-        RenderGameplay.getInstance().triggerFury(characterState);
-    }
-
-    /**
-     * Universal trigger
-     */
-    private void trigger() {
-        if (mode == Mode.STANDARD_GAMEPLAY_START)
-            RenderGameplay.getInstance().attack();
-
-    }
-
     public void keyPressed(KeyEvent e) {
-        KeyCode keyCode = e.getCode();
-        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
-            up();
-        }
-        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-            down();
-        }
-        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
-            left();
-        }
-        if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
-            right();
-        }
-        if (keyCode == KeyCode.BACK_SPACE) {
-            back();
-        }
-        if (keyCode == KeyCode.ENTER) {
-            onAccept();
-        }
-        if (keyCode == KeyCode.ESCAPE) {
-            onBackCancel();
-        }
-        if (keyCode == KeyCode.F5) {
-            if (mode == Mode.STANDARD_GAMEPLAY_START) {
-                cancelMatch();
-            }
-        }
-        if (keyCode == KeyCode.F12) {
-            //screenshot
-        } else if (mode == Mode.STANDARD_GAMEPLAY_START) {
-            if (keyCode == KeyCode.L) {
-                triggerFury(CharacterState.CHARACTER);
-            }
-            if (keyCode == KeyCode.SPACE) {
-                trigger();
-            }
-        }
-    }
-
-    public void mouseWheelMoved(MouseWheelEvent mwe) {
-        if (mode == Mode.MAIN_MENU) {
-            int count = mwe.getWheelRotation();
-            if (count >= 0) {
-                RenderMainMenu.getInstance().onDown();
-            }
-            if (count < 0) {
-                RenderMainMenu.getInstance().onUp();
-            }
-        } else {
-            if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-                int count = mwe.getWheelRotation();
-                if (count >= 0) {
-                    RenderGameplay.getInstance().onLeft();
-                }
-                if (count < 0) {
-                    RenderGameplay.getInstance().onRight();
-                }
-            }
-        }
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        MouseButton mb = mouseEvent.getButton();
-        if (jenesisMode != null)
-            jenesisMode.mouseClicked(mouseEvent);
-        if (mode == Mode.STANDARD_GAMEPLAY_START) {
-            if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                    if (mouseEvent.getX() > (29 + leftyXOffset) && mouseEvent.getX() < (220 + leftyXOffset) && (mouseEvent.getY() > 358)) {
-                        RenderGameplay.getInstance().onAccept();
-                    }
-                    if (mouseEvent.getX() < (29 + leftyXOffset)) {
-                        RenderGameplay.getInstance().onLeft();
-                    }
-                    if (mouseEvent.getX() > (220 + leftyXOffset) && mouseEvent.getX() < (305 + leftyXOffset)) {
-                        RenderGameplay.getInstance().onRight();
-                    } else if ((mouseEvent.getX() > 25 && mouseEvent.getX() < 46) && (mouseEvent.getY() > 190 && mouseEvent.getY() < 270)) {
-                        triggerFury(CharacterState.CHARACTER);
-                    }
-                }
-                if (mouseEvent.getButton() == MouseButton.MIDDLE) {
-                    triggerFury(CharacterState.CHARACTER);
-                }
-                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    RenderGameplay.getInstance().unQueMove();
-                }
-            }
-        }
-        focus();
+
     }
 
     public void mouseEntered(MouseEvent m) {
@@ -486,9 +272,8 @@ public class JenesisPanel extends Pane {
                 isWaiting = false;
                 lanHostWaitLobby.stopRepaint();
                 RenderCharacterSelectionScreen.getInstance().newInstance();
-                setContentPane(RenderCharacterSelectionScreen.getInstance());
-                mode = Mode.CHAR_SELECT_SCREEN;//RenderCharacterSelectionScreen.getInstance().animCloud();
                 RenderCharacterSelectionScreen.getInstance().animateCharSelect();
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
                 break;
             }
         }
@@ -508,11 +293,5 @@ public class JenesisPanel extends Pane {
 
     public void sendToServer(String thisTxt) {
         client.sendData(thisTxt);
-    }
-
-    protected final RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //anti aliasing, kill jaggies
-
-    private void setContentPane(final JenesisMode mode) {
-        this.jenesisMode = mode;
     }
 }

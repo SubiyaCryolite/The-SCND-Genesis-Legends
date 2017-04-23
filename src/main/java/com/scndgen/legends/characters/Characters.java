@@ -305,7 +305,7 @@ public class Characters {
         RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
         RenderGameplay.getInstance().setOpponentHp(opponent.getLife());
-        RenderGameplay.getInstance().setOppMaxLife(opponent.getLife());
+        RenderGameplay.getInstance().setOpponentMaximumHp(opponent.getLife());
         opponent.setAiProf();
     }
 

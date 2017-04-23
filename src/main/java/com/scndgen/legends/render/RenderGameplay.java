@@ -148,7 +148,7 @@ public class RenderGameplay extends Gameplay {
             gc.setFont(notSelected);
             if (getCharacterHp() >= 0) {
                 drawStageBackground(gc);
-                drawStageCharacters(gc);
+                drawStageCharacters(gc, width, height);
                 drawStageForeground(gc);
                 drawDamageLayer(gc);
                 gc.setGlobalAlpha((1.0f));
@@ -251,12 +251,13 @@ public class RenderGameplay extends Gameplay {
         }
     }
 
-    private void drawStageCharacters(GraphicsContext gc) {
+    private void drawStageCharacters(GraphicsContext gc, double width, double height) {
         if (getAttacksChar().isOverlayDisabled()) {
             gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
         }
-        gc.drawImage(oppSprites[oppMeleeSpriteStatus], oppXcord + uiShakeEffectOffsetOpponent, oppYcord + uiShakeEffectOffsetOpponent);
+        gc.drawImage(oppSprites[oppMeleeSpriteStatus], oppXcord + uiShakeEffectOffsetCharacter, oppYcord + uiShakeEffectOffsetCharacter, width, height, width, 0, -width, height);
         if (!getAttacksChar().isOverlayDisabled()) {
+            //if character is attacking
             gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
         }
     }
@@ -838,7 +839,7 @@ public class RenderGameplay extends Gameplay {
         if (ambientMusic != null) {
             ambientMusic.stop();
         }
-        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".mp3", true);
+        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".ogg", true);
         ambientMusic.play();
     }
 

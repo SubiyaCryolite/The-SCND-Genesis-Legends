@@ -107,23 +107,25 @@ public class GameInstance implements Runnable {
                     count = count + speedFactor;
                 } else {
                     try {
-                        timeLimit = timeLimit - 1;
-                        timeStr = "" + timeLimit + "";
-                        count = 0.0f;
-                        if (timeStr.length() == 1) {
-                            time1 = 10;
-                            time2 = 10;
-                            time3 = Integer.parseInt("" + timeStr.charAt(0));
-                        }
-                        if (timeStr.length() == 2) {
-                            time1 = 10;
-                            time2 = Integer.parseInt("" + timeStr.charAt(0));
-                            time3 = Integer.parseInt("" + timeStr.charAt(1));
-                        }
-                        if (timeStr.length() == 3) {
-                            time1 = Integer.parseInt("" + timeStr.charAt(0));
-                            time2 = Integer.parseInt("" + timeStr.charAt(1));
-                            time3 = Integer.parseInt("" + timeStr.charAt(2));
+                        if (timeLimit < 999 && timeLimit > 0) {
+                            timeLimit = timeLimit - 1;
+                            timeStr = "" + timeLimit + "";
+                            count = 0.0f;
+                            if (timeStr.length() == 1) {
+                                time1 = 10;
+                                time2 = 10;
+                                time3 = Integer.parseInt("" + timeStr.charAt(0));
+                            }
+                            if (timeStr.length() == 2) {
+                                time1 = 10;
+                                time2 = Integer.parseInt("" + timeStr.charAt(0));
+                                time3 = Integer.parseInt("" + timeStr.charAt(1));
+                            }
+                            if (timeStr.length() == 3) {
+                                time1 = Integer.parseInt("" + timeStr.charAt(0));
+                                time2 = Integer.parseInt("" + timeStr.charAt(1));
+                                time3 = Integer.parseInt("" + timeStr.charAt(2));
+                            }
                         }
                     } catch (Exception nfe) {
                         nfe.printStackTrace(System.err);
@@ -336,9 +338,9 @@ public class GameInstance implements Runnable {
             ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
         } else {
             if (toCharacterSelect) {
-                JenesisPanel.getInstance().backToMenuScreen();
-            } else{
-                JenesisPanel.getInstance().backToCharSelect();
+                ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
+            } else {
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
             }
         }
     }

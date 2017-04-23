@@ -55,7 +55,6 @@ public abstract class StageSelect extends JenesisMode {
     protected final Hashtable<Integer, Stage> stageLookup = new Hashtable<>();
     protected final Hashtable<Stage, String> lookupStageNames = new Hashtable<>();
     protected final String[] stagePreviews = new String[Stage.values().length];
-    protected boolean withinCharPanel;
     protected int storedX;
     protected int storedY;
     protected String fgLocation;
@@ -575,10 +574,6 @@ public abstract class StageSelect extends JenesisMode {
         row = value;
     }
 
-    public boolean getWithinCharPanel() {
-        return withinCharPanel;
-    }
-
     /**
      * To make sure the caption is animated once,
      * this method checks if the selected caption has changed
@@ -700,7 +695,16 @@ public abstract class StageSelect extends JenesisMode {
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        onAccept();
+        switch (mouseEvent.getButton()) {
+            case PRIMARY:
+                if (validHover)
+                    onAccept();
+                break;
+            case MIDDLE:
+                break;
+            case SECONDARY:
+                break;
+        }
     }
 
     public void keyPressed(KeyEvent keyEvent) {
@@ -743,18 +747,21 @@ public abstract class StageSelect extends JenesisMode {
                 setRow(row);
                 setColumn(column);
                 animateCaption(row, column);
-                withinCharPanel = true;
+                validHover = true;
             } else {
                 RenderCharacterSelectionScreen.getInstance().setHindex(99);
                 RenderCharacterSelectionScreen.getInstance().setVindex(99);
-                withinCharPanel = false;
+                validHover = false;
             }
         }
     }
 
     public void onAccept() {
-        if (getWithinCharPanel()) {
-            selectStage(getHoveredStage());
-        }
+        selectStage(getHoveredStage());
+    }
+
+    public void onBackCancel()
+    {
+        //ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
     }
 }

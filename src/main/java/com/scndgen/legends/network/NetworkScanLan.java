@@ -21,7 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.windows.JenesisPanel;
 
 import javax.swing.*;
@@ -79,16 +78,28 @@ public class NetworkScanLan extends JFrame implements ActionListener {
         if (source == connect) {
             try {
                 //int v = list.getSelectedIndex();
-                LoginScreen.getInstance().setIP(txt.getText());
+                setIP(txt.getText());
                 System.out.println("Attempting to connect to : " + txt.getText());
                 Thread.sleep(0050);
-                LoginScreen.getInstance().getMenu().joinGame();
-                LoginScreen.getInstance().getMenu().terminateThis();
+                joinGame();
+                terminateThis();
                 frame.dispose();
             } catch (InterruptedException ex) {
                 Logger.getLogger(NetworkScanLan.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void terminateThis() {
+
+    }
+
+    private void joinGame() {
+
+    }
+
+    private void setIP(String text) {
+
     }
     /*
     private void IPOnly(String input)

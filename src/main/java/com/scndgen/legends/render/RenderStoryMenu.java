@@ -119,7 +119,7 @@ public class RenderStoryMenu extends StoryMenu {
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
         victorySound = new AudioPlayback(AudioPlayback.soundGameOver(), true);
-        menuSound = new AudioPlayback("audio/menu-select.mp3", true);
+        menuSound = new AudioPlayback("audio/menu-select.ogg", true);
         JenesisImageLoader imageLoader = new JenesisImageLoader();
         RenderStageSelect.getInstance().setSelectedStage(false);
         try {

@@ -29,7 +29,6 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
-import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import javafx.scene.input.MouseEvent;
 
@@ -190,7 +189,7 @@ public abstract class StoryMenu extends JenesisMode {
 
     public void back() {
         getStoryInstance().firstRun = true;
-        JenesisPanel.getInstance().backToMenuScreen();
+       ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
     }
 
     /**

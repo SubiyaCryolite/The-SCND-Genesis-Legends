@@ -31,7 +31,6 @@ import com.scndgen.legends.render.OverlayAchievementLocker;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
@@ -285,98 +284,117 @@ public abstract class MainMenu extends JenesisMode {
         loadAssets = true;
     }
 
-    public void keyPressed(KeyEvent ke) {
-        KeyCode keyCode = ke.getCode();
-        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
-            onUp();
+    public void keyPressed(KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        switch (keyCode) {
+            case ENTER:
+                onAccept();
+                break;
+            case UP:
+            case W:
+                onUp();
+                break;
+            case DOWN:
+            case S:
+                onDown();
+                break;
+            case LEFT:
+            case A:
+                onLeft();
+                break;
+            case RIGHT:
+            case D:
+                onRight();
+                break;
+            case DIGIT1:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(0);
+                break;
+            case DIGIT2:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(3);
+                break;
+            case DIGIT3:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(11);
+                break;
+            case DIGIT4:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(20);
+                break;
+            case DIGIT5:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(27);
+                break;
+            case DIGIT6:
+                if (getOverlay() == Overlay.TUTORIAL)
+                    sktpToTut(32);
+                break;
+            case F:
+                provideFeedback('f');
+                break;
+            case B:
+                provideFeedback('b');
+                break;
+            case L:
+                provideFeedback('l');
+                break;
         }
-        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-            onDown();
-        }
-        if (keyCode == KeyCode.RIGHT) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                advanceTutorial();
-        }
-        if (keyCode == KeyCode.LEFT) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                reverseTutorial();
-        }
-        if (keyCode == KeyCode.DIGIT1) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(0);
-        }
-        if (keyCode == KeyCode.DIGIT2) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(3);
-        }
-        if (keyCode == KeyCode.DIGIT3) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(11);
-        }
-        if (keyCode == KeyCode.DIGIT4) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(20);
-        }
-        if (keyCode == KeyCode.DIGIT5) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(27);
-        }
-        if (keyCode == KeyCode.DIGIT6) {
-            if (getOverlay() == Overlay.TUTORIAL)
-                sktpToTut(32);
-        }
-        if (keyCode == KeyCode.F) {
-            provideFeedback('f');
-        }
-        if (keyCode == KeyCode.B) {
-            provideFeedback('b');
-        }
-        if (keyCode == KeyCode.L) {
-            provideFeedback('l');
-        }
+    }
+
+    public void onRight() {
+        if (getOverlay() == Overlay.TUTORIAL)
+            advanceTutorial();
+    }
+
+    public void onLeft() {
+        if (getOverlay() == Overlay.TUTORIAL)
+            reverseTutorial();
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        int x = getXMenu();
-        int y = getYMenu() - 14;
-        int space = getSpacer();
-        if (getOverlay() == Overlay.TUTORIAL) {
-            if (mouseEvent.getX() >= 425) {
-                advanceTutorial();
-            } else {
-                reverseTutorial();
-            }
-        } else if ((mouseEvent.getY() > y) && (mouseEvent.getY() < (y + (space * 13))) && mouseEvent.getX() > x) {
-            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                SubMode destination = getMenuModeStr();
-                ScndGenLegends.getInstance().setSubMode(destination);
-                if (destination == SubMode.LAN_HOST) {
-                    primaryNotice(Language.getInstance().get(107));
-                    ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-                } else if (destination == SubMode.SINGLE_PLAYER) {
-                    primaryNotice(Language.getInstance().get(108));
-                    ScndGenLegends.getInstance().setSubMode(destination);
-                    ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-                } else if (destination == SubMode.STORY_MODE) {
-                    ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
-                } else if (destination == SubMode.STATS) {
-                    setOverlay(Overlay.STATISTICS);
-                } else if (destination == SubMode.ACH) {
-                    refreshStats();
-                    setOverlay(Overlay.ACHIEVEMENTS);
-                } else if (destination == SubMode.TUTORIAL) {
-                    setOverlay(Overlay.TUTORIAL);
-                    startTut();
-                }
+        if (validHover) {
+            switch (mouseEvent.getButton()) {
+                case PRIMARY:
+                    onAccept();
+                    break;
+                case SECONDARY:
+                    onBackCancel();
+                    break;
             }
         }
     }
 
+    public void onAccept() {
+        SubMode destination = getMenuModeStr();
+        ScndGenLegends.getInstance().setSubMode(destination);
+        if (destination == SubMode.LAN_HOST) {
+            primaryNotice(Language.getInstance().get(107));
+            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+        } else if (destination == SubMode.SINGLE_PLAYER) {
+            primaryNotice(Language.getInstance().get(108));
+            ScndGenLegends.getInstance().setSubMode(destination);
+            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+        } else if (destination == SubMode.STORY_MODE) {
+            ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
+        } else if (destination == SubMode.STATS) {
+            setOverlay(Overlay.STATISTICS);
+        } else if (destination == SubMode.ACH) {
+            refreshStats();
+            setOverlay(Overlay.ACHIEVEMENTS);
+        } else if (destination == SubMode.TUTORIAL) {
+            setOverlay(Overlay.TUTORIAL);
+            startTut();
+        }
+    }
+
+
     public void mouseMoved(final MouseEvent mouseEvent) {
         int x = getXMenu();
-        int y = getYMenu() - 14;
+        int y = getYMenu();
         int space = getSpacer() - 2;
         if ((mouseEvent.getX() > x) && (mouseEvent.getX() < x + 200)) {
+            validHover = true;
             if ((mouseEvent.getY() > space) && (mouseEvent.getY() < (y + space)))
                 setMenuPos(0);
             if ((mouseEvent.getY() > (y + (space * 1))) && (mouseEvent.getY() < (y + (space * 2))))
@@ -403,6 +421,8 @@ public abstract class MainMenu extends JenesisMode {
                 setMenuPos(11);
             if ((mouseEvent.getY() > (y + (space * 13))) && (mouseEvent.getY() < (y + (space * 13))))
                 setMenuPos(12);
+        } else {
+            validHover = false;
         }
     }
 
