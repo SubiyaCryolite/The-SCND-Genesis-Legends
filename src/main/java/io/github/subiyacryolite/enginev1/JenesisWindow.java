@@ -87,7 +87,7 @@ public class JenesisWindow {
      * Select option in menu
      */
     private void select() {
-        //if viewing STATS, go back to menu
+        //if viewing STATS, go onBackCancel to menu
         if (RenderMainMenu.getInstance().getOverlay() == Overlay.STATISTICS || RenderMainMenu.getInstance().getOverlay() == Overlay.ACHIEVEMENTS || RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
             if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
                 RenderMainMenu.getInstance().stopTutorial();

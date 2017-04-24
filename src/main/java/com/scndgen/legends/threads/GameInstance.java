@@ -32,7 +32,6 @@ import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisOverlay;
@@ -326,22 +325,10 @@ public class GameInstance implements Runnable {
         GameState.getInstance().saveConfigFile();
         JenesisOverlay.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE && RenderStoryMenu.getInstance().moreStages()) {
-            //nextStage if you've won
-            if (RenderGameplay.getInstance().hasWon()) {
-                RenderStoryMenu.getInstance().incrementMode();
-                winMusic.play();
-            } else {
-                loseMusic.play();
-            }
-            RenderStoryMenu.getInstance().storyProcceed();
-            ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
+        if (toCharacterSelect) {
+            ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
         } else {
-            if (toCharacterSelect) {
-                ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
-            } else {
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-            }
+            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
         }
     }
 

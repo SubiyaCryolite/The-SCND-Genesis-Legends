@@ -27,7 +27,6 @@ import com.scndgen.legends.render.RenderGameplay;
 
 public abstract class Attack {
 
-    public boolean overlayEnabled;
     public String attackStr;
     public String attackIdentifier = "00";
     public int overlay = 0;
@@ -109,12 +108,7 @@ public abstract class Attack {
      *
      */
     public void doThis(CharacterState attack, CharacterState target) {
-        if (attack == CharacterState.CHARACTER) {
-            CharacterOverlayDisabled();
-        } else {
-            CharacterOverlayEnabled();
-        }
-
+            RenderGameplay.getInstance().isCharacterAttacking(attack == CharacterState.CHARACTER);
         if (target == CharacterState.SELF) {
             RenderGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
         } else {
@@ -126,40 +120,6 @@ public abstract class Attack {
             RenderGameplay.getInstance().setSprites(attack, this.attack, 11); //attack
             RenderGameplay.getInstance().setSprites(target, 0, 11); //defend
         }
-    }
-
-    //------------------------------NEW CLEANY STUFF-----------------------
-
-    /**
-     * Checks if overlay is disabled
-     *
-     * @return overlay status
-     */
-    public boolean isOverlayDisabled() {
-        return overlayEnabled;
-    }
-
-    /**
-     * Checks if overlay is enabled
-     *
-     * @return overlay status
-     */
-    public boolean isOverlayEnabled() {
-        return overlayEnabled;
-    }
-
-    /**
-     * Disable the characterEnum overlay
-     */
-    public void CharacterOverlayDisabled() {
-        overlayEnabled = false;
-    }
-
-    /**
-     * Enable characterEnum overlay
-     */
-    public void CharacterOverlayEnabled() {
-        overlayEnabled = true;
     }
 
     /**

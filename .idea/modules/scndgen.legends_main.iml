@@ -9,17 +9,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.36" level="project" />
     <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Gradle: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="library" name="Gradle: javazoom:jlayer:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.xerial:sqlite-jdbc:3.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput:2.0.6" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jutils:jutils:1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-linux:2.0.6" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-windows:2.0.6" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-osx:2.0.6" level="project" />
     <orderEntry type="library" name="Gradle: io.github.subiyacryolite:jds:1.170414" level="project" />
-    <orderEntry type="library" name="com.googlecode.soundlibs:vorbisspi:1.0.3.3" level="project" />
   </component>
 </module>

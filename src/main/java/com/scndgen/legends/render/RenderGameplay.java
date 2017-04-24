@@ -56,7 +56,6 @@ public class RenderGameplay extends Gameplay {
     private Animations3 animations3;
     private Font largeFont, normalFont;
     private Font notSelected;
-    private Image stat1, stat2, stat3, stat4;
     private Image particlesLayer1, particlesLayer2, foreGround;
     private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
@@ -66,8 +65,7 @@ public class RenderGameplay extends Gameplay {
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
     private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
     private Image[] charSprites, oppSprites;
-    private Image[] attackAnim2, attackAnim1;
-    private Image[] storyPicArr, stats;
+    private Image[] storyPicArr;
     private Image characterPortrait, storyPic;
     private Color currentColor = Color.RED;
 
@@ -196,7 +194,7 @@ public class RenderGameplay extends Gameplay {
                 gc.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 gc.setFill(Color.WHITE);
                 gc.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
-                gc.setGlobalAlpha((10 * 0.1f)); //op back to normal for other drawings
+                gc.setGlobalAlpha((10 * 0.1f)); //op onBackCancel to normal for other drawings
             }
 
             drawTimer(gc);
@@ -252,14 +250,11 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawStageCharacters(GraphicsContext gc, double width, double height) {
-        if (getAttacksChar().isOverlayDisabled()) {
+        if (!isCharacterAttacking)
             gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
-        }
         gc.drawImage(oppSprites[oppMeleeSpriteStatus], oppXcord + uiShakeEffectOffsetCharacter, oppYcord + uiShakeEffectOffsetCharacter, width, height, width, 0, -width, height);
-        if (!getAttacksChar().isOverlayDisabled()) {
-            //if character is attacking
+        if (isCharacterAttacking)
             gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
-        }
     }
 
     private void drawStageForeground(GraphicsContext gc) {
@@ -618,7 +613,6 @@ public class RenderGameplay extends Gameplay {
             //stat2 = imageLoader.loadImage("images/stats/stat2.png", 90, 24);
             //stat3 = imageLoader.loadImage("images/stats/stat3.png", 90, 24);
             //stat4 = imageLoader.loadImage("images/stats/stat4.png", 90, 24);
-            stats = new Image[]{stat1, stat2, stat3, stat4};
             hud1 = imageLoader.loadImage("images/hud1.png");
             hud2 = imageLoader.loadImage("images/hud2.png");
             win = imageLoader.loadImage("images/win.png");

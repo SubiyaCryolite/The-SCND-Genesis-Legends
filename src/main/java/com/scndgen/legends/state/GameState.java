@@ -26,7 +26,7 @@ public class GameState extends JdsEntity {
     private boolean newAccount;
     private String lanHostIp;
 
-    protected GameState() {
+    public GameState() {
         instance = this;
         map(LoginState.class, loginStates);
     }

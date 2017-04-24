@@ -4,12 +4,12 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
@@ -247,7 +247,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     }
 
     /**
-     * Goes back to main menu
+     * Goes onBackCancel to main menu
      */
     public void backToMenu() {
         newInstance();
@@ -256,7 +256,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
         } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             JenesisPanel.getInstance().closeTheClient();
         } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-            RenderStoryMenu.getInstance().getStoryInstance().onAccept();
+            StoryMode.getInstance().onAccept();
         }
         ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
         RenderGameplay.getInstance().closeAudio();
@@ -797,7 +797,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * CharacterEnum select screen, move down
      */
     public void onDown() {
-        if (rowIndex < rows)
+        if (rowIndex < rows - 1)
             rowIndex += 1;
         else
             rowIndex = 0;
@@ -808,7 +808,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      * CharacterEnum select screen, move right
      */
     public void onRight() {
-        if (columnIndex < columns)
+        if (columnIndex < columns - 1)
             columnIndex += 1;
         else
             columnIndex = 0;

@@ -94,7 +94,7 @@ public class OverlayAchievementLocker {
         screen.setFill(Color.BLACK);
         screen.fillRect(0, 0, w, h); //54+lines x 14
 
-        //back to full opacity
+        //onBackCancel to full opacity
         screen.setGlobalAlpha((10 * 0.1F));
         screen.setFill(Color.WHITE);
         screen.setFont(font2);

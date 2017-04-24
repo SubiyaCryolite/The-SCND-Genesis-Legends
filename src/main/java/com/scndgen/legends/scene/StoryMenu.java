@@ -30,6 +30,8 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisMode;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import javax.swing.*;
@@ -45,7 +47,6 @@ public abstract class StoryMenu extends JenesisMode {
     protected boolean loadingNow;
     protected int currentScene = GameState.getInstance().getLogin().getLastStoryScene();
     protected int storedX = 99, storedY = 99;
-    protected boolean withinMenuPanel;
     protected AudioPlayback victorySound;
     protected AudioPlayback menuSound;
 
@@ -68,10 +69,6 @@ public abstract class StoryMenu extends JenesisMode {
         loadAssets = true;
         StoryMode.getInstance().newInstance();
         opacity = 1.0f;
-    }
-
-    public StoryMode getStoryInstance() {
-        return StoryMode.getInstance();
     }
 
 
@@ -183,13 +180,8 @@ public abstract class StoryMenu extends JenesisMode {
         capAnim();
     }
 
-    public void storyProcceed() {
-        getStoryInstance().story(hoveredStoryIndex, true);
-    }
-
-    public void back() {
-        getStoryInstance().firstRun = true;
-       ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
+    public void onBackCancel() {
+        ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
     }
 
     /**
@@ -197,10 +189,6 @@ public abstract class StoryMenu extends JenesisMode {
      */
     public void resetCurrentStage() {
         currentScene = GameState.getInstance().getLogin().getLastStoryScene();
-    }
-
-    public void backToMainMenu() {
-        back();
     }
 
     /**
@@ -212,21 +200,6 @@ public abstract class StoryMenu extends JenesisMode {
         return currentScene;
     }
 
-    /**
-     * When you wins a match, move to the next level
-     */
-    public void incrementMode() {
-        if (currentScene < StoryMode.getInstance().max) {
-            currentScene = currentScene + 1;
-
-            //dont mess up progress
-            //if the player has advanced
-            //and theres still more stages
-            if (currentScene > currentScene) {
-                GameState.getInstance().getLogin().setLastStoryScene(currentScene);
-            }
-        }
-    }
 
     /**
      * Get the storyboard size for the characterEnum
@@ -237,22 +210,6 @@ public abstract class StoryMenu extends JenesisMode {
         return StoryMode.getInstance().max;
     }
 
-
-    public void startGame(int mode) {
-        if (unlockedStage[mode]) {
-            if (hoveredStoryIndex < StoryMode.getInstance().max + 1) {
-                hoveredStoryIndex = mode;
-            } else {
-                hoveredStoryIndex = mode - 1;
-            }
-
-            getStoryInstance().story(hoveredStoryIndex, false);
-            {
-                loadingNow = true;
-                storyProcceed();
-            }
-        }
-    }
 
     /**
      * Sets the story
@@ -329,11 +286,11 @@ public abstract class StoryMenu extends JenesisMode {
                 setHindex(hIndex);
                 setVindex(vIndex);
                 animateCap2x(hIndex, vIndex);
-                withinMenuPanel = true;
+                validHover = true;
             } else {
                 setHindex(99);
                 setVindex(99);
-                withinMenuPanel = false;
+                validHover = false;
             }
         }
     }
@@ -359,11 +316,6 @@ public abstract class StoryMenu extends JenesisMode {
         }
     }
 
-    public boolean getWithinMenuPanel() {
-        return withinMenuPanel;
-    }
-
-
     /**
      * Are there more stages?????
      *
@@ -379,7 +331,7 @@ public abstract class StoryMenu extends JenesisMode {
         } //if won last 'final' match
         else if (RenderGameplay.getInstance().hasWon()) {
             //incrementMode();
-            //go back to user difficulty
+            //go onBackCancel to user difficulty
             GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficulty());
             victorySound.play();
             JOptionPane.showMessageDialog(null, Language.getInstance().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
@@ -390,19 +342,56 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void selectScene() {
-        for (int i = 0; i <= StoryMode.getInstance().max; i++) {
-            if (hoveredStoryIndex == i) {
-                startGame(i);
-                menuSound.play();
-                break;
-            }
+        StoryMode.getInstance().setCurrentScene(validIndex(hoveredStoryIndex));
+        StoryMode.getInstance().startGame();
+        menuSound.play();
+    }
+
+    private int validIndex(int hoveredStoryIndex) {
+        for (int index = hoveredStoryIndex; index > 0; index--) {
+            if (unlockedStage[index])
+                return hoveredStoryIndex;
         }
+        return 0;
     }
 
 
     public void mouseClicked(MouseEvent me) {
-        if (!withinMenuPanel) return;
-        selectScene();
+        switch (me.getButton()) {
+            case PRIMARY:
+                if (validHover)
+                    onAccept();
+                break;
+        }
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        switch (keyCode) {
+            case ENTER:
+                onAccept();
+                break;
+            case ESCAPE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
+            case UP:
+            case W:
+                onUp();
+                break;
+            case DOWN:
+            case S:
+                onDown();
+                break;
+            case LEFT:
+            case A:
+                onLeft();
+                break;
+            case RIGHT:
+            case D:
+                onRight();
+                break;
+        }
     }
 
     public void onAccept() {

@@ -23,6 +23,8 @@ package com.scndgen.legends.controller;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
@@ -92,6 +94,7 @@ public class Tutorial implements Runnable {
         if (bgSound != null) {
             bgSound.stop();
         }
+        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
     }
 
     public void backTut() {

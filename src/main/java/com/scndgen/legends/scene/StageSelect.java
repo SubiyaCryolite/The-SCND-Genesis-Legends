@@ -341,7 +341,7 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().animLoops = 20;
         RenderGameplay.getInstance().animDirection = "rot";
         RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().animLayer = "onBackCancel";
         RenderGameplay.getInstance().delay = 25;
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
@@ -374,7 +374,7 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().animLoops = 20;
         RenderGameplay.getInstance().animDirection = "rot";
         RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().animLayer = "onBackCancel";
         RenderGameplay.getInstance().delay = 25;
         RenderGameplay.getInstance().ambSpeed1 = 1;
         RenderGameplay.getInstance().ambSpeed2 = 2;
@@ -425,7 +425,7 @@ public abstract class StageSelect extends JenesisMode {
         RenderGameplay.getInstance().animLoops = 20;
         RenderGameplay.getInstance().animDirection = "none";
         RenderGameplay.getInstance().verticalMove = "no";
-        RenderGameplay.getInstance().animLayer = "back";
+        RenderGameplay.getInstance().animLayer = "onBackCancel";
         RenderGameplay.getInstance().delay = 122;
         RenderGameplay.getInstance().ambSpeed1 = 2;
         RenderGameplay.getInstance().ambSpeed2 = 1;
@@ -610,7 +610,7 @@ public abstract class StageSelect extends JenesisMode {
      * Move down
      */
     public void onDown() {
-        if (row < rows)
+        if (row < rows-1)
             row = row + 1;
         else
             row = 0;
@@ -621,7 +621,7 @@ public abstract class StageSelect extends JenesisMode {
      * Move right
      */
     public void onRight() {
-        if (column < columns)
+        if (column < columns-1)
             column += 1;
         else
             column = 0;

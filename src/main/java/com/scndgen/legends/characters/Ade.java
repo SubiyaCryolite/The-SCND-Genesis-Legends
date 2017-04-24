@@ -33,7 +33,7 @@ public class Ade extends Character {
     public Ade() {
         descSmall = "Ade - a fighter utilising the air element";
         name = "Ade";
-        bragRights = new String[]{"Be gone", "Weakling", "Pathetic", "Is this a joke", "Not you again", "Lets do this", "You have more sense than you're brother, give up now", "I won't hold back", "It's an honour to face you in this form", "Your title doesn't scare achievements, I'll still destroy you", "Sorrowe, don't get big headed", "This is it?"};
+        bragRights = new String[]{"Be gone", "Weakling", "Pathetic", "Is this a joke", "Not you again", "Lets do this", "You have more sense than you're brother, give up now", "I won't hold onBackCancel", "It's an honour to face you in this form", "Your title doesn't scare achievements, I'll still destroy you", "Sorrowe, don't get big headed", "This is it?"};
         physical = new String[]{"Tornado Blast", "Hurricane Sphere", "Hurricane Barrage", "Violent Burst"};
         celestia = new String[]{"Crush Down", "Vortex Blades", "Cursed Seal", "Dark Swirl"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Wound Spray"};

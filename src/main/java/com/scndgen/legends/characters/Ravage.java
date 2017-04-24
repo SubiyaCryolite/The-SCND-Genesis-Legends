@@ -39,7 +39,7 @@ public class Ravage extends Character {
         characterEnum = RAVAGE;
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};
-        bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold back NovaAdam", "Goodie, no holding back, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
+        bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold onBackCancel NovaAdam", "Goodie, no holding onBackCancel, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
         physical = new String[]{"Strike", "Impale", "Stone Summon", "Deadly Snare"};
         celestia = new String[]{"Siezmic Slam", "Fist-Full", "Quake", "Boulder Rush"};
         status = new String[]{"Heal Plus", "Heal EX", "Energy Juice", "Weaken Opponent"};

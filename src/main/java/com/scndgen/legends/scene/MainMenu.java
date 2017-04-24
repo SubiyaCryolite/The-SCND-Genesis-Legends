@@ -290,6 +290,10 @@ public abstract class MainMenu extends JenesisMode {
             case ENTER:
                 onAccept();
                 break;
+            case ESCAPE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
             case UP:
             case W:
                 onUp();
@@ -342,6 +346,11 @@ public abstract class MainMenu extends JenesisMode {
         }
     }
 
+    public void onBackCancel() {
+        if (getOverlay() == Overlay.TUTORIAL)
+            tutorial.stopTut();
+    }
+
     public void onRight() {
         if (getOverlay() == Overlay.TUTORIAL)
             advanceTutorial();
@@ -366,25 +375,29 @@ public abstract class MainMenu extends JenesisMode {
     }
 
     public void onAccept() {
-        SubMode destination = getMenuModeStr();
-        ScndGenLegends.getInstance().setSubMode(destination);
-        if (destination == SubMode.LAN_HOST) {
-            primaryNotice(Language.getInstance().get(107));
-            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-        } else if (destination == SubMode.SINGLE_PLAYER) {
-            primaryNotice(Language.getInstance().get(108));
+        if (getOverlay() == Overlay.TUTORIAL) {
+            advanceTutorial();
+        } else {
+            SubMode destination = getMenuModeStr();
             ScndGenLegends.getInstance().setSubMode(destination);
-            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-        } else if (destination == SubMode.STORY_MODE) {
-            ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
-        } else if (destination == SubMode.STATS) {
-            setOverlay(Overlay.STATISTICS);
-        } else if (destination == SubMode.ACH) {
-            refreshStats();
-            setOverlay(Overlay.ACHIEVEMENTS);
-        } else if (destination == SubMode.TUTORIAL) {
-            setOverlay(Overlay.TUTORIAL);
-            startTut();
+            if (destination == SubMode.LAN_HOST) {
+                primaryNotice(Language.getInstance().get(107));
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            } else if (destination == SubMode.SINGLE_PLAYER) {
+                primaryNotice(Language.getInstance().get(108));
+                ScndGenLegends.getInstance().setSubMode(destination);
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            } else if (destination == SubMode.STORY_MODE) {
+                ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
+            } else if (destination == SubMode.STATS) {
+                setOverlay(Overlay.STATISTICS);
+            } else if (destination == SubMode.ACH) {
+                refreshStats();
+                setOverlay(Overlay.ACHIEVEMENTS);
+            } else if (destination == SubMode.TUTORIAL) {
+                setOverlay(Overlay.TUTORIAL);
+                startTut();
+            }
         }
     }
 

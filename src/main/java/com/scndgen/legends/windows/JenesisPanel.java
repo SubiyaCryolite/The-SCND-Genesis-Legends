@@ -22,6 +22,7 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
@@ -32,7 +33,6 @@ import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
@@ -127,7 +127,7 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Goes back to main menu
+     * Goes onBackCancel to main menu
      */
     public void backToMenuScreen() {
         JenesisWindow.getInstance().showModes();
@@ -244,13 +244,13 @@ public class JenesisPanel extends Pane {
                 GameInstance.getInstance().pauseGame();
                 RenderGameplay.getInstance().pauseThreads();
                 if (GameInstance.getInstance().storySequence == true) {
-                    RenderStoryMenu.getInstance().getStoryInstance().pauseDialogue();
+                    StoryMode.getInstance().pauseDialogue();
                 }
             } else {
                 RenderGameplay.getInstance().start();
                 RenderGameplay.getInstance().resumeThreads();
                 if (GameInstance.getInstance().storySequence == true) {
-                    RenderStoryMenu.getInstance().getStoryInstance().resumeDialogue();
+                    StoryMode.getInstance().resumeDialogue();
                 }
             }
         }

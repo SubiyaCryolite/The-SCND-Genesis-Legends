@@ -21,31 +21,26 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
-import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
 
 public class OpponentAttacks implements Runnable {
 
-    public int taskRun = 0, range;
-    public char feeCol;
-    public boolean isRunning = false;
+    public int attackRange;
     private Thread timer;
-    private int[] aiMoves;
+    private int[] aiQueuedAttacks;
 
     public OpponentAttacks() {
-        timer = new Thread(this);
-        timer.setName("Opponent attacking thread");
+
     }
 
     public void attack() {
-        if (timer.isAlive()) {
-            timer.resume();
-        } else {
-            timer.start();
-        }
+        timer = new Thread(this);
+        timer.setName("Opponent attacking thread");
+        timer.start();
     }
 
     @Override
@@ -64,17 +59,15 @@ public class OpponentAttacks implements Runnable {
     }
 
     private void executingTheCommandsAI() {
-        aiMoves = RenderCharacterSelectionScreen.getInstance().getAISlot();
-        range = aiMoves.length - 1;
+        aiQueuedAttacks = RenderCharacterSelectionScreen.getInstance().getAISlot();
+        attackRange = aiQueuedAttacks.length - 1;
         if (GameInstance.getInstance().gameOver == false) {
             for (int o = 0; o < ((GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyDynamic()) / GameState.DIFFICULTY_SCALE); o++) {
                 //fix story scene bug
                 if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().gameOver == false) {
-                    RenderGameplay.getInstance().getAttacksChar().CharacterOverlayDisabled();
-                    RenderGameplay.getInstance().getAttackOpponent().attack(aiMoves[Math.round(Math.round(Math.random() * range))], CharacterState.OPPONENT, CharacterState.CHARACTER);
+                    RenderGameplay.getInstance().getAttackOpponent().attack(aiQueuedAttacks[Math.round(Math.round(Math.random() * attackRange))], CharacterState.OPPONENT, CharacterState.CHARACTER);
                     RenderGameplay.getInstance().shakeCharacterLifeBar();
                     RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
-                    RenderGameplay.getInstance().getAttacksChar().CharacterOverlayEnabled();
                 }
             }
         }

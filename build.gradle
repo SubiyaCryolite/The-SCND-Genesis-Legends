@@ -15,15 +15,10 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/com.googlecode.soundlibs/vorbisspi
-    compile group: 'com.googlecode.soundlibs', name: 'vorbisspi', version: '1.0.3.3'
-    compile 'mysql:mysql-connector-java:5.1.36'
     compile 'io.github.subiyacryolite:jds:1.170414'
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-lang:commons-lang:2.6'
-    runtime 'net.java.jinput:jinput-platform:2.0.6'
-    compile 'javazoom:jlayer:1.0.1'
     compile 'org.xerial:sqlite-jdbc:3.7.2'
-    compile 'net.java.jinput:jinput:2.0.6'
     testCompile 'junit:junit:4.11'
 }
 

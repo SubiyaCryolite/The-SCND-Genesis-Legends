@@ -27,6 +27,7 @@ import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Stage;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
@@ -35,9 +36,6 @@ import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author ndana
  */
@@ -45,13 +43,13 @@ public class StoryMode implements Runnable {
     //mp3
 
     private static StoryMode instance;
-    public boolean notAsked, firstRun = true, doneShowingText = false;
+    public boolean notAsked, doneShowingText = false;
     public String stat = "";
     public final int max = 11;
     public int time;
     private AudioPlayback storyMus;
     private String storyText;
-    private int opt, tlkSpeed, sceneId;
+    private int opt, tlkSpeed, currentScene;
     //thread
     private Thread thread;
 
@@ -59,7 +57,7 @@ public class StoryMode implements Runnable {
         stat = "";
         time = 181;
         storyText = "";
-        sceneId = 0;
+        currentScene = 0;
     }
 
     public static synchronized StoryMode getInstance() {
@@ -72,10 +70,7 @@ public class StoryMode implements Runnable {
         instance = new StoryMode();
     }
 
-    public void story(int scene, boolean start) {
-        thread = new Thread(this);
-        thread.setName("story scene thread");
-        thread.setPriority(5);
+    public void story(int scene) {
         storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
         tlkSpeed = GameState.getInstance().getLogin().getTxtSpeed();
         notAsked = true;
@@ -169,14 +164,14 @@ public class StoryMode implements Runnable {
                 RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }
-        if (start) {
-            startStoryMode(scene);
-        }
+        startStoryMode(scene);
     }
 
     public void startStoryMode(int x) {
         RenderGameplay.getInstance().newInstance();
-        sceneId = x;
+        currentScene = x;
+        thread = new Thread(this);
+        thread.setName("story scene thread");
         thread.start();
     }
 
@@ -198,7 +193,7 @@ public class StoryMode implements Runnable {
             GameInstance.getInstance().musNotice();
         }
         RenderGameplay.getInstance().charPortBlank();
-        RenderGameplay.getInstance().flashyText("");
+        RenderGameplay.getInstance().storyText("");
         thread.stop();
         GameInstance.getInstance().storySequence = false;
         doneShowingText = true;
@@ -211,49 +206,48 @@ public class StoryMode implements Runnable {
         try {
             System.out.println("Stage " + RenderStoryMenu.getInstance().getStage());
             ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
+            ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
             storyIn();
-            firstRun = false;
-
-            if (sceneId == 0) //scene 1
+            if (currentScene == 0) //scene 1
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(0);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(174));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(174));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(175));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(175));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(176));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(176));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().changeStoryBoard(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(177));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(177));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(178));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(178));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(179));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(179));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(372));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(372));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1); //sub               
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(180));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(180));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4); //rav                
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(181));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(181));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1); //sub
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(182));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(182));
                 thread.sleep(storyText.length() * tlkSpeed);
                 RenderGameplay.getInstance().charPortBlank();
 
@@ -261,525 +255,456 @@ public class StoryMode implements Runnable {
                 storyOut(false);
             }
 
-            if (sceneId == 1) //scene 2
+            if (currentScene == 1) //scene 2
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(1);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(183));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(183));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(184));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(184));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(185));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(185));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().changeStoryBoard(2);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(186));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(186));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(187));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(187));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(146));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(146));
 
                 storyOut(false);
             }
 
-            if (sceneId == 2) //scene 3
+            if (currentScene == 2) //scene 3
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(2);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2); //lynx
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(188));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(188));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0); //raila                
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(189));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(189));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2); //lynx
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(190) + " .......");
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(190) + " .......");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3); //aisha
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(191));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(191));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(192));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(192));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(193));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(193));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(194));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(194));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(195));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(195));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(196));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(196));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(197));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(197));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(198));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(198));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().changeStoryBoard(3);
                 RenderGameplay.getInstance().charPortBlank();
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(199));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(199));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(200));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(200));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                ;
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(201));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(201));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3);
-                storyText = Language.getInstance().get(202);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(202));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                storyText = Language.getInstance().get(203);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(203));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(3);
-                storyText = Language.getInstance().get(204);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(204));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                storyText = Language.getInstance().get(205);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(205));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 3) //scene 4
+            if (currentScene == 3) //scene 4
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(3);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(206));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(206));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(207));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(207));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(208);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(208));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().changeStoryBoard(5);
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(209));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(209));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(210));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(210));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(211));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(211));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(212));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(212));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(213));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(213));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(214));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(214));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(215));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(215));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(216));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(216));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(203));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(203));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                RenderGameplay.getInstance().flashyText(storyText = Language.getInstance().get(217));
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(217));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 4) //scene 5
+            if (currentScene == 4) //scene 5
             {
                 thread.sleep(5000);
-                RenderGameplay.getInstance().changeStoryBoard(5);
 
-                storyText = Language.getInstance().get(218) + " .......";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().changeStoryBoard(5);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(218) + " .......");
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                storyText = Language.getInstance().get(219);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(219));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5); //ade
-                storyText = Language.getInstance().get(220);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(220));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10); //sorrowe
-                storyText = Language.getInstance().get(221);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(221));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5); //ade
-                storyText = Language.getInstance().get(222);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(222));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4); //ravage
-                storyText = Language.getInstance().get(223);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(223));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5); //ade
-                storyText = Language.getInstance().get(224);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(224));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(225);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(225));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5); //ade
-                storyText = Language.getInstance().get(226);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(226));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6); //jonah
-                storyText = Language.getInstance().get(227);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(227));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(228);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(228));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(229);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(229));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5);//ade
-                storyText = Language.getInstance().get(230);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(230));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 5) //scene 6
+            if (currentScene == 5) //scene 6
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(5);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(231);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(231));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5);//ade
-                storyText = Language.getInstance().get(232);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(232));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(233);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(233));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(234);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(234));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(235);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(235));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(236);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(236));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(237);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(237));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(238);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(238));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(239);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(239));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(240);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(240));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(241);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(241));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(242);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(242));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(243);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(243));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(244);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(244));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(245);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(245));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5);
-                storyText = Language.getInstance().get(246);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(246));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(247);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(247));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(248);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(248));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(249);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(249));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(250);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(250));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 6) //scene 7
+            if (currentScene == 6) //scene 7
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(4);
 
-                storyText = Language.getInstance().get(251);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(251));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                storyText = Language.getInstance().get(252);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(252));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                storyText = Language.getInstance().get(253);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(253));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().changeStoryBoard(6);
-                storyText = Language.getInstance().get(254);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(254));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(255);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(255));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(256);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(256));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(257);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(257));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(258);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(258));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(259);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(259));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(260);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(260));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(261);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(261));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(262);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(262));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
 
-            if (sceneId == 7) //scene 8
+            if (currentScene == 7) //scene 8
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(6);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(263);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(263));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(264);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(264));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(265);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(265));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(266);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(266));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(267);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(267));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(268);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(268));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = ".......... " + Language.getInstance().get(269);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = ".......... " + Language.getInstance().get(269));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 8) //scene 9
+            if (currentScene == 8) //scene 9
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(8);
 
-                storyText = Language.getInstance().get(270);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(270));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(271);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(271));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(272);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(272));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(273);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(273));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(274);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(274));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                storyText = Language.getInstance().get(275);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(275));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(276);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(276));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(277);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(277));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(231) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(231) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                storyText = Language.getInstance().get(278);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(278));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(279) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(279) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
@@ -787,85 +712,71 @@ public class StoryMode implements Runnable {
 
             //new stage they arrive
 
-            if (sceneId == 9) //scene 10
+            if (currentScene == 9) //scene 10
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(9);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(280) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(280) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(281);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(281));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(282);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(282));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(283);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(283));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(284);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(284));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(285);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(285));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(286);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(286));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().charPortBlank();
-                storyText = Language.getInstance().get(287) + " ...";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(287) + " ...");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(288);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(288));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(289) + " !!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(289) + " !!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(290);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(290));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(291);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(291));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(292);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(292));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(293);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(293));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 10) //scene 11
+            if (currentScene == 10) //scene 11
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(11);
@@ -874,181 +785,148 @@ public class StoryMode implements Runnable {
                 Characters.getInstance().setDamageCounter(CharacterState.OPPONENT, 18);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(294) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(294) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(231) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(231) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(295);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(295));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(296);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(296));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(297);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(297));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(0);
-                storyText = Language.getInstance().get(298);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(298));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(299) + "!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(299) + "!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(300) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(300) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(301) + " ?";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(301) + " ?");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(302) + " !!!!!!!!!!!!!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(302) + " !!!!!!!!!!!!!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(303) + " !!!";
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(303) + " !!!");
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(2);
-                storyText = Language.getInstance().get(304);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(304));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(305);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(305));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(7);
-                storyText = Language.getInstance().get(306);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(306));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
 
-            if (sceneId == 11) //scene 12
+            if (currentScene == 11) //scene 12
             {
                 thread.sleep(5000);
                 RenderGameplay.getInstance().changeStoryBoard(10);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(373);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(373));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().charPortBlank();
-                storyText = Language.getInstance().get(374);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(374));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(375);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(375));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(376);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(376));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(1);
-                storyText = Language.getInstance().get(377);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(377));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().charPortBlank();
-                storyText = Language.getInstance().get(378);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(378));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(4);
-                storyText = Language.getInstance().get(379);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(379));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(5);
-                storyText = Language.getInstance().get(380);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(380));
                 thread.sleep(storyText.length() * tlkSpeed);
 
-                storyText = Language.getInstance().get(381);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(381));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(8);
-                storyText = Language.getInstance().get(383);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(383));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(11);
-                storyText = Language.getInstance().get(384);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(384));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(385);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(385));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(9);
-                storyText = Language.getInstance().get(386);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(386));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(8);
-                storyText = Language.getInstance().get(387);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(387));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(388);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(388));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(10);
-                storyText = Language.getInstance().get(389);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(389));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(8);
-                storyText = Language.getInstance().get(390);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(390));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(8);
-                storyText = Language.getInstance().get(391);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(391));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 RenderGameplay.getInstance().setCharacterPortrait(6);
-                storyText = Language.getInstance().get(392);
-                RenderGameplay.getInstance().flashyText(storyText);
+                RenderGameplay.getInstance().storyText(storyText = Language.getInstance().get(392));
                 thread.sleep(storyText.length() * tlkSpeed);
 
                 storyOut(false);
             }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(StoryMode.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
         }
     }
 
@@ -1060,12 +938,31 @@ public class StoryMode implements Runnable {
         thread.resume();
     }
 
+    public void onBackCancel() {
+        storyOut(false);
+    }
+
     public void onAccept() {
-        boolean ans1 = GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == true;
-        boolean ans2 = GameInstance.getInstance().gameOver == false && RenderStoryMenu.getInstance().getStoryInstance().doneShowingText;
-        if (ans1 && ans2) {
-            thread.stop();
-            storyOut(true);
+        if (GameInstance.getInstance().gameOver && RenderGameplay.getInstance().hasWon()) {
+            incrementMode();
         }
+        startGame();
+    }
+
+    /**
+     * When you wins a match, move to the next level
+     */
+    public void incrementMode() {
+        if (currentScene < max)
+            currentScene = currentScene + 1;
+        GameState.getInstance().getLogin().setLastStoryScene(currentScene);
+    }
+
+    public void setCurrentScene(int currentScene) {
+        this.currentScene = currentScene;
+    }
+
+    public void startGame() {
+        story(currentScene);
     }
 }

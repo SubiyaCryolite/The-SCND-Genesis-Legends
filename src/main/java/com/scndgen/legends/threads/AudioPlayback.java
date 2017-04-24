@@ -19,7 +19,6 @@
  *************************************************************************/
 package com.scndgen.legends.threads;
 
-import javazoom.jl.player.Player;
 
 public class AudioPlayback implements Runnable {
 
@@ -47,7 +46,6 @@ public class AudioPlayback implements Runnable {
             "audio/from_Ardentryst/female/pain/NYX_PAIN5.ogg",
             "audio/from_Ardentryst/female/pain/NYX_PAIN6.ogg"};
     private String fileName;
-    private Player player;
     private final Thread thread;
 
     public AudioPlayback() {
@@ -157,11 +155,7 @@ public class AudioPlayback implements Runnable {
     }
 
     public boolean isPlaying() {
-        boolean dude = false;
-        if (player != null) {
-            dude = true;
-        }
-        return dude;
+        return false;
     }
 
     // play the MP3 file to the sound card
