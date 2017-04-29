@@ -25,10 +25,12 @@ import com.scndgen.legends.Achievement;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.Achievements;
+import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -38,7 +40,7 @@ import javafx.scene.text.Font;
  *
  * @author ndana
  */
-public class OverlayAchievementLocker {
+public class AchievementLocker {
 
     private int spacer = 14;
     private Font font2;
@@ -55,7 +57,7 @@ public class OverlayAchievementLocker {
     private float gWin, gLoss, denom, progression;
     private float numberOfTriggeredAchievements = 0.0f;
 
-    public OverlayAchievementLocker() {
+    public AchievementLocker() {
         pix = new JenesisImageLoader();
         loadFontAndPictures();
         refreshStats();
@@ -187,7 +189,7 @@ public class OverlayAchievementLocker {
     /**
      * Scroll up
      */
-    public void scrollUp() {
+    public void onUp() {
         if (scroller < 0) {
             scroller = scroller + 10;
         }
@@ -196,7 +198,7 @@ public class OverlayAchievementLocker {
     /**
      * Scroll up
      */
-    public void scrollDown() {
+    public void onDown() {
         if (scroller > -((achPicSpacer) * (achCap.length / 1.5))) {
             scroller = scroller - 10;
         }
@@ -269,6 +271,51 @@ public class OverlayAchievementLocker {
             int minutes = (timeInt - (hours * 3600) - (days * 86400)) / 60;
             int seconds = timeInt - ((minutes * 60) + (hours * 3600) + (days * 86400));
             return days + " days " + hours + "hrs, " + minutes + " mins and " + seconds + " secs";
+        }
+    }
+
+    public void onRight() {
+        onDown();
+    }
+
+    public void onLeft() {
+        onUp();
+    }
+
+    public void onAccept() {
+        this.onBackCancel();
+    }
+
+    public void onBackCancel() {
+        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()) {
+            case W:
+            case UP:
+                onUp();
+                break;
+            case S:
+            case DOWN:
+                onDown();
+                break;
+            case A:
+            case LEFT:
+                onLeft();
+                break;
+            case D:
+            case RIGHT:
+                onRight();
+                break;
+            case ENTER:
+            case SPACE:
+                onAccept();
+                break;
+            case DELETE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
         }
     }
 }

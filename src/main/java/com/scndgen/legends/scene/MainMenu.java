@@ -27,16 +27,13 @@ import com.scndgen.legends.controller.Tutorial;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.OverlayAchievementLocker;
+import com.scndgen.legends.render.AchievementLocker;
 import io.github.subiyacryolite.enginev1.JenesisMode;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
 import java.awt.*;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.net.URI;
 import java.util.Calendar;
 
@@ -48,7 +45,6 @@ import java.util.Calendar;
 public abstract class MainMenu extends JenesisMode {
 
     protected final int fontSize = 16;
-    protected boolean animThread = true;
     protected Font font;
     protected int hoveredMenuIndex = 0;
     protected int xMenu = 500;
@@ -56,41 +52,27 @@ public abstract class MainMenu extends JenesisMode {
     protected int menuItemIndex, menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
     protected int cloudOnePositionX = 0, yCordCloud = 0, cloudTwoPositionX = 0, yCordCloud2 = 20, cloudThreePositionX = 0, yCordCloud3 = 40;
-    protected String stat1, stat2, stat3, stat4, stat5, stat6, stat7, ach1, ach2, ach3, ach4, ach5, stat13, ach6, stat15, stat16, ach7, ach8, text2 = "", stat17;
-    protected SubMode menuItmStr;
-    protected int timeInt = 0;
-    protected int spacer = 12, time;
-    protected OverlayAchievementLocker achachievementLocker;
+    protected int time;
+    protected AchievementLocker achievementLocker;
     protected String mess;
     protected boolean fadeOutFeedback;
     protected float logoFadeOpacity = 1.0f;
     protected String[] menuItem;
-    protected int offset = 10;
     protected Calendar cal;
     protected Font menuFont;
-    protected float gWin, gLoss, denom, progression;
     protected Tutorial tutorial;
-    //---blur op
-    protected int size;
-    protected float[] data;
-    protected float sigma, opactity;
-    protected float twoSigmaSquare;
-    protected float sigmaRoot;
-    protected float total;
-    protected Kernel kernel;
-    //---blur op
 
-    @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public MainMenu() {
-        opactity = 3.0f;
+        ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
+        setOverlay(Overlay.PRIMARY_MENU);
+        opacity = 3.0f;
         logoFadeOpacity = 1.0f;
         fadeOutFeedback = false;
         menuItem = new String[(menuEntries + 2) * 2];
-        achachievementLocker = new OverlayAchievementLocker();
+        achievementLocker = new AchievementLocker();
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
-        loadPix();
         font = getMyFont(fontSize - 2);
         menuItem[0] = Language.getInstance().get(307);
         menuItem[1] = "STORY MODE";
@@ -122,9 +104,7 @@ public abstract class MainMenu extends JenesisMode {
         menuItem[25] = "TUTORIAL";
 
         new Thread() {
-
             @Override
-            @SuppressWarnings("static-access")
             public void run() {
                 try {
                     fadeOutFeedback = false;
@@ -138,67 +118,12 @@ public abstract class MainMenu extends JenesisMode {
     }
 
     /**
-     * Get timeLimit, dynamic menu
-     *
-     * @return timeLimit
-     */
-    public int getTime() {
-        return time;
-    }
-
-    protected String shortStr(String message) {
-        String returnThis;
-
-        if (message.length() < 20) {
-            returnThis = message;
-        } else {
-            returnThis = message.substring(0, 20) + "...";
-        }
-
-        return returnThis;
-    }
-
-
-    /**
      * Refresh achievement STATS
      */
     public void refreshStats() {
-        achachievementLocker.refreshStats();
+        achievementLocker.refreshStats();
     }
 
-
-    public void stopTutorial() {
-        tutorial.stopTut();
-    }
-
-    public void reverseTutorial() {
-        tutorial.backTut();
-    }
-
-    public void advanceTutorial() {
-        tutorial.forwarTut();
-    }
-
-    public void startTut() {
-        tutorial.startTut();
-    }
-
-    public void sktpToTut(int n) {
-        tutorial.skipToSection(n - 1);
-    }
-
-    /**
-     * Get the string representation of a scene
-     *
-     * @return
-     */
-    public SubMode getMenuModeStr() {
-        return menuItmStr;
-    }
-
-    public void StopRepaint() {
-        animThread = false;
-    }
 
     public int getXMenu() {
         return xMenu;
@@ -212,31 +137,8 @@ public abstract class MainMenu extends JenesisMode {
         return fontSize;
     }
 
-    public void setMenuPos(int where) {
+    public void setMenuPosition(int where) {
         hoveredMenuIndex = where;
-    }
-
-    public void onDown() {
-        if (hoveredMenuIndex < menuEntries && overlay == Overlay.PRIMARY_MENU) {
-            hoveredMenuIndex = hoveredMenuIndex + 1;
-        } else if (overlay == Overlay.ACHIEVEMENTS) {
-            achachievementLocker.scrollDown();
-        } else {
-            hoveredMenuIndex = 0;
-        }
-    }
-
-    public void onUp() {
-        if (hoveredMenuIndex > 0 && overlay == Overlay.PRIMARY_MENU) {
-            hoveredMenuIndex = hoveredMenuIndex - 1;
-        } else if (overlay == Overlay.ACHIEVEMENTS) {
-            achachievementLocker.scrollUp();
-        } else {
-            hoveredMenuIndex = menuEntries;
-        }
-    }
-
-    protected void loadPix() {
     }
 
     public Overlay getOverlay() {
@@ -250,115 +152,174 @@ public abstract class MainMenu extends JenesisMode {
         this.overlay = overlay;
     }
 
-    protected ConvolveOp getGaussianBlurFilter(int radius, boolean horizontal) {
-        if (radius < 1) {
-            throw new IllegalArgumentException("Radius must be >= 1");
-        }
-
-        size = radius * 2 + 1;
-        data = new float[size];
-        sigma = radius / 3.0f;
-        twoSigmaSquare = 2.0f * sigma * sigma;
-        sigmaRoot = (float) Math.sqrt(twoSigmaSquare * Math.PI);
-        total = 0.0f;
-        for (int i = -radius; i <= radius; i++) {
-            float distance = i * i;
-            int index = i + radius;
-            data[index] = (float) Math.exp(-distance / twoSigmaSquare) / sigmaRoot;
-            total += data[index];
-        }
-
-        for (int i = 0; i < data.length; i++) {
-            data[i] /= total;
-        }
-        kernel = null;
-        if (horizontal) {
-            kernel = new Kernel(size, 1, data);
-        } else {
-            kernel = new Kernel(1, size, data);
-        }
-        return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-    }
-
     public void newInstance() {
         loadAssets = true;
     }
 
     public void keyPressed(KeyEvent keyEvent) {
-        KeyCode keyCode = keyEvent.getCode();
-        switch (keyCode) {
-            case ENTER:
-                onAccept();
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.keyPressed(keyEvent);
                 break;
-            case ESCAPE:
-            case BACK_SPACE:
-                onBackCancel();
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.keyPressed(keyEvent);
                 break;
-            case UP:
-            case W:
-                onUp();
-                break;
-            case DOWN:
-            case S:
-                onDown();
-                break;
-            case LEFT:
-            case A:
-                onLeft();
-                break;
-            case RIGHT:
-            case D:
-                onRight();
-                break;
-            case DIGIT1:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(0);
-                break;
-            case DIGIT2:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(3);
-                break;
-            case DIGIT3:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(11);
-                break;
-            case DIGIT4:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(20);
-                break;
-            case DIGIT5:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(27);
-                break;
-            case DIGIT6:
-                if (getOverlay() == Overlay.TUTORIAL)
-                    sktpToTut(32);
-                break;
-            case F:
-                provideFeedback('f');
-                break;
-            case B:
-                provideFeedback('b');
-                break;
-            case L:
-                provideFeedback('l');
+            case PRIMARY_MENU:
+                switch (keyEvent.getCode()) {
+                    case ENTER:
+                        onAccept();
+                        break;
+                    case ESCAPE:
+                    case BACK_SPACE:
+                        onBackCancel();
+                        break;
+                    case UP:
+                    case W:
+                        onUp();
+                        break;
+                    case DOWN:
+                    case S:
+                        onDown();
+                        break;
+                    case LEFT:
+                    case A:
+                        onLeft();
+                        break;
+                    case RIGHT:
+                    case D:
+                        onRight();
+                        break;
+                    case F:
+                        provideFeedback('f');
+                        break;
+                    case B:
+                        provideFeedback('b');
+                        break;
+                    case L:
+                        provideFeedback('l');
+                        break;
+                }
                 break;
         }
     }
 
     public void onBackCancel() {
-        if (getOverlay() == Overlay.TUTORIAL)
-            tutorial.stopTut();
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onBackCancel();
+                break;
+            case ACHIEVEMENT_LOCKER:
+            case STATISTICS:
+                achievementLocker.onBackCancel();
+                break;
+            case PRIMARY_MENU:
+                break;
+        }
+    }
+
+    public void onDown() {
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onDown();
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.onDown();
+                break;
+            case PRIMARY_MENU:
+                if (hoveredMenuIndex < menuEntries && overlay == Overlay.PRIMARY_MENU) {
+                    hoveredMenuIndex = hoveredMenuIndex + 1;
+                } else {
+                    hoveredMenuIndex = 0;
+                }
+                break;
+        }
+    }
+
+    public void onUp() {
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onUp();
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.onUp();
+                break;
+            case PRIMARY_MENU:
+                if (hoveredMenuIndex > 0 && overlay == Overlay.PRIMARY_MENU) {
+                    hoveredMenuIndex = hoveredMenuIndex - 1;
+                } else {
+                    hoveredMenuIndex = menuEntries;
+                }
+                break;
+        }
     }
 
     public void onRight() {
-        if (getOverlay() == Overlay.TUTORIAL)
-            advanceTutorial();
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onRight();
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.onRight();
+                break;
+            case PRIMARY_MENU:
+                break;
+        }
     }
 
     public void onLeft() {
-        if (getOverlay() == Overlay.TUTORIAL)
-            reverseTutorial();
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onLeft();
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.onLeft();
+                break;
+            case PRIMARY_MENU:
+                break;
+        }
+    }
+
+    public void onAccept() {
+        switch (getOverlay()) {
+            case TUTORIAL:
+                tutorial.onAccept();
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                achievementLocker.onAccept();
+                break;
+            case PRIMARY_MENU:
+                switch (ScndGenLegends.getInstance().getSubMode()) {
+                    case LAN_HOST:
+                        primaryNotice(Language.getInstance().get(107));
+                        ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                        break;
+                    case SINGLE_PLAYER:
+                        primaryNotice(Language.getInstance().get(108));
+                        ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                        break;
+                    case STORY_MODE:
+                        ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
+                        break;
+                    case STATS:
+                        setOverlay(Overlay.STATISTICS);
+                        break;
+                    case ACH:
+                        refreshStats();
+                        setOverlay(Overlay.ACHIEVEMENT_LOCKER);
+                        break;
+                    case TUTORIAL:
+                        setOverlay(Overlay.TUTORIAL);
+                        tutorial.beginTutorial();
+                        break;
+                }
+                break;
+        }
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
@@ -374,68 +335,51 @@ public abstract class MainMenu extends JenesisMode {
         }
     }
 
-    public void onAccept() {
-        if (getOverlay() == Overlay.TUTORIAL) {
-            advanceTutorial();
-        } else {
-            SubMode destination = getMenuModeStr();
-            ScndGenLegends.getInstance().setSubMode(destination);
-            if (destination == SubMode.LAN_HOST) {
-                primaryNotice(Language.getInstance().get(107));
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-            } else if (destination == SubMode.SINGLE_PLAYER) {
-                primaryNotice(Language.getInstance().get(108));
-                ScndGenLegends.getInstance().setSubMode(destination);
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
-            } else if (destination == SubMode.STORY_MODE) {
-                ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
-            } else if (destination == SubMode.STATS) {
-                setOverlay(Overlay.STATISTICS);
-            } else if (destination == SubMode.ACH) {
-                refreshStats();
-                setOverlay(Overlay.ACHIEVEMENTS);
-            } else if (destination == SubMode.TUTORIAL) {
-                setOverlay(Overlay.TUTORIAL);
-                startTut();
-            }
-        }
-    }
-
-
     public void mouseMoved(final MouseEvent mouseEvent) {
         int x = getXMenu();
         int y = getYMenu();
         int space = getSpacer() - 2;
-        if ((mouseEvent.getX() > x) && (mouseEvent.getX() < x + 200)) {
-            validHover = true;
-            if ((mouseEvent.getY() > space) && (mouseEvent.getY() < (y + space)))
-                setMenuPos(0);
-            if ((mouseEvent.getY() > (y + (space * 1))) && (mouseEvent.getY() < (y + (space * 2))))
-                setMenuPos(1);
-            if ((mouseEvent.getY() > (y + (space * 2))) && (mouseEvent.getY() < (y + (space * 3))))
-                setMenuPos(2);
-            if ((mouseEvent.getY() > (y + (space * 3))) && (mouseEvent.getY() < (y + (space * 4))))
-                setMenuPos(3);
-            if ((mouseEvent.getY() > (y + (space * 4))) && (mouseEvent.getY() < (y + (space * 5))))
-                setMenuPos(4);
-            if ((mouseEvent.getY() > (y + (space * 5))) && (mouseEvent.getY() < (y + (space * 6))))
-                setMenuPos(5);
-            if ((mouseEvent.getY() > (y + (space * 7))) && (mouseEvent.getY() < (y + (space * 8))))
-                setMenuPos(6);
-            if ((mouseEvent.getY() > (y + (space * 8))) && (mouseEvent.getY() < (y + (space * 9))))
-                setMenuPos(7);
-            if ((mouseEvent.getY() > (y + (space * 9))) && (mouseEvent.getY() < (y + (space * 10))))
-                setMenuPos(8);
-            if ((mouseEvent.getY() > (y + (space * 10))) && (mouseEvent.getY() < (y + (space * 11))))
-                setMenuPos(9);
-            if ((mouseEvent.getY() > (y + (space * 11))) && (mouseEvent.getY() < (y + (space * 12))))
-                setMenuPos(10);
-            if ((mouseEvent.getY() > (y + (space * 12))) && (mouseEvent.getY() < (y + (space * 13))))
-                setMenuPos(11);
-            if ((mouseEvent.getY() > (y + (space * 13))) && (mouseEvent.getY() < (y + (space * 13))))
-                setMenuPos(12);
-        } else {
-            validHover = false;
+        switch (getOverlay()) {
+            case TUTORIAL:
+                validHover = true;
+                break;
+            case STATISTICS:
+            case ACHIEVEMENT_LOCKER:
+                validHover = true;
+                break;
+            case PRIMARY_MENU:
+                if ((mouseEvent.getX() > x) && (mouseEvent.getX() < x + 200)) {
+                    validHover = true;
+                    if ((mouseEvent.getY() > space) && (mouseEvent.getY() < (y + space)))
+                        setMenuPosition(0);
+                    if ((mouseEvent.getY() > (y + (space * 1))) && (mouseEvent.getY() < (y + (space * 2))))
+                        setMenuPosition(1);
+                    if ((mouseEvent.getY() > (y + (space * 2))) && (mouseEvent.getY() < (y + (space * 3))))
+                        setMenuPosition(2);
+                    if ((mouseEvent.getY() > (y + (space * 3))) && (mouseEvent.getY() < (y + (space * 4))))
+                        setMenuPosition(3);
+                    if ((mouseEvent.getY() > (y + (space * 4))) && (mouseEvent.getY() < (y + (space * 5))))
+                        setMenuPosition(4);
+                    if ((mouseEvent.getY() > (y + (space * 5))) && (mouseEvent.getY() < (y + (space * 6))))
+                        setMenuPosition(5);
+                    if ((mouseEvent.getY() > (y + (space * 7))) && (mouseEvent.getY() < (y + (space * 8))))
+                        setMenuPosition(6);
+                    if ((mouseEvent.getY() > (y + (space * 8))) && (mouseEvent.getY() < (y + (space * 9))))
+                        setMenuPosition(7);
+                    if ((mouseEvent.getY() > (y + (space * 9))) && (mouseEvent.getY() < (y + (space * 10))))
+                        setMenuPosition(8);
+                    if ((mouseEvent.getY() > (y + (space * 10))) && (mouseEvent.getY() < (y + (space * 11))))
+                        setMenuPosition(9);
+                    if ((mouseEvent.getY() > (y + (space * 11))) && (mouseEvent.getY() < (y + (space * 12))))
+                        setMenuPosition(10);
+                    if ((mouseEvent.getY() > (y + (space * 12))) && (mouseEvent.getY() < (y + (space * 13))))
+                        setMenuPosition(11);
+                    if ((mouseEvent.getY() > (y + (space * 13))) && (mouseEvent.getY() < (y + (space * 13))))
+                        setMenuPosition(12);
+                } else {
+                    validHover = false;
+                }
+                break;
         }
     }
 

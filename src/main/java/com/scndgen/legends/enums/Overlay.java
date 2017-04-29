@@ -6,7 +6,7 @@ package com.scndgen.legends.enums;
 public enum Overlay {
     PRIMARY_MENU(0),
     STATISTICS(1),
-    ACHIEVEMENTS(2),
+    ACHIEVEMENT_LOCKER(2),
     TUTORIAL(3);
     private final int index;
 

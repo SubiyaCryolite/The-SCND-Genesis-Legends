@@ -1044,26 +1044,30 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
 
     public void keyPressed(KeyEvent ke) {
         KeyCode keyCode = ke.getCode();
-        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
-            onUp();
-        }
-        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-            onDown();
-        }
-        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
-            onLeft();
-        }
-        if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
-            onRight();
-        }
-        if (keyCode == KeyCode.BACK_SPACE) {
-            onBackCancel();
-        }
-        if (keyCode == KeyCode.ENTER) {
-            onAccept();
-        }
-        if (keyCode == KeyCode.ESCAPE) {
-            onBackCancel();
+        switch (keyCode) {
+            case ENTER:
+                onAccept();
+                break;
+            case ESCAPE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
+            case UP:
+            case W:
+                onUp();
+                break;
+            case DOWN:
+            case S:
+                onDown();
+                break;
+            case LEFT:
+            case A:
+                onLeft();
+                break;
+            case RIGHT:
+            case D:
+                onRight();
+                break;
         }
     }
 

@@ -29,6 +29,7 @@ import com.scndgen.legends.threads.AudioPlayback;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -79,7 +80,7 @@ public class Tutorial implements Runnable {
         bgSound.play();
     }
 
-    public void startTut() {
+    public void beginTutorial() {
         thread = null;
         thread = new Thread(this);
         thread.start();
@@ -88,16 +89,7 @@ public class Tutorial implements Runnable {
         }
     }
 
-    public void stopTut() {
-        globalBreak = false;
-        isShowing = false;
-        if (bgSound != null) {
-            bgSound.stop();
-        }
-        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
-    }
-
-    public void backTut() {
+    public void onLeft() {
         if (sec == 1) {
             sec = sec - 1;
         } else if (sec > 1) {
@@ -107,7 +99,7 @@ public class Tutorial implements Runnable {
         skipSec = true;
     }
 
-    public void forwarTut() {
+    public void onRight() {
         skipSec = true;
         playForwardSound();
     }
@@ -850,5 +842,77 @@ public class Tutorial implements Runnable {
         } catch (Exception re) {
             return new javafx.scene.text.Font("Sans", size);
         }
+    }
+
+    public void onBackCancel() {
+        globalBreak = false;
+        isShowing = false;
+        if (bgSound != null) {
+            bgSound.stop();
+        }
+        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
+    }
+
+    public void onAccept() {
+        onBackCancel();
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()) {
+            case W:
+            case UP:
+                onUp();
+                break;
+            case S:
+            case DOWN:
+                onDown();
+                break;
+            case A:
+            case LEFT:
+                onLeft();
+                break;
+            case D:
+            case RIGHT:
+                onRight();
+                break;
+            case ENTER:
+            case SPACE:
+                onAccept();
+                break;
+            case DELETE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
+            case DIGIT1:
+                sktpToTut(0);
+                break;
+            case DIGIT2:
+                sktpToTut(3);
+                break;
+            case DIGIT3:
+                sktpToTut(11);
+                break;
+            case DIGIT4:
+                sktpToTut(20);
+                break;
+            case DIGIT5:
+                sktpToTut(27);
+                break;
+            case DIGIT6:
+                sktpToTut(32);
+                break;
+        }
+    }
+
+    private void sktpToTut(int n) {
+        skipToSection(n - 1);
+    }
+
+    public void onUp() {
+        this.onLeft();
+    }
+
+    public void onDown() {
+        this.onRight();
     }
 }

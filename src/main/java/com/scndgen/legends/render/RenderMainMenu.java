@@ -1,11 +1,12 @@
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.MainMenu;
 import com.scndgen.legends.windows.WindowAbout;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -89,7 +90,7 @@ public class RenderMainMenu extends MainMenu {
         if (overlay == Overlay.PRIMARY_MENU) {
             menuItemIndex = 0;
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.STORY_MODE;
+                ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
                 gc.drawImage(pointer, xMenu - 18, yMenu - 15);
                 gc.fillText(menuItem[1], xMenu, yMenu);
             } else {
@@ -97,7 +98,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.SINGLE_PLAYER;
+                ScndGenLegends.getInstance().setSubMode(SubMode.SINGLE_PLAYER);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[3], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -105,7 +106,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.LAN_HOST;
+                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[7], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -113,7 +114,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.LAN_CLIENT;
+                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[9], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -122,7 +123,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.STATS;
+                ScndGenLegends.getInstance().setSubMode(SubMode.STATS);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[11], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -131,7 +132,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.ACH;
+                ScndGenLegends.getInstance().setSubMode(SubMode.ACH);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[21], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -140,7 +141,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.TUTORIAL;
+                ScndGenLegends.getInstance().setSubMode(SubMode.TUTORIAL);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[25], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -149,7 +150,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.OPTIONS;
+                ScndGenLegends.getInstance().setSubMode(SubMode.OPTIONS);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[13], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -158,7 +159,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.CONTROLS;
+                ScndGenLegends.getInstance().setSubMode(SubMode.CONTROLS);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[15], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -167,7 +168,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.LOGOUT;
+                ScndGenLegends.getInstance().setSubMode(SubMode.LOGOUT);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[23], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -176,7 +177,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
 
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.ABOUT;
+                ScndGenLegends.getInstance().setSubMode(SubMode.ABOUT);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[17], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -184,7 +185,7 @@ public class RenderMainMenu extends MainMenu {
             }
             menuItemIndex++;
             if (hoveredMenuIndex == menuItemIndex) {
-                menuItmStr = SubMode.EXIT;
+                ScndGenLegends.getInstance().setSubMode(SubMode.EXIT);
                 gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
                 gc.fillText(menuItem[19], xMenu, yMenu + (fontSize * menuItemIndex));
             } else {
@@ -200,31 +201,31 @@ public class RenderMainMenu extends MainMenu {
         gc.setGlobalAlpha((1.0f));
         gc.setFill(Color.WHITE);
         if (overlay == Overlay.STATISTICS) {
-            achachievementLocker.drawStats(gc, w, h);
+            achievementLocker.drawStats(gc, w, h);
         }
-        if (overlay == Overlay.ACHIEVEMENTS) {
-            achachievementLocker.drawAch(gc, w, h);
+        if (overlay == Overlay.ACHIEVEMENT_LOCKER) {
+            achievementLocker.drawAch(gc, w, h);
         }
         if (overlay == Overlay.TUTORIAL) {
             tutorial.draw(gc, w, h);
         }
 
-        if (opactity > 0.0f) {
+        if (opacity > 0.0f) {
             gc.setGlobalAlpha((1));
-            if (opactity <= 1.0f) {
-                gc.setGlobalAlpha((opactity));
+            if (opacity <= 1.0f) {
+                gc.setGlobalAlpha((opacity));
             }
             gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, 852, 480);
-            if (opactity > 2.0f) {
+            if (opacity > 2.0f) {
                 gc.setGlobalAlpha((1.0f));
-            } else if (opactity <= 2.0f && opactity > 1.0f) {
-                gc.setGlobalAlpha((opactity - 1.0f));//TODO this one
+            } else if (opacity <= 2.0f && opacity > 1.0f) {
+                gc.setGlobalAlpha((opacity - 1.0f));//TODO this one
             } else {
                 gc.setGlobalAlpha((0f));
             }
             gc.drawImage(gameLogo, 0, 0);
-            opactity -= 0.0125f;
+            opacity -= 0.0125f;
         }
     }
 

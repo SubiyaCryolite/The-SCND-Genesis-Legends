@@ -610,7 +610,7 @@ public abstract class StageSelect extends JenesisMode {
      * Move down
      */
     public void onDown() {
-        if (row < rows-1)
+        if (row < rows - 1)
             row = row + 1;
         else
             row = 0;
@@ -621,7 +621,7 @@ public abstract class StageSelect extends JenesisMode {
      * Move right
      */
     public void onRight() {
-        if (column < columns-1)
+        if (column < columns - 1)
             column += 1;
         else
             column = 0;
@@ -709,26 +709,30 @@ public abstract class StageSelect extends JenesisMode {
 
     public void keyPressed(KeyEvent keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
-        if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
-            onUp();
-        }
-        if (keyCode == KeyCode.DOWN || keyCode == KeyCode.S) {
-            onDown();
-        }
-        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
-            onLeft();
-        }
-        if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
-            onRight();
-        }
-        if (keyCode == KeyCode.BACK_SPACE) {
-            onBackCancel();
-        }
-        if (keyCode == KeyCode.ENTER) {
-            onAccept();
-        }
-        if (keyCode == KeyCode.ESCAPE) {
-            onBackCancel();
+        switch (keyCode) {
+            case ENTER:
+                onAccept();
+                break;
+            case ESCAPE:
+            case BACK_SPACE:
+                onBackCancel();
+                break;
+            case UP:
+            case W:
+                onUp();
+                break;
+            case DOWN:
+            case S:
+                onDown();
+                break;
+            case LEFT:
+            case A:
+                onLeft();
+                break;
+            case RIGHT:
+            case D:
+                onRight();
+                break;
         }
     }
 
@@ -760,8 +764,7 @@ public abstract class StageSelect extends JenesisMode {
         selectStage(getHoveredStage());
     }
 
-    public void onBackCancel()
-    {
+    public void onBackCancel() {
         //ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
     }
 }

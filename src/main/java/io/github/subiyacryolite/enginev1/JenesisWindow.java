@@ -23,6 +23,7 @@ package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
@@ -88,13 +89,9 @@ public class JenesisWindow {
      */
     private void select() {
         //if viewing STATS, go onBackCancel to menu
-        if (RenderMainMenu.getInstance().getOverlay() == Overlay.STATISTICS || RenderMainMenu.getInstance().getOverlay() == Overlay.ACHIEVEMENTS || RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
-            if (RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
-                RenderMainMenu.getInstance().stopTutorial();
-            }
-            RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
+        if (RenderMainMenu.getInstance().getOverlay() == Overlay.STATISTICS || RenderMainMenu.getInstance().getOverlay() == Overlay.ACHIEVEMENT_LOCKER || RenderMainMenu.getInstance().getOverlay() == Overlay.TUTORIAL) {
         } else {
-            SubMode destination = RenderMainMenu.getInstance().getMenuModeStr();
+            SubMode destination = ScndGenLegends.getInstance().getSubMode();
             if (destination == SubMode.LAN_CLIENT) {
                 scan = new NetworkScanLan();
             }
@@ -149,14 +146,6 @@ public class JenesisWindow {
                 System.exit(0);
             }
         }
-    }
-
-    /**
-     * Gets rid of main menu (minimise)
-     */
-    public void terminateThis() {
-        RenderMainMenu.getInstance().StopRepaint();
-        isActive = false;
     }
 
     /**
