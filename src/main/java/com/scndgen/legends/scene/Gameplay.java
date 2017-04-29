@@ -28,10 +28,7 @@ import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Mode;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -74,8 +71,8 @@ public abstract class Gameplay extends JenesisMode {
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
     protected int particlesLayer1PositionX = 0, particlesLayer1PositionY = 0, particlesLayer2PositionX = 0, particlesLayer2PositionY = 0;
     protected int numOfComicPics = 9;
-    protected int foreGroundPositionX, foreGroundPositionY, fgxInc, fgyInc, animLoops, delay;
-    protected String animDirection = "vert", verticalMove = "no";
+    protected int foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops, delay;
+    protected AnimationDirection animationDirection = AnimationDirection.VERTICAL;
     protected int oppXcord = 10;
     protected int playerDamageXLoc, opponentDamageXLoc, numOfAttacks = 0;
     protected String scenePic = "images/bgBG2.png";
@@ -1021,8 +1018,8 @@ public abstract class Gameplay extends JenesisMode {
 
     protected abstract void attackSoundOpp();
 
-    public String getAnimDirection() {
-        return animDirection;
+    public AnimationDirection getAnimationDirection() {
+        return animationDirection;
     }
 
     public int getCharacterHpAsPercent() {
@@ -1049,8 +1046,8 @@ public abstract class Gameplay extends JenesisMode {
         oppYcord = value;
     }
 
-    public int getAnimLoops() {
-        return animLoops;
+    public int getAnimationLoops() {
+        return animationLoops;
     }
 
     public long getDelay() {
@@ -1073,12 +1070,12 @@ public abstract class Gameplay extends JenesisMode {
         this.foreGroundPositionY = foreGroundPositionY;
     }
 
-    public int getFgxInc() {
-        return fgxInc;
+    public int getForeGroundXIncrement() {
+        return foreGroundXIncrement;
     }
 
-    public int getFgyInc() {
-        return fgyInc;
+    public int getForeGroundYIncrement() {
+        return foreGroundYIncrement;
     }
 
     public int getComboCounter() {
@@ -1115,10 +1112,6 @@ public abstract class Gameplay extends JenesisMode {
 
     public CharacterEnum[] getCharNames() {
         return charNames;
-    }
-
-    public String getVerticalMove() {
-        return verticalMove;
     }
 
     public int getAmbSpeed1() {

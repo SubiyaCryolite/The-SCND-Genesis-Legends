@@ -332,7 +332,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
             System.out.println("Diff Range = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())));
             System.out.println("Diff Range Rate = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())) / GameState.DIFFICULTY_BASE);
         } else if (source == cmbTextSpeed) {
-            GameState.getInstance().getLogin().setTxtSpeed(GameState.getInstance().getLogin().getTxtSpeedConstant(cmbTextSpeed.getSelectedIndex()));
+            GameState.getInstance().getLogin().setTextSpeed(GameState.getInstance().getLogin().getTxtSpeedConstant(cmbTextSpeed.getSelectedIndex()));
         } else if (source == btnSoundOn) {
             GameState.getInstance().getLogin().setIsAudioOn(true);
         } else if (source == btnSoundOff) {

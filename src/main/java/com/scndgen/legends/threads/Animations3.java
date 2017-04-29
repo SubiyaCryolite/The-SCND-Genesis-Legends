@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
+import com.scndgen.legends.enums.AnimationDirection;
 import com.scndgen.legends.render.RenderGameplay;
 
 /**
@@ -39,7 +40,7 @@ public class Animations3 implements Runnable {
     public void run() {
         do {
             try {
-                if (RenderGameplay.getInstance().getVerticalMove().equalsIgnoreCase("no")) {
+                if (RenderGameplay.getInstance().getAnimationDirection()!= AnimationDirection.VERTICAL) {
                     thread.sleep(0016);
                     RenderGameplay.getInstance().setParticlesLayer1PositionX(RenderGameplay.getInstance().getParticlesLayer1PositionX() - RenderGameplay.getInstance().getAmbSpeed1());
                     RenderGameplay.getInstance().setParticlesLayer2PositionX(RenderGameplay.getInstance().getParticlesLayer2PositionX() - RenderGameplay.getInstance().getAmbSpeed2());

@@ -25,14 +25,9 @@ public class LoginState extends JdsEntity {
     private final int[] difficultyArray = {diff0, diff1, diff2, diff3, diff4, diff5};
     //
     private final SimpleStringProperty userName = new SimpleStringProperty("");
-    private final SimpleStringProperty usrCode = new SimpleStringProperty("");
     private final SimpleIntegerProperty points = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty playTime = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty numberOfMatches = new SimpleIntegerProperty(0);
-    private final SimpleStringProperty achievementName = new SimpleStringProperty("");
-    private final SimpleStringProperty achievementDescription = new SimpleStringProperty("");
-    private final SimpleStringProperty achievementClass = new SimpleStringProperty("");
-    private final SimpleStringProperty achievementPoints = new SimpleStringProperty("");
     private final SimpleIntegerProperty ach0 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty ach1 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty ach2 = new SimpleIntegerProperty(0);
@@ -48,16 +43,13 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty wins = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty losses = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty frames = new SimpleIntegerProperty(0);
-    private final SimpleIntegerProperty txtSpeed = new SimpleIntegerProperty(200);
+    private final SimpleIntegerProperty textSpeed = new SimpleIntegerProperty(200);
     private final SimpleBooleanProperty isAudioOn = new SimpleBooleanProperty(true);
     private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty difficultyDynamic = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty lastStoryScene = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(MAX_TIME);
-    private final SimpleStringProperty graffix = new SimpleStringProperty("");
-    private final SimpleStringProperty upToDate = new SimpleStringProperty("");
-    private final SimpleStringProperty autoUpdate = new SimpleStringProperty("");
-    private final SimpleStringProperty musicFiles = new SimpleStringProperty("");
+    private final SimpleStringProperty graphicsSetting = new SimpleStringProperty("");
     private final SimpleIntegerProperty char0 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty char1 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty char2 = new SimpleIntegerProperty(0);
@@ -72,11 +64,57 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty char11 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty comicEffectOccurence = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty gameRating = new SimpleIntegerProperty(0);
-    private final SimpleStringProperty country = new SimpleStringProperty("");
     private final SimpleBooleanProperty usingController = new SimpleBooleanProperty(true);
     private final SimpleIntegerProperty currentLanguage = new SimpleIntegerProperty(0);
     private final SimpleBooleanProperty leftHanded = new SimpleBooleanProperty(false);
-    private final SimpleIntegerProperty consequtiveWins = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty consecutiveWins = new SimpleIntegerProperty(0);
+
+    public LoginState() {
+        map(LoginFields.USER_NAME, userName);
+        map(LoginFields.POINTS, points);
+        map(LoginFields.PLAY_TIME, playTime);
+        map(LoginFields.NUMBER_OF_MATCHES, numberOfMatches);
+        map(LoginFields.D_005, ach0);
+        map(LoginFields.D_006, ach1);
+        map(LoginFields.D_007, ach2);
+        map(LoginFields.D_008, ach3);
+        map(LoginFields.D_009, ach4);
+        map(LoginFields.D_010, ach5);
+        map(LoginFields.D_011, ach6);
+        map(LoginFields.D_012, ach7);
+        map(LoginFields.D_013, ach8);
+        map(LoginFields.D_014, ach9);
+        map(LoginFields.D_015, ach10);
+        map(LoginFields.D_016, ach11);
+        map(LoginFields.WINS, wins);
+        map(LoginFields.LOSSES, losses);
+        map(LoginFields.FRAMES_PER_SECOND, frames);
+        map(LoginFields.TEXT_SPEED, textSpeed);
+        map(LoginFields.AUDIO_ON, isAudioOn);
+        map(LoginFields.DIFFICULTY, difficulty);
+        map(LoginFields.DIFFICULTY_DYNAMIC, difficultyDynamic);
+        map(LoginFields.LAST_STORY_SCENE, lastStoryScene);
+        map(LoginFields.TIME_LIMIT, timeLimit);
+        map(LoginFields.GRAPHICS_SETTING, graphicsSetting);
+        map(LoginFields.D_027, char0);
+        map(LoginFields.D_028, char1);
+        map(LoginFields.D_029, char2);
+        map(LoginFields.D_030, char3);
+        map(LoginFields.D_031, char4);
+        map(LoginFields.D_032, char5);
+        map(LoginFields.D_033, char6);
+        map(LoginFields.D_034, char7);
+        map(LoginFields.D_035, char8);
+        map(LoginFields.D_036, char9);
+        map(LoginFields.D_037, char10);
+        map(LoginFields.D_038, char11);
+        map(LoginFields.COMIC_EFFECT_TEXT_OCCURENCE, comicEffectOccurence);
+        map(LoginFields.GAME_RATING, gameRating);
+        map(LoginFields.USING_CONTROLLER, usingController);
+        map(LoginFields.CURRENT_LANGUAGE, currentLanguage);
+        map(LoginFields.LEFT_HANDED, leftHanded);
+        map(LoginFields.CONSECUTIVE_WINS, consecutiveWins);
+    }
 
     public void incrementAchievement(Achievements achievement) {
         switch (achievement) {
@@ -247,14 +285,6 @@ public class LoginState extends JdsEntity {
         this.userName.set(userName);
     }
 
-    public String getUsrCode() {
-        return usrCode.get();
-    }
-
-    public void setUsrCode(final String usrCode) {
-        this.usrCode.set(usrCode);
-    }
-
     public int getPoints() {
         return points.get();
     }
@@ -277,38 +307,6 @@ public class LoginState extends JdsEntity {
 
     public void setNumberOfMatches(final int numberOfMatches) {
         this.numberOfMatches.set(numberOfMatches);
-    }
-
-    public String getAchievementName() {
-        return achievementName.get();
-    }
-
-    public void setAchievementName(final String achievementName) {
-        this.achievementName.set(achievementName);
-    }
-
-    public String getAchievementDescription() {
-        return achievementDescription.get();
-    }
-
-    public void setAchievementDescription(final String achievementDescription) {
-        this.achievementDescription.set(achievementDescription);
-    }
-
-    public String getAchievementClass() {
-        return achievementClass.get();
-    }
-
-    public void setAchievementClass(final String achievementClass) {
-        this.achievementClass.set(achievementClass);
-    }
-
-    public String getAchievementPoints() {
-        return achievementPoints.get();
-    }
-
-    public void setAchievementPoints(final String achievementPoints) {
-        this.achievementPoints.set(achievementPoints);
     }
 
     public int getAch0() {
@@ -431,12 +429,12 @@ public class LoginState extends JdsEntity {
         this.frames.set(frames);
     }
 
-    public int getTxtSpeed() {
-        return txtSpeed.get();
+    public int getTextSpeed() {
+        return textSpeed.get();
     }
 
-    public void setTxtSpeed(int txtSpeed) {
-        this.txtSpeed.set(txtSpeed);
+    public void setTextSpeed(int textSpeed) {
+        this.textSpeed.set(textSpeed);
     }
 
     public SimpleIntegerProperty framesProperty() {
@@ -487,36 +485,12 @@ public class LoginState extends JdsEntity {
         return timeLimit;
     }
 
-    public String getGraffix() {
-        return graffix.get();
+    public String getGraphicsSetting() {
+        return graphicsSetting.get();
     }
 
-    public void setGraffix(final String graffix) {
-        this.graffix.set(graffix);
-    }
-
-    public String getUpToDate() {
-        return upToDate.get();
-    }
-
-    public void setUpToDate(final String upToDate) {
-        this.upToDate.set(upToDate);
-    }
-
-    public String getAutoUpdate() {
-        return autoUpdate.get();
-    }
-
-    public void setAutoUpdate(final String autoUpdate) {
-        this.autoUpdate.set(autoUpdate);
-    }
-
-    public String getMusicFiles() {
-        return musicFiles.get();
-    }
-
-    public void setMusicFiles(final String musicFiles) {
-        this.musicFiles.set(musicFiles);
+    public void setGraphicsSetting(final String graphicsSetting) {
+        this.graphicsSetting.set(graphicsSetting);
     }
 
     public int getChar0() {
@@ -631,14 +605,6 @@ public class LoginState extends JdsEntity {
         this.gameRating.set(gameRating);
     }
 
-    public String getCountry() {
-        return country.get();
-    }
-
-    public void setCountry(final String country) {
-        this.country.set(country);
-    }
-
     public boolean getUsingController() {
         return usingController.get();
     }
@@ -663,12 +629,12 @@ public class LoginState extends JdsEntity {
         this.leftHanded.set(leftHanded);
     }
 
-    public void setConsequtiveWins(int consequtiveWins) {
-        this.consequtiveWins.set(consequtiveWins);
+    public void setConsecutiveWins(int consecutiveWins) {
+        this.consecutiveWins.set(consecutiveWins);
     }
 
-    public int getConsequtiveWins() {
-        return this.consequtiveWins.get();
+    public int getConsecutiveWins() {
+        return this.consecutiveWins.get();
     }
 
     /**

@@ -215,7 +215,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && GameState.getInstance().getLogin().getConsequtiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
+        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && GameState.getInstance().getLogin().getConsecutiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
             achievement = Achievements.ON_A_ROLL;
             name.add(achievementName.get(achievement));
             JenesisOverlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));

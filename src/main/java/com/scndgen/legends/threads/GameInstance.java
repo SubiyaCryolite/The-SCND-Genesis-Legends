@@ -338,10 +338,10 @@ public class GameInstance implements Runnable {
             GameState.getInstance().getLogin().setNumberOfMatches(GameState.getInstance().getLogin().getNumberOfMatches() + 1);
             if (RenderGameplay.getInstance().getCharacterHp() < RenderGameplay.getInstance().getOpponentHp()) {
                 GameState.getInstance().getLogin().setLosses(GameState.getInstance().getLogin().getLosses() + 1);
-                GameState.getInstance().getLogin().setConsequtiveWins(0);
+                GameState.getInstance().getLogin().setConsecutiveWins(0);
             } else {
                 GameState.getInstance().getLogin().setWins(GameState.getInstance().getLogin().getWins() + 1);
-                GameState.getInstance().getLogin().setConsequtiveWins(GameState.getInstance().getLogin().getConsequtiveWins() + 1);
+                GameState.getInstance().getLogin().setConsecutiveWins(GameState.getInstance().getLogin().getConsecutiveWins() + 1);
             }
         }
     }
