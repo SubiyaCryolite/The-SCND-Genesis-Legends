@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 /**
- * Created by ifung on 15/04/2017.
+ * Created by ifunga on 15/04/2017.
  */
 public class ScndGenLegends extends JenesisGame {
 

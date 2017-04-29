@@ -33,7 +33,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     protected int[] attacks;
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected final int numOfCharacters = CharacterEnum.values().length;
-    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, columnIndex = 1, x = 0, y = 0, rowIndex = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
+    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
     protected JenesisImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
@@ -44,6 +44,8 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     protected AudioPlayback sound, sound2, error;
     protected final int columns = 3;
     protected final int rows = numOfCharacters / columns;
+    protected final int rowsCiel = Math.round(Math.round(Math.ceil(numOfCharacters / (double) columns)));
+    protected final int columnsCiel = numOfCharacters % columns;
     protected boolean canSelectCharacter;
     protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
     protected int storedX;
@@ -783,46 +785,51 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     }
 
     /**
-     * CharacterEnum select screen, move up
+     * Move up
      */
     public void onUp() {
-        if (rowIndex > 0)
-            rowIndex -= 1;
-        else
-            rowIndex = rows - 1;
+        if (row > 0)
+            row -= 1;
+        else {
+            int upperLimit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+            row = upperLimit;
+        }
         capAnim();
     }
 
     /**
-     * CharacterEnum select screen, move down
+     * Move down
      */
     public void onDown() {
-        if (rowIndex < rows - 1)
-            rowIndex += 1;
+        int limit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+        if (row < limit)
+            row++;
         else
-            rowIndex = 0;
+            row = 0;
         capAnim();
     }
 
     /**
-     * CharacterEnum select screen, move right
+     * Move right
      */
     public void onRight() {
-        if (columnIndex < columns - 1)
-            columnIndex += 1;
+        int limit = (row < rowsCiel) ? columns - 1 : columnsCiel - 1;
+        if (column < limit)
+            column ++;
         else
-            columnIndex = 0;
+            column = 0;
         capAnim();
     }
 
     /**
-     * CharacterEnum select screen, move left
+     * Move left
      */
     public void onLeft() {
-        if (columnIndex > 0)
-            columnIndex -= 1;
+        int limit = (row < rowsCiel-1) ? columns - 1 : columnsCiel - 1;
+        if (column > 0)
+            column -= 1;
         else
-            columnIndex = columns - 1;
+            column = limit;
         capAnim();
     }
 
@@ -951,33 +958,33 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
     /**
      * Horizontal index
      *
-     * @return columnIndex
+     * @return column
      */
     public int getHindex() {
-        return columnIndex;
+        return column;
     }
 
     /**
      * Set horizontal index
      */
     public void setHindex(int value) {
-        columnIndex = value;
+        column = value;
     }
 
     /**
      * Vertical index
      *
-     * @return rowIndex
+     * @return row
      */
     public int getVindex() {
-        return rowIndex;
+        return row;
     }
 
     /**
      * Set vertical index
      */
     public void setVindex(int value) {
-        rowIndex = value;
+        row = value;
     }
 
     /**
@@ -994,7 +1001,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode implements Ac
      */
     public boolean isWithinRange() {
         boolean ans = false;
-        int whichChar = ((rowIndex * columns) + columnIndex) - 1;
+        int whichChar = ((row * columns) + column) - 1;
         if (whichChar <= numOfCharacters) {
             ans = true;
         }

@@ -136,8 +136,8 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 int computedPosition = (columns * row) + column;
                 if (computedPosition >= numOfCharacters) continue;
                 boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
-                boolean validRow = rowIndex == row;
-                boolean validColumn = columnIndex == column;
+                boolean validRow = this.row == row;
+                boolean validColumn = this.column == column;
                 boolean notAllCharactersSelect = bothArentSelected();
                 if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
                 {
@@ -157,7 +157,6 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
             }
         }
         if (characterSelected && opponentSelected) {
-            //TODO show select lastStoryScene instead
             gc.drawImage(fight, 0, 0);
             gc.setFont(bigFont);
             gc.setFill(Color.WHITE);

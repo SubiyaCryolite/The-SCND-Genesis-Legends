@@ -48,6 +48,8 @@ public abstract class StageSelect extends JenesisMode {
     protected final int numberOfStages = Stage.values().length;
     protected final int columns = 3;
     protected final int rows = numberOfStages / columns;
+    protected final int rowsCiel = Math.round(Math.round(Math.ceil(numberOfStages / (double) columns)));
+    protected final int columnsCiel = numberOfStages % columns;
     protected boolean selectedStage;
     protected final Hashtable<Integer, Stage> stageLookup = new Hashtable<>();
     protected final Hashtable<Stage, String> lookupStageNames = new Hashtable<>();
@@ -125,7 +127,7 @@ public abstract class StageSelect extends JenesisMode {
                 }
             }
         } else {
-            hoveredStage = stageLookup.get((int) (Math.random() * (numberOfStages - 1)));
+            hoveredStage = stageLookup.getOrDefault((int) (Math.random() * (numberOfStages - 1)), Stage.IBEX_HILL);
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 nowLoading();
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
@@ -504,6 +506,7 @@ public abstract class StageSelect extends JenesisMode {
      */
     public void capAnim() {
         opacity = 0.0f;
+        animateCaption(row, column);
     }
 
     /**
@@ -514,7 +517,7 @@ public abstract class StageSelect extends JenesisMode {
         int computedStage = (row * columns) + column;
         if (computedStage <= numberOfStages) {
             ans = true;
-            hoveredStage = stageLookup.get(computedStage);
+            hoveredStage = stageLookup.getOrDefault(computedStage, Stage.IBEX_HILL);
         }
         return ans;
     }
@@ -526,7 +529,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Horizontal index
      *
-     * @return columnIndex
+     * @return column
      */
     public int getHindex() {
         return column;
@@ -542,7 +545,7 @@ public abstract class StageSelect extends JenesisMode {
     /**
      * Vertical index
      *
-     * @return rowIndex
+     * @return row
      */
     public int getVindex() {
         return row;
@@ -563,18 +566,13 @@ public abstract class StageSelect extends JenesisMode {
      * @param y
      */
     private void animateCaption(int x, int y) {
-        int tmpx = x;
-        int tmpy = y;
-
-        if (tmpx == storedX && tmpy == storedY) //same vals, do nothing
+        if (x != storedX || y != storedY)
         {
-        } else {
-            storedX = tmpx;
-            storedY = tmpy;
+            storedX = x;
+            storedY = y;
             RenderCharacterSelectionScreen.getInstance().animateCaption();
         }
     }
-
 
     /**
      * Move up
@@ -582,8 +580,10 @@ public abstract class StageSelect extends JenesisMode {
     public void onUp() {
         if (row > 0)
             row -= 1;
-        else
-            row = rows;
+        else {
+            int upperLimit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+            row = upperLimit;
+        }
         capAnim();
     }
 
@@ -591,8 +591,9 @@ public abstract class StageSelect extends JenesisMode {
      * Move down
      */
     public void onDown() {
-        if (row < rows - 1)
-            row = row + 1;
+        int limit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+        if (row < limit)
+            row++;
         else
             row = 0;
         capAnim();
@@ -602,8 +603,9 @@ public abstract class StageSelect extends JenesisMode {
      * Move right
      */
     public void onRight() {
-        if (column < columns - 1)
-            column += 1;
+        int limit = (row < rowsCiel) ? columns - 1 : columnsCiel - 1;
+        if (column < limit)
+            column++;
         else
             column = 0;
         capAnim();
@@ -613,10 +615,11 @@ public abstract class StageSelect extends JenesisMode {
      * Move left
      */
     public void onLeft() {
+        int limit = (row < rowsCiel - 1) ? columns - 1 : columnsCiel - 1;
         if (column > 0)
             column -= 1;
         else
-            column = columns - 1;
+            column = limit;
         capAnim();
     }
 

@@ -40,8 +40,10 @@ public abstract class StoryMenu extends JenesisMode {
 
     protected int charYcap = 0, charXcap = 0, hoveredStoryIndex = 99, row = 1, x = 0, y = 0, column = 0, vSpacer = 52, hSpacer = 92, commonXCoord = 299, commonYCoord = 105;
     protected final int columns = 3;
-    protected final int scenes = StoryMode.getInstance().max;
-    protected final int rows = scenes / columns;
+    protected final int numberOfScenes = StoryMode.getInstance().max;
+    protected final int rows = numberOfScenes / columns;
+    protected final int rowsCiel = Math.round(Math.round(Math.ceil(numberOfScenes / (double) columns)));
+    protected final int columnsCiel = numberOfScenes % columns;
     protected int oldId = -1;
     protected boolean[] unlockedStage;
     protected boolean loadingNow;
@@ -83,41 +85,50 @@ public abstract class StoryMenu extends JenesisMode {
      * Move up
      */
     public void onUp() {
-        if (column > 0) {
-            column = column - 1;
-        } else {
-            column = rows;
+        if (row > 0)
+            row -= 1;
+        else {
+            int upperLimit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+            row = upperLimit;
         }
         capAnim();
     }
 
+    /**
+     * Move down
+     */
     public void onDown() {
-        if (column < rows - 1) {
-            column = column + 1;
-        } else {
-            column = 0;
-        }
+        int limit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
+        if (row < limit)
+            row++;
+        else
+            row = 0;
         capAnim();
     }
 
+    /**
+     * Move right
+     */
     public void onRight() {
-        if (row < columns) {
-            row = row + 1;
-        } else {
-            row = 1;
-        }
+        int limit = (row < rowsCiel) ? columns - 1 : columnsCiel - 1;
+        if (column < limit)
+            column ++;
+        else
+            column = 0;
         capAnim();
     }
 
+    /**
+     * Move left
+     */
     public void onLeft() {
-        if (row > 1) {
-            row = row - 1;
-        } else {
-            row = columns;
-        }
+        int limit = (row < rowsCiel-1) ? columns - 1 : columnsCiel - 1;
+        if (column > 0)
+            column -= 1;
+        else
+            column = limit;
         capAnim();
     }
-
     /**
      * Gets the number of columns in the characterEnum select screen
      *
@@ -226,7 +237,7 @@ public abstract class StoryMenu extends JenesisMode {
     public boolean isUnlocked() {
         boolean ans = false;
         int computedPosition = (row * columns) + column;
-        if (computedPosition < scenes) {
+        if (computedPosition < numberOfScenes) {
             ans = true;
             hoveredStoryIndex = computedPosition;
         }
@@ -236,7 +247,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * Horizontal index
      *
-     * @return columnIndex
+     * @return column
      */
     public final int getHindex() {
         return row;
@@ -252,7 +263,7 @@ public abstract class StoryMenu extends JenesisMode {
     /**
      * Vertical index
      *
-     * @return rowIndex
+     * @return row
      */
     public final int getVindex() {
         return column;

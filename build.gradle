@@ -1,12 +1,13 @@
 group 'com.scndgen'
 version '2.17.04.15'
 apply plugin: 'java'
+apply plugin: 'idea'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 project.ext.jarDir = 'libs'
-project.ext.mainClass = 'com.scndgen.legends.LoginScreen'
+project.ext.mainClass = 'com.scndgen.legends.ScndGenLegends'
 repositories {
     mavenCentral()
 }
@@ -16,8 +17,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-lang:commons-lang:2.6'
     compile 'org.xerial:sqlite-jdbc:3.7.2'
-    compile 'org.jcraft:jorbis:0.0.17'
-    compile 'com.googlecode.soundlibs:jorbis:0.0.17.4'
+    compile 'com.github.trilarion:vorbis-support:1.1.0'
     testCompile 'junit:junit:4.11'
 }
 
@@ -30,16 +30,4 @@ jar {
                 "Class-Path": configurations.compile.collect { "libs/$it.name"}.join(' '),
         )
     }
-}
-
-task copyToLib(type: Copy) {
-    into "$buildDir/libs/libs"
-    from configurations.runtime
-}
-
-build.dependsOn(copyToLib)
-
-task runJava(type: JavaExec, dependsOn:[classes]) {
-    //main = 'com.scnd_genesis.loginScreen'
-    //classpath = sourceSets.main.runtimeClasspath
 }

@@ -51,10 +51,10 @@ public class RenderStoryMenu extends StoryMenu {
     private Image storyPrev;
 
     private RenderStoryMenu() {
-        lockedScene = new Image[scenes];
-        unlockedScene = new Image[scenes];
-        unlockedCaptions = new Image[scenes];
-        unlockedStage = new boolean[scenes];
+        lockedScene = new Image[numberOfScenes];
+        unlockedScene = new Image[numberOfScenes];
+        unlockedCaptions = new Image[numberOfScenes];
+        unlockedStage = new boolean[numberOfScenes];
         for (int u = 0; u < unlockedStage.length; u++) {
             unlockedStage[u] = u <= currentScene;
         }
@@ -123,7 +123,7 @@ public class RenderStoryMenu extends StoryMenu {
         JenesisImageLoader imageLoader = new JenesisImageLoader();
         RenderStageSelect.getInstance().setSelectedStage(false);
         try {
-            for (int i = 0; i < scenes; i++) {
+            for (int i = 0; i < numberOfScenes; i++) {
                 unlockedScene[i] = imageLoader.loadImage("images/story/locked/" + i + ".png");
                 unlockedCaptions[i] = imageLoader.loadImage("images/story/captions/" + i + ".png");
                 lockedScene[i] = imageLoader.loadImage("images/story/blur/" + i + ".png");

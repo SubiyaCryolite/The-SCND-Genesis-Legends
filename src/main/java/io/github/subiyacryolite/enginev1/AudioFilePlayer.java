@@ -18,8 +18,7 @@ public class AudioFilePlayer {
         return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
     }
 
-    private void stream(AudioInputStream in, SourceDataLine line)
-            throws IOException {
+    private void stream(AudioInputStream in, SourceDataLine line) throws IOException {
         final byte[] buffer = new byte[4096];
         for (int n = 0; n != -1; n = in.read(buffer, 0, buffer.length)) {
             line.write(buffer, 0, n);
