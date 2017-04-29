@@ -10,12 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="scndgen.legends_main" />
-    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
-    <orderEntry type="library" name="Gradle: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.xerial:sqlite-jdbc:3.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
-    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: io.github.subiyacryolite:jds:1.170414" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="scndgen.legends_main" />
 </module>

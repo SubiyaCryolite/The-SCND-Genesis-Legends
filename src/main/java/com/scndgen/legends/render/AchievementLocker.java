@@ -178,8 +178,7 @@ public class AchievementLocker {
     private void loadFontAndPictures() {
         font2 = getMyFont(spacer - 1);
         font1 = getMyFont(spacer + 2);
-        //total = (float) LoginScreen.getInstance().ach.length;
-        achCap = new Image[0];//[LoginScreen.getInstance().ach.length];
+        achCap = new Image[Achievements.values().length];
         for (int u = 0; u < achCap.length; u++) {
             achCap[u] = pix.loadImage("images/ach/" + u + ".png");
         }
@@ -243,7 +242,7 @@ public class AchievementLocker {
         }
         stat15 = Language.getInstance().get(125) + ": " + GameState.getInstance().getLogin().getWins();
         stat16 = Language.getInstance().get(126) + ": " + GameState.getInstance().getLogin().getLosses();
-        stat13 = Language.getInstance().get(127) + ": " + style[GameState.getInstance().getLogin().userAwesomeness()];
+        stat13 = Language.getInstance().get(127) + ": " + GameState.getInstance().getLogin().userAwesomeness();
         stat17 = Language.getInstance().get(128) + ": " + GameState.getInstance().getLogin().mostPopularCharEnum() + " " + GameState.getInstance().getLogin().mostPopularCharPercentage() + " %";
     }
 
