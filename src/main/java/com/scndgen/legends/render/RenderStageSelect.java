@@ -94,7 +94,7 @@ public class RenderStageSelect extends StageSelect {
         }
         if (selectedStage) {
             gc.setFill(Color.BLACK);
-            gc.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap);
+            gc.drawImage(stagePrev[hoveredStage.index()], 0, 0);
             gc.setGlobalAlpha((0.7f));
             gc.fillRect(0, 0, 852, 480);
             gc.setGlobalAlpha((1.0f));
@@ -116,7 +116,7 @@ public class RenderStageSelect extends StageSelect {
             gc.fillRect(0, 0, 852, 480);
             gc.setGlobalAlpha(opacity);
             if (hoveredStage.index() < stagePrev.length)
-                gc.drawImage(stagePrev[hoveredStage.index()], charXcap + x, charYcap);
+                gc.drawImage(stagePrev[hoveredStage.index()], 0, 0);
             gc.setGlobalAlpha((1.0f));
             gc.setGlobalAlpha((5 * 0.1F));
             gc.fillRoundRect(283, 0, 285, 480, 30, 30);

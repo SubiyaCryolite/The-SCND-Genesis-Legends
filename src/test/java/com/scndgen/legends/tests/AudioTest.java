@@ -13,7 +13,7 @@ import java.io.InputStream;
 public class AudioTest {
     @Test
     public void test() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("audio/Aleksi Aubry-Carlson - Battle Music.ogg"); AudioInputStream in = AudioSystem.getAudioInputStream(inputStream)) {
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("audio/Aleksi Aubry-Carlson - Battle Music.ogg"); AudioInputStream in = AudioSystem.getAudioInputStream(inputStream)) {
             if (in != null) {
                 AudioFormat baseFormat = in.getFormat();
                 AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);

@@ -463,14 +463,6 @@ public abstract class StageSelect extends JenesisMode {
         ambientMusicIndex = 3;
     }
 
-
-    /**
-     * @return lastStoryScene
-     */
-    public String getStage() {
-        return stagePreviews[hoveredStage.index()];
-    }
-
     public void start() {
         bgLocation = "images/bgBG" + hoveredStage.filePrefix() + ".png";
         fgLocation = "images/bgBG" + hoveredStage.filePrefix() + "fg.png";
