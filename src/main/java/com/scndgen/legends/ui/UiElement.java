@@ -52,6 +52,9 @@ public class UiElement {
 
     ///////////////events
     public void onHover() {
+        if (screen.getActiveItem() == this) return;
+        screen.getActiveItem().onLeave();
+        screen.setActiveItem(this);
     }
 
     public void onLeave() {
