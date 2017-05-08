@@ -29,8 +29,9 @@ import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import com.scndgen.legends.ui.UiElement;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -180,7 +181,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         if (x < 0) {
             x = x + 2;
         }
-        JenesisOverlay.getInstance().overlay(gc,x,y);
+        JenesisOverlay.getInstance().overlay(gc, x, y);
     }
 
     private void loadCaps() {
@@ -236,5 +237,15 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         statsChar[9] = Language.getInstance().get(143);
         statsChar[10] = Language.getInstance().get(144);
         statsChar[11] = Language.getInstance().get(145);
+    }
+
+    @Override
+    public void setActiveItem(UiElement uiElement) {
+        activeItem = uiElement;
+    }
+
+    @Override
+    public UiElement getActiveItem() {
+        return activeItem;
     }
 }

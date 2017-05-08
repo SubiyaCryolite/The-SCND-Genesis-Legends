@@ -24,11 +24,13 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
 import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -118,8 +120,8 @@ public class RenderStoryMenu extends StoryMenu {
         if (!loadAssets) return;
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
-        victorySound = new AudioPlayback(AudioPlayback.soundGameOver(), true);
-        menuSound = new AudioPlayback("audio/menu-select.ogg", true);
+        victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC,true);
+        menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND,true);
         JenesisImageLoader imageLoader = new JenesisImageLoader();
         RenderStageSelect.getInstance().setSelectedStage(false);
         try {

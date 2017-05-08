@@ -20,191 +20,129 @@
 package com.scndgen.legends.threads;
 
 
+import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.state.GameState;
+
+import javax.sound.sampled.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+
 public class AudioPlayback implements Runnable {
 
-    public static final String[] MALE_HURT = {"audio/from_Ardentryst/male/attack/Pain4.ogg",
-            "audio/from_Ardentryst/male/attack/death_16.ogg",
-            "audio/from_Ardentryst/male/attack/Pain5.ogg",
-            "audio/from_Ardentryst/male/attack/Pain7.ogg"};
-    public static final String[] MALE_ATTACKS = {"audio/from_Ardentryst/male/pain/death_11.ogg",
-            "audio/from_Ardentryst/male/pain/death_14.ogg",
-            "audio/from_Ardentryst/male/pain/death_17.ogg",
-            "audio/from_Ardentryst/male/pain/Pain2.ogg",
-            "audio/from_Ardentryst/male/pain/Pain6.ogg",
-            "audio/from_Ardentryst/male/pain/death_13.ogg",
-            "audio/from_Ardentryst/male/pain/death_15.ogg",
-            "audio/from_Ardentryst/male/pain/death_18.ogg",
-            "audio/from_Ardentryst/male/pain/Pain3.ogg",
-            "audio/from_Ardentryst/male/pain/Pain8.ogg"};
-    public static final String[] FEMALE_ATTACKS = {"audio/from_Ardentryst/female/attack/NYX_JUMP1.ogg",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP2.ogg",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP3.ogg",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP4.ogg",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP5.ogg",
-            "audio/from_Ardentryst/female/attack/NYX_JUMP6.ogg"};
-    public static final String[] FEMALE_HURT = {"audio/from_Ardentryst/female/pain/NYX_PAIN4.ogg",
-            "audio/from_Ardentryst/female/pain/NYX_PAIN5.ogg",
-            "audio/from_Ardentryst/female/pain/NYX_PAIN6.ogg"};
     private String fileName;
-    private final Thread thread;
+    private boolean playing;
+    private boolean paused;
+    private boolean looping;
+    private Thread thread;
+    private static final Set<AudioPlayback> heap = new HashSet<>();
+    private AudioType audioType;
+    private float volume;
 
-    public AudioPlayback() {
-        //dummy, grant access to methods
-        // run in new thread to play in background
-        thread = new Thread(this);
-        thread.setPriority(1);
-    }
-
-    public AudioPlayback(String filename, boolean loop) {
-        this();
-        try {
-            fileName = filename;
-        } catch (Exception e) {
-            //e.printStackTrace(System.err);
+    public AudioPlayback(String filename, AudioType audioType, boolean loop) {
+        this.fileName = filename;
+        this.looping = loop;
+        this.audioType = audioType;
+        heap.add(this);
+        switch (audioType) {
+            case MUSIC:
+                setVolume(GameState.getInstance().getLogin().getMusicVolume());
+                break;
+            case VOICE:
+                setVolume(GameState.getInstance().getLogin().getVoiceVolume());
+                break;
+            case SOUND:
+                setVolume(GameState.getInstance().getLogin().getSoundVolume());
+                break;
         }
     }
 
-    public static String maleAttack(int x) {
-        return MALE_HURT[x];
-    }
-
-    public static String maleHurt(int x) {
-        return MALE_ATTACKS[x];
-    }
-
-    public static String femaleAttack(int x) {
-        return FEMALE_HURT[x];
-    }
-
-    public static String femaleHurt(int x) {
-        return FEMALE_ATTACKS[x];
-    }
-
-    public static String tutorialSound() {
-        return "audio/from_0AD/germanic_peace_1.ogg";
-    }
-
-    public static String soundBack() {
-        return "audio/from_0AD/WeaponSwing.ogg";
-    }
-
-    public static String soundGameOver() {
-        return "audio/from_0AD/gen_loss_track.ogg";
-    }
-
-    public static String soundNext() {
-        return "audio/from_0AD/WeaponSwingHigh.ogg";
-    }
-
-    public static String enemyAttck() {
-        return "audio/hitlow.ogg";
-    }
-
-    public static String furyAttck() {
-        return "audio/hithard.ogg";
-    }
-
-    public static String playerAttack() {
-        return "audio/hitlow.ogg";
-    }
-
-    public static String selectSound() {
-        return "audio/menu-small-select.ogg";
-    }
-
-    public static String charSelectSound() {
-        return "audio/menu-back.ogg";
-    }
-
-    public static String itemSound1() {
-        return "audio/itembox_get.ogg";
-    }
-
-    public static String itemSound2() {
-        return "audio/itembox_get.ogg";
-    }
-
-    public static String startUpSound() {
-        return "audio/Ryan Reilly - Victory.ogg";
-    }
-
-    public static String flameSwoosh() {
-        return "audio/flame_whoosh.ogg";
-    }
-
-    public static String menuMus() {
-        return "audio/Doug Kaufman - The City Falls.ogg";
-    }
-
-    public static String winSound() {
-        return "audio/Ryan Reilly - Victory.ogg";
-    }
-
-    public static String loseSound() {
-        return "audio/Timothy Pinkham - Defeat.ogg";
-    }
-
-    public static String storySound() {
-        return "audio/Ryan Reilly - Suspense.ogg";
-    }
-
-    public void close() {
-        if (thread != null) {
-            thread.stop();
-        }
-    }
 
     public boolean isPlaying() {
-        return false;
+        return thread.isAlive() || playing;
     }
 
     // play the MP3 file to the sound card
     public void play() {
-//        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
-//            if (GameState.getInstance().getLogin().isAudioOn()) {
-//                player = new Player(inputStream);
-//                thread.setName("Music Thread");
-//                thread.start();
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Problem playing file " + fileName);
-//            System.out.println(e);
-//        }
+        if (thread != null && (playing || paused))
+            thread.stop();
+        thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.setName("Audio Playback - " + this.fileName);
+        thread.start();
     }
 
-    public void volume() {
+    public static void volume(AudioType audioType, float volume) {
+        heap.stream().forEach(elem -> {
+            if (elem.getAudioType() == audioType) {
+                elem.setVolume(volume);
+            }
+        });
     }
 
     @Override
     public void run() {
-        try {
-            //player.play();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+        playAudio();
     }
 
-    public void pause() {
-        try {
+    public void togglePause() {
+        if (!paused)
             thread.suspend();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+        else
+            thread.resume();
+        paused = !paused;
     }
 
     public void stop() {
-        try {
+        if (thread.isAlive())
             thread.stop();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+        heap.remove(this);
+    }
+
+    private void setVolume(float volume) {
+        this.volume = volume;
+        if (playing || paused) {
+            //float control here
         }
     }
 
-    public void resume() {
-        try {
-            thread.resume();
-        } catch (Exception e) {
+    private void playAudio() {
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName); AudioInputStream in = AudioSystem.getAudioInputStream(inputStream)) {
+            if (in != null) {
+                AudioFormat baseFormat = in.getFormat();
+                AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
+                AudioInputStream dataIn = AudioSystem.getAudioInputStream(targetFormat, in);
+                byte[] buffer = new byte[4096];
+                DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
+                SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+                if (line != null) {
+                    playing = true;
+                    line.open();
+                    line.start();
+                    int nBytesRead = 0, nBytesWritten = 0;
+                    while (nBytesRead != -1) {
+                        nBytesRead = dataIn.read(buffer, 0, buffer.length);
+                        if (nBytesRead != -1) {
+                            nBytesWritten = line.write(buffer, 0, nBytesRead);
+                        }
+                    }
+                    line.drain();
+                    line.stop();
+                    line.close();
+                    dataIn.close();
+                }
+            }
+            playing = false;
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace(System.err);
         }
+        if (looping)
+            playAudio();//call again
+    }
+
+    public AudioType getAudioType() {
+        return audioType;
     }
 }

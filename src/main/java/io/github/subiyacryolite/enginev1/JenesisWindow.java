@@ -24,6 +24,8 @@ package io.github.subiyacryolite.enginev1;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
@@ -56,7 +58,7 @@ public class JenesisWindow {
     @SuppressWarnings("LeakingThisInConstructor")
     public JenesisWindow(String dude, LoginScreen px) {
         p = px;
-        startup = new AudioPlayback(AudioPlayback.startUpSound(), false);
+        startup = new AudioPlayback(AudioConstants.startUpSound(), AudioType.MUSIC, false);
         startup.play();
         strUser = dude;
         //setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));

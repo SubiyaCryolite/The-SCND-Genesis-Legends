@@ -24,7 +24,9 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.Achievement;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacks;
@@ -411,8 +413,8 @@ public class GameInstance implements Runnable {
         gamePaused = false;
         gameOver = false;
         newMatch = true;
-        winMusic = new AudioPlayback(AudioPlayback.winSound(), false);
-        loseMusic = new AudioPlayback(AudioPlayback.loseSound(), false);
+        winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
+        loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();

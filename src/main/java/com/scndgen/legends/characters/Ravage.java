@@ -22,9 +22,8 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.Colors;
-import com.scndgen.legends.enums.*;
+import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.threads.AudioPlayback;
 
 import static com.scndgen.legends.enums.CharacterEnum.RAVAGE;
 
@@ -48,8 +47,7 @@ public class Ravage extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        atbRecoveryRate = 1.70f;//1.5;
-        sound3 = new AudioPlayback(AudioPlayback.itemSound1(), false);
+        atbRecoveryRate = 1.70f;
     }
 
     @Override

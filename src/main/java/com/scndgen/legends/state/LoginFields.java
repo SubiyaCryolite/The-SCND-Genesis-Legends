@@ -51,4 +51,7 @@ public class LoginFields {
     public static final JdsField CURRENT_LANGUAGE = new JdsField(42, "CURRENT_LANGUAGE", JdsFieldType.INT);
     public static final JdsField LEFT_HANDED = new JdsField(43, "LEFT_HANDED", JdsFieldType.BOOLEAN);
     public static final JdsField CONSECUTIVE_WINS = new JdsField(44, "CONSECUTIVE_WINS", JdsFieldType.INT);
+    public static final JdsField MUSIC_VOLUME  = new JdsField(45, "MUSIC_VOLUME", JdsFieldType.FLOAT);
+    public static final JdsField VOICE_VOLUME  = new JdsField(46, "VOICE_VOLUME", JdsFieldType.FLOAT);
+    public static final JdsField SOUND_VOLUME  = new JdsField(47, "SOUND_VOLUME", JdsFieldType.FLOAT);
 }

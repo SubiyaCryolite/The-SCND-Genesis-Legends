@@ -1,7 +1,6 @@
 package com.scndgen.legends.ui;
 
 /**
- *
  * @author indana
  */
 public class UiElement {
@@ -12,6 +11,13 @@ public class UiElement {
     private UiElement up;
     private UiElement down;
     private UiElement back;
+    private final UiScreen screen;
+    private final String tag;
+
+    public UiElement(UiScreen screen, String tag) {
+        this.screen = screen;
+        this.tag = tag;
+    }
 
     public final void setBack(UiElement value) {
         back = value;
@@ -69,6 +75,7 @@ public class UiElement {
         }
         this.onLeave();
         left.setHovered(true);
+        screen.setActiveItem(left);
     }
 
     public final void onRight() {
@@ -77,6 +84,7 @@ public class UiElement {
         }
         this.onLeave();
         right.setHovered(true);
+        screen.setActiveItem(right);
     }
 
     public final void onUp() {
@@ -85,6 +93,7 @@ public class UiElement {
         }
         this.onLeave();
         up.setHovered(true);
+        screen.setActiveItem(up);
     }
 
     public final void onDown() {
@@ -93,13 +102,15 @@ public class UiElement {
         }
         this.onLeave();
         down.setHovered(true);
+        screen.setActiveItem(down);
     }
-    
+
     public final void onBack() {
         if (back == null) {
             return;
         }
         this.onLeave();
         back.setHovered(true);
+        screen.setActiveItem(back);
     }
 }

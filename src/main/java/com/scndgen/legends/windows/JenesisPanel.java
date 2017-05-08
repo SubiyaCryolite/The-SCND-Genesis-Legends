@@ -34,7 +34,6 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.JenesisMode;
 import io.github.subiyacryolite.enginev1.JenesisWindow;
@@ -75,7 +74,6 @@ public class JenesisPanel extends Pane {
     private String gameIp = "";
     private String userName;
     private LanHostWaitLobby lanHostWaitLobby;
-    private AudioPlayback backgroundMusic;
     private JenesisMode jenesisMode;
     private VolatileImage volatileImage;
     private GraphicsEnvironment ge;
@@ -83,8 +81,6 @@ public class JenesisPanel extends Pane {
 
     private JenesisPanel(String nameOfUser, SubMode subMode) {
         instance = this;
-        backgroundMusic = new AudioPlayback(AudioPlayback.menuMus(), false);
-        backgroundMusic.play();
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
         leftyXOffset = GameState.getInstance().getLogin().isLeftHanded() ? 548 : 0;
@@ -109,9 +105,6 @@ public class JenesisPanel extends Pane {
     }
 
     public void stopBackgroundMusic() {
-        if (backgroundMusic == null) return;
-        backgroundMusic.stop();
-        backgroundMusic.close();
     }
 
     public String getServerName() {

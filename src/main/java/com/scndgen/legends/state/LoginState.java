@@ -5,6 +5,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import io.github.subiyacryolite.jds.JdsEntity;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -68,6 +69,9 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty currentLanguage = new SimpleIntegerProperty(0);
     private final SimpleBooleanProperty leftHanded = new SimpleBooleanProperty(false);
     private final SimpleIntegerProperty consecutiveWins = new SimpleIntegerProperty(0);
+    private final SimpleFloatProperty musicVolume = new SimpleFloatProperty(100);
+    private final SimpleFloatProperty voiceVolume = new SimpleFloatProperty(100);
+    private final SimpleFloatProperty soundVolume = new SimpleFloatProperty(100);
 
     public LoginState() {
         map(LoginFields.USER_NAME, userName);
@@ -114,6 +118,9 @@ public class LoginState extends JdsEntity {
         map(LoginFields.CURRENT_LANGUAGE, currentLanguage);
         map(LoginFields.LEFT_HANDED, leftHanded);
         map(LoginFields.CONSECUTIVE_WINS, consecutiveWins);
+        map(LoginFields.MUSIC_VOLUME, musicVolume);
+        map(LoginFields.VOICE_VOLUME, voiceVolume);
+        map(LoginFields.SOUND_VOLUME, soundVolume);
     }
 
     public void incrementAchievement(Achievements achievement) {
@@ -715,5 +722,29 @@ public class LoginState extends JdsEntity {
 
     public boolean isTimeLimited() {
         return getTimeLimit() != MAX_TIME;
+    }
+
+    public float getMusicVolume() {
+        return musicVolume.get();
+    }
+
+    public float getVoiceVolume() {
+        return voiceVolume.get();
+    }
+
+    public float getSoundVolume() {
+        return soundVolume.get();
+    }
+
+    public void setMusicVolume(float value) {
+        musicVolume.set(value);
+    }
+
+    public void setVoiceVolume(float value) {
+        voiceVolume.set(value);
+    }
+
+    public void setSoundVolume(float value) {
+        soundVolume.set(value);
     }
 }

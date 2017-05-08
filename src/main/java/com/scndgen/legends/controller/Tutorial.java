@@ -23,6 +23,8 @@ package com.scndgen.legends.controller;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.threads.AudioPlayback;
@@ -45,14 +47,17 @@ public class Tutorial implements Runnable {
     private Image forward, back;
     private Thread thread;
     private JenesisImageLoader imageLoader;
-    private boolean globalBreak, isShowing, skipSec;
+    private boolean  skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
     private Font normalFont;
-    private AudioPlayback bgSound, nextSound, backSound;
+    private final AudioPlayback bgSound, nextSound, backSound;
 
     public Tutorial() {
+        backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
+        nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
+        bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
         imageLoader = new JenesisImageLoader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
@@ -75,18 +80,13 @@ public class Tutorial implements Runnable {
         forward = imageLoader.loadImage("images/tutorial/list_item_arrow_r.png");
         back = imageLoader.loadImage("images/tutorial/list_item_arrow_l.png");
         tutText = "TUTORIAL";
-        isShowing = true;
-        bgSound = new AudioPlayback(AudioPlayback.tutorialSound(), false);
-        bgSound.play();
     }
 
     public void beginTutorial() {
         thread = null;
         thread = new Thread(this);
         thread.start();
-        {
-            globalBreak = true;
-        }
+        bgSound.play();
     }
 
     public void onLeft() {
@@ -179,17 +179,11 @@ public class Tutorial implements Runnable {
     }
 
     private void playBackSound() {
-        if (isShowing) {
-            backSound = new AudioPlayback(AudioPlayback.soundBack(), false);
             backSound.play();
-        }
     }
 
     private void playForwardSound() {
-        if (isShowing) {
-            nextSound = new AudioPlayback(AudioPlayback.soundNext(), false);
             nextSound.play();
-        }
     }
 
     private void setTxt(String p) {
@@ -204,7 +198,7 @@ public class Tutorial implements Runnable {
     @Override
     public void run() {
         try {
-            while (globalBreak) {
+            while (true) {
                 slide = -1;
                 slide++;
                 if (sec == slide) {
@@ -845,11 +839,9 @@ public class Tutorial implements Runnable {
     }
 
     public void onBackCancel() {
-        globalBreak = false;
-        isShowing = false;
-        if (bgSound != null) {
-            bgSound.stop();
-        }
+        bgSound.stop();
+        nextSound.stop();
+        thread.stop();
         RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
     }
 

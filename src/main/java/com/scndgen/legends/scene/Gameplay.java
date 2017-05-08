@@ -27,6 +27,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkClient;
@@ -153,10 +154,13 @@ public abstract class Gameplay extends JenesisMode {
     protected int limitBreak;
     protected AttackOpponent attackOpponent;
     protected AttackPlayer attackPlayer;
-    protected AudioPlayback sound, ambientMusic, furySound, damageSound, hurtChar, hurtOpp, attackChar, attackOpp;
+    protected AudioPlayback sound, ambientMusic, hurtChar, hurtOpp, attackChar, attackOpp;
+    protected final AudioPlayback furySound, damageSound;
     protected boolean isCharacterAttacking;
 
     protected Gameplay() {
+        furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
+        damageSound = new AudioPlayback(AudioConstants.playerAttack(), AudioType.SOUND, false);
     }
 
     /**
@@ -1238,7 +1242,7 @@ public abstract class Gameplay extends JenesisMode {
                 System.out.println("Player clashing");
             } else if (safeToSelect) {
                 numOfAttacks = numOfAttacks + 1;
-                sound = new AudioPlayback(AudioPlayback.selectSound(), false);
+                sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                 sound.play();
                 move = (currentColumnIndex * 4) + itemIndex + 1;
                 attackArray[comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0

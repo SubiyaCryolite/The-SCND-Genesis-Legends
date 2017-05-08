@@ -1,0 +1,17 @@
+package com.scndgen.legends.tests;
+
+import com.scndgen.legends.threads.AudioPlayback;
+import org.junit.Test;
+
+/**
+ * Created by ifung on 23/04/2017.
+ */
+
+public class Player {
+
+    @Test
+    public void run() {
+        AudioPlayback ap = new AudioPlayback("audio/Aleksi Aubry-Carlson - Battle Music.ogg", false);
+        ap.play();
+    }
+}

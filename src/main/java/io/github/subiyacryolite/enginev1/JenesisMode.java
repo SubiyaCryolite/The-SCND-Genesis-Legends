@@ -1,5 +1,7 @@
 package io.github.subiyacryolite.enginev1;
 
+import com.scndgen.legends.ui.UiElement;
+import com.scndgen.legends.ui.UiScreen;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -9,7 +11,7 @@ import javafx.scene.text.Font;
 /**
  * Created by ifunga on 14/04/2017.
  */
-public abstract class JenesisMode {
+public abstract class JenesisMode implements UiScreen {
 
     protected int screenWidth = 852;
     protected int screenHeight = 480;
@@ -19,6 +21,7 @@ public abstract class JenesisMode {
     protected long diff;
     protected boolean validHover, validSecondaryHover, validThirdHover, validFourthHover;
     protected boolean isPaused;
+    protected UiElement activeItem;
     private long accumulator16ms;
     private long accumulator33ms;
 

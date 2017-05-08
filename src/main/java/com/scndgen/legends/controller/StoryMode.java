@@ -24,10 +24,8 @@ package com.scndgen.legends.controller;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Mode;
-import com.scndgen.legends.enums.Stage;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
@@ -71,7 +69,7 @@ public class StoryMode implements Runnable {
     }
 
     public void story(int scene) {
-        storyMus = new AudioPlayback(AudioPlayback.storySound(), false);
+        storyMus = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC,false);
         tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
         notAsked = true;
         opt = -1;
@@ -188,7 +186,7 @@ public class StoryMode implements Runnable {
 
     private void storyOut(boolean terminateMode) {
         if (terminateMode) {
-            storyMus.close();
+            storyMus.stop();
             GameInstance.getInstance().playMusicNow();
             GameInstance.getInstance().musNotice();
         }

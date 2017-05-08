@@ -21,6 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
@@ -43,7 +45,7 @@ public abstract class Character {
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     public float[] weakness;
     public float atbRecoveryRate;
-    protected AudioPlayback sound3;
+    protected final AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private Image[] highQualitySprites;
     private JenesisImageLoader pix;
@@ -53,7 +55,7 @@ public abstract class Character {
 
     public Character() {
         bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
-        sound3 = new AudioPlayback(AudioPlayback.itemSound1(), false);
+        sound3 = new AudioPlayback(AudioConstants.itemSound1(), AudioType.SOUND, false);
         isMale = true;
     }
 

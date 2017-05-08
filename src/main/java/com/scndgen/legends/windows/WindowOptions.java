@@ -202,7 +202,7 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
         panController.add(opLabel9);
         panController.add(cont);
 
-        cmbLanguage = new JComboBox(Language.getInstance().getSupportedLanguages());
+        cmbLanguage = new JComboBox(Language.getInstance().getSupportedLanguages().toArray());
         cmbLanguage.setSelectedIndex(GameState.getInstance().getLogin().getCurrentLanguage());
         cmbLanguage.addActionListener(this);
         opLabel11 = new JLabel(Language.getInstance().get(19));

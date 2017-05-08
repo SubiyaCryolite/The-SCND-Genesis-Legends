@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scndgen.legends.iml" filepath="$PROJECT_DIR$/.idea/modules/scndgen.legends.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scndgen.legends_main.iml" filepath="$PROJECT_DIR$/.idea/modules/scndgen.legends_main.iml" group="scndgen.legends" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scndgen.legends_test.iml" filepath="$PROJECT_DIR$/.idea/modules/scndgen.legends_test.iml" group="scndgen.legends" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/legends.iml" filepath="$PROJECT_DIR$/.idea/modules/legends.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/legends_main.iml" filepath="$PROJECT_DIR$/.idea/modules/legends_main.iml" group="legends" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/legends_test.iml" filepath="$PROJECT_DIR$/.idea/modules/legends_test.iml" group="legends" />
     </modules>
   </component>
 </project>
