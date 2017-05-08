@@ -94,4 +94,12 @@ public class UiElement {
         this.onLeave();
         down.setHovered(true);
     }
+    
+    public final void onBack() {
+        if (back == null) {
+            return;
+        }
+        this.onLeave();
+        back.setHovered(true);
+    }
 }
