@@ -60,7 +60,7 @@ import java.util.logging.Logger;
  * @Class: Gameplay
  */
 public abstract class Gameplay extends JenesisMode {
-    protected String activePerson; // person who performed an attack, name shall show in battle info status area
+    protected String activePerson; // person who performed an attack, getName shall show in battle info status area
     protected int characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected int done = 0; // if gameover
     protected String[] attackArray = new String[8];//up to 8 moves can be qued
@@ -207,7 +207,7 @@ public abstract class Gameplay extends JenesisMode {
             do {
                 for (int u = 0; u < howMany; u++) {
                     String[] achievementInfo = Achievement.getInstance().getName(u);
-                    achievementName = achievementInfo[0]; //name
+                    achievementName = achievementInfo[0]; //getName
                     achievementDescription = achievementInfo[1]; //desc
                     achievementClass = achievementInfo[2]; //class
                     achievementPoints = achievementInfo[3]; //points
@@ -1195,7 +1195,7 @@ public abstract class Gameplay extends JenesisMode {
                     RenderGameplay.getInstance().onRight();
                 else if ((mouseEvent.getX() > 25 && mouseEvent.getX() < 46) && (mouseEvent.getY() > 190 && mouseEvent.getY() < 270))
                     RenderGameplay.getInstance().triggerFury(CharacterState.CHARACTER);
-                else if (validHover)
+                else if (false)
                     onAccept();
                 break;
             case MIDDLE:
@@ -1211,23 +1211,17 @@ public abstract class Gameplay extends JenesisMode {
         if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
             if (mouseEvent.getX() > (29 + leftHandXAxisOffset) && mouseEvent.getX() < (436 + leftHandXAxisOffset)) {
                 if (mouseEvent.getY() > 373 && mouseEvent.getY() < 390) {
-                    validHover = true;
                     RenderGameplay.getInstance().thisItem(0);
                 }
                 if (mouseEvent.getY() > 390 && mouseEvent.getY() < 407) {
-                    validHover = true;
                     RenderGameplay.getInstance().thisItem(1);
                 }
                 if (mouseEvent.getY() > 407 && mouseEvent.getY() < 420) {
-                    validHover = true;
                     RenderGameplay.getInstance().thisItem(2);
                 }
                 if (mouseEvent.getY() > 420 && mouseEvent.getY() < 435) {
-                    validHover = true;
                     RenderGameplay.getInstance().thisItem(3);
                 }
-            } else {
-                validHover = false;
             }
         }
     }

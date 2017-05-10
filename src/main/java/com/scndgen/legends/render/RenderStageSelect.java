@@ -73,8 +73,7 @@ public class RenderStageSelect extends StageSelect {
     }
 
     @Override
-    public void loadAssets() {
-        if (!loadAssets) return;
+    public void loadAssetsIml() {
         imageLoader = new JenesisImageLoader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         loadCaps();

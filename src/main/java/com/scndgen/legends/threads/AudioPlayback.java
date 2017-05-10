@@ -87,14 +87,16 @@ public class AudioPlayback implements Runnable {
     }
 
     public void togglePause() {
+        paused = !paused;
+        if(thread==null)return;
         if (!paused)
             thread.suspend();
         else
             thread.resume();
-        paused = !paused;
     }
 
     public void stop() {
+        if(thread==null)return;
         if (thread.isAlive())
             thread.stop();
         heap.remove(this);

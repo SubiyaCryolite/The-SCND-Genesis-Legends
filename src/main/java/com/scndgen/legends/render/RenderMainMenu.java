@@ -1,9 +1,13 @@
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.enums.Mode;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.MainMenu;
+import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.WindowAbout;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisOverlay;
@@ -18,6 +22,32 @@ import javafx.scene.paint.Color;
 public class RenderMainMenu extends MainMenu {
 
     private static RenderMainMenu instance;
+    private String strStoryMode;
+    private String strQuickMatch;
+    private String strHostLanMatch;
+    private String strJoinLanMatch;
+    private String strAchievementLocker;
+    private String strYourStats;
+    private String strOptions;
+    private String strControls;
+    private String strAbout;
+    private String strExit;
+    private String strOnlineLeaderBoards;
+    private String strLogOut;
+    private String strTutorial;
+    private final UiItem uiStoryMode;
+    private final UiItem uiQuickMatch;
+    private final UiItem uiHostLanMatch;
+    private final UiItem uiTutorial;
+    private final UiItem uiJoinLanMatch;
+    private final UiItem uiAchievementLocker;
+    private final UiItem uiYourStats;
+    private final UiItem uiOnlineLeaderBoards;
+    private final UiItem uiOptions;
+    private final UiItem uiControls;
+    private final UiItem uiAbout;
+    private final UiItem uiLogOut;
+    private final UiItem uiExit;
     private JenesisImageLoader imageLoader = new JenesisImageLoader();
     private Image menuLogo, gameLogo;
     private Image pointer;
@@ -29,13 +59,445 @@ public class RenderMainMenu extends MainMenu {
         return instance;
     }
 
+    public RenderMainMenu() {
+        strTutorial = Language.getInstance().get(319).toLowerCase();
+        strStoryMode = Language.getInstance().get(307).toLowerCase();
+        strQuickMatch = Language.getInstance().get(308).toLowerCase();
+        strHostLanMatch = Language.getInstance().get(309).toLowerCase();
+        strJoinLanMatch = Language.getInstance().get(310).toLowerCase();
+        strAchievementLocker = Language.getInstance().get(316).toLowerCase();
+        strYourStats = Language.getInstance().get(311).toLowerCase();
+        strOnlineLeaderBoards = Language.getInstance().get(317).toLowerCase();
+        strOptions = Language.getInstance().get(312).toLowerCase();
+        strControls = Language.getInstance().get(313).toLowerCase();
+        strAbout = Language.getInstance().get(314).toLowerCase();
+        strLogOut = Language.getInstance().get(318).toLowerCase();
+        strExit = Language.getInstance().get(315).toLowerCase();
+
+
+        (uiTutorial = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strTutorial = strTutorial.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strTutorial = strTutorial.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                if (getOverlay() != Overlay.TUTORIAL) {
+                    setOverlay(Overlay.TUTORIAL);
+                    tutorial.beginTutorial();
+                } else {
+                    tutorial.onAccept();
+                }
+            }
+
+            @Override
+            public void onBackCancel() {
+                if (getOverlay() != Overlay.TUTORIAL) return;
+                tutorial.onBackCancel();
+            }
+
+            @Override
+            public void onLeft() {
+                if (getOverlay() == Overlay.TUTORIAL) return;
+                tutorial.onLeft();
+            }
+
+            @Override
+            public void onRight() {
+                if (getOverlay() == Overlay.TUTORIAL) return;
+                tutorial.onRight();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+
+        (uiStoryMode = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strStoryMode = strStoryMode.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strStoryMode = strStoryMode.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
+                ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+
+        (uiQuickMatch = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strQuickMatch = strQuickMatch.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strQuickMatch = strQuickMatch.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                ScndGenLegends.getInstance().setSubMode(SubMode.SINGLE_PLAYER);
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+
+        (uiHostLanMatch = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strHostLanMatch = strHostLanMatch.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strHostLanMatch = strHostLanMatch.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
+                primaryNotice(Language.getInstance().get(107));
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+
+        (uiJoinLanMatch = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strJoinLanMatch = strJoinLanMatch.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strJoinLanMatch = strJoinLanMatch.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
+                primaryNotice(Language.getInstance().get(107));
+                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+
+        (uiAchievementLocker = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strAchievementLocker = strAchievementLocker.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strAchievementLocker = strAchievementLocker.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                    achievementLocker.onAccept();
+                else
+                    setOverlay(Overlay.ACHIEVEMENT_LOCKER);
+            }
+
+            @Override
+            public void onBackCancel() {
+                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                    achievementLocker.onBackCancel();
+            }
+
+            @Override
+            public void onDown() {
+                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                    achievementLocker.onDown();
+                else {
+                    setActiveItem(source.getDown());
+                }
+            }
+
+            @Override
+            public void onUp() {
+                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                    achievementLocker.onUp();
+                else {
+                    setActiveItem(source.getUp());
+                }
+            }
+        });
+
+        (uiYourStats = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strYourStats = strYourStats.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strYourStats = strYourStats.toLowerCase();
+            }
+
+            @Override
+            public void onAccept() {
+                if (getOverlay() == Overlay.STATISTICS)
+                    achievementLocker.onAccept();
+                else
+                    setOverlay(Overlay.STATISTICS);
+            }
+
+            @Override
+            public void onBackCancel() {
+                if (getOverlay() == Overlay.STATISTICS)
+                    achievementLocker.onBackCancel();
+            }
+
+            @Override
+            public void onDown() {
+                if (getOverlay() == Overlay.STATISTICS)
+                    achievementLocker.onDown();
+                else {
+                    setActiveItem(source.getDown());
+                }
+            }
+
+            @Override
+            public void onUp() {
+                if (getOverlay() == Overlay.STATISTICS)
+                    achievementLocker.onUp();
+                else {
+                    setActiveItem(source.getUp());
+                }
+            }
+        });
+
+        (uiOnlineLeaderBoards = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strOnlineLeaderBoards = strOnlineLeaderBoards.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strOnlineLeaderBoards = strOnlineLeaderBoards.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        (uiOptions = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strOptions = strOptions.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strOptions = strOptions.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        (uiControls = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strControls = strControls.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strControls = strControls.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        (uiAbout = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strAbout = strAbout.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strAbout = strAbout.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        (uiLogOut = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strLogOut = strLogOut.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strLogOut = strLogOut.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        (uiExit = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                strExit = strExit.toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                strExit = strExit.toLowerCase();
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+        });
+        uiTutorial.setDown(uiQuickMatch);
+        uiQuickMatch.setDown(uiHostLanMatch);
+        uiHostLanMatch.setDown(uiJoinLanMatch);
+        uiJoinLanMatch.setDown(uiAchievementLocker);
+        uiAchievementLocker.setDown(uiYourStats);
+        uiYourStats.setDown(uiOnlineLeaderBoards);
+        uiOnlineLeaderBoards.setDown(uiOptions);
+        uiOptions.setDown(uiControls);
+        uiControls.setDown(uiAbout);
+        uiAbout.setDown(uiLogOut);
+        uiLogOut.setDown(uiExit);
+        uiExit.setDown(uiTutorial);
+    }
+
+    public void onBackCancel() {
+        activeItem.backCancel();
+    }
+
+    public void onUp() {
+        activeItem.up();
+    }
+
+    public void onDown() {
+        activeItem.down();
+    }
+
+    public void onRight() {
+        activeItem.right();
+    }
+
+    public void onLeft() {
+        activeItem.left();
+    }
+
+    public void onAccept() {
+        activeItem.accept();
+    }
+
     @Override
     public void newInstance() {
         super.newInstance();
     }
 
     @Override
-    public void loadAssets() {
+    public void loadAssetsIml() {
         if (!loadAssets) return;
         menuFont = getMyFont(fontSize);
         gameLogo = imageLoader.loadImage("logo/gameLogo");
@@ -58,6 +520,7 @@ public class RenderMainMenu extends MainMenu {
             particlesLayer2 = imageLoader.loadImage("images/blur/bgBG5b.png");
         }
         loadAssets = false;
+        setActiveItem(uiTutorial);
     }
 
     @Override
@@ -89,108 +552,31 @@ public class RenderMainMenu extends MainMenu {
         gc.setFont(menuFont);
         if (overlay == Overlay.PRIMARY_MENU) {
             menuItemIndex = 0;
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
-                gc.drawImage(pointer, xMenu - 18, yMenu - 15);
-                gc.fillText(menuItem[1], xMenu, yMenu);
-            } else {
-                gc.fillText(menuItem[0], xMenu, yMenu);
-            }
+            ///////////////////////////////////////////
+            fillText(gc, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
             menuItemIndex++;
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.SINGLE_PLAYER);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[3], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[2], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strQuickMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiQuickMatch);
             menuItemIndex++;
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[7], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[6], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strHostLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiHostLanMatch);
             menuItemIndex++;
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[9], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[8], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strJoinLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiJoinLanMatch);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.STATS);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[11], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[10], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+/////////////////////////////////////////////////////
+            fillText(gc, strAchievementLocker, xMenu, yMenu + (fontSize * menuItemIndex), uiAchievementLocker);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.ACH);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[21], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[20], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strYourStats, xMenu, yMenu + (fontSize * menuItemIndex), uiYourStats);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.TUTORIAL);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[25], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[24], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strOnlineLeaderBoards, xMenu, yMenu + (fontSize * menuItemIndex), uiOnlineLeaderBoards);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.OPTIONS);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[13], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[12], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strOptions, xMenu, yMenu + (fontSize * menuItemIndex), uiOptions);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.CONTROLS);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[15], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[14], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strControls, xMenu, yMenu + (fontSize * menuItemIndex), uiControls);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.LOGOUT);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[23], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[22], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strAbout, xMenu, yMenu + (fontSize * menuItemIndex), uiAbout);
             menuItemIndex++;
-
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.ABOUT);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[17], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[16], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strLogOut, xMenu, yMenu + (fontSize * menuItemIndex), uiLogOut);
             menuItemIndex++;
-            if (hoveredMenuIndex == menuItemIndex) {
-                ScndGenLegends.getInstance().setSubMode(SubMode.EXIT);
-                gc.drawImage(pointer, xMenu - 18, yMenu + (fontSize * menuItemIndex) - 15);
-                gc.fillText(menuItem[19], xMenu, yMenu + (fontSize * menuItemIndex));
-            } else {
-                gc.fillText(menuItem[18], xMenu, yMenu + (fontSize * menuItemIndex));
-            }
+            fillText(gc, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
         JenesisOverlay.getInstance().overlay(gc, w, h);

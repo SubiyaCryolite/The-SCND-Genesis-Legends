@@ -1,5 +1,6 @@
 package com.scndgen.legends.tests;
 
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.threads.AudioPlayback;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class Player {
 
     @Test
     public void run() {
-        AudioPlayback ap = new AudioPlayback("audio/Aleksi Aubry-Carlson - Battle Music.ogg", false);
+        AudioPlayback ap = new AudioPlayback("audio/Aleksi Aubry-Carlson - Battle Music.ogg", AudioType.MUSIC, false);
         ap.play();
     }
 }

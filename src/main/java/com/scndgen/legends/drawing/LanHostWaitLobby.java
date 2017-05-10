@@ -83,7 +83,7 @@ public class LanHostWaitLobby extends JenesisMode {
     }
 
     @Override
-    public void loadAssets() {
+    public void loadAssetsIml() {
 
     }
 

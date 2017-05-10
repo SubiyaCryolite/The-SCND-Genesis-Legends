@@ -128,9 +128,9 @@ public abstract class Character {
     }
 
     /**
-     * Gets the name of a qued move
+     * Gets the getName of a qued move
      *
-     * @return The name of the qued move
+     * @return The getName of the qued move
      */
     public String getMoveQued(int move) {
         int yus = move - 1;
@@ -185,9 +185,9 @@ public abstract class Character {
     }
 
     /**
-     * Gets the characterEnum name
+     * Gets the characterEnum getName
      *
-     * @return characterEnum name
+     * @return characterEnum getName
      */
     public String getName() {
         return name;

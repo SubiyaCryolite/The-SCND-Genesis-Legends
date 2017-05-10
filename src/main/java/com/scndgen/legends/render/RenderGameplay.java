@@ -81,8 +81,7 @@ public class RenderGameplay extends Gameplay {
         return instance;
     }
 
-    public void loadAssets() {
-        if (!loadAssets) return;
+    public void loadAssetsIml() {
         loadAssets = false;
         notSelected = getMyFont(12);
         largeFont = getMyFont(LoginScreen.bigTxtSize);

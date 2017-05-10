@@ -116,8 +116,7 @@ public class RenderStoryMenu extends StoryMenu {
         JenesisOverlay.getInstance().overlay(gc,x,y);
     }
 
-    public void loadAssets() {
-        if (!loadAssets) return;
+    public void loadAssetsIml() {
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
         victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC,true);

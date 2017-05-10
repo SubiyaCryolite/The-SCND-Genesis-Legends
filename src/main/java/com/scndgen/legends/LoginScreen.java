@@ -202,7 +202,7 @@ public class LoginScreen extends JFrame {
                 }
             } else {
                 //extra account
-                newAcc = JOptionPane.showInputDialog(null, "Enter new account name", "Enter account name", JOptionPane.INFORMATION_MESSAGE);
+                newAcc = JOptionPane.showInputDialog(null, "Enter new account getName", "Enter account getName", JOptionPane.INFORMATION_MESSAGE);
                 if (newAcc.length() >= 1 && newAcc.length() <= 24) {
                     createUserCombo();
                     enter.setEnabled(true);

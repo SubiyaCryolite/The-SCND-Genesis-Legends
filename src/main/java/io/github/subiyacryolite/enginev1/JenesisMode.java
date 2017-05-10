@@ -1,8 +1,11 @@
 package io.github.subiyacryolite.enginev1;
 
-import com.scndgen.legends.ui.UiElement;
+import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.ui.UiScreen;
+import com.sun.javafx.tk.Toolkit;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
@@ -19,9 +22,8 @@ public abstract class JenesisMode implements UiScreen {
     protected boolean loadAssets = true;
     protected long lastDelta;
     protected long diff;
-    protected boolean validHover, validSecondaryHover, validThirdHover, validFourthHover;
     protected boolean isPaused;
-    protected UiElement activeItem;
+    protected UiItem activeItem;
     private long accumulator16ms;
     private long accumulator33ms;
 
@@ -61,8 +63,8 @@ public abstract class JenesisMode implements UiScreen {
     public void onBackCancel() {
     }
 
-    public void onTogglePause()
-    {}
+    public void onTogglePause() {
+    }
 
     public abstract void render(final GraphicsContext gc, final double w, final double h);
 
@@ -111,7 +113,13 @@ public abstract class JenesisMode implements UiScreen {
 
     public abstract void newInstance();
 
-    public abstract void loadAssets();
+    public final void loadAssets() {
+        if (!loadAssets) return;
+        loadAssetsIml();
+        ensureActiveUiItemSet();
+    }
+
+    public abstract void loadAssetsIml();
 
     public abstract void cleanAssets();
 
@@ -121,5 +129,59 @@ public abstract class JenesisMode implements UiScreen {
         } catch (Exception re) {
             return new javafx.scene.text.Font("Sans", size);
         }
+    }
+
+    public void drawImage(GraphicsContext gc, Image img, double upperLeftX, double upperLeftY, UiItem uiTile) {
+        gc.drawImage(img, upperLeftX, upperLeftY);
+        /////////////////////////////////////
+        double topLeftX = upperLeftX;
+        double topLeftY = upperLeftY;
+        double bottomRightX = upperLeftX + img.getWidth();
+        double bottomRightY = upperLeftY - img.getHeight();
+        /////////////////////////////////////
+        double mouseActualX = ScndGenLegends.getInstance().getMouseX();
+        double mouseActualY = ScndGenLegends.getInstance().getMouseY();
+        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
+        boolean check2 = topLeftY >= mouseActualY && mouseActualY >= bottomRightY;
+        if (check1 && check2) {
+            setActiveItem(uiTile);
+        }
+    }
+
+    public void fillText(GraphicsContext gc, String text, double upperLeftX, double upperLeftY, UiItem uiTile) {
+        gc.fillText(text, upperLeftX, upperLeftY);
+        /////////////////////////////////////
+        double topLeftX = upperLeftX;
+        double topLeftY = upperLeftY;
+        double bottomRightX = upperLeftX + Toolkit.getToolkit().getFontLoader().computeStringWidth(text, gc.getFont());
+        double bottomRightY = upperLeftY - Toolkit.getToolkit().getFontLoader().getFontMetrics(gc.getFont()).getLineHeight();
+        /////////////////////////////////////
+        double mouseActualX = ScndGenLegends.getInstance().getMouseX();
+        double mouseActualY = ScndGenLegends.getInstance().getMouseY();
+        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
+        boolean check2 = topLeftY >= mouseActualY && mouseActualY >= bottomRightY;
+        if (check1 && check2) {
+            setActiveItem(uiTile);
+        }
+    }
+
+    public final void setActiveItem(UiItem uiItem) {
+        if (activeItem != uiItem) {
+            if (activeItem != null) {
+                activeItem.leave();
+            }
+            activeItem = uiItem;
+            activeItem.hover();
+        }
+    }
+
+    @Override
+    public final UiItem getActiveItem() {
+        return activeItem;
+    }
+
+    protected final void ensureActiveUiItemSet() {
+        if (activeItem == null)
+            throw new RuntimeException("Each mode must have a default active UI item");
     }
 }

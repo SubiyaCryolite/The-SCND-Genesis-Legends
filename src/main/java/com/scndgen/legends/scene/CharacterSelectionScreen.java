@@ -272,18 +272,18 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
     }
 
     /**
-     * Get the CharacterEnum name
+     * Get the CharacterEnum getName
      *
-     * @return characterEnum name
+     * @return characterEnum getName
      */
     public CharacterEnum getCharName() {
         return characterEnum;
     }
 
     /**
-     * Get the opponents name
+     * Get the opponents getName
      *
-     * @return opponent name
+     * @return opponent getName
      */
     public CharacterEnum getOppName() {
         return opponent;
@@ -1056,18 +1056,15 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 storedY = vIndex;
                 animateCaption();
             }
-            validHover = true;
         } else {
             setHindex(99);
             setVindex(99);
-            validHover = false;
         }
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case PRIMARY:
-                if (validHover)
                     onAccept();
                 break;
             case SECONDARY:

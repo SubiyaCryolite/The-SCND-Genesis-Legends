@@ -34,7 +34,7 @@ public class NetworkClient implements Runnable {
     private boolean clientIsRunning;
 
     /**
-     * Constructor, expects name/ip address
+     * Constructor, expects getName/ip address
      */
     public NetworkClient(String ip) {
         clientIsRunning = true;
@@ -66,7 +66,7 @@ public class NetworkClient implements Runnable {
     /**
      * Connect to a given NetworkServer
      *
-     * @param hostname NetworkServer name
+     * @param hostname NetworkServer getName
      */
     private void connectToServer(String hostname) {
         try {

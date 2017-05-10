@@ -29,7 +29,6 @@ import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import com.scndgen.legends.ui.UiElement;
 import io.github.subiyacryolite.enginev1.JenesisImageLoader;
 import io.github.subiyacryolite.enginev1.JenesisOverlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -75,8 +74,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         Characters.getInstance().resetCharacters();
     }
 
-    public void loadAssets() {
-        if (!loadAssets) return;
+    public void loadAssetsIml() {
         imageLoader = new JenesisImageLoader();
         loadCaps();
         loadDesc();
@@ -237,15 +235,5 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         statsChar[9] = Language.getInstance().get(143);
         statsChar[10] = Language.getInstance().get(144);
         statsChar[11] = Language.getInstance().get(145);
-    }
-
-    @Override
-    public void setActiveItem(UiElement uiElement) {
-        activeItem = uiElement;
-    }
-
-    @Override
-    public UiElement getActiveItem() {
-        return activeItem;
     }
 }

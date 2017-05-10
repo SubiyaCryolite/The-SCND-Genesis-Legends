@@ -297,11 +297,9 @@ public abstract class StoryMenu extends JenesisMode {
                 setHindex(hIndex);
                 setVindex(vIndex);
                 animateCap2x(hIndex, vIndex);
-                validHover = true;
             } else {
                 setHindex(99);
                 setVindex(99);
-                validHover = false;
             }
         }
     }
@@ -370,7 +368,6 @@ public abstract class StoryMenu extends JenesisMode {
     public void mouseClicked(MouseEvent me) {
         switch (me.getButton()) {
             case PRIMARY:
-                if (validHover)
                     onAccept();
                 break;
         }

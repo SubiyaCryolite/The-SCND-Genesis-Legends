@@ -673,7 +673,6 @@ public abstract class StageSelect extends JenesisMode {
     public void mouseClicked(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case PRIMARY:
-                if (validHover)
                     onAccept();
                 break;
             case MIDDLE:
@@ -727,11 +726,9 @@ public abstract class StageSelect extends JenesisMode {
                 setRow(row);
                 setColumn(column);
                 animateCaption(row, column);
-                validHover = true;
             } else {
                 RenderCharacterSelectionScreen.getInstance().setHindex(99);
                 RenderCharacterSelectionScreen.getInstance().setVindex(99);
-                validHover = false;
             }
         }
     }

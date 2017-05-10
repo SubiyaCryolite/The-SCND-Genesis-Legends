@@ -17,6 +17,8 @@ public class ScndGenLegends extends JenesisGame {
     private static ScndGenLegends instance;
     private SubMode subMode;
     private Mode mode;
+    private double mouseX;
+    private double mouseY;
 
     public static ScndGenLegends getInstance() {
         return instance;
@@ -94,6 +96,8 @@ public class ScndGenLegends extends JenesisGame {
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
+        setMouseX(mouseEvent.getX());
+        setMouseY(mouseEvent.getY());
         if (getJenesisMode() != null && !isSwitchingModes())
             getJenesisMode().mouseMoved(mouseEvent);
     }
@@ -104,4 +108,19 @@ public class ScndGenLegends extends JenesisGame {
             getJenesisMode().mouseClicked(mouseEvent);
     }
 
+    public void setMouseX(double mouseX) {
+        this.mouseX = mouseX;
+    }
+
+    public void setMouseY(double mouseY) {
+        this.mouseY = mouseY;
+    }
+
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    public double getMouseY() {
+        return mouseY;
+    }
 }
