@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -166,7 +166,7 @@ public class SqlQuery extends JFrame implements ActionListener {
                             results[currentIndex][7] = (rs.getInt("userWin"));
                             results[currentIndex][8] = (rs.getInt("userLoss"));
                             results[currentIndex][6] = (Integer.parseInt("" + results[currentIndex][8]) + Integer.parseInt("" + results[currentIndex][7]));
-                            results[currentIndex][9] = RenderGameplay.getInstance().getFavChar(rs.getInt("favCharacter"));
+                            results[currentIndex][9] = RenderGamePlay.getInstance().getFavChar(rs.getInt("favCharacter"));
                             results[currentIndex][10] = (rs.getInt("userPoints"));
                             currentIndex++;
                         }

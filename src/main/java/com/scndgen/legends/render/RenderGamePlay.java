@@ -24,8 +24,6 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.attacks.AttackOpponent;
-import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.controller.StoryMode;
@@ -33,7 +31,7 @@ import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.*;
 import com.scndgen.legends.ui.Event;
@@ -57,8 +55,8 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
 /**
  * @author Ifunga Ndana
  */
-public class RenderGameplay extends Gameplay {
-    private static RenderGameplay instance;
+public class RenderGamePlay extends GamePlay {
+    private static RenderGamePlay instance;
     private Animations1 animations1;
     private Animations2 animations2;
     private Animations3 animations3;
@@ -90,7 +88,7 @@ public class RenderGameplay extends Gameplay {
     private final UiItem fury;
 
 
-    private RenderGameplay() {
+    private RenderGamePlay() {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
@@ -326,9 +324,9 @@ public class RenderGameplay extends Gameplay {
 
     }
 
-    public static synchronized RenderGameplay getInstance() {
+    public static synchronized RenderGamePlay getInstance() {
         if (instance == null)
-            instance = new RenderGameplay();
+            instance = new RenderGamePlay();
         return instance;
     }
 
@@ -896,8 +894,6 @@ public class RenderGameplay extends Gameplay {
 
     public void newInstance() {
         super.newInstance();
-        attackOpponent = new AttackOpponent();
-        attackPlayer = new AttackPlayer();
         damageLayerOpacity = 0;
         one = 10;
         two = 10;
@@ -1056,7 +1052,7 @@ public class RenderGameplay extends Gameplay {
         }
     }
 
-    public synchronized void playBGSound() {
+    public synchronized void playBGMusic() {
         if (ambientMusic != null) {
             ambientMusic.stop();
         }

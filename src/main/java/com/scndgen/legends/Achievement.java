@@ -26,7 +26,7 @@ import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.AchievementCategories;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.Overlay;
@@ -114,7 +114,7 @@ public class Achievement {
      */
     public void scan() {
         Achievements achievement;
-        if (Characters.getInstance().getCharMinLife() <= 79 && RenderGameplay.getInstance().getCharacterHpAsPercent() >= 82 && isAchievementLocked[Achievements.UPPER_HAND.id()]) {
+        if (Characters.getInstance().getCharMinLife() <= 79 && RenderGamePlay.getInstance().getCharacterHpAsPercent() >= 82 && isAchievementLocked[Achievements.UPPER_HAND.id()]) {
             achievement = Achievements.UPPER_HAND;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -125,7 +125,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (Characters.getInstance().getCharMinLife() <= 30 && RenderGameplay.getInstance().getCharacterHpAsPercent() >= 50 && isAchievementLocked[Achievements.BEAT_THE_ODDS.id()]) {
+        if (Characters.getInstance().getCharMinLife() <= 30 && RenderGamePlay.getInstance().getCharacterHpAsPercent() >= 50 && isAchievementLocked[Achievements.BEAT_THE_ODDS.id()]) {
             achievement = Achievements.BEAT_THE_ODDS;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -136,7 +136,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (((RenderGameplay.getInstance().getCharacterHpAsPercent() - RenderGameplay.getInstance().getOpponentHpAsPercent()) >= 50) && isAchievementLocked[Achievements.OWNAGE.id()]) {
+        if (((RenderGamePlay.getInstance().getCharacterHpAsPercent() - RenderGamePlay.getInstance().getOpponentHpAsPercent()) >= 50) && isAchievementLocked[Achievements.OWNAGE.id()]) {
             achievement = Achievements.OWNAGE;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -149,7 +149,7 @@ public class Achievement {
             isAchievementLocked[Achievements.MEANIE.id()] = false;
             isAchievementLocked[Achievements.HEARTLESS.id()] = false;
         }
-        if (((RenderGameplay.getInstance().getCharacterHpAsPercent() - RenderGameplay.getInstance().getOpponentHpAsPercent()) >= 40) && isAchievementLocked[Achievements.HEARTLESS.id()]) {
+        if (((RenderGamePlay.getInstance().getCharacterHpAsPercent() - RenderGamePlay.getInstance().getOpponentHpAsPercent()) >= 40) && isAchievementLocked[Achievements.HEARTLESS.id()]) {
             achievement = Achievements.HEARTLESS;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -160,7 +160,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (((RenderGameplay.getInstance().getCharacterHpAsPercent() - RenderGameplay.getInstance().getOpponentHpAsPercent()) >= 30) && isAchievementLocked[Achievements.MEANIE.id()]) {
+        if (((RenderGamePlay.getInstance().getCharacterHpAsPercent() - RenderGamePlay.getInstance().getOpponentHpAsPercent()) >= 30) && isAchievementLocked[Achievements.MEANIE.id()]) {
             achievement = Achievements.MEANIE;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -171,7 +171,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && GameInstance.getInstance().gameOver && RenderGameplay.getInstance().hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
+        if (RenderGamePlay.getInstance().getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && GameInstance.getInstance().gameOver && RenderGamePlay.getInstance().hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
             achievement = Achievements.RAGE;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -182,7 +182,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver) {
+        if (RenderGamePlay.getInstance().hasWon() && GameInstance.getInstance().gameOver) {
             achievement = Achievements.WINNER;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -193,7 +193,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
+        if (RenderGamePlay.getInstance().getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && RenderGamePlay.getInstance().hasWon() && GameInstance.getInstance().gameOver && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
             achievement = Achievements.BUZZ_KILL;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -204,7 +204,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && (RenderGameplay.getInstance().getCharacterHpAsPercent() - RenderGameplay.getInstance().getOpponentHpAsPercent() <= 30) && isAchievementLocked[Achievements.CLOSE_CALL.id()]) {
+        if (RenderGamePlay.getInstance().hasWon() && GameInstance.getInstance().gameOver && (RenderGamePlay.getInstance().getCharacterHpAsPercent() - RenderGamePlay.getInstance().getOpponentHpAsPercent() <= 30) && isAchievementLocked[Achievements.CLOSE_CALL.id()]) {
             achievement = Achievements.CLOSE_CALL;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -215,7 +215,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().hasWon() && GameInstance.getInstance().gameOver && GameState.getInstance().getLogin().getConsecutiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
+        if (RenderGamePlay.getInstance().hasWon() && GameInstance.getInstance().gameOver && GameState.getInstance().getLogin().getConsecutiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
             achievement = Achievements.ON_A_ROLL;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -226,7 +226,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (RenderGameplay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && GameInstance.getInstance().gameOver && isAchievementLocked[Achievements.HALF_WAY_THROUGH.id()]) {
+        if (RenderGamePlay.getInstance().hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && GameInstance.getInstance().gameOver && isAchievementLocked[Achievements.HALF_WAY_THROUGH.id()]) {
             achievement = Achievements.HALF_WAY_THROUGH;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));

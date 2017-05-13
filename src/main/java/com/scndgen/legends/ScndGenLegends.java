@@ -58,9 +58,9 @@ public class ScndGenLegends extends Game {
                     break;
                 case STANDARD_GAMEPLAY_START:
                     //stopBackgroundMusic();
-                    RenderGameplay.getInstance().newInstance();
-                    setMode(RenderGameplay.getInstance());
-                    RenderGameplay.getInstance().startFight();
+                    RenderGamePlay.getInstance().newInstance();
+                    setMode(RenderGamePlay.getInstance());
+                    RenderGamePlay.getInstance().startFight();
                     break;
             }
         } catch (Exception ex) {

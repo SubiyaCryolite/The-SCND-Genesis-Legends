@@ -6,7 +6,7 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
@@ -215,7 +215,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().setStageSelected(true);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().triggerFury(CharacterState.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));

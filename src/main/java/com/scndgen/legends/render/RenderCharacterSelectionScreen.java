@@ -30,7 +30,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.scene.CharacterSelectionScreen;
+import com.scndgen.legends.mode.CharacterSelectionScreen;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.ImageLoader;

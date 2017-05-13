@@ -22,7 +22,7 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
     private SpecialDrawMenuBGs logoPic;
     private JPanel box;
     //private Font normalFont;
-    private String about = "The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
+    private String about = "The SCND Genesis: Legends " + RenderGamePlay.getInstance().getVersionStr() + " \n\nBased on the webcomic created by Ifunga Ndana\nDesigned by Ifunga Ndana \nCoded by.....you guessed it, Ifunga Ndana\nPowered by Java and the Jenesis Engine v1.0"
             + "\n\nSpecial Thanks:"
             + "\n   -God"
             + "\n   -Jesus"
@@ -227,11 +227,8 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
 
     public static String year() {
         ans = "2011";
-
         tmp = Calendar.getInstance();
-
         yearz = tmp.get(Calendar.YEAR);
-
         if (!(yearz == 2011)) {
             ans = "2011 - " + yearz;
         }

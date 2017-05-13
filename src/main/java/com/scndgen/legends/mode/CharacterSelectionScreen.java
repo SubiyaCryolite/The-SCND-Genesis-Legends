@@ -1,4 +1,4 @@
-package com.scndgen.legends.scene;
+package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;

@@ -4,10 +4,13 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.scene.MainMenu;
+import com.scndgen.legends.mode.MainMenu;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.WindowAbout;
+import com.scndgen.legends.windows.WindowControls;
+import com.scndgen.legends.windows.WindowLeaderBoard;
+import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.ImageLoader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -328,6 +331,11 @@ public class RenderMainMenu extends MainMenu {
 
         (uiOnlineLeaderBoards = new UiItem()).addJenesisEvent(new Event() {
             @Override
+            public void onAccept() {
+                new WindowLeaderBoard();
+            }
+
+            @Override
             public void onHover() {
                 strOnlineLeaderBoards = strOnlineLeaderBoards.toUpperCase();
             }
@@ -348,6 +356,11 @@ public class RenderMainMenu extends MainMenu {
             }
         });
         (uiOptions = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onAccept() {
+                new WindowOptions();
+            }
+
             @Override
             public void onHover() {
                 strOptions = strOptions.toUpperCase();
@@ -370,6 +383,11 @@ public class RenderMainMenu extends MainMenu {
         });
         (uiControls = new UiItem()).addJenesisEvent(new Event() {
             @Override
+            public void onAccept() {
+                new WindowControls();
+            }
+
+            @Override
             public void onHover() {
                 strControls = strControls.toUpperCase();
             }
@@ -390,6 +408,12 @@ public class RenderMainMenu extends MainMenu {
             }
         });
         (uiAbout = new UiItem()).addJenesisEvent(new Event() {
+
+            @Override
+            public void onAccept() {
+                new WindowAbout();
+            }
+
             @Override
             public void onHover() {
                 strAbout = strAbout.toUpperCase();
@@ -579,7 +603,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
         }
         Overlay.getInstance().overlay(gc, w, h);
-        gc.fillText("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        gc.fillText("The SCND Genesis: Legends " + RenderGamePlay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
         gc.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);

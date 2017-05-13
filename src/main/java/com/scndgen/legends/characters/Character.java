@@ -25,8 +25,8 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.render.RenderGamePlay;
+import com.scndgen.legends.mode.GamePlay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.ImageLoader;
 import javafx.scene.image.Image;
@@ -41,15 +41,16 @@ public abstract class Character {
 
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status, bragRights;
-    public int points, life, damage, damageMultiplier;
+    public int points, life, damage;
+    public float damageMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     public float[] weakness;
     public float atbRecoveryRate;
     protected final AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
-    private Image[] highQualitySprites;
+    private Image[] sprites;
     private ImageLoader pix;
-    private String[] spriteLocation;
+    private String[] location;
     private boolean isMale;
     private int numberOfSprites = 12;
 
@@ -75,20 +76,20 @@ public abstract class Character {
 
     private void sortQue() {
         pix = new ImageLoader();
-        spriteLocation = new String[numberOfSprites];
-        spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
-        spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
-        spriteLocation[2] = "images/" + characterEnum.data() + "/M2.png"; //3
-        spriteLocation[3] = "images/" + characterEnum.data() + "/M3.png"; //4
-        spriteLocation[4] = "images/" + characterEnum.data() + "/M4.png"; //5
-        spriteLocation[5] = "images/" + characterEnum.data() + "/M5.png"; //6
-        spriteLocation[6] = "images/" + characterEnum.data() + "/M6.png"; //7
-        spriteLocation[7] = "images/" + characterEnum.data() + "/M7.png"; //8
-        spriteLocation[8] = "images/" + characterEnum.data() + "/M8.png"; //9
-        spriteLocation[9] = "images/" + characterEnum.data() + "/N.png"; //10
-        spriteLocation[10] = "images/" + characterEnum.data() + "/P.png"; //11
-        spriteLocation[11] = "images/trans.png"; //12
-        System.out.println("FROM CHARACTER CLASS " + characterEnum.data());
+        location = new String[numberOfSprites];
+        location[0] = "images/" + characterEnum.data() + "/D.png";  //1
+        location[1] = "images/" + characterEnum.data() + "/M1.png"; //2
+        location[2] = "images/" + characterEnum.data() + "/M2.png"; //3
+        location[3] = "images/" + characterEnum.data() + "/M3.png"; //4
+        location[4] = "images/" + characterEnum.data() + "/M4.png"; //5
+        location[5] = "images/" + characterEnum.data() + "/M5.png"; //6
+        location[6] = "images/" + characterEnum.data() + "/M6.png"; //7
+        location[7] = "images/" + characterEnum.data() + "/M7.png"; //8
+        location[8] = "images/" + characterEnum.data() + "/M8.png"; //9
+        location[9] = "images/" + characterEnum.data() + "/N.png"; //10
+        location[10] = "images/" + characterEnum.data() + "/P.png"; //11
+        location[11] = "images/trans.png"; //12
+        System.out.println("Loaded " + characterEnum.data());
     }
 
     public int getNumberOfSprites() {
@@ -97,26 +98,26 @@ public abstract class Character {
 
     public void loadMeHigh() {
         sortQue();
-        highQualitySprites = new Image[numberOfSprites];
-        highQualitySprites[0] = pix.loadImage(spriteLocation[0]);  //1
-        highQualitySprites[1] = pix.loadImage(spriteLocation[1]); //2
-        highQualitySprites[2] = pix.loadImage(spriteLocation[2]); //3
-        highQualitySprites[3] = pix.loadImage(spriteLocation[3]); //4
-        highQualitySprites[4] = pix.loadImage(spriteLocation[4]); //5
-        highQualitySprites[5] = pix.loadImage(spriteLocation[5]); //6
-        highQualitySprites[6] = pix.loadImage(spriteLocation[6]); //7
-        highQualitySprites[7] = pix.loadImage(spriteLocation[7]); //8
-        highQualitySprites[8] = pix.loadImage(spriteLocation[8]); //9
-        highQualitySprites[9] = pix.loadImage(spriteLocation[9]); //10
-        highQualitySprites[10] = pix.loadImage(spriteLocation[10]); //11
-        highQualitySprites[11] = pix.loadImage(spriteLocation[11]); //12
+        sprites = new Image[numberOfSprites];
+        sprites[0] = pix.loadImage(location[0]);
+        sprites[1] = pix.loadImage(location[1]);
+        sprites[2] = pix.loadImage(location[2]);
+        sprites[3] = pix.loadImage(location[3]);
+        sprites[4] = pix.loadImage(location[4]);
+        sprites[5] = pix.loadImage(location[5]);
+        sprites[6] = pix.loadImage(location[6]);
+        sprites[7] = pix.loadImage(location[7]);
+        sprites[8] = pix.loadImage(location[8]);
+        sprites[9] = pix.loadImage(location[9]);
+        sprites[10] = pix.loadImage(location[10]);
+        sprites[11] = pix.loadImage(location[11]);
     }
 
     public Image getSprite(int i) {
-        return highQualitySprites[i];
+        return sprites[i];
     }
 
-    public abstract void attack(String attack, CharacterState forWho, Gameplay gamePlay);
+    public abstract void attack(String attack, CharacterState forWho, GamePlay gamePlay);
 
     /**
      * Gets the move set of the characterEnum
@@ -124,7 +125,7 @@ public abstract class Character {
      * @return array of physical attacks
      */
     public void setCharacterAttackArrays() {
-        RenderGameplay.getInstance().setCharacterAttackArrays(physical, celestia, status);
+        RenderGamePlay.getInstance().setCharacterAttackArrays(physical, celestia, status);
     }
 
     /**
@@ -242,11 +243,11 @@ public abstract class Character {
         return celestiaMultiplier;
     }
 
-    public final int getDamageMultiplier() {
+    public final float getDamageMultiplier() {
         return damageMultiplier;
     }
 
-    public final void setDamageMultiplier(int value) {
+    public final void setDamageMultiplier(float value) {
         damageMultiplier = value;
     }
 }

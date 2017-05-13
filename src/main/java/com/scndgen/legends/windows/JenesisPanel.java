@@ -31,7 +31,7 @@ import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
@@ -235,13 +235,13 @@ public class JenesisPanel extends Pane {
         if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.STORY_MODE) {
             if (GameInstance.getInstance().gamePaused == false) {
                 GameInstance.getInstance().pauseGame();
-                RenderGameplay.getInstance().pauseThreads();
+                RenderGamePlay.getInstance().pauseThreads();
                 if (GameInstance.getInstance().storySequence == true) {
                     StoryMode.getInstance().pauseDialogue();
                 }
             } else {
-                RenderGameplay.getInstance().start();
-                RenderGameplay.getInstance().resumeThreads();
+                RenderGamePlay.getInstance().start();
+                RenderGamePlay.getInstance().resumeThreads();
                 if (GameInstance.getInstance().storySequence == true) {
                     StoryMode.getInstance().resumeDialogue();
                 }

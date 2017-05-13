@@ -25,7 +25,7 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 
 /**
  * This class should be self explainatory -_-
@@ -34,12 +34,10 @@ import com.scndgen.legends.render.RenderGameplay;
  */
 public class Characters {
 
-    public String[] moveMusicOpp = new String[8];
-    public String[] moveMusicChar = new String[8];
     public int[] pointsArr = new int[12];
     public String[] typeArray = new String[4];
     //AIRCON 12 GLOWING HOT GIMP 2.6.8
-    private int damageMultiplierOpp, damageMultiplierChar, minCharlife, minOppLife2, currCharLife3, minOppLife, currCharLife, currOppLife2, currOppLife, points, maxPoints;
+    private float damageMultiplierOpp, damageMultiplierChar, minCharlife,  minOppLife, currCharLife,  currOppLife, points, maxPoints;
     private float activityRecoverRateChar, activityRecoveryRateOpp;
     private String characterName, opponentName;
     private com.scndgen.legends.characters.Character character, opponent;
@@ -56,63 +54,39 @@ public class Characters {
     }
 
     //called when characterEnum damaged
-    public void setCurrLifeChar(int life) {
+    public void setCurrLifeChar(float life) {
         currCharLife = life;
-        //percentages
         if (life < minCharlife) {
             minCharlife = life;
-            //System.out.println("min char characterHp "+minCharlife);
         }
     }
 
     //called when opp damaged
-    public void setCurrLifeOpp(int life) {
+    public void setCurrLifeOpp(float life) {
         currOppLife = life;
-
-        //percentages
         if (life < minOppLife) {
             minOppLife = life;
         }
     }
 
-    //called when opp damaged
-    public void setCurrLifeOpp2(int life) {
-        currOppLife2 = life;
-
-        //percentages
-        if (life < minOppLife2) {
-            minOppLife2 = life;
-        }
-    }
-
-    //called when opp damaged
-    public void setCurrLifeChar2(int life) {
-        currCharLife3 = life;
-
-        //percentages
-        if (life < currCharLife3) {
-            currCharLife3 = life;
-        }
-    }
-
     public float getCharMinLife() {
-        return (float) minCharlife;
+        return minCharlife;
     }
 
     public float getCharCurrLife() {
-        return (float) currCharLife;
+        return currCharLife;
     }
 
     public float getOppMinLife() {
-        return (float) minOppLife;
+        return minOppLife;
     }
 
     public float getOppCurrLife() {
-        return (float) currOppLife;
+        return currOppLife;
     }
 
     public float getPoints() {
-        return (float) points / maxPoints;
+        return points / maxPoints;
     }
 
     public void setPoints(int amount) {
@@ -128,7 +102,7 @@ public class Characters {
      *
      */
     public void alterPoints2(int index) {
-        if (RenderGameplay.getInstance().getCharacterQueuedAttacks() > 1) {
+        if (RenderGamePlay.getInstance().getCharacterQueuedAttacks() > 1) {
             points += pointsArr[index];
         }
     }
@@ -149,15 +123,13 @@ public class Characters {
         }
     }
 
-    public int getDamageMultiplier(CharacterState per) {
-        int myInt = 0;
-
+    public float getDamageMultiplier(CharacterState per) {
+        float myInt = 0;
         if (per == CharacterState.CHARACTER) {
             myInt = damageMultiplierOpp;
         } else if (per == CharacterState.OPPONENT) {
             myInt = damageMultiplierChar;
         }
-
         return myInt;
     }
 
@@ -252,8 +224,8 @@ public class Characters {
         RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(characterEnum.index());
         activityRecoverRateChar = this.character.getAtbRecoveryRate();
         setPoints(this.character.getPoints());
-        RenderGameplay.getInstance().setCharacterHp(this.character.getLife());
-        RenderGameplay.getInstance().setMaxLife(this.character.getLife());
+        RenderGamePlay.getInstance().setCharacterHp(this.character.getLife());
+        RenderGamePlay.getInstance().setMaxLife(this.character.getLife());
     }
 
     public void prepareO(CharacterEnum characterEnum) {
@@ -303,8 +275,8 @@ public class Characters {
         opponentName = characterEnum.name();
         RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
-        RenderGameplay.getInstance().setOpponentHp(opponent.getLife());
-        RenderGameplay.getInstance().setOpponentMaximumHp(opponent.getLife());
+        RenderGamePlay.getInstance().setOpponentHp(opponent.getLife());
+        RenderGamePlay.getInstance().setOpponentMaximumHp(opponent.getLife());
         opponent.setAiProf();
     }
 

@@ -49,7 +49,7 @@ public class Window {
     private WindowOptions options;
     private WindowAbout about;
     private NetworkScanLan scan;
-    private MenuLeaderBoard board;
+    private WindowLeaderBoard board;
     private AudioPlayback startup;
     private boolean[] buttonz;
     private int compassDir, compassDir2, last = 13;
@@ -100,7 +100,7 @@ public class Window {
                 logOut();
             } else if (destination == SubMode.LEADERS) {
                 if (boardNotUp) {
-                    board = new MenuLeaderBoard();
+                    board = new WindowLeaderBoard();
                     boardNotUp = false;
                 } else {
                     board.reappear();

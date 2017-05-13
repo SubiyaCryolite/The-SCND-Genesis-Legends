@@ -23,7 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.threads.GameInstance;
 
 public class OpponentAttacksOnline implements Runnable {
@@ -54,12 +54,12 @@ public class OpponentAttacksOnline implements Runnable {
     public void run() {
         try {
             if (executionType == 'n') {
-                RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
-                RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
+                RenderGamePlay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
+                RenderGamePlay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
                 executingTheCommandsAI(command1, command2, command3, command4);
                 GameInstance.getInstance().setOpponentAtbValue(0);
             } else if (executionType == 'l') {//limit break
-                RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
+                RenderGamePlay.getInstance().clash(1, CharacterState.CHARACTER);
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -70,9 +70,9 @@ public class OpponentAttacksOnline implements Runnable {
         try {
             int[] commands = {command1, command2, command3, command4};
             for (int index = 0; index < commands.length; index++) {
-                RenderGameplay.getInstance().getAttackOpponent().setAttackSpritesAndTrigger(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER,RenderGameplay.getInstance(), Characters.getInstance().getCharacter());
-                RenderGameplay.getInstance().shakeCharacterLifeBar();
-                RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().setAttackSpritesAndTrigger(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGamePlay.getInstance(), Characters.getInstance().getCharacter());
+                RenderGamePlay.getInstance().shakeCharacterLifeBar(0);
+                RenderGamePlay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

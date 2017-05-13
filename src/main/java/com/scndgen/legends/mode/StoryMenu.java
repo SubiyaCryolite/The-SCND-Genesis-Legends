@@ -19,14 +19,14 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.scene;
+package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -338,7 +338,7 @@ public abstract class StoryMenu extends Mode {
         if (currentScene < StoryMode.getInstance().max) {
             answer = true;
         } //if won last 'final' match
-        else if (RenderGameplay.getInstance().hasWon()) {
+        else if (RenderGamePlay.getInstance().hasWon()) {
             //incrementMode();
             //go onBackCancel to user difficulty
             GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficulty());

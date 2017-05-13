@@ -22,7 +22,7 @@
 package com.scndgen.legends.threads;
 
 import com.scndgen.legends.enums.AnimationDirection;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 
 /**
  * @author ndana
@@ -40,25 +40,25 @@ public class Animations3 implements Runnable {
     public void run() {
         do {
             try {
-                if (RenderGameplay.getInstance().getAnimationDirection()!= AnimationDirection.VERTICAL) {
+                if (RenderGamePlay.getInstance().getAnimationDirection()!= AnimationDirection.VERTICAL) {
                     thread.sleep(0016);
-                    RenderGameplay.getInstance().setParticlesLayer1PositionX(RenderGameplay.getInstance().getParticlesLayer1PositionX() - RenderGameplay.getInstance().getAmbSpeed1());
-                    RenderGameplay.getInstance().setParticlesLayer2PositionX(RenderGameplay.getInstance().getParticlesLayer2PositionX() - RenderGameplay.getInstance().getAmbSpeed2());
-                    if (RenderGameplay.getInstance().getParticlesLayer1PositionX() < -960) {
-                        RenderGameplay.getInstance().setParticlesLayer1PositionX(852);
+                    RenderGamePlay.getInstance().setParticlesLayer1PositionX(RenderGamePlay.getInstance().getParticlesLayer1PositionX() - RenderGamePlay.getInstance().getAmbSpeed1());
+                    RenderGamePlay.getInstance().setParticlesLayer2PositionX(RenderGamePlay.getInstance().getParticlesLayer2PositionX() - RenderGamePlay.getInstance().getAmbSpeed2());
+                    if (RenderGamePlay.getInstance().getParticlesLayer1PositionX() < -960) {
+                        RenderGamePlay.getInstance().setParticlesLayer1PositionX(852);
                     }
-                    if (RenderGameplay.getInstance().getParticlesLayer2PositionX() < (-960)) {
-                        RenderGameplay.getInstance().setParticlesLayer2PositionX(852);
+                    if (RenderGamePlay.getInstance().getParticlesLayer2PositionX() < (-960)) {
+                        RenderGamePlay.getInstance().setParticlesLayer2PositionX(852);
                     }
                 } else {
                     thread.sleep(0016);
-                    RenderGameplay.getInstance().setParticlesLayer1PositionY(RenderGameplay.getInstance().getParticlesLayer1PositionY() + RenderGameplay.getInstance().getAmbSpeed1());
-                    RenderGameplay.getInstance().setParticlesLayer2PositionY(RenderGameplay.getInstance().getParticlesLayer2PositionY() + RenderGameplay.getInstance().getAmbSpeed2());
-                    if (RenderGameplay.getInstance().getParticlesLayer1PositionY() > 480) {
-                        RenderGameplay.getInstance().setParticlesLayer1PositionY(-480);
+                    RenderGamePlay.getInstance().setParticlesLayer1PositionY(RenderGamePlay.getInstance().getParticlesLayer1PositionY() + RenderGamePlay.getInstance().getAmbSpeed1());
+                    RenderGamePlay.getInstance().setParticlesLayer2PositionY(RenderGamePlay.getInstance().getParticlesLayer2PositionY() + RenderGamePlay.getInstance().getAmbSpeed2());
+                    if (RenderGamePlay.getInstance().getParticlesLayer1PositionY() > 480) {
+                        RenderGamePlay.getInstance().setParticlesLayer1PositionY(-480);
                     }
-                    if (RenderGameplay.getInstance().getParticlesLayer2PositionY() > 480) {
-                        RenderGameplay.getInstance().setParticlesLayer2PositionY(-480);
+                    if (RenderGamePlay.getInstance().getParticlesLayer2PositionY() > 480) {
+                        RenderGamePlay.getInstance().setParticlesLayer2PositionY(-480);
                     }
                 }
             } catch (InterruptedException ex) {

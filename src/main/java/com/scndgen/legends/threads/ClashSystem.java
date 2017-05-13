@@ -24,7 +24,7 @@ package com.scndgen.legends.threads;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.windows.JenesisPanel;
 
 /**
@@ -83,7 +83,7 @@ public class ClashSystem implements Runnable {
             }
         }
         isClashOn = false;
-        RenderGameplay.getInstance().setClasherRunning(false);
+        RenderGamePlay.getInstance().setClasherRunning(false);
         clashWinner(person);
     }
 
@@ -97,12 +97,12 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER);
-                RenderGameplay.getInstance().triggerFury(CharacterState.CHARACTER);
+                RenderGamePlay.getInstance().setStatusPic(CharacterState.CHARACTER);
+                RenderGamePlay.getInstance().triggerFury(CharacterState.CHARACTER);
             } else {
-                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT);
-                RenderGameplay.getInstance().resetBreak();
-                RenderGameplay.getInstance().updatePlayerLife(200);
+                RenderGamePlay.getInstance().setStatusPic(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().resetBreak();
+                RenderGamePlay.getInstance().updatePlayerLife(200);
                 //player didn'thread trigger clash but won, they arent attacked
             }
 
@@ -110,12 +110,12 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT);
-                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().setStatusPic(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().triggerFury(CharacterState.OPPONENT);
             } else {
-                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER);
-                RenderGameplay.getInstance().resetBreak();
-                RenderGameplay.getInstance().updateOpponentLife(200);
+                RenderGamePlay.getInstance().setStatusPic(CharacterState.CHARACTER);
+                RenderGamePlay.getInstance().resetBreak();
+                RenderGamePlay.getInstance().updateOpponentLife(200);
                 //opponent didn'thread trigger clash but won, they arent attacked
             }
         }

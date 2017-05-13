@@ -28,7 +28,7 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.StageSelectionMode;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.scene.StageSelect;
+import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.ImageLoader;

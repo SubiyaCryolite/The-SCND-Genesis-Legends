@@ -35,7 +35,7 @@ import java.sql.Statement;
 /**
  * @author ifunga
  */
-public class MenuLeaderBoard extends JFrame implements ActionListener {
+public class WindowLeaderBoard extends JFrame implements ActionListener {
 
     private JPanel line1, line2, line3;
     private JButton upload, view, close;
@@ -50,7 +50,7 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
     private Statement stmt;
     private ResultSet rs;
 
-    public MenuLeaderBoard() {
+    public WindowLeaderBoard() {
         super(Language.getInstance().get(98));
         if (notLoaded) {
             upload = new JButton(Language.getInstance().get(97));
@@ -80,7 +80,7 @@ public class MenuLeaderBoard extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new MenuLeaderBoard();
+        new WindowLeaderBoard();
     }
 
     public void reappear() {

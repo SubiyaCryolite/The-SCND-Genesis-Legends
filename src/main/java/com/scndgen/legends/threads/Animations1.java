@@ -21,8 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.render.RenderGamePlay;
+import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.state.GameState;
 
 import java.util.logging.Level;
@@ -49,21 +49,21 @@ public class Animations1 implements Runnable {
     public void run() {
         do {
             try {
-                if (RenderGameplay.getInstance().getBreak() > 5 && RenderGameplay.getInstance().getBreak() < 999) {
-                    RenderGameplay.getInstance().setBreak(-factor);
+                if (RenderGamePlay.getInstance().getBreak() > 5 && RenderGamePlay.getInstance().getBreak() < 999) {
+                    RenderGamePlay.getInstance().setBreak(-factor);
                 }
                 for (int o = 0; o <= 10; o++) {
-                    RenderGameplay.getInstance().setCharYcord(RenderGameplay.getInstance().getCharYcord() + 1);
-                    RenderGameplay.getInstance().setOppYcord(RenderGameplay.getInstance().getOppYcord() + 1);
+                    RenderGamePlay.getInstance().setCharYcord(RenderGamePlay.getInstance().getCharYcord() + 1);
+                    RenderGamePlay.getInstance().setOppYcord(RenderGamePlay.getInstance().getOppYcord() + 1);
                     thread.sleep(66);
                 }
                 for (int o = 0; o <= 10; o++) {
-                    RenderGameplay.getInstance().setCharYcord(RenderGameplay.getInstance().getCharYcord() - 1);
-                    RenderGameplay.getInstance().setOppYcord(RenderGameplay.getInstance().getOppYcord() - 1);
+                    RenderGamePlay.getInstance().setCharYcord(RenderGamePlay.getInstance().getCharYcord() - 1);
+                    RenderGamePlay.getInstance().setOppYcord(RenderGamePlay.getInstance().getOppYcord() - 1);
                     thread.sleep(66);
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(Gameplay.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GamePlay.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (true);
     }

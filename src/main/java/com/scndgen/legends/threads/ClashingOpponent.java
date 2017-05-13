@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,10 +48,10 @@ public class ClashingOpponent implements Runnable {
 
     @Override
     public void run() {
-        while (RenderGameplay.getInstance().getClasherRunning()) {
+        while (RenderGamePlay.getInstance().getClasherRunning()) {
             try {
                 int delay = 360;
-                RenderGameplay.getInstance().opponetClashing();
+                RenderGamePlay.getInstance().opponetClashing();
                 thread.sleep((int) (delay * Math.random()));
             } catch (InterruptedException ex) {
                 Logger.getLogger(ClashingOpponent.class.getName()).log(Level.SEVERE, null, ex);

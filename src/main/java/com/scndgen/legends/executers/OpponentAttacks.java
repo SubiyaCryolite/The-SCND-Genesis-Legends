@@ -23,7 +23,7 @@ package com.scndgen.legends.executers;
 
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
 
@@ -62,7 +62,7 @@ public class OpponentAttacks implements Runnable {
 
     private void executingTheCommandsAI() {
         aiQueuedAttacks.clear();
-        for (int i : RenderGameplay.getInstance().updateAndGetOpponentAttackQue())
+        for (int i : RenderGamePlay.getInstance().updateAndGetOpponentAttackQue())
             aiQueuedAttacks.add(i);
         attackRange = aiQueuedAttacks.size();
         /////////////////////////////////////////////////////////////
@@ -71,9 +71,9 @@ public class OpponentAttacks implements Runnable {
             for (int aiTimeout = 0; aiTimeout < computedDifficulty; aiTimeout++) {
                 if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().gameOver == false) {
                     int randomAttack = aiQueuedAttacks.get(Math.round(Math.round(Math.random() * attackRange)));
-                    RenderGameplay.getInstance().setAttackSpritesAndTrigger(randomAttack, CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGameplay.getInstance(), Characters.getInstance().getCharacter());
-                    RenderGameplay.getInstance().shakeCharacterLifeBar();
-                    RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
+                    RenderGamePlay.getInstance().setAttackSpritesAndTrigger(randomAttack, CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGamePlay.getInstance(), Characters.getInstance().getCharacter());
+                    RenderGamePlay.getInstance().shakeCharacterLifeBar(0);
+                    RenderGamePlay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
                 }
             }
         }

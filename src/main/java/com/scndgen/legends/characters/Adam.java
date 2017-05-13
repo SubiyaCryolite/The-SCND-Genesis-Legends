@@ -23,7 +23,7 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.scene.Gameplay;
+import com.scndgen.legends.mode.GamePlay;
 
 /**
  * @author ndana
@@ -52,7 +52,7 @@ public class Adam extends Character {
     }
 
     @Override
-    public void attack(String attack, CharacterState forWho,Gameplay gamePlay) {
+    public void attack(String attack, CharacterState forWho,GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];

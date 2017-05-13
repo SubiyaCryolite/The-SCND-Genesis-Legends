@@ -27,7 +27,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.scene.StoryMenu;
+import com.scndgen.legends.mode.StoryMenu;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.ImageLoader;
 import io.github.subiyacryolite.enginev1.Overlay;

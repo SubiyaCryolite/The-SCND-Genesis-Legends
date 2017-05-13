@@ -31,7 +31,7 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.windows.JenesisPanel;
@@ -81,7 +81,7 @@ public class GameInstance implements Runnable {
         do {
             try {
                 thread.sleep(33); // fps
-                RenderGameplay.getInstance().matchStatus();
+                RenderGamePlay.getInstance().updateMatchStatus();
                 Achievement.getInstance().scan();
             } catch (Exception ex) {
                 ex.printStackTrace(System.err);
@@ -187,7 +187,7 @@ public class GameInstance implements Runnable {
     public void pauseGame() {
         try {
             gamePaused = true;
-            RenderGameplay.getInstance().pauseThreads();
+            RenderGamePlay.getInstance().pauseThreads();
             thread.suspend();
             executorAI.pause();
         } catch (Exception e) {
@@ -201,7 +201,7 @@ public class GameInstance implements Runnable {
     public void resumeGame() {
         try {
             gamePaused = false;
-            RenderGameplay.getInstance().resumeThreads();
+            RenderGamePlay.getInstance().resumeThreads();
             thread.resume();
             executorAI.resume();
         } catch (Exception e) {
@@ -215,23 +215,23 @@ public class GameInstance implements Runnable {
     public void gameOver() {
         gameRunning = false;
         gameOver = true;
-        RenderGameplay.getInstance().closeAudio();
+        RenderGamePlay.getInstance().closeAudio();
         GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
         Achievement.getInstance().scan();
         //if not story scene, increment char usage
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
         }
-        if (RenderGameplay.getInstance().hasWon()) {
-            RenderGameplay.getInstance().showWinLabel();
+        if (RenderGamePlay.getInstance().hasWon()) {
+            RenderGamePlay.getInstance().showWinLabel();
             winMusic.play();
         } else {
-            RenderGameplay.getInstance().showLoseLabel();
+            RenderGamePlay.getInstance().showLoseLabel();
             loseMusic.play();
         }
         RenderStageSelect.getInstance().newInstance();
         RenderCharacterSelectionScreen.getInstance().newInstance();
-        RenderGameplay.getInstance().drawAchievements();
+        RenderGamePlay.getInstance().drawAchievements();
     }
 
     /**
@@ -315,7 +315,7 @@ public class GameInstance implements Runnable {
         if (newMatch) {
             newMatch = false;
             GameState.getInstance().getLogin().setNumberOfMatches(GameState.getInstance().getLogin().getNumberOfMatches() + 1);
-            if (RenderGameplay.getInstance().getCharacterHp() < RenderGameplay.getInstance().getOpponentHp()) {
+            if (RenderGamePlay.getInstance().getCharacterHp() < RenderGamePlay.getInstance().getOpponentHp()) {
                 GameState.getInstance().getLogin().setLosses(GameState.getInstance().getLogin().getLosses() + 1);
                 GameState.getInstance().getLogin().setConsecutiveWins(0);
             } else {
@@ -334,7 +334,7 @@ public class GameInstance implements Runnable {
         gameOver = true;
         RenderCharacterSelectionScreen.getInstance().newInstance();
         RenderStageSelect.getInstance().newInstance();
-        RenderGameplay.getInstance().closeAudio();
+        RenderGamePlay.getInstance().closeAudio();
     }
 
 
@@ -390,7 +390,7 @@ public class GameInstance implements Runnable {
         winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
         loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
-            RenderGameplay.getInstance().playBGSound();
+            RenderGamePlay.getInstance().playBGMusic();
             musNotice();
             Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
@@ -409,7 +409,7 @@ public class GameInstance implements Runnable {
      */
     public void playMusicNow() {
         try {
-            RenderGameplay.getInstance().playBGSound();
+            RenderGamePlay.getInstance().playBGMusic();
             Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());

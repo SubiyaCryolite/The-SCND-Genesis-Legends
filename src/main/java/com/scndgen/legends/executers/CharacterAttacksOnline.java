@@ -24,7 +24,7 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.ExecutionType;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.threads.GameInstance;
 
 public class CharacterAttacksOnline implements Runnable {
@@ -55,23 +55,23 @@ public class CharacterAttacksOnline implements Runnable {
         //normal attack
         if (executionType == ExecutionType.NORMAL) {
             //clear active combos
-            RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
-            RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
-            //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
+            RenderGamePlay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
+            RenderGamePlay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
+            //RenderGamePlay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
             executingTheCommands();
             GameInstance.getInstance().setCharacterAtbValue(0);
         } else if (executionType == ExecutionType.FURY) {//limit break
-            RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
+            RenderGamePlay.getInstance().clash(1, CharacterState.CHARACTER);
         }
     }
 
     private void executingTheCommands() {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
-            RenderGameplay.getInstance().setAttackSpritesAndTrigger(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT, RenderGameplay.getInstance(), Characters.getInstance().getOpponent());
-            RenderGameplay.getInstance().shakeOpponentLifeBar(0);
-            RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.CHARACTER);
+            RenderGamePlay.getInstance().setAttackSpritesAndTrigger(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT, RenderGamePlay.getInstance(), Characters.getInstance().getOpponent());
+            RenderGamePlay.getInstance().shakeOpponentLifeBar(0);
+            RenderGamePlay.getInstance().revertToDefaultSprites(CharacterState.CHARACTER);
         }
     }
 }
