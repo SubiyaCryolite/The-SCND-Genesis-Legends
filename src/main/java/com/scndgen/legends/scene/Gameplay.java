@@ -26,6 +26,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
+import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.*;
@@ -41,12 +42,13 @@ import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Mode;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
-import javax.swing.*;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,15 +59,19 @@ import java.util.logging.Logger;
  * @Class: Gameplay
  */
 public abstract class Gameplay extends Mode {
+    protected final String[] physical = new String[]{"", "", "", ""}, celestia = new String[]{"", "", "", ""}, item = new String[]{"", "", "", ""};
+    protected final AudioPlayback furySound, damageSound;
     protected String activePerson; // person who performed an attack, getName shall show in battle info status area
     protected int characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected boolean triggerCharacterAttack;
+    protected boolean triggerOpponentAttack;
     protected int done = 0; // if gameover
-    protected LinkedList<String> attackArray = new LinkedList<>();//up to 8 moves can be qued
+    protected LinkedList<String> characterAttacks = new LinkedList<>();
+    protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
     protected boolean threadsNotRunningYet = true, playATBFile = false;
     protected StringBuilder StatusText = new StringBuilder();
     protected int startDrawing = 0, menuBarY;
-    protected javafx.scene.paint.Color currentColor = javafx.scene.paint.Color.RED;
+    protected Color currentColor = Color.RED;
     protected float angRot = 20;
     protected boolean safeToSelect;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
@@ -83,7 +89,6 @@ public abstract class Gameplay extends Mode {
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInformation = new StringBuilder("");
     protected int count = 0, fpsInt = 0, fpsIntStat;
-    protected final String[] physical = new String[]{"", "", "", ""}, celestia = new String[]{"", "", "", ""}, item = new String[]{"", "", "", ""};
     protected StageAnimation animLayer;
     protected boolean clasherRunning = false;
     protected boolean loadedUpdaters;
@@ -149,10 +154,15 @@ public abstract class Gameplay extends Mode {
     protected AttackOpponent attackOpponent;
     protected AttackPlayer attackPlayer;
     protected AudioPlayback sound, ambientMusic, hurtChar, hurtOpp, attackChar, attackOpp;
-    protected final AudioPlayback furySound, damageSound;
     protected boolean isCharacterAttacking;
     protected int columnIndex;
     protected int rowIndex;
+    private int currentCharacterQueLoop, currentOpponentQueLoop;
+    private int lastCharacterQueLoop, lastOpponentQueLoop;
+    private int characterUiLoop, opponentUiLoop;
+    private long characterQueDelta, opponentQueDelta;
+    private long opponentAiTimeout, opponentAiDelta;
+
 
     protected Gameplay() {
         furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
@@ -221,12 +231,11 @@ public abstract class Gameplay extends Mode {
         }
     }
 
-
     /**
      * Get the CharacterEnum
      */
     protected void setCharMoveset() {
-        getAttacksChar().getOpponent().setCharMoveset();
+        Characters.getInstance().getCharacter().setCharacterAttackArrays();
     }
 
     /**
@@ -236,7 +245,7 @@ public abstract class Gameplay extends Mode {
      * @param celestiaS
      * @param itemS
      */
-    public void setStats(String[] physicalS, String[] celestiaS, String[] itemS) {
+    public void setCharacterAttackArrays(String[] physicalS, String[] celestiaS, String[] itemS) {
         System.arraycopy(physicalS, 0, physical, 0, physicalS.length);
         System.arraycopy(celestiaS, 0, celestia, 0, celestiaS.length);
         System.arraycopy(itemS, 0, item, 0, itemS.length);
@@ -261,8 +270,7 @@ public abstract class Gameplay extends Mode {
      * Get the move selected by the player
      */
     protected String getAttack(int move) {
-        String txt = getAttacksChar().getOpponent().getMoveQued(move);
-
+        String txt = Characters.getInstance().getOpponent().getMoveQued(move);
         return txt;
     }
 
@@ -294,37 +302,6 @@ public abstract class Gameplay extends Mode {
         }
     }
 
-
-    public ConvolveOp getGaussianBlurFilter(int radius, boolean horizontal) {
-        if (radius < 1) {
-            throw new IllegalArgumentException("Radius must be >= 1");
-        }
-
-        int size = radius * 2 + 1;
-        float[] data = new float[size];
-        float sigma = radius / 3.0f;
-        float twoSigmaSquare = 2.0f * sigma * sigma;
-        float sigmaRoot = (float) Math.sqrt(twoSigmaSquare * Math.PI);
-        float total = 0.0f;
-        for (int i = -radius; i <= radius; i++) {
-            float distance = i * i;
-            int index = i + radius;
-            data[index] = (float) Math.exp(-distance / twoSigmaSquare) / sigmaRoot;
-            total += data[index];
-        }
-
-        for (int i = 0; i < data.length; i++) {
-            data[i] /= total;
-        }
-        Kernel kernel = null;
-        if (horizontal) {
-            kernel = new Kernel(size, 1, data);
-        } else {
-            kernel = new Kernel(1, size, data);
-        }
-        return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-    }
-
     public void clash(int dude, CharacterState homie) {
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             JenesisPanel.getInstance().sendToServer("clashing^T&T^&T&^");
@@ -354,26 +331,21 @@ public abstract class Gameplay extends Mode {
         JenesisPanel.getInstance().sendToServer(message);
     }
 
-
     public String getFavChar(int here) {
         return charNames[here].name();
     }
-
 
     public void shakeCharacterLifeBar() {
         for (int iteration = 0; iteration < lifeBarShakeIterations; iteration++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter + 1;
-                slowDown(shakingChar);
             }
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter - 1;
-                slowDown(shakingChar);
             }
         }
     }
-
 
     public boolean shakeOpponentLifeBar(int loop) {
         int computedPosition = -1;//so that we start from zero
@@ -383,7 +355,6 @@ public abstract class Gameplay extends Mode {
                 computedPosition++;
                 if (loop == computedPosition) {
                     uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent + 1;
-                    slowDown(shakingChar);
                     return true;
                 }
             }
@@ -391,7 +362,6 @@ public abstract class Gameplay extends Mode {
                 computedPosition++;
                 if (loop == computedPosition) {
                     uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent - 1;
-                    slowDown(shakingChar);
                     return true;
                 }
             }
@@ -399,9 +369,8 @@ public abstract class Gameplay extends Mode {
         return false;
     }
 
-
     protected void checkStatus() {
-        if (attackArray.size() == 4) {
+        if (characterAttacks.size() == 4) {
             attack();
         }
     }
@@ -420,7 +389,6 @@ public abstract class Gameplay extends Mode {
         }
     }
 
-
     /**
      * Makes text white, meaning its OK to select a move
      */
@@ -437,12 +405,11 @@ public abstract class Gameplay extends Mode {
         safeToSelect = false;
     }
 
-
     /**
      * Attacks the opponent
      */
     public void attack() {
-        if (!attackArray.isEmpty()) {
+        if (!characterAttacks.isEmpty()) {
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 disableSelection();
                 prepareCharacterAttack();
@@ -451,7 +418,7 @@ public abstract class Gameplay extends Mode {
                 setSprites(CharacterState.CHARACTER, 9, 11);
                 setSprites(CharacterState.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + attackArray.get(0) + attackArray.get(1) + attackArray.get(2) + attackArray.get(3) + " attack";
+                attackStr = "" + characterAttacks.get(0) + characterAttacks.get(1) + characterAttacks.get(2) + characterAttacks.get(3) + " attack";
                 System.out.println(attackStr);
                 client.sendData(attackStr);
                 //attack on local
@@ -462,13 +429,13 @@ public abstract class Gameplay extends Mode {
                 setSprites(CharacterState.CHARACTER, 9, 11);
                 setSprites(CharacterState.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + attackArray.get(0) + attackArray.get(1) + attackArray.get(2) + attackArray.get(3) + " attack";
+                attackStr = "" + characterAttacks.get(0) + characterAttacks.get(1) + characterAttacks.get(2) + characterAttacks.get(3) + " attack";
                 System.out.println(attackStr);
                 server.sendData(attackStr);
                 //attack on local
                 disableSelection();
                 prepareCharacterAttack();
-                GameInstance.getInstance().setRecoveryUnitsChar(0);
+                GameInstance.getInstance().setCharacterAtbValue(0);
             }
         }
     }
@@ -481,24 +448,69 @@ public abstract class Gameplay extends Mode {
         characterUiLoop = 0;
     }
 
-    private int currentCharacterQueLoop;
-    private int lastCharacterQueLoop;
-    private int characterUiLoop;
-    private long characterQueDelta;
+    private void prepareOpponentAttack() {
+        triggerOpponentAttack = true;
+        currentOpponentQueLoop = 0;
+        lastOpponentQueLoop = -1;
+        opponentQueDelta = -1;
+        opponentUiLoop = 0;
+    }
 
     public void update(long delta) {
         super.update(delta);
-        if (triggerCharacterAttack) {
-            if (GameInstance.getInstance().gameOver == false) {
-                if (lastCharacterQueLoop == -1) {
-                    GameInstance.getInstance().pauseActivityRegen();
-                    GameInstance.getInstance().setRecoveryUnitsChar(0);
+        if (GameInstance.getInstance().gameOver == false) {
+            boolean singlePlayerOrStoryMode = ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE;
+            if (singlePlayerOrStoryMode && !triggerOpponentAttack) {
+                if (singlePlayerOrStoryMode && (delta - opponentAiDelta) > MS16) {
+                    opponentAiDelta = delta;
+                    if (opponentAiTimeout < GameState.getInstance().getLogin().getDifficultyDynamic()) {
+                        opponentAiTimeout += 16;
+                    } else {
+                        opponentAttacks.clear();
+                        for (int i : updateAndGetOpponentAttackQue()) {
+                            opponentAttacks.add(i);
+                        }
+                        prepareOpponentAttack();
+                    }
                 }
-                if (!attackArray.isEmpty()) {
+            }
+            if (triggerOpponentAttack) {
+                if (lastOpponentQueLoop == -1) {
+                    GameInstance.getInstance().pauseOpponentAtb();
+                    GameInstance.getInstance().setOpponentAtbValue(0);
+                }
+                if (!opponentAttacks.isEmpty()) {
+                    if (lastOpponentQueLoop != currentOpponentQueLoop) {
+                        opponentQueDelta = delta;
+                        lastOpponentQueLoop = currentOpponentQueLoop;
+                        setAttackSpritesAndTrigger(opponentAttacks.pop(), CharacterState.OPPONENT, CharacterState.CHARACTER, this,Characters.getInstance().getCharacter());//add mode reference here
+                    }
+                    if ((delta - opponentQueDelta) > MS33) {
+                        opponentQueDelta = delta;
+                        if (shakeOpponentLifeBar(opponentUiLoop)) {
+                            opponentUiLoop++;
+                        } else {
+                            currentOpponentQueLoop++;
+                            opponentUiLoop = 0;
+                        }
+                    }
+                } else {
+                    revertToDefaultSprites(CharacterState.OPPONENT);
+                    GameInstance.getInstance().resumeOpponentAtb();
+                    triggerOpponentAttack = false;
+                }
+
+            }
+            if (triggerCharacterAttack) {
+                if (lastCharacterQueLoop == -1) {
+                    GameInstance.getInstance().pauseCharacterAtb();
+                    GameInstance.getInstance().setCharacterAtbValue(0);
+                }
+                if (!characterAttacks.isEmpty()) {
                     if (lastCharacterQueLoop != currentCharacterQueLoop) {
                         characterQueDelta = delta;
                         lastCharacterQueLoop = currentCharacterQueLoop;
-                        getAttacksChar().setAttackSpritesAndTrigger(Integer.parseInt(attackArray.pop()), CharacterState.CHARACTER, CharacterState.OPPONENT, this);//add mode reference here
+                        setAttackSpritesAndTrigger(Integer.parseInt(characterAttacks.pop()), CharacterState.CHARACTER, CharacterState.OPPONENT, this,Characters.getInstance().getOpponent());//add mode reference here
                     }
                     if ((delta - characterQueDelta) > MS33) {
                         characterQueDelta = delta;
@@ -511,7 +523,7 @@ public abstract class Gameplay extends Mode {
                     }
                 } else {
                     revertToDefaultSprites(CharacterState.CHARACTER);
-                    GameInstance.getInstance().resumeActivityRegen();
+                    GameInstance.getInstance().resumeCharacterAtb();
                     triggerCharacterAttack = false;
                 }
             }
@@ -542,7 +554,16 @@ public abstract class Gameplay extends Mode {
      * @return integer
      */
     public int showConfirmMessage(String message) {
-        return JOptionPane.showConfirmDialog(null, message, "Hey There", JOptionPane.YES_NO_CANCEL_OPTION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Hey There");
+        alert.setHeaderText("Hey There");
+        alert.setContentText(message);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -717,8 +738,8 @@ public abstract class Gameplay extends Mode {
      * Remove move from que
      */
     public void unQueMove() {
-        if (!attackArray.isEmpty() && safeToSelect) {
-            int moi = Integer.parseInt(attackArray.removeLast());
+        if (!characterAttacks.isEmpty() && safeToSelect) {
+            int moi = Integer.parseInt(characterAttacks.removeLast());
             Characters.getInstance().alterPoints2(moi);
             System.out.println("UNQUED " + moi);
         }
@@ -865,9 +886,9 @@ public abstract class Gameplay extends Mode {
             @Override
             public void run() {
                 if (getBreak() == 1000) {
-                    //&& GameInstance.getInstance().getRecoveryUnitsChar()>289
+                    //&& GameInstance.getInstance().getCharacterAtbValue()>289
                     //runs on local
-                    if (characterState == CharacterState.CHARACTER && limitRunning && GameInstance.getInstance().getRecoveryUnitsChar() > 289) {
+                    if (characterState == CharacterState.CHARACTER && limitRunning && GameInstance.getInstance().getCharacterAtbValue() > 289) {
                         limitRunning = false;
                         if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
                             JenesisPanel.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
@@ -875,8 +896,8 @@ public abstract class Gameplay extends Mode {
                             JenesisPanel.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
-                        GameInstance.getInstance().pauseActivityRegen();
-                        GameInstance.getInstance().setRecoveryUnitsChar(0);
+                        GameInstance.getInstance().pauseCharacterAtb();
+                        GameInstance.getInstance().setCharacterAtbValue(0);
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
                             if (GameInstance.getInstance().gameOver == false) {
@@ -891,13 +912,13 @@ public abstract class Gameplay extends Mode {
                             }
                         }
                         comboPicArrayPosOpp = 8;
-                        GameInstance.getInstance().resumeActivityRegen();
+                        GameInstance.getInstance().resumeCharacterAtb();
                         setSprites(CharacterState.CHARACTER, 9, 11);
                         setSprites(CharacterState.OPPONENT, 9, 11);
                         limitRunning = true;
                         resetBreak();
                         setAttackType("normal", CharacterState.CHARACTER);
-                    } else if (characterState == CharacterState.OPPONENT && limitRunning && GameInstance.getInstance().getRecoveryUnitsOpp() > 289) {
+                    } else if (characterState == CharacterState.OPPONENT && limitRunning && GameInstance.getInstance().getOpponentAtbValue() > 289) {
                         setAttackType("fury", CharacterState.OPPONENT);
                         limitRunning = false;
                         for (int i = 1; i < 9; i++) {
@@ -905,7 +926,7 @@ public abstract class Gameplay extends Mode {
                                 isCharacterAttacking = true;
                                 furySound();
                                 hurtSoundChar();
-                                GameInstance.getInstance().setRecoveryUnitsOpp(0);
+                                GameInstance.getInstance().setOpponentAtbValue(0);
                                 setSprites(CharacterState.OPPONENT, i, 11);
                                 setSprites(CharacterState.CHARACTER, 0, 11);
                                 shakeCharacterLifeBar();
@@ -1051,7 +1072,7 @@ public abstract class Gameplay extends Mode {
 
 
     public int getCharacterQueuedAttacks() {
-        return attackArray.size();
+        return characterAttacks.size();
     }
 
     public int getDone() {
@@ -1133,10 +1154,6 @@ public abstract class Gameplay extends Mode {
         return attackOpponent;
     }
 
-    public AttackPlayer getAttacksChar() {
-        return attackPlayer;
-    }
-
     public void mouseClicked(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case PRIMARY:
@@ -1152,8 +1169,12 @@ public abstract class Gameplay extends Mode {
     }
 
     protected void cancelMatch() {
-        int u = JOptionPane.showConfirmDialog(null, "Are you sure you wanna quit?", "Dude!?", JOptionPane.YES_NO_OPTION);
-        if (u == JOptionPane.YES_OPTION) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Dude!?");
+        alert.setContentText("Are you sure you wanna quit?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
             if (GameInstance.getInstance().gamePaused) {
                 onTogglePause();
             }
@@ -1184,5 +1205,136 @@ public abstract class Gameplay extends Mode {
             setSprites(CharacterState.CHARACTER, 9, 11);
             setSprites(CharacterState.OPPONENT, 9, 11);
         }
+    }
+
+    /**
+     * Get char AI
+     *
+     * @return AI - Personality
+     */
+    public int[] updateAndGetOpponentAttackQue() {
+        int[] array = {};
+        //when doing isWithinRange, all attacks
+        if (getOpponentHp() / getOpponentMaximumHp() >= 1.00) {
+            array = Characters.getInstance().getOpponent().getAiProfile1();
+        } //when doing isWithinRange, all attacks + 2 buffs
+        else if (getOpponentHp() / getOpponentMaximumHp() >= 0.75 && getOpponentHp() / getOpponentMaximumHp() < 1.00) {
+            array = Characters.getInstance().getOpponent().getAiProfile2();
+        } //when doing isWithinRange, 4 attacks + 2 buffs
+        else if (getOpponentHp() / getOpponentMaximumHp() >= 0.50 && getOpponentHp() / getOpponentMaximumHp() < 0.75) {
+            if (getBreak() == 1000 && limitRunning) {
+                triggerFury(CharacterState.OPPONENT);
+                array = new int[]{0, 0, 0, 0};
+            } else {
+                array = Characters.getInstance().getOpponent().getAiProfile3();
+            }
+        } //when doing isWithinRange, 4 buffs + 2 moves
+        else if (getOpponentHp() / getOpponentMaximumHp() >= 0.25 && getOpponentHp() / getOpponentMaximumHp() < 0.50) {
+            if (getBreak() == 1000 && limitRunning) {
+                triggerFury(CharacterState.OPPONENT);
+                array = new int[]{0, 0, 0, 0};
+            } else {
+                array = Characters.getInstance().getOpponent().getAiProfile4();
+            }
+        } //first fury, when doing isWithinRange, 4 buffs + 2 moves
+        else {
+            if (getBreak() == 1000 && limitRunning) {
+                triggerFury(CharacterState.OPPONENT);
+                array = new int[]{0, 0, 0, 0};
+            } else {
+                array = Characters.getInstance().getOpponent().getAiProfile5();
+            }
+        }
+
+        return array;
+    }
+
+    /**
+     * Attack sorter
+     *
+     * @param attack - the move to execute
+     */
+    public void setAttackSpritesAndTrigger(int attack, CharacterState source, CharacterState destination, Gameplay renderGameplay, Character opponent) {
+        CharacterState victim = destination;
+        if (attack > 8) {
+            destination = CharacterState.SELF;
+        }
+        if (attack == 0) {
+            renderGameplay.setSprites(source, 9, 11);
+            renderGameplay.setSprites(destination, 9, 11);
+            renderGameplay.showBattleMessage("");
+        }
+        String attackIdentifier = "";
+        if (attack == 1) {
+            attackIdentifier = "01";
+        }
+
+        if (attack == 2) {
+            attackIdentifier = "02";
+        }
+
+        if (attack == 3) {
+            attackIdentifier = "03";
+        }
+
+        if (attack == 4) {
+            attackIdentifier = "04";
+        }
+
+        if (attack == 5) {
+            attackIdentifier = "05";
+        }
+
+        if (attack == 6) {
+            attackIdentifier = "06";
+        }
+
+        if (attack == 7) {
+            attackIdentifier = "07";
+        }
+
+        if (attack == 8) {
+            //char move thing
+            attackIdentifier = "08";
+        }
+
+        if (attack == 9) {
+            attackIdentifier = "09";
+        }
+
+        if (attack == 10) {
+            attackIdentifier = "10";
+        }
+
+        if (attack == 11) {
+            attackIdentifier = "11";
+        }
+
+        if (attack == 12) {
+            attackIdentifier = "12";
+        }
+        setAttackSprites(renderGameplay, source, destination, attack);
+        triggerAttack(renderGameplay, attackIdentifier, opponent, victim);
+    }
+
+    /**
+     * call specific attack
+     */
+    public void setAttackSprites(Gameplay gamePlay, CharacterState CHARACTERsTATE, CharacterState target, int attack) {
+        gamePlay.isCharacterAttacking(CHARACTERsTATE == CharacterState.CHARACTER);
+        if (target == CharacterState.SELF) {
+            gamePlay.setSprites(CHARACTERsTATE, 10, 11); //USE ITEM
+        } else {
+            //status moves use 10 (pose sprite)
+            gamePlay.setSprites(CHARACTERsTATE, attack > 9 ? 10 : attack, 11); //attack
+            gamePlay.setSprites(target, 0, 11); //defend
+        }
+    }
+
+    /**
+     * ATTAAAAAAACK!!!!!!!
+     */
+    public void triggerAttack(Gameplay gamePlay, String attackIdentifier, Character opponent, CharacterState victim) {
+        opponent.attack(attackIdentifier, victim, gamePlay);
     }
 }

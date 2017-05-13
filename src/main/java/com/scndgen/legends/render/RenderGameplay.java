@@ -431,7 +431,7 @@ public class RenderGameplay extends Gameplay {
                 gc.setFill(Color.BLACK);
                 gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 gc.setFill(gradient1);
-                gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, GameInstance.getInstance().getRecoveryUnitsOpp(), 6, 6, 6);
+                gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, GameInstance.getInstance().getOpponentAtbValue(), 6, 6, 6);
 
                 //------------player 1 HUD---------------------//
                 gc.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter); // HOLDS hp
@@ -538,8 +538,8 @@ public class RenderGameplay extends Gameplay {
         for (int queItem = 0; queItem < 4; queItem++) {
             gc.drawImage(quePic1, (queItem * 70 + 5 + attackMenuXPos), 440);
         }
-        if (attackArray.size() >= 1) {
-            for (int queItem = 0; queItem < attackArray.size(); queItem++) {
+        if (characterAttacks.size() >= 1) {
+            for (int queItem = 0; queItem < characterAttacks.size(); queItem++) {
                 gc.drawImage(quePic2, (queItem * 70 + 5 + attackMenuXPos), 440);
             }
         }
@@ -1049,9 +1049,8 @@ public class RenderGameplay extends Gameplay {
 
     public void comicText() {
         if (GameState.getInstance().getLogin().getComicEffectOccurence() > 0) {
-            int well = Math.round((float) (Math.random() * GameState.getInstance().getLogin().getComicEffectOccurence()));
-
-            if (well == 1) {
+            int randomInt = Math.round((float) (Math.random() * GameState.getInstance().getLogin().getComicEffectOccurence()));
+            if (randomInt == 1) {
                 setRandomPic();
             }
         }
@@ -1132,7 +1131,7 @@ public class RenderGameplay extends Gameplay {
      * @return circel angle
      */
     private int phyAngle() {
-        float start = GameInstance.getInstance().getRecoveryUnitsChar() / 290.0f;
+        float start = GameInstance.getInstance().getCharacterAtbValue() / 290.0f;
         angleRaw = start * 360;
         result = Integer.parseInt("" + Math.round(angleRaw));
         if (result >= 360) {
@@ -1191,7 +1190,7 @@ public class RenderGameplay extends Gameplay {
                     sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
-                    attackArray.push(genStr(activeAttack)); // count initially negative 1, add one to get to index 0
+                    characterAttacks.push(genStr(activeAttack)); // count initially negative 1, add one to get to index 0
                     checkStatus();
                     showBattleMessage("Queued up " + getAttack(activeAttack));
                 } else {

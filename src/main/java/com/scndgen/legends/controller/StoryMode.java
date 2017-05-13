@@ -180,8 +180,8 @@ public class StoryMode implements Runnable {
         storyMus.play();
         GameInstance.getInstance().storySequence = true;
         doneShowingText = false;
-        GameInstance.getInstance().pauseActivityRegen();
-        GameInstance.getInstance().pauseActivityRegenOpp();
+        GameInstance.getInstance().pauseCharacterAtb();
+        GameInstance.getInstance().pauseOpponentAtb();
     }
 
     private void storyOut(boolean terminateMode) {
@@ -195,8 +195,8 @@ public class StoryMode implements Runnable {
         thread.stop();
         GameInstance.getInstance().storySequence = false;
         doneShowingText = true;
-        GameInstance.getInstance().resumeActivityRegen();
-        GameInstance.getInstance().resumeActivityRegenOpp();
+        GameInstance.getInstance().resumeCharacterAtb();
+        GameInstance.getInstance().resumeOpponentAtb();
     }
 
     @Override

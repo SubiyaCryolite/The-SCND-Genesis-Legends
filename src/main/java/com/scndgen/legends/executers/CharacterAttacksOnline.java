@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.ExecutionType;
 import com.scndgen.legends.render.RenderGameplay;
@@ -59,7 +60,7 @@ public class CharacterAttacksOnline implements Runnable {
             //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
             // each Mattack will check if they are in the battle que.... if they are they execute
             executingTheCommands();
-            GameInstance.getInstance().setRecoveryUnitsChar(0);
+            GameInstance.getInstance().setCharacterAtbValue(0);
         } else if (executionType == ExecutionType.FURY) {//limit break
             RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
         }
@@ -68,7 +69,7 @@ public class CharacterAttacksOnline implements Runnable {
     private void executingTheCommands() {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
-            RenderGameplay.getInstance().getAttacksChar().setAttackSpritesAndTrigger(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT, RenderGameplay.getInstance());
+            RenderGameplay.getInstance().setAttackSpritesAndTrigger(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT, RenderGameplay.getInstance(), Characters.getInstance().getOpponent());
             RenderGameplay.getInstance().shakeOpponentLifeBar(0);
             RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.CHARACTER);
         }

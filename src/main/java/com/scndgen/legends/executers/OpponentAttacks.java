@@ -21,17 +21,19 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
+
+import java.util.LinkedList;
 
 public class OpponentAttacks implements Runnable {
 
     public int attackRange;
     private Thread timer;
-    private int[] aiQueuedAttacks;
+    private final LinkedList<Integer> aiQueuedAttacks = new LinkedList<>();
 
     public OpponentAttacks() {
 
@@ -52,20 +54,24 @@ public class OpponentAttacks implements Runnable {
                 ex.printStackTrace(System.err);
             }
             executingTheCommandsAI();
-            GameInstance.getInstance().setRecoveryUnitsOpp(0);
+            GameInstance.getInstance().setOpponentAtbValue(0);
             GameInstance.getInstance().enemyAiRunning = false;
             timer.suspend();
         } while (1 != 0);
     }
 
     private void executingTheCommandsAI() {
-        aiQueuedAttacks = RenderCharacterSelectionScreen.getInstance().getAISlot();
-        attackRange = aiQueuedAttacks.length - 1;
+        aiQueuedAttacks.clear();
+        for (int i : RenderGameplay.getInstance().updateAndGetOpponentAttackQue())
+            aiQueuedAttacks.add(i);
+        attackRange = aiQueuedAttacks.size();
+        /////////////////////////////////////////////////////////////
         if (GameInstance.getInstance().gameOver == false) {
-            for (int o = 0; o < ((GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyDynamic()) / GameState.DIFFICULTY_SCALE); o++) {
-                //fix story scene bug
+            int computedDifficulty = (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyDynamic()) / GameState.DIFFICULTY_SCALE;
+            for (int aiTimeout = 0; aiTimeout < computedDifficulty; aiTimeout++) {
                 if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().gameOver == false) {
-                    RenderGameplay.getInstance().getAttackOpponent().setAttackSpritesAndTrigger(aiQueuedAttacks[Math.round(Math.round(Math.random() * attackRange))], CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGameplay.getInstance());
+                    int randomAttack = aiQueuedAttacks.get(Math.round(Math.round(Math.random() * attackRange)));
+                    RenderGameplay.getInstance().setAttackSpritesAndTrigger(randomAttack, CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGameplay.getInstance(), Characters.getInstance().getCharacter());
                     RenderGameplay.getInstance().shakeCharacterLifeBar();
                     RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
                 }

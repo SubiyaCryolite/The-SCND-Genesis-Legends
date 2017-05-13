@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
+import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.GameInstance;
@@ -56,7 +57,7 @@ public class OpponentAttacksOnline implements Runnable {
                 RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
                 RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
                 executingTheCommandsAI(command1, command2, command3, command4);
-                GameInstance.getInstance().setRecoveryUnitsOpp(0);
+                GameInstance.getInstance().setOpponentAtbValue(0);
             } else if (executionType == 'l') {//limit break
                 RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
             }
@@ -69,7 +70,7 @@ public class OpponentAttacksOnline implements Runnable {
         try {
             int[] commands = {command1, command2, command3, command4};
             for (int index = 0; index < commands.length; index++) {
-                RenderGameplay.getInstance().getAttackOpponent().setAttackSpritesAndTrigger(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER,RenderGameplay.getInstance());
+                RenderGameplay.getInstance().getAttackOpponent().setAttackSpritesAndTrigger(commands[index], CharacterState.OPPONENT, CharacterState.CHARACTER,RenderGameplay.getInstance(), Characters.getInstance().getCharacter());
                 RenderGameplay.getInstance().shakeCharacterLifeBar();
                 RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
             }

@@ -25,7 +25,6 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.scene.Gameplay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -124,8 +123,8 @@ public abstract class Character {
      *
      * @return array of physical attacks
      */
-    public void setCharMoveset() {
-        RenderGameplay.getInstance().setStats(physical, celestia, status);
+    public void setCharacterAttackArrays() {
+        RenderGameplay.getInstance().setCharacterAttackArrays(physical, celestia, status);
     }
 
     /**
@@ -198,11 +197,31 @@ public abstract class Character {
      * Set CharacterEnum AI, opponent 1
      */
     public void setAiProf() {
-        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours1, 1);
-        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours2, 2);
-        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours3, 3);
-        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours4, 4);
-        RenderCharacterSelectionScreen.getInstance().setAISlot(behaviours5, 5);
+    }
+
+    public int[] getAiProfile1()
+    {
+        return behaviours1;
+    }
+
+    public int[] getAiProfile2()
+    {
+        return behaviours2;
+    }
+
+    public int[] getAiProfile3()
+    {
+        return behaviours3;
+    }
+
+    public int[] getAiProfile4()
+    {
+        return behaviours4;
+    }
+
+    public int[] getAiProfile5()
+    {
+        return behaviours5;
     }
 
     public int getPoints() {

@@ -9,7 +9,6 @@ import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.ImageLoader;
@@ -23,9 +22,6 @@ import java.util.Hashtable;
  */
 public abstract class CharacterSelectionScreen extends Mode {
     protected static String charDesc = "";
-    protected int[] arr1, arr2, arr3, arr4, arr5;
-    protected int[] arr1a, arr2a, arr3a, arr4a, arr5a;
-    protected int[] arr1b, arr2b, arr3b, arr4b, arr5b;
     protected int[] attacks;
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected final int numOfCharacters = CharacterEnum.values().length;
@@ -66,131 +62,7 @@ public abstract class CharacterSelectionScreen extends Mode {
         attacks = new int[4];
     }
 
-    /**
-     * Set 5 AI personalities
-     *
-     * @param array - the movws
-     * @param num   - the number
-     */
-    public void setAISlot(int[] array, int num) {
-        if (num == 1) {
-            arr1 = array;
-        }
 
-        if (num == 2) {
-            arr2 = array;
-        }
-
-        if (num == 3) {
-            arr3 = array;
-        }
-
-        if (num == 4) {
-            arr4 = array;
-        }
-
-        if (num == 5) {
-            arr5 = array;
-        }
-    }
-
-    /**
-     * Set 5 AI personalities
-     *
-     * @param array - the movws
-     * @param num   - the number
-     */
-    public void setAISlot2(int[] array, int num) {
-        if (num == 1) {
-            arr1a = array;
-        }
-
-        if (num == 2) {
-            arr2a = array;
-        }
-
-        if (num == 3) {
-            arr3a = array;
-        }
-
-        if (num == 4) {
-            arr4a = array;
-        }
-
-        if (num == 5) {
-            arr5a = array;
-        }
-    }
-
-    /**
-     * Set 5 AI personalities
-     *
-     * @param array - the movws
-     * @param num   - the number
-     */
-    public void setAISlot3(int[] array, int num) {
-        if (num == 1) {
-            arr1b = array;
-        }
-
-        if (num == 2) {
-            arr2b = array;
-        }
-
-        if (num == 3) {
-            arr3b = array;
-        }
-
-        if (num == 4) {
-            arr4b = array;
-        }
-
-        if (num == 5) {
-            arr5b = array;
-        }
-    }
-
-    /**
-     * Get char AI
-     *
-     * @return AI - Personality
-     */
-    public int[] getAISlot() {
-        int[] array = {};
-        //when doing isWithinRange, all attacks
-        if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 1.00) {
-            array = arr1;
-        } //when doing isWithinRange, all attacks + 2 buffs
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.75 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 1.00) {
-            array = arr2;
-        } //when doing isWithinRange, 4 attacks + 2 buffs
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.50 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 0.75) {
-            if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
-                array = new int[]{0, 0, 0, 0};
-            } else {
-                array = arr3;
-            }
-        } //when doing isWithinRange, 4 buffs + 2 moves
-        else if (RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() >= 0.25 && RenderGameplay.getInstance().getOpponentHp() / RenderGameplay.getInstance().getOpponentMaximumHp() < 0.50) {
-            if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
-                array = new int[]{0, 0, 0, 0};
-            } else {
-                array = arr4;
-            }
-        } //first fury, when doing isWithinRange, 4 buffs + 2 moves
-        else {
-            if (RenderGameplay.getInstance().getBreak() == 1000 && RenderGameplay.getInstance().limitRunning) {
-                RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
-                array = new int[]{0, 0, 0, 0};
-            } else {
-                array = arr5;
-            }
-        }
-
-        return array;
-    }
 
     public void setAttacks(int attackNUm, int frames) {
         attacks[attackNUm] = frames;
@@ -747,7 +619,6 @@ public abstract class CharacterSelectionScreen extends Mode {
     }
 
 
-
     /**
      * Gets the number of columns in the characterEnum select screen
      *
@@ -954,13 +825,13 @@ public abstract class CharacterSelectionScreen extends Mode {
         this.selectedOppIndex = selectedOppIndex;
     }
 
-     public void mouseMoved(MouseEvent m) {
+    public void mouseMoved(MouseEvent m) {
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case PRIMARY:
-                    onAccept();
+                onAccept();
                 break;
             case SECONDARY:
                 onBackCancel();

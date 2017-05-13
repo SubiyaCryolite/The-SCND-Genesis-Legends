@@ -49,7 +49,7 @@ public class GameInstance implements Runnable {
     public boolean gameOver, gamePaused, gameRunning;
     public int timeLimit, count2;
     public boolean storySequence;
-    private boolean runCharacterAtb = true, runOpponentAtb = true;
+    private boolean characterAtb = true, opponentAtb = true;
     public boolean isRunning = false;
     public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
@@ -57,11 +57,9 @@ public class GameInstance implements Runnable {
     public AudioPlayback loseMusic, winMusic;
     private boolean newMatch;
     private Thread thread;
-    private int sampleChar;
-    private float sampleCharDB;
+    private float characterAtbValue;
     private int limitChar;
-    private int sampleOpp;
-    private float sampleOppDB;
+    private float opponentAtbValue;
     private int limitOpp;
     private float count = 0.0f;
     private OpponentAttacks executorAI;
@@ -88,19 +86,18 @@ public class GameInstance implements Runnable {
             } catch (Exception ex) {
                 ex.printStackTrace(System.err);
             }
-            if (sampleChar <= limitChar && runCharacterAtb) {
-                sampleCharDB = sampleCharDB + (Characters.getInstance().getCharRecoverySpeed());
-                sampleChar = Integer.parseInt("" + Math.round(sampleCharDB) + "");
+            if (characterAtbValue <= limitChar && characterAtb) {
+                characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
             }
-            if (sampleOpp <= limitOpp && runOpponentAtb && storySequence == false) {
-                sampleOppDB = sampleOppDB + (Characters.getInstance().getOppRecoverySpeed());
-                sampleOpp = Integer.parseInt("" + Math.round(sampleOppDB) + "");
-            } else if (enemyAiRunning == false && runOpponentAtb && storySequence == false) {
+            if (opponentAtbValue <= limitOpp && opponentAtb && storySequence == false) {
+                opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
+            } else if (enemyAiRunning == false && opponentAtb && storySequence == false) {
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                     enemyAiRunning = true;
                     //execute enemy AI
                     //executorAI.attack();
-                    {}
+                    {
+                    }
                 }
             }
             if ((timeLimit <= 180 && storySequence == false)) {
@@ -142,8 +139,8 @@ public class GameInstance implements Runnable {
      *
      * @return CharacterEnum recovery units
      */
-    public int getRecoveryUnitsChar() {
-        return sampleChar;
+    public float getCharacterAtbValue() {
+        return characterAtbValue;
     }
 
     /**
@@ -151,9 +148,8 @@ public class GameInstance implements Runnable {
      *
      * @param thisNum - CharacterEnum recovery units
      */
-    public void setRecoveryUnitsChar(int thisNum) {
-        sampleCharDB = (int) Float.parseFloat("" + thisNum + "");
-        sampleChar = thisNum;
+    public void setCharacterAtbValue(float thisNum) {
+        characterAtbValue = thisNum;
     }
 
     /**
@@ -170,8 +166,8 @@ public class GameInstance implements Runnable {
      *
      * @return opponents recovery units
      */
-    public int getRecoveryUnitsOpp() {
-        return sampleOpp;
+    public float getOpponentAtbValue() {
+        return opponentAtbValue;
     }
 
     /**
@@ -179,18 +175,8 @@ public class GameInstance implements Runnable {
      *
      * @param thisNum2 - the value to set
      */
-    public void setRecoveryUnitsOpp(int thisNum2) {
-        sampleOppDB = (int) Float.parseFloat("" + thisNum2 + "");
-        sampleOpp = thisNum2;
-    }
-
-    /**
-     * Get the opponents recovery limits
-     *
-     * @return recovery limit for opponent
-     */
-    public int getLimitOpp() {
-        return limitOpp;
+    public void setOpponentAtbValue(int thisNum2) {
+        opponentAtbValue = thisNum2;
     }
 
     /**
@@ -355,29 +341,29 @@ public class GameInstance implements Runnable {
     /**
      * This method prevents the regeneration of Activity while movesare executing
      */
-    public void pauseActivityRegen() {
-        runCharacterAtb = false;
+    public void pauseCharacterAtb() {
+        characterAtb = false;
     }
 
     /**
      * Resumes the activity bar
      */
-    public void resumeActivityRegen() {
-        runCharacterAtb = true;
+    public void resumeCharacterAtb() {
+        characterAtb = true;
     }
 
     /**
      * This method prevents the regeneration of Activity while movesare executing
      */
-    public void pauseActivityRegenOpp() {
-        runOpponentAtb = false;
+    public void pauseOpponentAtb() {
+        opponentAtb = false;
     }
 
     /**
      * Resumes the activity bar
      */
-    public void resumeActivityRegenOpp() {
-        runOpponentAtb = true;
+    public void resumeOpponentAtb() {
+        opponentAtb = true;
     }
 
 
@@ -395,12 +381,9 @@ public class GameInstance implements Runnable {
         }
         gameRunning = true;
         recordPlayTime();
-        sampleChar = 00;
-        sampleCharDB = 00;
-        limitChar = 290;
-        sampleOpp = 00;
-        sampleOppDB = 00;
-        limitOpp = 290;
+        characterAtbValue = 00;
+        opponentAtbValue = 00;
+        limitChar = limitOpp = 290;
         gamePaused = false;
         gameOver = false;
         newMatch = true;
@@ -409,7 +392,7 @@ public class GameInstance implements Runnable {
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            Overlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
         thread = new Thread(this);
         thread.setName("MAIN GAME LOGIC THREAD");
@@ -427,7 +410,7 @@ public class GameInstance implements Runnable {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            Overlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }
