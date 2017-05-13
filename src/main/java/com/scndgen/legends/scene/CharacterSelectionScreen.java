@@ -5,15 +5,15 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.enums.*;
+import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisMode;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Hashtable;
@@ -21,7 +21,7 @@ import java.util.Hashtable;
 /**
  * Created by ifunga on 14/04/2017.
  */
-public abstract class CharacterSelectionScreen extends JenesisMode {
+public abstract class CharacterSelectionScreen extends Mode {
     protected static String charDesc = "";
     protected int[] arr1, arr2, arr3, arr4, arr5;
     protected int[] arr1a, arr2a, arr3a, arr4a, arr5a;
@@ -29,13 +29,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
     protected int[] attacks;
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected final int numOfCharacters = CharacterEnum.values().length;
-    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, charPrevLoicIndex = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
-    protected JenesisImageLoader imageLoader;
+    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
+    protected ImageLoader imageLoader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
-    protected CharacterEnum opponent, characterEnum;
+    protected CharacterEnum opponentEnum, characterEnum;
     protected int oppPrevLoc, charPrevLoc;
-    protected boolean characterSelected, opponentSelected, animatorThreadRunning;
+    protected boolean selectedCharacter, selectedOpponent, animatorThreadRunning;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
     protected final AudioPlayback sound, error;
     protected final int columns = 3;
@@ -44,14 +44,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
     protected final int columnsCiel = numOfCharacters % columns;
     protected boolean canSelectCharacter;
     protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
-    protected int storedX;
-    protected int storedY;
 
     public void newInstance() {
         loadAssets = true;
         canSelectCharacter = true;
-        characterSelected = false;
-        opponentSelected = false;
+        selectedCharacter = false;
+        selectedOpponent = false;
         refreshSelections();
         characterLookup.clear();
         for (CharacterEnum character : CharacterEnum.values()) {
@@ -241,21 +239,6 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         canSelectCharacter = false;
     }
 
-    /**
-     * Goes onBackCancel to main menu
-     */
-    public void backToMenu() {
-        newInstance();
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-            JenesisPanel.getInstance().closeTheServer();
-        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            JenesisPanel.getInstance().closeTheClient();
-        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-            StoryMode.getInstance().onAccept();
-        }
-        ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
-        RenderGameplay.getInstance().closeAudio();
-    }
 
     /**
      * Refresh selections
@@ -263,12 +246,10 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
     private void refreshSelections() {
         charPrevLoc = 0;
         oppPrevLoc = 0;
-        characterSelected = false;
-        opponentSelected = false;
+        selectedCharacter = false;
+        selectedOpponent = false;
         //selectedCharIndex=0;
         //selectedOppIndex=0;
-        storedX = 99;
-        storedY = 99;
     }
 
     /**
@@ -286,7 +267,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
      * @return opponent getName
      */
     public CharacterEnum getOppName() {
-        return opponent;
+        return opponentEnum;
     }
 
     /**
@@ -299,7 +280,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.RAILA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -311,15 +292,14 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 JenesisPanel.getInstance().sendToServer("selRai_jkxc");
                 preventCharacterSelection();
             }
-
-        } else if (type == CharacterState.OPPONENT && opponentSelected == false) {
+        } else if (type == CharacterState.OPPONENT && selectedOpponent == false) {
             sound.play();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             }
-            opponentSelected = true;
-            opponent = CharacterEnum.RAILA;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.RAILA;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -333,7 +313,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         {
             primaryNotice(Language.getInstance().get(85));
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.SUBIYA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -347,13 +327,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.SUBIYA;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.SUBIYA;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -367,7 +347,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.LYNX;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -381,13 +361,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.LYNX;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.LYNX;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -401,7 +381,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.AISHA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -415,13 +395,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.AISHA;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.AISHA;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -435,7 +415,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.ADE;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -449,13 +429,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.ADE;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.ADE;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -469,7 +449,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.RAVAGE;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -484,13 +464,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.RAVAGE;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.RAVAGE;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -504,7 +484,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.JONAH;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -519,13 +499,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.JONAH;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.JONAH;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -539,7 +519,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.ADAM;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -554,13 +534,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.NOVA_ADAM;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.NOVA_ADAM;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -574,7 +554,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.NOVA_ADAM;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -589,13 +569,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.NOVA_ADAM;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.NOVA_ADAM;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -609,7 +589,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.AZARIA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -624,13 +604,13 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.AZARIA;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.AZARIA;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -644,7 +624,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.SORROWE;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -659,12 +639,12 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
@@ -678,7 +658,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         if (type == CharacterState.CHARACTER) //when selecting char
         {
             sound.play();
-            characterSelected = true;
+            selectedCharacter = true;
             characterEnum = CharacterEnum.THING;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
@@ -693,27 +673,27 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
             }
         }
 
-        if (type == CharacterState.OPPONENT && opponentSelected == false) // when selecting opponent
+        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.THING;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.THING;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
 
-        if (type == CharacterState.BOSS && opponentSelected == false) // when selecting opponent as boss
+        if (type == CharacterState.BOSS && selectedOpponent == false) // when selecting opponent as boss
         {
             sound.play();
-            opponentSelected = true;
-            opponent = CharacterEnum.THING;
-            Characters.getInstance().prepareO(opponent);
-            selectedOppIndex = oppPrevLoc = opponent.index();
+            selectedOpponent = true;
+            opponentEnum = CharacterEnum.THING;
+            Characters.getInstance().prepareO(opponentEnum);
+            selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
 
     public void proceed2False() {
-        opponentSelected = false;
+        selectedOpponent = false;
     }
 
     public void animateCharSelect() {
@@ -746,54 +726,27 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         }.start();
     }
 
-    /**
-     * Move up
-     */
     public void onUp() {
-        if (row > 0)
-            row -= 1;
-        else {
-            int upperLimit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
-            row = upperLimit;
-        }
+        super.onUp();
         capAnim();
     }
 
-    /**
-     * Move down
-     */
     public void onDown() {
-        int limit = column < columnsCiel ? rowsCiel - 1 : rows - 1;
-        if (row < limit)
-            row++;
-        else
-            row = 0;
+        super.onDown();
         capAnim();
     }
 
-    /**
-     * Move right
-     */
     public void onRight() {
-        int limit = (row < rowsCiel) ? columns - 1 : columnsCiel - 1;
-        if (column < limit)
-            column++;
-        else
-            column = 0;
+        super.onRight();
         capAnim();
     }
 
-    /**
-     * Move left
-     */
     public void onLeft() {
-        int limit = (row < rowsCiel - 1) ? columns - 1 : columnsCiel - 1;
-        if (column > 0)
-            column -= 1;
-        else
-            column = limit;
+        super.onLeft();
         capAnim();
     }
+
+
 
     /**
      * Gets the number of columns in the characterEnum select screen
@@ -870,40 +823,40 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         CharacterEnum character = characterLookup.get(computedPosition);
         switch (character) {
             case SUBIYA:
-                selSubiya(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selSubiya(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case RAILA:
-                selRaila(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selRaila(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case LYNX:
-                selLynx(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selLynx(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case AISHA:
-                selAisha(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAisha(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case ADE:
-                selAde(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAde(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case RAVAGE:
-                selRav(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selRav(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case JONAH:
-                selJon(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selJon(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case ADAM:
-                selAdam(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case NOVA_ADAM:
-                selNOVAAdam(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selNOVAAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case AZARIA:
-                selAza(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAza(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case SORROWE:
-                selSorr(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selSorr(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
             case THING:
-                selThing(characterSelected ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selThing(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
                 break;
         }
     }
@@ -950,7 +903,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
     /**
      * Animates captions
      */
-    public void capAnim() {
+    protected void capAnim() {
         x = -100;
         p1Opac = 0.0f;
         opacChar = 0.0f;
@@ -975,7 +928,7 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
      */
     public boolean bothArentSelected() {
         boolean answer = true;
-        if (characterSelected && opponentSelected) {
+        if (selectedCharacter && selectedOpponent) {
             answer = false;
         }
         return answer;
@@ -989,77 +942,19 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
         this.selectedCharIndex = selectedCharIndex;
     }
 
-    public boolean getCharacterSelected() {
-        return characterSelected;
+    public void setSelectedCharacter(boolean selectedCharacter) {
+        this.selectedCharacter = selectedCharacter;
     }
 
-    public void setCharacterSelected(boolean characterSelected) {
-        this.characterSelected = characterSelected;
-    }
-
-    public boolean getOpponentSelected() {
-        return opponentSelected;
-    }
-
-    public void setOpponentSelected(boolean opponentSelected) {
-        this.opponentSelected = opponentSelected;
+    public void setSelectedOpponent(boolean selectedOpponent) {
+        this.selectedOpponent = selectedOpponent;
     }
 
     public void setSelectedOppIndex(int selectedOppIndex) {
         this.selectedOppIndex = selectedOppIndex;
     }
 
-    public void keyPressed(KeyEvent ke) {
-        KeyCode keyCode = ke.getCode();
-        switch (keyCode) {
-            case ENTER:
-                onAccept();
-                break;
-            case ESCAPE:
-            case BACK_SPACE:
-                onBackCancel();
-                break;
-            case UP:
-            case W:
-                onUp();
-                break;
-            case DOWN:
-            case S:
-                onDown();
-                break;
-            case LEFT:
-            case A:
-                onLeft();
-                break;
-            case RIGHT:
-            case D:
-                onRight();
-                break;
-        }
-    }
-
-    public void mouseMoved(MouseEvent m) {
-        int topY = getTopY();
-        int topX = getTopX();
-        int columns = getColumns();
-        int captionHeight = getCaptionHeight();
-        int captionWidth = getCaptionWidth();
-        int rows = getRows();
-        if (m.getX() > topX && m.getX() < (topX + (captionWidth * columns)) && (m.getY() > topY) && (m.getY() < topY + (captionHeight * rows))) {
-            int vIndex = Math.round(Math.round((m.getY() - topY) / captionHeight));
-            int hIndex = Math.round(Math.round((m.getX() - topX) / captionWidth));
-            setHindex(hIndex);
-            setVindex(vIndex);
-            if (hIndex != storedX || vIndex != storedY) //same vals, do nothing
-            {
-                storedX = hIndex;
-                storedY = vIndex;
-                animateCaption();
-            }
-        } else {
-            setHindex(99);
-            setVindex(99);
-        }
+     public void mouseMoved(MouseEvent m) {
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
@@ -1068,24 +963,10 @@ public abstract class CharacterSelectionScreen extends JenesisMode {
                     onAccept();
                 break;
             case SECONDARY:
+                onBackCancel();
                 break;
             case MIDDLE:
                 break;
-        }
-    }
-
-    public void onAccept() {
-        if (getCharacterSelected() && getOpponentSelected()) {
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER_TAG) {
-                    ScndGenLegends.getInstance().loadMode(Mode.STAGE_SELECT_SCREEN);
-                    if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                        //JenesisPanel.getInstance().sendToClient("watchStageSel_xcbD");
-                    }
-                }
-            }
-        } else {
-            selectCharacter();
         }
     }
 }

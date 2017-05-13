@@ -27,8 +27,8 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.render.RenderMainMenu;
-import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.ImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -46,7 +46,7 @@ public class Tutorial implements Runnable {
     private Image[] slides, arrows;
     private Image forward, back;
     private Thread thread;
-    private JenesisImageLoader imageLoader;
+    private ImageLoader imageLoader;
     private boolean  skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
@@ -58,7 +58,7 @@ public class Tutorial implements Runnable {
         backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
         nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
         bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
-        imageLoader = new JenesisImageLoader();
+        imageLoader = new ImageLoader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
         sec = 0;

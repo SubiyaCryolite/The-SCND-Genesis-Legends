@@ -2,15 +2,14 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.Mode;
-import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.MainMenu;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.WindowAbout;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -48,7 +47,7 @@ public class RenderMainMenu extends MainMenu {
     private final UiItem uiAbout;
     private final UiItem uiLogOut;
     private final UiItem uiExit;
-    private JenesisImageLoader imageLoader = new JenesisImageLoader();
+    private ImageLoader imageLoader = new ImageLoader();
     private Image menuLogo, gameLogo;
     private Image pointer;
     private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
@@ -88,8 +87,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() != Overlay.TUTORIAL) {
-                    setOverlay(Overlay.TUTORIAL);
+                if (getOverlay() != com.scndgen.legends.enums.Overlay.TUTORIAL) {
+                    setOverlay(com.scndgen.legends.enums.Overlay.TUTORIAL);
                     tutorial.beginTutorial();
                 } else {
                     tutorial.onAccept();
@@ -98,19 +97,19 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() != Overlay.TUTORIAL) return;
+                if (getOverlay() != com.scndgen.legends.enums.Overlay.TUTORIAL) return;
                 tutorial.onBackCancel();
             }
 
             @Override
             public void onLeft() {
-                if (getOverlay() == Overlay.TUTORIAL) return;
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.TUTORIAL) return;
                 tutorial.onLeft();
             }
 
             @Override
             public void onRight() {
-                if (getOverlay() == Overlay.TUTORIAL) return;
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.TUTORIAL) return;
                 tutorial.onRight();
             }
 
@@ -139,7 +138,7 @@ public class RenderMainMenu extends MainMenu {
             @Override
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
-                ScndGenLegends.getInstance().loadMode(Mode.STORY_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.STORY_SELECT_SCREEN);
             }
 
             @Override
@@ -167,7 +166,7 @@ public class RenderMainMenu extends MainMenu {
             @Override
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.SINGLE_PLAYER);
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -196,7 +195,7 @@ public class RenderMainMenu extends MainMenu {
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
                 primaryNotice(Language.getInstance().get(107));
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -225,7 +224,7 @@ public class RenderMainMenu extends MainMenu {
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
                 primaryNotice(Language.getInstance().get(107));
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -252,21 +251,21 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onAccept();
                 else
-                    setOverlay(Overlay.ACHIEVEMENT_LOCKER);
+                    setOverlay(com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER);
             }
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onBackCancel();
             }
 
             @Override
             public void onDown() {
-                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onDown();
                 else {
                     setActiveItem(source.getDown());
@@ -275,7 +274,7 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onUp() {
-                if (getOverlay() == Overlay.ACHIEVEMENT_LOCKER)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onUp();
                 else {
                     setActiveItem(source.getUp());
@@ -296,21 +295,21 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() == Overlay.STATISTICS)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
                     achievementLocker.onAccept();
                 else
-                    setOverlay(Overlay.STATISTICS);
+                    setOverlay(com.scndgen.legends.enums.Overlay.STATISTICS);
             }
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() == Overlay.STATISTICS)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
                     achievementLocker.onBackCancel();
             }
 
             @Override
             public void onDown() {
-                if (getOverlay() == Overlay.STATISTICS)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
                     achievementLocker.onDown();
                 else {
                     setActiveItem(source.getDown());
@@ -319,7 +318,7 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onUp() {
-                if (getOverlay() == Overlay.STATISTICS)
+                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
                     achievementLocker.onUp();
                 else {
                     setActiveItem(source.getUp());
@@ -550,7 +549,7 @@ public class RenderMainMenu extends MainMenu {
         gc.drawImage(menuLogo, 0, 0);
         gc.setFill(Color.WHITE);
         gc.setFont(menuFont);
-        if (overlay == Overlay.PRIMARY_MENU) {
+        if (overlay == com.scndgen.legends.enums.Overlay.PRIMARY_MENU) {
             menuItemIndex = 0;
             ///////////////////////////////////////////
             fillText(gc, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
@@ -579,20 +578,20 @@ public class RenderMainMenu extends MainMenu {
             fillText(gc, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
-        JenesisOverlay.getInstance().overlay(gc, w, h);
+        Overlay.getInstance().overlay(gc, w, h);
         gc.fillText("The SCND Genesis: Legends " + RenderGameplay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
         gc.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
         gc.setGlobalAlpha((1.0f));
         gc.setFill(Color.WHITE);
-        if (overlay == Overlay.STATISTICS) {
+        if (overlay == com.scndgen.legends.enums.Overlay.STATISTICS) {
             achievementLocker.drawStats(gc, w, h);
         }
-        if (overlay == Overlay.ACHIEVEMENT_LOCKER) {
+        if (overlay == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER) {
             achievementLocker.drawAch(gc, w, h);
         }
-        if (overlay == Overlay.TUTORIAL) {
+        if (overlay == com.scndgen.legends.enums.Overlay.TUTORIAL) {
             tutorial.draw(gc, w, h);
         }
 
@@ -615,7 +614,7 @@ public class RenderMainMenu extends MainMenu {
         }
     }
 
-    protected void logic(final long delta) {
+    protected void update(final long delta) {
         if (!isDelta60fps()) return;
         if (cloudOnePositionX < -960) {
             cloudOnePositionX = screenWidth;

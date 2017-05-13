@@ -1,7 +1,7 @@
 package com.scndgen.legends.tests;
 
 import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.threads.AudioPlayback;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import org.junit.Test;
 
 /**

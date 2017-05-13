@@ -1,10 +1,10 @@
 package com.scndgen.legends;
 
-import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.*;
-import io.github.subiyacryolite.enginev1.JenesisEngine;
-import io.github.subiyacryolite.enginev1.JenesisGame;
+import io.github.subiyacryolite.enginev1.Engine;
+import io.github.subiyacryolite.enginev1.Game;
 import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -12,11 +12,11 @@ import javafx.scene.input.MouseEvent;
 /**
  * Created by ifunga on 15/04/2017.
  */
-public class ScndGenLegends extends JenesisGame {
+public class ScndGenLegends extends Game {
 
     private static ScndGenLegends instance;
     private SubMode subMode;
-    private Mode mode;
+    private ModeEnum modeEnum;
     private double mouseX;
     private double mouseY;
 
@@ -25,21 +25,21 @@ public class ScndGenLegends extends JenesisGame {
     }
 
     public static void main(String[] main) {
-        JenesisEngine.applicationStage = ScndGenLegends.class;
-        Application.launch(JenesisEngine.class);
+        Engine.applicationStage = ScndGenLegends.class;
+        Application.launch(Engine.class);
     }
 
     public ScndGenLegends() {
         instance = this;
         setSize(852, 480);
-        loadMode(Mode.MAIN_MENU);
+        loadMode(ModeEnum.MAIN_MENU);
     }
 
-    public void loadMode(Mode mode) {
-        this.mode = mode;
+    public void loadMode(ModeEnum modeEnum) {
+        this.modeEnum = modeEnum;
         setSwitchingModes(true);
         try {
-            switch (mode) {
+            switch (modeEnum) {
                 case MAIN_MENU:
                     RenderMainMenu.getInstance().newInstance();
                     setMode(RenderMainMenu.getInstance());
@@ -74,9 +74,6 @@ public class ScndGenLegends extends JenesisGame {
         return this.subMode;
     }
 
-    public Mode getMode() {
-        return this.mode;
-    }
 
     public void setSubMode(SubMode subMode) {
         this.subMode = subMode;
@@ -84,28 +81,28 @@ public class ScndGenLegends extends JenesisGame {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        if (getJenesisMode() != null && !isSwitchingModes())
-            getJenesisMode().keyReleased(keyEvent);
+        if (this.getMode() != null && !isSwitchingModes())
+            this.getMode().keyReleased(keyEvent);
     }
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        if (getJenesisMode() != null && !isSwitchingModes())
-            getJenesisMode().keyPressed(keyEvent);
+        if (this.getMode() != null && !isSwitchingModes())
+            this.getMode().keyPressed(keyEvent);
     }
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         setMouseX(mouseEvent.getX());
         setMouseY(mouseEvent.getY());
-        if (getJenesisMode() != null && !isSwitchingModes())
-            getJenesisMode().mouseMoved(mouseEvent);
+        if (this.getMode() != null && !isSwitchingModes())
+            this.getMode().mouseMoved(mouseEvent);
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (getJenesisMode() != null && !isSwitchingModes())
-            getJenesisMode().mouseClicked(mouseEvent);
+        if (this.getMode() != null && !isSwitchingModes())
+            this.getMode().mouseClicked(mouseEvent);
     }
 
     public void setMouseX(double mouseX) {

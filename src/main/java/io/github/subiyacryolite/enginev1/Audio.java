@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED;
 
-public class AudioFilePlayer {
+public class Audio {
     public void play(InputStream filePath) {
     }
 

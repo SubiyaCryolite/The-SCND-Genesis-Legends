@@ -31,7 +31,7 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.AudioPlayback;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import com.scndgen.legends.threads.GameInstance;
 
 /**
@@ -203,7 +203,7 @@ public class StoryMode implements Runnable {
     public void run() {
         try {
             System.out.println("Stage " + RenderStoryMenu.getInstance().getStage());
-            ScndGenLegends.getInstance().loadMode(Mode.STANDARD_GAMEPLAY_START);
+            ScndGenLegends.getInstance().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
             ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
             storyIn();
             if (currentScene == 0) //scene 1

@@ -28,9 +28,9 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.StoryMenu;
-import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -113,7 +113,7 @@ public class RenderStoryMenu extends StoryMenu {
                 gc.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
             }
         }
-        JenesisOverlay.getInstance().overlay(gc,x,y);
+        Overlay.getInstance().overlay(gc,x,y);
     }
 
     public void loadAssetsIml() {
@@ -121,8 +121,8 @@ public class RenderStoryMenu extends StoryMenu {
         normal = getMyFont(LoginScreen.normalTxtSize);
         victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC,true);
         menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND,true);
-        JenesisImageLoader imageLoader = new JenesisImageLoader();
-        RenderStageSelect.getInstance().setSelectedStage(false);
+        ImageLoader imageLoader = new ImageLoader();
+        RenderStageSelect.getInstance().setStageSelected(false);
         try {
             for (int i = 0; i < numberOfScenes; i++) {
                 unlockedScene[i] = imageLoader.loadImage("images/story/locked/" + i + ".png");

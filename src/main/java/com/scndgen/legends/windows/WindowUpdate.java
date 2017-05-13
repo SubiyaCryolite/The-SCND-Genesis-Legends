@@ -110,7 +110,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
                 Desktop me = Desktop.getDesktop();
                 me.browse(new URI("http://www.sourceforge.com/projects/scndgen/files/executable/" + fname + "/download"));
                 JOptionPane.showMessageDialog(null, "You must install the patch and \n"
-                        + "then reboot the game in order to complete the update.\n "
+                        + "then reboot the game in order to complete the logic.\n "
                         + "Have a great day!");
             } catch (Exception ex) {
                 ex.printStackTrace(System.err);

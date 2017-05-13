@@ -27,7 +27,7 @@ import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.state.GameState;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.ImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -53,12 +53,12 @@ public class AchievementLocker {
     private Image no;
     private Image[] achCap;
     private boolean[] isAchievementActivated;
-    private JenesisImageLoader pix;
+    private ImageLoader pix;
     private float gWin, gLoss, denom, progression;
     private float numberOfTriggeredAchievements = 0.0f;
 
     public AchievementLocker() {
-        pix = new JenesisImageLoader();
+        pix = new ImageLoader();
         loadFontAndPictures();
         refreshStats();
     }

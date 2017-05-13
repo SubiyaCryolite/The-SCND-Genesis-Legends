@@ -1,5 +1,6 @@
 package io.github.subiyacryolite.enginev1;
 
+import com.scndgen.legends.enums.ModeEnum;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -8,21 +9,22 @@ import javafx.scene.paint.Color;
 /**
  * Created by ifung on 15/04/2017.
  */
-public abstract class JenesisGame {
+public abstract class Game {
     private final Color CIRCLE_BASE_FILL_COLOR = Color.LIGHTSKYBLUE;
     private final Color OUTLINE_COLOR = Color.GRAY;
     private final Color BACKGROUND_COLOR = Color.WHITE;
-    private JenesisMode mode;
+    private Mode mode;
+    private ModeEnum modeEnum;
     private boolean switchingModes;
     private boolean running;
     private double width;
     private double height;
 
-    public JenesisGame() {
+    public Game() {
         running = true;
     }
 
-    public final JenesisMode getJenesisMode() {
+    public final Mode getMode() {
         return mode;
     }
 
@@ -46,6 +48,14 @@ public abstract class JenesisGame {
         context.strokeOval(cx - currentRadius, cy - currentRadius, currentRadius * 2, currentRadius * 2);
     }
 
+    public final ModeEnum getModeEnum() {
+        return modeEnum;
+    }
+
+    public final void setModeEnum(ModeEnum value) {
+        modeEnum = value;
+    }
+
     public final double getWidth() {
         return width;
     }
@@ -67,7 +77,7 @@ public abstract class JenesisGame {
         setHeight(height);
     }
 
-    public void setMode(JenesisMode mode) {
+    public void setMode(Mode mode) {
         this.mode = mode;
     }
 

@@ -24,7 +24,7 @@ package com.scndgen.legends.windows;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
-import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.executers.CharacterAttacksOnline;
 import com.scndgen.legends.executers.OpponentAttacksOnline;
@@ -35,8 +35,8 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.GameInstance;
-import io.github.subiyacryolite.enginev1.JenesisMode;
-import io.github.subiyacryolite.enginev1.JenesisWindow;
+import io.github.subiyacryolite.enginev1.Mode;
+import io.github.subiyacryolite.enginev1.Window;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -74,7 +74,7 @@ public class JenesisPanel extends Pane {
     private String gameIp = "";
     private String userName;
     private LanHostWaitLobby lanHostWaitLobby;
-    private JenesisMode jenesisMode;
+    private Mode mode;
     private VolatileImage volatileImage;
     private GraphicsEnvironment ge;
     private Graphics2D gc;
@@ -123,7 +123,7 @@ public class JenesisPanel extends Pane {
      * Goes onBackCancel to main menu
      */
     public void backToMenuScreen() {
-        JenesisWindow.getInstance().showModes();
+        Window.getInstance().showModes();
         stopBackgroundMusic();
 
         focus();
@@ -155,32 +155,32 @@ public class JenesisPanel extends Pane {
      * Contains universal up menu/game movements
      */
     private void up() {
-        if (jenesisMode != null)
-            jenesisMode.onUp();
+        if (mode != null)
+            mode.onUp();
     }
 
     /**
      * Contains universal down menu/game movements
      */
     private void down() {
-        if (jenesisMode != null)
-            jenesisMode.onDown();
+        if (mode != null)
+            mode.onDown();
     }
 
     /**
      * Contains universal left menu/game movements
      */
     private void left() {
-        if (jenesisMode != null)
-            jenesisMode.onLeft();
+        if (mode != null)
+            mode.onLeft();
     }
 
     /**
      * Contains universal right menu/game movements
      */
     private void right() {
-        if (jenesisMode != null)
-            jenesisMode.onRight();
+        if (mode != null)
+            mode.onRight();
     }
 
     /**
@@ -266,7 +266,7 @@ public class JenesisPanel extends Pane {
                 lanHostWaitLobby.stopRepaint();
                 RenderCharacterSelectionScreen.getInstance().newInstance();
                 RenderCharacterSelectionScreen.getInstance().animateCharSelect();
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
                 break;
             }
         }

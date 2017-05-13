@@ -8,7 +8,7 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.Overlay;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -142,7 +142,7 @@ public class NetworkServer implements Runnable {
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                JenesisOverlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
+                Overlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);

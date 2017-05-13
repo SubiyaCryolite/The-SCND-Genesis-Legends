@@ -27,8 +27,9 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import com.scndgen.legends.scene.Gameplay;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.ImageLoader;
 import javafx.scene.image.Image;
 
 
@@ -48,7 +49,7 @@ public abstract class Character {
     protected final AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private Image[] highQualitySprites;
-    private JenesisImageLoader pix;
+    private ImageLoader pix;
     private String[] spriteLocation;
     private boolean isMale;
     private int numberOfSprites = 12;
@@ -74,7 +75,7 @@ public abstract class Character {
     protected final int celestiaMultiplier = 10;
 
     private void sortQue() {
-        pix = new JenesisImageLoader();
+        pix = new ImageLoader();
         spriteLocation = new String[numberOfSprites];
         spriteLocation[0] = "images/" + characterEnum.data() + "/D.png";  //1
         spriteLocation[1] = "images/" + characterEnum.data() + "/M1.png"; //2
@@ -116,7 +117,7 @@ public abstract class Character {
         return highQualitySprites[i];
     }
 
-    public abstract void attack(String attack, CharacterState forWho);
+    public abstract void attack(String attack, CharacterState forWho, Gameplay gamePlay);
 
     /**
      * Gets the move set of the characterEnum

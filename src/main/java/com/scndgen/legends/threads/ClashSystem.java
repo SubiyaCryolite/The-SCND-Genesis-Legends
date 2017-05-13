@@ -21,7 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends.threads;
 
-import com.scndgen.legends.Colors;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
@@ -98,10 +97,10 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 1) {
                 //if player triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "GOT EM !!!", Colors.getColor("blue"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER);
                 RenderGameplay.getInstance().triggerFury(CharacterState.CHARACTER);
             } else {
-                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "EVADED YA!!!", Colors.getColor("red"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT);
                 RenderGameplay.getInstance().resetBreak();
                 RenderGameplay.getInstance().updatePlayerLife(200);
                 //player didn'thread trigger clash but won, they arent attacked
@@ -111,10 +110,10 @@ public class ClashSystem implements Runnable {
         {
             if (caller == 2) {
                 //if opponent triggered clash and won, they attack
-                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "GOT YA !!!", Colors.getColor("blue"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT);
                 RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);
             } else {
-                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "EVADED !!!", Colors.getColor("red"));
+                RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER);
                 RenderGameplay.getInstance().resetBreak();
                 RenderGameplay.getInstance().updateOpponentLife(200);
                 //opponent didn'thread trigger clash but won, they arent attacked

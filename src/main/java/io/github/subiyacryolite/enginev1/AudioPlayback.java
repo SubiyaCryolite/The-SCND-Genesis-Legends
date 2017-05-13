@@ -17,7 +17,7 @@
  *  small edits by Ifunga Ndana
  *
  *************************************************************************/
-package com.scndgen.legends.threads;
+package io.github.subiyacryolite.enginev1;
 
 
 import com.scndgen.legends.enums.AudioType;
@@ -65,12 +65,12 @@ public class AudioPlayback implements Runnable {
 
     // play the MP3 file to the sound card
     public void play() {
-        if (thread != null && (playing || paused))
-            thread.stop();
-        thread = new Thread(this);
-        thread.setDaemon(true);
-        thread.setName("Audio Playback - " + this.fileName);
-        thread.start();
+//        if (thread != null && (playing || paused))
+//            thread.stop();
+//        thread = new Thread(this);
+//        thread.setDaemon(true);
+//        thread.setName("Audio Playback - " + this.fileName);
+//        thread.start();
     }
 
     public static void volume(AudioType audioType, float volume) {

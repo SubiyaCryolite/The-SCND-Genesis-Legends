@@ -27,8 +27,8 @@ import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.state.LoginState;
 import com.scndgen.legends.windows.WindowUpdate;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisWindow;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,11 +106,11 @@ public class LoginScreen extends JFrame {
     private JComboBox users;
     private JLabel userName, countryCode;
     private JTextField login;
-    private JenesisImageLoader pix;
+    private ImageLoader pix;
     private Box box = new Box(BoxLayout.Y_AXIS);
     private WindowUpdate newy = null;
     private RandomAccessFile rand;
-    private JenesisWindow startApp;
+    private Window startApp;
     private String IPAdd;
     private Image image;
     private SystemTray tray;
@@ -186,7 +186,7 @@ public class LoginScreen extends JFrame {
      *
      * @return
      */
-    public JenesisWindow getMenu() {
+    public Window getMenu() {
         return startApp;
     }
 

@@ -28,12 +28,12 @@ import javafx.scene.image.Image;
  *
  * @author ndana 16-Apr-2011
  */
-public class JenesisImageLoader {
+public class ImageLoader {
 
     /**
      * Loads image from toolkit
      *
-     * @param imageName - location of image
+     * @param imageName location of image
      * @return toolkit image
      */
     public Image loadImage(String imageName) {

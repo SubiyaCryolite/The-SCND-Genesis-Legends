@@ -19,7 +19,7 @@ public enum Stage {
     DESERT_RUINS_NIGHT("DESERT_RUINS_NIGHT", "stage13_vgdt", "13", 12),
     SCORCHED_RUINS_NIGHT("SCORCHED_RUINS_NIGHT", "stage14_vgdt", "14", 13),
     HIDDEN_CAVE_NIGHT("HIDDEN_CAVE_NIGHT", "stage15_vgdt", "15", 14),
-    RANDOM("RANDOM", "stage12_vgdt", "12", 15);
+    RANDOM("RANDOM", "stage12_vgdt", "12", 15);// RANDOM SHOULD ALWAYS BE LAST!!!!!!!!!!!
     private final String name;
     private final String shortCode;
     private final String filePrefix;

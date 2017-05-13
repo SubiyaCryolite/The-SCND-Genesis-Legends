@@ -32,20 +32,20 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
  *
  * @author ndana
  */
-public class JenesisOverlay {
+public class Overlay {
 
-    private static JenesisOverlay instance;
+    private static Overlay instance;
     private String primaryNotification = "", secondaryNotification = "";
     private float primaryOpacity = 0.0f, secondaryOpacity = 0.0f;
     private float primaryTimeout, secondaryTimeout;
     private boolean increasePrimaryOpacity, fadeOutPrimaryNotification, increaseSecondaryOpacity, fadeOutSecondaryNotification;
 
-    private JenesisOverlay() {
+    private Overlay() {
     }
 
-    public static synchronized JenesisOverlay getInstance() {
+    public static synchronized Overlay getInstance() {
         if (instance == null)
-            instance = new JenesisOverlay();
+            instance = new Overlay();
         return instance;
     }
 

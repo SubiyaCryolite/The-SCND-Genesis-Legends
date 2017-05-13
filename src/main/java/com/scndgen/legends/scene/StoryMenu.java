@@ -24,19 +24,19 @@ package com.scndgen.legends.scene;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.controller.StoryMode;
-import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.AudioPlayback;
-import io.github.subiyacryolite.enginev1.JenesisMode;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import javax.swing.*;
 
-public abstract class StoryMenu extends JenesisMode {
+public abstract class StoryMenu extends Mode {
 
     protected int charYcap = 0, charXcap = 0, hoveredStoryIndex = 99, row = 1, x = 0, y = 0, column = 0, vSpacer = 52, hSpacer = 92, commonXCoord = 299, commonYCoord = 105;
     protected final int columns = 3;
@@ -60,7 +60,7 @@ public abstract class StoryMenu extends JenesisMode {
     public static boolean bothArentSelected() {
         boolean answer = true;
 
-        if (RenderCharacterSelectionScreen.getInstance().characterSelected && RenderCharacterSelectionScreen.getInstance().opponentSelected) {
+        if (RenderCharacterSelectionScreen.getInstance().selectedCharacter && RenderCharacterSelectionScreen.getInstance().selectedOpponent) {
             answer = false;
         }
 
@@ -192,7 +192,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void onBackCancel() {
-        ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
+        ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
     }
 
     /**
@@ -284,7 +284,7 @@ public abstract class StoryMenu extends JenesisMode {
     }
 
     public void mouseMoved(MouseEvent me) {
-        if (ScndGenLegends.getInstance().getMode() == Mode.STORY_SELECT_SCREEN) {
+        if (ScndGenLegends.getInstance().getModeEnum() == ModeEnum.STORY_SELECT_SCREEN) {
             int topY = getStartY();
             int topX = getStartX();
             int columns = getNumberOfCharColumns();

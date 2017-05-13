@@ -128,9 +128,8 @@ public class Characters {
      *
      */
     public void alterPoints2(int index) {
-        if (RenderGameplay.getInstance().getNumOfAttacks() > 1) {
-            RenderGameplay.getInstance().setNumOfAttacks(1);
-            points = points + pointsArr[index];
+        if (RenderGameplay.getInstance().getCharacterQueuedAttacks() > 1) {
+            points += pointsArr[index];
         }
     }
 
@@ -318,7 +317,7 @@ public class Characters {
             opponent.resetLimits();
         if (character != null)
             character.resetLimits();
-        RenderCharacterSelectionScreen.getInstance().setCharacterSelected(false);
-        RenderCharacterSelectionScreen.getInstance().setOpponentSelected(false);
+        RenderCharacterSelectionScreen.getInstance().setSelectedCharacter(false);
+        RenderCharacterSelectionScreen.getInstance().setSelectedOpponent(false);
     }
 }

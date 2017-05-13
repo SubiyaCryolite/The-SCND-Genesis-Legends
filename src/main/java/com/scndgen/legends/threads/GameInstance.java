@@ -27,16 +27,16 @@ import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.executers.CharacterAttacks;
 import com.scndgen.legends.executers.OpponentAttacks;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Overlay;
 
 /**
  * This class ensures the game runs at a particular fps and initialises several
@@ -65,7 +65,6 @@ public class GameInstance implements Runnable {
     private int limitOpp;
     private float count = 0.0f;
     private OpponentAttacks executorAI;
-    private CharacterAttacks executorPlyr;
     private int speedFactor = 30; //equal to the fps division
     private int matchDuration, playTimeCounter;
     private static GameInstance instance;
@@ -99,7 +98,9 @@ public class GameInstance implements Runnable {
             } else if (enemyAiRunning == false && runOpponentAtb && storySequence == false) {
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                     enemyAiRunning = true;
-                    executorAI.attack();
+                    //execute enemy AI
+                    //executorAI.attack();
+                    {}
                 }
             }
             if ((timeLimit <= 180 && storySequence == false)) {
@@ -203,7 +204,6 @@ public class GameInstance implements Runnable {
             RenderGameplay.getInstance().pauseThreads();
             thread.suspend();
             executorAI.pause();
-            executorPlyr.pause();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -218,7 +218,6 @@ public class GameInstance implements Runnable {
             RenderGameplay.getInstance().resumeThreads();
             thread.resume();
             executorAI.resume();
-            executorPlyr.resume();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -282,20 +281,12 @@ public class GameInstance implements Runnable {
     }
 
     /**
-     * When the player selects all his moves, a new attack sequence is triggered
-     */
-    public void triggerCharAttack() {
-        executorPlyr = new CharacterAttacks();
-    }
-
-    /**
      * This method records play timeLimit
      */
     private void recordPlayTime() {
         matchDuration = 0;
         playTimeCounter = GameState.getInstance().getLogin().getPlayTime();
         new Thread() {
-
             @Override
             @SuppressWarnings("static-access")
             public void run() {
@@ -305,8 +296,8 @@ public class GameInstance implements Runnable {
                     } catch (InterruptedException ex) {
                         ex.printStackTrace(System.err);
                     }
-                    playTimeCounter = playTimeCounter + 1;
-                    matchDuration = matchDuration + 1;
+                    playTimeCounter++;
+                    matchDuration++;
                 } while (gameRunning);
             }
         }.start();
@@ -320,17 +311,17 @@ public class GameInstance implements Runnable {
      * This thread executes when a game is over, designed to free unused memory
      */
     public void closingThread(boolean toCharacterSelect) {
-        //update profile operations
+        //logic profile operations
         incrementWinsOrLosses();
         GameState.getInstance().getLogin().setPoints(Achievement.getInstance().getNewUserPoints());
         //save profile
         GameState.getInstance().saveConfigFile();
-        JenesisOverlay.getInstance().primaryNotice("Saved File");
+        Overlay.getInstance().primaryNotice("Saved File");
         thread.stop(); //stop this thread
         if (toCharacterSelect) {
-            ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
+            ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
         } else {
-            ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+            ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
         }
     }
 
@@ -418,7 +409,7 @@ public class GameInstance implements Runnable {
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             RenderGameplay.getInstance().playBGSound();
             musNotice();
-            JenesisOverlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            Overlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         }
         thread = new Thread(this);
         thread.setName("MAIN GAME LOGIC THREAD");
@@ -427,7 +418,7 @@ public class GameInstance implements Runnable {
     }
 
     public void musNotice() {
-        JenesisOverlay.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmnientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
+        Overlay.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmbientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
     }
 
     /**
@@ -436,7 +427,7 @@ public class GameInstance implements Runnable {
     public void playMusicNow() {
         try {
             RenderGameplay.getInstance().playBGSound();
-            JenesisOverlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            Overlay.getInstance().primaryNotice(RenderGameplay.getInstance().getAttackOpponent().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, somin went wrong" + e.getMessage());
         }

@@ -23,7 +23,7 @@ package com.scndgen.legends.attacks;
 
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.scene.Gameplay;
 
 public abstract class Attack {
 
@@ -39,16 +39,16 @@ public abstract class Attack {
      *
      * @param attack - the move to execute
      */
-    public void attack(int attack, CharacterState source, CharacterState destination) {
+    public void setAttackSpritesAndTrigger(int attack, CharacterState source, CharacterState destination, Gameplay renderGameplay) {
         this.attack = attack;
         victim = destination;
         if (attack > 8) {
-            destination=CharacterState.SELF;
+            destination = CharacterState.SELF;
         }
         if (attack == 0) {
-            RenderGameplay.getInstance().setSprites(source, 9, 11);
-            RenderGameplay.getInstance().setSprites(destination, 9, 11);
-            RenderGameplay.getInstance().showBattleMessage("");
+            renderGameplay.setSprites(source, 9, 11);
+            renderGameplay.setSprites(destination, 9, 11);
+            renderGameplay.showBattleMessage("");
         }
         if (attack == 1) {
             attackIdentifier = "01";
@@ -98,35 +98,33 @@ public abstract class Attack {
         if (attack == 12) {
             attackIdentifier = "12";
         }
-        doThis(source, destination);
-        action();
-        //regenerative moves update char, so overide forWho?
+        setAttackSprites(renderGameplay, source, destination);
+        triggerAttack(renderGameplay);
+        //regenerative moves logic char, so overide forWho?
     }
 
     /**
      * call specific attack
-     *
      */
-    public void doThis(CharacterState attack, CharacterState target) {
-            RenderGameplay.getInstance().isCharacterAttacking(attack == CharacterState.CHARACTER);
+    public void setAttackSprites(Gameplay gamePlay, CharacterState attack, CharacterState target) {
+        gamePlay.isCharacterAttacking(attack == CharacterState.CHARACTER);
         if (target == CharacterState.SELF) {
-            RenderGameplay.getInstance().setSprites(attack, 10, 11); //USE ITEM
+            gamePlay.setSprites(attack, 10, 11); //USE ITEM
         } else {
             //status moves use 10 (pose sprite)
             if (this.attack > 9) {
                 this.attack = 10;
             }
-
-            RenderGameplay.getInstance().setSprites(attack, this.attack, 11); //attack
-            RenderGameplay.getInstance().setSprites(target, 0, 11); //defend
+            gamePlay.setSprites(attack, this.attack, 11); //attack
+            gamePlay.setSprites(target, 0, 11); //defend
         }
     }
 
     /**
      * ATTAAAAAAACK!!!!!!!
      */
-    public void action() {
-        opponent.attack(attackIdentifier, victim);
+    public void triggerAttack(Gameplay gamePlay) {
+        opponent.attack(attackIdentifier, victim, gamePlay);
     }
 
     public Character getOpponent() {

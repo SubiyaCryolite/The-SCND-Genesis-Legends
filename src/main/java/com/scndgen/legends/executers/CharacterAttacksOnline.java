@@ -22,6 +22,7 @@
 package com.scndgen.legends.executers;
 
 import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.ExecutionType;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.threads.GameInstance;
 
@@ -29,9 +30,9 @@ public class CharacterAttacksOnline implements Runnable {
 
     private Thread timer;
     private int command1, command2, command3, command4;
-    private char executionType;
+    private ExecutionType executionType;
 
-    public CharacterAttacksOnline(int command1, int command2, int command3, int command4, char executionType) {
+    public CharacterAttacksOnline(int command1, int command2, int command3, int command4, ExecutionType executionType) {
         this.executionType = executionType;
         this.command1 = command1;
         this.command2 = command2;
@@ -51,8 +52,7 @@ public class CharacterAttacksOnline implements Runnable {
 
     public void run() {
         //normal attack
-        if (executionType == 'n') {
-            RenderGameplay.getInstance().setComboCounter(0);
+        if (executionType == ExecutionType.NORMAL) {
             //clear active combos
             RenderGameplay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
             RenderGameplay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
@@ -60,7 +60,7 @@ public class CharacterAttacksOnline implements Runnable {
             // each Mattack will check if they are in the battle que.... if they are they execute
             executingTheCommands();
             GameInstance.getInstance().setRecoveryUnitsChar(0);
-        } else if (executionType == 'l') {//limit break
+        } else if (executionType == ExecutionType.FURY) {//limit break
             RenderGameplay.getInstance().clash(1, CharacterState.CHARACTER);
         }
     }
@@ -68,9 +68,9 @@ public class CharacterAttacksOnline implements Runnable {
     private void executingTheCommands() {
         int[] action = {command1, command2, command3, command4};
         for (int index = 0; index < action.length; index++) {
-            RenderGameplay.getInstance().getAttacksChar().attack(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT);
-            RenderGameplay.getInstance().shakeOpponentLifeBar();
-            RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
+            RenderGameplay.getInstance().getAttacksChar().setAttackSpritesAndTrigger(action[index], CharacterState.CHARACTER, CharacterState.OPPONENT, RenderGameplay.getInstance());
+            RenderGameplay.getInstance().shakeOpponentLifeBar(0);
+            RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.CHARACTER);
         }
     }
 }

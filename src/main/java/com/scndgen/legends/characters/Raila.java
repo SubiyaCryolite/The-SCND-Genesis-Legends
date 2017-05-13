@@ -21,10 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
-import com.scndgen.legends.Colors;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
+import com.scndgen.legends.scene.Gameplay;
 
 /**
  * @author ndana
@@ -60,102 +59,102 @@ public class Raila extends Character {
     }
 
     @Override
-    public void attack(String attack, CharacterState forWho) {
+    public void attack(String attack, CharacterState forWho,Gameplay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 83;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 82;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 //Gameplay.specialEffect(2,true);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 82;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 //Gameplay.specialEffect(2,true);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 81;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 88;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 85;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 85;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 83;
-                RenderGameplay.getInstance().lifePhysUpdateSimple(forWho, damage, name);
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 sound3.play();
                 attackStr = status[0];
                 damage = 72;
-                RenderGameplay.getInstance().setStatIndex(1);
+                gamePlay.setStatIndex(1);
                 if (forWho == CharacterState.OPPONENT) {
-                    RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
+                    gamePlay.updatePlayerLife(damage);
+                    gamePlay.setStatusPic(CharacterState.CHARACTER);
                 } else {
-                    RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
+                    gamePlay.updateOpponentLife(damage);
+                    gamePlay.setStatusPic(CharacterState.OPPONENT);
                 }
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 sound3.play();
                 attackStr = status[1];
                 damage = 79;
-                RenderGameplay.getInstance().setStatIndex(1);
+                gamePlay.setStatIndex(1);
                 if (forWho == CharacterState.OPPONENT) {
-                    RenderGameplay.getInstance().updatePlayerLife(damage);
-                    RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "+" + damage + "0 HP", Colors.getColor("green"));
+                    gamePlay.updatePlayerLife(damage);
+                    gamePlay.setStatusPic(CharacterState.CHARACTER);
                 } else {
-                    RenderGameplay.getInstance().updateOpponentLife(damage);
-                    RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "+" + damage + "0 HP", Colors.getColor("green"));
+                    gamePlay.updateOpponentLife(damage);
+                    gamePlay.setStatusPic(CharacterState.OPPONENT);
                 }
-                RenderGameplay.getInstance().showBattleMessage(name + " used " + attackStr);
+                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 limit[1] = limit[1] + 1;
                 if (limit[1] <= 4) {
                     sound3.play();
                     attackStr = status[2];
-                    RenderGameplay.getInstance().setStatIndex(3);
+                    gamePlay.setStatIndex(3);
                     if (forWho == CharacterState.OPPONENT) {
-                        RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "STRENGTHENED", Colors.getColor("blue"));
-                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.OPPONENT, +1);
+                        gamePlay.setStatusPic(CharacterState.CHARACTER);
+                        gamePlay.alterDamageCounter(CharacterState.OPPONENT, +1);
                     } else {
-                        RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "STRENGTHENED", Colors.getColor("blue"));
-                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.CHARACTER, +1);
+                        gamePlay.setStatusPic(CharacterState.OPPONENT);
+                        gamePlay.alterDamageCounter(CharacterState.CHARACTER, +1);
                     }
-                    RenderGameplay.getInstance().showBattleMessage(name + " strengthened himself!!!");
+                    gamePlay.showBattleMessage(name + " strengthened himself!!!");
                 } else {
-                    RenderGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
             case "12":
@@ -163,18 +162,18 @@ public class Raila extends Character {
                 if (limit[0] <= 4) {
                     sound3.play();
                     attackStr = status[3];
-                    RenderGameplay.getInstance().setStatIndex(4);
+                    gamePlay.setStatIndex(4);
                     if (forWho == CharacterState.OPPONENT) {
                         //as a player(2) yo8u attack the opponent(1)
-                        RenderGameplay.getInstance().setStatusPic(CharacterState.OPPONENT, "WEAKENED!!!", Colors.getColor("red"));
-                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.CHARACTER, -1);
+                        gamePlay.setStatusPic(CharacterState.OPPONENT);
+                        gamePlay.alterDamageCounter(CharacterState.CHARACTER, -1);
                     } else {
-                        RenderGameplay.getInstance().setStatusPic(CharacterState.CHARACTER, "WEAKENED!!!", Colors.getColor("red"));
-                        RenderGameplay.getInstance().alterDamageCounter(CharacterState.OPPONENT, -1);
+                        gamePlay.setStatusPic(CharacterState.CHARACTER);
+                        gamePlay.alterDamageCounter(CharacterState.OPPONENT, -1);
                     }
-                    RenderGameplay.getInstance().showBattleMessage(name + " weakened his opponent!!!");
+                    gamePlay.showBattleMessage(name + " weakened his opponent!!!");
                 } else {
-                    RenderGameplay.getInstance().showBattleMessage(name + " cant use his attack!!!!");
+                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
         }

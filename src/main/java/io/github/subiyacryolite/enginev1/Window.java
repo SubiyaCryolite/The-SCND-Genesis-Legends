@@ -30,7 +30,6 @@ import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
-import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.windows.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -41,7 +40,7 @@ import javax.swing.*;
 /**
  * @author Ndana
  */
-public class JenesisWindow {
+public class Window {
 
     public static String strUser = "no user", strPoint = "0", strPlayTime = "0", matchCountStr = "0";
     public static boolean boardNotUp = true, controller = false, isActive = true, doneChilling;
@@ -56,7 +55,7 @@ public class JenesisWindow {
     private int compassDir, compassDir2, last = 13;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public JenesisWindow(String dude, LoginScreen px) {
+    public Window(String dude, LoginScreen px) {
         p = px;
         startup = new AudioPlayback(AudioConstants.startUpSound(), AudioType.MUSIC, false);
         startup.play();
@@ -64,7 +63,7 @@ public class JenesisWindow {
         //setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
     }
 
-    public static JenesisWindow getInstance() {
+    public static Window getInstance() {
         return p.getMenu();
     }
 
@@ -161,6 +160,6 @@ public class JenesisWindow {
      * Create a client game
      */
     public void joinGame() {
-        JenesisPanel.newInstance(JenesisWindow.getUserName(), SubMode.LAN_CLIENT);
+        JenesisPanel.newInstance(Window.getUserName(), SubMode.LAN_CLIENT);
     }
 }

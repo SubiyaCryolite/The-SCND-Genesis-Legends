@@ -27,14 +27,20 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.CharacterSelectionScreen;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiItem;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.HashMap;
 
 import static com.sun.javafx.tk.Toolkit.getToolkit;
 
@@ -52,13 +58,211 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     private final Image[] portrait = new Image[numOfCharacters];
     private final Image[] portraitFlipped = new Image[numOfCharacters];
     private final Image[] caption = new Image[numOfCharacters];
+    private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
+    private final UiItem subiya;
+    private final UiItem raila;
+    private final UiItem lynx;
+    private final UiItem aisha;
+    private final UiItem ade;
+    private final UiItem ravage;
+    private final UiItem jonah;
+    private final UiItem adam;
+    private final UiItem novaAdam;
+    private final UiItem azaria;
+    private final UiItem sorrowe;
+    private final UiItem thing;
     private Font bigFont, normalFont;
     private Image fg1, fg2, fg3, bg3;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
+    private CharacterEnum hoveredCharacter;
 
     private RenderCharacterSelectionScreen() {
         opacInc = 0.025f;
         loadAssets = true;
+        uiElements.clear();
+        Event commonEvent = new Event() {
+            public void onHover() {
+                capAnim();
+            }
+
+            public void onAccept() {
+                if (!selectedCharacter || !selectedOpponent) {
+                    switch (hoveredCharacter) {
+                        case SUBIYA:
+                            selSubiya(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case RAILA:
+                            selRaila(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case LYNX:
+                            selLynx(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case AISHA:
+                            selAisha(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case ADE:
+                            selAde(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case RAVAGE:
+                            selRav(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case JONAH:
+                            selJon(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case ADAM:
+                            selAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case NOVA_ADAM:
+                            selNOVAAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case AZARIA:
+                            selAza(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case SORROWE:
+                            selSorr(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                        case THING:
+                            selThing(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            break;
+                    }
+                } else {
+                    //if both character and opponent selected move on to stage select after second accept
+                    ScndGenLegends.getInstance().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                }
+            }
+
+            public void onBackCancel() {
+                if (selectedOpponent) {
+                    selectedOpponent = false;
+                } else if (selectedCharacter) {
+                    selectedCharacter = false;
+                } else {
+                    ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+                }
+            }
+
+            public void onRight() {
+                setActiveItem(activeItem.getRight());
+            }
+
+            public void onLeft() {
+                setActiveItem(activeItem.getLeft());
+            }
+
+            public void onUp() {
+                setActiveItem(activeItem.getUp());
+            }
+
+            public void onDown() {
+                setActiveItem(activeItem.getDown());
+            }
+        };
+
+        (subiya = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.SUBIYA;
+            }
+        });
+        subiya.addJenesisEvent(commonEvent);
+
+        (raila = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.RAILA;
+            }
+        });
+        raila.addJenesisEvent(commonEvent);
+
+        (lynx = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.LYNX;
+            }
+        });
+        lynx.addJenesisEvent(commonEvent);
+
+        (aisha = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.AISHA;
+            }
+        });
+        aisha.addJenesisEvent(commonEvent);
+
+        (ade = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.ADE;
+            }
+        });
+        ade.addJenesisEvent(commonEvent);
+
+        (ravage = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.RAVAGE;
+            }
+        });
+        ravage.addJenesisEvent(commonEvent);
+
+        (jonah = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.JONAH;
+            }
+        });
+        jonah.addJenesisEvent(commonEvent);
+
+        (adam = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.ADAM;
+            }
+        });
+        adam.addJenesisEvent(commonEvent);
+
+        (novaAdam = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.NOVA_ADAM;
+            }
+        });
+        novaAdam.addJenesisEvent(commonEvent);
+
+        (azaria = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.AZARIA;
+            }
+        });
+        azaria.addJenesisEvent(commonEvent);
+
+        (sorrowe = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.SORROWE;
+            }
+        });
+        sorrowe.addJenesisEvent(commonEvent);
+
+        (thing = new UiItem()).addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredCharacter = CharacterEnum.THING;
+            }
+        });
+        thing.addJenesisEvent(commonEvent);
+
+        uiElements.put(CharacterEnum.SUBIYA.index(), subiya);
+        uiElements.put(CharacterEnum.RAILA.index(), raila);
+        uiElements.put(CharacterEnum.LYNX.index(), lynx);
+        uiElements.put(CharacterEnum.AISHA.index(), aisha);
+        uiElements.put(CharacterEnum.ADE.index(), ade);
+        uiElements.put(CharacterEnum.RAVAGE.index(), ravage);
+        uiElements.put(CharacterEnum.JONAH.index(), jonah);
+        uiElements.put(CharacterEnum.ADAM.index(), adam);
+        uiElements.put(CharacterEnum.NOVA_ADAM.index(), novaAdam);
+        uiElements.put(CharacterEnum.AZARIA.index(), azaria);
+        uiElements.put(CharacterEnum.SORROWE.index(), sorrowe);
+        uiElements.put(CharacterEnum.THING.index(), thing);
+
+        //set up down, left right
+        int total = uiElements.size();
+        for (int index = 0; index < total; index++) {
+            if (index > 0)
+                uiElements.get(index).setLeft(uiElements.get(index - 1));
+            if ((index + columns) < total)
+                uiElements.get(index).setDown(uiElements.get(index + columns));
+        }
     }
 
     public static synchronized RenderCharacterSelectionScreen getInstance() {
@@ -72,10 +276,11 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     public void newInstance() {
         super.newInstance();
         Characters.getInstance().resetCharacters();
+        setActiveItem(uiElements.get(0));
     }
 
     public void loadAssetsIml() {
-        imageLoader = new JenesisImageLoader();
+        imageLoader = new ImageLoader();
         loadCaps();
         loadDesc();
         loadAssets = false;
@@ -106,26 +311,26 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         gc.fillRect(0, 0, 853, 480);
         gc.setGlobalAlpha(1.0f);
         //characterEnum preview DYNAMIC change
-        if (characterSelected != true) {
+        if (selectedCharacter != true) {
             gc.setGlobalAlpha((p1Opac));
-            gc.drawImage(portrait[charPrevLoicIndex], charXcap + x, charYcap);
+            gc.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
             gc.setGlobalAlpha((1.0f));
-            gc.drawImage(caption[charPrevLoicIndex], 40 - x, 400);
+            gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
         }
         //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+        if (selectedCharacter && selectedOpponent != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
             gc.setGlobalAlpha((p1Opac));
-            gc.drawImage(portraitFlipped[charPrevLoicIndex], 512 - x, charYcap);
+            gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
             gc.setGlobalAlpha((1.0f));
-            gc.drawImage(caption[charPrevLoicIndex], 553 + x, 400);
+            gc.drawImage(caption[hoveredCharacter.index()], 553 + x, 400);
         }
         //if characterEnum selected draw FIXED prev
-        if (characterSelected) {
+        if (selectedCharacter) {
             gc.drawImage(portrait[charPrevLoc], charXcap, charYcap);
             gc.drawImage(caption[selectedCharIndex], 40, 380);
         }
         //if opp selected, draw FIXED prev
-        if (opponentSelected) {
+        if (selectedOpponent) {
             gc.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
             gc.drawImage(caption[selectedOppIndex], 553, 380);
         }
@@ -135,27 +340,23 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
                 int computedPosition = (columns * row) + column;
                 if (computedPosition >= numOfCharacters) continue;
                 boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
-                boolean validRow = this.row == row;
-                boolean validColumn = this.column == column;
                 boolean notAllCharactersSelect = bothArentSelected();
-                if (notAllCharactersSelect && validColumn && validRow && characterOpenToSelection)//clear
+                if (notAllCharactersSelect && uiElements.get(computedPosition).isHovered() && characterOpenToSelection)//clear
                 {
-                    if (characterSelected != true) {
+                    if (!selectedCharacter) {
                         gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
-                    if (characterSelected && opponentSelected != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+                    if (selectedCharacter && !selectedOpponent && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
                         gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
-                    gc.setGlobalAlpha((opacChar));
-                    gc.drawImage(thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row));
-                    charPrevLoicIndex = computedPosition;
-                    gc.setGlobalAlpha((1.0f));
-                } else {
-                    gc.drawImage(thumbnailBlurred[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row));
                 }
+                gc.setGlobalAlpha(opacChar);
+                drawImage(gc, thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
+                gc.setGlobalAlpha((1.0f));
             }
         }
-        if (characterSelected && opponentSelected) {
+
+        if (selectedCharacter && selectedOpponent) {
             gc.drawImage(fight, 0, 0);
             gc.setFont(bigFont);
             gc.setFill(Color.WHITE);
@@ -164,22 +365,27 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         }
         gc.setFont(normalFont);
         gc.setFill(Color.WHITE);
-        if (characterSelected == false) {
+        if (!selectedCharacter) {
             //select character
             gc.drawImage(charDescPic, 0, 0);
-            gc.fillText(statsChar[charPrevLoicIndex], 4 + x, 18);
+            gc.fillText(statsChar[hoveredCharacter.index()], 4 + x, 18);
         }
-        if (characterSelected && opponentSelected == false) {
+        if (selectedCharacter && !selectedOpponent) {
             //select opponent
             gc.drawImage(oppDescPic, 452, 450);
-            gc.fillText(statsChar[charPrevLoicIndex], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[charPrevLoicIndex], gc.getFont()) + x, 468);
+            gc.fillText(statsChar[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[hoveredCharacter.index()], gc.getFont()) + x, 468);
         }
         gc.drawImage(p1, 0, 180);
         gc.drawImage(p2, 812, 180);
-        if (x < 0) {
+        if (x < 0)
+
+        {
             x = x + 2;
         }
-        JenesisOverlay.getInstance().overlay(gc, x, y);
+        Overlay.getInstance().
+
+                overlay(gc, x, y);
+
     }
 
     private void loadCaps() {

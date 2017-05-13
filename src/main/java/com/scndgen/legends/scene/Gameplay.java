@@ -28,7 +28,6 @@ import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
@@ -36,20 +35,18 @@ import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.AudioPlayback;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ClashingOpponent;
 import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisMode;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.MouseEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,23 +56,25 @@ import java.util.logging.Logger;
  * @Author: Ifunga Ndana
  * @Class: Gameplay
  */
-public abstract class Gameplay extends JenesisMode {
+public abstract class Gameplay extends Mode {
     protected String activePerson; // person who performed an attack, getName shall show in battle info status area
     protected int characterHpAsPercent = 100, opponentHpAsPercent = 100;
+    protected boolean triggerCharacterAttack;
     protected int done = 0; // if gameover
-    protected String[] attackArray = new String[8];//up to 8 moves can be qued
-    protected int comboCounter = 0; //must be negative one to reach index 0, app wide counter, enable you to que attacks of different kinds
+    protected LinkedList<String> attackArray = new LinkedList<>();//up to 8 moves can be qued
     protected boolean threadsNotRunningYet = true, playATBFile = false;
     protected StringBuilder StatusText = new StringBuilder();
     protected int startDrawing = 0, menuBarY;
+    protected javafx.scene.paint.Color currentColor = javafx.scene.paint.Color.RED;
     protected float angRot = 20;
+    protected boolean safeToSelect;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
     protected int particlesLayer1PositionX = 0, particlesLayer1PositionY = 0, particlesLayer2PositionX = 0, particlesLayer2PositionY = 0;
     protected int numOfComicPics = 9;
     protected int foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops, delay;
     protected AnimationDirection animationDirection = AnimationDirection.VERTICAL;
     protected int oppXcord = 10;
-    protected int playerDamageXLoc, opponentDamageXLoc, numOfAttacks = 0;
+    protected int playerDamageXLoc, opponentDamageXLoc;
     protected String scenePic = "images/bgBG2.png";
     protected String attackPicSrc = "images/trans.png";
     protected String[] storyPicArrStr;
@@ -84,11 +83,8 @@ public abstract class Gameplay extends JenesisMode {
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInformation = new StringBuilder("");
     protected int count = 0, fpsInt = 0, fpsIntStat;
-    protected String[] physical, celestia, item, special, current;
-    protected String[] currentColumn;
-    protected int currentColumnIndex = 0;
-    protected boolean safeToSelect = true;
-    protected String animLayer = "";
+    protected final String[] physical = new String[]{"", "", "", ""}, celestia = new String[]{"", "", "", ""}, item = new String[]{"", "", "", ""};
+    protected StageAnimation animLayer;
     protected boolean clasherRunning = false;
     protected boolean loadedUpdaters;
     protected float daNum, daNum2;
@@ -120,8 +116,7 @@ public abstract class Gameplay extends JenesisMode {
     protected String characterAttackType = "normal", opponentAttackType = "normal", statusChar = "", statusOpp = "";
     protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
     protected float statusEffectCharacterOpacity, statusEffectOpponentOpacity;
-    protected int itemIndex = 0, furyBarY = 0;
-    @SuppressWarnings("StaticNonFinalUsedInInitialization")
+    protected int furyBarY = 0;
     protected int[] fontSizes = {LoginScreen.bigTxtSize, LoginScreen.normalTxtSize, LoginScreen.normalTxtSize, LoginScreen.normalTxtSize};
     protected int attackInt = 0;
     protected String attackStr;
@@ -132,12 +127,12 @@ public abstract class Gameplay extends JenesisMode {
     protected String sysNot = "";
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String achievementName = "", achievementDescription = "", achievementClass = "", achievementPoints = "";
-    protected int move = 0;
+    protected int activeAttack = 0;
     protected NetworkServer server;
     protected NetworkClient client;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
     protected int x = 2;
-    protected int oppBarYOffset, leftHandXAxisOffset, y = 0;
+    protected int oppBarYOffset, attackMenuXPos, attackMenuTextXPos, attackMenuTextYPos, y = 0;
     protected float opacityTxt = 10, opacityPic = 0.0f;
     protected boolean limitRunning = true, animCharFree = true;
     protected float angleRaw, charPointInc;
@@ -146,10 +141,9 @@ public abstract class Gameplay extends JenesisMode {
     protected int comboPicArrayPosOpp = 8;
     protected String manipulateThis;
     protected int one, two, three, four, oneO, twoO, threeO, fourO;
-    protected int comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord, yTEST = 25, yTESTinit = 25;
+    protected int comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord;
     protected float opac = 1.0f;
     protected float damageLayerOpacity;
-    protected boolean nextEnabled = true, backEnabled = true;
     protected int charOp = 10, comicBookTextIndex = 0;
     protected int limitBreak;
     protected AttackOpponent attackOpponent;
@@ -157,6 +151,8 @@ public abstract class Gameplay extends JenesisMode {
     protected AudioPlayback sound, ambientMusic, hurtChar, hurtOpp, attackChar, attackOpp;
     protected final AudioPlayback furySound, damageSound;
     protected boolean isCharacterAttacking;
+    protected int columnIndex;
+    protected int rowIndex;
 
     protected Gameplay() {
         furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
@@ -172,7 +168,7 @@ public abstract class Gameplay extends JenesisMode {
         statIndex = dex;
     }
 
-    public void setStatusPic(CharacterState who, String stat, Color c) {
+    public void setStatusPic(CharacterState who) {
 
         if (who == CharacterState.CHARACTER) {
             statusEffectCharacterOpacity = 1.0f;
@@ -225,24 +221,6 @@ public abstract class Gameplay extends JenesisMode {
         }
     }
 
-    /**
-     * Navigate down in the menu
-     */
-    public void onDown() {
-        if (itemIndex < 3) {
-            itemIndex = itemIndex + 1;
-        } else {
-            itemIndex = 0;
-        }
-
-        //default size
-        for (int u = 0; u < fontSizes.length; u++) {
-            fontSizes[u] = LoginScreen.normalTxtSize;
-        }
-
-        //increase font size
-        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
-    }
 
     /**
      * Get the CharacterEnum
@@ -259,24 +237,9 @@ public abstract class Gameplay extends JenesisMode {
      * @param itemS
      */
     public void setStats(String[] physicalS, String[] celestiaS, String[] itemS) {
-        physical = physicalS;
-        celestia = celestiaS;
-        item = itemS;
-        currentColumn = physical;
-        currentColumnIndex = 0;
-    }
-
-    /**
-     * Resolves column names
-     */
-    protected void resolveText() {
-        if (currentColumnIndex == 0) {
-            currentColumn = physical;
-        } else if (currentColumnIndex == 1) {
-            currentColumn = celestia;
-        } else if (currentColumnIndex == 2) {
-            currentColumn = item;
-        }
+        System.arraycopy(physicalS, 0, physical, 0, physicalS.length);
+        System.arraycopy(celestiaS, 0, celestia, 0, celestiaS.length);
+        System.arraycopy(itemS, 0, item, 0, itemS.length);
     }
 
     /**
@@ -286,20 +249,18 @@ public abstract class Gameplay extends JenesisMode {
      */
     public String genStr(int input) {
         String thisTxt = "";
-
         if (input < 10) {
-            thisTxt = "0" + move;
+            thisTxt = "0" + activeAttack;
         } else {
-            thisTxt = "" + move;
+            thisTxt = "" + activeAttack;
         }
-
         return thisTxt;
     }
 
     /**
      * Get the move selected by the player
      */
-    protected String getSelMove(int move) {
+    protected String getAttack(int move) {
         String txt = getAttacksChar().getOpponent().getMoveQued(move);
 
         return txt;
@@ -370,7 +331,7 @@ public abstract class Gameplay extends JenesisMode {
         } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
             JenesisPanel.getInstance().sendToClient("clashing^T&T^&T&^");
         }
-        if (RenderGameplay.getInstance().getBreak() == 1000 && safeToSelect && clasherRunning == false) {
+        if (getBreak() == 1000 && safeToSelect && clasherRunning == false) {
             new ClashSystem(dude, homie);
             clasherRunning = true;
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
@@ -404,71 +365,46 @@ public abstract class Gameplay extends JenesisMode {
         {
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter + 1;
-                RenderGameplay.getInstance().slowDown(shakingChar);
+                slowDown(shakingChar);
             }
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter - 1;
-                RenderGameplay.getInstance().slowDown(shakingChar);
+                slowDown(shakingChar);
             }
         }
     }
 
-    public void shakeOpponentLifeBar() {
+
+    public boolean shakeOpponentLifeBar(int loop) {
+        int computedPosition = -1;//so that we start from zero
         for (int h = 0; h < lifeBarShakeIterations; h++) // shakes opponents LifeBar in a cool way as isWithinRange as Black n White flashy Anime effect
         {
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
-                uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent + 1;
-                RenderGameplay.getInstance().slowDown(shakingChar);
+                computedPosition++;
+                if (loop == computedPosition) {
+                    uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent + 1;
+                    slowDown(shakingChar);
+                    return true;
+                }
             }
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
-                uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent - 1;
-                RenderGameplay.getInstance().slowDown(shakingChar);
+                computedPosition++;
+                if (loop == computedPosition) {
+                    uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent - 1;
+                    slowDown(shakingChar);
+                    return true;
+                }
             }
         }
+        return false;
     }
 
 
-    /**
-     * Navigate to specific location in the menu. Used by the mouse
-     */
-    public void thisItem(int item) {
-        {
-            itemIndex = item;
-        }
-        for (int u = 0; u < fontSizes.length; u++) {
-            fontSizes[u] = LoginScreen.normalTxtSize;
-        }
-        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
-    }
-
-    /**
-     * Navigate up in the menu
-     */
-    public void onUp() {
-        if (itemIndex > 0) {
-            itemIndex = itemIndex - 1;
-        } else {
-            itemIndex = 3;
-        }
-        //default size
-        for (int u = 0; u < fontSizes.length; u++) {
-            fontSizes[u] = LoginScreen.normalTxtSize;
-        }
-        //increase font size
-        fontSizes[itemIndex] = LoginScreen.bigTxtSize;
-    }
-
-
-    /**
-     * Checks if opponent has more slots
-     * TRIGGERS ATTACKS
-     */
     protected void checkStatus() {
-        if (RenderGameplay.getInstance().comboCounter == 4) {
+        if (attackArray.size() == 4) {
             attack();
         }
     }
-
 
     /**
      * assigns pic to array index
@@ -484,43 +420,103 @@ public abstract class Gameplay extends JenesisMode {
         }
     }
 
+
+    /**
+     * Makes text white, meaning its OK to select a move
+     */
+    protected void enableSelection() {
+        currentColor = javafx.scene.paint.Color.WHITE;
+        safeToSelect = true;
+    }
+
+    /**
+     * Makes text red, meaning its NOT OK to select a move
+     */
+    protected void disableSelection() {
+        currentColor = javafx.scene.paint.Color.RED;
+        safeToSelect = false;
+    }
+
+
     /**
      * Attacks the opponent
      */
     public void attack() {
-        if (numOfAttacks > 0) {
+        if (!attackArray.isEmpty()) {
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-                RenderGameplay.getInstance().disableSelection();
-                GameInstance.getInstance().triggerCharAttack();
+                disableSelection();
+                prepareCharacterAttack();
             } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
                 setSprites(CharacterState.CHARACTER, 9, 11);
                 setSprites(CharacterState.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + RenderGameplay.getInstance().attackArray[0] + RenderGameplay.getInstance().attackArray[1] + RenderGameplay.getInstance().attackArray[2] + RenderGameplay.getInstance().attackArray[3] + " attack";
+                attackStr = "" + attackArray.get(0) + attackArray.get(1) + attackArray.get(2) + attackArray.get(3) + " attack";
                 System.out.println(attackStr);
                 client.sendData(attackStr);
                 //attack on local
-                RenderGameplay.getInstance().disableSelection();
-                GameInstance.getInstance().triggerCharAttack();
+                disableSelection();
+                prepareCharacterAttack();
             } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                RenderGameplay.getInstance().comboCounter = 0;
                 //clear active combos
                 setSprites(CharacterState.CHARACTER, 9, 11);
                 setSprites(CharacterState.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + RenderGameplay.getInstance().attackArray[0] + RenderGameplay.getInstance().attackArray[1] + RenderGameplay.getInstance().attackArray[2] + RenderGameplay.getInstance().attackArray[3] + " attack";
+                attackStr = "" + attackArray.get(0) + attackArray.get(1) + attackArray.get(2) + attackArray.get(3) + " attack";
                 System.out.println(attackStr);
                 server.sendData(attackStr);
                 //attack on local
-                RenderGameplay.getInstance().disableSelection();
-                GameInstance.getInstance().triggerCharAttack();
+                disableSelection();
+                prepareCharacterAttack();
                 GameInstance.getInstance().setRecoveryUnitsChar(0);
             }
         }
     }
 
+    private void prepareCharacterAttack() {
+        triggerCharacterAttack = true;
+        currentCharacterQueLoop = 0;
+        lastCharacterQueLoop = -1;
+        characterQueDelta = -1;
+        characterUiLoop = 0;
+    }
+
+    private int currentCharacterQueLoop;
+    private int lastCharacterQueLoop;
+    private int characterUiLoop;
+    private long characterQueDelta;
+
+    public void update(long delta) {
+        super.update(delta);
+        if (triggerCharacterAttack) {
+            if (GameInstance.getInstance().gameOver == false) {
+                if (lastCharacterQueLoop == -1) {
+                    GameInstance.getInstance().pauseActivityRegen();
+                    GameInstance.getInstance().setRecoveryUnitsChar(0);
+                }
+                if (!attackArray.isEmpty()) {
+                    if (lastCharacterQueLoop != currentCharacterQueLoop) {
+                        characterQueDelta = delta;
+                        lastCharacterQueLoop = currentCharacterQueLoop;
+                        getAttacksChar().setAttackSpritesAndTrigger(Integer.parseInt(attackArray.pop()), CharacterState.CHARACTER, CharacterState.OPPONENT, this);//add mode reference here
+                    }
+                    if ((delta - characterQueDelta) > MS33) {
+                        characterQueDelta = delta;
+                        if (shakeOpponentLifeBar(characterUiLoop)) {
+                            characterUiLoop++;
+                        } else {
+                            currentCharacterQueLoop++;
+                            characterUiLoop = 0;
+                        }
+                    }
+                } else {
+                    revertToDefaultSprites(CharacterState.CHARACTER);
+                    GameInstance.getInstance().resumeActivityRegen();
+                    triggerCharacterAttack = false;
+                }
+            }
+        }
+    }
 
     public void newInstance() {
         loadAssets = true;
@@ -534,8 +530,6 @@ public abstract class Gameplay extends JenesisMode {
         paneCord = 306;
         menuBarY = 360;
         threadsNotRunningYet = false;
-        currentColumn = physical;
-        itemIndex = 0;
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
@@ -714,50 +708,24 @@ public abstract class Gameplay extends JenesisMode {
         resetGame();
         GameInstance.getInstance().newInstance();
         startDrawing = 1;
-        comboCounter = 0;
         characterHpAsPercent = 100;
         opponentHpAsPercent = 100;
     }
 
-    /**
-     * Increment combo count
-     */
-    public void incrimentComboCounter() {
-        comboCounter = comboCounter + 1;
-    }
 
     /**
      * Remove move from que
      */
     public void unQueMove() {
-        if (comboCounter >= 1 && safeToSelect) {
-            //change curent index
-            comboCounter = comboCounter - 1;
-            int moi = Integer.parseInt(attackArray[comboCounter]);
+        if (!attackArray.isEmpty() && safeToSelect) {
+            int moi = Integer.parseInt(attackArray.removeLast());
             Characters.getInstance().alterPoints2(moi);
             System.out.println("UNQUED " + moi);
         }
     }
 
     /**
-     * Scan que for desired attacks
-     *
-     * @param desiredAttack - id
-     * @return status
-     */
-    public boolean scanPhyQue(int desiredAttack) {
-        isMoveQued = false;
-        for (int x = 0; x <= 3; x++) //loops 4 times
-        {
-            if (Integer.parseInt(attackArray[x]) == desiredAttack) {
-                isMoveQued = true;
-            }
-        }
-        return isMoveQued;
-    }
-
-    /**
-     * update CharacterState 1 characterHp
+     * logic CharacterState 1 characterHp
      *
      * @param thisMuch - value
      */
@@ -773,7 +741,7 @@ public abstract class Gameplay extends JenesisMode {
     }
 
     /**
-     * update opponent 1 characterHp
+     * logic opponent 1 characterHp
      *
      * @param thisMuch - value
      */
@@ -907,7 +875,6 @@ public abstract class Gameplay extends JenesisMode {
                             JenesisPanel.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
-                        comboCounter = 0;
                         GameInstance.getInstance().pauseActivityRegen();
                         GameInstance.getInstance().setRecoveryUnitsChar(0);
                         for (int i = 1; i < 9; i++) {
@@ -917,7 +884,7 @@ public abstract class Gameplay extends JenesisMode {
                                 hurtSoundOpp();
                                 setSprites(CharacterState.CHARACTER, i, 11);
                                 setSprites(CharacterState.OPPONENT, 0, 11);
-                                shakeOpponentLifeBar();
+                                shakeOpponentLifeBar(0);
                                 comboPicArrayPosOpp = i;
                                 furyComboOpacity = 1.0f;
                                 lifePhysUpdateSimple(CharacterState.OPPONENT, 100, "");
@@ -1082,24 +1049,9 @@ public abstract class Gameplay extends JenesisMode {
         return foreGroundYIncrement;
     }
 
-    public int getComboCounter() {
-        return comboCounter;
-    }
 
-    public void setComboCounter(int comboCounter) {
-        this.comboCounter = comboCounter;
-    }
-
-    public String[] getAttackArray() {
-        return attackArray;
-    }
-
-    public int getNumOfAttacks() {
-        return numOfAttacks;
-    }
-
-    public void setNumOfAttacks(int numOfAttacks) {
-        this.numOfAttacks = numOfAttacks;
+    public int getCharacterQueuedAttacks() {
+        return attackArray.size();
     }
 
     public int getDone() {
@@ -1181,7 +1133,6 @@ public abstract class Gameplay extends JenesisMode {
         return attackOpponent;
     }
 
-
     public AttackPlayer getAttacksChar() {
         return attackPlayer;
     }
@@ -1189,14 +1140,7 @@ public abstract class Gameplay extends JenesisMode {
     public void mouseClicked(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case PRIMARY:
-                if (mouseEvent.getX() < (29 + leftHandXAxisOffset))
-                    RenderGameplay.getInstance().onLeft();
-                else if (mouseEvent.getX() > (220 + leftHandXAxisOffset) && mouseEvent.getX() < (305 + leftHandXAxisOffset))
-                    RenderGameplay.getInstance().onRight();
-                else if ((mouseEvent.getX() > 25 && mouseEvent.getX() < 46) && (mouseEvent.getY() > 190 && mouseEvent.getY() < 270))
-                    RenderGameplay.getInstance().triggerFury(CharacterState.CHARACTER);
-                else if (false)
-                    onAccept();
+                onAccept();
                 break;
             case MIDDLE:
                 triggerFury(CharacterState.CHARACTER);
@@ -1207,115 +1151,7 @@ public abstract class Gameplay extends JenesisMode {
         }
     }
 
-    public void mouseMoved(MouseEvent mouseEvent) {
-        if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
-            if (mouseEvent.getX() > (29 + leftHandXAxisOffset) && mouseEvent.getX() < (436 + leftHandXAxisOffset)) {
-                if (mouseEvent.getY() > 373 && mouseEvent.getY() < 390) {
-                    RenderGameplay.getInstance().thisItem(0);
-                }
-                if (mouseEvent.getY() > 390 && mouseEvent.getY() < 407) {
-                    RenderGameplay.getInstance().thisItem(1);
-                }
-                if (mouseEvent.getY() > 407 && mouseEvent.getY() < 420) {
-                    RenderGameplay.getInstance().thisItem(2);
-                }
-                if (mouseEvent.getY() > 420 && mouseEvent.getY() < 435) {
-                    RenderGameplay.getInstance().thisItem(3);
-                }
-            }
-        }
-    }
-
-    /**
-     * Selecting a move
-     */
-    public void onAccept() {
-        if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
-            if (clasherRunning) {
-                ClashSystem.getInstance().plrClashing();
-                System.out.println("Player clashing");
-            } else if (safeToSelect) {
-                numOfAttacks = numOfAttacks + 1;
-                sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
-                sound.play();
-                move = (currentColumnIndex * 4) + itemIndex + 1;
-                attackArray[comboCounter] = genStr(move); // count initially negative 1, add one to get to index 0
-                incrimentComboCounter();
-                checkStatus();
-                showBattleMessage("Queued up " + getSelMove(move));
-            } else {
-                RenderCharacterSelectionScreen.getInstance().errorSound();
-            }
-        } else if (GameInstance.getInstance().storySequence) {
-            //skip to next scene
-            StoryMode.getInstance().onAccept();
-        } else if (GameInstance.getInstance().gameOver) {
-            switch (ScndGenLegends.getInstance().getSubMode()) {
-                case SINGLE_PLAYER:
-                case LAN_CLIENT:
-                case LAN_HOST:
-                    GameInstance.getInstance().closingThread(true);
-                    break;
-                case STORY_MODE:
-                    StoryMode.getInstance().onAccept();
-                    break;
-                default:
-                    GameInstance.getInstance().closingThread(false);
-                    break;
-            }
-        }
-    }
-
-    public void onBackCancel() {
-        //closeTheServer();
-        if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
-            onTogglePause();
-        } else if (GameInstance.getInstance().storySequence) {
-            //start the damn match
-            StoryMode.getInstance().onBackCancel();
-        }
-    }
-
-    public void keyPressed(KeyEvent keyEvent) {
-        KeyCode keyCode = keyEvent.getCode();
-        switch (keyCode) {
-            case UP:
-            case W:
-                onUp();
-                break;
-            case DOWN:
-            case S:
-                onDown();
-                break;
-            case LEFT:
-            case A:
-                onLeft();
-                break;
-            case RIGHT:
-            case D:
-                onRight();
-                break;
-            case ENTER:
-                onAccept();
-                break;
-            case SPACE:
-                attack();
-                break;
-            case BACK_SPACE:
-                unQueMove();
-            case ESCAPE:
-                onBackCancel();
-                break;
-            case L:
-                triggerFury(CharacterState.CHARACTER);
-                break;
-            case F5:
-                cancelMatch();
-                break;
-        }
-    }
-
-    private void cancelMatch() {
+    protected void cancelMatch() {
         int u = JOptionPane.showConfirmDialog(null, "Are you sure you wanna quit?", "Dude!?", JOptionPane.YES_NO_OPTION);
         if (u == JOptionPane.YES_OPTION) {
             if (GameInstance.getInstance().gamePaused) {
@@ -1323,11 +1159,11 @@ public abstract class Gameplay extends JenesisMode {
             }
             GameInstance.getInstance().gamePaused = false;
             GameInstance.getInstance().terminateGameplay();
-            RenderStageSelect.getInstance().setSelectedStage(false);
+            RenderStageSelect.getInstance().setStageSelected(false);
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-                ScndGenLegends.getInstance().loadMode(Mode.MAIN_MENU);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
             } else {
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
             RenderCharacterSelectionScreen.getInstance().primaryNotice("Canceled Match");
         }
@@ -1335,5 +1171,18 @@ public abstract class Gameplay extends JenesisMode {
 
     public void isCharacterAttacking(boolean value) {
         isCharacterAttacking = value;
+    }
+
+    /**
+     * Animate attacks in graphics context
+     *
+     * @param thischar - active characterEnum
+     */
+    public void revertToDefaultSprites(CharacterState thischar) {
+        if (thischar == CharacterState.CHARACTER || thischar == CharacterState.OPPONENT) {
+            //sprites back to normal poses
+            setSprites(CharacterState.CHARACTER, 9, 11);
+            setSprites(CharacterState.OPPONENT, 9, 11);
+        }
     }
 }

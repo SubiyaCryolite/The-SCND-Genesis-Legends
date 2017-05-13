@@ -28,6 +28,7 @@ import com.scndgen.legends.attacks.AttackOpponent;
 import com.scndgen.legends.attacks.AttackPlayer;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
@@ -35,11 +36,16 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.scene.Gameplay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.*;
+import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -62,17 +68,262 @@ public class RenderGameplay extends Gameplay {
     private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private Image flashy;
-    private Image[] moveCat, numberPix;
+    private Image[] attackCategory, numberPix;
     private Image[] characterPortraits;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, fury, fury1, fury2, phys, cel, itm, curr, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
+    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, furyPlaceholder, fury1, fury2, phys, cel, itm, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
     private Image[] charSprites, oppSprites;
     private Image[] storyPicArr;
     private Image characterPortrait, storyPic;
-    private Color currentColor = Color.RED;
+    private final UiItem attackOne;
+    private final UiItem attackTwo;
+    private final UiItem attackThree;
+    private final UiItem attackFour;
+    private final UiItem attackFive;
+    private final UiItem attackSix;
+    private final UiItem attackSeven;
+    private final UiItem attackEight;
+    private final UiItem attackNine;
+    private final UiItem attackTen;
+    private final UiItem attackEleven;
+    private final UiItem attackTwelve;
+    private final UiItem fury;
 
 
     private RenderGameplay() {
+        (fury = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onAccept() {
+                triggerFury(CharacterState.CHARACTER);
+            }
+
+            @Override
+            public void onBackCancel() {
+                paused = !paused;
+            }
+
+            @Override
+            public void onLeft() {
+                setActiveItem(attackOne);
+            }
+
+            @Override
+            public void onRight() {
+                setActiveItem(attackOne);
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(attackOne);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(attackOne);
+            }
+        });
+
+        (attackOne = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 0;
+                rowIndex = 0;
+                physical[rowIndex] = physical[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                physical[rowIndex] = physical[rowIndex].toLowerCase();
+            }
+        });
+        (attackTwo = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 0;
+                rowIndex = 1;
+                physical[rowIndex] = physical[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                physical[rowIndex] = physical[rowIndex].toLowerCase();
+            }
+        });
+        (attackThree = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 0;
+                rowIndex = 2;
+                physical[rowIndex] = physical[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                physical[rowIndex] = physical[rowIndex].toLowerCase();
+            }
+        });
+        (attackFour = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 0;
+                rowIndex = 3;
+                physical[rowIndex] = physical[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                physical[rowIndex] = physical[rowIndex].toLowerCase();
+            }
+        });
+        (attackFive = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 1;
+                rowIndex = 0;
+                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+            }
+        });
+        (attackSix = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 1;
+                rowIndex = 1;
+                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+            }
+        });
+        (attackSeven = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 1;
+                rowIndex = 2;
+                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+            }
+        });
+        (attackEight = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 1;
+                rowIndex = 3;
+                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+            }
+        });
+        (attackNine = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 2;
+                rowIndex = 0;
+                item[rowIndex] = item[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                item[rowIndex] = item[rowIndex].toLowerCase();
+            }
+        });
+        (attackTen = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 2;
+                rowIndex = 1;
+                item[rowIndex] = item[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                item[rowIndex] = item[rowIndex].toLowerCase();
+            }
+        });
+        (attackEleven = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 2;
+                rowIndex = 2;
+                item[rowIndex] = item[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                item[rowIndex] = item[rowIndex].toLowerCase();
+            }
+        });
+        (attackTwelve = new UiItem()).addJenesisEvent(new Event() {
+            @Override
+            public void onHover() {
+                columnIndex = 2;
+                rowIndex = 3;
+                item[rowIndex] = item[rowIndex].toUpperCase();
+            }
+
+            @Override
+            public void onLeave() {
+                item[rowIndex] = item[rowIndex].toLowerCase();
+            }
+        });
+
+        attackOne.addJenesisEvent(new PauseAndNavigate());
+        attackTwo.addJenesisEvent(new PauseAndNavigate());
+        attackThree.addJenesisEvent(new PauseAndNavigate());
+        attackFour.addJenesisEvent(new PauseAndNavigate());
+        attackFive.addJenesisEvent(new PauseAndNavigate());
+        attackSix.addJenesisEvent(new PauseAndNavigate());
+        attackSeven.addJenesisEvent(new PauseAndNavigate());
+        attackEight.addJenesisEvent(new PauseAndNavigate());
+        attackNine.addJenesisEvent(new PauseAndNavigate());
+        attackTen.addJenesisEvent(new PauseAndNavigate());
+        attackEleven.addJenesisEvent(new PauseAndNavigate());
+        attackTwelve.addJenesisEvent(new PauseAndNavigate());
+
+        //column 1 - right
+        attackOne.setRight(attackFive);
+        attackTwo.setRight(attackSix);
+        attackThree.setRight(attackSeven);
+        attackFour.setRight(attackEight);
+        //column 2 - right
+        attackFive.setRight(attackNine);
+        attackSix.setRight(attackTen);
+        attackSeven.setRight(attackEleven);
+        attackEight.setRight(attackTwelve);
+        //column 3 - right
+        attackNine.setRight(attackOne);
+        attackTen.setRight(attackTwo);
+        attackEleven.setRight(attackThree);
+        attackTwelve.setRight(attackFour);
+        //column 1 - down
+        attackOne.setDown(attackTwo);
+        attackTwo.setDown(attackThree);
+        attackThree.setDown(attackFour);
+        attackFour.setDown(attackOne);
+        //column 2 - down
+        attackFive.setDown(attackSix);
+        attackSix.setDown(attackSeven);
+        attackSeven.setDown(attackEight);
+        attackEight.setDown(attackFive);
+        //column 3 - down
+        attackNine.setDown(attackTen);
+        attackTen.setDown(attackEleven);
+        attackEleven.setDown(attackTwelve);
+        attackTwelve.setDown(attackNine);
+
     }
 
     public static synchronized RenderGameplay getInstance() {
@@ -199,7 +450,7 @@ public class RenderGameplay extends Gameplay {
             }
 
             drawTimer(gc);
-            drawItemMenu(gc);
+            drawAttackMenu(gc);
             drawFuryBar(gc);
             drawFuryComboEffects(gc);
             drawClashes(gc);
@@ -238,15 +489,18 @@ public class RenderGameplay extends Gameplay {
             gc.fillText(achievementPoints, 400, 282);
             gc.fillText("<< " + Language.getInstance().get(146) + " >>", 400, 296);
         }
-        JenesisOverlay.getInstance().overlay(gc, width, height);
+        Overlay.getInstance().overlay(gc, width, height);
     }
 
     private void drawStageBackground(GraphicsContext gc) {
-        if (animLayer.equalsIgnoreCase("both")) {
-            gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
-        } else if (animLayer.equalsIgnoreCase("back")) {
-            gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-            gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+        switch (animLayer) {
+            case BOTH:
+                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                break;
+            case BACKGROUND:
+                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                break;
         }
     }
 
@@ -259,11 +513,14 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawStageForeground(GraphicsContext gc) {
-        if (animLayer.equalsIgnoreCase("both")) {
-            gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-        } else if (animLayer.equalsIgnoreCase("forg")) {
-            gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-            gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+        switch (animLayer) {
+            case BOTH:
+                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                break;
+            case FOREGROUND:
+                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                break;
         }
         gc.drawImage(foreGround, foreGroundPositionX, foreGroundPositionY);
     }
@@ -277,13 +534,13 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawCharacterMenuAndQueSlots(GraphicsContext gc) {
-        gc.drawImage(menuHold, leftHandXAxisOffset, menuBarY);
+        gc.drawImage(menuHold, attackMenuXPos, menuBarY);
         for (int queItem = 0; queItem < 4; queItem++) {
-            gc.drawImage(quePic1, (queItem * 70 + 5 + leftHandXAxisOffset), 440);
+            gc.drawImage(quePic1, (queItem * 70 + 5 + attackMenuXPos), 440);
         }
-        if (comboCounter >= 1) {
-            for (int queItem = 0; queItem < comboCounter; queItem++) {
-                gc.drawImage(quePic2, (queItem * 70 + 5 + leftHandXAxisOffset), 440);
+        if (attackArray.size() >= 1) {
+            for (int queItem = 0; queItem < attackArray.size(); queItem++) {
+                gc.drawImage(quePic2, (queItem * 70 + 5 + attackMenuXPos), 440);
             }
         }
     }
@@ -304,43 +561,49 @@ public class RenderGameplay extends Gameplay {
         }
         gc.setGlobalAlpha((opacityTxt));
         gc.setFill(Color.WHITE);
-        gc.fillText(battleInformation.toString(), 32 + leftHandXAxisOffset, 470);
+        gc.fillText(battleInformation.toString(), 32 + attackMenuXPos, 470);
         gc.setGlobalAlpha((1.0f));
     }
 
-    private void drawItemMenu(GraphicsContext gc) {
+    private void drawAttackMenu(GraphicsContext gc) {
         if (opac < 0.95f) {
             opac = opac + 0.05f;
         }
         gc.setGlobalAlpha((opac));
         gc.setFill(currentColor);
-        gc.drawImage(curr, itemX + leftHandXAxisOffset, itemY);
-
-        if (fontSizes[0] == LoginScreen.bigTxtSize) {
-            gc.setFont(largeFont);
-        } else {
-            gc.setFont(normalFont);
+        gc.drawImage(attackCategory[columnIndex], itemX + attackMenuXPos, itemY);
+        switch (columnIndex) {
+            case 0:
+                gc.setFont(attackOne.isHovered() ? largeFont : normalFont);
+                fillText(gc, physical[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackOne);
+                gc.setFont(attackTwo.isHovered() ? largeFont : normalFont);
+                fillText(gc, physical[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTwo);
+                gc.setFont(attackThree.isHovered() ? largeFont : normalFont);
+                fillText(gc, physical[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackThree);
+                gc.setFont(attackFour.isHovered() ? largeFont : normalFont);
+                fillText(gc, physical[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackFour);
+                break;
+            case 1:
+                gc.setFont(attackFive.isHovered() ? largeFont : normalFont);
+                fillText(gc, celestia[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackFive);
+                gc.setFont(attackSix.isHovered() ? largeFont : normalFont);
+                fillText(gc, celestia[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackSix);
+                gc.setFont(attackSeven.isHovered() ? largeFont : normalFont);
+                fillText(gc, celestia[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackSeven);
+                gc.setFont(attackEight.isHovered() ? largeFont : normalFont);
+                fillText(gc, celestia[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackEight);
+                break;
+            case 2:
+                gc.setFont(attackNine.isHovered() ? largeFont : normalFont);
+                fillText(gc, item[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackNine);
+                gc.setFont(attackTen.isHovered() ? largeFont : normalFont);
+                fillText(gc, item[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTen);
+                gc.setFont(attackEleven.isHovered() ? largeFont : normalFont);
+                fillText(gc, item[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackEleven);
+                gc.setFont(attackTwelve.isHovered() ? largeFont : normalFont);
+                fillText(gc, item[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackTwelve);
+                break;
         }
-        gc.fillText(currentColumn[0], (yTEST + leftHandXAxisOffset), ((366) + fontSizes[0]));
-
-        if (fontSizes[1] == LoginScreen.bigTxtSize) {
-            gc.setFont(largeFont);
-        } else {
-            gc.setFont(normalFont);
-        }
-        gc.fillText(currentColumn[1], (yTEST + leftHandXAxisOffset), ((366) + fontSizes[0] + 2 + fontSizes[1]));
-        if (fontSizes[2] == LoginScreen.bigTxtSize) {
-            gc.setFont(largeFont);
-        } else {
-            gc.setFont(normalFont);
-        }
-        gc.fillText(currentColumn[2], (yTEST + leftHandXAxisOffset), ((366) + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2]));
-        if (fontSizes[3] == LoginScreen.bigTxtSize) {
-            gc.setFont(largeFont);
-        } else {
-            gc.setFont(normalFont);
-        }
-        gc.fillText(currentColumn[3], (yTEST + leftHandXAxisOffset), ((366) + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3]));
         gc.setGlobalAlpha((1.0f));
     }
 
@@ -359,7 +622,7 @@ public class RenderGameplay extends Gameplay {
     }
 
     private void drawFuryBar(GraphicsContext gc) {
-        gc.drawImage(fury, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
+        drawImage(gc, furyPlaceholder, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), fury);
         gc.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
         gc.setFill(Color.RED);
         gc.fillRoundRect(12 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 132 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 12, getBreak() / 5, 12, 12);
@@ -446,9 +709,9 @@ public class RenderGameplay extends Gameplay {
 
     private void checkFuryStatus() {
         if (getBreak() == 1000) {
-            fury = fury1;
+            furyPlaceholder = fury1;
         } else {
-            fury = fury2;
+            furyPlaceholder = fury2;
         }
         if (GameInstance.getInstance().gameOver == true) {
             //slow mo!!!!
@@ -504,8 +767,10 @@ public class RenderGameplay extends Gameplay {
      * Caches number
      */
     private void cacheNumPix() {
-        leftHandXAxisOffset = GameState.getInstance().getLogin().isLeftHanded() ? 0 : 548;
-        JenesisImageLoader pix = new JenesisImageLoader();
+        attackMenuXPos = GameState.getInstance().getLogin().isLeftHanded() ? 0 : 547;
+        attackMenuTextXPos = attackMenuXPos + 25;
+        attackMenuTextYPos = 366;
+        ImageLoader pix = new ImageLoader();
         counterPane = pix.loadImage("images/countPane.png");
         foreGround = pix.loadImage(RenderStageSelect.getInstance().getFgLocation());
         num0 = pix.loadImage("images/fig/0.png");
@@ -539,7 +804,7 @@ public class RenderGameplay extends Gameplay {
      */
     private void loadSprites() {
         try {
-            JenesisImageLoader imageLoader = new JenesisImageLoader();
+            ImageLoader imageLoader = new ImageLoader();
             Characters.getInstance().getCharacter().loadMeHigh();
             Characters.getInstance().getOpponent().loadMeHigh();
 
@@ -594,7 +859,7 @@ public class RenderGameplay extends Gameplay {
             itm = imageLoader.loadImage("images/t_item.png");
             fury1 = imageLoader.loadImage("images/fury.gif");
             fury2 = imageLoader.loadImage("images/furyo.png");
-            fury = fury2;
+            furyPlaceholder = fury2;
             particlesLayer1 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
             particlesLayer2 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
@@ -608,8 +873,7 @@ public class RenderGameplay extends Gameplay {
             quePic1 = imageLoader.loadImage("images/queB.png");
             quePic2 = imageLoader.loadImage("images/que.gif");
             oppBar = imageLoader.loadImage("images/oppBar.png");
-            moveCat = new Image[]{phys, cel, itm};
-            curr = moveCat[0];
+            attackCategory = new Image[]{phys, cel, itm};
             //stat1 = imageLoader.loadImage("images/stats/stat1.png", 90, 24);
             //stat2 = imageLoader.loadImage("images/stats/stat2.png", 90, 24);
             //stat3 = imageLoader.loadImage("images/stats/stat3.png", 90, 24);
@@ -626,43 +890,8 @@ public class RenderGameplay extends Gameplay {
         }
     }
 
-    /**
-     * Go to next command menu column
-     */
-    public void onRight() {
-        if (nextEnabled && backEnabled) {
-            backEnabled = false;
-            yTEST = yTESTinit;
-            if (currentColumnIndex < moveCat.length - 1) {
-                currentColumnIndex++;
-            } else {
-                currentColumnIndex = 0;
-            }
-            curr = moveCat[currentColumnIndex];
-            resolveText();
-            opac = 0.0f;
-            backEnabled = true;
-        }
-    }
-
-    /**
-     * Go to previous command menu column
-     */
-    public void onLeft() {
-        if (backEnabled && nextEnabled) {
-            nextEnabled = false;
-            yTEST = yTESTinit;
-            opac = 0.0f;
-            if (currentColumnIndex > 0) {
-                currentColumnIndex = currentColumnIndex - 1;
-            } else {
-                currentColumnIndex = moveCat.length - 1;
-            }
-            curr = moveCat[currentColumnIndex];
-            resolveText();
-            opac = 0.0f;
-            nextEnabled = true;
-        }
+    public void capAnim() {
+        opac = 0.0f;
     }
 
     public void newInstance() {
@@ -690,7 +919,7 @@ public class RenderGameplay extends Gameplay {
         animations2 = new Animations2();
         animations3 = new Animations3();
         loadedUpdaters = true;
-        System.out.println("Char inc: " + charPointInc);
+        setActiveItem(attackOne);
     }
 
     /**
@@ -739,13 +968,13 @@ public class RenderGameplay extends Gameplay {
         if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntChar = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.MALE_HURT.length) {
-                attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE,false);
+                attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         } else {
             randSoundIntChar = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.FEMALE_HURT.length) {
-                attackChar = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntChar),AudioType.VOICE, false);
+                attackChar = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         }
@@ -755,13 +984,13 @@ public class RenderGameplay extends Gameplay {
         if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.MALE_HURT.length) {
-                attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE,false);
+                attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         } else {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.FEMALE_HURT.length) {
-                attackOpp = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntOpp),AudioType.VOICE, false);
+                attackOpp = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         }
@@ -771,13 +1000,13 @@ public class RenderGameplay extends Gameplay {
         if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.MALE_ATTACKS.length) {
-                hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt),AudioType.VOICE, false);
+                hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         } else {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                hurtChar = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntCharHurt),AudioType.VOICE, false);
+                hurtChar = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         }
@@ -787,13 +1016,13 @@ public class RenderGameplay extends Gameplay {
         if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.MALE_ATTACKS.length) {
-                hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE,false);
+                hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         } else {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                hurtOpp = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntOppHurt),AudioType.VOICE, false);
+                hurtOpp = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         }
@@ -832,7 +1061,7 @@ public class RenderGameplay extends Gameplay {
         if (ambientMusic != null) {
             ambientMusic.stop();
         }
-        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC,true);
+        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
         ambientMusic.play();
     }
 
@@ -890,40 +1119,10 @@ public class RenderGameplay extends Gameplay {
 
 
     /**
-     * Animate attacks in graphics context
-     *
-     * @param thischar - active characterEnum
-     */
-    public void AnimatePhyAttax(CharacterState thischar) {
-        if (thischar == CharacterState.CHARACTER || thischar == CharacterState.OPPONENT) {
-            //sprites back to normal poses
-            setSprites(CharacterState.CHARACTER, 9, 11);
-            setSprites(CharacterState.OPPONENT, 9, 11);
-        }
-    }
-
-
-    /**
      * set the break status
      */
     public void setBreak(int change) {
         limitBreak = limitBreak + change;
-    }
-
-    /**
-     * Makes text white, meaning its OK to select a move
-     */
-    public void enableSelection() {
-        currentColor = Color.WHITE;
-        safeToSelect = true;
-    }
-
-    /**
-     * Makes text red, meaning its NOT OK to select a move
-     */
-    public void disableSelection() {
-        currentColor = Color.RED;
-        safeToSelect = false;
     }
 
 
@@ -942,5 +1141,110 @@ public class RenderGameplay extends Gameplay {
             disableSelection();
         }
         return result;
+    }
+
+    public void keyPressed(KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        switch (keyCode) {
+            case UP:
+            case W:
+                onUp();
+                break;
+            case DOWN:
+            case S:
+                onDown();
+                break;
+            case LEFT:
+            case D:
+                onLeft();
+                break;
+            case RIGHT:
+            case A:
+                onRight();
+                break;
+            case ENTER:
+                onAccept();
+                break;
+            case BACK_SPACE:
+                unQueMove();
+            case ESCAPE:
+                onBackCancel();
+                break;
+            case L:
+                setActiveItem(fury);
+                fury.accept();
+                break;
+            case F5:
+                cancelMatch();
+                break;
+        }
+    }
+
+    private class PauseAndNavigate extends Event {
+        @Override
+        public void onAccept() {
+            if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
+                if (clasherRunning) {
+                    ClashSystem.getInstance().plrClashing();
+                    System.out.println("Player clashing");
+                } else if (safeToSelect) {
+                    sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
+                    sound.play();
+                    activeAttack = (columnIndex * 4) + (rowIndex + 1);
+                    attackArray.push(genStr(activeAttack)); // count initially negative 1, add one to get to index 0
+                    checkStatus();
+                    showBattleMessage("Queued up " + getAttack(activeAttack));
+                } else {
+                    RenderCharacterSelectionScreen.getInstance().errorSound();
+                }
+            } else if (GameInstance.getInstance().storySequence) {
+                //skip to next scene
+                StoryMode.getInstance().onAccept();
+            } else if (GameInstance.getInstance().gameOver) {
+                switch (ScndGenLegends.getInstance().getSubMode()) {
+                    case SINGLE_PLAYER:
+                    case LAN_CLIENT:
+                    case LAN_HOST:
+                        GameInstance.getInstance().closingThread(true);
+                        break;
+                    case STORY_MODE:
+                        StoryMode.getInstance().onAccept();
+                        break;
+                    default:
+                        GameInstance.getInstance().closingThread(false);
+                        break;
+                }
+            }
+        }
+
+        @Override
+        public void onBackCancel() {
+            //closeTheServer();
+            if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
+                onTogglePause();
+            } else if (GameInstance.getInstance().storySequence) {
+                StoryMode.getInstance().onBackCancel();
+            }
+        }
+
+        @Override
+        public void onLeft() {
+            setActiveItem(source.getLeft());
+        }
+
+        @Override
+        public void onRight() {
+            setActiveItem(source.getRight());
+        }
+
+        @Override
+        public void onUp() {
+            setActiveItem(source.getUp());
+        }
+
+        @Override
+        public void onDown() {
+            setActiveItem(source.getDown());
+        }
     }
 }

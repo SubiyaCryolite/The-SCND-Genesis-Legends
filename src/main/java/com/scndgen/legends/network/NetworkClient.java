@@ -2,17 +2,15 @@ package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.enums.Mode;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.executers.CharacterAttacksOnline;
-import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
 import com.scndgen.legends.render.RenderGameplay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
+import io.github.subiyacryolite.enginev1.Overlay;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -57,7 +55,7 @@ public class NetworkClient implements Runnable {
                 thread.sleep(JenesisPanel.getInstance().serverLatency);
             } catch (InterruptedException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                ScndGenLegends.getInstance().loadMode(Mode.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
         }
 
@@ -106,17 +104,17 @@ public class NetworkClient implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
+                    //JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                    JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
+                    //JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
                 System.out.println("\n");
             } else if (line.endsWith("pauseGame")) {
                 //pauseMethod();
             } else if (line.endsWith(" xc_97_mb")) {
-                JenesisOverlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
+                Overlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
@@ -214,7 +212,7 @@ public class NetworkClient implements Runnable {
             else if (line.endsWith("gameStart7%^&")) {
                 RenderStageSelect.getInstance().start();
             } else if (line.contains("loadingGVSHA")) {
-                RenderStageSelect.getInstance().nowLoading();
+                RenderStageSelect.getInstance().setStageSelected(true);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
                 RenderGameplay.getInstance().triggerFury(CharacterState.OPPONENT);

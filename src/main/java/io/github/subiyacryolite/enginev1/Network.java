@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * Created by ifung on 22/04/2017.
  */
-public class JenesisNetwork {
+public class Network {
     public boolean downloadFile(String source, String destination) {
         boolean managedToDownload;
         int bufferSize = 1024;

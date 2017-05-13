@@ -26,7 +26,7 @@ import com.scndgen.legends.controller.Tutorial;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.AchievementLocker;
-import io.github.subiyacryolite.enginev1.JenesisMode;
+import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
@@ -40,7 +40,7 @@ import java.util.Calendar;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public abstract class MainMenu extends JenesisMode {
+public abstract class MainMenu extends Mode {
 
     protected final int fontSize = 16;
     protected Font font;

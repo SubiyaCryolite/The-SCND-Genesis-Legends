@@ -21,10 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends.executers;
 
-import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderGameplay;
-import com.scndgen.legends.threads.GameInstance;
-
 public class CharacterAttacks implements Runnable {
 
     private Thread timer;
@@ -39,24 +35,7 @@ public class CharacterAttacks implements Runnable {
     public void run() {
         //RenderGameplay.getInstance().DisableMenus(); disable issueing of more attacksCombatMage during execution
         //each attack will check if they are in the battle que.... if they are they execute
-        GameInstance.getInstance().pauseActivityRegen();
-        GameInstance.getInstance().setRecoveryUnitsChar(0);
-        if (GameInstance.getInstance().gameOver == false) {
-            for (int o = 0; o < 4; o++) {
-                RenderGameplay.getInstance().getAttacksChar().attack(Integer.parseInt(RenderGameplay.getInstance().getAttackArray()[o]), CharacterState.CHARACTER, CharacterState.OPPONENT);
-                RenderGameplay.getInstance().shakeOpponentLifeBar();
-                RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.CHARACTER);
-                if ((o + 1) == RenderGameplay.getInstance().getNumOfAttacks()) {
-                    break;
-                }
-            }
-        }
-        if (RenderGameplay.getInstance().getDone() != 1)// if game still running enable menus
-        {
-            GameInstance.getInstance().resumeActivityRegen();
-        }
-        RenderGameplay.getInstance().setComboCounter(0);
-        RenderGameplay.getInstance().setNumOfAttacks(0);
+
     }
 
     public void pause() {

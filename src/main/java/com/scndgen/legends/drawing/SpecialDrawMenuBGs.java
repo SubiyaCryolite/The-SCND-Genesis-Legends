@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
+import io.github.subiyacryolite.enginev1.ImageLoader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -38,7 +38,7 @@ public class SpecialDrawMenuBGs extends JPanel {
     private final Image bufferedImage;
 
     public SpecialDrawMenuBGs() {
-        JenesisImageLoader imageLoader = new JenesisImageLoader();
+        ImageLoader imageLoader = new ImageLoader();
         int x = (int) (Math.random() * 5);
         switch (x) {
             case 0:

@@ -100,13 +100,6 @@ public class UiItem {
         selectable = val;
     }
 
-    /**
-     * @param active
-     */
-    public void setAsActive(final UiItem active) {
-        this.hover();
-    }
-
     public final UiItem getUp() {
         if (up != null) {
             return up;

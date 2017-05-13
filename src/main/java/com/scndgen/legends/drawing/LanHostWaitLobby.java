@@ -23,9 +23,9 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import io.github.subiyacryolite.enginev1.JenesisOverlay;
-import io.github.subiyacryolite.enginev1.JenesisImageLoader;
-import io.github.subiyacryolite.enginev1.JenesisMode;
+import io.github.subiyacryolite.enginev1.Overlay;
+import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -40,7 +40,7 @@ import java.util.Enumeration;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class LanHostWaitLobby extends JenesisMode {
+public class LanHostWaitLobby extends Mode {
 
     private static float opac = 10;
     private static int y = 0;
@@ -48,7 +48,7 @@ public class LanHostWaitLobby extends JenesisMode {
     private static String name, ip;
     private Image pic1, pic2;
     private InetAddress ia;
-    private JenesisImageLoader imageLoader;
+    private ImageLoader imageLoader;
     private Font normalFont;
     private Enumeration enumeration;
     private NetworkInterface networkInterface;
@@ -56,7 +56,7 @@ public class LanHostWaitLobby extends JenesisMode {
 
     public LanHostWaitLobby() {
         normalFont = getMyFont(LoginScreen.normalTxtSize);
-        imageLoader = new JenesisImageLoader();
+        imageLoader = new ImageLoader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
             while (enumeration.hasMoreElements()) {
@@ -104,7 +104,7 @@ public class LanHostWaitLobby extends JenesisMode {
         gc.fillText(Language.getInstance().get(168), 20, 360);
         gc.fillText(Language.getInstance().get(169), 20, 376);
         gc.fillText(Language.getInstance().get(131), 20, 390);
-        JenesisOverlay.getInstance().overlay(gc,x,y);
+        Overlay.getInstance().overlay(gc,x,y);
     }
 
     public void stopRepaint() {

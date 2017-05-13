@@ -65,9 +65,9 @@ public class OpponentAttacks implements Runnable {
             for (int o = 0; o < ((GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyDynamic()) / GameState.DIFFICULTY_SCALE); o++) {
                 //fix story scene bug
                 if (GameInstance.getInstance().storySequence == false && GameInstance.getInstance().gameOver == false) {
-                    RenderGameplay.getInstance().getAttackOpponent().attack(aiQueuedAttacks[Math.round(Math.round(Math.random() * attackRange))], CharacterState.OPPONENT, CharacterState.CHARACTER);
+                    RenderGameplay.getInstance().getAttackOpponent().setAttackSpritesAndTrigger(aiQueuedAttacks[Math.round(Math.round(Math.random() * attackRange))], CharacterState.OPPONENT, CharacterState.CHARACTER, RenderGameplay.getInstance());
                     RenderGameplay.getInstance().shakeCharacterLifeBar();
-                    RenderGameplay.getInstance().AnimatePhyAttax(CharacterState.OPPONENT);
+                    RenderGameplay.getInstance().revertToDefaultSprites(CharacterState.OPPONENT);
                 }
             }
         }
