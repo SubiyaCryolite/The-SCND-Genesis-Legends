@@ -27,6 +27,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
@@ -36,7 +37,6 @@ import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.threads.ClashingOpponent;
-import com.scndgen.legends.threads.GameInstance;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -222,7 +222,7 @@ public abstract class GamePlay extends Mode {
                         Logger.getLogger(GamePlay.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } while (GameInstance.getInstance().isRunning);
+            } while (isRunning);
         } catch (Exception e) {
             //nothin
         }
@@ -442,7 +442,7 @@ public abstract class GamePlay extends Mode {
                 //attack on local
                 disableSelection();
                 prepareCharacterAttack();
-                GameInstance.getInstance().setCharacterAtbValue(0);
+                setCharacterAtbValue(0);
             }
         }
     }
@@ -463,12 +463,30 @@ public abstract class GamePlay extends Mode {
         opponentUiLoop = 0;
     }
 
+    private float maxAtb = 290f;
+    private long timerDelta;
+    public int timeLimit, count2;
+    public boolean storySequence;
+    private boolean characterAtb = true, opponentAtb = true;
+    public boolean isRunning = false;
+    public String timeStr;//, scene;
+    public int time1 = 10, time2 = 10, time3 = 10;
+    public AudioPlayback loseMusic, winMusic;
+    private boolean newMatch;
+    private float characterAtbValue;
+    private int limitChar;
+    private float opponentAtbValue;
+    private int limitOpp;
+    private float secondCount = 0.0f;
+    private int speedFactor = 30; //equal to the fps division
+    private int matchDuration, playTimeCounter;
+
     public void update(long delta) {
         super.update(delta);
-        if (GameInstance.getInstance().gameOver == false) {
+        if (gameOver == false) {
             boolean singlePlayerOrStoryMode = ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE;
             if (singlePlayerOrStoryMode && !triggerOpponentAttack) {
-                if (singlePlayerOrStoryMode && (delta - opponentAiDelta) > MS16) {
+                if (singlePlayerOrStoryMode && isOpponentAtbFull() && (delta - opponentAiDelta) > MS16) {
                     opponentAiDelta = delta;
                     if (opponentAiTimeout < GameState.getInstance().getLogin().getDifficultyDynamic()) {
                         opponentAiTimeout += 16;
@@ -485,8 +503,8 @@ public abstract class GamePlay extends Mode {
             }
             if (triggerOpponentAttack) {
                 if (lastOpponentQueLoop == -1) {
-                    GameInstance.getInstance().pauseOpponentAtb();
-                    GameInstance.getInstance().setOpponentAtbValue(0);
+                    pauseOpponentAtb();
+                    setOpponentAtbValue(0);
                 }
                 if (lastOpponentQueLoop != currentOpponentQueLoop && !opponentAttacks.isEmpty()) {
                     opponentQueDelta = delta;
@@ -502,7 +520,7 @@ public abstract class GamePlay extends Mode {
                         opponentUiLoop = 0;
                         if (opponentAttacks.isEmpty()) {
                             revertToDefaultSprites(CharacterState.OPPONENT);
-                            GameInstance.getInstance().resumeOpponentAtb();
+                            resumeOpponentAtb();
                             triggerOpponentAttack = false;
                         }
                     }
@@ -510,8 +528,8 @@ public abstract class GamePlay extends Mode {
             }
             if (triggerCharacterAttack) {
                 if (lastCharacterQueLoop == -1) {
-                    GameInstance.getInstance().pauseCharacterAtb();
-                    GameInstance.getInstance().setCharacterAtbValue(0);
+                    pauseCharacterAtb();
+                    setCharacterAtbValue(0);
                 }
                 if (lastCharacterQueLoop != currentCharacterQueLoop && !characterAttacks.isEmpty()) {
                     characterQueDelta = delta;
@@ -527,8 +545,51 @@ public abstract class GamePlay extends Mode {
                         characterUiLoop = 0;
                         if (characterAttacks.isEmpty()) {
                             revertToDefaultSprites(CharacterState.CHARACTER);
-                            GameInstance.getInstance().resumeCharacterAtb();
+                            resumeCharacterAtb();
                             triggerCharacterAttack = false;
+                        }
+                    }
+                }
+            }
+            if ((delta - timerDelta) > MS33) {
+                timerDelta = delta;
+                /////////////////////
+                updateMatchStatus();
+                Achievement.getInstance().scan(this);
+                if (characterAtbValue <= maxAtb && characterAtb) {
+                    characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
+                }
+                if (opponentAtbValue <= maxAtb && opponentAtb && ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE) {
+                    opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
+                }
+                if (timeLimit <= 180 && storySequence == false) {
+                    if (secondCount < 1000) //continue till we make a second
+                    {
+                        secondCount += speedFactor;
+                    } else {
+                        try {
+                            if (timeLimit < 999 && timeLimit > 0) {
+                                timeLimit = timeLimit - 1;
+                                timeStr = "" + timeLimit + "";
+                                secondCount = 0.0f;
+                                if (timeStr.length() == 1) {
+                                    time1 = 10;
+                                    time2 = 10;
+                                    time3 = Integer.parseInt("" + timeStr.charAt(0));
+                                }
+                                if (timeStr.length() == 2) {
+                                    time1 = 10;
+                                    time2 = Integer.parseInt("" + timeStr.charAt(0));
+                                    time3 = Integer.parseInt("" + timeStr.charAt(1));
+                                }
+                                if (timeStr.length() == 3) {
+                                    time1 = Integer.parseInt("" + timeStr.charAt(0));
+                                    time2 = Integer.parseInt("" + timeStr.charAt(1));
+                                    time3 = Integer.parseInt("" + timeStr.charAt(2));
+                                }
+                            }
+                        } catch (Exception nfe) {
+                            nfe.printStackTrace(System.err);
                         }
                     }
                 }
@@ -551,7 +612,36 @@ public abstract class GamePlay extends Mode {
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
+        /////////////////////////
+        /////////////////////////
+        /////////////////////////
+        Achievement.getInstance().newInstance();
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
+            storySequence = true;
+            timeLimit = StoryMode.getInstance().time;
+        } //if LAN, client uses hosts timeLimit preset
+        else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            timeLimit = JenesisPanel.getInstance().hostTime;
+        } else {
+            timeLimit = GameState.getInstance().getLogin().getTimeLimit();
+        }
+        recordPlayTime();
+        characterAtbValue = 00;
+        opponentAtbValue = 00;
+        maxAtb = 290;
+        gameOver = false;
+        newMatch = true;
+        winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
+        loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
+            playBGMusic();
+            musNotice();
+            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+        }
+        count2 = 0;
     }
+
+    protected abstract void playBGMusic();
 
     /**
      * Gets the damage multiplier
@@ -627,10 +717,9 @@ public abstract class GamePlay extends Mode {
      */
     public void updateMatchStatus() {
         if (gameOver == false) {
-            float timeLimit = GameInstance.getInstance().timeLimit;
             if (opponentHp < 0 || characterHp < 0 || (timeLimit <= 0 && GameState.getInstance().getLogin().isTimeLimited())) {
                 if (opponentHp / opponentMaximumHp > characterHp / characterMaximumHp || opponentHp / opponentMaximumHp < characterHp / characterMaximumHp) {
-                    GameInstance.getInstance().gameOver();
+                    gameOver();
                 }
             }
             //save characterHp at gameover
@@ -663,7 +752,7 @@ public abstract class GamePlay extends Mode {
      * @return value
      */
     public float getOpponentMaximumHp() {
-        return (float) opponentMaximumHp;
+        return opponentMaximumHp;
     }
 
     /**
@@ -691,7 +780,7 @@ public abstract class GamePlay extends Mode {
      */
     public void startFight() {
         resetGame();
-        GameInstance.getInstance().newInstance();
+        newInstance();
         startDrawing = 1;
         characterHpAsPercent = 100;
         opponentHpAsPercent = 100;
@@ -765,14 +854,7 @@ public abstract class GamePlay extends Mode {
      * @return CharacterEnum maximum characterHp
      */
     public float getCharacterMaximumHp() {
-        return (float) characterMaximumHp;
-    }
-
-    /**
-     * Resume paused game
-     */
-    public void start() {
-        GameInstance.getInstance().resumeGame();
+        return characterMaximumHp;
     }
 
     /**
@@ -850,9 +932,9 @@ public abstract class GamePlay extends Mode {
             @Override
             public void run() {
                 if (getBreak() == 1000) {
-                    //&& GameInstance.getInstance().getCharacterAtbValue()>289
+                    //&& getCharacterAtbValue()>289
                     //runs on local
-                    if (characterState == CharacterState.CHARACTER && limitRunning && GameInstance.getInstance().getCharacterAtbValue() > 289) {
+                    if (characterState == CharacterState.CHARACTER && limitRunning && getCharacterAtbValue() > 289) {
                         limitRunning = false;
                         if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
                             JenesisPanel.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
@@ -860,11 +942,11 @@ public abstract class GamePlay extends Mode {
                             JenesisPanel.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
                         }
                         setAttackType("fury", CharacterState.CHARACTER);
-                        GameInstance.getInstance().pauseCharacterAtb();
-                        GameInstance.getInstance().setCharacterAtbValue(0);
+                        pauseCharacterAtb();
+                        setCharacterAtbValue(0);
                         for (int i = 1; i < 9; i++) {
                             //stop attacking when game over
-                            if (GameInstance.getInstance().gameOver == false) {
+                            if (gameOver == false) {
                                 furySound();
                                 hurtSoundOpp();
                                 setSprites(CharacterState.CHARACTER, i, 11);
@@ -876,21 +958,21 @@ public abstract class GamePlay extends Mode {
                             }
                         }
                         comboPicArrayPosOpp = 8;
-                        GameInstance.getInstance().resumeCharacterAtb();
+                        resumeCharacterAtb();
                         setSprites(CharacterState.CHARACTER, 9, 11);
                         setSprites(CharacterState.OPPONENT, 9, 11);
                         limitRunning = true;
                         resetBreak();
                         setAttackType("normal", CharacterState.CHARACTER);
-                    } else if (characterState == CharacterState.OPPONENT && limitRunning && GameInstance.getInstance().getOpponentAtbValue() > 289) {
+                    } else if (characterState == CharacterState.OPPONENT && limitRunning && getOpponentAtbValue() > 289) {
                         setAttackType("fury", CharacterState.OPPONENT);
                         limitRunning = false;
                         for (int i = 1; i < 9; i++) {
-                            if (GameInstance.getInstance().gameOver == false) {
+                            if (gameOver == false) {
                                 isCharacterAttacking = true;
                                 furySound();
                                 hurtSoundChar();
-                                GameInstance.getInstance().setOpponentAtbValue(0);
+                                setOpponentAtbValue(0);
                                 setSprites(CharacterState.OPPONENT, i, 11);
                                 setSprites(CharacterState.CHARACTER, 0, 11);
                                 shakeCharacterLifeBar(0);
@@ -1135,11 +1217,10 @@ public abstract class GamePlay extends Mode {
         alert.setContentText("Are you sure you wanna quit?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            if (GameInstance.getInstance().gamePaused) {
+            if (isPaused()) {
                 onTogglePause();
             }
-            GameInstance.getInstance().gamePaused = false;
-            GameInstance.getInstance().terminateGameplay();
+            terminateGameplay();
             RenderStageSelect.getInstance().setStageSelected(false);
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
@@ -1296,5 +1377,160 @@ public abstract class GamePlay extends Mode {
      */
     public void triggerAttack(GamePlay gamePlay, String attackIdentifier, Character opponent, CharacterState destination) {
         opponent.attack(attackIdentifier, destination, gamePlay);
+    }
+
+    //////////////////////////////////
+    //////////////////////////////////
+    //////////////////////////////////
+    //////////////////////////////////
+
+    public float getCharacterAtbValue() {
+        return characterAtbValue;
+    }
+
+    public void setCharacterAtbValue(float thisNum) {
+        characterAtbValue = thisNum;
+    }
+
+    public boolean isOpponentAtbFull() {
+        return opponentAtbValue >= maxAtb;
+    }
+
+    public boolean isCharacterAtbFull() {
+        return characterAtbValue >= maxAtb;
+    }
+
+    public float getOpponentAtbValue() {
+        return opponentAtbValue;
+    }
+
+    public void setOpponentAtbValue(int thisNum2) {
+        opponentAtbValue = thisNum2;
+    }
+
+    public void gameOver() {
+        gameOver = true;
+        closeAudio();
+        GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
+        Achievement.getInstance().scan(this);
+        //if not story scene, increment char usage
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
+            GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
+        }
+        if (hasWon()) {
+            showWinLabel();
+            winMusic.play();
+        } else {
+            showLoseLabel();
+            loseMusic.play();
+        }
+        RenderStageSelect.getInstance().newInstance();
+        RenderCharacterSelectionScreen.getInstance().newInstance();
+        drawAchievements();
+    }
+
+    protected abstract void closeAudio();
+
+    protected abstract void showWinLabel();
+
+    protected abstract void showLoseLabel();
+
+    private void recordPlayTime() {
+        matchDuration = 0;
+        playTimeCounter = GameState.getInstance().getLogin().getPlayTime();
+        new Thread() {
+            @Override
+            @SuppressWarnings("static-access")
+            public void run() {
+                do {
+                    try {
+                        this.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace(System.err);
+                    }
+                    playTimeCounter++;
+                    matchDuration++;
+                } while (!gameOver);
+            }
+        }.start();
+    }
+
+    public int getMatchTime() {
+        return matchDuration;
+    }
+
+    /**
+     * This thread executes when a game is over, designed to free unused memory
+     */
+    public void closingThread(boolean toCharacterSelect) {
+        //logic profile operations
+        incrementWinsOrLosses();
+        GameState.getInstance().getLogin().setPoints(Achievement.getInstance().getNewUserPoints());
+        //save profile
+        GameState.getInstance().saveConfigFile();
+        io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice("Saved File");
+        if (toCharacterSelect) {
+            ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+        } else {
+            ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+        }
+    }
+
+    private void incrementWinsOrLosses() {
+        if (newMatch) {
+            newMatch = false;
+            GameState.getInstance().getLogin().setNumberOfMatches(GameState.getInstance().getLogin().getNumberOfMatches() + 1);
+            if (getCharacterHp() < getOpponentHp()) {
+                GameState.getInstance().getLogin().setLosses(GameState.getInstance().getLogin().getLosses() + 1);
+                GameState.getInstance().getLogin().setConsecutiveWins(0);
+            } else {
+                GameState.getInstance().getLogin().setWins(GameState.getInstance().getLogin().getWins() + 1);
+                GameState.getInstance().getLogin().setConsecutiveWins(GameState.getInstance().getLogin().getConsecutiveWins() + 1);
+            }
+        }
+    }
+
+    /**
+     * Cancel the game mid fight
+     */
+    public void terminateGameplay() {
+        gameOver = true;
+        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderStageSelect.getInstance().newInstance();
+        closeAudio();
+    }
+
+    public void pauseCharacterAtb() {
+        characterAtb = false;
+    }
+
+    public void resumeCharacterAtb() {
+        characterAtb = true;
+    }
+
+    public void pauseOpponentAtb() {
+        opponentAtb = false;
+    }
+
+    public void resumeOpponentAtb() {
+        opponentAtb = true;
+    }
+
+    public void musNotice() {
+        io.github.subiyacryolite.enginev1.Overlay.getInstance().secondaryNotice(RenderStageSelect.getInstance().getAmbientMusicMetaData()[RenderStageSelect.getInstance().getAmbientMusicIndex()]);
+    }
+
+    public void playMusicNow() {
+        try {
+            playBGMusic();
+            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+        } catch (Exception e) {
+            System.out.println("Dude, somin went wrong" + e.getMessage());
+        }
+    }
+
+    public boolean isGameOver()
+    {
+        return gameOver;
     }
 }

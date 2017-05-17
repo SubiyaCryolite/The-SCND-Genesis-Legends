@@ -22,7 +22,6 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
@@ -31,10 +30,8 @@ import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelectionScreen;
-import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.GameInstance;
 import io.github.subiyacryolite.enginev1.Mode;
 import io.github.subiyacryolite.enginev1.Window;
 import javafx.scene.input.KeyEvent;
@@ -229,24 +226,6 @@ public class JenesisPanel extends Pane {
 
     public void setIP(String ip) {
         gameIp = ip;
-    }
-
-    private void onTogglePause() {
-        if (getGameMode() == SubMode.SINGLE_PLAYER || getGameMode() == SubMode.STORY_MODE) {
-            if (GameInstance.getInstance().gamePaused == false) {
-                GameInstance.getInstance().pauseGame();
-                RenderGamePlay.getInstance().pauseThreads();
-                if (GameInstance.getInstance().storySequence == true) {
-                    StoryMode.getInstance().pauseDialogue();
-                }
-            } else {
-                RenderGamePlay.getInstance().start();
-                RenderGamePlay.getInstance().resumeThreads();
-                if (GameInstance.getInstance().storySequence == true) {
-                    StoryMode.getInstance().resumeDialogue();
-                }
-            }
-        }
     }
 
     public void focus() {

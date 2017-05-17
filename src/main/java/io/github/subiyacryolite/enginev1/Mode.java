@@ -76,6 +76,10 @@ public abstract class Mode implements UiScreen {
         paused = !paused;
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
     public abstract void render(final GraphicsContext gc, final double w, final double h);
 
     public final void logic(final long delta) {

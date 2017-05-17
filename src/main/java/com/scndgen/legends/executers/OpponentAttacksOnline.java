@@ -24,14 +24,12 @@ package com.scndgen.legends.executers;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.render.RenderGamePlay;
-import com.scndgen.legends.threads.GameInstance;
 
 public class OpponentAttacksOnline implements Runnable {
     private Thread timer;
     private int command1, command2, command3, command4;
     private char executionType;
 
-    @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public OpponentAttacksOnline(int command1, int command2, int command3, int command4, char type) {
         this.executionType = type;
         this.command1 = command1;
@@ -57,7 +55,7 @@ public class OpponentAttacksOnline implements Runnable {
                 RenderGamePlay.getInstance().setSprites(CharacterState.CHARACTER, 9, 11);
                 RenderGamePlay.getInstance().setSprites(CharacterState.OPPONENT, 9, 11);
                 executingTheCommandsAI(command1, command2, command3, command4);
-                GameInstance.getInstance().setOpponentAtbValue(0);
+                RenderGamePlay.getInstance().setOpponentAtbValue(0);
             } else if (executionType == 'l') {//limit break
                 RenderGamePlay.getInstance().clash(1, CharacterState.CHARACTER);
             }

@@ -32,7 +32,6 @@ import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import com.scndgen.legends.threads.GameInstance;
 
 /**
  * @author ndana
@@ -178,25 +177,25 @@ public class StoryMode implements Runnable {
      */
     private void storyIn() {
         storyMus.play();
-        GameInstance.getInstance().storySequence = true;
+        RenderGamePlay.getInstance().storySequence = true;
         doneShowingText = false;
-        GameInstance.getInstance().pauseCharacterAtb();
-        GameInstance.getInstance().pauseOpponentAtb();
+        RenderGamePlay.getInstance().pauseCharacterAtb();
+        RenderGamePlay.getInstance().pauseOpponentAtb();
     }
 
     private void storyOut(boolean terminateMode) {
         if (terminateMode) {
             storyMus.stop();
-            GameInstance.getInstance().playMusicNow();
-            GameInstance.getInstance().musNotice();
+            RenderGamePlay.getInstance().playMusicNow();
+            RenderGamePlay.getInstance().musNotice();
         }
         RenderGamePlay.getInstance().charPortBlank();
         RenderGamePlay.getInstance().storyText("");
         thread.stop();
-        GameInstance.getInstance().storySequence = false;
+        RenderGamePlay.getInstance().storySequence = false;
         doneShowingText = true;
-        GameInstance.getInstance().resumeCharacterAtb();
-        GameInstance.getInstance().resumeOpponentAtb();
+        RenderGamePlay.getInstance().resumeCharacterAtb();
+        RenderGamePlay.getInstance().resumeOpponentAtb();
     }
 
     @Override
@@ -941,7 +940,7 @@ public class StoryMode implements Runnable {
     }
 
     public void onAccept() {
-        if (GameInstance.getInstance().gameOver && RenderGamePlay.getInstance().hasWon()) {
+        if (RenderGamePlay.getInstance().isGameOver() && RenderGamePlay.getInstance().hasWon()) {
             incrementMode();
         }
         startGame();

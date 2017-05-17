@@ -33,7 +33,10 @@ import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.*;
+import com.scndgen.legends.threads.Animations1;
+import com.scndgen.legends.threads.Animations2;
+import com.scndgen.legends.threads.Animations3;
+import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.JenesisPanel;
@@ -69,7 +72,7 @@ public class RenderGamePlay extends GamePlay {
     private Image[] attackCategory, numberPix;
     private Image[] characterPortraits;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, furyPlaceholder, fury1, fury2, phys, cel, itm, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0, time1, time2, time3, time4, time5, time6, time7, time8, time9;
+    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, furyPlaceholder, fury1, fury2, phys, cel, itm, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
     private Image[] charSprites, oppSprites;
     private Image[] storyPicArr;
     private Image characterPortrait, storyPic;
@@ -364,7 +367,7 @@ public class RenderGamePlay extends GamePlay {
     @Override
     public void render(GraphicsContext gc, double width, double height) {
         loadAssets();
-        if (GameInstance.getInstance().storySequence) {
+        if (storySequence) {
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, width, height);
             if (opacityPic < 0.98f) {
@@ -391,7 +394,7 @@ public class RenderGamePlay extends GamePlay {
             gc.fillText(battleInformation.toString(), ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
             gc.setGlobalAlpha((10 * 0.1f));
 
-        } else if (GameInstance.getInstance().gameOver == false && GameInstance.getInstance().storySequence == false) {
+        } else if (!gameOver && !storySequence) {
             gc.drawImage(stageBackground, 0, 0);
             gc.setFont(notSelected);
             if (getCharacterHp() >= 0) {
@@ -429,7 +432,7 @@ public class RenderGamePlay extends GamePlay {
                 gc.setFill(Color.BLACK);
                 gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 gc.setFill(gradient1);
-                gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, GameInstance.getInstance().getOpponentAtbValue(), 6, 6, 6);
+                gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, getOpponentAtbValue(), 6, 6, 6);
 
                 //------------player 1 HUD---------------------//
                 gc.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter); // HOLDS hp
@@ -459,7 +462,7 @@ public class RenderGamePlay extends GamePlay {
         //-----------ENDS ATTACKS QUEING UP--------------
 
         //when paused
-        if (GameInstance.getInstance().gamePaused == true) {
+        if (paused) {
             gc.setFill(Color.BLACK);
             gc.setGlobalAlpha((5 * 0.1f));//initial val between 1 and 10
             gc.fillRect(0, 0, width, height);
@@ -471,7 +474,7 @@ public class RenderGamePlay extends GamePlay {
         }
 
         //when gameover
-        if (GameInstance.getInstance().gameOver == true) {
+        if (gameOver) {
             gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, width, height);
             gc.setFill(Color.BLACK);
@@ -607,15 +610,15 @@ public class RenderGamePlay extends GamePlay {
 
     private void drawTimer(GraphicsContext gc) {
         gc.drawImage(counterPane, paneCord, 0);
-        if (GameInstance.getInstance().timeLimit > 180) {
+        if (timeLimit > 180) {
             gc.drawImage(numberPix[11], (int) (386), 0);
         } else {
-            if (times.length > GameInstance.getInstance().time1)
-                gc.drawImage(times[GameInstance.getInstance().time1], 356, 0);
-            if (times.length > GameInstance.getInstance().time2)
-                gc.drawImage(times[GameInstance.getInstance().time2], 356 + 40, 0);
-            if (times.length > GameInstance.getInstance().time3)
-                gc.drawImage(times[GameInstance.getInstance().time3], 356 + 80, 0);
+            if (times.length > time1)
+                gc.drawImage(times[time1], 356, 0);
+            if (times.length > time2)
+                gc.drawImage(times[time2], 356 + 40, 0);
+            if (times.length > time3)
+                gc.drawImage(times[time3], 356 + 80, 0);
         }
     }
 
@@ -711,7 +714,7 @@ public class RenderGamePlay extends GamePlay {
         } else {
             furyPlaceholder = fury2;
         }
-        if (GameInstance.getInstance().gameOver == true) {
+        if (gameOver == true) {
             //slow mo!!!!
         }
     }
@@ -827,17 +830,17 @@ public class RenderGamePlay extends GamePlay {
             menuHold = imageLoader.loadImage("images/" + Characters.getInstance().getCharacter().getEnum().data() + "/menu.png");
             damageLayer = imageLoader.loadImage("images/damage1.png");
 
-            time0 = imageLoader.loadImage("images/fig/0.png");
-            time1 = imageLoader.loadImage("images/fig/1.png");
-            time2 = imageLoader.loadImage("images/fig/2.png");
-            time3 = imageLoader.loadImage("images/fig/3.png");
-            time4 = imageLoader.loadImage("images/fig/4.png");
-            time5 = imageLoader.loadImage("images/fig/5.png");
-            time6 = imageLoader.loadImage("images/fig/6.png");
-            time7 = imageLoader.loadImage("images/fig/7.png");
-            time8 = imageLoader.loadImage("images/fig/8.png");
-            time9 = imageLoader.loadImage("images/fig/9.png");
-            times = new Image[]{time0, time1, time2, time3, time4, time5, time6, time7, time8, time9};
+            time0i = imageLoader.loadImage("images/fig/0.png");
+            time1i = imageLoader.loadImage("images/fig/1.png");
+            time2i = imageLoader.loadImage("images/fig/2.png");
+            time3i = imageLoader.loadImage("images/fig/3.png");
+            time4i = imageLoader.loadImage("images/fig/4.png");
+            time5i = imageLoader.loadImage("images/fig/5.png");
+            time6i = imageLoader.loadImage("images/fig/6.png");
+            time7i = imageLoader.loadImage("images/fig/7.png");
+            time8i = imageLoader.loadImage("images/fig/8.png");
+            time9i = imageLoader.loadImage("images/fig/9.png");
+            times = new Image[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
 
             characterPortraits = new Image[charNames.length];
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
@@ -1127,7 +1130,7 @@ public class RenderGamePlay extends GamePlay {
      * @return circel angle
      */
     private int phyAngle() {
-        float start = GameInstance.getInstance().getCharacterAtbValue() / 290.0f;
+        float start = getCharacterAtbValue() / 290.0f;
         angleRaw = start * 360;
         result = Integer.parseInt("" + Math.round(angleRaw));
         if (result >= 360) {
@@ -1178,7 +1181,7 @@ public class RenderGamePlay extends GamePlay {
     private class PauseAndNavigate extends Event {
         @Override
         public void onAccept() {
-            if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
+            if (!gameOver && storySequence == false) {
                 if (clasherRunning) {
                     ClashSystem.getInstance().plrClashing();
                     System.out.println("Player clashing");
@@ -1192,21 +1195,21 @@ public class RenderGamePlay extends GamePlay {
                 } else {
                     RenderCharacterSelectionScreen.getInstance().errorSound();
                 }
-            } else if (GameInstance.getInstance().storySequence) {
+            } else if (storySequence) {
                 //skip to next scene
                 StoryMode.getInstance().onAccept();
-            } else if (GameInstance.getInstance().gameOver) {
+            } else if (gameOver) {
                 switch (ScndGenLegends.getInstance().getSubMode()) {
                     case SINGLE_PLAYER:
                     case LAN_CLIENT:
                     case LAN_HOST:
-                        GameInstance.getInstance().closingThread(true);
+                        closingThread(true);
                         break;
                     case STORY_MODE:
                         StoryMode.getInstance().onAccept();
                         break;
                     default:
-                        GameInstance.getInstance().closingThread(false);
+                        closingThread(false);
                         break;
                 }
             }
@@ -1215,9 +1218,9 @@ public class RenderGamePlay extends GamePlay {
         @Override
         public void onBackCancel() {
             //closeTheServer();
-            if (!GameInstance.getInstance().gameOver && GameInstance.getInstance().storySequence == false) {
+            if (!gameOver && storySequence == false) {
                 onTogglePause();
-            } else if (GameInstance.getInstance().storySequence) {
+            } else if (storySequence) {
                 StoryMode.getInstance().onBackCancel();
             }
         }

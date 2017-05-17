@@ -21,7 +21,7 @@ public final class Language {
     private static Language instance;
     private final HashMap<Integer, String> text = new HashMap<>();
     private final HashMap<Integer, String> languageImplementation = new HashMap<>();
-    private final HashMap<Integer, String>  fullyImplementedLanguages = new HashMap<>();
+    private final HashMap<Integer, String> fullyImplementedLanguages = new HashMap<>();
     private String currentLanguage;
 
     /**
@@ -55,7 +55,7 @@ public final class Language {
      * @return line of text
      */
     public String get(int dex) {
-        return text.getOrDefault(dex, "No " + currentLanguage + " translation for line " + dex);
+        return text.getOrDefault(dex, "No translation :: " + dex);
     }
 
     /**
