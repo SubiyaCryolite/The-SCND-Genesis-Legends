@@ -20,7 +20,7 @@ import java.util.Hashtable;
 /**
  * Created by ifunga on 14/04/2017.
  */
-public abstract class CharacterSelectionScreen extends Mode {
+public abstract class CharacterSelection extends Mode {
     protected static String charDesc = "";
     protected int[] attacks;
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
@@ -56,7 +56,7 @@ public abstract class CharacterSelectionScreen extends Mode {
     /**
      * Initialises the characterEnum select panel
      */
-    public CharacterSelectionScreen() {
+    public CharacterSelection() {
         error = new AudioPlayback("audio/error.ogg", AudioType.SOUND, false);
         sound = new AudioPlayback(AudioConstants.charSelectSound(), AudioType.SOUND, false);
         attacks = new int[4];

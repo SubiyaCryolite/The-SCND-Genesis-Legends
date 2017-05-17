@@ -5,10 +5,9 @@ import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.Overlay;
 
@@ -118,40 +117,40 @@ public class NetworkClient implements Runnable {
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
-                    RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSubiya(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRai")) {
-                    RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRaila(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAlx")) {
-                    RenderCharacterSelectionScreen.getInstance().selAisha(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAisha(CharacterState.OPPONENT);
                 }
                 if (line.contains("selLyn")) {
-                    RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selLynx(CharacterState.OPPONENT);
                 }
                 if (line.contains("selRav")) {
-                    RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRav(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAde")) {
-                    RenderCharacterSelectionScreen.getInstance().selAde(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAde(CharacterState.OPPONENT);
                 }
                 if (line.contains("selJon")) {
-                    RenderCharacterSelectionScreen.getInstance().selJon(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selJon(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 }
                 if (line.contains("selAzaria")) {
-                    RenderCharacterSelectionScreen.getInstance().selAza(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAza(CharacterState.OPPONENT);
                 }
                 if (line.contains("selSorr")) {
-                    RenderCharacterSelectionScreen.getInstance().selSorr(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSorr(CharacterState.OPPONENT);
                 }
                 if (line.contains("selThi")) {
-                    RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selThing(CharacterState.OPPONENT);
                 }
             } else if (line.endsWith("watchStageSel_xcbD")) {
                 RenderStageSelect.getInstance().onAccept();
@@ -220,7 +219,6 @@ public class NetworkClient implements Runnable {
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
                 int val = Integer.parseInt(line.substring(7));
-                ClashSystem.getInstance().setOpp(val);
             } //rejected
             else if (line.contains("getLost")) ;
             {

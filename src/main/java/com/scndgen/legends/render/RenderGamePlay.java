@@ -33,10 +33,6 @@ import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.Animations1;
-import com.scndgen.legends.threads.Animations2;
-import com.scndgen.legends.threads.Animations3;
-import com.scndgen.legends.threads.ClashSystem;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.JenesisPanel;
@@ -60,9 +56,6 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
  */
 public class RenderGamePlay extends GamePlay {
     private static RenderGamePlay instance;
-    private Animations1 animations1;
-    private Animations2 animations2;
-    private Animations3 animations3;
     private Font largeFont, normalFont;
     private Font notSelected;
     private Image particlesLayer1, particlesLayer2, foreGround;
@@ -352,15 +345,6 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public void cleanAssets() {
-        if (animations1 != null)
-            if (animations1.isRunning())
-                animations1.stop();
-        if (animations2 != null)
-            if (animations2.isRunning())
-                animations2.stop();
-        if (animations3 != null)
-            if (animations3.isRunning())
-                animations3.stop();
         loadAssets = true;
     }
 
@@ -454,7 +438,6 @@ public class RenderGamePlay extends GamePlay {
             drawAttackMenu(gc);
             drawFuryBar(gc);
             drawFuryComboEffects(gc);
-            drawClashes(gc);
             drawDamageDigits(gc);
             checkFuryStatus();
         }
@@ -637,18 +620,6 @@ public class RenderGamePlay extends GamePlay {
         gc.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
         gc.setGlobalAlpha((1.0f));
         gc.setFont(notSelected);
-    }
-
-    private void drawClashes(GraphicsContext gc) {
-        if (clasherRunning) {
-            gc.setFill(Color.BLACK);
-            gc.fillRoundRect(221, 395, 410, 20, 10, 10);
-            gc.drawImage(flashy, (int) (ClashSystem.getInstance().plyClashPerc * 4) + 226, 385);
-            gc.setFill(Color.RED);
-            gc.fillRect((int) (626 - (ClashSystem.getInstance().oppClashPerc * 4)), 400, (int) ClashSystem.getInstance().oppClashPerc * 4, 10);
-            gc.setFill(Color.YELLOW);
-            gc.fillRect(226, 400, (int) (ClashSystem.getInstance().plyClashPerc * 4), 10);
-        }
     }
 
     private void drawDamageDigits(GraphicsContext gc) {
@@ -908,15 +879,6 @@ public class RenderGamePlay extends GamePlay {
         fourO = 10;
         opponentDamageYLoc = 400;
         playerDamageYCoord = 400;
-        if (animations1 != null)
-            animations1.stop();
-        if (animations2 != null)
-            animations2.stop();
-        if (animations3 != null)
-            animations3.stop();
-        animations1 = new Animations1();
-        animations2 = new Animations2();
-        animations3 = new Animations3();
         loadedUpdaters = true;
         setActiveItem(attackOne);
     }
@@ -1069,9 +1031,6 @@ public class RenderGamePlay extends GamePlay {
     public void pauseThreads() {
         try {
             ambientMusic.togglePause();
-            animations1.pauseThread();
-            animations2.pauseThread();
-            animations3.pauseThread();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -1082,20 +1041,6 @@ public class RenderGamePlay extends GamePlay {
             ambientMusic.stop();
             //ambientMusic.close();
         } catch (Exception e) {
-        }
-    }
-
-    /**
-     * resume threads
-     */
-    public void resumeThreads() {
-        try {
-            ambientMusic.togglePause();
-            animations1.resumeThread();
-            animations2.resumeThread();
-            animations3.resumeThread();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
         }
     }
 
@@ -1113,14 +1058,6 @@ public class RenderGamePlay extends GamePlay {
      */
     public void setCharacterPortrait(int here) {
         characterPortrait = characterPortraits[here];
-    }
-
-
-    /**
-     * set the break status
-     */
-    public void setBreak(int change) {
-        limitBreak = limitBreak + change;
     }
 
 
@@ -1182,18 +1119,15 @@ public class RenderGamePlay extends GamePlay {
         @Override
         public void onAccept() {
             if (!gameOver && storySequence == false) {
-                if (clasherRunning) {
-                    ClashSystem.getInstance().plrClashing();
-                    System.out.println("Player clashing");
-                } else if (safeToSelect) {
+                if (safeToSelect) {
                     sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
-                    characterAttacks.push(genStr(activeAttack)); // count initially negative 1, add one to get to index 0
+                    characterAttacks.push(activeAttack); // count initially negative 1, add one to get to index 0
                     checkStatus();
                     showBattleMessage("Queued up " + getAttack(activeAttack));
                 } else {
-                    RenderCharacterSelectionScreen.getInstance().errorSound();
+                    RenderCharacterSelection.getInstance().errorSound();
                 }
             } else if (storySequence) {
                 //skip to next scene

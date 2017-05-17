@@ -30,7 +30,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.mode.CharacterSelectionScreen;
+import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.ImageLoader;
@@ -49,9 +49,9 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
  * @class: drawPrevChar
  * This class creates a graphical preview of the characterEnum and opponent
  */
-public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
+public class RenderCharacterSelection extends CharacterSelection {
 
-    private static RenderCharacterSelectionScreen instance;
+    private static RenderCharacterSelection instance;
     private final String[] charDesc = new String[numOfCharacters];
     private final Image[] thumbnailNormal = new Image[numOfCharacters];
     private final Image[] thumbnailBlurred = new Image[numOfCharacters];
@@ -76,7 +76,7 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private CharacterEnum hoveredCharacter;
 
-    private RenderCharacterSelectionScreen() {
+    private RenderCharacterSelection() {
         opacInc = 0.025f;
         loadAssets = true;
         uiElements.clear();
@@ -265,9 +265,9 @@ public class RenderCharacterSelectionScreen extends CharacterSelectionScreen {
         }
     }
 
-    public static synchronized RenderCharacterSelectionScreen getInstance() {
+    public static synchronized RenderCharacterSelection getInstance() {
         if (instance == null) {
-            instance = new RenderCharacterSelectionScreen();
+            instance = new RenderCharacterSelection();
         }
         return instance;
     }

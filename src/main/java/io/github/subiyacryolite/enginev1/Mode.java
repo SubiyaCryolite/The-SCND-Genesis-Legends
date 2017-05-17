@@ -19,6 +19,7 @@ public abstract class Mode implements UiScreen {
 
     protected static final double MS33 = 3.3e+7;
     protected static final double MS16 = 1.6e+7;
+    protected static final double MS1320 = 132.0e+7;
     protected int screenWidth = 852;
     protected int screenHeight = 480;
     protected float opacity;

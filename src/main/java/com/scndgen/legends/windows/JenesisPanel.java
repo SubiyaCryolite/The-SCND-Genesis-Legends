@@ -25,11 +25,9 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.executers.CharacterAttacksOnline;
-import com.scndgen.legends.executers.OpponentAttacksOnline;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -52,8 +50,6 @@ public class JenesisPanel extends Pane {
     public int hostTime;
     public boolean inStoryPane;
     public int item = 0, xyzStickDir;
-    public OpponentAttacksOnline playerHost2, playerClient1;
-    public CharacterAttacksOnline playerHost1, playerClient2;
     public String ServerName;
     public String last, UserName;
     //sever
@@ -85,7 +81,7 @@ public class JenesisPanel extends Pane {
             client = new NetworkClient(GameState.getInstance().getLanHostIp());
         }
         RenderStageSelect.getInstance().newInstance();
-        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderCharacterSelection.getInstance().newInstance();
         if (gameMode == SubMode.LAN_CLIENT)
             client.sendData("player_QSLV");
         setPrefSize(852, 480);
@@ -243,8 +239,8 @@ public class JenesisPanel extends Pane {
                 sendToClient("as1wds2_" + GameState.getInstance().getLogin().getTimeLimit());
                 isWaiting = false;
                 lanHostWaitLobby.stopRepaint();
-                RenderCharacterSelectionScreen.getInstance().newInstance();
-                RenderCharacterSelectionScreen.getInstance().animateCharSelect();
+                RenderCharacterSelection.getInstance().newInstance();
+                RenderCharacterSelection.getInstance().animateCharSelect();
                 ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
                 break;
             }

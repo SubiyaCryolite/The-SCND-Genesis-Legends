@@ -26,7 +26,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.*;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
@@ -72,92 +72,92 @@ public class StoryMode implements Runnable {
         tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
         notAsked = true;
         opt = -1;
-        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderCharacterSelection.getInstance().newInstance();
         RenderStageSelect.getInstance().newInstance();
         switch (scene) {
             case 0:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selRaila(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selRav(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
                 break;
             case 1:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selLynx(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selRaila(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
                 break;
             case 2:
                 time = 30;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAisha(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selAisha(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selLynx(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
                 break;
             case 3:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selRaila(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selSubiya(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
                 break;
             case 4:
                 time = 45;
                 stat = "half way";
-                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selAde(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selRav(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selAde(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 5:
                 time = 45;
                 stat = "nrml";
                 RenderGamePlay.getInstance().setNumOfBoards(2);
-                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selJon(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selAdam(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selJon(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 6:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAza(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selAza(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 7:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selRav(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selSubiya(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selRav(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 break;
             case 8:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selLynx(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selLynx(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 9:
                 time = 60;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selRaila(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selSorr(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selRaila(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selSorr(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
                 break;
             case 10:
                 time = 90;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selSubiya(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selNOVAAdam(CharacterState.OPPONENT);
+                RenderCharacterSelection.getInstance().selSubiya(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selNOVAAdam(CharacterState.OPPONENT);
                 RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 break;
             case 11:
                 time = 181;
                 stat = "nrml";
-                RenderCharacterSelectionScreen.getInstance().selAdam(CharacterState.CHARACTER);
-                RenderCharacterSelectionScreen.getInstance().selThing(CharacterState.BOSS);
+                RenderCharacterSelection.getInstance().selAdam(CharacterState.CHARACTER);
+                RenderCharacterSelection.getInstance().selThing(CharacterState.BOSS);
                 RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }

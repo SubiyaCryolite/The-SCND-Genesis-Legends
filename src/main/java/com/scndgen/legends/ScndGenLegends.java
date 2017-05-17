@@ -49,8 +49,8 @@ public class ScndGenLegends extends Game {
                     setMode(RenderStoryMenu.getInstance());
                     break;
                 case CHAR_SELECT_SCREEN:
-                    RenderCharacterSelectionScreen.getInstance().newInstance();
-                    setMode(RenderCharacterSelectionScreen.getInstance());
+                    RenderCharacterSelection.getInstance().newInstance();
+                    setMode(RenderCharacterSelection.getInstance());
                     break;
                 case STAGE_SELECT_SCREEN:
                     RenderStageSelect.getInstance().newInstance();

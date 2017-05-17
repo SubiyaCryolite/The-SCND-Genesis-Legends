@@ -24,7 +24,7 @@ package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.CharacterState;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 
 /**
@@ -221,7 +221,7 @@ public class Characters {
         }
 
         characterName = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().setSelectedCharIndex(characterEnum.index());
+        RenderCharacterSelection.getInstance().setSelectedCharIndex(characterEnum.index());
         activityRecoverRateChar = this.character.getAtbRecoveryRate();
         setPoints(this.character.getPoints());
         RenderGamePlay.getInstance().setCharacterHp(this.character.getLife());
@@ -273,7 +273,7 @@ public class Characters {
                 break;
         }
         opponentName = characterEnum.name();
-        RenderCharacterSelectionScreen.getInstance().setSelectedOppIndex(characterEnum.index());
+        RenderCharacterSelection.getInstance().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
         RenderGamePlay.getInstance().setOpponentHp(opponent.getLife());
         RenderGamePlay.getInstance().setOpponentMaximumHp(opponent.getLife());
@@ -289,7 +289,7 @@ public class Characters {
             opponent.resetLimits();
         if (character != null)
             character.resetLimits();
-        RenderCharacterSelectionScreen.getInstance().setSelectedCharacter(false);
-        RenderCharacterSelectionScreen.getInstance().setSelectedOpponent(false);
+        RenderCharacterSelection.getInstance().setSelectedCharacter(false);
+        RenderCharacterSelection.getInstance().setSelectedOpponent(false);
     }
 }

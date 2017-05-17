@@ -31,12 +31,10 @@ import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkServer;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
-import com.scndgen.legends.threads.ClashSystem;
-import com.scndgen.legends.threads.ClashingOpponent;
 import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -65,7 +63,7 @@ public abstract class GamePlay extends Mode {
     protected boolean triggerCharacterAttack;
     protected boolean triggerOpponentAttack;
     protected int done = 0; // if gameover
-    protected LinkedList<String> characterAttacks = new LinkedList<>();
+    protected LinkedList<Integer> characterAttacks = new LinkedList<>();
     protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
     protected boolean threadsNotRunningYet = true, playATBFile = false;
     protected StringBuilder StatusText = new StringBuilder();
@@ -89,7 +87,6 @@ public abstract class GamePlay extends Mode {
     protected StringBuilder battleInformation = new StringBuilder("");
     protected int count = 0, fpsInt = 0, fpsIntStat;
     protected StageAnimation animLayer;
-    protected boolean clasherRunning = false;
     protected boolean loadedUpdaters;
     protected float daNum, daNum2;
     protected long lifePlain, lifeTotalPlain, lifePlain2, lifeTotalPlain2;
@@ -111,7 +108,6 @@ public abstract class GamePlay extends Mode {
     protected int y2 = 435;
     protected int statIndexOpp, statIndexChar, statusEffectCharacterYCoord, statusEffectOpponentYCoord, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
     protected boolean shaky1 = true;
-    protected ClashingOpponent oppAttack = null;
     protected int animTime = 400, itemX = 0, itemY = 0;
     protected boolean runNew = true, effectChar = false;
     protected int bgX = 0;
@@ -159,11 +155,13 @@ public abstract class GamePlay extends Mode {
     private int characterUiLoop, opponentUiLoop;
     private long characterQueDelta, opponentQueDelta;
     private long opponentAiTimeout, opponentAiDelta;
+    private int furyBarCoolDownFactor;
 
 
     protected GamePlay() {
         furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
         damageSound = new AudioPlayback(AudioConstants.playerAttack(), AudioType.SOUND, false);
+        furyBarCoolDownFactor = 30 - (8 + (GameState.getInstance().getLogin().resolveDifficulty() * 2));
     }
 
     /**
@@ -253,7 +251,7 @@ public abstract class GamePlay extends Mode {
      *
      * @param input move
      */
-    public String genStr(int input) {
+    public String attackString(int input) {
         String thisTxt = "";
         if (input < 10) {
             thisTxt = "0" + activeAttack;
@@ -299,26 +297,6 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    public void clash(int dude, CharacterState homie) {
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            JenesisPanel.getInstance().sendToServer("clashing^T&T^&T&^");
-        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-            JenesisPanel.getInstance().sendToClient("clashing^T&T^&T&^");
-        }
-        if (getBreak() == 1000 && safeToSelect && clasherRunning == false) {
-            new ClashSystem(dude, homie);
-            clasherRunning = true;
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-                oppAttack = new ClashingOpponent();
-                System.out.println("clash ai");
-            }
-        }
-    }
-
-    public void opponetClashing() {
-        ClashSystem.getInstance().oppClashing();
-    }
-
     public void sendToClient(String message) {
         JenesisPanel.getInstance().sendToClient(message);
         //protected JenesisPanel.getInstance().NetworkClient client;
@@ -339,14 +317,14 @@ public abstract class GamePlay extends Mode {
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 computedPosition++;
                 if (loop == computedPosition) {
-                    uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter + 1;
+                    uiShakeEffectOffsetCharacter += 1;
                     return true;
                 }
             }
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 computedPosition++;
                 if (loop == computedPosition) {
-                    uiShakeEffectOffsetCharacter = uiShakeEffectOffsetCharacter - 1;
+                    uiShakeEffectOffsetCharacter -= 1;
                     return true;
                 }
             }
@@ -361,14 +339,14 @@ public abstract class GamePlay extends Mode {
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 computedPosition++;
                 if (loop == computedPosition) {
-                    uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent + 1;
+                    uiShakeEffectOffsetOpponent += 1;
                     return true;
                 }
             }
             for (int i = 0; i < lifeBarShakeInnerIterations; i++) {
                 computedPosition++;
                 if (loop == computedPosition) {
-                    uiShakeEffectOffsetOpponent = uiShakeEffectOffsetOpponent - 1;
+                    uiShakeEffectOffsetOpponent -= 1;
                     return true;
                 }
             }
@@ -474,12 +452,17 @@ public abstract class GamePlay extends Mode {
     public AudioPlayback loseMusic, winMusic;
     private boolean newMatch;
     private float characterAtbValue;
-    private int limitChar;
     private float opponentAtbValue;
-    private int limitOpp;
-    private float secondCount = 0.0f;
-    private int speedFactor = 30; //equal to the fps division
+    private float secondCount = 1000.0f;
     private int matchDuration, playTimeCounter;
+    private long animationLoopADelta;
+    private int animationLoopA;
+    private long animationLoopBDelta;
+    private int animationLoopB;
+    private long animationLoopCDelta;
+    private long animationLoopDDelta;
+    private int animationLoopD;
+    private long animationLoopEDelta;
 
     public void update(long delta) {
         super.update(delta);
@@ -534,7 +517,7 @@ public abstract class GamePlay extends Mode {
                 if (lastCharacterQueLoop != currentCharacterQueLoop && !characterAttacks.isEmpty()) {
                     characterQueDelta = delta;
                     lastCharacterQueLoop = currentCharacterQueLoop;
-                    setAttackSpritesAndTrigger(Integer.parseInt(characterAttacks.pop()), CharacterState.CHARACTER, CharacterState.OPPONENT, this, Characters.getInstance().getOpponent());//add mode reference here
+                    setAttackSpritesAndTrigger(characterAttacks.pop(), CharacterState.CHARACTER, CharacterState.OPPONENT, this, Characters.getInstance().getOpponent());//add mode reference here
                 }
                 if ((delta - characterQueDelta) > MS33) {
                     characterQueDelta = delta;
@@ -551,50 +534,226 @@ public abstract class GamePlay extends Mode {
                     }
                 }
             }
-            if ((delta - timerDelta) > MS33) {
-                timerDelta = delta;
-                /////////////////////
-                updateMatchStatus();
-                Achievement.getInstance().scan(this);
-                if (characterAtbValue <= maxAtb && characterAtb) {
-                    characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
+            animateTimer(delta);
+            animateLoopA(delta);
+            animateLoopB(delta);
+            animateLoopC(delta);
+            animateLoopD(delta);
+            if ((delta - animationLoopEDelta) > MS33) {
+                animationLoopEDelta = delta;
+                if (getBreak() > 5 && getBreak() < 999) {
+                    setBreak(-furyBarCoolDownFactor);
                 }
-                if (opponentAtbValue <= maxAtb && opponentAtb && ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE) {
-                    opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
+            }
+        }
+    }
+
+    private void animateLoopD(long delta) {
+        if ((delta - animationLoopDDelta) > MS33) {
+            animationLoopDDelta = delta;
+            if (animateLoopDLogic(animationLoopD)) {
+                animationLoopD++;
+            } else {
+                animationLoopD = 0;
+            }
+        }
+    }
+
+    private void animateLoopC(long delta) {
+        if ((delta - animationLoopCDelta) > MS16) {
+            animationLoopCDelta = delta;
+            if (getAnimationDirection() != AnimationDirection.VERTICAL) {
+                setParticlesLayer1PositionX(getParticlesLayer1PositionX() - getAmbSpeed1());
+                setParticlesLayer2PositionX(getParticlesLayer2PositionX() - getAmbSpeed2());
+                if (getParticlesLayer1PositionX() < -960) {
+                    setParticlesLayer1PositionX(852);
                 }
-                if (timeLimit <= 180 && storySequence == false) {
-                    if (secondCount < 1000) //continue till we make a second
-                    {
-                        secondCount += speedFactor;
-                    } else {
-                        try {
-                            if (timeLimit < 999 && timeLimit > 0) {
-                                timeLimit = timeLimit - 1;
-                                timeStr = "" + timeLimit + "";
-                                secondCount = 0.0f;
-                                if (timeStr.length() == 1) {
-                                    time1 = 10;
-                                    time2 = 10;
-                                    time3 = Integer.parseInt("" + timeStr.charAt(0));
-                                }
-                                if (timeStr.length() == 2) {
-                                    time1 = 10;
-                                    time2 = Integer.parseInt("" + timeStr.charAt(0));
-                                    time3 = Integer.parseInt("" + timeStr.charAt(1));
-                                }
-                                if (timeStr.length() == 3) {
-                                    time1 = Integer.parseInt("" + timeStr.charAt(0));
-                                    time2 = Integer.parseInt("" + timeStr.charAt(1));
-                                    time3 = Integer.parseInt("" + timeStr.charAt(2));
-                                }
+                if (getParticlesLayer2PositionX() < (-960)) {
+                    setParticlesLayer2PositionX(852);
+                }
+            } else {
+                setParticlesLayer1PositionY(getParticlesLayer1PositionY() + getAmbSpeed1());
+                setParticlesLayer2PositionY(getParticlesLayer2PositionY() + getAmbSpeed2());
+                if (getParticlesLayer1PositionY() > 480) {
+                    setParticlesLayer1PositionY(-480);
+                }
+                if (getParticlesLayer2PositionY() > 480) {
+                    setParticlesLayer2PositionY(-480);
+                }
+            }
+        }
+    }
+
+    private void animateLoopA(long delta) {
+        if ((delta - animationLoopADelta) > MS33) {
+            animationLoopADelta = delta;
+            if (animateLoopALogic(animationLoopA)) {
+                animationLoopA++;
+            } else {
+                animationLoopA = 0;
+            }
+        }
+    }
+
+    private void animateLoopB(long delta) {
+        if ((delta - animationLoopBDelta) > MS33) {
+            animationLoopBDelta = delta;
+            if (animateLoopBLogic(animationLoopB)) {
+                animationLoopB++;
+            } else {
+                animationLoopB = 0;
+            }
+        }
+    }
+
+    private void animateTimer(long delta) {
+        if ((delta - timerDelta) > MS33) {
+            timerDelta = delta;
+            /////////////////////
+            updateMatchStatus();
+            Achievement.getInstance().scan(this);
+            if (characterAtbValue <= maxAtb && characterAtb) {
+                characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
+            }
+            if (opponentAtbValue <= maxAtb && opponentAtb && ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE) {
+                opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
+            }
+            if (timeLimit <= 180 && storySequence == false) {
+                if (secondCount < 1000) //continue till we make a second
+                {
+                    secondCount += 33.33f;
+                } else {
+                    try {
+                        if (timeLimit < 999 && timeLimit > 0) {
+                            timeLimit = timeLimit - 1;
+                            timeStr = "" + timeLimit + "";
+                            secondCount = 0.0f;
+                            if (timeStr.length() == 1) {
+                                time1 = 10;
+                                time2 = 10;
+                                time3 = Integer.parseInt("" + timeStr.charAt(0));
                             }
-                        } catch (Exception nfe) {
-                            nfe.printStackTrace(System.err);
+                            if (timeStr.length() == 2) {
+                                time1 = 10;
+                                time2 = Integer.parseInt("" + timeStr.charAt(0));
+                                time3 = Integer.parseInt("" + timeStr.charAt(1));
+                            }
+                            if (timeStr.length() == 3) {
+                                time1 = Integer.parseInt("" + timeStr.charAt(0));
+                                time2 = Integer.parseInt("" + timeStr.charAt(1));
+                                time3 = Integer.parseInt("" + timeStr.charAt(2));
+                            }
                         }
+                    } catch (Exception nfe) {
+                        nfe.printStackTrace(System.err);
                     }
                 }
             }
         }
+    }
+
+    private boolean animateLoopDLogic(int loop) {
+        int computedPosition = -1;
+        for (int iteration = 0; iteration <= 10; iteration++) {
+            computedPosition++;
+            if (loop == computedPosition) {
+                setCharYcord(getCharYcord() + 1);
+                setOppYcord(getOppYcord() + 1);
+                return true;
+            }
+        }
+        for (int iteration = 0; iteration <= 10; iteration++) {
+            computedPosition++;
+            if (loop == computedPosition) {
+                setCharYcord(getCharYcord() - 1);
+                setOppYcord(getOppYcord() - 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean animateLoopALogic(int loop) {
+        int computedPosition = -1;//so that we start from zero
+        switch (getAnimationDirection()) {
+            case ROTATION:
+                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
+                        setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
+                        return true;
+                    }
+                }
+                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
+                        setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
+                        return true;
+                    }
+                }
+                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
+                        setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
+                        return true;
+                    }
+                }
+                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
+                        setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
+                        return true;
+                    }
+                }
+                break;
+            default:
+                for (int inner = 0; inner <= getAnimationLoops(); inner++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        switch (getAnimationDirection()) {
+                            case VERTICAL_HORIZONTAL:
+                                setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
+                                setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
+                                break;
+                            case HORIZONTAL:
+                                setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
+                                break;
+                            case VERTICAL:
+                                setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
+                                break;
+                        }
+                        return true;
+                    }
+                }
+                for (int inner = 0; inner <= getAnimationLoops(); inner++) {
+                    computedPosition++;
+                    if (loop == computedPosition) {
+                        switch (getAnimationDirection()) {
+                            case VERTICAL_HORIZONTAL:
+                                setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
+                                setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
+                                break;
+                            case HORIZONTAL:
+                                setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
+                                break;
+                            case VERTICAL:
+                                setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
+                                break;
+                        }
+                        return true;
+                    }
+                }
+                break;
+        }
+        return false;
+    }
+
+    private boolean animateLoopBLogic(int loop) {
+        return false;
     }
 
     public void newInstance() {
@@ -612,9 +771,8 @@ public abstract class GamePlay extends Mode {
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
-        /////////////////////////
-        /////////////////////////
-        /////////////////////////
+        setForeGroundPositionX(0);
+        setForeGroundPositionY(0);
         Achievement.getInstance().newInstance();
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
             storySequence = true;
@@ -636,28 +794,12 @@ public abstract class GamePlay extends Mode {
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             playBGMusic();
             musNotice();
-            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelection.getInstance().getSelectedCharIndex()));
         }
         count2 = 0;
     }
 
     protected abstract void playBGMusic();
-
-    /**
-     * Gets the damage multiplier
-     *
-     * @param who - which characterEnum
-     * @return damage multiplier
-     */
-    public int getDamageDealt(CharacterState who) {
-        if (who == CharacterState.CHARACTER) {
-            thisInt = damageC;
-        }
-        if (who == CharacterState.OPPONENT) {
-            thisInt = damageO;
-        }
-        return thisInt;
-    }
 
     /**
      * Set player 1 maximum characterHp
@@ -722,7 +864,6 @@ public abstract class GamePlay extends Mode {
                     gameOver();
                 }
             }
-            //save characterHp at gameover
             opponentLifePercentage = opponentHp / opponentMaximumHp;
             characterLifePercentage = characterHp / characterMaximumHp;
         }
@@ -792,7 +933,7 @@ public abstract class GamePlay extends Mode {
      */
     public void unQueMove() {
         if (!characterAttacks.isEmpty() && safeToSelect) {
-            int moi = Integer.parseInt(characterAttacks.removeLast());
+            int moi = characterAttacks.removeLast();
             Characters.getInstance().alterPoints2(moi);
             System.out.println("UNQUEUED " + moi);
         }
@@ -1046,6 +1187,10 @@ public abstract class GamePlay extends Mode {
         return limitBreak;
     }
 
+    public void setBreak(int change) {
+        limitBreak += change;
+    }
+
     protected abstract void guiScreenChaos(float damageAmount, CharacterState who);
 
     protected abstract void furySound();
@@ -1123,14 +1268,6 @@ public abstract class GamePlay extends Mode {
 
     public int getDone() {
         return done;
-    }
-
-    public boolean getClasherRunning() {
-        return clasherRunning;
-    }
-
-    public void setClasherRunning(boolean value) {
-        clasherRunning = value;
     }
 
     public CharacterEnum[] getCharNames() {
@@ -1227,7 +1364,7 @@ public abstract class GamePlay extends Mode {
             } else {
                 ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
-            RenderCharacterSelectionScreen.getInstance().primaryNotice("Canceled Match");
+            RenderCharacterSelection.getInstance().primaryNotice("Canceled Match");
         }
     }
 
@@ -1415,7 +1552,7 @@ public abstract class GamePlay extends Mode {
         Achievement.getInstance().scan(this);
         //if not story scene, increment char usage
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
-            GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelectionScreen.getInstance().getCharName());
+            GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelection.getInstance().getCharName());
         }
         if (hasWon()) {
             showWinLabel();
@@ -1425,7 +1562,7 @@ public abstract class GamePlay extends Mode {
             loseMusic.play();
         }
         RenderStageSelect.getInstance().newInstance();
-        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderCharacterSelection.getInstance().newInstance();
         drawAchievements();
     }
 
@@ -1495,7 +1632,7 @@ public abstract class GamePlay extends Mode {
      */
     public void terminateGameplay() {
         gameOver = true;
-        RenderCharacterSelectionScreen.getInstance().newInstance();
+        RenderCharacterSelection.getInstance().newInstance();
         RenderStageSelect.getInstance().newInstance();
         closeAudio();
     }
@@ -1523,14 +1660,13 @@ public abstract class GamePlay extends Mode {
     public void playMusicNow() {
         try {
             playBGMusic();
-            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelectionScreen.getInstance().getSelectedCharIndex()));
+            io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelection.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
-            System.out.println("Dude, somin went wrong" + e.getMessage());
+            System.out.println("Dude, something went wrong " + e.getMessage());
         }
     }
 
-    public boolean isGameOver()
-    {
+    public boolean isGameOver() {
         return gameOver;
     }
 }

@@ -25,7 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.render.RenderCharacterSelectionScreen;
+import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -60,7 +60,7 @@ public abstract class StoryMenu extends Mode {
     public static boolean bothArentSelected() {
         boolean answer = true;
 
-        if (RenderCharacterSelectionScreen.getInstance().selectedCharacter && RenderCharacterSelectionScreen.getInstance().selectedOpponent) {
+        if (RenderCharacterSelection.getInstance().selectedCharacter && RenderCharacterSelection.getInstance().selectedOpponent) {
             answer = false;
         }
 
