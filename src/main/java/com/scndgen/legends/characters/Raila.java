@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
 /**
@@ -59,7 +59,7 @@ public class Raila extends Character {
     }
 
     @Override
-    public void attack(String attack, CharacterState forWho,GamePlay gamePlay) {
+    public void attack(String attack, Player forWho, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
@@ -116,12 +116,12 @@ public class Raila extends Character {
                 attackStr = status[0];
                 damage = 72;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -130,12 +130,12 @@ public class Raila extends Character {
                 attackStr = status[1];
                 damage = 79;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -145,12 +145,12 @@ public class Raila extends Character {
                     sound3.play();
                     attackStr = status[2];
                     gamePlay.setStatIndex(3);
-                    if (forWho == CharacterState.OPPONENT) {
-                        gamePlay.setStatusPic(CharacterState.CHARACTER);
-                        gamePlay.alterDamageCounter(CharacterState.OPPONENT, +1);
+                    if (forWho == Player.OPPONENT) {
+                        gamePlay.setStatusPic(Player.CHARACTER);
+                        gamePlay.alterDamageCounter(Player.OPPONENT, +1);
                     } else {
-                        gamePlay.setStatusPic(CharacterState.OPPONENT);
-                        gamePlay.alterDamageCounter(CharacterState.CHARACTER, +1);
+                        gamePlay.setStatusPic(Player.OPPONENT);
+                        gamePlay.alterDamageCounter(Player.CHARACTER, +1);
                     }
                     gamePlay.showBattleMessage(name + " strengthened himself!!!");
                 } else {
@@ -163,13 +163,13 @@ public class Raila extends Character {
                     sound3.play();
                     attackStr = status[3];
                     gamePlay.setStatIndex(4);
-                    if (forWho == CharacterState.OPPONENT) {
+                    if (forWho == Player.OPPONENT) {
                         //as a player(2) yo8u attack the opponent(1)
-                        gamePlay.setStatusPic(CharacterState.OPPONENT);
-                        gamePlay.alterDamageCounter(CharacterState.CHARACTER, -1);
+                        gamePlay.setStatusPic(Player.OPPONENT);
+                        gamePlay.alterDamageCounter(Player.CHARACTER, -1);
                     } else {
-                        gamePlay.setStatusPic(CharacterState.CHARACTER);
-                        gamePlay.alterDamageCounter(CharacterState.OPPONENT, -1);
+                        gamePlay.setStatusPic(Player.CHARACTER);
+                        gamePlay.alterDamageCounter(Player.OPPONENT, -1);
                     }
                     gamePlay.showBattleMessage(name + " weakened his opponent!!!");
                 } else {

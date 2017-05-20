@@ -19,34 +19,32 @@
  along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
 
  **************************************************************************/
-package com.scndgen.legends.windows;
+package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.drawing.LanHostWaitLobby;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.network.NetworkClient;
-import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.Mode;
-import io.github.subiyacryolite.enginev1.Window;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.VolatileImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.InetAddress;
+import java.net.URL;
 
-public class JenesisPanel extends Pane {
+public class NetworkManager {
 
     public static final int PORT = 5555;
     public static final int serverLatency = 500;
     public final static int frameRate = 60;
-    private static JenesisPanel instance;
+    private static NetworkManager instance;
     public int hostTime;
     public boolean inStoryPane;
     public int item = 0, xyzStickDir;
@@ -55,7 +53,6 @@ public class JenesisPanel extends Pane {
     //sever
     private NetworkServer server;
     private InetAddress ServerAddress;
-    private int leftyXOffset, onlineClients = 0, hatDir;
     private boolean messageSent = false, isWaiting = true;
     //client
     private NetworkClient client;
@@ -72,32 +69,25 @@ public class JenesisPanel extends Pane {
     private GraphicsEnvironment ge;
     private Graphics2D gc;
 
-    private JenesisPanel(String nameOfUser, SubMode subMode) {
+    private NetworkManager(String nameOfUser, SubMode subMode) {
         instance = this;
         System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
         userName = nameOfUser;
-        leftyXOffset = GameState.getInstance().getLogin().isLeftHanded() ? 548 : 0;
         if (getGameMode() == SubMode.LAN_CLIENT) {
             client = new NetworkClient(GameState.getInstance().getLanHostIp());
         }
-        RenderStageSelect.getInstance().newInstance();
-        RenderCharacterSelection.getInstance().newInstance();
         if (gameMode == SubMode.LAN_CLIENT)
             client.sendData("player_QSLV");
-        setPrefSize(852, 480);
     }
 
-    public static synchronized JenesisPanel newInstance(String strUser, SubMode subMode) {
+    public static synchronized NetworkManager newInstance(String strUser, SubMode subMode) {
         if (instance == null)
-            instance = new JenesisPanel(strUser, subMode);
+            instance = new NetworkManager(strUser, subMode);
         return instance;
     }
 
-    public static JenesisPanel getInstance() {
+    public static NetworkManager getInstance() {
         return instance;
-    }
-
-    public void stopBackgroundMusic() {
     }
 
     public String getServerName() {
@@ -113,22 +103,11 @@ public class JenesisPanel extends Pane {
     }
 
     /**
-     * Goes onBackCancel to main menu
-     */
-    public void backToMenuScreen() {
-        Window.getInstance().showModes();
-        stopBackgroundMusic();
-
-        focus();
-    }
-
-    /**
      * Closes hosting NetworkServer
      */
     public void closeTheServer() {
         server.closeServer();
         System.out.println("Closed server");
-        backToMenuScreen();
     }
 
     /**
@@ -137,83 +116,10 @@ public class JenesisPanel extends Pane {
     public void closeTheClient() {
         client.closeClient();
         System.out.println("Closed client");
-        backToMenuScreen();
     }
 
     public SubMode getGameMode() {
         return gameMode;
-    }
-
-    /**
-     * Contains universal up menu/game movements
-     */
-    private void up() {
-        if (mode != null)
-            mode.onUp();
-    }
-
-    /**
-     * Contains universal down menu/game movements
-     */
-    private void down() {
-        if (mode != null)
-            mode.onDown();
-    }
-
-    /**
-     * Contains universal left menu/game movements
-     */
-    private void left() {
-        if (mode != null)
-            mode.onLeft();
-    }
-
-    /**
-     * Contains universal right menu/game movements
-     */
-    private void right() {
-        if (mode != null)
-            mode.onRight();
-    }
-
-    /**
-     * Handles universal onAccept functions
-     */
-    private void onAccept() {
-        if (isWaiting && gameMode == SubMode.LAN_HOST) {
-            closeTheServer();
-        }
-    }
-
-    public void keyPressed(KeyEvent e) {
-    }
-
-    public void mouseClicked(MouseEvent mouseEvent) {
-
-    }
-
-    public void mouseEntered(MouseEvent m) {
-    }
-
-    public void mouseDragged(MouseEvent m) {
-    }
-
-    public void mouseMoved(MouseEvent m) {
-    }
-
-    public void mouseExited(MouseEvent m) {
-    }
-
-    public void mousePressed(MouseEvent m) {
-    }
-
-    public void mouseReleased(MouseEvent m) {
-    }
-
-    public void keyReleased(KeyEvent e) {
-    }
-
-    public void keyTyped(KeyEvent e) {
     }
 
     public String getIP() {
@@ -224,14 +130,6 @@ public class JenesisPanel extends Pane {
         gameIp = ip;
     }
 
-    public void focus() {
-        setFocusTraversable(true);
-        setFocused(true);
-    }
-
-    /**
-     * When a player is found
-     */
     public void playerFound() {
         int ansx = JOptionPane.showConfirmDialog(null, userName + " , someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         switch (ansx) {
@@ -261,5 +159,27 @@ public class JenesisPanel extends Pane {
 
     public void sendToServer(String thisTxt) {
         client.sendData(thisTxt);
+    }
+
+    public boolean downloadFile(String source, String destination) {
+        boolean managedToDownload;
+        int bufferSize = 1024;
+        File out = new File(destination);
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new URL(source).openStream());
+             FileOutputStream fileOutputStream = new FileOutputStream(out);
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream, bufferSize)) {
+            byte[] data = new byte[bufferSize];
+            int x;
+            while ((x = bufferedInputStream.read(data, 0, bufferSize)) >= 0) {
+                bufferedOutputStream.write(data, 0, x);
+            }
+            bufferedOutputStream.close();
+            bufferedInputStream.close();
+            managedToDownload = true;
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            managedToDownload = false;
+        }
+        return managedToDownload;
     }
 }

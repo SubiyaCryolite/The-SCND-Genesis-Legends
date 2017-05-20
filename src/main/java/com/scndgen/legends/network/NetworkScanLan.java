@@ -21,8 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.windows.JenesisPanel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +32,7 @@ import java.util.logging.Logger;
 
 public class NetworkScanLan extends JFrame implements ActionListener {
 
-    private static JenesisPanel startApp;
+    private static NetworkManager startApp;
     private InetAddress ia;
     private JFrame frame;
     private JPanel buttons, panel, txtP;

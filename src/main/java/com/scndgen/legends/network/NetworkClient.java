@@ -1,14 +1,13 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
-import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.Overlay;
 
 import javax.swing.*;
@@ -43,15 +42,15 @@ public class NetworkClient implements Runnable {
     @Override
     public void run() {
 
-        JenesisPanel.getInstance().getInstance().ServerName = JenesisPanel.getInstance().getInstance().getServerName();
-        System.out.println(JenesisPanel.getInstance().getInstance().ServerName);
-        JenesisPanel.getInstance().getInstance().UserName = JenesisPanel.getInstance().getInstance().getServerUserName();
+        NetworkManager.getInstance().getInstance().ServerName = NetworkManager.getInstance().getInstance().getServerName();
+        System.out.println(NetworkManager.getInstance().getInstance().ServerName);
+        NetworkManager.getInstance().getInstance().UserName = NetworkManager.getInstance().getInstance().getServerUserName();
         connectToServer(IPaddress);
         while (clientIsRunning) {
             getStreams();
             readMassage();
             try {
-                thread.sleep(JenesisPanel.getInstance().serverLatency);
+                thread.sleep(NetworkManager.getInstance().serverLatency);
             } catch (InterruptedException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
                 ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
@@ -68,7 +67,7 @@ public class NetworkClient implements Runnable {
     private void connectToServer(String hostname) {
         try {
             clientIsRunning = true;
-            socket = new Socket(InetAddress.getByName(hostname), JenesisPanel.getInstance().PORT);
+            socket = new Socket(InetAddress.getByName(hostname), NetworkManager.getInstance().PORT);
             System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -103,10 +102,10 @@ public class NetworkClient implements Runnable {
                 int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
                 int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    //JenesisPanel.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
+                    //NetworkManager.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                    //JenesisPanel.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
+                    //NetworkManager.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
                 }
                 System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
                 System.out.println("\n");
@@ -117,46 +116,46 @@ public class NetworkClient implements Runnable {
             } //CharacterEnum
             else if (line.endsWith("_jkxc")) {
                 if (line.contains("selSub")) {
-                    RenderCharacterSelection.getInstance().selSubiya(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSubiya(Player.OPPONENT);
                 }
                 if (line.contains("selRai")) {
-                    RenderCharacterSelection.getInstance().selRaila(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRaila(Player.OPPONENT);
                 }
                 if (line.contains("selAlx")) {
-                    RenderCharacterSelection.getInstance().selAisha(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAisha(Player.OPPONENT);
                 }
                 if (line.contains("selLyn")) {
-                    RenderCharacterSelection.getInstance().selLynx(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selLynx(Player.OPPONENT);
                 }
                 if (line.contains("selRav")) {
-                    RenderCharacterSelection.getInstance().selRav(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRav(Player.OPPONENT);
                 }
                 if (line.contains("selAde")) {
-                    RenderCharacterSelection.getInstance().selAde(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAde(Player.OPPONENT);
                 }
                 if (line.contains("selJon")) {
-                    RenderCharacterSelection.getInstance().selJon(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selJon(Player.OPPONENT);
                 }
                 if (line.contains("selAdam")) {
-                    RenderCharacterSelection.getInstance().selAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAdam(Player.OPPONENT);
                 }
                 if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelection.getInstance().selNOVAAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selNOVAAdam(Player.OPPONENT);
                 }
                 if (line.contains("selAzaria")) {
-                    RenderCharacterSelection.getInstance().selAza(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAza(Player.OPPONENT);
                 }
                 if (line.contains("selSorr")) {
-                    RenderCharacterSelection.getInstance().selSorr(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSorr(Player.OPPONENT);
                 }
                 if (line.contains("selThi")) {
-                    RenderCharacterSelection.getInstance().selThing(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selThing(Player.OPPONENT);
                 }
             } else if (line.endsWith("watchStageSel_xcbD")) {
                 RenderStageSelect.getInstance().onAccept();
             } else if (line.startsWith("as1wds2_")) {
-                JenesisPanel.getInstance().hostTime = Integer.parseInt(line.substring(8));
-                System.out.println("aquired timeLimit is " + JenesisPanel.getInstance().hostTime);
+                NetworkManager.getInstance().hostTime = Integer.parseInt(line.substring(8));
+                System.out.println("aquired timeLimit is " + NetworkManager.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
                 if (line.equals(Stage.IBEX_HILL.shortCode())) {
@@ -214,7 +213,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().setStageSelected(true);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                RenderGamePlay.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().triggerFury(Player.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
@@ -222,10 +221,9 @@ public class NetworkClient implements Runnable {
             } //rejected
             else if (line.contains("getLost")) ;
             {
-                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + JenesisPanel.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getSubMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
-                JenesisPanel.getInstance().sendToServer("quit");
-                JenesisPanel.getInstance().closeTheClient();
-                JenesisPanel.getInstance().backToMenuScreen();
+                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + NetworkManager.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getSubMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
+                NetworkManager.getInstance().sendToServer("quit");
+                NetworkManager.getInstance().closeTheClient();
             }
         } catch (Exception ex) {
             System.err.println(ex);
@@ -241,7 +239,7 @@ public class NetworkClient implements Runnable {
      */
     public void sendData(String mess) {
         try {
-            JenesisPanel.getInstance().last = mess;
+            NetworkManager.getInstance().last = mess;
             dataOutputStream.writeUTF(mess);
             dataOutputStream.flush();
         } catch (Exception exception) {

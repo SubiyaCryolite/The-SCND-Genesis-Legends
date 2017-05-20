@@ -22,11 +22,12 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.AchievementCategories;
 import com.scndgen.legends.enums.Achievements;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.AttackType;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
+import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.Overlay;
 
@@ -170,7 +171,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.getAttackType(CharacterState.CHARACTER).equalsIgnoreCase("fury") && gamePlay.isGameOver() && gamePlay.hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
+        if (gamePlay.getAttackType(Player.CHARACTER) == AttackType.FURY && gamePlay.isGameOver() && gamePlay.hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
             achievement = Achievements.RAGE;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));
@@ -192,7 +193,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.getAttackType(CharacterState.OPPONENT).equalsIgnoreCase("fury") && gamePlay.hasWon() && gamePlay.isGameOver() && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
+        if (gamePlay.getAttackType(Player.OPPONENT) == AttackType.FURY && gamePlay.hasWon() && gamePlay.isGameOver() && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
             achievement = Achievements.BUZZ_KILL;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));

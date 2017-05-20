@@ -23,7 +23,6 @@ package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.controller.StoryMode;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;

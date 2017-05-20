@@ -23,7 +23,7 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Achievement;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.state.GameState;

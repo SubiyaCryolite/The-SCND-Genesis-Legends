@@ -1,11 +1,10 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
-import com.scndgen.legends.windows.JenesisPanel;
 import io.github.subiyacryolite.enginev1.Overlay;
 
 import java.io.DataInputStream;
@@ -48,7 +47,7 @@ public class NetworkServer implements Runnable {
     private void InitServer() {
         try {
             serverIsRunning = true;
-            server = new ServerSocket(JenesisPanel.PORT, 1);
+            server = new ServerSocket(NetworkManager.PORT, 1);
             System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -63,7 +62,7 @@ public class NetworkServer implements Runnable {
         try {
             connection = server.accept();
             System.out.println(connection.getInetAddress().getHostName());
-            JenesisPanel.getInstance().playerFound();
+            NetworkManager.getInstance().playerFound();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -90,7 +89,7 @@ public class NetworkServer implements Runnable {
             try {
                 getStreams();
                 readMessage();
-                thread.sleep(JenesisPanel.serverLatency);
+                thread.sleep(NetworkManager.serverLatency);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
@@ -119,7 +118,7 @@ public class NetworkServer implements Runnable {
             if (line.endsWith("quit")) {
                 closeServer();
             } else if (line.endsWith("player_QSLV")) {
-                JenesisPanel.getInstance().playerFound();
+                NetworkManager.getInstance().playerFound();
             } else if (line.endsWith("attack")) {
 
                 //1111 attack
@@ -145,46 +144,46 @@ public class NetworkServer implements Runnable {
             else if (line.endsWith("_jkxc")) {
                 System.out.println("Server mess: " + line);
                 if (line.contains("selSub")) {
-                    RenderCharacterSelection.getInstance().selSubiya(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSubiya(Player.OPPONENT);
                 }
                 if (line.contains("selRai")) {
-                    RenderCharacterSelection.getInstance().selRaila(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRaila(Player.OPPONENT);
                 }
                 if (line.contains("selAlx")) {
-                    RenderCharacterSelection.getInstance().selAisha(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAisha(Player.OPPONENT);
                 }
                 if (line.contains("selLyn")) {
-                    RenderCharacterSelection.getInstance().selLynx(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selLynx(Player.OPPONENT);
                 }
                 if (line.contains("selRav")) {
-                    RenderCharacterSelection.getInstance().selRav(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selRav(Player.OPPONENT);
                 }
                 if (line.contains("selAde")) {
-                    RenderCharacterSelection.getInstance().selAde(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAde(Player.OPPONENT);
                 }
                 if (line.contains("selJon")) {
-                    RenderCharacterSelection.getInstance().selJon(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selJon(Player.OPPONENT);
                 }
                 if (line.contains("selAdam")) {
-                    RenderCharacterSelection.getInstance().selAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAdam(Player.OPPONENT);
                 }
                 if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelection.getInstance().selNOVAAdam(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selNOVAAdam(Player.OPPONENT);
                 }
                 if (line.contains("selAzaria")) {
-                    RenderCharacterSelection.getInstance().selAza(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selAza(Player.OPPONENT);
                 }
                 if (line.contains("selSorr")) {
-                    RenderCharacterSelection.getInstance().selSorr(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selSorr(Player.OPPONENT);
                 }
                 if (line.contains("selThi")) {
-                    RenderCharacterSelection.getInstance().selThing(CharacterState.OPPONENT);
+                    RenderCharacterSelection.getInstance().selThing(Player.OPPONENT);
                 }
             } else if (line.equalsIgnoreCase("lastMess")) {
-                sendData(JenesisPanel.getInstance().last);
+                sendData(NetworkManager.getInstance().last);
             } //special moves
             else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                RenderGamePlay.getInstance().triggerFury(CharacterState.OPPONENT);
+                RenderGamePlay.getInstance().triggerFury(Player.OPPONENT);
             } //clashes
             else if (line.contains("oppClsh")) {
                 System.out.println("THis is it " + line.substring(7));
@@ -204,7 +203,7 @@ public class NetworkServer implements Runnable {
      */
     public void sendData(String mess) {
         try {
-            JenesisPanel.getInstance().last = mess;
+            NetworkManager.getInstance().last = mess;
             output.writeUTF(mess);
             output.flush();
         } catch (Exception e) {

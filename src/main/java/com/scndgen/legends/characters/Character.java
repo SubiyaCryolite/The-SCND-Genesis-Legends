@@ -24,7 +24,7 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.mode.GamePlay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -117,7 +117,7 @@ public abstract class Character {
         return sprites[i];
     }
 
-    public abstract void attack(String attack, CharacterState forWho, GamePlay gamePlay);
+    public abstract void attack(String attack, Player forWho, GamePlay gamePlay);
 
     /**
      * Gets the move set of the characterEnum

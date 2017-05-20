@@ -25,7 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGamePlay;
-import com.scndgen.legends.windows.JenesisPanel;
+import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -110,14 +110,14 @@ public abstract class StageSelect extends Mode {
         if (mode == StageSelectionMode.NORMAL) {
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    JenesisPanel.getInstance().sendToClient("loadingGVSHA");
+                    NetworkManager.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         } else {
             stage = stageLookup.getOrDefault((int) (Math.random() * (numberOfStages - 1)), Stage.IBEX_HILL);//for this to work RANDOM SHOULD ALWAYS BE LAST
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
                 if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    JenesisPanel.getInstance().sendToClient("loadingGVSHA");
+                    NetworkManager.getInstance().sendToClient("loadingGVSHA");
                 }
             }
         }
@@ -171,12 +171,12 @@ public abstract class StageSelect extends Mode {
                     break;
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient(hoveredStage.shortCode());
+                NetworkManager.getInstance().sendToClient(hoveredStage.shortCode());
             }
         }
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.WATCH) {
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("gameStart7%^&");
+                NetworkManager.getInstance().sendToClient("gameStart7%^&");
             }
             start();
         }

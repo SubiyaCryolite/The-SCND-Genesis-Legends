@@ -26,16 +26,16 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.controller.StoryMode;
+import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import com.scndgen.legends.windows.JenesisPanel;
+import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.ImageLoader;
 import io.github.subiyacryolite.enginev1.Overlay;
@@ -84,11 +84,11 @@ public class RenderGamePlay extends GamePlay {
     private final UiItem fury;
 
 
-    private RenderGamePlay() {
+    public RenderGamePlay() {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                triggerFury(CharacterState.CHARACTER);
+                triggerFury(Player.CHARACTER);
             }
 
             @Override
@@ -335,11 +335,11 @@ public class RenderGamePlay extends GamePlay {
         cacheNumPix();
         loadSprites();
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-            server = JenesisPanel.getInstance().getServer();
+            server = NetworkManager.getInstance().getServer();
         }
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             //get ip from game
-            client = JenesisPanel.getInstance().getClient();
+            client = NetworkManager.getInstance().getClient();
         }
         charPointInc = Characters.getInstance().getPoints();
     }
@@ -889,9 +889,9 @@ public class RenderGamePlay extends GamePlay {
      * @param damageAmount - damage dealt
      * @param who          - who dealt the damage
      */
-    public void guiScreenChaos(float damageAmount, CharacterState who) {
+    public void guiScreenChaos(float damageAmount, Player who) {
         manipulateThis = "" + Math.round(damageAmount);
-        if (who == CharacterState.CHARACTER) {
+        if (who == Player.CHARACTER) {
             if (manipulateThis.length() == 1) {
                 setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
@@ -906,7 +906,7 @@ public class RenderGamePlay extends GamePlay {
             }
         }
 
-        if (who == CharacterState.OPPONENT) {
+        if (who == Player.OPPONENT) {
             if (manipulateThis.length() == 1) {
                 setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
@@ -997,15 +997,10 @@ public class RenderGamePlay extends GamePlay {
         damageSound.play();
     }
 
-
     private void setRandomPic() {
         comicBookTextIndex = Math.round((float) (numOfComicPics * Math.random()));
         comicBookTextOpacity = 1.0f;
         comicBookTextPositionY = 0;
-    }
-
-    public void resetComicTxt() {
-        comicBookTextIndex = 0;
     }
 
     public void comicText() {

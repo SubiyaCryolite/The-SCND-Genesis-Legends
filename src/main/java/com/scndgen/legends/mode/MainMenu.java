@@ -22,7 +22,6 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.controller.Tutorial;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.AchievementLocker;

@@ -27,7 +27,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.CharacterSelection;
@@ -76,7 +76,7 @@ public class RenderCharacterSelection extends CharacterSelection {
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private CharacterEnum hoveredCharacter;
 
-    private RenderCharacterSelection() {
+    public RenderCharacterSelection() {
         opacInc = 0.025f;
         loadAssets = true;
         uiElements.clear();
@@ -89,40 +89,40 @@ public class RenderCharacterSelection extends CharacterSelection {
                 if (!selectedCharacter || !selectedOpponent) {
                     switch (hoveredCharacter) {
                         case SUBIYA:
-                            selSubiya(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selSubiya(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case RAILA:
-                            selRaila(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selRaila(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case LYNX:
-                            selLynx(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selLynx(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case AISHA:
-                            selAisha(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selAisha(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case ADE:
-                            selAde(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selAde(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case RAVAGE:
-                            selRav(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selRav(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case JONAH:
-                            selJon(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selJon(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case ADAM:
-                            selAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case NOVA_ADAM:
-                            selNOVAAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selNOVAAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case AZARIA:
-                            selAza(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selAza(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case SORROWE:
-                            selSorr(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selSorr(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                         case THING:
-                            selThing(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                            selThing(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                             break;
                     }
                 } else {

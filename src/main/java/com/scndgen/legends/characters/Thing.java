@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
 /**
@@ -70,7 +70,7 @@ public class Thing extends Character {
     }
 
     @Override
-    public void attack(String attack, CharacterState forWho,GamePlay gamePlay) {
+    public void attack(String attack, Player forWho, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
@@ -125,12 +125,12 @@ public class Thing extends Character {
                 attackStr = status[0];
                 damage = bonus + 106;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -139,12 +139,12 @@ public class Thing extends Character {
                 attackStr = status[1];
                 damage = bonus + 100;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -153,12 +153,12 @@ public class Thing extends Character {
                 attackStr = status[2];
                 damage = bonus + 108;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -167,12 +167,12 @@ public class Thing extends Character {
                 attackStr = status[3];
                 damage = bonus + 102;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;

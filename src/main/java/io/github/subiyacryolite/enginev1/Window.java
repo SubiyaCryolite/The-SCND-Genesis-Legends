@@ -21,21 +21,19 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev1;
 
-import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
-import com.scndgen.legends.windows.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-
-import javax.swing.*;
+import com.scndgen.legends.windows.WindowAbout;
+import com.scndgen.legends.windows.WindowControls;
+import com.scndgen.legends.windows.WindowLeaderBoard;
+import com.scndgen.legends.windows.WindowOptions;
 
 /**
  * @author Ndana
@@ -60,7 +58,7 @@ public class Window {
         startup = new AudioPlayback(AudioConstants.startUpSound(), AudioType.MUSIC, false);
         startup.play();
         strUser = dude;
-        //setContentPane(JenesisPanel.newInstance(strUser, SubMode.MAIN_MENU));
+        //setContentPane(NetworkManager.newInstance(strUser, SubMode.MAIN_MENU));
     }
 
     public static Window getInstance() {
@@ -112,54 +110,12 @@ public class Window {
             } else if (destination == SubMode.OPTIONS) {
                 options = new WindowOptions();
             }
-            if (destination == SubMode.EXIT) {
-                exit();
-            }
         }
     }
-
-    public void mouseClicked(MouseEvent m) {
-        JenesisPanel.getInstance().mouseClicked(m);
-    }
-
-    public void mouseMoved(MouseEvent m) {
-        JenesisPanel.getInstance().mouseMoved(m);
-    }
-
-
-    public void keyPressed(KeyEvent e) {
-        JenesisPanel.getInstance().keyPressed(e);
-        KeyCode keyCode = e.getCode();
-        if (keyCode == KeyCode.ENTER) {
-            select();
-        }
-    }
-
-    /**
-     * Exit game
-     */
-    public void exit() {
-        int exit = JOptionPane.showConfirmDialog(null, Language.getInstance().get(110), "Exit", JOptionPane.YES_NO_OPTION);
-        if (exit == JOptionPane.YES_OPTION) {
-            int seriously = JOptionPane.showConfirmDialog(null, Language.getInstance().get(111), "Seriously", JOptionPane.YES_NO_OPTION);
-            if (seriously == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, Language.getInstance().get(112), "Later", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
-            }
-        }
-    }
-
-    /**
-     * Show menu (maximise)
-     */
-    public void showModes() {
-        isActive = true;
-    }
-
     /**
      * Create a client game
      */
     public void joinGame() {
-        JenesisPanel.newInstance(Window.getUserName(), SubMode.LAN_CLIENT);
+        NetworkManager.newInstance(Window.getUserName(), SubMode.LAN_CLIENT);
     }
 }

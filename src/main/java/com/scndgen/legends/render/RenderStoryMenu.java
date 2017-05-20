@@ -52,7 +52,7 @@ public class RenderStoryMenu extends StoryMenu {
     private Image[] unlockedScene, unlockedCaptions, lockedScene;
     private Image storyPrev;
 
-    private RenderStoryMenu() {
+    public RenderStoryMenu() {
         lockedScene = new Image[numberOfScenes];
         unlockedScene = new Image[numberOfScenes];
         unlockedCaptions = new Image[numberOfScenes];

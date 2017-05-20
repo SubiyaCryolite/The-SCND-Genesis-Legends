@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
 import static com.scndgen.legends.enums.CharacterEnum.SORROWE;
@@ -57,7 +57,7 @@ public class Sorrowe extends Character {
     }
 
     @Override
-    public void attack(String attack, CharacterState forWho,GamePlay gamePlay) {
+    public void attack(String attack, Player forWho, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
@@ -113,12 +113,12 @@ public class Sorrowe extends Character {
                 //girls have a healing bonus of 5 XD
                 damage = 78;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -127,12 +127,12 @@ public class Sorrowe extends Character {
                 attackStr = status[1];
                 damage = 80;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -141,12 +141,12 @@ public class Sorrowe extends Character {
                 attackStr = status[2];
                 damage = 84;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
@@ -155,12 +155,12 @@ public class Sorrowe extends Character {
                 attackStr = status[3];
                 damage = 76;
                 gamePlay.setStatIndex(1);
-                if (forWho == CharacterState.OPPONENT) {
+                if (forWho == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(CharacterState.CHARACTER);
+                    gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(CharacterState.OPPONENT);
+                    gamePlay.setStatusPic(Player.OPPONENT);
                 }
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;

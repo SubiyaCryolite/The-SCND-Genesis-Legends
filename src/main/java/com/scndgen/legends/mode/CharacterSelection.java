@@ -7,9 +7,9 @@ import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.CharacterState;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.windows.JenesisPanel;
+import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.ImageLoader;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -96,11 +96,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Depending on scene, sets
      */
-    private static void sortMode(CharacterState who) {
+    private static void sortMode(Player who) {
         /**
          * If you choose a characterEnum in lan, you can't choose your opponent
          */
-        if (who == CharacterState.CHARACTER) {
+        if (who == Player.CHARACTER) {
         }
     }
 
@@ -145,11 +145,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Raila
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selRaila(CharacterState type) {
+    public void selRaila(Player type) {
         primaryNotice(Language.getInstance().get(84));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -157,14 +157,14 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selRai_jkxc");
+                NetworkManager.getInstance().sendToClient("selRai_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selRai_jkxc");
+                NetworkManager.getInstance().sendToServer("selRai_jkxc");
                 preventCharacterSelection();
             }
-        } else if (type == CharacterState.OPPONENT && selectedOpponent == false) {
+        } else if (type == Player.OPPONENT && selectedOpponent == false) {
             sound.play();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             }
@@ -178,10 +178,10 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Subiya
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selSubiya(CharacterState type) {
-        if (type == CharacterState.CHARACTER) //when selecting char
+    public void selSubiya(Player type) {
+        if (type == Player.CHARACTER) //when selecting char
         {
             primaryNotice(Language.getInstance().get(85));
             sound.play();
@@ -191,15 +191,15 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selSub_jkxc");
+                NetworkManager.getInstance().sendToClient("selSub_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selSub_jkxc");
+                NetworkManager.getInstance().sendToServer("selSub_jkxc");
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -212,11 +212,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Lynx
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selLynx(CharacterState type) {
+    public void selLynx(Player type) {
         primaryNotice(Language.getInstance().get(86));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -225,15 +225,15 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selLyn_jkxc");
+                NetworkManager.getInstance().sendToClient("selLyn_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selLyn_jkxc");
+                NetworkManager.getInstance().sendToServer("selLyn_jkxc");
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -246,11 +246,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Aisha
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selAisha(CharacterState type) {
+    public void selAisha(Player type) {
         primaryNotice(Language.getInstance().get(87));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -259,15 +259,15 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selAlx_jkxc");
+                NetworkManager.getInstance().sendToClient("selAlx_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selAlx_jkxc");
+                NetworkManager.getInstance().sendToServer("selAlx_jkxc");
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -280,11 +280,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Ade
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selAde(CharacterState type) {
+    public void selAde(Player type) {
         primaryNotice(Language.getInstance().get(88));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -293,15 +293,15 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selAde_jkxc");
+                NetworkManager.getInstance().sendToClient("selAde_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selAde_jkxc");
+                NetworkManager.getInstance().sendToServer("selAde_jkxc");
                 preventCharacterSelection();
             }
         }
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -314,11 +314,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Aisha
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selRav(CharacterState type) {
+    public void selRav(Player type) {
         primaryNotice(Language.getInstance().get(89));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -327,16 +327,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selRav_jkxc");
+                NetworkManager.getInstance().sendToClient("selRav_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selRav_jkxc");
+                NetworkManager.getInstance().sendToServer("selRav_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -349,11 +349,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Jonah
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selJon(CharacterState type) {
+    public void selJon(Player type) {
         primaryNotice(Language.getInstance().get(90));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -362,16 +362,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selJon_jkxc");
+                NetworkManager.getInstance().sendToClient("selJon_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selJon_jkxc");
+                NetworkManager.getInstance().sendToServer("selJon_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -384,11 +384,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting NovaAdam
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selAdam(CharacterState type) {
+    public void selAdam(Player type) {
         primaryNotice(Language.getInstance().get(91));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -397,16 +397,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selAdam_jkxc");
+                NetworkManager.getInstance().sendToClient("selAdam_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selAdam_jkxc");
+                NetworkManager.getInstance().sendToServer("selAdam_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -419,11 +419,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting NOVA NovaAdam
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selNOVAAdam(CharacterState type) {
+    public void selNOVAAdam(Player type) {
         primaryNotice(Language.getInstance().get(92));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -432,16 +432,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selNOVAAdam_jkxc");
+                NetworkManager.getInstance().sendToClient("selNOVAAdam_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selNOVAAdam_jkxc");
+                NetworkManager.getInstance().sendToServer("selNOVAAdam_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -454,11 +454,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Azaria
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selAza(CharacterState type) {
+    public void selAza(Player type) {
         primaryNotice(Language.getInstance().get(93));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -467,16 +467,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selAzaria_jkxc");
+                NetworkManager.getInstance().sendToClient("selAzaria_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selAzaria_jkxc");
+                NetworkManager.getInstance().sendToServer("selAzaria_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -489,11 +489,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selSorr(CharacterState type) {
+    public void selSorr(Player type) {
         primaryNotice(Language.getInstance().get(94));
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -502,16 +502,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selSorr_jkxc");
+                NetworkManager.getInstance().sendToClient("selSorr_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selSorr_jkxc");
+                NetworkManager.getInstance().sendToServer("selSorr_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -523,11 +523,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent (CharacterState.OPPONENT) or characterEnum (CharacterState.CHARACTER)
+     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
-    public void selThing(CharacterState type) {
+    public void selThing(Player type) {
         primaryNotice("..........");
-        if (type == CharacterState.CHARACTER) //when selecting char
+        if (type == Player.CHARACTER) //when selecting char
         {
             sound.play();
             selectedCharacter = true;
@@ -536,16 +536,16 @@ public abstract class CharacterSelection extends Mode {
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                JenesisPanel.getInstance().sendToClient("selThi_jkxc");
+                NetworkManager.getInstance().sendToClient("selThi_jkxc");
                 preventCharacterSelection();
             }
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                JenesisPanel.getInstance().sendToServer("selThi_jkxc");
+                NetworkManager.getInstance().sendToServer("selThi_jkxc");
                 preventCharacterSelection();
             }
         }
 
-        if (type == CharacterState.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
             sound.play();
             selectedOpponent = true;
@@ -554,7 +554,7 @@ public abstract class CharacterSelection extends Mode {
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
 
-        if (type == CharacterState.BOSS && selectedOpponent == false) // when selecting opponent as boss
+        if (type == Player.BOSS && selectedOpponent == false) // when selecting opponent as boss
         {
             sound.play();
             selectedOpponent = true;
@@ -694,40 +694,40 @@ public abstract class CharacterSelection extends Mode {
         CharacterEnum character = characterLookup.get(computedPosition);
         switch (character) {
             case SUBIYA:
-                selSubiya(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selSubiya(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case RAILA:
-                selRaila(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selRaila(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case LYNX:
-                selLynx(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selLynx(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case AISHA:
-                selAisha(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAisha(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case ADE:
-                selAde(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAde(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case RAVAGE:
-                selRav(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selRav(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case JONAH:
-                selJon(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selJon(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case ADAM:
-                selAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case NOVA_ADAM:
-                selNOVAAdam(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selNOVAAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case AZARIA:
-                selAza(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selAza(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case SORROWE:
-                selSorr(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selSorr(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
             case THING:
-                selThing(selectedCharacter ? CharacterState.OPPONENT : CharacterState.CHARACTER);
+                selThing(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
                 break;
         }
     }

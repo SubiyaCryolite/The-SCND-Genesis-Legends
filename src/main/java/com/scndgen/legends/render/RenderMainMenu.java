@@ -17,6 +17,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import javax.swing.*;
+
 
 /**
  * Created by ifunga on 15/04/2017.
@@ -666,6 +668,15 @@ public class RenderMainMenu extends MainMenu {
     public Image[] getPics() {
         return new Image[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
     }
-
+    public void exit() {
+        int exit = JOptionPane.showConfirmDialog(null, Language.getInstance().get(110), "Exit", JOptionPane.YES_NO_OPTION);
+        if (exit == JOptionPane.YES_OPTION) {
+            int seriously = JOptionPane.showConfirmDialog(null, Language.getInstance().get(111), "Seriously", JOptionPane.YES_NO_OPTION);
+            if (seriously == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, Language.getInstance().get(112), "Later", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
+        }
+    }
 
 }
