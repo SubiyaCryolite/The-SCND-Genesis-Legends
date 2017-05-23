@@ -67,7 +67,7 @@ public class StoryMode implements Runnable {
         instance = new StoryMode();
     }
 
-    public void story(int scene) {
+    public void playStory(int scene) {
         storyMus = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
         tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
         notAsked = true;
@@ -170,12 +170,12 @@ public class StoryMode implements Runnable {
         if (thread != null)
             thread.stop();
         thread = new Thread(this); //single static thread, always fire up new
-        thread.setName("story scene thread");
+        thread.setName("playStory scene thread");
         thread.start();
     }
 
     /**
-     * In story scene chars and opp should generate nothin
+     * In playStory scene chars and opp should generate nothin
      */
     private void storyIn() {
         storyMus.play();
@@ -929,6 +929,10 @@ public class StoryMode implements Runnable {
         }
     }
 
+    public void startFight() {
+        storyOut(false);
+    }
+
     public void pauseDialogue() {
         thread.suspend();
     }
@@ -938,14 +942,21 @@ public class StoryMode implements Runnable {
     }
 
     public void onBackCancel() {
-        storyOut(false);
+        startFight();
     }
 
     public void onAccept() {
         if (RenderGamePlay.getInstance().isGameOver() && RenderGamePlay.getInstance().hasWon()) {
             incrementMode();
         }
-        startGame();
+        if (!RenderStoryMenu.getInstance().moreStages()) {
+            if (RenderGamePlay.getInstance().isGameOver()) {
+                startStoryMode(currentScene);//play next scene
+            }
+            startFight();
+        } else {
+            ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+        }
     }
 
     /**
@@ -953,7 +964,7 @@ public class StoryMode implements Runnable {
      */
     public void incrementMode() {
         if (currentScene < max)
-            currentScene = currentScene + 1;
+            currentScene += 1;
         GameState.getInstance().getLogin().setLastStoryScene(currentScene);
     }
 
@@ -961,7 +972,4 @@ public class StoryMode implements Runnable {
         this.currentScene = currentScene;
     }
 
-    public void startGame() {
-        story(currentScene);
-    }
 }

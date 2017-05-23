@@ -89,7 +89,7 @@ public class RenderStageSelect extends StageSelect {
     public RenderStageSelect() {
         Event commonEvent = new Event() {
             public void onHover() {
-                capAnim();
+                animateCaption();
             }
 
             public void onAccept() {
@@ -325,7 +325,7 @@ public class RenderStageSelect extends StageSelect {
 
     private void showStageName(Stage stage) {
         if (stage.index() == hoveredStageIndex) return;
-        capAnim();
+        animateCaption();
         primaryNotice(lookupStageNames.get(stage));
         hoveredStageIndex = stage.index();
         if (hoveredStageIndex == Stage.RANDOM.index()) {

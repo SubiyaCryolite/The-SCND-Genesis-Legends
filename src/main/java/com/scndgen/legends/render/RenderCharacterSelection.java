@@ -27,8 +27,8 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.ModeEnum;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.ui.Event;
@@ -82,7 +82,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         uiElements.clear();
         Event commonEvent = new Event() {
             public void onHover() {
-                capAnim();
+                animatePortratit();
             }
 
             public void onAccept() {

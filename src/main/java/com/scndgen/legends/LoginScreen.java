@@ -71,18 +71,18 @@ import java.io.RandomAccessFile;
  * 03/11/10 -25- added limit break system, fixed LAN bugs - 0.0.9.0
  * 17/11/10 -26- better ABOUT screen, new versioning system ( major version | minor revision | updates/fixes ) 0.0.9.1
  * 20/11/10 -29- STORY MODE STRUCURE!!! Storymode bug-fixes, OPTIONS and STATS integrated into menu
- * 23/11/10 -30- fixed story scene and added togglePause, skip, resume :D
+ * 23/11/10 -30- fixed playStory scene and added togglePause, skip, resume :D
  * 02/12/10 -31- MOUSE INPUT :D, Fixed sound structure,Music pauses, added framrate chooser, sound-on/off works
- * 04/12/10 -32- One story scene to rule them all, bwa ha ha, added scene select as isWithinRange :)
+ * 04/12/10 -32- One playStory scene to rule them all, bwa ha ha, added scene select as isWithinRange :)
  * 07/12/10 -33- Added background animation thread
- * 10/12/10 -34- Added Ravage, implemented characterEnum balance scheme, fixed bug in story scene thread
+ * 10/12/10 -34- Added Ravage, implemented characterEnum balance scheme, fixed bug in playStory scene thread
  * Sidenote 14/12/10: Joined Twitter ^_^
  * 15/12/10 -35- Added characterEnum Ade, Added quit game, resume, EXIT to gameplay. New achievement pics, mod to primaryNotice(), better figures, sexy transparent HUD
  * 17/12/10 -36- Added new stages "Scorched Ruins" and "Frozen Wilderness"
  * 23/12/10 - Started porting the game to c++, evident performance benefits, fixed threads.
  * 27/12/10 -37- Realised how much I love Java, cross pompiling on C++ sucks, smoothened animations and initiate menu screen
  * 01/1/11 -38- Thread optimisations. wee
- * 04/1/11 -39- Fixed story scene bugs, adding GPL headerz gon opensource
+ * 04/1/11 -39- Fixed playStory scene bugs, adding GPL headerz gon opensource
  * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
  * 14/1/11 -41- Integrated STATS into main menu, pending for connections can be cancelled
  * 15/1/11 -42- Backwards compatibility for new save items, fixed time

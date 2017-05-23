@@ -477,7 +477,8 @@ public class RenderMainMenu extends MainMenu {
                 setActiveItem(source.getUp());
             }
         });
-        uiTutorial.setDown(uiQuickMatch);
+        uiTutorial.setDown(uiStoryMode);
+        uiStoryMode.setDown(uiQuickMatch);
         uiQuickMatch.setDown(uiHostLanMatch);
         uiHostLanMatch.setDown(uiJoinLanMatch);
         uiJoinLanMatch.setDown(uiAchievementLocker);

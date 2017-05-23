@@ -116,7 +116,7 @@ public class AchievementLocker {
         screen.fillText(stat16, offset + 500, (48 - 3) + (spacer * 1));
         screen.fillRect(610 - Integer.parseInt("" + Math.round(gLoss)), 35, Integer.parseInt("" + Math.round(gLoss)), spacer);
 
-        //story progress
+        //playStory progress
         screen.setFill(Color.WHITE);
 
         screen.fillText(Language.getInstance().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));

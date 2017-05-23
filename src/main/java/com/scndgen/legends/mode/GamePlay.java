@@ -1547,7 +1547,7 @@ public abstract class GamePlay extends Mode {
         closeAudio();
         GameState.getInstance().getLogin().setPlayTime(playTimeCounter);
         Achievement.getInstance().scan(this);
-        //if not story scene, increment char usage
+        //if not playStory scene, increment char usage
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
             GameState.getInstance().getLogin().setCharacterUsage(RenderCharacterSelection.getInstance().getCharName());
         }

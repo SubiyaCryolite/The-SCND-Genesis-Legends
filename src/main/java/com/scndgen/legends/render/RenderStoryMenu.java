@@ -26,15 +26,22 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.StoryMenu;
+import com.scndgen.legends.mode.StoryMode;
+import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.HashMap;
 
 import static com.sun.javafx.tk.Toolkit.getToolkit;
 
@@ -48,9 +55,24 @@ public class RenderStoryMenu extends StoryMenu {
 
     private static RenderStoryMenu instance;
     private Font header, normal;
-    private Image charBack, loading;
+    private Image stageHover, loading;
     private Image[] unlockedScene, unlockedCaptions, lockedScene;
     private Image storyPrev;
+    private int hoveredScene;
+    private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
+    private final UiItem scene1;
+    private final UiItem scene2;
+    private final UiItem scene3;
+    private final UiItem scene4;
+    private final UiItem scene5;
+    private final UiItem scene6;
+    private final UiItem scene7;
+    private final UiItem scene8;
+    private final UiItem scene9;
+    private final UiItem scene10;
+    private final UiItem scene11;
+    private final UiItem scene12;
+    private final UiItem scene13;
 
     public RenderStoryMenu() {
         lockedScene = new Image[numberOfScenes];
@@ -60,6 +82,145 @@ public class RenderStoryMenu extends StoryMenu {
         for (int u = 0; u < unlockedStage.length; u++) {
             unlockedStage[u] = u <= currentScene;
         }
+        //=======================================
+        Event commonEvent = new Event() {
+            public void onHover() {
+                animateCaption();
+            }
+
+            public void onAccept() {
+                selectScene();
+            }
+
+            public void onBackCancel() {
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+            }
+
+            @Override
+            public void onDown() {
+                setActiveItem(source.getDown());
+            }
+
+            @Override
+            public void onUp() {
+                setActiveItem(source.getUp());
+            }
+
+            @Override
+            public void onLeft() {
+                setActiveItem(source.getLeft());
+            }
+
+            @Override
+            public void onRight() {
+                setActiveItem(source.getRight());
+            }
+        };
+        (scene1 = new UiItem()).addJenesisEvent(commonEvent);
+        scene1.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 0;
+            }
+        });
+        (scene2 = new UiItem()).addJenesisEvent(commonEvent);
+        scene2.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 1;
+            }
+        });
+        (scene3 = new UiItem()).addJenesisEvent(commonEvent);
+        scene3.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 2;
+            }
+        });
+        (scene4 = new UiItem()).addJenesisEvent(commonEvent);
+        scene4.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 3;
+            }
+        });
+        (scene5 = new UiItem()).addJenesisEvent(commonEvent);
+        scene5.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 4;
+            }
+        });
+        (scene6 = new UiItem()).addJenesisEvent(commonEvent);
+        scene6.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 5;
+            }
+        });
+        (scene7 = new UiItem()).addJenesisEvent(commonEvent);
+        scene7.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 6;
+            }
+        });
+        (scene8 = new UiItem()).addJenesisEvent(commonEvent);
+        scene8.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 7;
+            }
+        });
+        (scene9 = new UiItem()).addJenesisEvent(commonEvent);
+        scene9.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 8;
+            }
+        });
+        (scene10 = new UiItem()).addJenesisEvent(commonEvent);
+        scene10.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 9;
+            }
+        });
+        (scene11 = new UiItem()).addJenesisEvent(commonEvent);
+        scene11.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 10;
+            }
+        });
+        (scene12 = new UiItem()).addJenesisEvent(commonEvent);
+        scene12.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 11;
+            }
+        });
+        (scene13 = new UiItem()).addJenesisEvent(commonEvent);
+        scene13.addJenesisEvent(new Event() {
+            public void onHover() {
+                hoveredScene = 12;
+            }
+        });
+        uiElements.put(0, scene1);
+        uiElements.put(1, scene2);
+        uiElements.put(2, scene3);
+        uiElements.put(3, scene4);
+        uiElements.put(4, scene5);
+        uiElements.put(5, scene6);
+        uiElements.put(6, scene7);
+        uiElements.put(7, scene8);
+        uiElements.put(8, scene9);
+        uiElements.put(9, scene10);
+        uiElements.put(10, scene11);
+        uiElements.put(11, scene12);
+        uiElements.put(12, scene13);
+        setActiveItem(scene1);
+
+        //set up down, left right
+        int total = uiElements.size();
+        for (int index = 0; index < total; index++) {
+            if (index > 0)
+                uiElements.get(index).setLeft(uiElements.get(index - 1));
+            if ((index + columns) < total)
+                uiElements.get(index).setDown(uiElements.get(index + columns));
+        }
+    }
+
+    private void selectScene(int hoveredScene) {
+        this.hoveredScene = hoveredScene;
     }
 
     public static synchronized RenderStoryMenu getInstance() {
@@ -95,32 +256,44 @@ public class RenderStoryMenu extends StoryMenu {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
                     if (computedPosition >= unlockedStage.length) continue;
-                    gc.drawImage(unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                    UiItem currentEl = uiElements.get(computedPosition);
+                    drawImage(gc, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
+                    if (!currentEl.isHovered()) continue;
+                    gc.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                    if (!unlockedStage[hoveredScene]) continue;
+                    if (opacity < 0.95f)
+                        opacity += 0.05f;
+                    gc.setGlobalAlpha((opacity));
+                    gc.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                    gc.setGlobalAlpha((1.0f));
                 }
+                gc.setFill(Color.WHITE);
+                gc.setFont(header);
+                gc.fillText(Language.getInstance().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(307), gc.getFont()) / 2), 80);
+                gc.setFont(normal);
+                gc.fillText(Language.getInstance().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(368), gc.getFont()) / 2), 380);
+                showstoryName(hoveredScene);
             }
-            gc.setFill(Color.WHITE);
-            gc.setFont(header);
-            gc.fillText(Language.getInstance().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(307), gc.getFont()) / 2), 80);
-            gc.setFont(normal);
-            gc.fillText(Language.getInstance().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(368), gc.getFont()) / 2), 380);
-            showstoryName(hoveredStoryIndex);
-            if (isUnlocked() && unlockedStage[hoveredStoryIndex]) {
-                if (opacity < 0.98f)
-                    opacity = opacity + 0.02f;
-                gc.setGlobalAlpha((opacity));
-                gc.drawImage(unlockedCaptions[hoveredStoryIndex], (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
-                gc.setGlobalAlpha((1.0f));
-                gc.drawImage(charBack, (commonXCoord - hSpacer) + (hSpacer * row), commonYCoord + (vSpacer * column));
-            }
+            Overlay.getInstance().overlay(gc, x, y);
         }
-        Overlay.getInstance().overlay(gc,x,y);
+    }
+
+    public void selectScene() {
+        if (validIndex(hoveredScene)) {
+            StoryMode.getInstance().setCurrentScene(hoveredScene);
+            StoryMode.getInstance().playStory(hoveredScene);
+            menuSound.play();
+        } else {
+            errorSound.play();
+        }
     }
 
     public void loadAssetsIml() {
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
-        victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC,true);
-        menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND,true);
+        victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC, true);
+        menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, true);
+        errorSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, true);
         Loader loader = new Loader();
         RenderStageSelect.getInstance().setStageSelected(false);
         try {
@@ -132,9 +305,8 @@ public class RenderStoryMenu extends StoryMenu {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-        //charBack = loader.load("images/selstory.png");
         loading = loader.load("images/loading.gif");
-        charBack = loader.load("images/story/frame.png");
+        stageHover = loader.load("images/story/frame.png");
         int random = (int) (Math.random() * 4);
         switch (random) {
             case 0:
@@ -156,17 +328,10 @@ public class RenderStoryMenu extends StoryMenu {
     public void cleanAssets() {
         header = null;
         normal = null;
-        charBack = null;
+        stageHover = null;
         loading = null;
-        for (Image image : unlockedScene) {
-            image = null;
-        }
-        for (Image image : unlockedCaptions) {
-            image = null;
-        }
-        for (Image image : lockedScene) {
-            image = null;
-        }
+        unlockedCaptions = null;
+        lockedScene = null;
         storyPrev = null;
         loadAssets = true;
     }
@@ -175,5 +340,14 @@ public class RenderStoryMenu extends StoryMenu {
         super.newInstance();
     }
 
-
+    public void mouseClicked(MouseEvent mouseEvent) {
+        switch (mouseEvent.getButton()) {
+            case PRIMARY:
+                onAccept();
+                break;
+            case SECONDARY:
+                onBackCancel();
+                break;
+        }
+    }
 }

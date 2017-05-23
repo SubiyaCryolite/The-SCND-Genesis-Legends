@@ -863,7 +863,7 @@ public class RenderGamePlay extends GamePlay {
         }
     }
 
-    public void capAnim() {
+    public void animateCaption() {
         opac = 0.0f;
     }
 
@@ -1114,7 +1114,7 @@ public class RenderGamePlay extends GamePlay {
     private class PauseAndNavigate extends Event {
         @Override
         public void onAccept() {
-            if (!gameOver && storySequence == false) {
+            if (!gameOver && !storySequence) {
                 if (safeToSelect) {
                     sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();

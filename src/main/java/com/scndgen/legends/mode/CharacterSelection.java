@@ -105,7 +105,7 @@ public abstract class CharacterSelection extends Mode {
     }
 
     /**
-     * Disables all buttons, used in online and story modes
+     * Disables all buttons, used in online and playStory modes
      */
     public void preventCharacterSelection() {
         canSelectCharacter = false;
@@ -600,22 +600,18 @@ public abstract class CharacterSelection extends Mode {
 
     public void onUp() {
         super.onUp();
-        capAnim();
     }
 
     public void onDown() {
         super.onDown();
-        capAnim();
     }
 
     public void onRight() {
         super.onRight();
-        capAnim();
     }
 
     public void onLeft() {
         super.onLeft();
-        capAnim();
     }
 
 
@@ -671,13 +667,6 @@ public abstract class CharacterSelection extends Mode {
      */
     public int getRows() {
         return rows;
-    }
-
-    /**
-     * Animates caption
-     */
-    public void animateCaption() {
-        capAnim();
     }
 
     /**
@@ -774,7 +763,7 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Animates captions
      */
-    protected void capAnim() {
+    protected void animatePortratit() {
         x = -100;
         p1Opac = 0.0f;
         opacChar = 0.0f;

@@ -411,7 +411,7 @@ public abstract class StageSelect extends Mode {
         return fgLocation;
     }
 
-    public void capAnim() {
+    public void animateCaption() {
         opacity = 0.0f;
     }
 
