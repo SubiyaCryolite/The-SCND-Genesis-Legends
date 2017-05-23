@@ -32,7 +32,7 @@ import static com.scndgen.legends.enums.CharacterEnum.NOVA_ADAM;
 public class NovaAdam extends Character {
 
     public NovaAdam() {
-        descSmall = "Nova Adam - an awakened Celestia Being specialised in celestia combat";
+        descSmall = "Nova Adam - an awakened Celestia Being specialised in celestiaAttacks combat";
         name = "NovaAdam";
         characterEnum = NOVA_ADAM;
         bragRights = new String[]{"Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "*blank stare* Dude"};
@@ -50,54 +50,54 @@ public class NovaAdam extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, Player player, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 128;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 123;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 122;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 123;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 122;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 121;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 125;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 125;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
@@ -105,7 +105,7 @@ public class NovaAdam extends Character {
                 attackStr = status[0];
                 damage = 123;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -119,7 +119,7 @@ public class NovaAdam extends Character {
                 attackStr = status[1];
                 damage = 125;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -133,7 +133,7 @@ public class NovaAdam extends Character {
                 attackStr = status[2];
                 damage = 129;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -147,7 +147,7 @@ public class NovaAdam extends Character {
                 attackStr = status[3];
                 damage = 111;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {

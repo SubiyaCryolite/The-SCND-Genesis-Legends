@@ -50,55 +50,55 @@ public class Ravage extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, Player player, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 102;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 //GamePlay.specialEffect(2,true);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 103;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 103;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 101;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 107;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 103;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 102;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
@@ -106,7 +106,7 @@ public class Ravage extends Character {
                 attackStr = status[0];
                 damage = 82;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -120,7 +120,7 @@ public class Ravage extends Character {
                 attackStr = status[1];
                 damage = 99;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -135,7 +135,7 @@ public class Ravage extends Character {
                     sound3.play();
                     attackStr = status[2];
                     gamePlay.setStatIndex(3);
-                    if (forWho == Player.OPPONENT) {
+                    if (player == Player.OPPONENT) {
                         gamePlay.setStatusPic(Player.CHARACTER);
                         gamePlay.alterDamageCounter(Player.OPPONENT, +1);
                     } else {
@@ -154,7 +154,7 @@ public class Ravage extends Character {
                     sound3.play();
                     attackStr = status[3];
                     gamePlay.setStatIndex(4);
-                    if (forWho == Player.OPPONENT) {
+                    if (player == Player.OPPONENT) {
                         //as a player(2) yo8u attack the opponent(1)
                         gamePlay.setStatusPic(Player.OPPONENT);
                         gamePlay.alterDamageCounter(Player.CHARACTER, -1);

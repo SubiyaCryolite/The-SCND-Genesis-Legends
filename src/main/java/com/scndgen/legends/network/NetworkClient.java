@@ -30,7 +30,7 @@ public class NetworkClient implements Runnable {
     private boolean clientIsRunning;
 
     /**
-     * Constructor, expects getName/ip address
+     * Constructor, expects getInfo/ip address
      */
     public NetworkClient(String ip) {
         clientIsRunning = true;
@@ -62,7 +62,7 @@ public class NetworkClient implements Runnable {
     /**
      * Connect to a given NetworkServer
      *
-     * @param hostname NetworkServer getName
+     * @param hostname NetworkServer getInfo
      */
     private void connectToServer(String hostname) {
         try {
@@ -155,7 +155,7 @@ public class NetworkClient implements Runnable {
                 RenderStageSelect.getInstance().onAccept();
             } else if (line.startsWith("as1wds2_")) {
                 NetworkManager.getInstance().hostTime = Integer.parseInt(line.substring(8));
-                System.out.println("aquired timeLimit is " + NetworkManager.getInstance().hostTime);
+                System.out.println("aquired time is " + NetworkManager.getInstance().hostTime);
             } //stages
             else if (line.endsWith("_vgdt")) {
                 if (line.equals(Stage.IBEX_HILL.shortCode())) {

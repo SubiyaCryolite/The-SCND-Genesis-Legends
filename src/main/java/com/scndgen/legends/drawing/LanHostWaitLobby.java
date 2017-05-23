@@ -23,8 +23,8 @@ package com.scndgen.legends.drawing;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
-import io.github.subiyacryolite.enginev1.ImageLoader;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -48,7 +48,7 @@ public class LanHostWaitLobby extends Mode {
     private static String name, ip;
     private Image pic1, pic2;
     private InetAddress ia;
-    private ImageLoader imageLoader;
+    private Loader loader;
     private Font normalFont;
     private Enumeration enumeration;
     private NetworkInterface networkInterface;
@@ -56,7 +56,7 @@ public class LanHostWaitLobby extends Mode {
 
     public LanHostWaitLobby() {
         normalFont = getMyFont(LoginScreen.normalTxtSize);
-        imageLoader = new ImageLoader();
+        loader = new Loader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
             while (enumeration.hasMoreElements()) {
@@ -73,8 +73,8 @@ public class LanHostWaitLobby extends Mode {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-        pic1 = imageLoader.loadImage("images/menus/waiting.jpg");
-        pic2 = imageLoader.loadImage("images/menus/loading.gif");
+        pic1 = loader.load("images/menus/waiting.jpg");
+        pic2 = loader.load("images/menus/loading.gif");
     }
 
     @Override

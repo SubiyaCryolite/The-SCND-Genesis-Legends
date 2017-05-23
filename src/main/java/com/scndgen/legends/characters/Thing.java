@@ -52,7 +52,7 @@ public class Thing extends Character {
         weakness[3] = 0.90f;    //earth ( wood/ rock)
         weakness[4] = 0.80f;    //water
         weakness[5] = 0.30f;    //ice
-        weakness[6] = 0.70f;    //physical
+        weakness[6] = 0.70f;    //physicalAttacks
         weakness[7] = 0.30f;    //fire
         points = 1800;
         damage = 0;
@@ -70,54 +70,54 @@ public class Thing extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, Player player, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = bonus + 130;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = bonus + 129;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = bonus + 128;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = bonus + 127;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = bonus + 130;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = bonus + 129;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = bonus + 128;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = bonus + 127;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
@@ -125,7 +125,7 @@ public class Thing extends Character {
                 attackStr = status[0];
                 damage = bonus + 106;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -139,7 +139,7 @@ public class Thing extends Character {
                 attackStr = status[1];
                 damage = bonus + 100;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -153,7 +153,7 @@ public class Thing extends Character {
                 attackStr = status[2];
                 damage = bonus + 108;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -167,7 +167,7 @@ public class Thing extends Character {
                 attackStr = status[3];
                 damage = bonus + 102;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {

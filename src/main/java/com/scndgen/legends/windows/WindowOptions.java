@@ -354,7 +354,6 @@ public class WindowOptions extends JFrame implements ActionListener, ItemListene
                 GameState.getInstance().getLogin().setTimeLimit(30);
             }
         } else if (source == save) {
-            //GameState.getInstance().getLogin().setCountry(nation.getSelectedItem() + "");
             GameState.getInstance().saveConfigFile();
             dispose();
         }

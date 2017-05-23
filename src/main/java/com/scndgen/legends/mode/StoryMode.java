@@ -48,7 +48,7 @@ public class StoryMode implements Runnable {
     private String storyText;
     private int opt, tlkSpeed, currentScene;
     //thread
-    private Thread thread;
+    private static Thread thread;
 
     private StoryMode() {
         stat = "";
@@ -68,7 +68,7 @@ public class StoryMode implements Runnable {
     }
 
     public void story(int scene) {
-        storyMus = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC,false);
+        storyMus = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
         tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
         notAsked = true;
         opt = -1;
@@ -167,7 +167,9 @@ public class StoryMode implements Runnable {
     public void startStoryMode(int x) {
         RenderGamePlay.getInstance().newInstance();
         currentScene = x;
-        thread = new Thread(this);
+        if (thread != null)
+            thread.stop();
+        thread = new Thread(this); //single static thread, always fire up new
         thread.setName("story scene thread");
         thread.start();
     }

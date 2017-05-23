@@ -83,7 +83,7 @@ public class Achievement {
      *
      * @return
      */
-    public int getAcievementsTriggered() {
+    public int getNumberOfAchievements() {
         return name.size();
     }
 
@@ -93,7 +93,7 @@ public class Achievement {
      * @param index
      * @return details
      */
-    public String[] getName(int index) {
+    public String[] getInfo(int index) {
         String[] results = new String[4];
         results[0] = "" + name.get(index);
         results[1] = "" + descriptions.get(index);

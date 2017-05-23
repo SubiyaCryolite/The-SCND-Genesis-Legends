@@ -39,11 +39,11 @@ public class WindowControls extends Stage {
 
     private Object source;
     private HBox bottom;
-    private Button ok;
+    private Button btnOk;
     private SpecialDrawMenuBGs logoPic;
     private VBox box;
     //private Font normalFont;
-    private HBox p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17;
+    private HBox line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17;
     private Label lLabel, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20;
     private Label mLabel, m1, m2, m3, m4, m5, m6, m8, m7, m9, m10;
 
@@ -53,68 +53,68 @@ public class WindowControls extends Stage {
 
         box = new VBox();
 
-        ok = new Button(Language.getInstance().get(36));
-        ok.setOnAction(event -> close());
+        btnOk = new Button(Language.getInstance().get(36));
+        btnOk.setOnAction(event -> close());
         bottom = new HBox();
-        bottom.getChildren().add(ok);
+        bottom.getChildren().add(btnOk);
 
         lLabel = new Label(Language.getInstance().get(37));
-        l1 = new Label(" " + Language.getInstance().get(38));
+        l1 = new Label(Language.getInstance().get(38));
         l2 = new Label(Language.getInstance().get(40));
-        l17 = new Label(" " + Language.getInstance().get(39));
+        l17 = new Label(Language.getInstance().get(39));
         l18 = new Label(Language.getInstance().get(41));
-        l3 = new Label(" " + Language.getInstance().get(42));
+        l3 = new Label(Language.getInstance().get(42));
         l4 = new Label("F12");
-        l5 = new Label(" " + Language.getInstance().get(43));
+        l5 = new Label(Language.getInstance().get(43));
         l6 = new Label("ESC");
-        l7 = new Label(" " + Language.getInstance().get(44));
+        l7 = new Label(Language.getInstance().get(44));
         l8 = new Label("L");
-        l9 = new Label(" " + Language.getInstance().get(45));
+        l9 = new Label(Language.getInstance().get(45));
         l10 = new Label("Left");
-        l11 = new Label(" " + Language.getInstance().get(46));
+        l11 = new Label(Language.getInstance().get(46));
         l12 = new Label("Right");
-        l13 = new Label(" " + Language.getInstance().get(47));
+        l13 = new Label(Language.getInstance().get(47));
         l14 = new Label("Up");
-        l15 = new Label(" " + Language.getInstance().get(48));
+        l15 = new Label(Language.getInstance().get(48));
         l16 = new Label(Language.getInstance().get(49));
-        l19 = new Label(" " + Language.getInstance().get(50));
+        l19 = new Label(Language.getInstance().get(50));
         l20 = new Label("F4");
 
-        (p9 = new HBox()).getChildren().add(lLabel);
-        (p1 = new HBox()).getChildren().addAll(l1, l2);
-        (p2 = new HBox()).getChildren().addAll(l3, l4);
-        (p3 = new HBox()).getChildren().addAll(l5, l6);
-        (p4 = new HBox()).getChildren().addAll(l7, l8);
-        (p5 = new HBox()).getChildren().addAll(l9, l10);
-        (p6 = new HBox()).getChildren().addAll(l11, l12);
-        (p7 = new HBox()).getChildren().addAll(l13, l14);
-        (p8 = new HBox()).getChildren().addAll(l15, l16);
-        (p15 = new HBox()).getChildren().addAll(l17, l18);
-        (p17 = new HBox()).getChildren().addAll(l19, l20);
+        (line9 = new HBox()).getChildren().add(lLabel);
+        (line1 = new HBox()).getChildren().addAll(l1, l2);
+        (line2 = new HBox()).getChildren().addAll(l3, l4);
+        (line3 = new HBox()).getChildren().addAll(l5, l6);
+        (line4 = new HBox()).getChildren().addAll(l7, l8);
+        (line5 = new HBox()).getChildren().addAll(l9, l10);
+        (line6 = new HBox()).getChildren().addAll(l11, l12);
+        (line7 = new HBox()).getChildren().addAll(l13, l14);
+        (line8 = new HBox()).getChildren().addAll(l15, l16);
+        (line15 = new HBox()).getChildren().addAll(l17, l18);
+        (line17 = new HBox()).getChildren().addAll(l19, l20);
 
         //Mouse
         mLabel = new Label(Language.getInstance().get(51));
-        (p13 = new HBox()).getChildren().add(mLabel);
+        (line13 = new HBox()).getChildren().add(mLabel);
 
-        m2 = new Label(" " + Language.getInstance().get(45));
+        m2 = new Label(Language.getInstance().get(45));
         m1 = new Label(Language.getInstance().get(52));
-        (p10 = new HBox()).getChildren().addAll(m2, m1);
+        (line10 = new HBox()).getChildren().addAll(m2, m1);
 
         m3 = new Label(Language.getInstance().get(53));
-        m4 = new Label(" " + Language.getInstance().get(46));
-        (p11 = new HBox()).getChildren().addAll(m4, m3);
+        m4 = new Label(Language.getInstance().get(46));
+        (line11 = new HBox()).getChildren().addAll(m4, m3);
 
         m5 = new Label(Language.getInstance().get(54));
-        m6 = new Label(" " + Language.getInstance().get(38));
-        (p12 = new HBox()).getChildren().addAll(m6, m5);
+        m6 = new Label(Language.getInstance().get(38));
+        (line12 = new HBox()).getChildren().addAll(m6, m5);
 
         m7 = new Label(Language.getInstance().get(55));
-        m8 = new Label(" " + Language.getInstance().get(44));
-        (p14 = new HBox()).getChildren().addAll(m8, m7);
+        m8 = new Label(Language.getInstance().get(44));
+        (line14 = new HBox()).getChildren().addAll(m8, m7);
 
         m9 = new Label(Language.getInstance().get(56));
-        m10 = new Label(" " + Language.getInstance().get(39));
-        (p16 = new HBox()).getChildren().addAll(m10, m9);
+        m10 = new Label(Language.getInstance().get(39));
+        (line16 = new HBox()).getChildren().addAll(m10, m9);
 
         alterLabel(lLabel);
         alterLabel(l1);
@@ -139,17 +139,17 @@ public class WindowControls extends Stage {
         alterLabel(l20);
 
         //keyboard
-        alterPanel(p9);
-        alterPanel(p1);
-        alterPanel(p15);
-        alterPanel(p2);
-        alterPanel(p3);
-        alterPanel(p4);
-        alterPanel(p5);
-        alterPanel(p6);
-        alterPanel(p7);
-        alterPanel(p8);
-        alterPanel(p17);
+        alterPanel(line9);
+        alterPanel(line1);
+        alterPanel(line15);
+        alterPanel(line2);
+        alterPanel(line3);
+        alterPanel(line4);
+        alterPanel(line5);
+        alterPanel(line6);
+        alterPanel(line7);
+        alterPanel(line8);
+        alterPanel(line17);
 
         alterLabel(mLabel);
         alterLabel(m1);
@@ -166,33 +166,33 @@ public class WindowControls extends Stage {
         alterPanel(bottom);
 
         //mouse
-        alterPanel(p13);
-        alterPanel(p10);
-        alterPanel(p11);
-        alterPanel(p12);
-        alterPanel(p14);
-        alterPanel(p16);
+        alterPanel(line13);
+        alterPanel(line10);
+        alterPanel(line11);
+        alterPanel(line12);
+        alterPanel(line14);
+        alterPanel(line16);
 
         //keyboard
-        box.getChildren().add(p9);
-        box.getChildren().add(p1);
-        box.getChildren().add(p15);
-        box.getChildren().add(p2);
-        box.getChildren().add(p3);
-        box.getChildren().add(p4);
-        box.getChildren().add(p5);
-        box.getChildren().add(p6);
-        box.getChildren().add(p7);
-        box.getChildren().add(p8);
-        box.getChildren().add(p17);
+        box.getChildren().add(line9);
+        box.getChildren().add(line1);
+        box.getChildren().add(line15);
+        box.getChildren().add(line2);
+        box.getChildren().add(line3);
+        box.getChildren().add(line4);
+        box.getChildren().add(line5);
+        box.getChildren().add(line6);
+        box.getChildren().add(line7);
+        box.getChildren().add(line8);
+        box.getChildren().add(line17);
 
         //mouse
-        box.getChildren().add(p13);
-        box.getChildren().add(p10);
-        box.getChildren().add(p11);
-        box.getChildren().add(p12);
-        box.getChildren().add(p14);
-        box.getChildren().add(p16);
+        box.getChildren().add(line13);
+        box.getChildren().add(line10);
+        box.getChildren().add(line11);
+        box.getChildren().add(line12);
+        box.getChildren().add(line14);
+        box.getChildren().add(line16);
 
         box.getChildren().add(bottom);
 

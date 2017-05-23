@@ -55,9 +55,8 @@ import java.util.logging.Logger;
  * @Class: GamePlay
  */
 public abstract class GamePlay extends Mode {
-    protected final String[] physical = new String[]{"", "", "", ""}, celestia = new String[]{"", "", "", ""}, item = new String[]{"", "", "", ""};
+    protected final String[] physicalAttacks = new String[]{"", "", "", ""}, celestiaAttacks = new String[]{"", "", "", ""}, itemAttacks = new String[]{"", "", "", ""};
     protected final AudioPlayback furySound, damageSound;
-    protected String activePerson; // person who performed an attack, getName shall show in battle info status area
     protected float characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected boolean triggerCharacterAttack;
     protected boolean triggerOpponentAttack;
@@ -101,7 +100,7 @@ public abstract class GamePlay extends Mode {
     protected int versioInt = 20120630; // yyyy-mm-dd
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
-    protected int shakingChar = 0033, lifeBarShakeIterations = 3, lifeBarShakeInnerIterations = 4;
+    protected int lifeBarShakeIterations = 2, lifeBarShakeInnerIterations = 4;
     protected int x2 = 560, comX = 380, comY = 100;
     protected int xLocal = 470;
     protected int y2 = 435;
@@ -174,14 +173,13 @@ public abstract class GamePlay extends Mode {
         statIndex = dex;
     }
 
-    public void setStatusPic(Player who) {
-
-        if (who == Player.CHARACTER) {
+    public void setStatusPic(Player player) {
+        if (player == Player.CHARACTER) {
             statusEffectCharacterOpacity = 1.0f;
             statusEffectCharacterYCoord = 0;
             statIndexChar = statIndex;
         }
-        if (who == Player.OPPONENT) {
+        if (player == Player.OPPONENT) {
             statusEffectOpponentOpacity = 1.0f;
             statusEffectOpponentYCoord = 0;
             statIndexOpp = statIndex;
@@ -202,29 +200,22 @@ public abstract class GamePlay extends Mode {
     /**
      * Draws Achievements
      */
-    @SuppressWarnings("SleepWhileHoldingLock")
     public void drawAchievements() {
-        try {
-            int howMany = Achievement.getInstance().getAcievementsTriggered();
-            do {
-                for (int u = 0; u < howMany; u++) {
-                    String[] achievementInfo = Achievement.getInstance().getName(u);
-                    achievementName = achievementInfo[0]; //getName
-                    achievementDescription = achievementInfo[1]; //desc
-                    achievementClass = achievementInfo[2]; //class
-                    achievementPoints = achievementInfo[3]; //points
-                    System.out.println("Triggered " + achievementName + "\n" + achievementDescription + "\n" + achievementClass + "\n" + achievementPoints);
-
-                    try {
-                        Thread.sleep(2300);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(GamePlay.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        int unlocks = Achievement.getInstance().getNumberOfAchievements();
+        do {
+            for (int iteration = 0; iteration < unlocks; iteration++) {
+                String[] info = Achievement.getInstance().getInfo(iteration);
+                achievementName = info[0]; //getInfo
+                achievementDescription = info[1]; //desc
+                achievementClass = info[2]; //class
+                achievementPoints = info[3]; //points
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GamePlay.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } while (isRunning);
-        } catch (Exception e) {
-            //nothin
-        }
+            }
+        } while (isRunning);
     }
 
     /**
@@ -237,29 +228,14 @@ public abstract class GamePlay extends Mode {
     /**
      * Set STATS
      *
-     * @param physicalS
-     * @param celestiaS
-     * @param itemS
+     * @param physicalAttacks
+     * @param celestiaAttacks
+     * @param itemAttacks
      */
-    public void setCharacterAttackArrays(String[] physicalS, String[] celestiaS, String[] itemS) {
-        System.arraycopy(physicalS, 0, physical, 0, physicalS.length);
-        System.arraycopy(celestiaS, 0, celestia, 0, celestiaS.length);
-        System.arraycopy(itemS, 0, item, 0, itemS.length);
-    }
-
-    /**
-     * Generates strings used to execute moves
-     *
-     * @param input move
-     */
-    public String attackString(int input) {
-        String thisTxt = "";
-        if (input < 10) {
-            thisTxt = "0" + activeAttack;
-        } else {
-            thisTxt = "" + activeAttack;
-        }
-        return thisTxt;
+    public void setCharacterAttackArrays(String[] physicalAttacks, String[] celestiaAttacks, String[] itemAttacks) {
+        System.arraycopy(physicalAttacks, 0, this.physicalAttacks, 0, physicalAttacks.length);
+        System.arraycopy(celestiaAttacks, 0, this.celestiaAttacks, 0, celestiaAttacks.length);
+        System.arraycopy(itemAttacks, 0, this.itemAttacks, 0, itemAttacks.length);
     }
 
     /**
@@ -297,12 +273,11 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    public void sendToClient(String message) {
+    protected void sendToClient(String message) {
         NetworkManager.getInstance().sendToClient(message);
-        //protected NetworkManager.getInstance().NetworkClient client;
     }
 
-    public void sendToServer(String message) {
+    protected void sendToServer(String message) {
         NetworkManager.getInstance().sendToServer(message);
     }
 
@@ -443,7 +418,7 @@ public abstract class GamePlay extends Mode {
 
     private float maxAtb = 290f;
     private long timerDelta;
-    public int timeLimit, count2;
+    public int time, count2;
     public boolean storySequence;
     private boolean characterAtb = true, opponentAtb = true;
     public boolean isRunning = false;
@@ -475,6 +450,7 @@ public abstract class GamePlay extends Mode {
             animateLoopB(delta);
             animateLoopC(delta);
             animateLoopD(delta);
+            updateMatchStatus();
             if ((delta - animationLoopEDelta) > MS1320) {
                 animationLoopEDelta = delta;
                 if (getBreak() > 5 && getBreak() < 999) {
@@ -516,7 +492,7 @@ public abstract class GamePlay extends Mode {
                     } else {
                         furySound();
                         hurtSoundChar();
-                        lifePhysUpdateSimple(Player.CHARACTER, 100, "");
+                        lifePhysUpdateSimple(Player.CHARACTER, 100);
                         comboPicArrayPosOpp = opponentUiLoop;
                         furyComboOpacity = 1.0f;
                         currentOpponentQueLoop++;
@@ -571,7 +547,7 @@ public abstract class GamePlay extends Mode {
                     } else {
                         furySound();
                         hurtSoundOpp();
-                        lifePhysUpdateSimple(Player.OPPONENT, 100, "");
+                        lifePhysUpdateSimple(Player.OPPONENT, 100);
                         currentCharacterQueLoop++;
                         comboPicArrayPosOpp = currentCharacterQueLoop;
                         furyComboOpacity = 1.0f;
@@ -673,10 +649,8 @@ public abstract class GamePlay extends Mode {
     }
 
     private void animateTimer(long delta) {
-        if ((delta - timerDelta) > MS33) {
+        if ((delta - timerDelta) > MS16) {
             timerDelta = delta;
-            /////////////////////
-            updateMatchStatus();
             Achievement.getInstance().scan(this);
             if (characterAtbValue <= maxAtb && characterAtb) {
                 characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
@@ -684,30 +658,32 @@ public abstract class GamePlay extends Mode {
             if (opponentAtbValue <= maxAtb && opponentAtb && ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE) {
                 opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
             }
-            if (timeLimit <= 180 && storySequence == false) {
+            if (time <= 180 && storySequence == false) {
                 if (secondCount < 1000) //continue till we make a second
                 {
-                    secondCount += 33.33f;
+                    secondCount += 16.67f;
                 } else {
                     try {
-                        if (timeLimit < 999 && timeLimit > 0) {
-                            timeLimit = timeLimit - 1;
-                            timeStr = "" + timeLimit + "";
+                        if (time < 999 && time > 0) {
+                            time -= 1;
+                            timeStr = "" + time;
                             secondCount = 0.0f;
-                            if (timeStr.length() == 1) {
-                                time1 = 10;
-                                time2 = 10;
-                                time3 = Integer.parseInt("" + timeStr.charAt(0));
-                            }
-                            if (timeStr.length() == 2) {
-                                time1 = 10;
-                                time2 = Integer.parseInt("" + timeStr.charAt(0));
-                                time3 = Integer.parseInt("" + timeStr.charAt(1));
-                            }
-                            if (timeStr.length() == 3) {
-                                time1 = Integer.parseInt("" + timeStr.charAt(0));
-                                time2 = Integer.parseInt("" + timeStr.charAt(1));
-                                time3 = Integer.parseInt("" + timeStr.charAt(2));
+                            switch (timeStr.length()) {
+                                case 1:
+                                    time1 = 10;
+                                    time2 = Integer.parseInt(String.valueOf(timeStr.charAt(0)));
+                                    time3 = 10;
+                                    break;
+                                case 2:
+                                    time1 = 10;
+                                    time2 = Integer.parseInt(String.valueOf(timeStr.charAt(0)));
+                                    time3 = Integer.parseInt(String.valueOf(timeStr.charAt(1)));
+                                    break;
+                                case 3:
+                                    time1 = Integer.parseInt(String.valueOf(timeStr.charAt(0)));
+                                    time2 = Integer.parseInt(String.valueOf(timeStr.charAt(1)));
+                                    time3 = Integer.parseInt(String.valueOf(timeStr.charAt(2)));
+                                    break;
                             }
                         }
                     } catch (Exception nfe) {
@@ -843,12 +819,12 @@ public abstract class GamePlay extends Mode {
         Achievement.getInstance().newInstance();
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
             storySequence = true;
-            timeLimit = StoryMode.getInstance().time;
-        } //if LAN, client uses hosts timeLimit preset
+            time = StoryMode.getInstance().time;
+        } //if LAN, client uses hosts time preset
         else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            timeLimit = NetworkManager.getInstance().hostTime;
+            time = NetworkManager.getInstance().hostTime;
         } else {
-            timeLimit = GameState.getInstance().getLogin().getTimeLimit();
+            time = GameState.getInstance().getLogin().getTimeLimit();
         }
         recordPlayTime();
         characterAtbValue = 00;
@@ -925,8 +901,8 @@ public abstract class GamePlay extends Mode {
      * Determines if match has reached game over state
      */
     public void updateMatchStatus() {
-        if (gameOver == false) {
-            if (opponentHp < 0 || characterHp < 0 || (timeLimit <= 0 && GameState.getInstance().getLogin().isTimeLimited())) {
+        if (!gameOver) {
+            if (opponentHp < 0 || characterHp < 0 || (time <= 0 && GameState.getInstance().getLogin().isTimeLimited())) {
                 if (opponentHp / opponentMaximumHp > characterHp / characterMaximumHp || opponentHp / opponentMaximumHp < characterHp / characterMaximumHp) {
                     gameOver();
                 }
@@ -1161,16 +1137,14 @@ public abstract class GamePlay extends Mode {
     /**
      * Updates the characterHp of CharacterEnum
      *
-     * @param forWho     - the person affected
-     * @param damageDone - the characterHp to add/subtract
-     * @param attacker   - who inflicted damage
+     * @param forWho     the person affected
+     * @param damageDone the characterHp to add/subtract
      */
-    public void lifePhysUpdateSimple(Player forWho, int damageDone, String attacker) {
+    public void lifePhysUpdateSimple(Player forWho, int damageDone) {
 
         if (forWho == Player.CHARACTER) //Attack from player
         {
             damageDoneToCharacter = damageDone;
-            activePerson = attacker;
             incLImit(damageDoneToCharacter);
             guiScreenChaos(damageDone * getDamageMultiplierOpp(), Player.OPPONENT);
             for (int m = 0; m < damageDoneToCharacter; m++) {
@@ -1187,7 +1161,6 @@ public abstract class GamePlay extends Mode {
         if (forWho == Player.OPPONENT || forWho == Player.BOSS) //Attack from CPU pponent 1
         {
             damageDoneToOpponent = damageDone;
-            activePerson = attacker;
             incLImit(damageDoneToOpponent);
             guiScreenChaos(damageDone * getDamageMultiplierChar(), Player.CHARACTER);
             for (int m = 0; m < damageDoneToOpponent; m++) {
@@ -1341,20 +1314,20 @@ public abstract class GamePlay extends Mode {
     /**
      * Draws battle message at bottom of screen
      *
-     * @param writeThis - what to display
+     * @param message - what to display
      */
-    public void showBattleMessage(String writeThis) {
-        storyText(writeThis);
+    public void showBattleMessage(String message) {
+        storyText(message);
     }
 
     /**
      * Flashy text at bottom of screen
      *
-     * @param thisMessage
+     * @param message
      */
-    public void storyText(String thisMessage) {
+    public void storyText(String message) {
         opacityTxt = 0.0f;
-        battleInformation = new StringBuilder(thisMessage);
+        battleInformation = new StringBuilder(message);
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
@@ -1623,18 +1596,20 @@ public abstract class GamePlay extends Mode {
     /**
      * This thread executes when a game is over, designed to free unused memory
      */
-    public void closingThread(boolean toCharacterSelect) {
+    public void closingThread(boolean goToCharacterSelect) {
+        if (goToCharacterSelect) {
+            ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+        } else {
+            ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+        }
+    }
+
+    protected void updatePlayerProfile() {
         //logic profile operations
         incrementWinsOrLosses();
         GameState.getInstance().getLogin().setPoints(Achievement.getInstance().getNewUserPoints());
         //save profile
         GameState.getInstance().saveConfigFile();
-        io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice("Saved File");
-        if (toCharacterSelect) {
-            ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
-        } else {
-            ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-        }
     }
 
     private void incrementWinsOrLosses() {

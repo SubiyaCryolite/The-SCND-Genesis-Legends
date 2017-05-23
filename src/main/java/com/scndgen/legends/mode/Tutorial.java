@@ -28,7 +28,7 @@ import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.render.RenderMainMenu;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -46,7 +46,7 @@ public class Tutorial implements Runnable {
     private Image[] slides, arrows;
     private Image forward, back;
     private Thread thread;
-    private ImageLoader imageLoader;
+    private Loader loader;
     private boolean  skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
@@ -58,7 +58,7 @@ public class Tutorial implements Runnable {
         backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
         nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
         bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
-        imageLoader = new ImageLoader();
+        loader = new Loader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         pixLoc = 0;
         sec = 0;
@@ -71,14 +71,14 @@ public class Tutorial implements Runnable {
 
         slides = new Image[6];
         for (int u = 0; u < slides.length; u++) {
-            slides[u] = imageLoader.loadImage("images/tutorial/" + u + ".png");
+            slides[u] = loader.load("images/tutorial/" + u + ".png");
         }
         arrows = new Image[9];
         for (int u = 0; u < arrows.length; u++) {
-            arrows[u] = imageLoader.loadImage("images/tutorial/a" + u + ".png");
+            arrows[u] = loader.load("images/tutorial/a" + u + ".png");
         }
-        forward = imageLoader.loadImage("images/tutorial/list_item_arrow_r.png");
-        back = imageLoader.loadImage("images/tutorial/list_item_arrow_l.png");
+        forward = loader.load("images/tutorial/list_item_arrow_r.png");
+        back = loader.load("images/tutorial/list_item_arrow_l.png");
         tutText = "TUTORIAL";
     }
 

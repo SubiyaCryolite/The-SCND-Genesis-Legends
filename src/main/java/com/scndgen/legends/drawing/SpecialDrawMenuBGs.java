@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -38,23 +38,23 @@ public class SpecialDrawMenuBGs extends JPanel {
     private final Image bufferedImage;
 
     public SpecialDrawMenuBGs() {
-        ImageLoader imageLoader = new ImageLoader();
+        Loader loader = new Loader();
         int x = (int) (Math.random() * 5);
         switch (x) {
             case 0:
-                bufferedImage = imageLoader.loadImage("images/story/blur/s4.png");
+                bufferedImage = loader.load("images/story/blur/s4.png");
                 break;
             case 1:
-                bufferedImage = imageLoader.loadImage("images/story/blur/s5.png");
+                bufferedImage = loader.load("images/story/blur/s5.png");
                 break;
             case 2:
-                bufferedImage = imageLoader.loadImage("images/story/blur/s6.png");
+                bufferedImage = loader.load("images/story/blur/s6.png");
                 break;
             case 3:
-                bufferedImage = imageLoader.loadImage("images/story/blur/s11.png");
+                bufferedImage = loader.load("images/story/blur/s11.png");
                 break;
             default:
-                bufferedImage = imageLoader.loadImage("images/story/blur/s6.png");
+                bufferedImage = loader.load("images/story/blur/s6.png");
                 break;
         }
     }

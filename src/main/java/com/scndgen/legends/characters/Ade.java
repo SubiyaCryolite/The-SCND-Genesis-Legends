@@ -53,55 +53,55 @@ public class Ade extends Character {
             case "00":
                 attackStr = physical[0];
                 damage = 50;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "01":
                 attackStr = physical[0];
                 damage = 110;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 106;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 110;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 107;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 106;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 113;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(forWho, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":

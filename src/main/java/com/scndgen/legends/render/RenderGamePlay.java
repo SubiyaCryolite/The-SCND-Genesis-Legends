@@ -26,18 +26,18 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.enums.Player;
-import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
+import com.scndgen.legends.mode.StoryMode;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -122,12 +122,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 0;
                 rowIndex = 0;
-                physical[rowIndex] = physical[rowIndex].toUpperCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                physical[rowIndex] = physical[rowIndex].toLowerCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
             }
         });
         (attackTwo = new UiItem()).addJenesisEvent(new Event() {
@@ -135,12 +135,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 0;
                 rowIndex = 1;
-                physical[rowIndex] = physical[rowIndex].toUpperCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                physical[rowIndex] = physical[rowIndex].toLowerCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
             }
         });
         (attackThree = new UiItem()).addJenesisEvent(new Event() {
@@ -148,12 +148,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 0;
                 rowIndex = 2;
-                physical[rowIndex] = physical[rowIndex].toUpperCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                physical[rowIndex] = physical[rowIndex].toLowerCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
             }
         });
         (attackFour = new UiItem()).addJenesisEvent(new Event() {
@@ -161,12 +161,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 0;
                 rowIndex = 3;
-                physical[rowIndex] = physical[rowIndex].toUpperCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                physical[rowIndex] = physical[rowIndex].toLowerCase();
+                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
             }
         });
         (attackFive = new UiItem()).addJenesisEvent(new Event() {
@@ -174,12 +174,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 1;
                 rowIndex = 0;
-                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
             }
         });
         (attackSix = new UiItem()).addJenesisEvent(new Event() {
@@ -187,12 +187,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 1;
                 rowIndex = 1;
-                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
             }
         });
         (attackSeven = new UiItem()).addJenesisEvent(new Event() {
@@ -200,12 +200,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 1;
                 rowIndex = 2;
-                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
             }
         });
         (attackEight = new UiItem()).addJenesisEvent(new Event() {
@@ -213,12 +213,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 1;
                 rowIndex = 3;
-                celestia[rowIndex] = celestia[rowIndex].toUpperCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                celestia[rowIndex] = celestia[rowIndex].toLowerCase();
+                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
             }
         });
         (attackNine = new UiItem()).addJenesisEvent(new Event() {
@@ -226,12 +226,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 2;
                 rowIndex = 0;
-                item[rowIndex] = item[rowIndex].toUpperCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                item[rowIndex] = item[rowIndex].toLowerCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
             }
         });
         (attackTen = new UiItem()).addJenesisEvent(new Event() {
@@ -239,12 +239,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 2;
                 rowIndex = 1;
-                item[rowIndex] = item[rowIndex].toUpperCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                item[rowIndex] = item[rowIndex].toLowerCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
             }
         });
         (attackEleven = new UiItem()).addJenesisEvent(new Event() {
@@ -252,12 +252,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 2;
                 rowIndex = 2;
-                item[rowIndex] = item[rowIndex].toUpperCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                item[rowIndex] = item[rowIndex].toLowerCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
             }
         });
         (attackTwelve = new UiItem()).addJenesisEvent(new Event() {
@@ -265,12 +265,12 @@ public class RenderGamePlay extends GamePlay {
             public void onHover() {
                 columnIndex = 2;
                 rowIndex = 3;
-                item[rowIndex] = item[rowIndex].toUpperCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
             }
 
             @Override
             public void onLeave() {
-                item[rowIndex] = item[rowIndex].toLowerCase();
+                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
             }
         });
 
@@ -559,33 +559,33 @@ public class RenderGamePlay extends GamePlay {
         switch (columnIndex) {
             case 0:
                 gc.setFont(attackOne.isHovered() ? largeFont : normalFont);
-                fillText(gc, physical[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackOne);
+                fillText(gc, physicalAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackOne);
                 gc.setFont(attackTwo.isHovered() ? largeFont : normalFont);
-                fillText(gc, physical[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTwo);
+                fillText(gc, physicalAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTwo);
                 gc.setFont(attackThree.isHovered() ? largeFont : normalFont);
-                fillText(gc, physical[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackThree);
+                fillText(gc, physicalAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackThree);
                 gc.setFont(attackFour.isHovered() ? largeFont : normalFont);
-                fillText(gc, physical[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackFour);
+                fillText(gc, physicalAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackFour);
                 break;
             case 1:
                 gc.setFont(attackFive.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestia[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackFive);
+                fillText(gc, celestiaAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackFive);
                 gc.setFont(attackSix.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestia[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackSix);
+                fillText(gc, celestiaAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackSix);
                 gc.setFont(attackSeven.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestia[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackSeven);
+                fillText(gc, celestiaAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackSeven);
                 gc.setFont(attackEight.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestia[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackEight);
+                fillText(gc, celestiaAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackEight);
                 break;
             case 2:
                 gc.setFont(attackNine.isHovered() ? largeFont : normalFont);
-                fillText(gc, item[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackNine);
+                fillText(gc, itemAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackNine);
                 gc.setFont(attackTen.isHovered() ? largeFont : normalFont);
-                fillText(gc, item[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTen);
+                fillText(gc, itemAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTen);
                 gc.setFont(attackEleven.isHovered() ? largeFont : normalFont);
-                fillText(gc, item[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackEleven);
+                fillText(gc, itemAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackEleven);
                 gc.setFont(attackTwelve.isHovered() ? largeFont : normalFont);
-                fillText(gc, item[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackTwelve);
+                fillText(gc, itemAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackTwelve);
                 break;
         }
         gc.setGlobalAlpha((1.0f));
@@ -593,7 +593,7 @@ public class RenderGamePlay extends GamePlay {
 
     private void drawTimer(GraphicsContext gc) {
         gc.drawImage(counterPane, paneCord, 0);
-        if (timeLimit > 180) {
+        if (time > 180) {
             gc.drawImage(numberPix[11], (int) (386), 0);
         } else {
             if (times.length > time1)
@@ -614,17 +614,18 @@ public class RenderGamePlay extends GamePlay {
 
     private void drawFuryComboEffects(GraphicsContext gc) {
         if (furyComboOpacity > 0.01f) {
-            furyComboOpacity = furyComboOpacity - 0.01f;
+            furyComboOpacity -= 0.01f;
         }
         gc.setGlobalAlpha((furyComboOpacity));
-        gc.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
+        if (comboPicArrayPosOpp < 9)
+            gc.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
         gc.setGlobalAlpha((1.0f));
         gc.setFont(notSelected);
     }
 
     private void drawDamageDigits(GraphicsContext gc) {
         gc.setGlobalAlpha((opponentDamageOpacity));
-        //opp damage imageLoader
+        //opp damage loader
         gc.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         gc.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         gc.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
@@ -639,7 +640,7 @@ public class RenderGamePlay extends GamePlay {
 
 
         gc.setGlobalAlpha((playerDamageOpacity));
-        //char damage imageLoader
+        //char damage loader
         gc.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         gc.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         gc.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
@@ -742,32 +743,32 @@ public class RenderGamePlay extends GamePlay {
         attackMenuXPos = GameState.getInstance().getLogin().isLeftHanded() ? 0 : 547;
         attackMenuTextXPos = attackMenuXPos + 25;
         attackMenuTextYPos = 366;
-        ImageLoader pix = new ImageLoader();
-        counterPane = pix.loadImage("images/countPane.png");
-        foreGround = pix.loadImage(RenderStageSelect.getInstance().getFgLocation());
-        num0 = pix.loadImage("images/fig/0.png");
-        num1 = pix.loadImage("images/fig/1.png");
-        num2 = pix.loadImage("images/fig/2.png");
-        num3 = pix.loadImage("images/fig/3.png");
-        num4 = pix.loadImage("images/fig/4.png");
-        num5 = pix.loadImage("images/fig/5.png");
-        num6 = pix.loadImage("images/fig/6.png");
-        num7 = pix.loadImage("images/fig/7.png");
-        num8 = pix.loadImage("images/fig/8.png");
-        num9 = pix.loadImage("images/fig/9.png");
-        numInfinite = pix.loadImage("images/fig/infinite.png");
-        numNull = pix.loadImage("images/trans.png");
-        //flashy=imageLoader.loadImage("images/flash.gif",40,40);
+        Loader pix = new Loader();
+        counterPane = pix.load("images/countPane.png");
+        foreGround = pix.load(RenderStageSelect.getInstance().getFgLocation());
+        num0 = pix.load("images/fig/0.png");
+        num1 = pix.load("images/fig/1.png");
+        num2 = pix.load("images/fig/2.png");
+        num3 = pix.load("images/fig/3.png");
+        num4 = pix.load("images/fig/4.png");
+        num5 = pix.load("images/fig/5.png");
+        num6 = pix.load("images/fig/6.png");
+        num7 = pix.load("images/fig/7.png");
+        num8 = pix.load("images/fig/8.png");
+        num9 = pix.load("images/fig/9.png");
+        numInfinite = pix.load("images/fig/infinite.png");
+        numNull = pix.load("images/trans.png");
+        //flashy=loader.load("images/flash.gif",40,40);
         flashy = null;
         numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
 
-        statusEffectSprites[0] = pix.loadImage("images/trans.png");
-        statusEffectSprites[1] = pix.loadImage("images/stats/stat1.png");
-        statusEffectSprites[2] = pix.loadImage("images/stats/stat2.png");
-        statusEffectSprites[3] = pix.loadImage("images/stats/stat3.png");
-        statusEffectSprites[4] = pix.loadImage("images/stats/stat4.png");
+        statusEffectSprites[0] = pix.load("images/trans.png");
+        statusEffectSprites[1] = pix.load("images/stats/stat1.png");
+        statusEffectSprites[2] = pix.load("images/stats/stat2.png");
+        statusEffectSprites[3] = pix.load("images/stats/stat3.png");
+        statusEffectSprites[4] = pix.load("images/stats/stat4.png");
 
-        System.out.println("loaded all imageLoader");
+        System.out.println("loaded all loader");
 
     }
 
@@ -776,7 +777,7 @@ public class RenderGamePlay extends GamePlay {
      */
     private void loadSprites() {
         try {
-            ImageLoader imageLoader = new ImageLoader();
+            Loader loader = new Loader();
             Characters.getInstance().getCharacter().loadMeHigh();
             Characters.getInstance().getOpponent().loadMeHigh();
 
@@ -790,72 +791,72 @@ public class RenderGamePlay extends GamePlay {
 
             comboPicArray = new Image[9];
             for (int u = 0; u < 6; u++)
-                comboPicArray[u] = imageLoader.loadImage("images/screenTxt/" + u + ".png");
-            comboPicArray[7] = imageLoader.loadImage("images/screenTxt/7.png");
+                comboPicArray[u] = loader.load("images/screenTxt/" + u + ".png");
+            comboPicArray[7] = loader.load("images/screenTxt/7.png");
             comboPicArray[8] = Characters.getInstance().getCharacter().getSprite(11);
 
             comicBookText = new Image[10];
             comicBookText[0] = Characters.getInstance().getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
-                comicBookText[bx] = imageLoader.loadImage("images/screenComic/" + (bx - 1) + ".png");
-            menuHold = imageLoader.loadImage("images/" + Characters.getInstance().getCharacter().getEnum().data() + "/menu.png");
-            damageLayer = imageLoader.loadImage("images/damage1.png");
+                comicBookText[bx] = loader.load("images/screenComic/" + (bx - 1) + ".png");
+            menuHold = loader.load("images/" + Characters.getInstance().getCharacter().getEnum().data() + "/menu.png");
+            damageLayer = loader.load("images/damage1.png");
 
-            time0i = imageLoader.loadImage("images/fig/0.png");
-            time1i = imageLoader.loadImage("images/fig/1.png");
-            time2i = imageLoader.loadImage("images/fig/2.png");
-            time3i = imageLoader.loadImage("images/fig/3.png");
-            time4i = imageLoader.loadImage("images/fig/4.png");
-            time5i = imageLoader.loadImage("images/fig/5.png");
-            time6i = imageLoader.loadImage("images/fig/6.png");
-            time7i = imageLoader.loadImage("images/fig/7.png");
-            time8i = imageLoader.loadImage("images/fig/8.png");
-            time9i = imageLoader.loadImage("images/fig/9.png");
+            time0i = loader.load("images/fig/0.png");
+            time1i = loader.load("images/fig/1.png");
+            time2i = loader.load("images/fig/2.png");
+            time3i = loader.load("images/fig/3.png");
+            time4i = loader.load("images/fig/4.png");
+            time5i = loader.load("images/fig/5.png");
+            time6i = loader.load("images/fig/6.png");
+            time7i = loader.load("images/fig/7.png");
+            time8i = loader.load("images/fig/8.png");
+            time9i = loader.load("images/fig/9.png");
             times = new Image[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
 
             characterPortraits = new Image[charNames.length];
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
-                    characterPortraits[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
+                    characterPortraits[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/cap.png");
                 }
             } else {
                 for (int p = 0; p < charNames.length; p++) {
                     characterPortraits[p] = null;
                 }
             }
-            Image transBuf = imageLoader.loadImage("images/trans.png");
-            hpHolder = imageLoader.loadImage("images/hpHolder.png");
-            stageBackground = imageLoader.loadImage(RenderStageSelect.getInstance().getBgLocation());
-            phys = imageLoader.loadImage("images/t_physical.png");
-            cel = imageLoader.loadImage("images/t_celestia.png");
-            itm = imageLoader.loadImage("images/t_item.png");
-            fury1 = imageLoader.loadImage("images/fury.gif");
-            fury2 = imageLoader.loadImage("images/furyo.png");
+            Image transBuf = loader.load("images/trans.png");
+            hpHolder = loader.load("images/hpHolder.png");
+            stageBackground = loader.load(RenderStageSelect.getInstance().getBgLocation());
+            phys = loader.load("images/t_physical.png");
+            cel = loader.load("images/t_celestia.png");
+            itm = loader.load("images/t_item.png");
+            fury1 = loader.load("images/fury.gif");
+            fury2 = loader.load("images/furyo.png");
             furyPlaceholder = fury2;
-            particlesLayer1 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
-            particlesLayer2 = imageLoader.loadImage("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
+            particlesLayer1 = loader.load("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
+            particlesLayer2 = loader.load("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
                 storyPicArr = new Image[13];
                 for (int u = 0; u < 11; u++) {
-                    storyPicArr[u] = imageLoader.loadImage("images/story/s" + u + ".png");
+                    storyPicArr[u] = loader.load("images/story/s" + u + ".png");
                 }
                 storyPic = storyPicArr[0];
             }
-            furyBar = imageLoader.loadImage("images/furyBar.png");
-            quePic1 = imageLoader.loadImage("images/queB.png");
-            quePic2 = imageLoader.loadImage("images/que.gif");
-            oppBar = imageLoader.loadImage("images/oppBar.png");
+            furyBar = loader.load("images/furyBar.png");
+            quePic1 = loader.load("images/queB.png");
+            quePic2 = loader.load("images/que.gif");
+            oppBar = loader.load("images/oppBar.png");
             attackCategory = new Image[]{phys, cel, itm};
-            //stat1 = imageLoader.loadImage("images/stats/stat1.png", 90, 24);
-            //stat2 = imageLoader.loadImage("images/stats/stat2.png", 90, 24);
-            //stat3 = imageLoader.loadImage("images/stats/stat3.png", 90, 24);
-            //stat4 = imageLoader.loadImage("images/stats/stat4.png", 90, 24);
-            hud1 = imageLoader.loadImage("images/hud1.png");
-            hud2 = imageLoader.loadImage("images/hud2.png");
-            win = imageLoader.loadImage("images/win.png");
-            lose = imageLoader.loadImage("images/lose.png");
+            //stat1 = loader.load("images/stats/stat1.png", 90, 24);
+            //stat2 = loader.load("images/stats/stat2.png", 90, 24);
+            //stat3 = loader.load("images/stats/stat3.png", 90, 24);
+            //stat4 = loader.load("images/stats/stat4.png", 90, 24);
+            hud1 = loader.load("images/hud1.png");
+            hud2 = loader.load("images/hud2.png");
+            win = loader.load("images/win.png");
+            lose = loader.load("images/lose.png");
             status = transBuf;
-            System.out.println("loaded all char sprites imageLoader");
+            System.out.println("loaded all char sprites loader");
             //ensures method is only run once
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -1125,9 +1126,9 @@ public class RenderGamePlay extends GamePlay {
                     RenderCharacterSelection.getInstance().errorSound();
                 }
             } else if (storySequence) {
-                //skip to next scene
                 StoryMode.getInstance().onAccept();
             } else if (gameOver) {
+                updatePlayerProfile();
                 switch (ScndGenLegends.getInstance().getSubMode()) {
                     case SINGLE_PLAYER:
                     case LAN_CLIENT:

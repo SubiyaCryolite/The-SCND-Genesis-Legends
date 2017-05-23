@@ -29,7 +29,7 @@ import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.StoryMenu;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -121,33 +121,33 @@ public class RenderStoryMenu extends StoryMenu {
         normal = getMyFont(LoginScreen.normalTxtSize);
         victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC,true);
         menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND,true);
-        ImageLoader imageLoader = new ImageLoader();
+        Loader loader = new Loader();
         RenderStageSelect.getInstance().setStageSelected(false);
         try {
             for (int i = 0; i < numberOfScenes; i++) {
-                unlockedScene[i] = imageLoader.loadImage("images/story/locked/" + i + ".png");
-                unlockedCaptions[i] = imageLoader.loadImage("images/story/captions/" + i + ".png");
-                lockedScene[i] = imageLoader.loadImage("images/story/blur/" + i + ".png");
+                unlockedScene[i] = loader.load("images/story/locked/" + i + ".png");
+                unlockedCaptions[i] = loader.load("images/story/captions/" + i + ".png");
+                lockedScene[i] = loader.load("images/story/blur/" + i + ".png");
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-        //charBack = imageLoader.loadImage("images/selstory.png");
-        loading = imageLoader.loadImage("images/loading.gif");
-        charBack = imageLoader.loadImage("images/story/frame.png");
+        //charBack = loader.load("images/selstory.png");
+        loading = loader.load("images/loading.gif");
+        charBack = loader.load("images/story/frame.png");
         int random = (int) (Math.random() * 4);
         switch (random) {
             case 0:
-                storyPrev = imageLoader.loadImage("images/story/blur/s4.png");
+                storyPrev = loader.load("images/story/blur/s4.png");
                 break;
             case 1:
-                storyPrev = imageLoader.loadImage("images/story/blur/s5.png");
+                storyPrev = loader.load("images/story/blur/s5.png");
                 break;
             case 2:
-                storyPrev = imageLoader.loadImage("images/story/blur/s6.png");
+                storyPrev = loader.load("images/story/blur/s6.png");
                 break;
             default:
-                storyPrev = imageLoader.loadImage("images/story/blur/s6.png");
+                storyPrev = loader.load("images/story/blur/s6.png");
                 break;
         }
         loadAssets = false;

@@ -1,5 +1,6 @@
 package com.scndgen.legends.state;
 
+import io.github.subiyacryolite.enginev1.Overlay;
 import io.github.subiyacryolite.jds.*;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
 import io.github.subiyacryolite.jds.enums.JdsImplementation;
@@ -80,6 +81,7 @@ public class GameState extends JdsEntity {
 
     public void saveConfigFile() {
         JdsSave.save(jdsDatabase, 1, this);
+        Overlay.getInstance().primaryNotice("Saved File");
     }
 
     public ObservableList<LoginState> getLoginStates() {

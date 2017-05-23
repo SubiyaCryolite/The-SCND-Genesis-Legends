@@ -11,7 +11,7 @@ import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.MouseEvent;
 
@@ -26,7 +26,7 @@ public abstract class CharacterSelection extends Mode {
     protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
     protected final int numOfCharacters = CharacterEnum.values().length;
     protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
-    protected ImageLoader imageLoader;
+    protected Loader loader;
     protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
     protected CharacterEnum opponentEnum, characterEnum;
@@ -125,18 +125,18 @@ public abstract class CharacterSelection extends Mode {
     }
 
     /**
-     * Get the CharacterEnum getName
+     * Get the CharacterEnum getInfo
      *
-     * @return characterEnum getName
+     * @return characterEnum getInfo
      */
     public CharacterEnum getCharName() {
         return characterEnum;
     }
 
     /**
-     * Get the opponents getName
+     * Get the opponents getInfo
      *
-     * @return opponent getName
+     * @return opponent getInfo
      */
     public CharacterEnum getOppName() {
         return opponentEnum;

@@ -31,7 +31,7 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -62,7 +62,7 @@ public class RenderStageSelect extends StageSelect {
             "Mattias Westlund - Breaking the Chains",
             "Aleksi Aubry-Carlson - Battle Music"};
     private Image captionHighlight, loading;
-    private ImageLoader imageLoader;
+    private Loader loader;
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
     private final Image[] stageCap = new Image[numberOfStages];
     private final Image[] stagePrev = new Image[numberOfStages];
@@ -249,7 +249,7 @@ public class RenderStageSelect extends StageSelect {
 
     @Override
     public void loadAssetsIml() {
-        imageLoader = new ImageLoader();
+        loader = new Loader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
         loadCaps();
         setActiveItem(uiElements.get(0));
@@ -312,11 +312,11 @@ public class RenderStageSelect extends StageSelect {
 
     private void loadCaps() {
         try {
-            captionHighlight = imageLoader.loadImage("images/stageCaptionHighlight.png");
-            loading = imageLoader.loadImage("images/loading.gif");
+            captionHighlight = loader.load("images/stageCaptionHighlight.png");
+            loading = loader.load("images/loading.gif");
             for (int index = 0; index < stagePreviews.length; index++) {
-                stageCap[index] = imageLoader.loadImage("images/t_" + stagePreviews[index] + ".png");
-                stagePrev[index] = imageLoader.loadImage("images/prev/" + stagePreviews[index] + ".jpg");
+                stageCap[index] = loader.load("images/t_" + stagePreviews[index] + ".png");
+                stagePrev[index] = loader.load("images/prev/" + stagePreviews[index] + ".jpg");
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

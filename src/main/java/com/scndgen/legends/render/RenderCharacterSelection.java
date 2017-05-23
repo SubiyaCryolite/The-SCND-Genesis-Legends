@@ -33,7 +33,7 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -280,7 +280,7 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     public void loadAssetsIml() {
-        imageLoader = new ImageLoader();
+        loader = new Loader();
         loadCaps();
         loadDesc();
         loadAssets = false;
@@ -391,8 +391,8 @@ public class RenderCharacterSelection extends CharacterSelection {
     private void loadCaps() {
         bigFont = getMyFont(LoginScreen.extraTxtSize);
         normalFont = getMyFont(LoginScreen.normalTxtSize);
-        oppDescPic = imageLoader.loadImage("images/charInfoO.png");
-        charDescPic = imageLoader.loadImage("images/charInfoC.png");
+        oppDescPic = loader.load("images/charInfoO.png");
+        charDescPic = loader.load("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
         loadUiContent(CharacterEnum.SUBIYA);
         loadUiContent(CharacterEnum.LYNX);
@@ -405,26 +405,26 @@ public class RenderCharacterSelection extends CharacterSelection {
         loadUiContent(CharacterEnum.AZARIA);
         loadUiContent(CharacterEnum.SORROWE);
         loadUiContent(CharacterEnum.THING);
-        charBack = imageLoader.loadImage("images/selChar.png");
-        oppBack = imageLoader.loadImage("images/selOpp.png");
-        charHold = imageLoader.loadImage("images/charHold.png");
+        charBack = loader.load("images/selChar.png");
+        oppBack = loader.load("images/selOpp.png");
+        charHold = loader.load("images/charHold.png");
         Image[] tmp = RenderMainMenu.getInstance().getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
         fg3 = tmp[3];
-        p1 = imageLoader.loadImage("images/player1.png");
-        p2 = imageLoader.loadImage("images/player2.png");
-        fight = imageLoader.loadImage("images/fight.png");
+        p1 = loader.load("images/player1.png");
+        p2 = loader.load("images/player2.png");
+        fight = loader.load("images/fight.png");
         charDesc[0] = Raila.class.getName();
     }
 
     public void loadUiContent(CharacterEnum characterEnum) {
-        thumbnailNormal[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/cap.png");
-        thumbnailBlurred[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/capB.png");
-        caption[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/name.png");
-        portrait[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/Prev.png");
-        portraitFlipped[characterEnum.index()] = imageLoader.loadImage("images/" + characterEnum.data() + "/PrevO.png");
+        thumbnailNormal[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/PrevO.png");
     }
 
 

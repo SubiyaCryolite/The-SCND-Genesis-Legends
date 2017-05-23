@@ -15,9 +15,9 @@ public class UiItem {
     protected final List<Event> events = new ArrayList<>();
 
     /**
-     * Set getName of the object
+     * Set getInfo of the object
      *
-     * @param name getName
+     * @param name getInfo
      */
     public void getName(String name) {
         this.name = name;

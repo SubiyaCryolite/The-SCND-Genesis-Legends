@@ -37,11 +37,11 @@ public class Sorrowe extends Character {
      * Constructor
      */
     public Sorrowe() {
-        descSmall = "Sorrowe - Specialised in celestia combat and the flame element";
+        descSmall = "Sorrowe - Specialised in celestiaAttacks combat and the flame element";
         name = "Sorrowe";
         characterEnum = SORROWE;
         isNotMale();
-        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout timeLimit", "Weakling !!", "You're incredibly annoying", "Don't go easy on achievements", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare achievements", "Let's do this", "Ugh, disgusting"};
+        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout time", "Weakling !!", "You're incredibly annoying", "Don't go easy on achievements", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare achievements", "Let's do this", "Ugh, disgusting"};
         physical = new String[]{"Lashing", "Whip-nado", "Lash assault", "Snared"};
         celestia = new String[]{"Hell Falme", "Hell Judgement", "Hell Blast", "Hell Blade"};
         status = new String[]{"Heal", "Cura EX", "Health ++", "E-Juice"};
@@ -57,54 +57,54 @@ public class Sorrowe extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, Player player, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 102;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 105;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 102;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 103;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 102;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 101;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 105;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
@@ -113,7 +113,7 @@ public class Sorrowe extends Character {
                 //girls have a healing bonus of 5 XD
                 damage = 78;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -127,7 +127,7 @@ public class Sorrowe extends Character {
                 attackStr = status[1];
                 damage = 80;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -141,7 +141,7 @@ public class Sorrowe extends Character {
                 attackStr = status[2];
                 damage = 84;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -155,7 +155,7 @@ public class Sorrowe extends Character {
                 attackStr = status[3];
                 damage = 76;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {

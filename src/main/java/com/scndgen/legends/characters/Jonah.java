@@ -50,54 +50,54 @@ public class Jonah extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, Player player, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 95;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 95;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 96;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 98;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 94;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 96;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 101;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 98;
-                gamePlay.lifePhysUpdateSimple(forWho, damage, name);
+                gamePlay.lifePhysUpdateSimple(player, damage);
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
@@ -105,7 +105,7 @@ public class Jonah extends Character {
                 attackStr = status[0];
                 damage = 73;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -119,7 +119,7 @@ public class Jonah extends Character {
                 attackStr = status[1];
                 damage = 75;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -133,7 +133,7 @@ public class Jonah extends Character {
                 attackStr = status[2];
                 damage = 79;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {
@@ -147,7 +147,7 @@ public class Jonah extends Character {
                 attackStr = status[3];
                 damage = 71;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (player == Player.OPPONENT) {
                     gamePlay.updatePlayerLife(damage);
                     gamePlay.setStatusPic(Player.CHARACTER);
                 } else {

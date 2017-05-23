@@ -27,7 +27,7 @@ import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.state.LoginState;
 import com.scndgen.legends.windows.WindowUpdate;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Window;
 
 import javax.swing.*;
@@ -85,10 +85,10 @@ import java.io.RandomAccessFile;
  * 04/1/11 -39- Fixed story scene bugs, adding GPL headerz gon opensource
  * 13/1/11 -40- Changed main menu, ditched runtime flipping for pre rendered images (opponents), performance benefits
  * 14/1/11 -41- Integrated STATS into main menu, pending for connections can be cancelled
- * 15/1/11 -42- Backwards compatibility for new save items, fixed timeLimit
+ * 15/1/11 -42- Backwards compatibility for new save items, fixed time
  * 15/1/11 -43- Changelog moved to WindowAbout.java in text3
  * 13/2/11 -44- I'm baaaaack, changelog in WindowAbout is clientSide only, codies go here
- * 13/2/11 -44- Fixed bug, reset move to physical at new match
+ * 13/2/11 -44- Fixed bug, reset move to physicalAttacks at new match
  *
  * @author Ndana
  */
@@ -106,7 +106,7 @@ public class LoginScreen extends JFrame {
     private JComboBox users;
     private JLabel userName, countryCode;
     private JTextField login;
-    private ImageLoader pix;
+    private Loader pix;
     private Box box = new Box(BoxLayout.Y_AXIS);
     private WindowUpdate newy = null;
     private RandomAccessFile rand;
@@ -202,7 +202,7 @@ public class LoginScreen extends JFrame {
                 }
             } else {
                 //extra account
-                newAcc = JOptionPane.showInputDialog(null, "Enter new account getName", "Enter account getName", JOptionPane.INFORMATION_MESSAGE);
+                newAcc = JOptionPane.showInputDialog(null, "Enter new account getInfo", "Enter account getInfo", JOptionPane.INFORMATION_MESSAGE);
                 if (newAcc.length() >= 1 && newAcc.length() <= 24) {
                     createUserCombo();
                     enter.setEnabled(true);

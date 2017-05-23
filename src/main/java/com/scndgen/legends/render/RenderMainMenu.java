@@ -11,7 +11,7 @@ import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
 import com.scndgen.legends.windows.WindowLeaderBoard;
 import com.scndgen.legends.windows.WindowOptions;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -52,9 +52,8 @@ public class RenderMainMenu extends MainMenu {
     private final UiItem uiAbout;
     private final UiItem uiLogOut;
     private final UiItem uiExit;
-    private ImageLoader imageLoader = new ImageLoader();
+    private Loader loader = new Loader();
     private Image menuLogo, gameLogo;
-    private Image pointer;
     private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
 
     public static synchronized RenderMainMenu getInstance() {
@@ -525,24 +524,23 @@ public class RenderMainMenu extends MainMenu {
     public void loadAssetsIml() {
         if (!loadAssets) return;
         menuFont = getMyFont(fontSize);
-        gameLogo = imageLoader.loadImage("logo/gameLogo");
-        menuLogo = imageLoader.loadImage("images/sglogo.png");
-        pointer = imageLoader.loadImage("images/pointer.png");
+        gameLogo = loader.load("logo/gameLogo");
+        menuLogo = loader.load("images/sglogo.png");
         if (time >= 0 && time <= 9) {
-            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG1.png");
-            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG1fg.png");
-            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG1a.png");
-            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG1b.png");
+            backgroundPixelated = loader.load("images/blur/bgBG1.png");
+            foregroundPixelated = loader.load("images/blur/bgBG1fg.png");
+            particlesLayer1 = loader.load("images/blur/bgBG1a.png");
+            particlesLayer2 = loader.load("images/blur/bgBG1b.png");
         } else if (time > 9 && time <= 16) {
-            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG6.png");
-            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG6fg.png");
-            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG6a.png");
-            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG6b.png");
+            backgroundPixelated = loader.load("images/blur/bgBG6.png");
+            foregroundPixelated = loader.load("images/blur/bgBG6fg.png");
+            particlesLayer1 = loader.load("images/blur/bgBG6a.png");
+            particlesLayer2 = loader.load("images/blur/bgBG6b.png");
         } else if (time > 16 && time <= 24) {
-            backgroundPixelated = imageLoader.loadImage("images/blur/bgBG5.png");
-            foregroundPixelated = imageLoader.loadImage("images/blur/bgBG5fg.png");
-            particlesLayer1 = imageLoader.loadImage("images/blur/bgBG5a.png");
-            particlesLayer2 = imageLoader.loadImage("images/blur/bgBG5b.png");
+            backgroundPixelated = loader.load("images/blur/bgBG5.png");
+            foregroundPixelated = loader.load("images/blur/bgBG5fg.png");
+            particlesLayer1 = loader.load("images/blur/bgBG5a.png");
+            particlesLayer2 = loader.load("images/blur/bgBG5b.png");
         }
         loadAssets = false;
         setActiveItem(uiTutorial);
@@ -552,7 +550,6 @@ public class RenderMainMenu extends MainMenu {
     public void cleanAssets() {
         menuLogo = null;
         gameLogo = null;
-        pointer = null;
         foregroundPixelated = null;
         particlesLayer1 = null;
         backgroundPixelated = null;
@@ -579,6 +576,8 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex = 0;
             ///////////////////////////////////////////
             fillText(gc, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
+            menuItemIndex++;
+            fillText(gc, strStoryMode, xMenu, yMenu + (fontSize * menuItemIndex), uiStoryMode);
             menuItemIndex++;
             fillText(gc, strQuickMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiQuickMatch);
             menuItemIndex++;
@@ -659,15 +658,10 @@ public class RenderMainMenu extends MainMenu {
         }
     }
 
-
-    /**
-     * Get menu images for use in characterEnum select screen
-     *
-     * @return pictures
-     */
     public Image[] getPics() {
         return new Image[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
     }
+
     public void exit() {
         int exit = JOptionPane.showConfirmDialog(null, Language.getInstance().get(110), "Exit", JOptionPane.YES_NO_OPTION);
         if (exit == JOptionPane.YES_OPTION) {

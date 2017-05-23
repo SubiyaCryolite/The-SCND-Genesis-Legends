@@ -11,31 +11,31 @@ public class Event {
     }
 
     /**
-     * What happens when this item is clicked/selected
+     * What happens when this itemAttacks is clicked/selected
      */
     public void onAccept() {
     }
 
     /**
-     * What happens when this item is clicked/selected (ALTERNATE FIRE)
+     * What happens when this itemAttacks is clicked/selected (ALTERNATE FIRE)
      */
     public void onAcceptAction2() {
     }
 
     /**
-     * What happens when this item is unclicked/canceled
+     * What happens when this itemAttacks is unclicked/canceled
      */
     public void onBackCancel() {
     }
 
     /**
-     * What happens when this item is isHovered/active
+     * What happens when this itemAttacks is isHovered/active
      */
     public void onHover() {
     }
 
     /**
-     * What happens when this item is uiLeft/made non active
+     * What happens when this itemAttacks is uiLeft/made non active
      */
     public void onLeave() {
     }

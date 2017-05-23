@@ -38,9 +38,7 @@ import java.sql.Statement;
 public class WindowLeaderBoard extends JFrame implements ActionListener {
 
     private JPanel line1, line2, line3;
-    private JButton upload, view, close;
-    private String dbName = "sql09.freemysql.net/scndrating";
-    private String passWd = "user=subiyacryolite&password=dbHomie";
+    private JButton btnUpload, btnView, btnClose;
     private boolean notLoaded = true;
     private Box box;
     private SqlQuery viewer;
@@ -53,18 +51,18 @@ public class WindowLeaderBoard extends JFrame implements ActionListener {
     public WindowLeaderBoard() {
         super(Language.getInstance().get(98));
         if (notLoaded) {
-            upload = new JButton(Language.getInstance().get(97));
-            upload.addActionListener(this);
-            view = new JButton(Language.getInstance().get(96));
-            view.addActionListener(this);
-            close = new JButton(Language.getInstance().get(95));
-            close.addActionListener(this);
+            btnUpload = new JButton(Language.getInstance().get(97));
+            btnUpload.addActionListener(this);
+            btnView = new JButton(Language.getInstance().get(96));
+            btnView.addActionListener(this);
+            btnClose = new JButton(Language.getInstance().get(95));
+            btnClose.addActionListener(this);
             line1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            line1.add(view);
+            line1.add(btnView);
             line2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            line2.add(upload);
+            line2.add(btnUpload);
             line3 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            line3.add(close);
+            line3.add(btnClose);
             box = new Box(BoxLayout.Y_AXIS);
             box.add(line1);
             box.add(line2);
@@ -88,8 +86,8 @@ public class WindowLeaderBoard extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == view) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == btnView) {
             if (viewerNotLoaded) {
                 viewer = new SqlQuery();
                 viewerNotLoaded = false;
@@ -97,10 +95,10 @@ public class WindowLeaderBoard extends JFrame implements ActionListener {
                 viewer.reappear();
             }
         }
-        if (ae.getSource() == upload) {
+        if (actionEvent.getSource() == btnUpload) {
             uploadToServer();
         }
-        if (ae.getSource() == close) {
+        if (actionEvent.getSource() == btnClose) {
             dispose();
         }
     }

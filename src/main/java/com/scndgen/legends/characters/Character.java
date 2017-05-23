@@ -28,7 +28,7 @@ import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.mode.GamePlay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.image.Image;
 
 
@@ -49,7 +49,7 @@ public abstract class Character {
     protected final AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private Image[] sprites;
-    private ImageLoader pix;
+    private Loader pix;
     private String[] location;
     private boolean isMale;
     private int numberOfSprites = 12;
@@ -75,7 +75,7 @@ public abstract class Character {
     protected final int celestiaMultiplier = 10;
 
     private void sortQue() {
-        pix = new ImageLoader();
+        pix = new Loader();
         location = new String[numberOfSprites];
         location[0] = "images/" + characterEnum.data() + "/D.png";  //1
         location[1] = "images/" + characterEnum.data() + "/M1.png"; //2
@@ -99,18 +99,18 @@ public abstract class Character {
     public void loadMeHigh() {
         sortQue();
         sprites = new Image[numberOfSprites];
-        sprites[0] = pix.loadImage(location[0]);
-        sprites[1] = pix.loadImage(location[1]);
-        sprites[2] = pix.loadImage(location[2]);
-        sprites[3] = pix.loadImage(location[3]);
-        sprites[4] = pix.loadImage(location[4]);
-        sprites[5] = pix.loadImage(location[5]);
-        sprites[6] = pix.loadImage(location[6]);
-        sprites[7] = pix.loadImage(location[7]);
-        sprites[8] = pix.loadImage(location[8]);
-        sprites[9] = pix.loadImage(location[9]);
-        sprites[10] = pix.loadImage(location[10]);
-        sprites[11] = pix.loadImage(location[11]);
+        sprites[0] = pix.load(location[0]);
+        sprites[1] = pix.load(location[1]);
+        sprites[2] = pix.load(location[2]);
+        sprites[3] = pix.load(location[3]);
+        sprites[4] = pix.load(location[4]);
+        sprites[5] = pix.load(location[5]);
+        sprites[6] = pix.load(location[6]);
+        sprites[7] = pix.load(location[7]);
+        sprites[8] = pix.load(location[8]);
+        sprites[9] = pix.load(location[9]);
+        sprites[10] = pix.load(location[10]);
+        sprites[11] = pix.load(location[11]);
     }
 
     public Image getSprite(int i) {
@@ -122,16 +122,16 @@ public abstract class Character {
     /**
      * Gets the move set of the characterEnum
      *
-     * @return array of physical attacks
+     * @return array of physicalAttacks attacks
      */
     public void setCharacterAttackArrays() {
         RenderGamePlay.getInstance().setCharacterAttackArrays(physical, celestia, status);
     }
 
     /**
-     * Gets the getName of a qued move
+     * Gets the getInfo of a qued move
      *
-     * @return The getName of the qued move
+     * @return The getInfo of the qued move
      */
     public String getMoveQued(int move) {
         int yus = move - 1;
@@ -186,9 +186,9 @@ public abstract class Character {
     }
 
     /**
-     * Gets the characterEnum getName
+     * Gets the characterEnum getInfo
      *
-     * @return characterEnum getName
+     * @return characterEnum getInfo
      */
     public String getName() {
         return name;

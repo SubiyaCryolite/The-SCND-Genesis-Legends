@@ -28,19 +28,19 @@ import javafx.scene.image.Image;
  *
  * @author ndana 16-Apr-2011
  */
-public class ImageLoader {
+public class Loader {
 
     /**
      * Loads image from toolkit
      *
-     * @param imageName location of image
-     * @return toolkit image
+     * @param url location of image
+     * @return image
      */
-    public Image loadImage(String imageName) {
+    public Image load(String url) {
         try {
-            return new Image(imageName);
+            return new Image(url);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Unable to load image: " + imageName);
+            throw new IllegalArgumentException("Unable to load image: " + url);
         }
     }
 }

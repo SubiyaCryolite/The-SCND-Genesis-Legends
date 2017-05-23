@@ -223,6 +223,6 @@ public abstract class Mode implements UiScreen {
 
     protected final void ensureActiveUiItemSet() {
         if (activeItem == null)
-            throw new RuntimeException("Each mode must have a default active UI item");
+            throw new RuntimeException("Each mode must have a default active UI itemAttacks");
     }
 }

@@ -27,7 +27,7 @@ import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.state.GameState;
-import io.github.subiyacryolite.enginev1.ImageLoader;
+import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -53,12 +53,12 @@ public class AchievementLocker {
     private Image no;
     private Image[] achCap;
     private boolean[] isAchievementActivated;
-    private ImageLoader pix;
+    private Loader pix;
     private float gWin, gLoss, denom, progression;
     private float numberOfTriggeredAchievements = 0.0f;
 
     public AchievementLocker() {
-        pix = new ImageLoader();
+        pix = new Loader();
         loadFontAndPictures();
         refreshStats();
     }
@@ -173,16 +173,16 @@ public class AchievementLocker {
 
 
     /**
-     * Load my imageLoader
+     * Load my loader
      */
     private void loadFontAndPictures() {
         font2 = getMyFont(spacer - 1);
         font1 = getMyFont(spacer + 2);
         achCap = new Image[Achievements.values().length];
         for (int u = 0; u < achCap.length; u++) {
-            achCap[u] = pix.loadImage("images/ach/" + u + ".png");
+            achCap[u] = pix.load("images/ach/" + u + ".png");
         }
-        no = pix.loadImage("images/ach/no.png");
+        no = pix.load("images/ach/no.png");
     }
 
     /**
@@ -233,7 +233,7 @@ public class AchievementLocker {
         stat2 = Language.getInstance().get(119) + ": " + shortVer(GameState.getInstance().getLogin().getPoints() + "");
         stat3 = Language.getInstance().get(120) + ": " + timeCal(GameState.getInstance().getLogin().getPlayTime());
         stat4 = Language.getInstance().get(121) + ": " + GameState.getInstance().getLogin().getUnlockedAch();
-        stat5 = Language.getInstance().get(122) + ": " + GameState.getInstance().getLogin().getNumberOfTimesAchivementTriggered() + " timeLimit(s)";
+        stat5 = Language.getInstance().get(122) + ": " + GameState.getInstance().getLogin().getNumberOfTimesAchivementTriggered() + " time(s)";
         stat6 = Language.getInstance().get(123) + ": " + GameState.getInstance().getLogin().getNumberOfMatches();
         try {
             stat7 = Language.getInstance().get(124) + ": " + GameState.getInstance().getLogin().getPoints() / GameState.getInstance().getLogin().getNumberOfMatches();
