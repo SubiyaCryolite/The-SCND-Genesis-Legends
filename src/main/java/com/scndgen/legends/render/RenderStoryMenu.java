@@ -280,8 +280,7 @@ public class RenderStoryMenu extends StoryMenu {
 
     public void selectScene() {
         if (validIndex(hoveredScene)) {
-            StoryMode.getInstance().setCurrentScene(hoveredScene);
-            StoryMode.getInstance().playStory(hoveredScene);
+            StoryMode.getInstance().startStoryMode(hoveredScene);
             menuSound.play();
         } else {
             errorSound.play();

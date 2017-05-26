@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import static com.scndgen.legends.state.GameState.MAX_TIME;
 
 /**
- * Created by ifung on 22/04/2017.
+ * Created by ifunga on 22/04/2017.
  */
 @JdsEntityAnnotation(entityName = "Game Saves", entityId = 2)
 public class LoginState extends JdsEntity {

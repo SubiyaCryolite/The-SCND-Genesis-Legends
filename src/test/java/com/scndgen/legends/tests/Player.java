@@ -5,7 +5,7 @@ import io.github.subiyacryolite.enginev1.AudioPlayback;
 import org.junit.Test;
 
 /**
- * Created by ifung on 23/04/2017.
+ * Created by ifunga on 23/04/2017.
  */
 
 public class Player {

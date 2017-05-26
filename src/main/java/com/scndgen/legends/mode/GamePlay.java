@@ -48,6 +48,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
+
 /**
  * This class draws and manipulates all sprites, images and effects used in the game
  *
@@ -69,6 +71,7 @@ public abstract class GamePlay extends Mode {
     protected Color currentColor = Color.RED;
     protected float angRot = 20;
     protected boolean safeToSelect;
+    protected int unlockedAchievementInstance;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
     protected int particlesLayer1PositionX = 0, particlesLayer1PositionY = 0, particlesLayer2PositionX = 0, particlesLayer2PositionY = 0;
     protected int numOfComicPics = 9;
@@ -126,7 +129,7 @@ public abstract class GamePlay extends Mode {
     protected Player runningFury;
     protected String sysNot = "";
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
-    protected String achievementName = "", achievementDescription = "", achievementClass = "", achievementPoints = "";
+    protected String[] achievementName, achievementDescription, achievementClass, achievementPoints;
     protected int activeAttack = 0;
     protected NetworkServer server;
     protected NetworkClient client;
@@ -202,20 +205,17 @@ public abstract class GamePlay extends Mode {
      */
     public void drawAchievements() {
         int unlocks = Achievement.getInstance().getNumberOfAchievements();
-        do {
-            for (int iteration = 0; iteration < unlocks; iteration++) {
-                String[] info = Achievement.getInstance().getInfo(iteration);
-                achievementName = info[0]; //getInfo
-                achievementDescription = info[1]; //desc
-                achievementClass = info[2]; //class
-                achievementPoints = info[3]; //points
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GamePlay.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } while (isRunning);
+        achievementName = new String[unlocks];
+        achievementDescription = new String[unlocks];
+        achievementClass = new String[unlocks];
+        achievementPoints = new String[unlocks];
+        for (int iteration = 0; iteration < unlocks; iteration++) {
+            String[] info = Achievement.getInstance().getInfo(iteration);
+            achievementName[iteration] = info[0]; //getInfo
+            achievementDescription[iteration] = info[1]; //desc
+            achievementClass[iteration] = info[2]; //class
+            achievementPoints[iteration] = info[3]; //points
+        }
     }
 
     /**
@@ -419,7 +419,7 @@ public abstract class GamePlay extends Mode {
     private float maxAtb = 290f;
     private long timerDelta;
     public int time, count2;
-    public boolean storySequence;
+    public boolean playingCutscene;
     private boolean characterAtb = true, opponentAtb = true;
     public boolean isRunning = false;
     public String timeStr;//, scene;
@@ -438,6 +438,7 @@ public abstract class GamePlay extends Mode {
     private long animationLoopDDelta;
     private int animationLoopD;
     private long animationLoopEDelta;
+    private long achievementDelta;
 
     public void update(long delta) {
         super.update(delta);
@@ -457,17 +458,25 @@ public abstract class GamePlay extends Mode {
                     setBreak(-furyBarCoolDownFactor);
                 }
             }
+        } else {
+            if ((delta - achievementDelta) > MS1320) {
+                achievementDelta = delta;
+                if (unlockedAchievementInstance < achievementClass.length - 1)
+                    unlockedAchievementInstance++;
+                else
+                    unlockedAchievementInstance = 0;
+            }
         }
     }
 
     private void handleOpponentAi(long delta) {
         boolean singlePlayerOrStoryMode = ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE;
-        if (singlePlayerOrStoryMode && !triggerOpponentAttack) {
-            if (singlePlayerOrStoryMode && isOpponentAtbFull() && (delta - opponentAiDelta) > MS16) {
+        if (singlePlayerOrStoryMode && !triggerOpponentAttack && !playingCutscene) {
+            if (singlePlayerOrStoryMode && (delta - opponentAiDelta) > MS16) {
                 opponentAiDelta = delta;
                 if (opponentAiTimeout < GameState.getInstance().getLogin().getDifficultyDynamic()) {
                     opponentAiTimeout += 16;
-                } else {
+                } else if (isOpponentAtbFull()) {
                     opponentAttacks.clear();
                     opponentAiTimeout = 0;
                     for (int i : updateAndGetOpponentAttackQue()) {
@@ -655,10 +664,10 @@ public abstract class GamePlay extends Mode {
             if (characterAtbValue <= maxAtb && characterAtb) {
                 characterAtbValue += Characters.getInstance().getCharRecoverySpeed();
             }
-            if (opponentAtbValue <= maxAtb && opponentAtb && ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE) {
+            if (opponentAtbValue <= maxAtb && opponentAtb && !playingCutscene) {
                 opponentAtbValue += Characters.getInstance().getOppRecoverySpeed();
             }
-            if (time <= 180 && storySequence == false) {
+            if (time <= INFINITE_TIME && !playingCutscene) {
                 if (secondCount < 1000) //continue till we make a second
                 {
                     secondCount += 16.67f;
@@ -799,6 +808,11 @@ public abstract class GamePlay extends Mode {
     }
 
     public void newInstance() {
+        unlockedAchievementInstance = 0;
+        achievementName = new String[0];
+        achievementDescription = new String[0];
+        achievementClass = new String[0];
+        achievementPoints = new String[0];
         limitRunning = false;//incase match ended in fury
         loadAssets = true;
         opponentDamageXLoc = 150;
@@ -818,8 +832,8 @@ public abstract class GamePlay extends Mode {
         setForeGroundPositionY(0);
         Achievement.getInstance().newInstance();
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-            storySequence = true;
-            time = StoryMode.getInstance().time;
+            playingCutscene = true;
+            time = StoryMode.getInstance().timeLimit;
         } //if LAN, client uses hosts time preset
         else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             time = NetworkManager.getInstance().hostTime;

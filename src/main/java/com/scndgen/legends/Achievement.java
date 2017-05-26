@@ -22,10 +22,7 @@
 package com.scndgen.legends;
 
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.enums.AchievementCategories;
-import com.scndgen.legends.enums.Achievements;
-import com.scndgen.legends.enums.AttackType;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.GameState;
@@ -53,21 +50,21 @@ public class Achievement {
 
     private Achievement() {
         instance = this;
-        setAchievementBinding(Achievements.UPPER_HAND, Language.getInstance().get(61), Language.getInstance().get(72));
-        setAchievementBinding(Achievements.BEAT_THE_ODDS, Language.getInstance().get(62), Language.getInstance().get(73));
-        setAchievementBinding(Achievements.OWNAGE, Language.getInstance().get(63), Language.getInstance().get(74));
-        setAchievementBinding(Achievements.HEARTLESS, Language.getInstance().get(64), Language.getInstance().get(75));
-        setAchievementBinding(Achievements.MEANIE, Language.getInstance().get(65), Language.getInstance().get(76));
-        setAchievementBinding(Achievements.RAGE, Language.getInstance().get(66), Language.getInstance().get(77));
-        setAchievementBinding(Achievements.WINNER, Language.getInstance().get(67), Language.getInstance().get(78));
-        setAchievementBinding(Achievements.BUZZ_KILL, Language.getInstance().get(68), Language.getInstance().get(79));
-        setAchievementBinding(Achievements.CLOSE_CALL, Language.getInstance().get(69), Language.getInstance().get(80));
-        setAchievementBinding(Achievements.ON_A_ROLL, Language.getInstance().get(70), Language.getInstance().get(81));
-        setAchievementBinding(Achievements.HALF_WAY_THROUGH, Language.getInstance().get(71), Language.getInstance().get(82));
+        setBinding(Achievements.UPPER_HAND, Language.getInstance().get(61), Language.getInstance().get(72));
+        setBinding(Achievements.BEAT_THE_ODDS, Language.getInstance().get(62), Language.getInstance().get(73));
+        setBinding(Achievements.OWNAGE, Language.getInstance().get(63), Language.getInstance().get(74));
+        setBinding(Achievements.HEARTLESS, Language.getInstance().get(64), Language.getInstance().get(75));
+        setBinding(Achievements.MEANIE, Language.getInstance().get(65), Language.getInstance().get(76));
+        setBinding(Achievements.RAGE, Language.getInstance().get(66), Language.getInstance().get(77));
+        setBinding(Achievements.WINNER, Language.getInstance().get(67), Language.getInstance().get(78));
+        setBinding(Achievements.BUZZ_KILL, Language.getInstance().get(68), Language.getInstance().get(79));
+        setBinding(Achievements.CLOSE_CALL, Language.getInstance().get(69), Language.getInstance().get(80));
+        setBinding(Achievements.ON_A_ROLL, Language.getInstance().get(70), Language.getInstance().get(81));
+        setBinding(Achievements.HALF_WAY_THROUGH, Language.getInstance().get(71), Language.getInstance().get(82));
         newInstance();
     }
 
-    private void setAchievementBinding(final Achievements achievement, final String name, final String description) {
+    private void setBinding(final Achievements achievement, final String name, final String description) {
         achievementName.put(achievement, name);
         achievementDescription.put(achievement, description);
     }
@@ -226,7 +223,7 @@ public class Achievement {
             GameState.getInstance().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.hasWon() && StoryMode.getInstance().stat.equalsIgnoreCase("half way") && gamePlay.isGameOver() && isAchievementLocked[Achievements.HALF_WAY_THROUGH.id()]) {
+        if (gamePlay.hasWon() && StoryMode.getInstance().stat == StoryProgress.HALFWAY && gamePlay.isGameOver() && isAchievementLocked[Achievements.HALF_WAY_THROUGH.id()]) {
             achievement = Achievements.HALF_WAY_THROUGH;
             name.add(achievementName.get(achievement));
             Overlay.getInstance().primaryNotice(Language.getInstance().get(83) + ": " + achievementName.get(achievement));

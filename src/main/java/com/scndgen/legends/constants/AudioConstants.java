@@ -1,7 +1,7 @@
 package com.scndgen.legends.constants;
 
 /**
- * Created by ifung on 30/04/2017.
+ * Created by ifunga on 30/04/2017.
  */
 public class AudioConstants {
     public static final String[] MALE_HURT = {"audio/from_Ardentryst/male/attack/Pain4.ogg",

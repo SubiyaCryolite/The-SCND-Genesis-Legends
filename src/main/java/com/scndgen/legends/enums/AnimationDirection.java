@@ -1,7 +1,7 @@
 package com.scndgen.legends.enums;
 
 /**
- * Created by ifung on 29/04/2017.
+ * Created by ifunga on 29/04/2017.
  */
 public enum AnimationDirection {
     VERTICAL,

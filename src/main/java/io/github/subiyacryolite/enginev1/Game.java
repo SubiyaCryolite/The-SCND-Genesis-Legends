@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 /**
- * Created by ifung on 15/04/2017.
+ * Created by ifunga on 15/04/2017.
  */
 public abstract class Game {
     private final Color CIRCLE_BASE_FILL_COLOR = Color.LIGHTSKYBLUE;

@@ -61,7 +61,6 @@ public class RenderGamePlay extends GamePlay {
     private Image particlesLayer1, particlesLayer2, foreGround;
     private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
-    private Image flashy;
     private Image[] attackCategory, numberPix;
     private Image[] characterPortraits;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
@@ -88,7 +87,8 @@ public class RenderGamePlay extends GamePlay {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                triggerFury(Player.CHARACTER);
+                if (!gameOver && !playingCutscene && !paused)
+                    triggerFury(Player.CHARACTER);
             }
 
             @Override
@@ -273,7 +273,7 @@ public class RenderGamePlay extends GamePlay {
                 itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
             }
         });
-
+        fury.addJenesisEvent(new PauseAndNavigate());
         attackOne.addJenesisEvent(new PauseAndNavigate());
         attackTwo.addJenesisEvent(new PauseAndNavigate());
         attackThree.addJenesisEvent(new PauseAndNavigate());
@@ -286,6 +286,11 @@ public class RenderGamePlay extends GamePlay {
         attackTen.addJenesisEvent(new PauseAndNavigate());
         attackEleven.addJenesisEvent(new PauseAndNavigate());
         attackTwelve.addJenesisEvent(new PauseAndNavigate());
+
+        fury.setLeft(attackOne);
+        fury.setUp(attackOne);
+        fury.setDown(attackOne);
+        fury.setRight(attackOne);
 
         //column 1 - right
         attackOne.setRight(attackFive);
@@ -351,7 +356,7 @@ public class RenderGamePlay extends GamePlay {
     @Override
     public void render(GraphicsContext gc, double width, double height) {
         loadAssets();
-        if (storySequence) {
+        if (playingCutscene) {
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, width, height);
             if (opacityPic < 0.98f) {
@@ -378,7 +383,7 @@ public class RenderGamePlay extends GamePlay {
             gc.fillText(battleInformation.toString(), ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
             gc.setGlobalAlpha((10 * 0.1f));
 
-        } else if (!gameOver && !storySequence) {
+        } else if (!gameOver && !playingCutscene) {
             gc.drawImage(stageBackground, 0, 0);
             gc.setFont(notSelected);
             if (getCharacterHp() >= 0) {
@@ -467,10 +472,12 @@ public class RenderGamePlay extends GamePlay {
             gc.drawImage(status, 0, 210);
             gc.setFill(Color.WHITE);
             gc.setFont(notSelected);
-            gc.fillText(achievementName, 400, 240); //+14
-            gc.fillText(achievementDescription, 400, 254);
-            gc.fillText(achievementClass, 400, 268);
-            gc.fillText(achievementPoints, 400, 282);
+            if (achievementName.length > unlockedAchievementInstance) {
+                gc.fillText(achievementName[unlockedAchievementInstance], 400, 240); //+14
+                gc.fillText(achievementDescription[unlockedAchievementInstance], 400, 254);
+                gc.fillText(achievementClass[unlockedAchievementInstance], 400, 268);
+                gc.fillText(achievementPoints[unlockedAchievementInstance], 400, 282);
+            }
             gc.fillText("<< " + Language.getInstance().get(146) + " >>", 400, 296);
         }
         Overlay.getInstance().overlay(gc, width, height);
@@ -758,18 +765,13 @@ public class RenderGamePlay extends GamePlay {
         num9 = pix.load("images/fig/9.png");
         numInfinite = pix.load("images/fig/infinite.png");
         numNull = pix.load("images/trans.png");
-        //flashy=loader.load("images/flash.gif",40,40);
-        flashy = null;
         numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
-
         statusEffectSprites[0] = pix.load("images/trans.png");
         statusEffectSprites[1] = pix.load("images/stats/stat1.png");
         statusEffectSprites[2] = pix.load("images/stats/stat2.png");
         statusEffectSprites[3] = pix.load("images/stats/stat3.png");
         statusEffectSprites[4] = pix.load("images/stats/stat4.png");
-
         System.out.println("loaded all loader");
-
     }
 
     /**
@@ -1111,10 +1113,14 @@ public class RenderGamePlay extends GamePlay {
         }
     }
 
+    public void reloadAssets() {
+        loadAssets = true;
+    }
+
     private class PauseAndNavigate extends Event {
         @Override
         public void onAccept() {
-            if (!gameOver && !storySequence) {
+            if (!gameOver && !playingCutscene) {
                 if (safeToSelect) {
                     sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
@@ -1125,7 +1131,7 @@ public class RenderGamePlay extends GamePlay {
                 } else {
                     RenderCharacterSelection.getInstance().errorSound();
                 }
-            } else if (storySequence) {
+            } else if (playingCutscene) {
                 StoryMode.getInstance().onAccept();
             } else if (gameOver) {
                 updatePlayerProfile();
@@ -1148,9 +1154,9 @@ public class RenderGamePlay extends GamePlay {
         @Override
         public void onBackCancel() {
             //closeTheServer();
-            if (!gameOver && storySequence == false) {
+            if (!gameOver && playingCutscene == false) {
                 onTogglePause();
-            } else if (storySequence) {
+            } else if (playingCutscene) {
                 StoryMode.getInstance().onBackCancel();
             }
         }

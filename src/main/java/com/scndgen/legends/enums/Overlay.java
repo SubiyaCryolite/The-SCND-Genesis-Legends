@@ -1,7 +1,7 @@
 package com.scndgen.legends.enums;
 
 /**
- * Created by ifung on 15/04/2017.
+ * Created by ifunga on 15/04/2017.
  */
 public enum Overlay {
     PRIMARY_MENU(0),
