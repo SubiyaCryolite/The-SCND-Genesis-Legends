@@ -26,13 +26,11 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.Player;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -75,6 +73,16 @@ public class RenderCharacterSelection extends CharacterSelection {
     private Image fg1, fg2, fg3, bg3;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private CharacterEnum hoveredCharacter;
+    private AudioPlayback menuMusic;
+
+    public void onEnterMode() {
+        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - Rays.ogg", AudioType.MUSIC, true);
+        menuMusic.play();
+    }
+
+    public void onLeaveMode() {
+        menuMusic.stop(2000);
+    }
 
     public RenderCharacterSelection() {
         opacInc = 0.025f;

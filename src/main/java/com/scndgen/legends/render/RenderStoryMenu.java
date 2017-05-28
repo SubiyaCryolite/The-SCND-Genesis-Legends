@@ -72,6 +72,17 @@ public class RenderStoryMenu extends StoryMenu {
     private final UiItem scene11;
     private final UiItem scene12;
     private final UiItem scene13;
+    private AudioPlayback menuMusic;
+
+    public void onEnterMode() {
+        menuMusic = new AudioPlayback("audio/scotty/scotty zepplin - We Are.ogg", AudioType.MUSIC, true);
+        menuMusic.play();
+    }
+
+    public void onLeaveMode() {
+        menuMusic.stop(2000);
+    }
+
 
     public RenderStoryMenu() {
         lockedScene = new Image[numberOfScenes];
@@ -291,7 +302,6 @@ public class RenderStoryMenu extends StoryMenu {
     public void loadAssetsIml() {
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
-
         Loader loader = new Loader();
         RenderStageSelect.getInstance().setStageSelected(false);
         try {

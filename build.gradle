@@ -1,6 +1,7 @@
 group 'com.scndgen'
 version '2.17.04.15'
 apply plugin: 'java'
+apply plugin: 'application'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -42,7 +43,14 @@ jar {
                 "Implementation-Version": project.version,
                 "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
                 "Main-Class": project.ext.mainClass,
-                "Class-Path": configurations.runtime.collect { "libs/$it.name" }.join(' '),
+                "Class-Path": configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
         )
     }
 }
+
+task copyDependencies(type: Copy) {
+    from configurations.runtime
+    into "$buildDir/libs/lib"
+}
+
+jar.dependsOn(copyDependencies)

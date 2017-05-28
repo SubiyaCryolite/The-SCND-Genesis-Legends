@@ -957,6 +957,7 @@ public class StoryMode implements Runnable {
                 startStoryMode(currentScene);//try again
             }
         } else {
+            storyMusic.stop(2000);
             startFight();
         }
     }

@@ -2,6 +2,8 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.MainMenu;
@@ -11,6 +13,7 @@ import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
 import com.scndgen.legends.windows.WindowLeaderBoard;
 import com.scndgen.legends.windows.WindowOptions;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -55,6 +58,7 @@ public class RenderMainMenu extends MainMenu {
     private Loader loader = new Loader();
     private Image menuLogo, gameLogo;
     private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
+    private AudioPlayback menuMusic;
 
     public static synchronized RenderMainMenu getInstance() {
         if (instance == null)
@@ -519,6 +523,15 @@ public class RenderMainMenu extends MainMenu {
     @Override
     public void newInstance() {
         super.newInstance();
+    }
+
+    public void onEnterMode() {
+        menuMusic = new AudioPlayback(AudioConstants.menuMus(), AudioType.MUSIC, true);
+        menuMusic.play();
+    }
+
+    public void onLeaveMode() {
+        menuMusic.stop(2000);
     }
 
     @Override

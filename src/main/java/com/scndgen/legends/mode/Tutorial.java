@@ -82,6 +82,7 @@ public class Tutorial implements Runnable {
     }
 
     public void beginTutorial() {
+        RenderMainMenu.getInstance().onLeaveMode();
         thread = null;
         thread = new Thread(this);
         thread.start();
@@ -842,6 +843,7 @@ public class Tutorial implements Runnable {
     public void onBackCancel() {
         bgSound.stop();
         thread.stop();
+        RenderMainMenu.getInstance().onEnterMode();
         RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
     }
 

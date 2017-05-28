@@ -24,8 +24,8 @@ package com.scndgen.legends.mode;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.*;
-import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.network.NetworkManager;
+import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -99,10 +99,6 @@ public abstract class StageSelect extends Mode {
         lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.get(370));
         lookupStageNames.put(Stage.RANDOM, language.get(164));
         lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.get(371));
-    }
-
-    public StageSelect() {
-
     }
 
     public void selectStage(Stage stage) {
@@ -400,7 +396,8 @@ public abstract class StageSelect extends Mode {
     }
 
     public void start() {
-        RenderGamePlay.getInstance().playBGMusic();
+        if (ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE)
+            RenderGamePlay.getInstance().playBGMusic();
         ScndGenLegends.getInstance().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
     }
 

@@ -23,8 +23,6 @@ package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
@@ -48,15 +46,12 @@ public class Window {
     private WindowAbout about;
     private NetworkScanLan scan;
     private WindowLeaderBoard board;
-    private AudioPlayback startup;
     private boolean[] buttonz;
     private int compassDir, compassDir2, last = 13;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public Window(String dude, LoginScreen px) {
         p = px;
-        startup = new AudioPlayback(AudioConstants.startUpSound(), AudioType.MUSIC, false);
-        startup.play();
         strUser = dude;
         //setContentPane(NetworkManager.newInstance(strUser, SubMode.MAIN_MENU));
     }

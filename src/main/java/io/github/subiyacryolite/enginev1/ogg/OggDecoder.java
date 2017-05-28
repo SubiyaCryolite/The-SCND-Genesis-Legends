@@ -12,8 +12,9 @@ import com.jcraft.jorbis.Info;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import static org.lwjgl.system.MemoryUtil.memAlloc;
 
 /**
  * Decode an OGG file to PCM data. This class is based on the example code that
@@ -311,10 +312,8 @@ public class OggDecoder {
         ogg.rate = vi.rate;
 
         byte[] data = dataout.toByteArray();
-        ogg.data = ByteBuffer.allocateDirect(data.length);
-        ogg.data.put(data);
-        ogg.data.rewind();
-
+        ogg.data = memAlloc(data.length);
+        ogg.data.put(data).rewind();
         return ogg;
     }
 }

@@ -233,4 +233,9 @@ public abstract class Mode implements UiScreen {
         else
             onDown();
     }
+
+    protected void onLeaveMode()
+    {}
+
+    protected void onEnterMode(){}
 }

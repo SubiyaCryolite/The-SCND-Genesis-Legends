@@ -42,6 +42,7 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public class AudioPlayback implements Runnable {
 
@@ -49,7 +50,6 @@ public class AudioPlayback implements Runnable {
     private boolean paused;
     private boolean looping;
     private boolean playingAudio;
-    private boolean lockVolume;
     private Thread thread;
     private static final Set<AudioPlayback> heap = new HashSet<>();
     private AudioType audioType;
@@ -57,6 +57,7 @@ public class AudioPlayback implements Runnable {
     //========================================
     private int bufferNames;
     private int srcNames;
+    private OggData ogg;
     //========================================
     private static long audioDevice;
     private static long audioContext;
@@ -136,7 +137,7 @@ public class AudioPlayback implements Runnable {
 
     private void loadAudioFile(InputStream in, int[] format, ByteBuffer[] data, int[] size, int[] freq) throws IOException {
         OggDecoder decoder = new OggDecoder();
-        OggData ogg = decoder.Data(in);
+        ogg = decoder.Data(in);
         format[0] = ogg.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
         data[0] = ogg.data;
         freq[0] = ogg.rate;
@@ -205,7 +206,7 @@ public class AudioPlayback implements Runnable {
 
     private void setVolume(float volume) {
         this.volume = volume;
-        if (playingAudio && !lockVolume)
+        if (playingAudio)
             alSourcef(srcNames, AL_GAIN, volume / 100.0f);
     }
 
@@ -216,10 +217,21 @@ public class AudioPlayback implements Runnable {
     public void togglePause() {
         paused = !paused;
         if (paused)
-            alSourcePause(srcNames);
+            pause();
         else
-            alSourcePlay(srcNames);
+            resume();
     }
+
+    public void pause() {
+        paused = true;
+        alSourcePause(srcNames);
+    }
+
+    public void resume() {
+        paused = false;
+        alSourcePlay(srcNames);
+    }
+
 
     public void stop() {
         alSourceStop(srcNames);
@@ -227,7 +239,6 @@ public class AudioPlayback implements Runnable {
 
     public void stop(int milliFadeTimeout) {
         float volumeDecrement = volume / milliFadeTimeout;
-        lockVolume = true;
         new Thread(() -> {
             while (volume > 0.0f) {
                 setVolume(volume - volumeDecrement);
@@ -244,9 +255,11 @@ public class AudioPlayback implements Runnable {
 
     public void close() {
         heap.remove(this);
+        alSourcei(srcNames, AL_BUFFER, 0);
         alSourceStop(srcNames);
         alDeleteSources(srcNames);
         alDeleteBuffers(bufferNames);
+        free(ogg.data);
     }
 
     public static void closeAll() {

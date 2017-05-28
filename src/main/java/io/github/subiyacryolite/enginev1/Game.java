@@ -78,8 +78,13 @@ public abstract class Game {
         setHeight(height);
     }
 
-    public void setMode(Mode mode) {
+    public final void setMode(Mode mode) {
+        if (mode == null) return;
+        if (this.mode == mode) return;
+        if (this.mode != null)
+            this.mode.onLeaveMode();
         this.mode = mode;
+        this.mode.onEnterMode();
     }
 
     public void setSwitchingModes(boolean switchingModes) {

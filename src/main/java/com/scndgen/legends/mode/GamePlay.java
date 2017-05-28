@@ -438,6 +438,7 @@ public abstract class GamePlay extends Mode {
     public void update(long delta) {
         super.update(delta);
         if (loadAssets) return;
+        if (playingCutscene) return;
         if (!gameOver) {
             handleOpponentAi(delta);
             handleOpponentAttacks(delta);

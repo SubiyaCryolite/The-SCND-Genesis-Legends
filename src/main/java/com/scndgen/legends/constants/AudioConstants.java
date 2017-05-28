@@ -60,9 +60,6 @@ public class AudioConstants {
         return "audio/from_0AD/WeaponSwingHigh.ogg";
     }
 
-    public static String enemyAttck() {
-        return "audio/hitlow.ogg";
-    }
 
     public static String furyAttck() {
         return "audio/hithard.ogg";
@@ -84,20 +81,12 @@ public class AudioConstants {
         return "audio/itembox_get.ogg";
     }
 
-    public static String itemSound2() {
-        return "audio/itembox_get.ogg";
-    }
-
     public static String startUpSound() {
         return "audio/Ryan Reilly - Victory.ogg";
     }
 
-    public static String flameSwoosh() {
-        return "audio/flame_whoosh.ogg";
-    }
-
     public static String menuMus() {
-        return "audio/Doug Kaufman - The City Falls.ogg";
+        return "audio/scotty/Aeon AstriX.ogg";
     }
 
     public static String winSound() {

@@ -24,13 +24,11 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.Stage;
-import com.scndgen.legends.enums.StageSelectionMode;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,21 +44,22 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
 public class RenderStageSelect extends StageSelect {
 
     private static RenderStageSelect instance;
-    //♩♪♬♫
-    private String[] amnientMusicMetaData = {"\"The King is Dead\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //0
-            "\"vengeful\" by \"Jeremy Nicoll\" from \"The Battle for Wesnoth OST\"", //1
-            "\"The City Falls\" by \"Doug Kaufman\" from \"The Battle for Wesnoth OST\"", //2
-            "\"Suspense\" by \"Ryan Reilly\" from \"The Battle for Wesnoth OST\"", //3
-            "\"Elvish theme\" by \"Doug Kaufman\" from \"The Battle for Wesnoth OST\"", //4
-            "\"Breaking the Chains\" by \"Mattias Westlund\" from \"The Battle for Wesnoth OST\"", //5
-            "\"Battle Music\" by \"Aleksi Aubry-Carlson\" from \"The Battle for Wesnoth OST\""}; //6
-    private String[] ambientMusic = {"Mattias Westlund - The King is Dead",
-            "Jeremy Nicoll - Vengeful Pursuit",
-            "Doug Kaufman - The City Falls",
-            "Ryan Reilly - Suspense",
-            "Doug Kaufman - Elvish theme",
-            "Mattias Westlund - Breaking the Chains",
-            "Aleksi Aubry-Carlson - Battle Music"};
+    private String[] amnientMusicMetaData = {
+            "\"KORNIKOVA\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //0
+            "\"Zulu Warrior\" by \"Scotty Zepplin\"", //1
+            "\"Silikon Orchestra (guardian's awakening)\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //2
+            "\"Sirens Octave\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //3
+            "\"tRAVELLING FIREFLIES\" by \"Scotty Zepplin\" from \"Magical Untold Cookies\"", //4
+            "\"We Are\" by \"Scotty Zepplin\" from \"Magical Untold Cookies\"", //5
+            "\"Rays\" by \"Scotty Zepplin\""}; //6
+    private String[] ambientMusic = {
+            "scotty/KORNIKOVA",
+            "scotty/Scotty Zepplin - Zulu Warrior",
+            "scotty/Silikon Orchestra",
+            "scotty/Sirens Octave",
+            "scotty/Scotty Zepplin - tRAVELLING FIREFLIES",
+            "scotty/scotty zepplin - We Are",
+            "scotty/Scotty Zepplin - Rays"};
     private Image captionHighlight, loading;
     private Loader loader;
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
@@ -85,6 +84,17 @@ public class RenderStageSelect extends StageSelect {
     private final UiItem scorchedRuinsNight;
     private final UiItem hiddenCaveNight;
     private final UiItem random;
+    private AudioPlayback menuMusic;
+
+    public void onEnterMode() {
+        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - Zulu Warrior.ogg", AudioType.MUSIC, true);
+        menuMusic.play();
+    }
+
+    public void onLeaveMode() {
+        menuMusic.stop(2000);
+    }
+
 
     public RenderStageSelect() {
         Event commonEvent = new Event() {
