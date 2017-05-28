@@ -8,6 +8,7 @@ import io.github.subiyacryolite.enginev1.Game;
 import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 /**
  * Created by ifunga on 15/04/2017.
@@ -104,6 +105,10 @@ public class ScndGenLegends extends Game {
         if (this.getMode() != null && !isSwitchingModes())
             this.getMode().mouseClicked(mouseEvent);
     }
+
+    public void mouseScrolled(ScrollEvent scrollEvent)
+    {if (this.getMode() != null && !isSwitchingModes())
+        this.getMode().mouseScrolled(scrollEvent);}
 
     public void setMouseX(double mouseX) {
         this.mouseX = mouseX;

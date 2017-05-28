@@ -25,6 +25,7 @@ public class Engine extends Application {
         canvas.setOnKeyPressed(keyEvent -> game.keyPressed(keyEvent));
         canvas.setOnMouseMoved(mouseEvent -> game.mouseMoved(mouseEvent));
         canvas.setOnMouseClicked(mouseEvent -> game.mouseClicked(mouseEvent));
+        canvas.setOnScroll(scrollEvent -> game.mouseScrolled(scrollEvent));
         canvas.setFocusTraversable(true);
         Group group = new Group();
         group.getChildren().add(canvas);

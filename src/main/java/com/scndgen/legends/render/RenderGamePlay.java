@@ -43,6 +43,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -81,6 +82,7 @@ public class RenderGamePlay extends GamePlay {
     private final UiItem attackEleven;
     private final UiItem attackTwelve;
     private final UiItem fury;
+    private AudioPlayback ambientMusic;
 
 
     public RenderGamePlay() {
@@ -932,13 +934,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntChar = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.MALE_HURT.length) {
-                attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
+                AudioPlayback attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         } else {
             randSoundIntChar = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.FEMALE_HURT.length) {
-                attackChar = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntChar), AudioType.VOICE, false);
+                AudioPlayback attackChar = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         }
@@ -948,13 +950,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.MALE_HURT.length) {
-                attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
+                AudioPlayback attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         } else {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.FEMALE_HURT.length) {
-                attackOpp = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntOpp), AudioType.VOICE, false);
+                AudioPlayback attackOpp = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         }
@@ -964,13 +966,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.getInstance().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.MALE_ATTACKS.length) {
-                hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
+                AudioPlayback hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         } else {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                hurtChar = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
+                AudioPlayback hurtChar = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         }
@@ -980,23 +982,25 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.getInstance().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.MALE_ATTACKS.length) {
-                hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
+                AudioPlayback hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         } else {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                hurtOpp = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
+                AudioPlayback hurtOpp = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         }
     }
 
     public void furySound() {
+        AudioPlayback furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
         furySound.play();
     }
 
     private void nrmlDamageSound() {
+        AudioPlayback damageSound = new AudioPlayback(AudioConstants.playerAttack(), AudioType.SOUND, false);
         damageSound.play();
     }
 
@@ -1016,30 +1020,12 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public synchronized void playBGMusic() {
-        if (ambientMusic != null) {
-            ambientMusic.stop();
-        }
         ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
         ambientMusic.play();
     }
 
-    /**
-     * togglePause threads
-     */
-    public void pauseThreads() {
-        try {
-            ambientMusic.togglePause();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
     public void closeAudio() {
-        try {
-            ambientMusic.stop();
-            //ambientMusic.close();
-        } catch (Exception e) {
-        }
+        ambientMusic.stop(1000);
     }
 
     /**
@@ -1117,12 +1103,19 @@ public class RenderGamePlay extends GamePlay {
         loadAssets = true;
     }
 
+    public void mouseScrolled(ScrollEvent scrollEvent) {
+        if (scrollEvent.getDeltaY() > 0)
+            onLeft();
+        else
+            onRight();
+    }
+
     private class PauseAndNavigate extends Event {
         @Override
         public void onAccept() {
             if (!gameOver && !playingCutscene) {
                 if (safeToSelect) {
-                    sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
+                    AudioPlayback sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
                     characterAttacks.push(activeAttack); // count initially negative 1, add one to get to index 0

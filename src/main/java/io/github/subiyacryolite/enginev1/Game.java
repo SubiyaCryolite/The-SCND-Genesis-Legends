@@ -4,6 +4,7 @@ import com.scndgen.legends.enums.ModeEnum;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 
 /**
@@ -93,6 +94,8 @@ public abstract class Game {
 
     public abstract void mouseClicked(MouseEvent mouseEvent);
 
+    public abstract void mouseScrolled(ScrollEvent scrollEvent);
+
     public void run() {
         do {
             try {
@@ -103,4 +106,6 @@ public abstract class Game {
         }
         while (running);
     }
+
+
 }

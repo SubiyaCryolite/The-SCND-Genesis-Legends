@@ -121,7 +121,7 @@ public class Thing extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
-                sound3.play();
+                play();
                 attackStr = status[0];
                 damage = bonus + 106;
                 gamePlay.setStatIndex(1);
@@ -135,7 +135,7 @@ public class Thing extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
-                sound3.play();
+                play();
                 attackStr = status[1];
                 damage = bonus + 100;
                 gamePlay.setStatIndex(1);
@@ -149,7 +149,7 @@ public class Thing extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
-                sound3.play();
+                play();
                 attackStr = status[2];
                 damage = bonus + 108;
                 gamePlay.setStatIndex(1);
@@ -163,7 +163,7 @@ public class Thing extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
-                sound3.play();
+                play();
                 attackStr = status[3];
                 damage = bonus + 102;
                 gamePlay.setStatIndex(1);

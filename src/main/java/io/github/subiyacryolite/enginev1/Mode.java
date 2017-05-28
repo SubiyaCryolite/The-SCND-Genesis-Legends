@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Font;
 
 
@@ -92,7 +93,7 @@ public abstract class Mode implements UiScreen {
     }
 
     protected void update(final long delta) {
-        if (paused) return;
+
     }
 
     public void keyReleased(final KeyEvent keyEvent) {
@@ -224,5 +225,12 @@ public abstract class Mode implements UiScreen {
     protected final void ensureActiveUiItemSet() {
         if (activeItem == null)
             throw new RuntimeException("Each mode must have a default active UI itemAttacks");
+    }
+
+    public void mouseScrolled(ScrollEvent scrollEvent) {
+        if (scrollEvent.getDeltaY() > 0)
+            onUp();
+        else
+            onDown();
     }
 }

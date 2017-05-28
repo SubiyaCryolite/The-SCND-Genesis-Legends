@@ -108,7 +108,7 @@ public class Aisha extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
-                sound3.play();
+                play();
                 attackStr = status[0];
                 //girls have a healing bonus of 5 XD
                 damage = 82;
@@ -123,7 +123,7 @@ public class Aisha extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
-                sound3.play();
+                play();
                 attackStr = status[1];
                 damage = 84;
                 gamePlay.setStatIndex(1);
@@ -137,7 +137,7 @@ public class Aisha extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
-                sound3.play();
+                play();
                 attackStr = status[2];
                 damage = 78;
                 gamePlay.setStatIndex(1);
@@ -151,7 +151,7 @@ public class Aisha extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
-                sound3.play();
+                play();
                 attackStr = status[3];
                 damage = 80;
                 gamePlay.setStatIndex(1);

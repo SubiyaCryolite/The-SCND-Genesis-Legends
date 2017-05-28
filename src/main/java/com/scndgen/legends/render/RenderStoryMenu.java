@@ -24,7 +24,6 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
@@ -93,7 +92,7 @@ public class RenderStoryMenu extends StoryMenu {
             }
 
             public void onBackCancel() {
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
             }
 
             @Override
@@ -281,8 +280,10 @@ public class RenderStoryMenu extends StoryMenu {
     public void selectScene() {
         if (validIndex(hoveredScene)) {
             StoryMode.getInstance().startStoryMode(hoveredScene);
+            AudioPlayback menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, false);
             menuSound.play();
         } else {
+            AudioPlayback errorSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, false);
             errorSound.play();
         }
     }
@@ -290,9 +291,7 @@ public class RenderStoryMenu extends StoryMenu {
     public void loadAssetsIml() {
         header = getMyFont(LoginScreen.extraTxtSize);
         normal = getMyFont(LoginScreen.normalTxtSize);
-        victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC, true);
-        menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, true);
-        errorSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, true);
+
         Loader loader = new Loader();
         RenderStageSelect.getInstance().setStageSelected(false);
         try {

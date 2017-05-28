@@ -12,7 +12,7 @@ public class Player {
 
     @Test
     public void run() {
-        AudioPlayback ap = new AudioPlayback("audio/Aleksi Aubry-Carlson - Battle Music.ogg", AudioType.MUSIC, false);
-        ap.play();
+        AudioPlayback audioPlayback = new AudioPlayback("audio/Aleksi Aubry-Carlson - Battle Music.ogg", AudioType.MUSIC, false);
+        audioPlayback.play();
     }
 }

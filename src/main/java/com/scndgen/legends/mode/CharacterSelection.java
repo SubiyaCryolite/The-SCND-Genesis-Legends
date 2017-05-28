@@ -23,7 +23,7 @@ import java.util.Hashtable;
 public abstract class CharacterSelection extends Mode {
     protected static String charDesc = "";
     protected int[] attacks;
-    protected String[] statsChar = new String[LoginScreen.getInstance().charNames.length];
+    protected String[] characterDescription = new String[LoginScreen.getInstance().charNames.length];
     protected final int numOfCharacters = CharacterEnum.values().length;
     protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
     protected Loader loader;
@@ -33,7 +33,6 @@ public abstract class CharacterSelection extends Mode {
     protected int oppPrevLoc, charPrevLoc;
     protected boolean selectedCharacter, selectedOpponent, animatorThreadRunning;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
-    protected final AudioPlayback sound, error;
     protected final int columns = 3;
     protected final int rows = numOfCharacters / columns;
     protected final int rowsCiel = Math.round(Math.round(Math.ceil(numOfCharacters / (double) columns)));
@@ -57,12 +56,14 @@ public abstract class CharacterSelection extends Mode {
      * Initialises the characterEnum select panel
      */
     public CharacterSelection() {
-        error = new AudioPlayback("audio/error.ogg", AudioType.SOUND, false);
-        sound = new AudioPlayback(AudioConstants.charSelectSound(), AudioType.SOUND, false);
+
         attacks = new int[4];
     }
 
-
+    protected void playSelectSound() {
+        AudioPlayback sound = new AudioPlayback(AudioConstants.charSelectSound(), AudioType.SOUND, false);
+        sound.play();
+    }
 
     public void setAttacks(int attackNUm, int frames) {
         attacks[attackNUm] = frames;
@@ -151,7 +152,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(84));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.RAILA;
             Characters.getInstance().prepare(characterEnum);
@@ -165,7 +166,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         } else if (type == Player.OPPONENT && selectedOpponent == false) {
-            sound.play();
+            playSelectSound();
             if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
             }
             selectedOpponent = true;
@@ -184,7 +185,7 @@ public abstract class CharacterSelection extends Mode {
         if (type == Player.CHARACTER) //when selecting char
         {
             primaryNotice(Language.getInstance().get(85));
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.SUBIYA;
             Characters.getInstance().prepare(characterEnum);
@@ -201,7 +202,7 @@ public abstract class CharacterSelection extends Mode {
         }
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.SUBIYA;
             Characters.getInstance().prepareO(opponentEnum);
@@ -218,7 +219,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(86));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.LYNX;
             Characters.getInstance().prepare(characterEnum);
@@ -235,7 +236,7 @@ public abstract class CharacterSelection extends Mode {
         }
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.LYNX;
             Characters.getInstance().prepareO(opponentEnum);
@@ -252,7 +253,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(87));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.AISHA;
             Characters.getInstance().prepare(characterEnum);
@@ -269,7 +270,7 @@ public abstract class CharacterSelection extends Mode {
         }
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.AISHA;
             Characters.getInstance().prepareO(opponentEnum);
@@ -286,7 +287,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(88));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.ADE;
             Characters.getInstance().prepare(characterEnum);
@@ -303,7 +304,7 @@ public abstract class CharacterSelection extends Mode {
         }
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.ADE;
             Characters.getInstance().prepareO(opponentEnum);
@@ -320,7 +321,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(89));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.RAVAGE;
             Characters.getInstance().prepare(characterEnum);
@@ -338,7 +339,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.RAVAGE;
             Characters.getInstance().prepareO(opponentEnum);
@@ -355,7 +356,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(90));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.JONAH;
             Characters.getInstance().prepare(characterEnum);
@@ -373,7 +374,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.JONAH;
             Characters.getInstance().prepareO(opponentEnum);
@@ -390,7 +391,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(91));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.ADAM;
             Characters.getInstance().prepare(characterEnum);
@@ -408,7 +409,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.NOVA_ADAM;
             Characters.getInstance().prepareO(opponentEnum);
@@ -425,7 +426,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(92));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.NOVA_ADAM;
             Characters.getInstance().prepare(characterEnum);
@@ -443,7 +444,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.NOVA_ADAM;
             Characters.getInstance().prepareO(opponentEnum);
@@ -460,7 +461,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(93));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.AZARIA;
             Characters.getInstance().prepare(characterEnum);
@@ -478,7 +479,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.AZARIA;
             Characters.getInstance().prepareO(opponentEnum);
@@ -495,7 +496,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice(Language.getInstance().get(94));
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.SORROWE;
             Characters.getInstance().prepare(characterEnum);
@@ -513,7 +514,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             Characters.getInstance().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
@@ -529,7 +530,7 @@ public abstract class CharacterSelection extends Mode {
         primaryNotice("..........");
         if (type == Player.CHARACTER) //when selecting char
         {
-            sound.play();
+            playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.THING;
             Characters.getInstance().prepare(characterEnum);
@@ -547,7 +548,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
             Characters.getInstance().prepareO(opponentEnum);
@@ -556,7 +557,7 @@ public abstract class CharacterSelection extends Mode {
 
         if (type == Player.BOSS && selectedOpponent == false) // when selecting opponent as boss
         {
-            sound.play();
+            playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
             Characters.getInstance().prepareO(opponentEnum);
@@ -725,6 +726,7 @@ public abstract class CharacterSelection extends Mode {
      * Plays error sound
      */
     public void errorSound() {
+        AudioPlayback error = new AudioPlayback("audio/error.ogg", AudioType.SOUND, false);
         error.play();
     }
 

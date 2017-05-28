@@ -362,6 +362,7 @@ public class RenderStageSelect extends StageSelect {
 
     public void newInstance() {
         super.newInstance();
+        stageSelected = false;
     }
 
 }

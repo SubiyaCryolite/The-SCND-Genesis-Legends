@@ -22,23 +22,73 @@ package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.state.GameState;
+import io.github.subiyacryolite.enginev1.ogg.OggData;
+import io.github.subiyacryolite.enginev1.ogg.OggDecoder;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALUtil;
+import org.lwjgl.system.MemoryStack;
 
-import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.*;
+import static org.lwjgl.openal.ALC11.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class AudioPlayback implements Runnable {
 
     private String fileName;
-    private boolean playing;
     private boolean paused;
     private boolean looping;
+    private boolean playingAudio;
+    private boolean lockVolume;
     private Thread thread;
     private static final Set<AudioPlayback> heap = new HashSet<>();
     private AudioType audioType;
     private float volume;
+    //========================================
+    private int bufferNames;
+    private int srcNames;
+    //========================================
+    private static long audioDevice;
+    private static long audioContext;
+
+    static {
+        audioDevice = alcOpenDevice((ByteBuffer) null);
+        if (audioDevice == NULL)
+            throw new IllegalStateException("Failed to open the default device.");
+        ALCCapabilities deviceCaps = ALC.createCapabilities(audioDevice);
+        System.out.println("OpenALC10: " + deviceCaps.OpenALC10);
+        System.out.println("OpenALC11: " + deviceCaps.OpenALC11);
+        System.out.println("caps.ALC_EXT_EFX = " + deviceCaps.ALC_EXT_EFX);
+        if (deviceCaps.OpenALC11) {
+            List<String> devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
+            if (devices == null)
+                throw new IllegalStateException("Failed to open the default device.");
+            else {
+                for (int i = 0; i < devices.size(); i++)
+                    System.out.println(i + ": " + devices.get(i));
+            }
+        }
+        String defaultDeviceSpecifier = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+        System.out.println("Default device: " + defaultDeviceSpecifier);
+        audioContext = alcCreateContext(audioDevice, (IntBuffer) null);
+        alcMakeContextCurrent(audioContext);
+        AL.createCapabilities(deviceCaps);
+        System.out.println("ALC_FREQUENCY: " + alcGetInteger(audioDevice, ALC_FREQUENCY) + "Hz");
+        System.out.println("ALC_REFRESH: " + alcGetInteger(audioDevice, ALC_REFRESH) + "Hz");
+        System.out.println("ALC_SYNC: " + (alcGetInteger(audioDevice, ALC_SYNC) == ALC_TRUE));
+        System.out.println("ALC_MONO_SOURCES: " + alcGetInteger(audioDevice, ALC_MONO_SOURCES));
+        System.out.println("ALC_STEREO_SOURCES: " + alcGetInteger(audioDevice, ALC_STEREO_SOURCES));
+    }
 
     public AudioPlayback(String filename, AudioType audioType, boolean loop) {
         this.fileName = filename;
@@ -58,19 +108,45 @@ public class AudioPlayback implements Runnable {
         }
     }
 
+    private void checkForError() throws Exception {
+        int result;
+        if ((result = alGetError()) != AL_NO_ERROR) {
+            throw new Exception(alErrorString(result));
+        }
+    }
 
-    public boolean isPlaying() {
-        return thread.isAlive() || playing;
+    private String alErrorString(int err) {
+        switch (err) {
+            case AL_NO_ERROR:
+                return "AL_NO_ERROR";
+            case AL_INVALID_NAME:
+                return "AL_INVALID_NAME";
+            case AL_INVALID_ENUM:
+                return "AL_INVALID_ENUM";
+            case AL_INVALID_VALUE:
+                return "AL_INVALID_VALUE";
+            case AL_INVALID_OPERATION:
+                return "AL_INVALID_OPERATION";
+            case AL_OUT_OF_MEMORY:
+                return "AL_OUT_OF_MEMORY";
+            default:
+                return null;
+        }
+    }
+
+    private void loadAudioFile(InputStream in, int[] format, ByteBuffer[] data, int[] size, int[] freq) throws IOException {
+        OggDecoder decoder = new OggDecoder();
+        OggData ogg = decoder.Data(in);
+        format[0] = ogg.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+        data[0] = ogg.data;
+        freq[0] = ogg.rate;
+        size[0] = ogg.data.capacity();
     }
 
     // play the MP3 file to the sound card
     public void play() {
-//        if (thread != null && (playing || paused))
-//            thread.stop();
-//        thread = new Thread(this);
-//        thread.setDaemon(true);
-//        thread.setName("Audio Playback - " + this.fileName);
-//        thread.start();
+        thread = new Thread(this);
+        thread.start();
     }
 
     public static void volume(AudioType audioType, float volume) {
@@ -83,68 +159,98 @@ public class AudioPlayback implements Runnable {
 
     @Override
     public void run() {
-        playAudio();
+        try {
+            int[] format = new int[1];
+            int[] size = new int[1];
+            int[] freq = new int[1];
+            ByteBuffer[] data = new ByteBuffer[1];
+            try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
+                alGetError();
+                bufferNames = alGenBuffers();
+                checkForError();
+                srcNames = alGenSources();
+                checkForError();
+
+                loadAudioFile(inputStream, format, data, size, freq);
+                alBufferData(bufferNames, format[0], data[0], freq[0]);
+                checkForError();
+                alSourcei(srcNames, AL_BUFFER, bufferNames);
+                alSourcei(srcNames, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
+                alSourcef(srcNames, AL_PITCH, 1.0f);
+                alSourcef(srcNames, AL_GAIN, volume / 100.0f);
+                playingAudio = true;
+                alSourcePlay(srcNames);
+                checkForError();
+                try (MemoryStack mem = MemoryStack.create()) {
+                    IntBuffer audioState = mem.callocInt(1);
+                    mem.push();
+                    int state = methodWaitTillDone(audioState);
+                    while (state == AL_PLAYING || state == AL_PAUSED) {
+                        Thread.sleep(16);//wait till done
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            System.err.printf("Problem with [%s - %s] %s\n", srcNames, bufferNames, fileName);
+            ex.printStackTrace(System.err);
+        } finally {
+            close();
+        }
     }
 
-    public void togglePause() {
-        paused = !paused;
-        if(thread==null)return;
-        if (!paused)
-            thread.suspend();
-        else
-            thread.resume();
-    }
-
-    public void stop() {
-        if(thread==null)return;
-        if (thread.isAlive())
-            thread.stop();
-        heap.remove(this);
+    private int methodWaitTillDone(IntBuffer audioState) {
+        alGetSourcei(srcNames, AL_SOURCE_STATE, audioState);
+        return audioState.get(0);
     }
 
     private void setVolume(float volume) {
         this.volume = volume;
-        if (playing || paused) {
-            //float control here
-        }
-    }
-
-    private void playAudio() {
-        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName); AudioInputStream in = AudioSystem.getAudioInputStream(inputStream)) {
-            if (in != null) {
-                AudioFormat baseFormat = in.getFormat();
-                AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
-                AudioInputStream dataIn = AudioSystem.getAudioInputStream(targetFormat, in);
-                byte[] buffer = new byte[4096];
-                DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
-                SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
-                if (line != null) {
-                    playing = true;
-                    line.open();
-                    line.start();
-                    int nBytesRead = 0, nBytesWritten = 0;
-                    while (nBytesRead != -1) {
-                        nBytesRead = dataIn.read(buffer, 0, buffer.length);
-                        if (nBytesRead != -1) {
-                            nBytesWritten = line.write(buffer, 0, nBytesRead);
-                        }
-                    }
-                    line.drain();
-                    line.stop();
-                    line.close();
-                    dataIn.close();
-                }
-            }
-            playing = false;
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace(System.err);
-        }
-        if (looping)
-            playAudio();//call again
+        if (playingAudio && !lockVolume)
+            alSourcef(srcNames, AL_GAIN, volume / 100.0f);
     }
 
     public AudioType getAudioType() {
         return audioType;
+    }
+
+    public void togglePause() {
+        paused = !paused;
+        if (paused)
+            alSourcePause(srcNames);
+        else
+            alSourcePlay(srcNames);
+    }
+
+    public void stop() {
+        alSourceStop(srcNames);
+    }
+
+    public void stop(int milliFadeTimeout) {
+        float volumeDecrement = volume / milliFadeTimeout;
+        lockVolume = true;
+        new Thread(() -> {
+            while (volume > 0.0f) {
+                setVolume(volume - volumeDecrement);
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            alSourceStop(srcNames);
+        }).start();
+
+    }
+
+    public void close() {
+        heap.remove(this);
+        alSourceStop(srcNames);
+        alDeleteSources(srcNames);
+        alDeleteBuffers(bufferNames);
+    }
+
+    public static void closeAll() {
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
     }
 }

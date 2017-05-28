@@ -101,7 +101,7 @@ public class NovaAdam extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
-                sound3.play();
+                play();
                 attackStr = status[0];
                 damage = 123;
                 gamePlay.setStatIndex(1);
@@ -115,7 +115,7 @@ public class NovaAdam extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
-                sound3.play();
+                play();
                 attackStr = status[1];
                 damage = 125;
                 gamePlay.setStatIndex(1);
@@ -129,7 +129,7 @@ public class NovaAdam extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
-                sound3.play();
+                play();
                 attackStr = status[2];
                 damage = 129;
                 gamePlay.setStatIndex(1);
@@ -143,7 +143,7 @@ public class NovaAdam extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
-                sound3.play();
+                play();
                 attackStr = status[3];
                 damage = 111;
                 gamePlay.setStatIndex(1);

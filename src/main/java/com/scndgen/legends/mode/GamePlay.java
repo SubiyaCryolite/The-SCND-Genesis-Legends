@@ -58,7 +58,6 @@ import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
  */
 public abstract class GamePlay extends Mode {
     protected final String[] physicalAttacks = new String[]{"", "", "", ""}, celestiaAttacks = new String[]{"", "", "", ""}, itemAttacks = new String[]{"", "", "", ""};
-    protected final AudioPlayback furySound, damageSound;
     protected float characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected boolean triggerCharacterAttack;
     protected boolean triggerOpponentAttack;
@@ -149,7 +148,6 @@ public abstract class GamePlay extends Mode {
     protected float damageLayerOpacity;
     protected int charOp = 10, comicBookTextIndex = 0;
     protected int limitBreak;
-    protected AudioPlayback sound, ambientMusic, hurtChar, hurtOpp, attackChar, attackOpp;
     protected boolean isCharacterAttacking;
     protected int columnIndex;
     protected int rowIndex;
@@ -162,8 +160,6 @@ public abstract class GamePlay extends Mode {
 
 
     protected GamePlay() {
-        furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
-        damageSound = new AudioPlayback(AudioConstants.playerAttack(), AudioType.SOUND, false);
         furyBarCoolDownFactor = 30 - (8 + (GameState.getInstance().getLogin().resolveDifficulty() * 2));
     }
 
@@ -424,7 +420,6 @@ public abstract class GamePlay extends Mode {
     public boolean isRunning = false;
     public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
-    public AudioPlayback loseMusic, winMusic;
     private boolean newMatch;
     private float characterAtbValue;
     private float opponentAtbValue;
@@ -442,6 +437,7 @@ public abstract class GamePlay extends Mode {
 
     public void update(long delta) {
         super.update(delta);
+        if (loadAssets) return;
         if (!gameOver) {
             handleOpponentAi(delta);
             handleOpponentAttacks(delta);
@@ -846,10 +842,8 @@ public abstract class GamePlay extends Mode {
         maxAtb = 290;
         gameOver = false;
         newMatch = true;
-        winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
-        loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
+
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE == false) {
-            playBGMusic();
             musNotice();
             io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelection.getInstance().getSelectedCharIndex()));
         }
@@ -1567,9 +1561,11 @@ public abstract class GamePlay extends Mode {
         }
         if (hasWon()) {
             showWinLabel();
+            AudioPlayback winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
             winMusic.play();
         } else {
             showLoseLabel();
+            AudioPlayback loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
             loseMusic.play();
         }
         RenderStageSelect.getInstance().newInstance();
@@ -1672,7 +1668,7 @@ public abstract class GamePlay extends Mode {
 
     public void playMusicNow() {
         try {
-            playBGMusic();
+
             io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelection.getInstance().getSelectedCharIndex()));
         } catch (Exception e) {
             System.out.println("Dude, something went wrong " + e.getMessage());

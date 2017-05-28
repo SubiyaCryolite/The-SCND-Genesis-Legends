@@ -22,6 +22,8 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
+import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -42,9 +44,6 @@ public abstract class StoryMenu extends Mode {
     protected boolean loadingNow;
     protected int currentScene = GameState.getInstance().getLogin().getLastStoryScene();
     protected int storedX = 99, storedY = 99;
-    protected AudioPlayback victorySound;
-    protected AudioPlayback menuSound;
-    protected AudioPlayback errorSound;
 
     public void newInstance() {
         loadAssets = true;
@@ -99,6 +98,7 @@ public abstract class StoryMenu extends Mode {
             //incrementMode();
             //go onBackCancel to user difficulty
             GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficulty());
+            AudioPlayback victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
             JOptionPane.showMessageDialog(null, Language.getInstance().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
             answer = false;

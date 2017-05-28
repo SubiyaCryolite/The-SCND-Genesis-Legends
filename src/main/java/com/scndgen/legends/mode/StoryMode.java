@@ -43,7 +43,7 @@ public class StoryMode implements Runnable {
     public StoryProgress stat = StoryProgress.NORMAL;
     public final int max = 11;
     public int timeLimit;
-    private AudioPlayback storyMus;
+    private AudioPlayback storyMusic;
     private String storyText;
     private int opt, tlkSpeed, currentScene;
     private static Thread thread;
@@ -66,7 +66,7 @@ public class StoryMode implements Runnable {
     }
 
     private void setScene(int scene) {
-        storyMus = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
+        storyMusic = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
         tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
         opt = -1;
         RenderCharacterSelection.getInstance().newInstance();
@@ -174,7 +174,7 @@ public class StoryMode implements Runnable {
      * In playStory scene chars and opp should generate nothin
      */
     private void storyIn() {
-        storyMus.play();
+        storyMusic.play();
         RenderGamePlay.getInstance().reloadAssets();//set new properties, load relevant sprites
         RenderGamePlay.getInstance().charPortBlank();
         RenderGamePlay.getInstance().storyText("");
@@ -185,10 +185,11 @@ public class StoryMode implements Runnable {
 
     private void storyOut(boolean terminateMode) {
         if (terminateMode) {
-            storyMus.stop();
+            storyMusic.stop();
             RenderGamePlay.getInstance().playMusicNow();
             RenderGamePlay.getInstance().musNotice();
         }
+        RenderGamePlay.getInstance().playBGMusic();
         RenderGamePlay.getInstance().charPortBlank();
         RenderGamePlay.getInstance().storyText("");
         thread.stop();
@@ -961,7 +962,7 @@ public class StoryMode implements Runnable {
     }
 
     /**
-     * When you wins a match, move to the next level
+     * Move to the next level when you win a match
      */
 
     public void incrementMode() {

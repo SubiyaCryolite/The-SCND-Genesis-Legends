@@ -301,10 +301,10 @@ public class RenderCharacterSelection extends CharacterSelection {
         gc.drawImage(fg2, xCordCloud2, 0);
         gc.drawImage(fg3, 0, 0);
         if (p1Opac < (1.0f - opacInc)) {
-            p1Opac = p1Opac + opacInc;
+            p1Opac += opacInc;
         }
         if (opacChar < (1.0f - (opacInc * 2))) {
-            opacChar = opacChar + (opacInc * 2);
+            opacChar += (opacInc * 2);
         }
         gc.setFill(Color.BLACK);
         gc.setGlobalAlpha(0.70f);
@@ -355,7 +355,6 @@ public class RenderCharacterSelection extends CharacterSelection {
                 gc.setGlobalAlpha((1.0f));
             }
         }
-
         if (selectedCharacter && selectedOpponent) {
             gc.drawImage(fight, 0, 0);
             gc.setFont(bigFont);
@@ -368,24 +367,19 @@ public class RenderCharacterSelection extends CharacterSelection {
         if (!selectedCharacter) {
             //select character
             gc.drawImage(charDescPic, 0, 0);
-            gc.fillText(statsChar[hoveredCharacter.index()], 4 + x, 18);
+            gc.fillText(characterDescription[hoveredCharacter.index()], 4 + x, 18);
         }
         if (selectedCharacter && !selectedOpponent) {
             //select opponent
             gc.drawImage(oppDescPic, 452, 450);
-            gc.fillText(statsChar[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(statsChar[hoveredCharacter.index()], gc.getFont()) + x, 468);
+            gc.fillText(characterDescription[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
         }
         gc.drawImage(p1, 0, 180);
         gc.drawImage(p2, 812, 180);
-        if (x < 0)
-
-        {
+        if (x < 0) {
             x = x + 2;
         }
-        Overlay.getInstance().
-
-                overlay(gc, x, y);
-
+        Overlay.getInstance().overlay(gc, x, y);
     }
 
     private void loadCaps() {
@@ -429,17 +423,17 @@ public class RenderCharacterSelection extends CharacterSelection {
 
 
     private void loadDesc() {
-        statsChar[0] = Language.getInstance().get(134);
-        statsChar[1] = Language.getInstance().get(135);
-        statsChar[2] = Language.getInstance().get(136);
-        statsChar[3] = Language.getInstance().get(137);
-        statsChar[4] = Language.getInstance().get(138);
-        statsChar[5] = Language.getInstance().get(139);
-        statsChar[6] = Language.getInstance().get(140);
-        statsChar[7] = Language.getInstance().get(141);
-        statsChar[8] = Language.getInstance().get(142);
-        statsChar[9] = Language.getInstance().get(143);
-        statsChar[10] = Language.getInstance().get(144);
-        statsChar[11] = Language.getInstance().get(145);
+        characterDescription[CharacterEnum.RAILA.index()] = Language.getInstance().get(134);
+        characterDescription[CharacterEnum.SUBIYA.index()] = Language.getInstance().get(135);
+        characterDescription[CharacterEnum.LYNX.index()] = Language.getInstance().get(136);
+        characterDescription[CharacterEnum.AISHA.index()] = Language.getInstance().get(137);
+        characterDescription[CharacterEnum.RAVAGE.index()] = Language.getInstance().get(138);
+        characterDescription[CharacterEnum.ADE.index()] = Language.getInstance().get(139);
+        characterDescription[CharacterEnum.JONAH.index()] = Language.getInstance().get(140);
+        characterDescription[CharacterEnum.ADAM.index()] = Language.getInstance().get(141);
+        characterDescription[CharacterEnum.NOVA_ADAM.index()] = Language.getInstance().get(142);
+        characterDescription[CharacterEnum.AZARIA.index()] = Language.getInstance().get(143);
+        characterDescription[CharacterEnum.SORROWE.index()] = Language.getInstance().get(144);
+        characterDescription[CharacterEnum.THING.index()] = Language.getInstance().get(145);
     }
 }

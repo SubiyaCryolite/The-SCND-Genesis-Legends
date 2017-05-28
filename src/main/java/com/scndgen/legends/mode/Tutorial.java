@@ -47,16 +47,15 @@ public class Tutorial implements Runnable {
     private Image forward, back;
     private Thread thread;
     private Loader loader;
-    private boolean  skipSec;
+    private boolean skipSec;
     private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
     private Font normalFont;
-    private final AudioPlayback bgSound, nextSound, backSound;
+    private final AudioPlayback bgSound, backSound;
 
     public Tutorial() {
         backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
-        nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
         bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
         loader = new Loader();
         normalFont = getMyFont(LoginScreen.normalTxtSize);
@@ -179,11 +178,13 @@ public class Tutorial implements Runnable {
     }
 
     private void playBackSound() {
-            backSound.play();
+        AudioPlayback backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
+        backSound.play();
     }
 
     private void playForwardSound() {
-            nextSound.play();
+        AudioPlayback nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
+        nextSound.play();
     }
 
     private void setTxt(String p) {
@@ -840,7 +841,6 @@ public class Tutorial implements Runnable {
 
     public void onBackCancel() {
         bgSound.stop();
-        nextSound.stop();
         thread.stop();
         RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
     }

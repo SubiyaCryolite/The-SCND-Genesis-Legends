@@ -123,6 +123,8 @@ public abstract class StageSelect extends Mode {
         }
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
             selectedStage = stage;
+            bgLocation = "images/bgBG" + stage.filePrefix() + ".png";
+            fgLocation = "images/bgBG" + stage.filePrefix() + "fg.png";
             switch (stage) {
                 case IBEX_HILL:
                     selectIbexHill();
@@ -398,8 +400,7 @@ public abstract class StageSelect extends Mode {
     }
 
     public void start() {
-        bgLocation = "images/bgBG" + selectedStage.filePrefix() + ".png";
-        fgLocation = "images/bgBG" + selectedStage.filePrefix() + "fg.png";
+        RenderGamePlay.getInstance().playBGMusic();
         ScndGenLegends.getInstance().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
     }
 

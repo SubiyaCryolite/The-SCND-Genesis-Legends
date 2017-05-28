@@ -112,7 +112,7 @@ public class Raila extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
-                sound3.play();
+                play();
                 attackStr = status[0];
                 damage = 72;
                 gamePlay.setStatIndex(1);
@@ -126,7 +126,7 @@ public class Raila extends Character {
                 gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
-                sound3.play();
+                play();
                 attackStr = status[1];
                 damage = 79;
                 gamePlay.setStatIndex(1);
@@ -142,7 +142,7 @@ public class Raila extends Character {
             case "11":
                 limit[1] = limit[1] + 1;
                 if (limit[1] <= 4) {
-                    sound3.play();
+                    play();
                     attackStr = status[2];
                     gamePlay.setStatIndex(3);
                     if (player == Player.OPPONENT) {
@@ -160,7 +160,7 @@ public class Raila extends Character {
             case "12":
                 limit[0] = limit[0] + 1;
                 if (limit[0] <= 4) {
-                    sound3.play();
+                    play();
                     attackStr = status[3];
                     gamePlay.setStatIndex(4);
                     if (player == Player.OPPONENT) {

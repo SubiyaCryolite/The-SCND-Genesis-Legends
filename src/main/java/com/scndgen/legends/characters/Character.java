@@ -25,8 +25,8 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
-import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.mode.GamePlay;
+import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.image.Image;
@@ -46,7 +46,6 @@ public abstract class Character {
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     public float[] weakness;
     public float atbRecoveryRate;
-    protected final AudioPlayback sound3;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private Image[] sprites;
     private Loader pix;
@@ -56,7 +55,6 @@ public abstract class Character {
 
     public Character() {
         bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
-        sound3 = new AudioPlayback(AudioConstants.itemSound1(), AudioType.SOUND, false);
         isMale = true;
     }
 
@@ -249,5 +247,11 @@ public abstract class Character {
 
     public final void setDamageMultiplier(float value) {
         damageMultiplier = value;
+    }
+
+    public void play()
+    {
+        AudioPlayback sound3 = new AudioPlayback(AudioConstants.itemSound1(), AudioType.SOUND, false);
+        sound3.play();
     }
 }

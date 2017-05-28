@@ -7,6 +7,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 project.ext.jarDir = 'libs'
 project.ext.mainClass = 'com.scndgen.legends.ScndGenLegends'
+project.ext.lwjglVersion = "3.1.2"
+
 repositories {
     mavenCentral()
 }
@@ -15,22 +17,32 @@ dependencies {
     compile 'io.github.subiyacryolite:jds:1.170414'
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-lang:commons-lang:2.6'
+    compile 'commons-io:commons-io:2.5'
     compile 'org.xerial:sqlite-jdbc:3.7.2'
     compile 'com.github.trilarion:vorbis-support:1.1.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.9.0.pr2'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr2'
+    compile 'org.jcraft:jorbis:0.0.17'
+    compile "org.lwjgl:lwjgl:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
+    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
+    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
+    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
+    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
+    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
     testCompile 'junit:junit:4.11'
 }
 
 jar {
     manifest {
-        attributes (
+        attributes(
                 "Implementation-Title": rootProject.name,
                 "Implementation-Version": project.version,
-                "Created-By" : "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
+                "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
                 "Main-Class": project.ext.mainClass,
-                "Class-Path": configurations.runtime.collect { "libs/$it.name"}.join(' '),
+                "Class-Path": configurations.runtime.collect { "libs/$it.name" }.join(' '),
         )
     }
 }
