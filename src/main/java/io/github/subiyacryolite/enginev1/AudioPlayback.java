@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +43,6 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public class AudioPlayback {
@@ -53,12 +53,12 @@ public class AudioPlayback {
     private AudioType audioType;
     private boolean looping = false;
     private float volume = 0.0f;
-    //========================================
-    private final IntBuffer bufferNames = memAllocInt(1);
-    private final IntBuffer srcNames = memAllocInt(1);
+    private int bufferNames;
+    private int srcNames;
     //========================================
     private static long audioDevice;
     private static long audioContext;
+    private final static LinkedList<Integer> freeSources = new LinkedList<>();
 
     static {
         audioDevice = alcOpenDevice((ByteBuffer) null);
@@ -67,7 +67,6 @@ public class AudioPlayback {
         ALCCapabilities deviceCaps = ALC.createCapabilities(audioDevice);
         System.out.println("OpenALC10: " + deviceCaps.OpenALC10);
         System.out.println("OpenALC11: " + deviceCaps.OpenALC11);
-        System.out.println("caps.ALC_EXT_EFX = " + deviceCaps.ALC_EXT_EFX);
         if (deviceCaps.OpenALC11) {
             List<String> devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
             if (devices == null)
@@ -87,6 +86,9 @@ public class AudioPlayback {
         System.out.println("ALC_SYNC: " + (alcGetInteger(audioDevice, ALC_SYNC) == ALC_TRUE));
         System.out.println("ALC_MONO_SOURCES: " + alcGetInteger(audioDevice, ALC_MONO_SOURCES));
         System.out.println("ALC_STEREO_SOURCES: " + alcGetInteger(audioDevice, ALC_STEREO_SOURCES));
+        for (int i = 0; i < alcGetInteger(audioDevice, ALC_MONO_SOURCES); i++) {
+            freeSources.add(alGenSources());
+        }
     }
 
     public AudioPlayback(String filename, AudioType audioType, boolean loop) {
@@ -133,13 +135,13 @@ public class AudioPlayback {
         }
     }
 
-    private static OggData loadAudioFile(InputStream in, int[] format, ByteBuffer[] data, int[] size, int[] freq) throws IOException {
+    private static OggData loadAudioFile(InputStream in, Container container) throws IOException {
         OggDecoder oggDecoder = new OggDecoder();
         OggData oggData = oggDecoder.Data(in);
-        format[0] = oggData.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
-        data[0] = oggData.data;
-        freq[0] = oggData.rate;
-        size[0] = oggData.data.capacity();
+        container.format = oggData.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+        container.data = oggData.data;
+        container.freq = oggData.rate;
+        container.size = oggData.data.capacity();
         return oggData;
     }
 
@@ -147,14 +149,21 @@ public class AudioPlayback {
     public void play() {
         new Thread(() -> {
             try {
-                OggData oggData = synchronizedCreationAndPlayback(fileName, bufferNames, srcNames);
+                Container container = new Container();
+                OggData oggData = synchronizedCreationAndPlayback(fileName, container);
                 if (oggData != null) {
-                    alSourcei(srcNames.get(0), AL_BUFFER, bufferNames.get(0));
-                    alSourcei(srcNames.get(0), AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
-                    alSourcef(srcNames.get(0), AL_PITCH, 1.0f);
-                    alSourcef(srcNames.get(0), AL_GAIN, volume / 100.0f);
-                    alSourcePlay(srcNames.get(0));
-                    checkForError();
+                    bufferNames = alGenBuffers();
+                    if (bufferNames <= 0)
+                        throw new Exception("Couldnt create the buffer");
+                    srcNames = freeSources.removeFirst();
+                    if (srcNames <= 0)
+                        throw new Exception("Couldnt create the source");
+                    alBufferData(bufferNames, container.format, container.data, container.freq);
+                    alSourcei(srcNames, AL_BUFFER, bufferNames);
+                    alSourcei(srcNames, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
+                    alSourcef(srcNames, AL_PITCH, 1.0f);
+                    alSourcef(srcNames, AL_GAIN, volume / 100.0f);
+                    alSourcePlay(srcNames);
                     try (MemoryStack mem = MemoryStack.create()) {
                         IntBuffer audioState = mem.callocInt(1);
                         mem.push();
@@ -166,7 +175,7 @@ public class AudioPlayback {
                     free(oggData.data);
                 }
             } catch (Exception ex) {
-                System.err.printf("Problem with [%s - %s] %s\n", srcNames.get(0), bufferNames.get(0), fileName);
+                System.err.printf("Problem with [%s - %s] %s\n", srcNames, bufferNames, fileName);
                 ex.printStackTrace(System.err);
             } finally {
                 close();
@@ -182,36 +191,32 @@ public class AudioPlayback {
         });
     }
 
-    private static synchronized OggData synchronizedCreationAndPlayback(String fileName, IntBuffer bufferNames, IntBuffer srcNames) throws Exception {
-        int[] format = new int[1];
-        int[] size = new int[1];
-        int[] freq = new int[1];
-        ByteBuffer[] data = new ByteBuffer[1];
+    private class Container {
+        int format;
+        int size;
+        int freq;
+        ByteBuffer data;
+    }
+
+    private static synchronized OggData synchronizedCreationAndPlayback(String fileName, Container container) throws Exception {
         try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
-            alGetError();
-            alGenBuffers(bufferNames);
-            checkForError();
-            alGenSources(srcNames);
-            checkForError();
-            OggData oggData = loadAudioFile(inputStream, format, data, size, freq);
-            alBufferData(bufferNames.get(0), format[0], data[0], freq[0]);
-            checkForError();
+            OggData oggData = loadAudioFile(inputStream, container);
             return oggData;
         } catch (Exception ex) {
-            System.err.printf("Problem with [%s - %s] %s\n", srcNames.get(0), bufferNames.get(0), fileName);
+            System.err.printf("Couldnt load file -> %s\n", fileName);
             ex.printStackTrace(System.err);
             return null;
         }
     }
 
-    private static int methodWaitTillDone(IntBuffer srcNames, IntBuffer audioState) {
-        alGetSourcei(srcNames.get(0), AL_SOURCE_STATE, audioState);
+    private static int methodWaitTillDone(int srcNames, IntBuffer audioState) {
+        alGetSourcei(srcNames, AL_SOURCE_STATE, audioState);
         return audioState.get(0);
     }
 
     private void setVolume(float volume) {
-        this.volume=volume;
-        alSourcef(srcNames.get(0), AL_GAIN, volume / 100.0f);
+        this.volume = volume;
+        alSourcef(srcNames, AL_GAIN, volume / 100.0f);
     }
 
     public AudioType getAudioType() {
@@ -228,17 +233,17 @@ public class AudioPlayback {
 
     public void pause() {
         paused = true;
-        alSourcePause(srcNames.get(0));
+        alSourcePause(srcNames);
     }
 
     public void resume() {
         paused = false;
-        alSourcePlay(srcNames.get(0));
+        alSourcePlay(srcNames);
     }
 
 
     public void stop() {
-        alSourceStop(srcNames.get(0));
+        alSourceStop(srcNames);
     }
 
     public void stop(int milliFadeTimeout) {
@@ -252,26 +257,25 @@ public class AudioPlayback {
                     e.printStackTrace();
                 }
             }
-            alSourceStop(srcNames.get(0));
+            alSourceStop(srcNames);
         }).start();
 
     }
 
     public void close() {
         heap.remove(this);
-        alSourcei(srcNames.get(0), AL_BUFFER, 0);
-        alSourceStop(srcNames.get(0));
-        int rem1 = bufferNames.remaining();
-        int rem2 = srcNames.remaining();
-        alDeleteSources(srcNames);
+        alSourcei(srcNames, AL_BUFFER, 0);
+        alSourceStop(srcNames);
         alDeleteBuffers(bufferNames);
-        free(bufferNames);
-        free(srcNames);
+        freeSources.addLast(srcNames);
     }
 
     public static void closeAll() {
         for (AudioPlayback audioPlayback : heap) {
             audioPlayback.stop();
+        }
+        for (Integer source : freeSources) {
+            alDeleteSources(source);
         }
         alcDestroyContext(audioContext);
         alcCloseDevice(audioDevice);
