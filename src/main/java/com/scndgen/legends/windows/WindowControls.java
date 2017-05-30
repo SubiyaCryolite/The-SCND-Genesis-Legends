@@ -48,7 +48,7 @@ public class WindowControls extends Stage {
     private Label mLabel, m1, m2, m3, m4, m5, m6, m8, m7, m9, m10;
 
     public WindowControls() {
-        //normalFont = getMyFont(LoginScreen.normalTxtSize - 2);
+        //normalFont = loadFont(LoginScreen.normalTxtSize - 2);
         logoPic = new SpecialDrawMenuBGs();
 
         box = new VBox();

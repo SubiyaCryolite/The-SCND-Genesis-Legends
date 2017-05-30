@@ -955,6 +955,7 @@ public class StoryMode implements Runnable {
                 }
             } else {
                 startStoryMode(currentScene);//try again
+                RenderGamePlay.getInstance().onLeaveMode();//stop music!!
             }
         } else {
             storyMusic.stop(2000);

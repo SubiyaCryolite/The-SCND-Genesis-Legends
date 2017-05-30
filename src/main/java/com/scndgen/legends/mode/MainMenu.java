@@ -68,7 +68,7 @@ public abstract class MainMenu extends Mode {
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
-        font = getMyFont(fontSize - 2);
+        font = loadFont(fontSize - 2);
         new Thread() {
             @Override
             public void run() {

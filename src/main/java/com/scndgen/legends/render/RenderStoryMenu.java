@@ -300,8 +300,8 @@ public class RenderStoryMenu extends StoryMenu {
     }
 
     public void loadAssetsIml() {
-        header = getMyFont(LoginScreen.extraTxtSize);
-        normal = getMyFont(LoginScreen.normalTxtSize);
+        header = loadFont(LoginScreen.extraTxtSize);
+        normal = loadFont(LoginScreen.normalTxtSize);
         Loader loader = new Loader();
         RenderStageSelect.getInstance().setStageSelected(false);
         try {

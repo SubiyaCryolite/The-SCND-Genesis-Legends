@@ -22,164 +22,89 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.drawing.LanHostWaitLobby;
-import com.scndgen.legends.enums.ModeEnum;
+import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.state.GameState;
-import io.github.subiyacryolite.enginev1.Mode;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.VolatileImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.InetAddress;
-import java.net.URL;
 
 public class NetworkManager {
 
     public static final int PORT = 5555;
-    public static final int serverLatency = 500;
-    public final static int frameRate = 60;
+    public static final int serverLatency = 10; //ms
+    public static final int serverTimeout = 2000; //ms
     private static NetworkManager instance;
     public int hostTime;
-    public boolean inStoryPane;
-    public int item = 0, xyzStickDir;
-    public String ServerName;
-    public String last, UserName;
-    //sever
     private NetworkServer server;
-    private InetAddress ServerAddress;
-    private boolean messageSent = false, isWaiting = true;
-    //client
     private NetworkClient client;
-    private JTextField txtServerName = new JTextField(20);
-    private JTextField txtUserName = new JTextField(20);
-    private int mouseYoffset = 0;
-    private SubMode gameMode = SubMode.BLANK;
-    //offline, host, client
-    private String gameIp = "";
-    private String userName;
-    private LanHostWaitLobby lanHostWaitLobby;
-    private Mode mode;
-    private VolatileImage volatileImage;
-    private GraphicsEnvironment ge;
-    private Graphics2D gc;
+    private String remoteIpAddress = "";
 
-    private NetworkManager(String nameOfUser, SubMode subMode) {
+    private NetworkManager() {
         instance = this;
-        System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
-        userName = nameOfUser;
-        if (getGameMode() == SubMode.LAN_CLIENT) {
-            client = new NetworkClient(GameState.getInstance().getLanHostIp());
-        }
-        if (gameMode == SubMode.LAN_CLIENT)
-            client.sendData("player_QSLV");
-    }
-
-    public static synchronized NetworkManager newInstance(String strUser, SubMode subMode) {
-        if (instance == null)
-            instance = new NetworkManager(strUser, subMode);
-        return instance;
     }
 
     public static NetworkManager getInstance() {
+        if (instance == null)
+            instance = new NetworkManager();
         return instance;
     }
 
-    public String getServerName() {
-        return txtServerName.getText();
+    public void asHost() {
+        if (client != null)
+            closeTheClient();
+        server = new NetworkServer();
     }
 
-    public String getServerUserName() {
-        return txtUserName.getText();
-    }
-
-    public boolean isMessageSent() {
-        return messageSent;
+    public void asClient(String ip) {
+        if (server != null)
+            closeTheServer();
+        this.remoteIpAddress = ip;
+        client = new NetworkClient(remoteIpAddress);
+        client.sendData(NetworkConstants.CONNECT_TO_HOST);
     }
 
     /**
      * Closes hosting NetworkServer
      */
-    public void closeTheServer() {
-        server.closeServer();
+    private void closeTheServer() {
+        server.close();
+        server = null;
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST)
+            ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
         System.out.println("Closed server");
     }
 
     /**
      * Closes client
      */
-    public void closeTheClient() {
-        client.closeClient();
+    private void closeTheClient() {
+        client.close();
+        client = null;
+        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT)
+            ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
         System.out.println("Closed client");
     }
 
-    public SubMode getGameMode() {
-        return gameMode;
+    public boolean isServer() {
+        return server != null;
     }
 
-    public String getIP() {
-        return gameIp;
+    public boolean isClient() {
+        return client != null;
     }
 
-    public void setIP(String ip) {
-        gameIp = ip;
+    public void send(String message) {
+        if (isClient())
+            client.sendData(message);
+        if (isServer())
+            server.sendData(message);
     }
 
-    public void playerFound() {
-        int ansx = JOptionPane.showConfirmDialog(null, userName + " , someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        switch (ansx) {
-            case JOptionPane.YES_OPTION: {
-                sendToClient("as1wds2_" + GameState.getInstance().getLogin().getTimeLimit());
-                isWaiting = false;
-                lanHostWaitLobby.stopRepaint();
-                RenderCharacterSelection.getInstance().newInstance();
-                RenderCharacterSelection.getInstance().animateCharSelect();
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-                break;
-            }
-        }
+    public void closePipes() {
+        if (isClient())
+            closeTheClient();
+        if (isServer())
+            closeTheServer();
     }
 
-    public NetworkServer getServer() {
-        return server;
-    }
-
-    public NetworkClient getClient() {
-        return client;
-    }
-
-    public void sendToClient(String thisTxt) {
-        server.sendData(thisTxt);
-    }
-
-    public void sendToServer(String thisTxt) {
-        client.sendData(thisTxt);
-    }
-
-    public boolean downloadFile(String source, String destination) {
-        boolean managedToDownload;
-        int bufferSize = 1024;
-        File out = new File(destination);
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new URL(source).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(out);
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream, bufferSize)) {
-            byte[] data = new byte[bufferSize];
-            int x;
-            while ((x = bufferedInputStream.read(data, 0, bufferSize)) >= 0) {
-                bufferedOutputStream.write(data, 0, x);
-            }
-            bufferedOutputStream.close();
-            bufferedInputStream.close();
-            managedToDownload = true;
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            managedToDownload = false;
-        }
-        return managedToDownload;
+    public boolean isOnline() {
+        return isClient() && isServer();
     }
 }

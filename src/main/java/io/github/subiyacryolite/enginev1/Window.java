@@ -25,7 +25,6 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Overlay;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.windows.WindowAbout;
@@ -106,11 +105,5 @@ public class Window {
                 options = new WindowOptions();
             }
         }
-    }
-    /**
-     * Create a client game
-     */
-    public void joinGame() {
-        NetworkManager.newInstance(Window.getUserName(), SubMode.LAN_CLIENT);
     }
 }

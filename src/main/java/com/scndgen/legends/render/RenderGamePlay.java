@@ -32,7 +32,6 @@ import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
-import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
@@ -84,11 +83,9 @@ public class RenderGamePlay extends GamePlay {
     private final UiItem fury;
     private AudioPlayback ambientMusic;
 
-    protected void onLeaveMode() {
-        if (loseMusic != null)
-            loseMusic.stop(2000);
-        if (winMusic != null)
-            winMusic.stop(2000);
+    public void onLeaveMode() {
+        if (ambientMusic != null)
+            ambientMusic.stop(2000);
     }
 
 
@@ -342,21 +339,12 @@ public class RenderGamePlay extends GamePlay {
 
     public void loadAssetsIml() {
         loadAssets = false;
-        loseMusic = null;
-        winMusic = null;
-        notSelected = getMyFont(12);
-        largeFont = getMyFont(LoginScreen.bigTxtSize);
-        normalFont = getMyFont(LoginScreen.normalTxtSize);
+        notSelected = loadFont(12);
+        largeFont = loadFont(LoginScreen.bigTxtSize);
+        normalFont = loadFont(LoginScreen.normalTxtSize);
         setCharMoveset();
         cacheNumPix();
         loadSprites();
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-            server = NetworkManager.getInstance().getServer();
-        }
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            //get ip from game
-            client = NetworkManager.getInstance().getClient();
-        }
         charPointInc = Characters.getInstance().getPoints();
     }
 

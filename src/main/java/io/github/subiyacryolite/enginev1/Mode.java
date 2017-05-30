@@ -165,7 +165,7 @@ public abstract class Mode implements UiScreen {
 
     public abstract void cleanAssets();
 
-    public Font getMyFont(float size) {
+    public Font loadFont(float size) {
         try {
             return Font.loadFont(getClass().getResourceAsStream("font/Sawasdee.ttf"), size);
         } catch (Exception re) {

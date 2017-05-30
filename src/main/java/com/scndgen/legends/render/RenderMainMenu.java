@@ -486,7 +486,7 @@ public class RenderMainMenu extends MainMenu {
     @Override
     public void loadAssetsIml() {
         if (!loadAssets) return;
-        menuFont = getMyFont(fontSize);
+        menuFont = loadFont(fontSize);
         gameLogo = loader.load("logo/gameLogo");
         menuLogo = loader.load("images/sglogo.png");
         if (time >= 0 && time <= 9) {

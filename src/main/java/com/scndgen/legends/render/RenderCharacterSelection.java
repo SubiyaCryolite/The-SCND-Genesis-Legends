@@ -391,8 +391,8 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     private void loadCaps() {
-        bigFont = getMyFont(LoginScreen.extraTxtSize);
-        normalFont = getMyFont(LoginScreen.normalTxtSize);
+        bigFont = loadFont(LoginScreen.extraTxtSize);
+        normalFont = loadFont(LoginScreen.normalTxtSize);
         oppDescPic = loader.load("images/charInfoO.png");
         charDescPic = loader.load("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);

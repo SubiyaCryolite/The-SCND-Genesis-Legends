@@ -55,7 +55,7 @@ public class LanHostWaitLobby extends Mode {
     private Enumeration enumeration1;
 
     public LanHostWaitLobby() {
-        normalFont = getMyFont(LoginScreen.normalTxtSize);
+        normalFont = loadFont(LoginScreen.normalTxtSize);
         loader = new Loader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();

@@ -26,16 +26,13 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
-import com.scndgen.legends.network.NetworkClient;
 import com.scndgen.legends.network.NetworkManager;
-import com.scndgen.legends.network.NetworkServer;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.GameState;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -43,6 +40,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
@@ -130,8 +128,6 @@ public abstract class GamePlay extends Mode {
     protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String[] achievementName, achievementDescription, achievementClass, achievementPoints;
     protected int activeAttack = 0;
-    protected NetworkServer server;
-    protected NetworkClient client;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
     protected int x = 2;
     protected int oppBarYOffset, attackMenuXPos, attackMenuTextXPos, attackMenuTextYPos, y = 0;
@@ -157,7 +153,6 @@ public abstract class GamePlay extends Mode {
     private long characterQueDelta, opponentQueDelta;
     private long opponentAiTimeout, opponentAiDelta;
     private int furyBarCoolDownFactor;
-    protected AudioPlayback loseMusic, winMusic;
 
 
     protected GamePlay() {
@@ -270,14 +265,6 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    protected void sendToClient(String message) {
-        NetworkManager.getInstance().sendToClient(message);
-    }
-
-    protected void sendToServer(String message) {
-        NetworkManager.getInstance().sendToServer(message);
-    }
-
     public String getFavChar(int here) {
         return charNames[here].name();
     }
@@ -375,9 +362,8 @@ public abstract class GamePlay extends Mode {
                 setSprites(Player.CHARACTER, 9, 11);
                 setSprites(Player.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + characterAttacks.get(0) + characterAttacks.get(1) + characterAttacks.get(2) + characterAttacks.get(3) + " attack";
-                System.out.println(attackStr);
-                client.sendData(attackStr);
+                attackStr = String.format("%s:%s:%s:%s:%s:", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX);
+                NetworkManager.getInstance().send(attackStr);
                 //attack on local
                 disableSelection();
                 prepareCharacterAttack();
@@ -386,9 +372,8 @@ public abstract class GamePlay extends Mode {
                 setSprites(Player.CHARACTER, 9, 11);
                 setSprites(Player.OPPONENT, 9, 11);
                 //broadcast hurtChar on net
-                attackStr = "" + characterAttacks.get(0) + characterAttacks.get(1) + characterAttacks.get(2) + characterAttacks.get(3) + " attack";
-                System.out.println(attackStr);
-                server.sendData(attackStr);
+                attackStr = String.format("%s:%s:%s:%s:%s:", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX);
+                NetworkManager.getInstance().send(attackStr);
                 //attack on local
                 disableSelection();
                 prepareCharacterAttack();
@@ -469,7 +454,7 @@ public abstract class GamePlay extends Mode {
 
     private void handleOpponentAi(long delta) {
         boolean singlePlayerOrStoryMode = ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE;
-        if (singlePlayerOrStoryMode && !triggerOpponentAttack && !playingCutscene) {
+        if (singlePlayerOrStoryMode && !triggerOpponentAttack && !playingCutscene && !NetworkManager.getInstance().isOnline()) {
             if (singlePlayerOrStoryMode && (delta - opponentAiDelta) > MS16) {
                 opponentAiDelta = delta;
                 if (opponentAiTimeout < GameState.getInstance().getLogin().getDifficultyDynamic()) {
@@ -1125,10 +1110,8 @@ public abstract class GamePlay extends Mode {
         limitRunning = true;
         switch (runningFury) {
             case CHARACTER:
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                    NetworkManager.getInstance().sendToServer("limt_Break_Oxodia_Ownz");
-                } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    NetworkManager.getInstance().sendToClient("limt_Break_Oxodia_Ownz");
+                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
+                    NetworkManager.getInstance().send(NetworkConstants.FURY_ATTACK);
                 }
                 setAttackType(AttackType.FURY, Player.CHARACTER);
                 pauseCharacterAtb();
@@ -1563,12 +1546,8 @@ public abstract class GamePlay extends Mode {
         }
         if (hasWon()) {
             showWinLabel();
-            winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
-            winMusic.play();
         } else {
             showLoseLabel();
-            loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
-            loseMusic.play();
         }
         RenderStageSelect.getInstance().newInstance();
         RenderCharacterSelection.getInstance().newInstance();
@@ -1679,5 +1658,15 @@ public abstract class GamePlay extends Mode {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public void opponentAttack(List<String> attackList) {
+        opponentAttacks.clear();
+        opponentAiTimeout = 0;
+        for (String i : attackList) {
+            if (opponentAttacks.size() < 4)
+                opponentAttacks.add(Integer.parseInt(i));
+        }
+        prepareOpponentAttack();
     }
 }

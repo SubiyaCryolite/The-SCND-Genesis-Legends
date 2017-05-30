@@ -1,25 +1,27 @@
 package com.scndgen.legends.enums;
 
+import com.scndgen.legends.constants.NetworkConstants;
+
 /**
  * Created by ifunga on 15/04/2017.
  */
 public enum Stage {
-    IBEX_HILL("IBEX_HILL", "stage1_vgdt", "1", 0),
-    CHELSTON_CITY_DOCKS("CHELSTON_CITY_DOCKS", "stage2_vgdt", "2", 1),
-    DESERT_RUINS("DESERT_RUINS", "stage3_vgdt", "3", 2),
-    CHELSTON_CITY_STREETS("CHELSTON_CITY_STREETS", "stage4_vgdt", "4", 3),
-    IBEX_HILL_NIGHT("IBEX_HILL_NIGHT", "stage5_vgdt", "5", 4),
-    SCORCHED_RUINS("SCORCHED_RUINS", "stage6_vgdt", "6", 5),
-    FROZEN_WILDERNESS("FROZEN_WILDERNESS", "stage7_vgdt", "7", 6),
-    DISTANT_ISLE("DISTANT_ISLE", "stage100_vgdt", "100", 7),
-    HIDDEN_CAVE("HIDDEN_CAVE", "stage8_vgdt", "8", 8),
-    AFRICAN_VILLAGE("AFRICAN_VILLAGE", "stage9_vgdt", "9", 9),
-    APOCALYPTO("APOCALYPTO", "stage10_vgdt", "10", 10),
-    DISTANT_ISLE_NIGHT("DISTANT_ISLE_NIGHT", "stage11_vgdt", "11", 11),
-    DESERT_RUINS_NIGHT("DESERT_RUINS_NIGHT", "stage13_vgdt", "13", 12),
-    SCORCHED_RUINS_NIGHT("SCORCHED_RUINS_NIGHT", "stage14_vgdt", "14", 13),
-    HIDDEN_CAVE_NIGHT("HIDDEN_CAVE_NIGHT", "stage15_vgdt", "15", 14),
-    RANDOM("RANDOM", "stage12_vgdt", "12", 15);// RANDOM SHOULD ALWAYS BE LAST!!!!!!!!!!!
+    IBEX_HILL("IBEX_HILL", NetworkConstants.STAGE_IBEX_HILL, "1", 0),
+    CHELSTON_CITY_DOCKS("CHELSTON_CITY_DOCKS", NetworkConstants.STAGE_CHELSTON_CITY_DOCKS, "2", 1),
+    DESERT_RUINS("DESERT_RUINS", NetworkConstants.STAGE_DESERT_RUINS, "3", 2),
+    CHELSTON_CITY_STREETS("CHELSTON_CITY_STREETS", NetworkConstants.STAGE_CHELSTON_CITY_STREETS, "4", 3),
+    IBEX_HILL_NIGHT("IBEX_HILL_NIGHT", NetworkConstants.STAGE_IBEX_HILL_NIGHT, "5", 4),
+    SCORCHED_RUINS("SCORCHED_RUINS", NetworkConstants.STAGE_SCORCHED_RUINS, "6", 5),
+    FROZEN_WILDERNESS("FROZEN_WILDERNESS", NetworkConstants.STAGE_FROZEN_WILDERNESS, "7", 6),
+    DISTANT_ISLE("DISTANT_ISLE", NetworkConstants.STAGE_DISTANT_ISLE, "100", 7),
+    HIDDEN_CAVE("HIDDEN_CAVE", NetworkConstants.STAGE_HIDDEN_CAVE, "8", 8),
+    AFRICAN_VILLAGE("AFRICAN_VILLAGE", NetworkConstants.STAGE_AFRICAN_VILLAGE, "9", 9),
+    APOCALYPTO("APOCALYPTO", NetworkConstants.STAGE_APOCALYPTO, "10", 10),
+    DISTANT_ISLE_NIGHT("DISTANT_ISLE_NIGHT", NetworkConstants.STAGE_DISTANT_ISLE_NIGHT, "11", 11),
+    DESERT_RUINS_NIGHT("DESERT_RUINS_NIGHT", NetworkConstants.STAGE_DESERT_RUINS_NIGHT, "13", 12),
+    SCORCHED_RUINS_NIGHT("SCORCHED_RUINS_NIGHT", NetworkConstants.STAGE_SCORCHED_RUINS_NIGHT, "14", 13),
+    HIDDEN_CAVE_NIGHT("HIDDEN_CAVE_NIGHT", NetworkConstants.STAGE_HIDDEN_CAVE_NIGHT, "15", 14),
+    RANDOM("RANDOM", NetworkConstants.STAGE_RANDOM, "12", 15);// RANDOM SHOULD ALWAYS BE LAST!!!!!!!!!!!
     private final String name;
     private final String shortCode;
     private final String filePrefix;

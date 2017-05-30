@@ -1,12 +1,12 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.Player;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.render.RenderGamePlay;
-import io.github.subiyacryolite.enginev1.Overlay;
+import com.scndgen.legends.state.GameState;
 
+import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,14 +17,14 @@ import java.net.Socket;
 /**
  * Created by ifunga on 15/04/2017.
  */
-public class NetworkServer implements Runnable {
+public class NetworkServer extends NetworkBase implements Runnable {
 
-    private DataOutputStream output;
-    private DataInputStream input;
-    private ServerSocket server;
-    private Socket connection;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private ServerSocket serverSocket;
+    private Socket socket;
     private Thread thread;
-    private boolean serverIsRunning;
+    private boolean running;
 
     /**
      * Basic constructor
@@ -46,8 +46,8 @@ public class NetworkServer implements Runnable {
      */
     private void InitServer() {
         try {
-            serverIsRunning = true;
-            server = new ServerSocket(NetworkManager.PORT, 1);
+            running = true;
+            serverSocket = new ServerSocket(NetworkManager.PORT, 1);
             System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
             System.err.println(ex);
@@ -56,27 +56,42 @@ public class NetworkServer implements Runnable {
     }
 
     /**
-     * Establish a new connection
+     * Establish a new socket
      */
     private void establishConnection() {
         try {
-            connection = server.accept();
-            System.out.println(connection.getInetAddress().getHostName());
-            NetworkManager.getInstance().playerFound();
+            socket = serverSocket.accept();
+            System.out.println(socket.getInetAddress().getHostName());
+            playerFound();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    public void playerFound() {
+        int answer = JOptionPane.showConfirmDialog(null, "Someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        switch (answer) {
+            case JOptionPane.YES_OPTION: {
+                sendData(NetworkConstants.connectToHost(GameState.getInstance().getLogin().getTimeLimit()));
+                RenderCharacterSelection.getInstance().newInstance();
+                RenderCharacterSelection.getInstance().animateCharSelect();
+                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                break;
+            }
+            case JOptionPane.NO_OPTION: {
+            }
         }
     }
 
     /**
      * Close the NetworkServer
      */
-    public void closeServer() {
+    public void close() {
         try {
-            serverIsRunning = false;
-            output.close();
-            input.close();
-            connection.close();
+            running = false;
+            dataOutputStream.close();
+            dataInputStream.close();
+            socket.close();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -85,10 +100,10 @@ public class NetworkServer implements Runnable {
     @Override
     public void run() {
         establishConnection();
-        while (serverIsRunning) {
+        while (running) {
             try {
                 getStreams();
-                readMessage();
+                readMessage(dataInputStream.readUTF());
                 thread.sleep(NetworkManager.serverLatency);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
@@ -101,111 +116,25 @@ public class NetworkServer implements Runnable {
      */
     private void getStreams() {
         try {
-            output = new DataOutputStream(connection.getOutputStream());
-            output.flush();
-            input = new DataInputStream(connection.getInputStream());
+            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            dataOutputStream.flush();
+            dataInputStream = new DataInputStream(socket.getInputStream());
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
 
-    /**
-     * Read incoming data
-     */
-    public void readMessage() {
-        try {
-            String line = input.readUTF();
-            if (line.endsWith("quit")) {
-                closeServer();
-            } else if (line.endsWith("player_QSLV")) {
-                NetworkManager.getInstance().playerFound();
-            } else if (line.endsWith("attack")) {
-
-                //1111 attack
-                //01010101 attack
-                int back = line.length();
-                int y1 = Integer.parseInt("" + line.substring(back - 15, back - 13) + "");
-                int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
-                int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
-                int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-
-                if (ScndGenLegends.getInstance().getSubMode()== SubMode.LAN_HOST) {
-                    //TODO SEND ATTACK
-                }
-
-                System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
-                //SendMassage(client,client.socket().getInetAddress()+" ATTACKED YOU!!!");
-                System.out.println("\n");
-            } else if (line.endsWith("pauseGame")) {
-                //pauseMethod();
-            } else if (line.endsWith(" xc_97_mb")) {
-                Overlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
-            } //CharacterEnum
-            else if (line.endsWith("_jkxc")) {
-                System.out.println("Server mess: " + line);
-                if (line.contains("selSub")) {
-                    RenderCharacterSelection.getInstance().selSubiya(Player.OPPONENT);
-                }
-                if (line.contains("selRai")) {
-                    RenderCharacterSelection.getInstance().selRaila(Player.OPPONENT);
-                }
-                if (line.contains("selAlx")) {
-                    RenderCharacterSelection.getInstance().selAisha(Player.OPPONENT);
-                }
-                if (line.contains("selLyn")) {
-                    RenderCharacterSelection.getInstance().selLynx(Player.OPPONENT);
-                }
-                if (line.contains("selRav")) {
-                    RenderCharacterSelection.getInstance().selRav(Player.OPPONENT);
-                }
-                if (line.contains("selAde")) {
-                    RenderCharacterSelection.getInstance().selAde(Player.OPPONENT);
-                }
-                if (line.contains("selJon")) {
-                    RenderCharacterSelection.getInstance().selJon(Player.OPPONENT);
-                }
-                if (line.contains("selAdam")) {
-                    RenderCharacterSelection.getInstance().selAdam(Player.OPPONENT);
-                }
-                if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelection.getInstance().selNOVAAdam(Player.OPPONENT);
-                }
-                if (line.contains("selAzaria")) {
-                    RenderCharacterSelection.getInstance().selAza(Player.OPPONENT);
-                }
-                if (line.contains("selSorr")) {
-                    RenderCharacterSelection.getInstance().selSorr(Player.OPPONENT);
-                }
-                if (line.contains("selThi")) {
-                    RenderCharacterSelection.getInstance().selThing(Player.OPPONENT);
-                }
-            } else if (line.equalsIgnoreCase("lastMess")) {
-                sendData(NetworkManager.getInstance().last);
-            } //special moves
-            else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                RenderGamePlay.getInstance().triggerFury(Player.OPPONENT);
-            } //clashes
-            else if (line.contains("oppClsh")) {
-                System.out.println("THis is it " + line.substring(7));
-                int val = Integer.parseInt(line.substring(7));
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
-            ex.printStackTrace();
-            sendData("lastMess");
-        }
-    }
 
     /**
      * Send data stream
      *
      * @param mess message to send
      */
+    @Override
     public void sendData(String mess) {
         try {
-            NetworkManager.getInstance().last = mess;
-            output.writeUTF(mess);
-            output.flush();
+            dataOutputStream.writeUTF(mess);
+            dataOutputStream.flush();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

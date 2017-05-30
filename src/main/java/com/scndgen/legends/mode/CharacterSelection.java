@@ -5,6 +5,7 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
@@ -157,18 +158,12 @@ public abstract class CharacterSelection extends Mode {
             characterEnum = CharacterEnum.RAILA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selRai_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selRai_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_RAILA);
                 preventCharacterSelection();
             }
         } else if (type == Player.OPPONENT && selectedOpponent == false) {
             playSelectSound();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            }
             selectedOpponent = true;
             opponentEnum = CharacterEnum.RAILA;
             Characters.getInstance().prepareO(opponentEnum);
@@ -191,12 +186,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selSub_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selSub_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_SUBIYA);
                 preventCharacterSelection();
             }
         }
@@ -225,12 +216,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selLyn_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selLyn_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_LYNX);
                 preventCharacterSelection();
             }
         }
@@ -259,12 +246,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selAlx_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selAlx_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_ALEX);
                 preventCharacterSelection();
             }
         }
@@ -293,12 +276,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selAde_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selAde_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_ADE);
                 preventCharacterSelection();
             }
         }
@@ -327,12 +306,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selRav_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selRav_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_RAVAGE);
                 preventCharacterSelection();
             }
         }
@@ -362,12 +337,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selJon_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selJon_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_JOHN);
                 preventCharacterSelection();
             }
         }
@@ -397,12 +368,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selAdam_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selAdam_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_ADAM);
                 preventCharacterSelection();
             }
         }
@@ -432,12 +399,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selNOVAAdam_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selNOVAAdam_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_NOVA_ADAM);
                 preventCharacterSelection();
             }
         }
@@ -467,12 +430,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selAzaria_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selAzaria_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_AZARIA);
                 preventCharacterSelection();
             }
         }
@@ -502,12 +461,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selSorr_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selSorr_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_SORROWE);
                 preventCharacterSelection();
             }
         }
@@ -536,12 +491,8 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().sendToClient("selThi_jkxc");
-                preventCharacterSelection();
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                NetworkManager.getInstance().sendToServer("selThi_jkxc");
+            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+                NetworkManager.getInstance().send(NetworkConstants.SEL_THING);
                 preventCharacterSelection();
             }
         }
@@ -597,77 +548,6 @@ public abstract class CharacterSelection extends Mode {
                 animatorThreadRunning = false;
             }
         }.start();
-    }
-
-    public void onUp() {
-        super.onUp();
-    }
-
-    public void onDown() {
-        super.onDown();
-    }
-
-    public void onRight() {
-        super.onRight();
-    }
-
-    public void onLeft() {
-        super.onLeft();
-    }
-
-
-    /**
-     * Gets the number of columns in the characterEnum select screen
-     *
-     * @return number of columns
-     */
-    public int getColumns() {
-        return columns;
-    }
-
-    /**
-     * Gets the char caption spacer
-     *
-     * @return spacer
-     */
-    public int getCaptionHeight() {
-        return vSpacer;
-    }
-
-    /**
-     * Gets the char caption spacer
-     *
-     * @return spacer
-     */
-    public int getCaptionWidth() {
-        return hSpacer;
-    }
-
-    /**
-     * Get starting x coordinate
-     *
-     * @return starting x coordinate
-     */
-    public int getTopX() {
-        return hPos;
-    }
-
-    /**
-     * Returns the starting Y coordinate
-     *
-     * @return starting y
-     */
-    public int getTopY() {
-        return firstLine;
-    }
-
-    /**
-     * Get number of char rows
-     *
-     * @return number of rows
-     */
-    public int getRows() {
-        return rows;
     }
 
     /**
@@ -740,26 +620,12 @@ public abstract class CharacterSelection extends Mode {
     }
 
     /**
-     * Set horizontal index
-     */
-    public void setHindex(int value) {
-        column = value;
-    }
-
-    /**
      * Vertical index
      *
      * @return row
      */
     public int getVindex() {
         return row;
-    }
-
-    /**
-     * Set vertical index
-     */
-    public void setVindex(int value) {
-        row = value;
     }
 
     /**

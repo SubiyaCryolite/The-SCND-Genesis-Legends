@@ -260,7 +260,7 @@ public class RenderStageSelect extends StageSelect {
     @Override
     public void loadAssetsIml() {
         loader = new Loader();
-        normalFont = getMyFont(LoginScreen.normalTxtSize);
+        normalFont = loadFont(LoginScreen.normalTxtSize);
         loadCaps();
         setActiveItem(uiElements.get(0));
         loadAssets = false;

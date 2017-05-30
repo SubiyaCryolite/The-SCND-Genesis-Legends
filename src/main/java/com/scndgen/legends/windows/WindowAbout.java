@@ -143,7 +143,7 @@ public class WindowAbout extends JFrame implements ActionListener, KeyListener {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public WindowAbout() {
-        //normalFont = getMyFont(LoginScreen.normalTxtSize + 4);
+        //normalFont = loadFont(LoginScreen.normalTxtSize + 4);
         box = new JPanel(new FlowLayout(FlowLayout.CENTER));
         logoPic = new SpecialDrawMenuBGs();
         txtAbout = new JTextArea("", 2, 2);

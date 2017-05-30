@@ -27,12 +27,16 @@ dependencies {
     compile 'org.jcraft:jorbis:0.0.17'
     compile "org.lwjgl:lwjgl:${lwjglVersion}"
     compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
     runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
     runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
+    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
     runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
     runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
+    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
     runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
     runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
+    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
     testCompile 'junit:junit:4.11'
 }
 

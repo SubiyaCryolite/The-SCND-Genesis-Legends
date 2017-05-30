@@ -84,14 +84,6 @@ public class AudioConstants {
         return "audio/scotty/Scotty Zepplin - Zulu Warrior.ogg";
     }
 
-    public static String winSound() {
-        return "audio/scotty/EFFEKTOR.ogg";
-    }
-
-    public static String loseSound() {
-        return "audio/scotty/hit dat ass.ogg";
-    }
-
     public static String storySound() {
         return "audio/Ryan Reilly - Suspense.ogg";
     }

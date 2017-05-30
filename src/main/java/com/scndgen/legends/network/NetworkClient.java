@@ -1,14 +1,7 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.Stage;
-import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.render.RenderGamePlay;
-import com.scndgen.legends.render.RenderStageSelect;
-import io.github.subiyacryolite.enginev1.Overlay;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -20,40 +13,37 @@ import java.net.Socket;
 /**
  * Created by ifunga on 15/04/2017.
  */
-public class NetworkClient implements Runnable {
+public class NetworkClient extends NetworkBase implements Runnable {
 
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private Socket socket;
     private Thread thread;
-    private String IPaddress;
-    private boolean clientIsRunning;
+    private String serverIpAddress;
+    private boolean running;
 
     /**
      * Constructor, expects getInfo/ip address
      */
     public NetworkClient(String ip) {
-        clientIsRunning = true;
-        IPaddress = ip;
+        running = true;
+        serverIpAddress = ip;
         thread = new Thread(this);
         thread.start();
     }
 
     @Override
     public void run() {
-
-        NetworkManager.getInstance().getInstance().ServerName = NetworkManager.getInstance().getInstance().getServerName();
-        System.out.println(NetworkManager.getInstance().getInstance().ServerName);
-        NetworkManager.getInstance().getInstance().UserName = NetworkManager.getInstance().getInstance().getServerUserName();
-        connectToServer(IPaddress);
-        while (clientIsRunning) {
+        connectToServer(serverIpAddress);
+        while (running) {
             getStreams();
-            readMassage();
             try {
+                readMessage(dataInputStream.readUTF());
                 thread.sleep(NetworkManager.getInstance().serverLatency);
-            } catch (InterruptedException ie) {
+            } catch (Exception ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+                NetworkManager.getInstance().closePipes();
             }
         }
 
@@ -66,7 +56,7 @@ public class NetworkClient implements Runnable {
      */
     private void connectToServer(String hostname) {
         try {
-            clientIsRunning = true;
+            running = true;
             socket = new Socket(InetAddress.getByName(hostname), NetworkManager.getInstance().PORT);
             System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
         } catch (IOException ex) {
@@ -89,158 +79,16 @@ public class NetworkClient implements Runnable {
         }
     }
 
-    /**
-     * Read incoming data stream
-     */
-    public void readMassage() {
-        try {
-            String line = dataInputStream.readUTF();
-            if (line.endsWith("attack")) {
-                int back = line.length();
-                int y1 = Integer.parseInt("" + line.substring(back - 15, back - 13) + "");
-                int y2 = Integer.parseInt("" + line.substring(back - 13, back - 11) + "");
-                int y3 = Integer.parseInt("" + line.substring(back - 11, back - 9) + "");
-                int y4 = Integer.parseInt("" + line.substring(back - 9, back - 7) + "");
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    //NetworkManager.getInstance().playerClient2 = new CharacterAttacksOnline(y1, y2, y3, y4, 'n');
-                }
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-                    //NetworkManager.getInstance().playerClient1 = new OpponentAttacksOnline(y1, y2, y3, y4, 'n');
-                }
-                System.out.println(line.charAt(back - 11) + " " + line.charAt(back - 10) + " " + line.charAt(back - 9) + " " + line.charAt(back - 8));
-                System.out.println("\n");
-            } else if (line.endsWith("pauseGame")) {
-                //pauseMethod();
-            } else if (line.endsWith(" xc_97_mb")) {
-                Overlay.getInstance().primaryNotice(line.replaceAll(" xc_97_mb", ""));
-            } //CharacterEnum
-            else if (line.endsWith("_jkxc")) {
-                if (line.contains("selSub")) {
-                    RenderCharacterSelection.getInstance().selSubiya(Player.OPPONENT);
-                }
-                if (line.contains("selRai")) {
-                    RenderCharacterSelection.getInstance().selRaila(Player.OPPONENT);
-                }
-                if (line.contains("selAlx")) {
-                    RenderCharacterSelection.getInstance().selAisha(Player.OPPONENT);
-                }
-                if (line.contains("selLyn")) {
-                    RenderCharacterSelection.getInstance().selLynx(Player.OPPONENT);
-                }
-                if (line.contains("selRav")) {
-                    RenderCharacterSelection.getInstance().selRav(Player.OPPONENT);
-                }
-                if (line.contains("selAde")) {
-                    RenderCharacterSelection.getInstance().selAde(Player.OPPONENT);
-                }
-                if (line.contains("selJon")) {
-                    RenderCharacterSelection.getInstance().selJon(Player.OPPONENT);
-                }
-                if (line.contains("selAdam")) {
-                    RenderCharacterSelection.getInstance().selAdam(Player.OPPONENT);
-                }
-                if (line.contains("selNOVAAdam")) {
-                    RenderCharacterSelection.getInstance().selNOVAAdam(Player.OPPONENT);
-                }
-                if (line.contains("selAzaria")) {
-                    RenderCharacterSelection.getInstance().selAza(Player.OPPONENT);
-                }
-                if (line.contains("selSorr")) {
-                    RenderCharacterSelection.getInstance().selSorr(Player.OPPONENT);
-                }
-                if (line.contains("selThi")) {
-                    RenderCharacterSelection.getInstance().selThing(Player.OPPONENT);
-                }
-            } else if (line.endsWith("watchStageSel_xcbD")) {
-                RenderStageSelect.getInstance().onAccept();
-            } else if (line.startsWith("as1wds2_")) {
-                NetworkManager.getInstance().hostTime = Integer.parseInt(line.substring(8));
-                System.out.println("aquired time is " + NetworkManager.getInstance().hostTime);
-            } //stages
-            else if (line.endsWith("_vgdt")) {
-                if (line.equals(Stage.IBEX_HILL.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
-                }
-                if (line.equals(Stage.CHELSTON_CITY_DOCKS.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
-                }
-                if (line.equals(Stage.DESERT_RUINS.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS);
-                }
-                if (line.equals(Stage.CHELSTON_CITY_STREETS.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
-                }
-                if (line.equals(Stage.IBEX_HILL_NIGHT.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
-                }
-                if (line.equals(Stage.SCORCHED_RUINS.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS);
-                }
-                if (line.equals(Stage.FROZEN_WILDERNESS.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
-                }
-                if (line.equals(Stage.DISTANT_ISLE.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
-                }
-                if (line.equals(Stage.HIDDEN_CAVE.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE);
-                }
-                if (line.equals(Stage.HIDDEN_CAVE_NIGHT.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE_NIGHT);
-                }
-                if (line.equals(Stage.AFRICAN_VILLAGE.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.AFRICAN_VILLAGE);
-                }
-                if (line.equals(Stage.APOCALYPTO.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
-                }
-                if (line.equals(Stage.DISTANT_ISLE_NIGHT.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
-                }
-                if (line.equals(Stage.RANDOM.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.RANDOM);
-                }
-                if (line.equals(Stage.DESERT_RUINS_NIGHT.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
-                }
-                if (line.equals(Stage.SCORCHED_RUINS_NIGHT.shortCode())) {
-                    RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
-                }
-            } //initiate game
-            else if (line.endsWith("gameStart7%^&")) {
-                RenderStageSelect.getInstance().start();
-            } else if (line.contains("loadingGVSHA")) {
-                RenderStageSelect.getInstance().setStageSelected(true);
-            } //special moves
-            else if (line.contains("limt_Break_Oxodia_Ownz")) {
-                RenderGamePlay.getInstance().triggerFury(Player.OPPONENT);
-            } //clashes
-            else if (line.contains("oppClsh")) {
-                System.out.println("THis is it " + line.substring(7));
-                int val = Integer.parseInt(line.substring(7));
-            } //rejected
-            else if (line.contains("getLost")) ;
-            {
-                JOptionPane.showMessageDialog(null, "HARSH!, The opponent doesnt want to fight you -_-" + NetworkManager.getInstance().isMessageSent() + " " + ScndGenLegends.getInstance().getSubMode(), "Ouchies", JOptionPane.ERROR_MESSAGE);
-                NetworkManager.getInstance().sendToServer("quit");
-                NetworkManager.getInstance().closeTheClient();
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
-            ex.printStackTrace();
-            sendData("lastMess");
-        }
-    }
 
     /**
      * Send a data stream
      *
-     * @param mess message to send
+     * @param message message to send
      */
-    public void sendData(String mess) {
+    @Override
+    public void sendData(String message) {
         try {
-            NetworkManager.getInstance().last = mess;
-            dataOutputStream.writeUTF(mess);
+            dataOutputStream.writeUTF(message);
             dataOutputStream.flush();
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
@@ -250,9 +98,9 @@ public class NetworkClient implements Runnable {
     /**
      * Terminate client
      */
-    public void closeClient() {
+    public void close() {
         try {
-            clientIsRunning = false;
+            running = false;
             dataOutputStream.close();
             dataInputStream.close();
             socket.close();
