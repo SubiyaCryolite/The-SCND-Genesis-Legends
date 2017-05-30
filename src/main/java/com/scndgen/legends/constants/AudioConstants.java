@@ -60,7 +60,6 @@ public class AudioConstants {
         return "audio/from_0AD/WeaponSwingHigh.ogg";
     }
 
-
     public static String furyAttck() {
         return "audio/hithard.ogg";
     }
@@ -81,20 +80,16 @@ public class AudioConstants {
         return "audio/itembox_get.ogg";
     }
 
-    public static String startUpSound() {
-        return "audio/Ryan Reilly - Victory.ogg";
-    }
-
     public static String menuMus() {
-        return "audio/scotty/Aeon AstriX.ogg";
+        return "audio/scotty/Scotty Zepplin - Zulu Warrior.ogg";
     }
 
     public static String winSound() {
-        return "audio/Ryan Reilly - Victory.ogg";
+        return "audio/scotty/EFFEKTOR.ogg";
     }
 
     public static String loseSound() {
-        return "audio/Timothy Pinkham - Defeat.ogg";
+        return "audio/scotty/hit dat ass.ogg";
     }
 
     public static String storySound() {

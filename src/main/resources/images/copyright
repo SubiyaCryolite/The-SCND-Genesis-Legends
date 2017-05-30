@@ -1,12 +1,12 @@
 Files: * 
-Copyright: 2011-2012 Ifunga Ndana
-Source: http://www.sourceforge.com/projects/scndgen/files/executable/ScndGen.jar (./images)
-Homepage: http://scndgen.sf.net/game.php
+Copyright: 2011+ Ifunga Ndana
+Source: https://github.com/SubiyaCryolite/The-SCND-Genesis-Legends
+Homepage: http://www.scndgen.com
 License:  Creative Commons Attribution-NonCommercial 3.0 Unported
 
 Files: debian/* 
 Copyright: 2011 Ndana <ifungandana@gmail> 
-License: GPL-2+ 
+License: GPL-3+
 
 
 License: Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0) 

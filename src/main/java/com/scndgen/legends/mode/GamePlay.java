@@ -157,6 +157,7 @@ public abstract class GamePlay extends Mode {
     private long characterQueDelta, opponentQueDelta;
     private long opponentAiTimeout, opponentAiDelta;
     private int furyBarCoolDownFactor;
+    protected AudioPlayback loseMusic, winMusic;
 
 
     protected GamePlay() {
@@ -1562,11 +1563,11 @@ public abstract class GamePlay extends Mode {
         }
         if (hasWon()) {
             showWinLabel();
-            AudioPlayback winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
+            winMusic = new AudioPlayback(AudioConstants.winSound(), AudioType.MUSIC, false);
             winMusic.play();
         } else {
             showLoseLabel();
-            AudioPlayback loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
+            loseMusic = new AudioPlayback(AudioConstants.loseSound(), AudioType.MUSIC, false);
             loseMusic.play();
         }
         RenderStageSelect.getInstance().newInstance();

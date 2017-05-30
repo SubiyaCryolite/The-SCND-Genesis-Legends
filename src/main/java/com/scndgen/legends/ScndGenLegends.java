@@ -3,12 +3,14 @@ package com.scndgen.legends;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.*;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Engine;
 import io.github.subiyacryolite.enginev1.Game;
 import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.stage.WindowEvent;
 
 /**
  * Created by ifunga on 15/04/2017.
@@ -81,19 +83,19 @@ public class ScndGenLegends extends Game {
     }
 
     @Override
-    public void keyReleased(KeyEvent keyEvent) {
+    public void onKeyReleased(KeyEvent keyEvent) {
         if (this.getMode() != null && !isSwitchingModes())
             this.getMode().keyReleased(keyEvent);
     }
 
     @Override
-    public void keyPressed(KeyEvent keyEvent) {
+    public void onKeyPressed(KeyEvent keyEvent) {
         if (this.getMode() != null && !isSwitchingModes())
             this.getMode().keyPressed(keyEvent);
     }
 
     @Override
-    public void mouseMoved(MouseEvent mouseEvent) {
+    public void onMouseMoved(MouseEvent mouseEvent) {
         setMouseX(mouseEvent.getX());
         setMouseY(mouseEvent.getY());
         if (this.getMode() != null && !isSwitchingModes())
@@ -101,14 +103,23 @@ public class ScndGenLegends extends Game {
     }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
+    public void onMouseClicked(MouseEvent mouseEvent) {
         if (this.getMode() != null && !isSwitchingModes())
             this.getMode().mouseClicked(mouseEvent);
     }
 
-    public void mouseScrolled(ScrollEvent scrollEvent)
-    {if (this.getMode() != null && !isSwitchingModes())
-        this.getMode().mouseScrolled(scrollEvent);}
+    public void onScroll(ScrollEvent scrollEvent) {
+        if (this.getMode() != null && !isSwitchingModes())
+            this.getMode().mouseScrolled(scrollEvent);
+    }
+
+    public void shutDown() {
+        AudioPlayback.closeAll();
+    }
+
+    public void onCloseRequest(WindowEvent closeRequest) {
+        shutDown();
+    }
 
     public void setMouseX(double mouseX) {
         this.mouseX = mouseX;

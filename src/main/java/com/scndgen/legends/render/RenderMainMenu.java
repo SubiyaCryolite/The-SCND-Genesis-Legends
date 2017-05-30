@@ -11,7 +11,6 @@ import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
-import com.scndgen.legends.windows.WindowLeaderBoard;
 import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
@@ -39,8 +38,6 @@ public class RenderMainMenu extends MainMenu {
     private String strControls;
     private String strAbout;
     private String strExit;
-    private String strOnlineLeaderBoards;
-    private String strLogOut;
     private String strTutorial;
     private final UiItem uiStoryMode;
     private final UiItem uiQuickMatch;
@@ -49,11 +46,9 @@ public class RenderMainMenu extends MainMenu {
     private final UiItem uiJoinLanMatch;
     private final UiItem uiAchievementLocker;
     private final UiItem uiYourStats;
-    private final UiItem uiOnlineLeaderBoards;
     private final UiItem uiOptions;
     private final UiItem uiControls;
     private final UiItem uiAbout;
-    private final UiItem uiLogOut;
     private final UiItem uiExit;
     private Loader loader = new Loader();
     private Image menuLogo, gameLogo;
@@ -74,11 +69,9 @@ public class RenderMainMenu extends MainMenu {
         strJoinLanMatch = Language.getInstance().get(310).toLowerCase();
         strAchievementLocker = Language.getInstance().get(316).toLowerCase();
         strYourStats = Language.getInstance().get(311).toLowerCase();
-        strOnlineLeaderBoards = Language.getInstance().get(317).toLowerCase();
         strOptions = Language.getInstance().get(312).toLowerCase();
         strControls = Language.getInstance().get(313).toLowerCase();
         strAbout = Language.getInstance().get(314).toLowerCase();
-        strLogOut = Language.getInstance().get(318).toLowerCase();
         strExit = Language.getInstance().get(315).toLowerCase();
 
 
@@ -333,33 +326,6 @@ public class RenderMainMenu extends MainMenu {
                 }
             }
         });
-
-        (uiOnlineLeaderBoards = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onAccept() {
-                new WindowLeaderBoard();
-            }
-
-            @Override
-            public void onHover() {
-                strOnlineLeaderBoards = strOnlineLeaderBoards.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strOnlineLeaderBoards = strOnlineLeaderBoards.toLowerCase();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
         (uiOptions = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
@@ -439,28 +405,13 @@ public class RenderMainMenu extends MainMenu {
                 setActiveItem(source.getUp());
             }
         });
-        (uiLogOut = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strLogOut = strLogOut.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strLogOut = strLogOut.toLowerCase();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
         (uiExit = new UiItem()).addJenesisEvent(new Event() {
+
+            @Override
+            public void onAccept() {
+                ScndGenLegends.getInstance().exit();
+            }
+
             @Override
             public void onHover() {
                 strExit = strExit.toUpperCase();
@@ -487,12 +438,10 @@ public class RenderMainMenu extends MainMenu {
         uiHostLanMatch.setDown(uiJoinLanMatch);
         uiJoinLanMatch.setDown(uiAchievementLocker);
         uiAchievementLocker.setDown(uiYourStats);
-        uiYourStats.setDown(uiOnlineLeaderBoards);
-        uiOnlineLeaderBoards.setDown(uiOptions);
+        uiYourStats.setDown(uiOptions);
         uiOptions.setDown(uiControls);
         uiControls.setDown(uiAbout);
-        uiAbout.setDown(uiLogOut);
-        uiLogOut.setDown(uiExit);
+        uiAbout.setDown(uiExit);
         uiExit.setDown(uiTutorial);
     }
 
@@ -604,15 +553,11 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
             fillText(gc, strYourStats, xMenu, yMenu + (fontSize * menuItemIndex), uiYourStats);
             menuItemIndex++;
-            fillText(gc, strOnlineLeaderBoards, xMenu, yMenu + (fontSize * menuItemIndex), uiOnlineLeaderBoards);
-            menuItemIndex++;
             fillText(gc, strOptions, xMenu, yMenu + (fontSize * menuItemIndex), uiOptions);
             menuItemIndex++;
             fillText(gc, strControls, xMenu, yMenu + (fontSize * menuItemIndex), uiControls);
             menuItemIndex++;
             fillText(gc, strAbout, xMenu, yMenu + (fontSize * menuItemIndex), uiAbout);
-            menuItemIndex++;
-            fillText(gc, strLogOut, xMenu, yMenu + (fontSize * menuItemIndex), uiLogOut);
             menuItemIndex++;
             fillText(gc, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;

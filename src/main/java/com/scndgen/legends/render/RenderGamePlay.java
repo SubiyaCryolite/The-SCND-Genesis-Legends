@@ -84,6 +84,13 @@ public class RenderGamePlay extends GamePlay {
     private final UiItem fury;
     private AudioPlayback ambientMusic;
 
+    protected void onLeaveMode() {
+        if (loseMusic != null)
+            loseMusic.stop(2000);
+        if (winMusic != null)
+            winMusic.stop(2000);
+    }
+
 
     public RenderGamePlay() {
         (fury = new UiItem()).addJenesisEvent(new Event() {
@@ -335,6 +342,8 @@ public class RenderGamePlay extends GamePlay {
 
     public void loadAssetsIml() {
         loadAssets = false;
+        loseMusic = null;
+        winMusic = null;
         notSelected = getMyFont(12);
         largeFont = getMyFont(LoginScreen.bigTxtSize);
         normalFont = getMyFont(LoginScreen.normalTxtSize);

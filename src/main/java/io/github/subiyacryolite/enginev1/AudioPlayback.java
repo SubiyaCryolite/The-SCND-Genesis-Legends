@@ -42,22 +42,20 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
-public class AudioPlayback implements Runnable {
+public class AudioPlayback {
 
     private String fileName;
     private boolean paused;
-    private boolean looping;
-    private boolean playingAudio;
-    private Thread thread;
     private static final Set<AudioPlayback> heap = new HashSet<>();
     private AudioType audioType;
-    private float volume;
+    private boolean looping = false;
+    private float volume = 0.0f;
     //========================================
-    private int bufferNames;
-    private int srcNames;
-    private OggData ogg;
+    private final IntBuffer bufferNames = memAllocInt(1);
+    private final IntBuffer srcNames = memAllocInt(1);
     //========================================
     private static long audioDevice;
     private static long audioContext;
@@ -109,14 +107,14 @@ public class AudioPlayback implements Runnable {
         }
     }
 
-    private void checkForError() throws Exception {
+    private static void checkForError() throws Exception {
         int result;
         if ((result = alGetError()) != AL_NO_ERROR) {
             throw new Exception(alErrorString(result));
         }
     }
 
-    private String alErrorString(int err) {
+    private static String alErrorString(int err) {
         switch (err) {
             case AL_NO_ERROR:
                 return "AL_NO_ERROR";
@@ -135,19 +133,45 @@ public class AudioPlayback implements Runnable {
         }
     }
 
-    private void loadAudioFile(InputStream in, int[] format, ByteBuffer[] data, int[] size, int[] freq) throws IOException {
-        OggDecoder decoder = new OggDecoder();
-        ogg = decoder.Data(in);
-        format[0] = ogg.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
-        data[0] = ogg.data;
-        freq[0] = ogg.rate;
-        size[0] = ogg.data.capacity();
+    private static OggData loadAudioFile(InputStream in, int[] format, ByteBuffer[] data, int[] size, int[] freq) throws IOException {
+        OggDecoder oggDecoder = new OggDecoder();
+        OggData oggData = oggDecoder.Data(in);
+        format[0] = oggData.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+        data[0] = oggData.data;
+        freq[0] = oggData.rate;
+        size[0] = oggData.data.capacity();
+        return oggData;
     }
 
     // play the MP3 file to the sound card
     public void play() {
-        thread = new Thread(this);
-        thread.start();
+        new Thread(() -> {
+            try {
+                OggData oggData = synchronizedCreationAndPlayback(fileName, bufferNames, srcNames);
+                if (oggData != null) {
+                    alSourcei(srcNames.get(0), AL_BUFFER, bufferNames.get(0));
+                    alSourcei(srcNames.get(0), AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
+                    alSourcef(srcNames.get(0), AL_PITCH, 1.0f);
+                    alSourcef(srcNames.get(0), AL_GAIN, volume / 100.0f);
+                    alSourcePlay(srcNames.get(0));
+                    checkForError();
+                    try (MemoryStack mem = MemoryStack.create()) {
+                        IntBuffer audioState = mem.callocInt(1);
+                        mem.push();
+                        int state = methodWaitTillDone(srcNames, audioState);
+                        while (state == AL_PLAYING || state == AL_PAUSED) {
+                            Thread.sleep(16);//wait till done
+                        }
+                    }
+                    free(oggData.data);
+                }
+            } catch (Exception ex) {
+                System.err.printf("Problem with [%s - %s] %s\n", srcNames.get(0), bufferNames.get(0), fileName);
+                ex.printStackTrace(System.err);
+            } finally {
+                close();
+            }
+        }).start();
     }
 
     public static void volume(AudioType audioType, float volume) {
@@ -158,56 +182,36 @@ public class AudioPlayback implements Runnable {
         });
     }
 
-    @Override
-    public void run() {
-        try {
-            int[] format = new int[1];
-            int[] size = new int[1];
-            int[] freq = new int[1];
-            ByteBuffer[] data = new ByteBuffer[1];
-            try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
-                alGetError();
-                bufferNames = alGenBuffers();
-                checkForError();
-                srcNames = alGenSources();
-                checkForError();
-
-                loadAudioFile(inputStream, format, data, size, freq);
-                alBufferData(bufferNames, format[0], data[0], freq[0]);
-                checkForError();
-                alSourcei(srcNames, AL_BUFFER, bufferNames);
-                alSourcei(srcNames, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
-                alSourcef(srcNames, AL_PITCH, 1.0f);
-                alSourcef(srcNames, AL_GAIN, volume / 100.0f);
-                playingAudio = true;
-                alSourcePlay(srcNames);
-                checkForError();
-                try (MemoryStack mem = MemoryStack.create()) {
-                    IntBuffer audioState = mem.callocInt(1);
-                    mem.push();
-                    int state = methodWaitTillDone(audioState);
-                    while (state == AL_PLAYING || state == AL_PAUSED) {
-                        Thread.sleep(16);//wait till done
-                    }
-                }
-            }
+    private static synchronized OggData synchronizedCreationAndPlayback(String fileName, IntBuffer bufferNames, IntBuffer srcNames) throws Exception {
+        int[] format = new int[1];
+        int[] size = new int[1];
+        int[] freq = new int[1];
+        ByteBuffer[] data = new ByteBuffer[1];
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
+            alGetError();
+            alGenBuffers(bufferNames);
+            checkForError();
+            alGenSources(srcNames);
+            checkForError();
+            OggData oggData = loadAudioFile(inputStream, format, data, size, freq);
+            alBufferData(bufferNames.get(0), format[0], data[0], freq[0]);
+            checkForError();
+            return oggData;
         } catch (Exception ex) {
-            System.err.printf("Problem with [%s - %s] %s\n", srcNames, bufferNames, fileName);
+            System.err.printf("Problem with [%s - %s] %s\n", srcNames.get(0), bufferNames.get(0), fileName);
             ex.printStackTrace(System.err);
-        } finally {
-            close();
+            return null;
         }
     }
 
-    private int methodWaitTillDone(IntBuffer audioState) {
-        alGetSourcei(srcNames, AL_SOURCE_STATE, audioState);
+    private static int methodWaitTillDone(IntBuffer srcNames, IntBuffer audioState) {
+        alGetSourcei(srcNames.get(0), AL_SOURCE_STATE, audioState);
         return audioState.get(0);
     }
 
     private void setVolume(float volume) {
-        this.volume = volume;
-        if (playingAudio)
-            alSourcef(srcNames, AL_GAIN, volume / 100.0f);
+        this.volume=volume;
+        alSourcef(srcNames.get(0), AL_GAIN, volume / 100.0f);
     }
 
     public AudioType getAudioType() {
@@ -224,17 +228,17 @@ public class AudioPlayback implements Runnable {
 
     public void pause() {
         paused = true;
-        alSourcePause(srcNames);
+        alSourcePause(srcNames.get(0));
     }
 
     public void resume() {
         paused = false;
-        alSourcePlay(srcNames);
+        alSourcePlay(srcNames.get(0));
     }
 
 
     public void stop() {
-        alSourceStop(srcNames);
+        alSourceStop(srcNames.get(0));
     }
 
     public void stop(int milliFadeTimeout) {
@@ -248,21 +252,27 @@ public class AudioPlayback implements Runnable {
                     e.printStackTrace();
                 }
             }
-            alSourceStop(srcNames);
+            alSourceStop(srcNames.get(0));
         }).start();
 
     }
 
     public void close() {
         heap.remove(this);
-        alSourcei(srcNames, AL_BUFFER, 0);
-        alSourceStop(srcNames);
+        alSourcei(srcNames.get(0), AL_BUFFER, 0);
+        alSourceStop(srcNames.get(0));
+        int rem1 = bufferNames.remaining();
+        int rem2 = srcNames.remaining();
         alDeleteSources(srcNames);
         alDeleteBuffers(bufferNames);
-        free(ogg.data);
+        free(bufferNames);
+        free(srcNames);
     }
 
     public static void closeAll() {
+        for (AudioPlayback audioPlayback : heap) {
+            audioPlayback.stop();
+        }
         alcDestroyContext(audioContext);
         alcCloseDevice(audioDevice);
     }

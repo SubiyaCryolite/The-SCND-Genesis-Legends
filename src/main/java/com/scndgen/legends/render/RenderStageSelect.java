@@ -46,7 +46,7 @@ public class RenderStageSelect extends StageSelect {
     private static RenderStageSelect instance;
     private String[] amnientMusicMetaData = {
             "\"KORNIKOVA\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //0
-            "\"Zulu Warrior\" by \"Scotty Zepplin\"", //1
+            "\"Aeon AstriX\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //1
             "\"Silikon Orchestra (guardian's awakening)\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //2
             "\"Sirens Octave\" by \"Scotty Zepplin\" from \"Stratos Halo\"", //3
             "\"tRAVELLING FIREFLIES\" by \"Scotty Zepplin\" from \"Magical Untold Cookies\"", //4
@@ -54,7 +54,7 @@ public class RenderStageSelect extends StageSelect {
             "\"Rays\" by \"Scotty Zepplin\""}; //6
     private String[] ambientMusic = {
             "scotty/KORNIKOVA",
-            "scotty/Scotty Zepplin - Zulu Warrior",
+            "scotty/Aeon AstriX",
             "scotty/Silikon Orchestra",
             "scotty/Sirens Octave",
             "scotty/Scotty Zepplin - tRAVELLING FIREFLIES",
@@ -87,7 +87,7 @@ public class RenderStageSelect extends StageSelect {
     private AudioPlayback menuMusic;
 
     public void onEnterMode() {
-        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - Zulu Warrior.ogg", AudioType.MUSIC, true);
+        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - i LOST MY SOUL.ogg", AudioType.MUSIC, true);
         menuMusic.play();
     }
 

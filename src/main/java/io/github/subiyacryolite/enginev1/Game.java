@@ -6,6 +6,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Created by ifunga on 15/04/2017.
@@ -20,6 +22,7 @@ public abstract class Game {
     private boolean running;
     private double width;
     private double height;
+    private Stage stage;
 
     public Game() {
         running = true;
@@ -91,15 +94,15 @@ public abstract class Game {
         this.switchingModes = switchingModes;
     }
 
-    public abstract void keyReleased(KeyEvent keyEvent);
+    public abstract void onKeyReleased(KeyEvent keyEvent);
 
-    public abstract void keyPressed(KeyEvent keyEvent);
+    public abstract void onKeyPressed(KeyEvent keyEvent);
 
-    public abstract void mouseMoved(MouseEvent mouseEvent);
+    public abstract void onMouseMoved(MouseEvent mouseEvent);
 
-    public abstract void mouseClicked(MouseEvent mouseEvent);
+    public abstract void onMouseClicked(MouseEvent mouseEvent);
 
-    public abstract void mouseScrolled(ScrollEvent scrollEvent);
+    public abstract void onScroll(ScrollEvent scrollEvent);
 
     public void run() {
         do {
@@ -113,4 +116,17 @@ public abstract class Game {
     }
 
 
+    public abstract void onCloseRequest(WindowEvent closeRequest);
+
+    public abstract void shutDown();
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void exit()
+    {
+        shutDown();
+        stage.close();
+    }
 }

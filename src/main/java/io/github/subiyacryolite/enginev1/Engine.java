@@ -21,15 +21,17 @@ public class Engine extends Application {
             e.printStackTrace(System.err);
         }
         canvas = new Canvas(game.getWidth(), game.getHeight());
-        canvas.setOnKeyReleased(keyEvent -> game.keyReleased(keyEvent));
-        canvas.setOnKeyPressed(keyEvent -> game.keyPressed(keyEvent));
-        canvas.setOnMouseMoved(mouseEvent -> game.mouseMoved(mouseEvent));
-        canvas.setOnMouseClicked(mouseEvent -> game.mouseClicked(mouseEvent));
-        canvas.setOnScroll(scrollEvent -> game.mouseScrolled(scrollEvent));
+        canvas.setOnKeyReleased(keyEvent -> game.onKeyReleased(keyEvent));
+        canvas.setOnKeyPressed(keyEvent -> game.onKeyPressed(keyEvent));
+        canvas.setOnMouseMoved(mouseEvent -> game.onMouseMoved(mouseEvent));
+        canvas.setOnMouseClicked(mouseEvent -> game.onMouseClicked(mouseEvent));
+        canvas.setOnScroll(scrollEvent -> game.onScroll(scrollEvent));
         canvas.setFocusTraversable(true);
         Group group = new Group();
         group.getChildren().add(canvas);
         stage.setScene(new Scene(group));
+        stage.setOnCloseRequest(closeRequest->game.onCloseRequest(closeRequest));
+        game.setStage(stage);
         stage.show();
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override

@@ -28,7 +28,7 @@ public class OggDecoder {
     /**
      * BLOCK_SIZE The conversion buffer size
      */
-    private int convsize = BLOCK_SIZE * 2;
+    private int convsize = BLOCK_SIZE * 4;
     /**
      * The buffer used to read OGG file
      */
