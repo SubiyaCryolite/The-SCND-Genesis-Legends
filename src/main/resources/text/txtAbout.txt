@@ -1,0 +1,38 @@
+The SCND Genesis: Legends  2K17 RMX
+
+Based on the webcomic created by Ifunga Ndana
+Designed by Ifunga Ndana
+Coded by.....you guessed it, Ifunga Ndana
+Powered by Java and the Jenesis Engine v1.0
+
+Special Thanks:
+   -God
+   -Jesus
+   -Susan Ndana
+   -Monde Ndana
+   -Chisomo Mwanza
+   -Atupele Mboya
+   -Daniel Chuck
+   -Codehead
+   -The Official Game Programming Wiki Forums
+
+   -"Wildfire Games" for audio under Creative Commons Attribution-Share Alike 3.0
+      * http://creativecommons.org/licenses/by-sa/3.0/
+      * http://www.wildfiregames.com/
+
+   -"Jordan Trudgett" for audio under Creative Commons Attribution-Share Alike 3.0
+      * http://creativecommons.org/licenses/by-sa/3.0/
+      * http://jordan.trudgett.com/cgi-bin/Page.py?pagestyle=download
+
+
+Hope you enjoy this game!!!!!
+Webcomic: http://scndgen.sourceforge.net
+SourceForge: http://www.sourceforge.com/projects/scndgen
+email: ifungandana@gmail.com
+
+Your Machine==========
+Java Runtime Environment: 1.8.0_131
+Operating System: null ( 10.0 ) amd64
+
+
+The SCND Genesis: Legends copyright © 2011 - 2017 Ifunga Ndana.

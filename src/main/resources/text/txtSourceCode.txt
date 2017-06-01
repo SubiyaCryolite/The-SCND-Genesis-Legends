@@ -1,0 +1,9 @@
+You can access the games SourceFourge SVN servers here:
+https://scndgen.svn.sourceforge.net/svnroot/scndgen
+
+You can access the games launchpad ppa here:
+https://launchpad.net/~ifungandana/+archive/scndgen
+
+The art assets are available within each .jar file under the lib directory
+
+Happy Coding XD

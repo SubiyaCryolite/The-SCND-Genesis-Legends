@@ -23,7 +23,6 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.drawing.DrawUserLogin;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.state.LoginState;
 import com.scndgen.legends.windows.WindowUpdate;
@@ -143,7 +142,7 @@ public class LoginScreen extends JFrame {
         createUserCombo();
         thisPic = new DrawUserLogin(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("The SCND Genesis: Legends" + RenderGamePlay.getInstance().getVersionStr());
+        setTitle("The SCND Genesis: Legends RMX");
         pack();
         setLocationRelativeTo(null);
         setResizable(false);

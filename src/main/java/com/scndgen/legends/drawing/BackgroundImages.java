@@ -22,9 +22,7 @@
 package com.scndgen.legends.drawing;
 
 import io.github.subiyacryolite.enginev1.Loader;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import javax.swing.*;
 
@@ -33,37 +31,33 @@ import javax.swing.*;
  * @Class: screenDrawer
  * This class draws nd manipulates all sprites, images and effects used in the game
  */
-public class SpecialDrawMenuBGs extends JPanel {
+public class BackgroundImages extends JPanel {
 
-    private final Image bufferedImage;
+    private Image image;
 
-    public SpecialDrawMenuBGs() {
+    public BackgroundImages() {
         Loader loader = new Loader();
         int x = (int) (Math.random() * 5);
         switch (x) {
             case 0:
-                bufferedImage = loader.load("images/story/blur/s4.png");
+                image = loader.load("images/story/blur/s4.png");
                 break;
             case 1:
-                bufferedImage = loader.load("images/story/blur/s5.png");
+                image = loader.load("images/story/blur/s5.png");
                 break;
             case 2:
-                bufferedImage = loader.load("images/story/blur/s6.png");
+                image = loader.load("images/story/blur/s6.png");
                 break;
             case 3:
-                bufferedImage = loader.load("images/story/blur/s11.png");
+                image = loader.load("images/story/blur/s11.png");
                 break;
             default:
-                bufferedImage = loader.load("images/story/blur/s6.png");
+                image = loader.load("images/story/blur/s6.png");
                 break;
         }
     }
 
-    public void paintComponent(GraphicsContext gc, double x, double y) {
-        gc.drawImage(bufferedImage, 0, 0);
-        gc.setFill(Color.BLACK);
-        gc.setGlobalAlpha((0.7f));
-        gc.fillRect(0, 0, 853, 480);
-        gc.setGlobalAlpha((1.0f));
+    public Image getImage() {
+        return image;
     }
 }

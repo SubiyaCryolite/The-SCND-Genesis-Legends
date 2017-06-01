@@ -29,7 +29,6 @@ import com.scndgen.legends.network.NetworkScanLan;
 import com.scndgen.legends.render.RenderMainMenu;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
-import com.scndgen.legends.windows.WindowLeaderBoard;
 import com.scndgen.legends.windows.WindowOptions;
 
 /**
@@ -44,7 +43,6 @@ public class Window {
     private WindowOptions options;
     private WindowAbout about;
     private NetworkScanLan scan;
-    private WindowLeaderBoard board;
     private boolean[] buttonz;
     private int compassDir, compassDir2, last = 13;
 
@@ -90,14 +88,7 @@ public class Window {
             }
             if (destination == SubMode.LOGOUT) {
                 logOut();
-            } else if (destination == SubMode.LEADERS) {
-                if (boardNotUp) {
-                    board = new WindowLeaderBoard();
-                    boardNotUp = false;
-                } else {
-                    board.reappear();
-                }
-            } else if (destination == SubMode.ABOUT) {
+            }  else if (destination == SubMode.ABOUT) {
                 about = new WindowAbout();
             } else if (destination == SubMode.CONTROLS) {
                 controls = new WindowControls();

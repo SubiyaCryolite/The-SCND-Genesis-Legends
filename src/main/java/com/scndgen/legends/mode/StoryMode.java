@@ -67,7 +67,7 @@ public class StoryMode implements Runnable {
 
     private void setScene(int scene) {
         storyMusic = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
-        tlkSpeed = GameState.getInstance().getLogin().getTextSpeed();
+        tlkSpeed = GameState.getInstance().getLogin().getTextSpeedInt();
         opt = -1;
         RenderCharacterSelection.getInstance().newInstance();
         RenderStageSelect.getInstance().newInstance();

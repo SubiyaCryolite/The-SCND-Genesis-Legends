@@ -23,7 +23,8 @@ package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
-import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
+import com.scndgen.legends.constants.GeneralConstants;
+import com.scndgen.legends.drawing.BackgroundImages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,28 +44,27 @@ public class WindowUpdate extends JFrame implements ActionListener {
     private JPanel logo, textHolder, bottom;
     private JButton ok, get;
     private JScrollPane scroller;
-    private SpecialDrawMenuBGs logoPic;
+    private BackgroundImages logoPic;
     private Box box = new Box(BoxLayout.Y_AXIS);
     private String updateVer, text;
     private String[] updateArr;
     //private Font normalFont;
     private String fname;
 
-    @SuppressWarnings("LeakingThisInConstructor")
     public WindowUpdate(String updateVerStr, String fname, String[] updates, LoginScreen p) {
         //normalFont = getMyFont(LoginScreen.normalTxtSize);
         updateVer = updateVerStr;
         updateArr = updates;
         logo = new JPanel();
         this.fname = fname;
-        logoPic = new SpecialDrawMenuBGs();
+        logoPic = new BackgroundImages();
         logo.add(logoPic);
 
         text = "The SCND Genesis: Legends " + updateVer + " " + Language.getInstance().get(58) + " "
                 + "\nhttp://www.sourceforge.com/projects/scndgen/files/executable/" + fname + "/download"
                 + "\n\n" + Language.getInstance().get(59) + ": \n"
                 + stringBuilder(updates)
-                + "\n\nThe SCND Genesis: Legends copyright © " + WindowAbout.year() + " Ifunga Ndana.";
+                + "\n\nThe SCND Genesis: Legends RMX. Copyright © " + GeneralConstants.years() + " Ifunga Ndana.";
 
         txt = new JTextArea("", 2, 2);
         //txt.setFont(normalFont);

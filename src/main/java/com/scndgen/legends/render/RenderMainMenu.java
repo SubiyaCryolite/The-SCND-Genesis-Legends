@@ -3,6 +3,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
+import com.scndgen.legends.constants.GeneralConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
@@ -563,7 +564,7 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
         }
         Overlay.getInstance().overlay(gc, w, h);
-        gc.fillText("The SCND Genesis: Legends " + RenderGamePlay.getInstance().getVersionStr() + " | copyright © " + WindowAbout.year() + " Ifunga Ndana.", 10, screenHeight - 10);
+        gc.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
         gc.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);

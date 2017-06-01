@@ -54,4 +54,5 @@ public class LoginFields {
     public static final JdsField MUSIC_VOLUME  = new JdsField(45, "MUSIC_VOLUME", JdsFieldType.FLOAT);
     public static final JdsField VOICE_VOLUME  = new JdsField(46, "VOICE_VOLUME", JdsFieldType.FLOAT);
     public static final JdsField SOUND_VOLUME  = new JdsField(47, "SOUND_VOLUME", JdsFieldType.FLOAT);
+    public static final JdsField TEXT_SPEED_STRING  = new JdsField(48, "TEXT_SPEED", JdsFieldType.TEXT);
 }

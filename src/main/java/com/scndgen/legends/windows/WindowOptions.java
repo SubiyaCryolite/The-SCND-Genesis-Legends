@@ -21,356 +21,122 @@
  **************************************************************************/
 package com.scndgen.legends.windows;
 
-import com.scndgen.legends.state.GameState;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.drawing.SpecialDrawMenuBGs;
+import com.scndgen.legends.state.GameState;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 
 /**
  * @author: Ifunga Ndana
  * @class: WindowOptions
  * This class contains the games OPTIONS
  */
-public class WindowOptions extends JFrame implements ActionListener, ItemListener, KeyListener {
+public class WindowOptions extends Stage {
 
-    public String charPrevLoc = "images/trans.png", oppPrevLoc = "images/trans.png";
-    private Object source;
-    private JToggleButton[] btnRating;
-    private JToggleButton btnSoundOn, btnSoundOff, star1, star2, star3, star4, star5;
-    private ButtonGroup soundBG;
-    private JLabel ratingL, lblOption1, oplblOption2, opLabel3, lblOption4, opLabel8, opLabel9, opLabel10, opLabel11;
-    private JComboBox diffSett, cmbLanguage;
-    private String[] comicTxtFreqStr;
-    private String[] mode;
-    private String[] diffSettOpt;
-    private JCheckBox cont;
-    private JPanel pnlGameRating, pnl2l, pan3, panDifficulty, panSound, panTimeDur, panTextSpeed, opPanelSave, panComicText, panController, panLefty, panLanguage;
-    private Box box;
-    private JComboBox lefty, cmbTimeDuration, cmbTextSpeed, cmbComicTextOccurence;
-    private String[] times = {"infinite", "180", "150", "120", "90", "60", "30"};
-    private String[] frames = {"25", "30", "40", "60", "75", "120"};
-    private String[] preset;
-    private JButton btnReset, save, updateButton;
-    private int gameRating;
-    private SpecialDrawMenuBGs logoPic;
-    //private Font normalFont;
+    private Label lblDifficultySetting, lblTimeDuration, lblTextSpeed, lblComicTextOccurence, lblIsLeftHanded;
+    private GridPane gridPane;
+    private ObservableList<String> comicTextOccurence;
+    private ObservableList<String> textSpeed;
+    private ObservableList<String> difficultySetting;
+    private ObservableList<String> timeLimits;
+    private ObservableList<String> isLeftHanded;
+    private ComboBox<String> cmbDifficultySetting;
+    private ComboBox<String> cmbIsLeftHanded;
+    private ComboBox<String> cmbTimeDuration;
+    private ComboBox<String> cmbTextSpeed;
+    private ComboBox<String> cmbComicTextOccurence;
+    private Button btnSave;
 
     /**
      * Constructor
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public WindowOptions() {
-        box = new Box(BoxLayout.Y_AXIS);
-        box.setOpaque(false);
+        super(StageStyle.UNDECORATED);
+        gridPane = new GridPane();
+        isLeftHanded = FXCollections.observableArrayList(new String[]{Language.getInstance().get(172), Language.getInstance().get(171)});
+        timeLimits = FXCollections.observableArrayList(new String[]{"Infinite", "180", "150", "120", "90", "60", "30"});
+        comicTextOccurence = FXCollections.observableArrayList(new String[]{Language.getInstance().get(1), Language.getInstance().get(2), Language.getInstance().get(3), Language.getInstance().get(4)});
+        textSpeed = FXCollections.observableArrayList(new String[]{Language.getInstance().get(22), Language.getInstance().get(23), Language.getInstance().get(24), Language.getInstance().get(25)});
+        difficultySetting = FXCollections.observableArrayList(new String[]{Language.getInstance().get(26), Language.getInstance().get(27), Language.getInstance().get(28), Language.getInstance().get(29), Language.getInstance().get(30)});
 
-        logoPic = new SpecialDrawMenuBGs();
-        comicTxtFreqStr = new String[]{Language.getInstance().get(1), Language.getInstance().get(2), Language.getInstance().get(3), Language.getInstance().get(4)};
-        mode = new String[]{Language.getInstance().get(22), Language.getInstance().get(23), Language.getInstance().get(24), Language.getInstance().get(25)};
-        diffSettOpt = new String[]{Language.getInstance().get(26), Language.getInstance().get(27), Language.getInstance().get(28), Language.getInstance().get(29), Language.getInstance().get(30)};
-        preset = new String[]{Language.getInstance().get(32), Language.getInstance().get(33)};
+        int row = 1;
 
-        gameRating = 0;
+        cmbDifficultySetting = new ComboBox(difficultySetting);
+        cmbDifficultySetting.setValue(GameState.getInstance().getLogin().resolveDifficulty());
+        cmbDifficultySetting.getSelectionModel().selectedItemProperty().addListener((src, oldValue, newValue) -> {
+            GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
+            GameState.getInstance().getLogin().setDifficulty(GameState.getInstance().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
+        });
+        lblDifficultySetting = new Label(Language.getInstance().get(6));
+        gridPane.add(lblDifficultySetting, 1, row);
+        gridPane.add(cmbDifficultySetting, 2, row);
+        row++;
 
-        btnReset = new JButton(Language.getInstance().get(31));
-        btnReset.setPreferredSize(new Dimension(64, 32));
-        btnReset.addActionListener(this);
+        cmbTextSpeed = new ComboBox(textSpeed);
+        cmbTextSpeed.setValue(GameState.getInstance().getLogin().getTextSpeed());
+        cmbTextSpeed.getSelectionModel().selectedItemProperty().addListener((src, oldValue, newValue) -> {
+            GameState.getInstance().getLogin().setTextSpeed(newValue);
+        });
+        lblTextSpeed = new Label(Language.getInstance().get(7));
+        gridPane.add(lblTextSpeed, 1, row);
+        gridPane.add(cmbTextSpeed, 2, row);
+        row++;
 
-        star1 = new JToggleButton("★");
-        star1.setToolTipText("1 out of 5");
-        star1.addActionListener(this);
-        star2 = new JToggleButton("★★");
-        star2.setToolTipText("2 out of 5");
-        star2.addActionListener(this);
-        star3 = new JToggleButton("★★★");
-        star3.setToolTipText("3 out of 5");
-        star3.addActionListener(this);
-        star4 = new JToggleButton("★★★★");
-        star4.setToolTipText("4 out of 5");
-        star4.addActionListener(this);
-        star5 = new JToggleButton("★★★★★");
-        star5.setToolTipText("5 out of 5");
-        star5.addActionListener(this);
+        lblTimeDuration = new Label(Language.getInstance().get(14));
+        cmbTimeDuration = new ComboBox(timeLimits);
+        cmbTimeDuration.setValue(GameState.getInstance().getLogin().getTimeLimitString());
+        cmbTimeDuration.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
+            if (newValue.equalsIgnoreCase("infinite"))
+                GameState.getInstance().getLogin().setTimeLimit(INFINITE_TIME);
+            else
+                GameState.getInstance().getLogin().setTimeLimit(Integer.parseInt(newValue));
+        });
+        gridPane.add(lblTimeDuration, 1, row);
+        gridPane.add(cmbTimeDuration, 2, row);
+        row++;
 
-        btnRating = new JToggleButton[]{star1, star2, star3, star4, star5};
-        pnl2l = new JPanel(new FlowLayout());
-        pnl2l.add(btnReset);
-        pnl2l.add(btnRating[0]);
-        pnl2l.add(btnRating[1]);
-        pnl2l.add(btnRating[2]);
-        pnl2l.add(btnRating[3]);
-        pnl2l.add(btnRating[4]);
+        cmbIsLeftHanded = new ComboBox(isLeftHanded);
+        cmbIsLeftHanded.getSelectionModel().select(GameState.getInstance().getLogin().isLeftHanded() ? 0 : 1);
+        cmbIsLeftHanded.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
+            GameState.getInstance().getLogin().setLeftHanded(list.getValue().indexOf(newValue) == 0 ? true : false);
+        });
+        lblIsLeftHanded = new Label(Language.getInstance().get(173));
+        gridPane.add(lblIsLeftHanded, 1, row);
+        gridPane.add(cmbIsLeftHanded, 2, row);
+        row++;
 
-        ratingL = new JLabel(Language.getInstance().get(5) + gameRating + "/10");
-        alterJLabel(ratingL);
-        pnlGameRating = new JPanel(new GridLayout(1, 2));
-        pnlGameRating.add(ratingL);
-        pnl2l.setOpaque(false);
-        pnlGameRating.add(pnl2l);
+        cmbComicTextOccurence = new ComboBox(comicTextOccurence);
+        cmbComicTextOccurence.getSelectionModel().select(GameState.getInstance().getLogin().getComicEffectOccurence());
+        cmbComicTextOccurence.getSelectionModel().selectedItemProperty().addListener((list, newv, oldv) -> {
 
-        /*
-        countries = Locale.getISOCountries();
-        nation = new JComboBox(countries);
-        nation.setSelectedItem(LoginScreen.getInstance().getCountry());
-         */
+        });
+        lblComicTextOccurence = new Label(Language.getInstance().get(17));
+        gridPane.add(lblComicTextOccurence, 1, row);
+        gridPane.add(cmbComicTextOccurence, 2, row);
+        row++;
 
-        diffSett = new JComboBox(diffSettOpt);
-        diffSett.setSelectedIndex(GameState.getInstance().getLogin().resolveDifficulty());
-        diffSett.addActionListener(this);
-        lblOption1 = new JLabel(Language.getInstance().get(6));
-        panDifficulty = new JPanel(new GridLayout(1, 2));
-        panDifficulty.add(lblOption1);
-        panDifficulty.add(diffSett);
-
-        /*
-        cmbResolution = new JComboBox(reso);
-        cmbResolution.setSelectedIndex(LoginScreen.scalePos);
-        cmbResolution.addActionListener(this);
-        opLabel10 = new JLabel("Screen resolution: ");
-        panLefty = new JPanel(new GridLayout(1, 2));
-        panLefty.add(opLabel10);
-        panLefty.add(cmbResolution);*/
-
-        cmbTextSpeed = new JComboBox(mode);
-        cmbTextSpeed.setSelectedIndex(2);
-        cmbTextSpeed.addActionListener(this);
-        lblOption4 = new JLabel(Language.getInstance().get(7));
-        panTextSpeed = new JPanel(new GridLayout(1, 2));
-        panTextSpeed.add(lblOption4);
-        panTextSpeed.add(cmbTextSpeed);
-
-        oplblOption2 = new JLabel(Language.getInstance().get(11));
-        btnSoundOn = new JToggleButton(Language.getInstance().get(12));
-        btnSoundOff = new JToggleButton(Language.getInstance().get(13));
-        btnSoundOn.addActionListener(this);
-        btnSoundOff.addActionListener(this);
-        btnSoundOn.setSelected(GameState.getInstance().getLogin().isAudioOn()); //on by default
-        btnSoundOff.setSelected(!GameState.getInstance().getLogin().isAudioOn());
-
-        soundBG = new ButtonGroup();
-        soundBG.add(btnSoundOn);
-        soundBG.add(btnSoundOff);
-
-        panSound = new JPanel(new GridLayout(1, 3));
-        panSound.add(oplblOption2);
-        panSound.add(btnSoundOn);
-        panSound.add(btnSoundOff);
-        panSound.setOpaque(false);
-
-        opLabel3 = new JLabel(Language.getInstance().get(14));
-        cmbTimeDuration = new JComboBox(times);
-        cmbTimeDuration.setSelectedItem("" + GameState.getInstance().getLogin().getTimeLimit());
-        cmbTimeDuration.addActionListener(this);
-        panTimeDur = new JPanel(new GridLayout(1, 2));
-        panTimeDur.add(opLabel3);
-        panTimeDur.add(cmbTimeDuration);
-
-        pan3 = new JPanel();
-        updateButton = new JButton(Language.getInstance().get(16));
-        updateButton.addActionListener(this);
-        pan3.add(updateButton);
-        /*
-        countryCode = new JLabel("Country Code :");
-        pan3.add(countryCode);
-        pan3.add(nation);
-         */
-
-        panLefty = new JPanel(new GridLayout(1, 2));
-        lefty = new JComboBox(new String[]{Language.getInstance().get(172), Language.getInstance().get(171)});
-        lefty.setSelectedIndex(GameState.getInstance().getLogin().isLeftHanded() ? 0 : 1);
-        lefty.addActionListener(this);
-        opLabel10 = new JLabel(Language.getInstance().get(173));
-        panLefty.add(opLabel10);
-        panLefty.add(lefty);
-
-        cmbComicTextOccurence = new JComboBox(comicTxtFreqStr);
-        cmbComicTextOccurence.setSelectedIndex(GameState.getInstance().getLogin().getComicEffectOccurence());
-        cmbComicTextOccurence.addActionListener(this);
-        opLabel8 = new JLabel(Language.getInstance().get(17));
-        panComicText = new JPanel(new GridLayout(1, 2));
-        panComicText.add(opLabel8);
-        panComicText.add(cmbComicTextOccurence);
-
-        cont = new JCheckBox();
-        cont.addItemListener(this);
-        cont.setSelected(GameState.getInstance().getLogin().getUsingController());
-        cont.setSelected(false);
-        opLabel9 = new JLabel(Language.getInstance().get(18));
-        panController = new JPanel(new GridLayout(1, 2));
-        panController.add(opLabel9);
-        panController.add(cont);
-
-        cmbLanguage = new JComboBox(Language.getInstance().getSupportedLanguages().toArray());
-        cmbLanguage.setSelectedIndex(GameState.getInstance().getLogin().getCurrentLanguage());
-        cmbLanguage.addActionListener(this);
-        opLabel11 = new JLabel(Language.getInstance().get(19));
-        panLanguage = new JPanel(new GridLayout(1, 2));
-        panLanguage.add(opLabel11);
-        panLanguage.add(cmbLanguage);
-
-
-        save = new JButton(Language.getInstance().get(20));
-        save.addActionListener(this);
-
-        opPanelSave = new JPanel(new FlowLayout());
-        opPanelSave.add(save);
-
-
-        panLanguage.setOpaque(false);
-        //pnlGameRating.setOpaque(false);
-        panLefty.setOpaque(false);
-        panDifficulty.setOpaque(false);
-        panSound.setOpaque(false);
-        panTimeDur.setOpaque(false);
-        panTextSpeed.setOpaque(false);
-        panComicText.setOpaque(false);
-        //panController.setOpaque(false)
-        opPanelSave.setOpaque(false);
-
-
-        alterJLabel(opLabel9);
-        alterJLabel(lblOption1);
-        alterJLabel(oplblOption2);
-        alterJLabel(opLabel3);
-        alterJLabel(lblOption4);
-        alterJLabel(opLabel8);
-        alterJLabel(opLabel9);
-        alterJLabel(opLabel10);
-        alterJLabel(opLabel11);
-
-        box.add(panLanguage);
-        //box.add(pnlGameRating);
-        box.add(panLefty);
-        //box.add(panFrameRate);
-        box.add(panDifficulty);
-        box.add(panSound);
-        box.add(panTimeDur);
-        box.add(panTextSpeed);
-        //box.add(panUpdates);
-        box.add(panComicText);
-        //box.add(panController);
-        box.add(opPanelSave);
+        btnSave = new Button(Language.getInstance().get(20));
+        btnSave.setOnAction(event -> {
+            GameState.getInstance().saveConfigFile();
+            close();
+        });
+        gridPane.add(btnSave, 1, row, 2, 1);
+        GridPane.setHalignment(btnSave, HPos.CENTER);
+        row++;
 
         setTitle(Language.getInstance().get(34));
-        setUndecorated(true);
-        setContentPane(logoPic);
-        add(box);
-        pack();
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        addKeyListener(this);
-        requestFocusInWindow();
-        setFocusable(true);
-        setLocationRelativeTo(null);
+        setScene(new Scene(gridPane));
         setResizable(false);
-        setVisible(true);
-        setRating(GameState.getInstance().getLogin().getGameRating() / 20);
-    }
-
-
-    public void alterJLabel(JLabel jLabel) {
-        jLabel.setForeground(Color.WHITE);
-        //jLabel.setFont(normalFont);
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent ie) {
-        GameState.getInstance().getLogin().setUsingController(ie.getStateChange() == ItemEvent.SELECTED);
-    }
-
-    private void resetRating() {
-        for (int u = 0; u < 5; u++) {
-            btnRating[u].setEnabled(true);
-        }
-    }
-
-    private void setRating(int num) {
-        if (num > -1 && num < 6) {
-            for (int u = 0; u < btnRating.length; u++) {
-                btnRating[u].setEnabled(true);
-            }
-            //set new val
-            for (int u = 0; u < num; u++) {
-                btnRating[u].setEnabled(false);
-            }
-            gameRating = num;
-            GameState.getInstance().getLogin().setGameRating(gameRating);
-            ratingL.setText(Language.getInstance().get(35) + gameRating + "/5");
-            GameState.getInstance().saveConfigFile();
-        }
-    }
-
-    /**
-     * Action performed method
-     *
-     * @param ae - action event
-     */
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        source = ae.getSource();
-
-        for (int um = 0; um < 5; um++) {
-            if (source == btnRating[um]) {
-                setRating(um + 1);
-            }
-        }
-        if (source == lefty) {
-            GameState.getInstance().getLogin().setLeftHanded(lefty.getSelectedIndex() != 0);
-        }
-        if (source == btnReset) {
-            resetRating();
-        } else if (source == cmbComicTextOccurence) {
-            GameState.getInstance().getLogin().setComicEffectOccurence(cmbComicTextOccurence.getSelectedIndex());
-        } else if (source == cmbLanguage) {
-            Language.getInstance().setLanguage(cmbLanguage.getSelectedIndex());
-            GameState.getInstance().getLogin().setCurrentLanguage(cmbLanguage.getSelectedIndex());
-        } else if (source == diffSett) {
-            GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
-            GameState.getInstance().getLogin().setDifficulty(GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
-            System.out.println("Diff = " + GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex()));
-            System.out.println("Diff Range = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())));
-            System.out.println("Diff Range Rate = " + (GameState.DIFFICULTY_BASE - GameState.getInstance().getLogin().getDifficultyConstant(diffSett.getSelectedIndex())) / GameState.DIFFICULTY_BASE);
-        } else if (source == cmbTextSpeed) {
-            GameState.getInstance().getLogin().setTextSpeed(GameState.getInstance().getLogin().getTxtSpeedConstant(cmbTextSpeed.getSelectedIndex()));
-        } else if (source == btnSoundOn) {
-            GameState.getInstance().getLogin().setIsAudioOn(true);
-        } else if (source == btnSoundOff) {
-            GameState.getInstance().getLogin().setIsAudioOn(false);
-        } else if (source == cmbTimeDuration) {
-            if (cmbTimeDuration.getSelectedItem() == "infinite") {
-                GameState.getInstance().getLogin().setTimeLimit(GameState.MAX_TIME);
-            } else if (cmbTimeDuration.getSelectedItem() == "180") {
-                GameState.getInstance().getLogin().setTimeLimit(180);
-            } else if (cmbTimeDuration.getSelectedItem() == "150") {
-                GameState.getInstance().getLogin().setTimeLimit(150);
-            } else if (cmbTimeDuration.getSelectedItem() == "120") {
-                GameState.getInstance().getLogin().setTimeLimit(120);
-            } else if (cmbTimeDuration.getSelectedItem() == "90") {
-                GameState.getInstance().getLogin().setTimeLimit(90);
-            } else if (cmbTimeDuration.getSelectedItem() == "60") {
-                GameState.getInstance().getLogin().setTimeLimit(60);
-            } else if (cmbTimeDuration.getSelectedItem() == "30") {
-                GameState.getInstance().getLogin().setTimeLimit(30);
-            }
-        } else if (source == save) {
-            GameState.getInstance().saveConfigFile();
-            dispose();
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
+        show();
     }
 }

@@ -1,0 +1,78 @@
+================Changelog================
+Alpha 11.01_15 >>>>
+13/01/11 -Changed main menu, performance benefits
+14/01/11 -Integrated STATS into main menu, pending for connections can be cancelled
+15/01/11 -Backwards compatibility for new save items, fixed time
+16/01/11 -Dynamic main menu, changes based on hour of Day :D
+
+Alpha 11.01_17 >>>>
+17/01/11 -Client in LAN uses hosts time preset, clients closed after match
+
+Alpha 11.02_06 >>>>
+24/01/11 - Added 2 new stages "African Village" and "Hidden Cave", redrew "Frozen Wilderness"
+28/01/11 - Game automatically checks for new updates and downloads audio files
+30/01/11 - Completed new character select screen
+03/02/11 - Added a new character, "Jonah"
+05/02/11 - Added 2 new character, "NovaAdam" and "NOVA NovaAdam"
+05/02/11 - Added a new lastStoryScene, "The Apocalypse"
+
+Alpha 11.02_15 >>>>
+15/02/11 - Game logs character usage (favourite/least favourite)
+15/02/11 - Switched to sourceforge server
+15/02/11 - Several bug fixes and optimisations
+15/02/11 - Added music from Ruins by The Seventh Alchemy (creative commons by-nc-nd v3.0)
+
+Alpha 11.03_08 >>>>
+28/02/11 - Code optimization, smoother animation
+03/03/11 - Added a new Stage Select screen
+05/03/11 - Added a new character, Azaria.
+
+Alpha 11.04_29 >>>>
+26/03/11 - Epic code surgery
+27/03/11 - Comic book text effect, enhanced Frozen Wilderness lastStoryScene
+04/04/11 - New 2 vs 2 battle scene. Early form but playable. Testing and feedback phase
+10/04/11 - character taunt each other at the initiate of each battle
+16/04/11 - More epic code surgery, new GLOBAL overlay/menu
+21/04/11 - Controller support, including force feedback via jInput. Thanks to Andrew Davison's TUTORIAL
+27/04/11 - Added a new character, Sorrowe
+27/04/11 - 2 more sample playStory scene stages
+28/04/11 - Added acheivement locker, with descriptions
+02/05/11 - Added a guest character, The Thing. Based on my first Blender mesh.
+
+Alpha 11.07_01 >>>>
+16/05/11 - Added scalabe images, resolutions can be altered
+16/05/11 - Supported resolutions 720x405, 852x480 (native), 1024x576, 1280x720, 1680x1050, 1920x1080
+24/06/11 - Rebalanced overpowered character *cough* The Thing *cough*
+30/06/11 - *NOTE* If window doesn't scale up or down properly in Linux press 'X'
+05/07/11 - Added user locale, sorting out online leaderboards
+05/07/11 - Added testing 'Rate this game' feature.
+07/07/11 - Added online leaderboards!!!!!
+08/07/11 - Refined leaderboard functionality
+
+Beta 11.08_17 >>>>
+16/07/11 - Fixed wave bug on frozen wilderness lastStoryScene
+12/08/11 - Disabled multi resolution (sorry :/)
+12/08/11 - Added high and low quality sprites, to prevent freezing on load and save RAM
+17/08/11 - Added new lastStoryScene, "Moonlit Shore"
+17/08/11 - Fixed background music bug
+
+Beta 11.10_29 >>>>
+04/09/2011 - Added random lastStoryScene function
+12/10/2011 - Added new lastStoryScene "The Ruined Hall"
+14/10/2011 - FINALLY coloured the character "Lynx"
+25/10/2011 - Added total game completion in STATS (playStory + Achievements)
+29/10/2011 - Removed 2 vs 2 battle, unstable n buggy, DX
+
+Version 1.11.11.27 >>>>
+27/11/2011 - Complete playStory scene, experience the prologue of this great adventure
+18/11/2011 - Added langauge XML file, feel free to translate to anything you can think of.
+27/11/2011 - Dynamic HUD (left handed/ right handed)
+
+Version 1.11.12.19 >>>>
+19/12/2011 - Fixed UI bugs
+19/12/2011 - Fixed LAN errors on machines that are online
+19/12/2011 - Fury can be activated by clicking on flashing fury icon
+19/12/2011 - Implemented WASD CONTROLS on top of existing navigation keys
+19/12/2011 - Fixed storymode slideshow bug on resume/load game
+19/12/2011 - Disabled leaderboards - server maintenance >:(
+19/12/2011 - Moved 'download music' to OPTIONS menu to prevent crash on startup

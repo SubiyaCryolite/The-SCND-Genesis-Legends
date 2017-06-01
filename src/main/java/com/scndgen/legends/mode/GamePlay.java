@@ -96,7 +96,6 @@ public abstract class GamePlay extends Mode {
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
     protected int damageDoneToCharacter, damageDoneToOpponent;
     protected int limitTop = 1000;
-    protected String versionString = " 2K17 RMX";
     protected int versioInt = 20120630; // yyyy-mm-dd
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
@@ -156,7 +155,7 @@ public abstract class GamePlay extends Mode {
 
 
     protected GamePlay() {
-        furyBarCoolDownFactor = 30 - (8 + (GameState.getInstance().getLogin().resolveDifficulty() * 2));
+        furyBarCoolDownFactor = 30 - (8 + (GameState.getInstance().getLogin().resolveDifficultyInt() * 2));
     }
 
     /**
@@ -425,6 +424,7 @@ public abstract class GamePlay extends Mode {
         super.update(delta);
         if (loadAssets) return;
         if (playingCutscene) return;
+        if (paused) return;
         if (!gameOver) {
             handleOpponentAi(delta);
             handleOpponentAttacks(delta);
@@ -656,7 +656,7 @@ public abstract class GamePlay extends Mode {
                     secondCount += 16.67f;
                 } else {
                     try {
-                        if (time < 999 && time > 0) {
+                        if (time < INFINITE_TIME && time > 0) {
                             time -= 1;
                             timeStr = "" + time;
                             secondCount = 0.0f;
@@ -849,27 +849,16 @@ public abstract class GamePlay extends Mode {
     }
 
     /**
-     * Gets the games current version
-     *
-     * @return version
-     */
-    public String getVersionStr() {
-        return versionString;
-    }
-
-    /**
      * Legacy awesomeness
      *
      * @return is effect on?
      */
     public boolean isFancyEffect() {
-        {
-            if (fancyBWAnimeEffect == 1) {
-                fancyBWAnimeEffectEnabled = true;
-            }
-            if (fancyBWAnimeEffect != 1) {
-                fancyBWAnimeEffectEnabled = false;
-            }
+        if (fancyBWAnimeEffect == 1) {
+            fancyBWAnimeEffectEnabled = true;
+        }
+        if (fancyBWAnimeEffect != 1) {
+            fancyBWAnimeEffectEnabled = false;
         }
         return fancyBWAnimeEffectEnabled;
     }

@@ -17,7 +17,6 @@ import java.util.List;
  */
 @JdsEntityAnnotation(entityName = "Game State", entityId = 1)
 public class GameState extends JdsEntity {
-    public static final int MAX_TIME = 1000;
     private static GameState instance;
     private static JdsDataBase jdsDatabase;
     public static final int DIFFICULTY_BASE = 8000;

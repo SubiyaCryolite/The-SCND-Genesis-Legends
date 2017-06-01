@@ -35,7 +35,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import static org.lwjgl.openal.AL10.*;
@@ -43,14 +42,13 @@ import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC11.ALC_MONO_SOURCES;
 import static org.lwjgl.openal.ALC11.ALC_STEREO_SOURCES;
 import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memAlloc;
+import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public class AudioPlayback {
 
     private static final Set<AudioPlayback> heap = new HashSet<>();
-    private static final LinkedList<Integer> freeSources = new LinkedList<>();
+    private static final int[] sources = new int[24];
     //========================================
     private static long audioDevice;
     private static long audioContext;
@@ -72,13 +70,19 @@ public class AudioPlayback {
         System.out.println("ALC_SYNC: " + (alcGetInteger(audioDevice, ALC_SYNC) == ALC_TRUE));
         System.out.println("ALC_MONO_SOURCES: " + alcGetInteger(audioDevice, ALC_MONO_SOURCES));
         System.out.println("ALC_STEREO_SOURCES: " + alcGetInteger(audioDevice, ALC_STEREO_SOURCES));
-        for (int i = 0; i < 12; i++) {
-            sources().add(alGenSources());
+        for (int i = 0; i < sources.length; i++) {
+            sources[i] = alGenSources();
         }
     }
 
-    private static synchronized LinkedList<Integer> sources() {
-        return freeSources;
+    private static int currentBuffer() {
+        for (int source : sources) {
+            int state = alGetSourcei(source, AL_SOURCE_STATE);
+            if (state == AL_PLAYING || state == AL_PAUSED)
+                continue;
+            return source;
+        }
+        return 0;
     }
 
     private String fileName;
@@ -86,8 +90,8 @@ public class AudioPlayback {
     private AudioType audioType;
     private boolean looping = false;
     private float volume = 0.0f;
+    private int source;
     private int buffer;
-    private int sourcePointer;
 
     public AudioPlayback(String filename, AudioType audioType, boolean loop) {
         this.fileName = filename;
@@ -124,7 +128,7 @@ public class AudioPlayback {
         stb_vorbis_get_info(decoder, info);
         int channels = info.channels();
         int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
-        ShortBuffer pcm = BufferUtils.createShortBuffer(lengthSamples);
+        ShortBuffer pcm = memAllocShort(lengthSamples);
         pcm.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm) * channels);
         stb_vorbis_close(decoder);
         free(byteBuffer);
@@ -143,28 +147,25 @@ public class AudioPlayback {
     public void play() {
         new Thread(() -> {
             try {
+                source = currentBuffer();
                 buffer = alGenBuffers();
-                if (buffer <= 0)
-                    throw new Exception("Couldn't create the buffer");
-                sourcePointer = sources().pop();
-                if (sourcePointer <= 0)
-                    throw new Exception("Couldn't create the sourcePointer");
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     ShortBuffer pcm = readVorbis(fileName, info);
                     alBufferData(buffer, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
+                    free(pcm);
                 }
-                alSourcei(sourcePointer, AL_BUFFER, buffer);
-                alSourcei(sourcePointer, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
-                alSourcef(sourcePointer, AL_PITCH, 1.0f);
-                alSourcef(sourcePointer, AL_GAIN, volume / 100.0f);
-                alSourcePlay(sourcePointer);
+                alSourcei(source, AL_BUFFER, 0);//reset
+                alSourcei(source, AL_BUFFER, buffer);
+                alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
+                alSourcef(source, AL_GAIN, volume / 100.0f);
+                alSourcePlay(source);
                 int state;
                 do {
-                    state = alGetSourcei(sourcePointer, AL_SOURCE_STATE);
-                    Thread.sleep(2);//wait till done
+                    state = alGetSourcei(source, AL_SOURCE_STATE);
+                    Thread.sleep(1);//wait till done
                 } while (state == AL_PLAYING || state == AL_PAUSED);
             } catch (Exception ex) {
-                System.err.printf("Problem with [%s - %s] %s\n", sourcePointer, buffer, fileName);
+                System.err.printf("Problem with [%s - %s] %s\n", source, buffer, fileName);
                 ex.printStackTrace(System.err);
             } finally {
                 close();
@@ -174,8 +175,8 @@ public class AudioPlayback {
 
     private void setVolume(float volume) {
         this.volume = volume;
-        if (sourcePointer > 0)
-            alSourcef(sourcePointer, AL_GAIN, volume / 100.0f);
+        if (source > 0)
+            alSourcef(source, AL_GAIN, volume / 100.0f);
     }
 
     public AudioType getAudioType() {
@@ -192,16 +193,16 @@ public class AudioPlayback {
 
     public void pause() {
         paused = true;
-        alSourcePause(sourcePointer);
+        alSourcePause(source);
     }
 
     public void resume() {
         paused = false;
-        alSourcePlay(sourcePointer);
+        alSourcePlay(source);
     }
 
     public void stop() {
-        alSourceStop(sourcePointer);
+        alSourceStop(source);
         looping = false;
     }
 
@@ -223,8 +224,7 @@ public class AudioPlayback {
 
     public void close() {
         heap.remove(this);
-        alSourceStop(sourcePointer);
-        sources().push(sourcePointer);
+        alSourceStop(source);
         alDeleteBuffers(buffer);
     }
 
@@ -233,7 +233,7 @@ public class AudioPlayback {
         for (AudioPlayback audioPlayback : heap) {
             audioPlayback.stop();
         }
-        for (Integer source : sources()) {
+        for (int source : sources) {
             alDeleteSources(source);
         }
         alcDestroyContext(audioContext);

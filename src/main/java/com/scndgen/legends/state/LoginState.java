@@ -1,5 +1,6 @@
 package com.scndgen.legends.state;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.CharacterEnum;
 import io.github.subiyacryolite.jds.JdsEntity;
@@ -9,7 +10,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import static com.scndgen.legends.state.GameState.MAX_TIME;
+import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 
 /**
  * Created by ifunga on 22/04/2017.
@@ -22,7 +23,6 @@ public class LoginState extends JdsEntity {
             diff3 = 3500,
             diff4 = 4500,
             diff5 = 6000;
-    private final int[] txtSpeedArr = new int[]{50, 100, 200, 250};
     private final int[] difficultyArray = {diff0, diff1, diff2, diff3, diff4, diff5};
     //
     private final SimpleStringProperty userName = new SimpleStringProperty("");
@@ -44,12 +44,11 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty wins = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty losses = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty frames = new SimpleIntegerProperty(0);
-    private final SimpleIntegerProperty textSpeed = new SimpleIntegerProperty(200);
     private final SimpleBooleanProperty isAudioOn = new SimpleBooleanProperty(true);
     private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty difficultyDynamic = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty lastStoryScene = new SimpleIntegerProperty(0);
-    private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(MAX_TIME);
+    private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(90);
     private final SimpleStringProperty graphicsSetting = new SimpleStringProperty("");
     private final SimpleIntegerProperty char0 = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty char1 = new SimpleIntegerProperty(0);
@@ -72,6 +71,7 @@ public class LoginState extends JdsEntity {
     private final SimpleFloatProperty musicVolume = new SimpleFloatProperty(100);
     private final SimpleFloatProperty voiceVolume = new SimpleFloatProperty(100);
     private final SimpleFloatProperty soundVolume = new SimpleFloatProperty(100);
+    private final SimpleStringProperty txtSpeed = new SimpleStringProperty("Normal");
 
     public LoginState() {
         map(LoginFields.USER_NAME, userName);
@@ -93,7 +93,6 @@ public class LoginState extends JdsEntity {
         map(LoginFields.WINS, wins);
         map(LoginFields.LOSSES, losses);
         map(LoginFields.FRAMES_PER_SECOND, frames);
-        map(LoginFields.TEXT_SPEED, textSpeed);
         map(LoginFields.AUDIO_ON, isAudioOn);
         map(LoginFields.DIFFICULTY, difficulty);
         map(LoginFields.DIFFICULTY_DYNAMIC, difficultyDynamic);
@@ -121,6 +120,7 @@ public class LoginState extends JdsEntity {
         map(LoginFields.MUSIC_VOLUME, musicVolume);
         map(LoginFields.VOICE_VOLUME, voiceVolume);
         map(LoginFields.SOUND_VOLUME, soundVolume);
+        map(LoginFields.TEXT_SPEED_STRING, txtSpeed);
     }
 
     public void incrementAchievement(Achievements achievement) {
@@ -436,14 +436,6 @@ public class LoginState extends JdsEntity {
         this.frames.set(frames);
     }
 
-    public int getTextSpeed() {
-        return textSpeed.get();
-    }
-
-    public void setTextSpeed(int textSpeed) {
-        this.textSpeed.set(textSpeed);
-    }
-
     public SimpleIntegerProperty framesProperty() {
         return frames;
     }
@@ -486,6 +478,26 @@ public class LoginState extends JdsEntity {
 
     public void setTimeLimit(int timeLimit) {
         this.timeLimit.set(timeLimit);
+    }
+
+    public String getTimeLimitString() {
+        switch (getTimeLimit()) {
+            case INFINITE_TIME:
+                return "Infinite";
+            case 180:
+                return "180";
+            case 150:
+                return "150";
+            case 120:
+                return "120";
+            case 90:
+                return "90";
+            case 60:
+                return "60";
+            case 30:
+                return "30";
+        }
+        return "90";
     }
 
     public SimpleIntegerProperty timeLimitProperty() {
@@ -649,7 +661,7 @@ public class LoginState extends JdsEntity {
      *
      * @return difficulty array index
      */
-    public int resolveDifficulty() {
+    public int resolveDifficultyInt() {
         if (GameState.getInstance().getLogin().getDifficulty() == diff0)
             return 0;
         if (GameState.getInstance().getLogin().getDifficulty() == diff1)
@@ -665,8 +677,44 @@ public class LoginState extends JdsEntity {
         return -1;
     }
 
-    public int getTxtSpeedConstant(int dex) {
-        return txtSpeedArr[dex];
+    public String resolveDifficulty() {
+        switch (resolveDifficultyInt()) {
+            case 0:
+                return Language.getInstance().get(26);
+            case 1:
+                return Language.getInstance().get(27);
+            case 2:
+                return Language.getInstance().get(28);
+            case 3:
+                return Language.getInstance().get(29);
+            case 4:
+                return Language.getInstance().get(30);
+            case 5:
+                return Language.getInstance().get(31);
+        }
+        return Language.getInstance().get(26);
+    }
+
+    public void setTextSpeed(String dex) {
+        txtSpeed.set(dex);
+    }
+
+    public String getTextSpeed() {
+        return txtSpeed.get();
+    }
+
+    public int getTextSpeedInt() {
+        switch (txtSpeed.get()) {
+            case "Insane":
+                return 50;
+            case "Fast":
+                return 100;
+            case "Normal":
+                return 200;
+            case "Slow":
+                return 250;
+        }
+        return 200;
     }
 
     public int getDifficultyConstant(int dex) {
@@ -721,7 +769,7 @@ public class LoginState extends JdsEntity {
     }
 
     public boolean isTimeLimited() {
-        return getTimeLimit() != MAX_TIME;
+        return getTimeLimit() != INFINITE_TIME;
     }
 
     public float getMusicVolume() {
