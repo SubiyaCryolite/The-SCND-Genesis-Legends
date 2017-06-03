@@ -1,26 +1,23 @@
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.ModeEnum;
+import com.scndgen.legends.constants.NetworkConstants;
+import io.github.subiyacryolite.enginev1.FxDialogs;
 
-import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * Created by ifunga on 15/04/2017.
  */
 public class NetworkClient extends NetworkBase implements Runnable {
 
-    private DataOutputStream dataOutputStream;
-    private DataInputStream dataInputStream;
-    private Socket socket;
     private Thread thread;
     private String serverIpAddress;
     private boolean running;
+    private final LinkedList<String> messageQue = new LinkedList<>();
 
     /**
      * Constructor, expects getInfo/ip address
@@ -28,57 +25,37 @@ public class NetworkClient extends NetworkBase implements Runnable {
     public NetworkClient(String ip) {
         running = true;
         serverIpAddress = ip;
+        sendData(NetworkConstants.CONNECT_TO_HOST);
         thread = new Thread(this);
         thread.start();
     }
 
     @Override
     public void run() {
-        connectToServer(serverIpAddress);
-        while (running) {
-            getStreams();
-            try {
-                readMessage(dataInputStream.readUTF());
-                thread.sleep(NetworkManager.getInstance().serverLatency);
-            } catch (Exception ie) {
-                JOptionPane.showMessageDialog(null, ie.getMessage(), "Network ERROR", JOptionPane.ERROR_MESSAGE);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
-                NetworkManager.getInstance().closePipes();
+        running = true;
+        try {
+            InetAddress inetAddress = InetAddress.getByName(serverIpAddress);
+            System.out.printf("Attempting to connect to %s\n", inetAddress);
+            try (Socket socket = new Socket(inetAddress, NetworkManager.PORT)) {
+                System.out.println("Connected to " + socket.getInetAddress() + "\n");
+                socket.setSoTimeout(NetworkManager.TIMEOUT);
+                while (running) {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if (!messageQue.isEmpty()) {
+                        dataOutputStream.writeUTF(messageQue.pop());
+                        dataOutputStream.flush();
+                    }
+                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                    readMessage(dataInputStream.readUTF());
+                    thread.sleep(NetworkManager.getInstance().SERVER_LATENCY);
+                    sendData("");//keep stream alive
+                }
             }
-        }
-
-    }
-
-    /**
-     * Connect to a given NetworkServer
-     *
-     * @param hostname NetworkServer getInfo
-     */
-    private void connectToServer(String hostname) {
-        try {
-            running = true;
-            socket = new Socket(InetAddress.getByName(hostname), NetworkManager.getInstance().PORT);
-            System.out.println(InetAddress.getByName(hostname).getHostAddress() + " || " + InetAddress.getByName(hostname).getHostName() + " <Server> Started. \n");
-        } catch (IOException ex) {
-            System.err.println(ex);
-            System.out.println("Address already in use, please close other instances");
+        } catch (Exception ex) {
+            FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
+            NetworkManager.getInstance().close();
         }
     }
-
-    /**
-     * Get data streams
-     */
-    private void getStreams() {
-        try {
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.flush();
-            dataInputStream = new DataInputStream(socket.getInputStream());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace(System.err);
-        }
-    }
-
 
     /**
      * Send a data stream
@@ -87,12 +64,7 @@ public class NetworkClient extends NetworkBase implements Runnable {
      */
     @Override
     public void sendData(String message) {
-        try {
-            dataOutputStream.writeUTF(message);
-            dataOutputStream.flush();
-        } catch (Exception exception) {
-            exception.printStackTrace(System.err);
-        }
+        messageQue.add(message);
     }
 
     /**
@@ -101,9 +73,6 @@ public class NetworkClient extends NetworkBase implements Runnable {
     public void close() {
         try {
             running = false;
-            dataOutputStream.close();
-            dataInputStream.close();
-            socket.close();
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
         }

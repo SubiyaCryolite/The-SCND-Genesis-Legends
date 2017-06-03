@@ -44,7 +44,7 @@ public abstract class StageSelect extends Mode {
     protected Stage hoveredStage = Stage.IBEX_HILL;
     protected Stage selectedStage = Stage.IBEX_HILL;
     protected int x = 0, y = 0, vSpacer = 52, hSpacer = 92, hPos = 288, firstLine = 105;
-    protected StageSelectionMode mode;
+    protected StageSelectionMode stageSelectionMode;
     protected int ambientMusicIndex = 0;
     protected final int numberOfStages = Stage.values().length;
     protected final int columns = 3;
@@ -59,7 +59,7 @@ public abstract class StageSelect extends Mode {
     public void newInstance() {
         loadAssets = true;
         hoveredStage = Stage.IBEX_HILL;
-        mode = StageSelectionMode.NORMAL;
+        stageSelectionMode = StageSelectionMode.NORMAL;
         stageLookup.clear();
         for (Stage stage : Stage.values()) {
             stageLookup.put(stage.index(), stage);
@@ -104,79 +104,63 @@ public abstract class StageSelect extends Mode {
 
     public void selectStage(Stage stage) {
         stageSelected = true;
-        if (mode == StageSelectionMode.NORMAL) {
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    NetworkManager.getInstance().send(NetworkConstants.INDICATE_STAGE_SELECTED);
-                }
-            }
-        } else {
+        if (stageSelectionMode != StageSelectionMode.NORMAL) {
             stage = stageLookup.getOrDefault((int) (Math.random() * (numberOfStages - 1)), Stage.IBEX_HILL);//for this to work RANDOM SHOULD ALWAYS BE LAST
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                    NetworkManager.getInstance().send(NetworkConstants.INDICATE_STAGE_SELECTED);
-                }
-            }
         }
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-            selectedStage = stage;
-            bgLocation = "images/bgBG" + stage.filePrefix() + ".png";
-            fgLocation = "images/bgBG" + stage.filePrefix() + "fg.png";
-            switch (stage) {
-                case IBEX_HILL:
-                    selectIbexHill();
-                    break;
-                case CHELSTON_CITY_DOCKS:
-                    selectChelsonCityDocks();
-                    break;
-                case DESERT_RUINS:
-                    selectDesertRuins();
-                    break;
-                case CHELSTON_CITY_STREETS:
-                    selectChelstonCityStreets();
-                    break;
-                case IBEX_HILL_NIGHT:
-                    selectIbexHillNight();
-                    break;
-                case SCORCHED_RUINS:
-                    selectScorchedRuins();
-                    break;
-                case FROZEN_WILDERNESS:
-                    selectDistantSnowField();
-                    break;
-                case DISTANT_ISLE:
-                    selectDistantIsle();
-                    break;
-                case HIDDEN_CAVE:
-                    selectHiddenCave();
-                    break;
-                case HIDDEN_CAVE_NIGHT:
-                    selectHiddenCaveNight();
-                    break;
-                case AFRICAN_VILLAGE:
-                    selectAfricanVillage();
-                    break;
-                case APOCALYPTO:
-                    selectApocalypto();
-                    break;
-                case DISTANT_ISLE_NIGHT:
-                    selectDistantIsleNight();
-                    break;
-                case DESERT_RUINS_NIGHT:
-                    selectDesertRuinsNight();
-                    break;
-                case SCORCHED_RUINS_NIGHT:
-                    selectScorchedRuinsNight();
-                    break;
-            }
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
-                NetworkManager.getInstance().send(hoveredStage.shortCode());
-            }
+        selectedStage = stage;
+        bgLocation = "images/bgBG" + stage.filePrefix() + ".png";
+        fgLocation = "images/bgBG" + stage.filePrefix() + "fg.png";
+        switch (stage) {
+            case IBEX_HILL:
+                selectIbexHill();
+                break;
+            case CHELSTON_CITY_DOCKS:
+                selectChelsonCityDocks();
+                break;
+            case DESERT_RUINS:
+                selectDesertRuins();
+                break;
+            case CHELSTON_CITY_STREETS:
+                selectChelstonCityStreets();
+                break;
+            case IBEX_HILL_NIGHT:
+                selectIbexHillNight();
+                break;
+            case SCORCHED_RUINS:
+                selectScorchedRuins();
+                break;
+            case FROZEN_WILDERNESS:
+                selectDistantSnowField();
+                break;
+            case DISTANT_ISLE:
+                selectDistantIsle();
+                break;
+            case HIDDEN_CAVE:
+                selectHiddenCave();
+                break;
+            case HIDDEN_CAVE_NIGHT:
+                selectHiddenCaveNight();
+                break;
+            case AFRICAN_VILLAGE:
+                selectAfricanVillage();
+                break;
+            case APOCALYPTO:
+                selectApocalypto();
+                break;
+            case DISTANT_ISLE_NIGHT:
+                selectDistantIsleNight();
+                break;
+            case DESERT_RUINS_NIGHT:
+                selectDesertRuinsNight();
+                break;
+            case SCORCHED_RUINS_NIGHT:
+                selectScorchedRuinsNight();
+                break;
         }
         if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.WATCH) {
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST) {
+            if (NetworkManager.getInstance().isServer()) {
+                NetworkManager.getInstance().send(hoveredStage.shortCode());
                 NetworkManager.getInstance().send(NetworkConstants.GAME_START);
-
             }
             start();
         }
@@ -419,18 +403,6 @@ public abstract class StageSelect extends Mode {
         return hoveredStage;
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-        switch (mouseEvent.getButton()) {
-            case PRIMARY:
-                onAccept();
-                break;
-            case MIDDLE:
-                break;
-            case SECONDARY:
-                break;
-        }
-    }
-
     public void keyPressed(KeyEvent keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
         switch (keyCode) {
@@ -460,7 +432,16 @@ public abstract class StageSelect extends Mode {
         }
     }
 
-    public void mouseMoved(MouseEvent mouseEvent) {
+    public void mouseClicked(MouseEvent mouseEvent) {
+        switch (mouseEvent.getButton()) {
+            case PRIMARY:
+                onAccept();
+                break;
+            case SECONDARY:
+                onBackCancel();
+                break;
+            case MIDDLE:
+                break;
+        }
     }
-
 }

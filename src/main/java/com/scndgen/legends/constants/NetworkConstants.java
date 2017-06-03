@@ -5,10 +5,9 @@ package com.scndgen.legends.constants;
  */
 public class NetworkConstants {
     public static final String SEL_RAILA = "SEL_RAILA";
-    public static final String CONNECT_TO_HOST = "0000";
-    public static final String DISCONNECT_FROM_HOST = "0001";
-    public static final String FURY_ATTACK = "0002";
-    public static final String ATTACK_POSTFIX = "0003";
+    public static final String CONNECT_TO_HOST = "CONNECT_TO_HOST";
+    public static final String FURY_ATTACK = "FURY_ATTACK";
+    public static final String ATTACK_POSTFIX = "ATTACK_POSTFIX";
     public static final String SEL_SUBIYA = "SEL_SUBIYA";
     public static final String SEL_LYNX = "SEL_LYNX";
     public static final String SEL_ALEX = "SEL_ALEX";
@@ -36,11 +35,13 @@ public class NetworkConstants {
     public static final String STAGE_RANDOM = "STAGE_RANDOM";
     public static final String STAGE_DESERT_RUINS_NIGHT = "STAGE_DESERT_RUINS_NIGHT";
     public static final String STAGE_SCORCHED_RUINS_NIGHT = "STAGE_SCORCHED_RUINS_NIGHT";
-    public static final String INDICATE_STAGE_SELECTED = "INDICATE_STAGE_SELECTED";
-    public static final String GAME_START="GAME_START";
+    public static final String GAME_START = "GAME_START";
+    public static final String HOST_TIME_CONSTANT = "HOST_TIME_CONSTANT";
+    public static final String DISCONNECT_FROM_HOST = "DISCONNECT_FROM_HOST";
+    public static final String TO_STAGE_SELECT = "TO_STAGE_SELECT";
 
     public static String connectToHost(int timeOut) {
-        return String.format("%s_%s", CONNECT_TO_HOST, timeOut);
+        return String.format("%s%s", HOST_TIME_CONSTANT, timeOut);
     }
 
 

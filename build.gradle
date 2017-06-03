@@ -1,5 +1,5 @@
 group 'com.scndgen'
-version '2.17.04.15'
+version '2.170601'
 apply plugin: 'java'
 apply plugin: 'application'
 sourceCompatibility = JavaVersion.VERSION_1_8

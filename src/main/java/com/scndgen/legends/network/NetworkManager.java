@@ -22,19 +22,20 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 
 public class NetworkManager {
 
-    public static final int PORT = 5555;
-    public static final int serverLatency = 10; //ms
-    public static final int serverTimeout = 2000; //ms
+    public static final int PORT = 3074;
+    public static final int SERVER_LATENCY = 16; //ms
+    public static final int TIMEOUT = 4000; //ms
     private static NetworkManager instance;
-    public int hostTime;
+    public int hostTimeLimit;
     private NetworkServer server;
     private NetworkClient client;
     private String remoteIpAddress = "";
+    private boolean connectedToPartner;
 
     private NetworkManager() {
         instance = this;
@@ -57,7 +58,6 @@ public class NetworkManager {
             closeTheServer();
         this.remoteIpAddress = ip;
         client = new NetworkClient(remoteIpAddress);
-        client.sendData(NetworkConstants.CONNECT_TO_HOST);
     }
 
     /**
@@ -66,9 +66,7 @@ public class NetworkManager {
     private void closeTheServer() {
         server.close();
         server = null;
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST)
-            ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
-        System.out.println("Closed server");
+        backToMainMenu("Closed server");
     }
 
     /**
@@ -77,9 +75,14 @@ public class NetworkManager {
     private void closeTheClient() {
         client.close();
         client = null;
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT)
-            ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
-        System.out.println("Closed client");
+        backToMainMenu("Closed client");
+    }
+
+    private void backToMainMenu(String x) {
+        setConnectedToPartner(false);
+        ScndGenLegends.getInstance().setSubMode(SubMode.MAIN_MENU);
+        ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+        System.out.println(x);
     }
 
     public boolean isServer() {
@@ -97,7 +100,7 @@ public class NetworkManager {
             server.sendData(message);
     }
 
-    public void closePipes() {
+    public void close() {
         if (isClient())
             closeTheClient();
         if (isServer())
@@ -105,6 +108,27 @@ public class NetworkManager {
     }
 
     public boolean isOnline() {
-        return isClient() && isServer();
+        return isClient() || isServer();
+    }
+
+    public boolean isOffline() {
+        return !isOnline();
+    }
+
+    public boolean isOnlineAndConnectedToPartner() {
+        return isOnline() && isConnectedToPartner();
+    }
+
+    public void setConnectedToPartner(boolean value) {
+        this.connectedToPartner = value;
+    }
+
+    public boolean isConnectedToPartner() {
+        return this.connectedToPartner;
+    }
+
+    public void promptServer() {
+        if (server != null)
+            server.playerFound();
     }
 }

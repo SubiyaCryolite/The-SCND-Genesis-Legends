@@ -2,9 +2,11 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.*;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Engine;
+import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Game;
 import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
@@ -22,6 +24,7 @@ public class ScndGenLegends extends Game {
     private ModeEnum modeEnum;
     private double mouseX;
     private double mouseY;
+    private String targetIp = "192.168.1.103";
 
     public static ScndGenLegends getInstance() {
         return instance;
@@ -53,6 +56,15 @@ public class ScndGenLegends extends Game {
                     break;
                 case CHAR_SELECT_SCREEN:
                     RenderCharacterSelection.getInstance().newInstance();
+                    switch (getSubMode()) {
+                        case LAN_HOST:
+                            NetworkManager.getInstance().asHost();
+                            break;
+                        case LAN_CLIENT:
+                            targetIp = FxDialogs.input("title", "header", "content", targetIp);
+                            NetworkManager.getInstance().asClient(targetIp);
+                            break;
+                    }
                     setMode(RenderCharacterSelection.getInstance());
                     break;
                 case STAGE_SELECT_SCREEN:
@@ -60,7 +72,6 @@ public class ScndGenLegends extends Game {
                     setMode(RenderStageSelect.getInstance());
                     break;
                 case STANDARD_GAMEPLAY_START:
-                    //stopBackgroundMusic();
                     RenderGamePlay.getInstance().newInstance();
                     setMode(RenderGamePlay.getInstance());
                     RenderGamePlay.getInstance().startFight();
@@ -114,6 +125,7 @@ public class ScndGenLegends extends Game {
     }
 
     public void shutDown() {
+        NetworkManager.getInstance().close();
         AudioPlayback.closeAll();
     }
 

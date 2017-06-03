@@ -196,7 +196,6 @@ public class RenderMainMenu extends MainMenu {
             @Override
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
-                primaryNotice(Language.getInstance().get(107));
                 ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
@@ -225,7 +224,6 @@ public class RenderMainMenu extends MainMenu {
             @Override
             public void onAccept() {
                 ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
-                primaryNotice(Language.getInstance().get(107));
                 ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 

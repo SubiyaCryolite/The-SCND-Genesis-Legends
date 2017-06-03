@@ -791,6 +791,10 @@ public abstract class GamePlay extends Mode {
     }
 
     public void newInstance() {
+        triggerCharacterAttack = false;
+        triggerOpponentAttack = false;
+        opponentAttacks.clear();
+        opponentAiTimeout = 0;
         unlockedAchievementInstance = 0;
         achievementName = new String[0];
         achievementDescription = new String[0];
@@ -819,7 +823,7 @@ public abstract class GamePlay extends Mode {
             time = StoryMode.getInstance().timeLimit;
         } //if LAN, client uses hosts time preset
         else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
-            time = NetworkManager.getInstance().hostTime;
+            time = NetworkManager.getInstance().hostTimeLimit;
         } else {
             time = GameState.getInstance().getLogin().getTimeLimit();
         }
@@ -1640,8 +1644,8 @@ public abstract class GamePlay extends Mode {
         try {
 
             io.github.subiyacryolite.enginev1.Overlay.getInstance().primaryNotice(Characters.getInstance().getOpponent().getBraggingRights(RenderCharacterSelection.getInstance().getSelectedCharIndex()));
-        } catch (Exception e) {
-            System.out.println("Dude, something went wrong " + e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Dude, something went wrong " + ex.getMessage());
         }
     }
 

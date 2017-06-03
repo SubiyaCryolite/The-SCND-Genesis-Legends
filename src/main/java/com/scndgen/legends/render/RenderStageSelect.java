@@ -339,9 +339,9 @@ public class RenderStageSelect extends StageSelect {
         primaryNotice(lookupStageNames.get(stage));
         hoveredStageIndex = stage.index();
         if (hoveredStageIndex == Stage.RANDOM.index()) {
-            mode = StageSelectionMode.RANDOM;
+            stageSelectionMode = StageSelectionMode.RANDOM;
         } else {
-            mode = StageSelectionMode.NORMAL;
+            stageSelectionMode = StageSelectionMode.NORMAL;
         }
     }
 

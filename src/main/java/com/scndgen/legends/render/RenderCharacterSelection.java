@@ -26,8 +26,10 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
+import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.CharacterSelection;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -135,6 +137,8 @@ public class RenderCharacterSelection extends CharacterSelection {
                     }
                 } else {
                     //if both character and opponent selected move on to stage select after second accept
+                    if(NetworkManager.getInstance().isServer())
+                        NetworkManager.getInstance().send(NetworkConstants.TO_STAGE_SELECT);
                     ScndGenLegends.getInstance().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
                 }
             }
@@ -308,84 +312,94 @@ public class RenderCharacterSelection extends CharacterSelection {
         gc.drawImage(fg1, xCordCloud, 0);
         gc.drawImage(fg2, xCordCloud2, 0);
         gc.drawImage(fg3, 0, 0);
-        if (p1Opac < (1.0f - opacInc)) {
-            p1Opac += opacInc;
-        }
-        if (opacChar < (1.0f - (opacInc * 2))) {
-            opacChar += (opacInc * 2);
-        }
-        gc.setFill(Color.BLACK);
-        gc.setGlobalAlpha(0.70f);
-        gc.fillRect(0, 0, 853, 480);
-        gc.setGlobalAlpha(1.0f);
-        //characterEnum preview DYNAMIC change
-        if (selectedCharacter != true) {
-            gc.setGlobalAlpha((p1Opac));
-            gc.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
-            gc.setGlobalAlpha((1.0f));
-            gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
-        }
-        //opponent preview DYNAMIC change, only show if quick match, should change sprites
-        if (selectedCharacter && selectedOpponent != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
-            gc.setGlobalAlpha((p1Opac));
-            gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
-            gc.setGlobalAlpha((1.0f));
-            gc.drawImage(caption[hoveredCharacter.index()], 553 + x, 400);
-        }
-        //if characterEnum selected draw FIXED prev
-        if (selectedCharacter) {
-            gc.drawImage(portrait[charPrevLoc], charXcap, charYcap);
-            gc.drawImage(caption[selectedCharIndex], 40, 380);
-        }
-        //if opp selected, draw FIXED prev
-        if (selectedOpponent) {
-            gc.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
-            gc.drawImage(caption[selectedOppIndex], 553, 380);
-        }
-        gc.drawImage(charHold, 311, 0);
-        for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
-            for (int column = 0; column < columns; column++) {
-                int computedPosition = (columns * row) + column;
-                if (computedPosition >= numOfCharacters) continue;
-                boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
-                boolean notAllCharactersSelect = bothArentSelected();
-                if (notAllCharactersSelect && uiElements.get(computedPosition).isHovered() && characterOpenToSelection)//clear
-                {
-                    if (!selectedCharacter) {
-                        gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
-                    }
-                    if (selectedCharacter && !selectedOpponent && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
-                        gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
-                    }
-                }
-                gc.setGlobalAlpha(opacChar);
-                drawImage(gc, thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
-                gc.setGlobalAlpha((1.0f));
+        if (NetworkManager.getInstance().isOffline() || (NetworkManager.getInstance().isOnline() && NetworkManager.getInstance().isConnectedToPartner())) {
+            if (p1Opac < (1.0f - opacInc)) {
+                p1Opac += opacInc;
             }
-        }
-        if (selectedCharacter && selectedOpponent) {
-            gc.drawImage(fight, 0, 0);
-            gc.setFont(bigFont);
+            if (opacChar < (1.0f - (opacInc * 2))) {
+                opacChar += (opacInc * 2);
+            }
+            gc.setFill(Color.BLACK);
+            gc.setGlobalAlpha(0.70f);
+            gc.fillRect(0, 0, 853, 480);
+            gc.setGlobalAlpha(1.0f);
+            //characterEnum preview DYNAMIC change
+            if (selectedCharacter != true) {
+                gc.setGlobalAlpha((p1Opac));
+                gc.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
+                gc.setGlobalAlpha((1.0f));
+                gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
+            }
+            //opponent preview DYNAMIC change, only show if quick match, should change sprites
+            if (selectedCharacter && selectedOpponent != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+                gc.setGlobalAlpha((p1Opac));
+                gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
+                gc.setGlobalAlpha((1.0f));
+                gc.drawImage(caption[hoveredCharacter.index()], 553 + x, 400);
+            }
+            //if characterEnum selected draw FIXED prev
+            if (selectedCharacter) {
+                gc.drawImage(portrait[charPrevLoc], charXcap, charYcap);
+                gc.drawImage(caption[selectedCharIndex], 40, 380);
+            }
+            //if opp selected, draw FIXED prev
+            if (selectedOpponent) {
+                gc.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
+                gc.drawImage(caption[selectedOppIndex], 553, 380);
+            }
+            gc.drawImage(charHold, 311, 0);
+            for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
+                for (int column = 0; column < columns; column++) {
+                    int computedPosition = (columns * row) + column;
+                    if (computedPosition >= numOfCharacters) continue;
+                    boolean characterOpenToSelection = (selectedCharIndex != computedPosition || selectedOppIndex != computedPosition);
+                    boolean notAllCharactersSelect = bothArentSelected();
+                    if (notAllCharactersSelect && uiElements.get(computedPosition).isHovered() && characterOpenToSelection)//clear
+                    {
+                        if (!selectedCharacter) {
+                            gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
+                        }
+                        if (selectedCharacter && !selectedOpponent && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+                            gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
+                        }
+                    }
+                    gc.setGlobalAlpha(opacChar);
+                    drawImage(gc, thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
+                    gc.setGlobalAlpha((1.0f));
+                }
+            }
+            if (selectedCharacter && selectedOpponent) {
+                gc.drawImage(fight, 0, 0);
+                gc.setFont(bigFont);
+                gc.setFill(Color.WHITE);
+                gc.fillText("<< " + Language.getInstance().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(146) + " >>", gc.getFont())) / 2, 360);
+                gc.fillText("<< " + Language.getInstance().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(147) + " >>", gc.getFont())) / 2, 390);
+            }
+            gc.setFont(normalFont);
             gc.setFill(Color.WHITE);
-            gc.fillText("<< " + Language.getInstance().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(146) + " >>", gc.getFont())) / 2, 360);
-            gc.fillText("<< " + Language.getInstance().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(147) + " >>", gc.getFont())) / 2, 390);
-        }
-        gc.setFont(normalFont);
-        gc.setFill(Color.WHITE);
-        if (!selectedCharacter) {
-            //select character
-            gc.drawImage(charDescPic, 0, 0);
-            gc.fillText(characterDescription[hoveredCharacter.index()], 4 + x, 18);
-        }
-        if (selectedCharacter && !selectedOpponent) {
-            //select opponent
-            gc.drawImage(oppDescPic, 452, 450);
-            gc.fillText(characterDescription[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
-        }
-        gc.drawImage(p1, 0, 180);
-        gc.drawImage(p2, 812, 180);
-        if (x < 0) {
-            x = x + 2;
+            if (!selectedCharacter) {
+                //select character
+                gc.drawImage(charDescPic, 0, 0);
+                gc.fillText(characterDescription[hoveredCharacter.index()], 4 + x, 18);
+            }
+            if (selectedCharacter && !selectedOpponent) {
+                //select opponent
+                gc.drawImage(oppDescPic, 452, 450);
+                gc.fillText(characterDescription[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
+            }
+            gc.drawImage(p1, 0, 180);
+            gc.drawImage(p2, 812, 180);
+            if (x < 0) {
+                x = x + 2;
+            }
+        } else if (NetworkManager.getInstance().isServer()) {
+            gc.setGlobalAlpha(1.0f);
+            gc.setFill(Color.WHITE);
+            gc.fillText("waiting for players to join", 553 + x, 400);
+        } else if (NetworkManager.getInstance().isClient()) {
+            gc.setGlobalAlpha(1.0f);
+            gc.setFill(Color.WHITE);
+            gc.fillText("waiting for host to respond", 553 + x, 400);
         }
         Overlay.getInstance().overlay(gc, x, y);
     }

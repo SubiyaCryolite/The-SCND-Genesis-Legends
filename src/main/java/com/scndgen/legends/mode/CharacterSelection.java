@@ -158,7 +158,7 @@ public abstract class CharacterSelection extends Mode {
             characterEnum = CharacterEnum.RAILA;
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_RAILA);
                 preventCharacterSelection();
             }
@@ -186,7 +186,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_SUBIYA);
                 preventCharacterSelection();
             }
@@ -216,7 +216,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_LYNX);
                 preventCharacterSelection();
             }
@@ -246,7 +246,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_ALEX);
                 preventCharacterSelection();
             }
@@ -276,7 +276,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_ADE);
                 preventCharacterSelection();
             }
@@ -306,7 +306,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_RAVAGE);
                 preventCharacterSelection();
             }
@@ -337,7 +337,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_JOHN);
                 preventCharacterSelection();
             }
@@ -368,7 +368,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_ADAM);
                 preventCharacterSelection();
             }
@@ -399,7 +399,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_NOVA_ADAM);
                 preventCharacterSelection();
             }
@@ -430,7 +430,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_AZARIA);
                 preventCharacterSelection();
             }
@@ -461,7 +461,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_SORROWE);
                 preventCharacterSelection();
             }
@@ -491,7 +491,7 @@ public abstract class CharacterSelection extends Mode {
             Characters.getInstance().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT) {
+            if (NetworkManager.getInstance().isOnline()) {
                 NetworkManager.getInstance().send(NetworkConstants.SEL_THING);
                 preventCharacterSelection();
             }

@@ -9,5 +9,5 @@ public enum ModeEnum {
     CHAR_SELECT_SCREEN,
     STAGE_SELECT_SCREEN,
     STANDARD_GAMEPLAY_START,
-    MAIN_MENU
+    MAIN_MENU,
 }

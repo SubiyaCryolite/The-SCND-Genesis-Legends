@@ -1,86 +1,53 @@
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
-import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.state.GameState;
+import io.github.subiyacryolite.enginev1.FxDialogs;
+import javafx.application.Platform;
+import javafx.scene.control.ButtonBar;
 
-import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
+
+import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
 
 /**
  * Created by ifunga on 15/04/2017.
  */
 public class NetworkServer extends NetworkBase implements Runnable {
 
-    private DataOutputStream dataOutputStream;
-    private DataInputStream dataInputStream;
-    private ServerSocket serverSocket;
-    private Socket socket;
     private Thread thread;
     private boolean running;
+    private final LinkedList<String> messageQue = new LinkedList<>();
 
     /**
      * Basic constructor
      */
     public NetworkServer() {
-        InitServer();
         thread = new Thread(this);
-    }
-
-    /**
-     * Start this NetworkServer
-     */
-    public void start() {
         thread.start();
     }
 
-    /**
-     * Initialize NetworkServer
-     */
-    private void InitServer() {
-        try {
-            running = true;
-            serverSocket = new ServerSocket(NetworkManager.PORT, 1);
-            System.out.println(InetAddress.getLocalHost().getHostAddress() + " || " + InetAddress.getLocalHost().getHostName() + " <Server> Started. \n");
-        } catch (IOException ex) {
-            System.err.println(ex);
-            System.err.println("Address already in use, please close other instances");
-        }
-    }
-
-    /**
-     * Establish a new socket
-     */
-    private void establishConnection() {
-        try {
-            socket = serverSocket.accept();
-            System.out.println(socket.getInetAddress().getHostName());
-            playerFound();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
 
     public void playerFound() {
-        int answer = JOptionPane.showConfirmDialog(null, "Someone wants to fight you!!!!\nWanna waste em!?", "Heads Up", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        switch (answer) {
-            case JOptionPane.YES_OPTION: {
-                sendData(NetworkConstants.connectToHost(GameState.getInstance().getLogin().getTimeLimit()));
-                RenderCharacterSelection.getInstance().newInstance();
-                RenderCharacterSelection.getInstance().animateCharSelect();
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-                break;
+        Platform.runLater(() -> {
+            ButtonBar.ButtonData answer = FxDialogs.yesNo("Heads Up", "Someone wants to fight you!", "Wanna waste em?");
+            switch (answer) {
+                case YES:
+                    NetworkManager.getInstance().setConnectedToPartner(true);
+                    sendData(CONNECT_TO_HOST);
+                    sendData(NetworkConstants.connectToHost(GameState.getInstance().getLogin().getTimeLimit()));
+                    break;
+                case NO:
+                    NetworkManager.getInstance().setConnectedToPartner(false);
+                    sendData(NetworkConstants.DISCONNECT_FROM_HOST);
+                    break;
             }
-            case JOptionPane.NO_OPTION: {
-            }
-        }
+        });
     }
 
     /**
@@ -89,54 +56,44 @@ public class NetworkServer extends NetworkBase implements Runnable {
     public void close() {
         try {
             running = false;
-            dataOutputStream.close();
-            dataInputStream.close();
-            socket.close();
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+            ex.printStackTrace(System.err);
         }
     }
 
     @Override
     public void run() {
-        establishConnection();
-        while (running) {
-            try {
-                getStreams();
-                readMessage(dataInputStream.readUTF());
-                thread.sleep(NetworkManager.serverLatency);
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Get data streams
-     */
-    private void getStreams() {
+        running = true;
         try {
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.flush();
-            dataInputStream = new DataInputStream(socket.getInputStream());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.out.printf("<Server> Started on %s.\n", InetAddress.getLocalHost());
+            try (ServerSocket serverSocket = new ServerSocket(NetworkManager.PORT, 1); Socket socket = serverSocket.accept()) {
+                serverSocket.setSoTimeout(NetworkManager.TIMEOUT);
+                System.out.printf("Client [%s] connected to server.\n", socket);
+                while (running) {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if (!messageQue.isEmpty()) {
+                        dataOutputStream.writeUTF(messageQue.pop());
+                        dataOutputStream.flush();
+                    }
+                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                    readMessage(dataInputStream.readUTF());
+                    thread.sleep(NetworkManager.SERVER_LATENCY);
+                    sendData("");//keep stream alive
+                }
+            }
+        } catch (Exception ex) {
+            FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
+            NetworkManager.getInstance().close();
         }
     }
-
 
     /**
      * Send data stream
      *
-     * @param mess message to send
+     * @param message message to send
      */
     @Override
-    public void sendData(String mess) {
-        try {
-            dataOutputStream.writeUTF(mess);
-            dataOutputStream.flush();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void sendData(String message) {
+        messageQue.add(message);
     }
 }
