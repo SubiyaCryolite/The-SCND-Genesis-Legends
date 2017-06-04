@@ -33,9 +33,11 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -144,12 +146,22 @@ public class RenderCharacterSelection extends CharacterSelection {
             }
 
             public void onBackCancel() {
-                if (selectedOpponent) {
+                if (selectedOpponent && NetworkManager.get().isOffline()) {
                     selectedOpponent = false;
                 } else if (selectedCharacter) {
                     selectedCharacter = false;
+                    if (NetworkManager.get().isOnline())
+                        NetworkManager.get().send(NetworkConstants.DESELECT_OPPONENT);
                 } else {
-                    ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                    if (NetworkManager.get().isOnline()) {
+                        ButtonBar.ButtonData answer = FxDialogs.yesNo("Are you sure?", "This will terminate the current network session", "Nuke from orbit?");
+                        if (answer == ButtonBar.ButtonData.YES) {
+                            NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                            NetworkManager.get().close();
+                        }
+                    } else {
+                        ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                    }
                 }
             }
 

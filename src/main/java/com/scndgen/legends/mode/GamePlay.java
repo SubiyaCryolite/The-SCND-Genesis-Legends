@@ -33,15 +33,14 @@ import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Mode;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,14 +58,10 @@ public abstract class GamePlay extends Mode {
     protected float characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected boolean triggerCharacterAttack;
     protected boolean triggerOpponentAttack;
-    protected int done = 0; // if gameover
     protected LinkedList<Integer> characterAttacks = new LinkedList<>();
     protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
-    protected boolean threadsNotRunningYet = true, playATBFile = false;
-    protected StringBuilder StatusText = new StringBuilder();
     protected int startDrawing = 0, menuBarY;
     protected Color currentColor = Color.RED;
-    protected float angRot = 20;
     protected boolean safeToSelect;
     protected int unlockedAchievementInstance;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
@@ -76,27 +71,20 @@ public abstract class GamePlay extends Mode {
     protected AnimationDirection animationDirection = AnimationDirection.VERTICAL;
     protected int oppXcord = 10;
     protected int playerDamageXLoc, opponentDamageXLoc;
-    protected String scenePic = "images/bgBG2.png";
-    protected String attackPicSrc = "images/trans.png";
     protected String[] storyPicArrStr;
     protected CharacterEnum[] charNames = LoginScreen.charNames;
-    protected String attackPicOppSrc = "images/trans.png";
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInformation = new StringBuilder("");
-    protected int count = 0, fpsInt = 0, fpsIntStat;
     protected StageAnimation animLayer;
     protected boolean loadedUpdaters;
     protected float daNum, daNum2;
     protected long lifePlain, lifeTotalPlain, lifePlain2, lifeTotalPlain2;
     protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
     protected boolean fancyBWAnimeEffectEnabled;
-    protected boolean isMoveQued, gameOver;
-    protected int thisInt; //max damage that can be dealt by Celestia Physics
-    protected int damageC, damageO;
+    protected boolean gameOver;
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
     protected int damageDoneToCharacter, damageDoneToOpponent;
     protected int limitTop = 1000;
-    protected int versioInt = 20120630; // yyyy-mm-dd
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
     protected int lifeBarShakeIterations = 2, lifeBarShakeInnerIterations = 4;
@@ -104,27 +92,17 @@ public abstract class GamePlay extends Mode {
     protected int xLocal = 470;
     protected int y2 = 435;
     protected int statIndexOpp, statIndexChar, statusEffectCharacterYCoord, statusEffectOpponentYCoord, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
-    protected boolean shaky1 = true;
-    protected int animTime = 400, itemX = 0, itemY = 0;
-    protected boolean runNew = true, effectChar = false;
-    protected int bgX = 0;
-    protected int numberOfStoryPix, lbx2 = 500;
+    protected int itemX = 0, itemY = 0;
+    protected int lbx2 = 500;
     protected int lby2 = 420;
     protected AttackType characterAttackType = AttackType.PHYSICAL;
     protected AttackType opponentAttackType = AttackType.PHYSICAL;
-    protected String statusChar = "", statusOpp = "";
     protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
     protected float statusEffectCharacterOpacity, statusEffectOpponentOpacity;
     protected int furyBarY = 0;
     protected int[] fontSizes = {LoginScreen.LARGE_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE};
-    protected int attackInt = 0;
     protected String attackStr;
-    protected boolean lagFactor = true;
-    protected float currentXShear = 0, currentYShear = 0;
-    protected boolean isFree = true, isFree2 = true;
     protected Player runningFury;
-    protected String sysNot = "";
-    protected float sysNotOpac = 0, sysNotOpacInc = (float) 0.1;
     protected String[] achievementName, achievementDescription, achievementClass, achievementPoints;
     protected int activeAttack = 0;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
@@ -142,7 +120,7 @@ public abstract class GamePlay extends Mode {
     protected float opac = 1.0f;
     protected float damageLayerOpacity;
     protected int charOp = 10, comicBookTextIndex = 0;
-    protected int limitBreak;
+    protected int furyLevel;
     protected boolean isCharacterAttacking;
     protected int columnIndex;
     protected int rowIndex;
@@ -152,6 +130,7 @@ public abstract class GamePlay extends Mode {
     private long characterQueDelta, opponentQueDelta;
     private long opponentAiTimeout, opponentAiDelta;
     private int furyBarCoolDownFactor;
+    protected final int FURY_BAR_MAX = 1000;
 
 
     protected GamePlay() {
@@ -437,8 +416,8 @@ public abstract class GamePlay extends Mode {
             updateMatchStatus();
             if ((delta - animationLoopEDelta) > MS1320) {
                 animationLoopEDelta = delta;
-                if (getBreak() > 5 && getBreak() < 999) {
-                    setBreak(-furyBarCoolDownFactor);
+                if (getFuryLevel() > 5 && getFuryLevel() < 999) {
+                    incrementFuryLevel(-furyBarCoolDownFactor);
                 }
             }
         } else {
@@ -791,9 +770,13 @@ public abstract class GamePlay extends Mode {
     }
 
     public void newInstance() {
+        setCharacterAtbValue(0);
+        setOpponentAtbValue(0);
+        setFuryLevel(0);
+        characterAttacks.clear();
+        opponentAttacks.clear();
         triggerCharacterAttack = false;
         triggerOpponentAttack = false;
-        opponentAttacks.clear();
         opponentAiTimeout = 0;
         unlockedAchievementInstance = 0;
         achievementName = new String[0];
@@ -811,7 +794,6 @@ public abstract class GamePlay extends Mode {
         oppBarYOffset = 435;
         paneCord = 306;
         menuBarY = 360;
-        threadsNotRunningYet = false;
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
@@ -942,7 +924,7 @@ public abstract class GamePlay extends Mode {
     public void resetGame() {
         characterHp = characterMaximumHp;
         opponentHp = opponentMaximumHp;
-        limitBreak = 5;
+        furyLevel = 5;
         Characters.get().getCharacter().setDamageMultiplier(Characters.get().getDamageMultiplier(Player.CHARACTER));
         Characters.get().getOpponent().setDamageMultiplier(Characters.get().getDamageMultiplier(Player.OPPONENT));
     }
@@ -1069,9 +1051,9 @@ public abstract class GamePlay extends Mode {
                 int icrement = inc;
                 setName("Fury bar increment lastStoryScene");
                 for (int o = 0; o < icrement; o++) {
-                    if (limitBreak < limitTop) {
+                    if (furyLevel < limitTop) {
                         try {
-                            limitBreak = limitBreak + 1;
+                            furyLevel = furyLevel + 1;
                             this.sleep(15);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(RenderGamePlay.class.getName()).log(Level.SEVERE, null, ex);
@@ -1091,7 +1073,7 @@ public abstract class GamePlay extends Mode {
      * Sets limit onBackCancel to initial value
      */
     public void resetBreak() {
-        limitBreak = 5;
+        furyLevel = 5;
     }
 
     /**
@@ -1099,23 +1081,27 @@ public abstract class GamePlay extends Mode {
      */
     public void limitBreak(Player player) {
         if (limitRunning) return;//one at a time folks :)
-        runningFury = player;
-        limitRunning = true;
         switch (runningFury) {
             case CHARACTER:
-                if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT || ScndGenLegends.get().getSubMode() == SubMode.LAN_HOST) {
+                if (!isCharacterAtbFull() || !isFuryBarFull()) return;
+                if (NetworkManager.get().isOnline()) {
                     NetworkManager.get().send(NetworkConstants.FURY_ATTACK);
                 }
                 setAttackType(AttackType.FURY, Player.CHARACTER);
                 pauseCharacterAtb();
                 setCharacterAtbValue(0);
                 prepareCharacterAttack();
+                runningFury = player;
+                limitRunning = true;
                 break;
             case OPPONENT:
+                if (!isOpponentAtbFull() || !isFuryBarFull()) return;
                 setAttackType(AttackType.FURY, Player.OPPONENT);
                 pauseOpponentAtb();
                 setOpponentAtbValue(0);
                 prepareOpponentAttack();
+                runningFury = player;
+                limitRunning = true;
                 break;
         }
     }
@@ -1166,12 +1152,16 @@ public abstract class GamePlay extends Mode {
      *
      * @return break status
      */
-    public int getBreak() {
-        return limitBreak;
+    public int getFuryLevel() {
+        return furyLevel;
     }
 
-    public void setBreak(int change) {
-        limitBreak += change;
+    public void setFuryLevel(int level) {
+        furyLevel = level;
+    }
+
+    public void incrementFuryLevel(int change) {
+        furyLevel += change;
     }
 
     protected abstract void guiScreenChaos(float damageAmount, Player who);
@@ -1249,14 +1239,6 @@ public abstract class GamePlay extends Mode {
         return characterAttacks.size();
     }
 
-    public int getDone() {
-        return done;
-    }
-
-    public CharacterEnum[] getCharNames() {
-        return charNames;
-    }
-
     public int getAmbSpeed1() {
         return ambSpeed1;
     }
@@ -1331,23 +1313,30 @@ public abstract class GamePlay extends Mode {
     }
 
     protected void cancelMatch() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("Dude!?");
-        alert.setContentText("Are you sure you wanna quit?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            if (isPaused()) {
-                onTogglePause();
-            }
-            terminateGameplay();
-            RenderStageSelect.get().setStageSelected(false);
-            if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+        ButtonBar.ButtonData firstPrompt = FxDialogs.yesNo("Confirmation", "Dude!?", "Are you sure you wanna quit?");
+        if (firstPrompt == ButtonBar.ButtonData.YES) {
+            if (NetworkManager.get().isOffline()) {
+                if (isPaused()) {
+                    onTogglePause();
+                }
+                terminateGameplay();
+                RenderStageSelect.get().setStageSelected(false);
+                if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
+                    ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                } else {
+                    ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                }
             } else {
-                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ButtonBar.ButtonData secondPrompt = FxDialogs.yesNo("Are you sure?", "This will terminate the current network session", "Nuke from orbit?");
+                if (secondPrompt == ButtonBar.ButtonData.YES) {
+                    if (isPaused()) {
+                        onTogglePause();
+                    }
+                    terminateGameplay();
+                    NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                    NetworkManager.get().close();
+                }
             }
-            RenderCharacterSelection.get().primaryNotice("Canceled Match");
         }
     }
 
@@ -1383,7 +1372,7 @@ public abstract class GamePlay extends Mode {
             array = Characters.get().getOpponent().getAiProfile2();
         } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.50 && getOpponentHp() / getOpponentMaximumHp() < 0.75) {
-            if (getBreak() == 1000 && limitRunning) {
+            if (getFuryLevel() == 1000 && limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1391,7 +1380,7 @@ public abstract class GamePlay extends Mode {
             }
         } //when doing isWithinRange, 4 buffs + 2 moves
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.25 && getOpponentHp() / getOpponentMaximumHp() < 0.50) {
-            if (getBreak() == 1000 && limitRunning) {
+            if (getFuryLevel() == 1000 && limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1399,7 +1388,7 @@ public abstract class GamePlay extends Mode {
             }
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
-            if (getBreak() == 1000 && limitRunning) {
+            if (getFuryLevel() == 1000 && limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1661,5 +1650,9 @@ public abstract class GamePlay extends Mode {
                 opponentAttacks.add(Integer.parseInt(i));
         }
         prepareOpponentAttack();
+    }
+
+    protected boolean isFuryBarFull() {
+        return getFuryLevel() >= FURY_BAR_MAX;
     }
 }

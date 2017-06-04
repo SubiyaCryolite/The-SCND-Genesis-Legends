@@ -52,8 +52,10 @@ public abstract class StageSelect extends Mode {
     protected final Hashtable<Integer, Stage> stageLookup = new Hashtable<>();
     protected final Hashtable<Stage, String> lookupStageNames = new Hashtable<>();
     protected final String[] stagePreviews = new String[Stage.values().length];
-    protected String fgLocation;
-    protected String bgLocation;
+    protected String stageForeground;
+    protected String stageBackground;
+    protected String stageAmbient1;
+    protected String stageAmbient2;
     protected boolean stageSelected;
 
     public void newInstance() {
@@ -108,8 +110,10 @@ public abstract class StageSelect extends Mode {
             stage = stageLookup.getOrDefault((int) (Math.random() * (numberOfStages - 1)), Stage.IBEX_HILL);//for this to work RANDOM SHOULD ALWAYS BE LAST
         }
         selectedStage = stage;
-        bgLocation = "images/bgBG" + stage.filePrefix() + ".png";
-        fgLocation = "images/bgBG" + stage.filePrefix() + "fg.png";
+        stageBackground = "images/bgBG" + stage.filePrefix() + ".png";
+        stageForeground = "images/bgBG" + stage.filePrefix() + "fg.png";
+        stageAmbient1 = "images/bgBG" + stage.filePrefix() + "a.png";
+        stageAmbient2 = "images/bgBG" + stage.filePrefix() + "b.png";
         switch (stage) {
             case IBEX_HILL:
                 selectIbexHill();
@@ -339,7 +343,7 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().animLayer = StageAnimation.BOTH;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
@@ -353,7 +357,7 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
@@ -367,7 +371,7 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().animLayer = StageAnimation.NONE;
         RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
@@ -381,12 +385,20 @@ public abstract class StageSelect extends Mode {
         ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
     }
 
-    public String getBgLocation() {
-        return bgLocation;
+    public String getStageBackground() {
+        return stageBackground;
     }
 
-    public String getFgLocation() {
-        return fgLocation;
+    public String getStageForeground() {
+        return stageForeground;
+    }
+
+    public String getFgLocation1() {
+        return stageAmbient1;
+    }
+
+    public String getFgLocation2() {
+        return stageAmbient2;
     }
 
     public void animateCaption() {

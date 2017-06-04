@@ -24,8 +24,10 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.StageSelect;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -107,7 +109,14 @@ public class RenderStageSelect extends StageSelect {
             }
 
             public void onBackCancel() {
-                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                if (NetworkManager.get().isOffline())
+                    ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                else {
+                    if (NetworkManager.get().isServer()) {
+                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT);
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                    }
+                }
             }
         };
 

@@ -153,9 +153,9 @@ public class WindowOptions extends Stage {
         row++;
 
         cmbIsLeftHanded = new ComboBox(isLeftHanded);
-        cmbIsLeftHanded.getSelectionModel().select(State.get().getLogin().isLeftHanded() ? 0 : 1);
+        cmbIsLeftHanded.getSelectionModel().select(State.get().getLogin().isLeftHanded() ? Language.get().get(171) : Language.get().get(172));
         cmbIsLeftHanded.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
-            State.get().getLogin().setLeftHanded(list.getValue().indexOf(newValue) == 0 ? true : false);
+            State.get().getLogin().setLeftHanded(newValue.equals(Language.get().get(171)) ? true : false);
         });
         lblIsLeftHanded = new Label(Language.get().get(173));
         gridPane.add(lblIsLeftHanded, 1, row);

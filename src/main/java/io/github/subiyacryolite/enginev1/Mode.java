@@ -1,6 +1,7 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.ui.UiScreen;
 import com.sun.javafx.tk.Toolkit;
@@ -75,7 +76,8 @@ public abstract class Mode implements UiScreen {
     }
 
     public void onTogglePause() {
-        paused = !paused;
+        if (NetworkManager.get().isOffline())
+            paused = !paused;
     }
 
     public boolean isPaused() {
@@ -234,8 +236,9 @@ public abstract class Mode implements UiScreen {
             onDown();
     }
 
-    protected void onLeaveMode()
-    {}
+    protected void onLeaveMode() {
+    }
 
-    protected void onEnterMode(){}
+    protected void onEnterMode() {
+    }
 }

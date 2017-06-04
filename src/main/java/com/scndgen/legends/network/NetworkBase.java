@@ -37,6 +37,16 @@ public abstract class NetworkBase {
                 System.out.println("aquired time is " + NetworkManager.get().hostTimeLimit);
             } else {
                 switch (line) {
+                    case TO_CHARACTER_SELECT:
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                        return;
+                    case CANCEL_CONNECTIVITY:
+                        FxDialogs.message("Yikes", "Your opponent has terminated this network session", "Well, that sucks");
+                        NetworkManager.get().close();
+                        break;
+                    case DESELECT_OPPONENT:
+                        RenderCharacterSelection.get().setSelectedOpponent(false);
+                        return;
                     case SEL_SUBIYA:
                         RenderCharacterSelection.get().selSubiya(Player.OPPONENT);
                         return;
