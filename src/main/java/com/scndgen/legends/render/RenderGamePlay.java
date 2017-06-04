@@ -58,7 +58,7 @@ public class RenderGamePlay extends GamePlay {
     private static RenderGamePlay instance;
     private Font largeFont, normalFont;
     private Font notSelected;
-    private Image particlesLayer1, particlesLayer2, foreGround;
+    private Image stageAmbientLayer1, stageAmbientLayer2, stageForeground;
     private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private Image[] attackCategory, numberPix;
@@ -482,11 +482,11 @@ public class RenderGamePlay extends GamePlay {
     private void drawStageBackground(GraphicsContext gc) {
         switch (animLayer) {
             case BOTH:
-                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
                 break;
             case BACKGROUND:
-                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
                 break;
         }
     }
@@ -502,14 +502,14 @@ public class RenderGamePlay extends GamePlay {
     private void drawStageForeground(GraphicsContext gc) {
         switch (animLayer) {
             case BOTH:
-                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
                 break;
             case FOREGROUND:
-                gc.drawImage(particlesLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-                gc.drawImage(particlesLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
                 break;
         }
-        gc.drawImage(foreGround, foreGroundPositionX, foreGroundPositionY);
+        gc.drawImage(stageForeground, foreGroundPositionX, foreGroundPositionY);
     }
 
     private void drawDamageLayer(GraphicsContext gc) {
@@ -751,7 +751,6 @@ public class RenderGamePlay extends GamePlay {
         attackMenuTextYPos = 366;
         Loader pix = new Loader();
         counterPane = pix.load("images/countPane.png");
-        foreGround = pix.load(RenderStageSelect.get().getFgLocation());
         num0 = pix.load("images/fig/0.png");
         num1 = pix.load("images/fig/1.png");
         num2 = pix.load("images/fig/2.png");
@@ -827,24 +826,22 @@ public class RenderGamePlay extends GamePlay {
             }
             Image transBuf = loader.load("images/trans.png");
             hpHolder = loader.load("images/hpHolder.png");
-            stageBackground = loader.load(RenderStageSelect.get().getBgLocation());
+            stageBackground = loader.load(RenderStageSelect.get().getStageBackground());
+            stageForeground = loader.load(RenderStageSelect.get().getStageForeground());
+            stageAmbientLayer1 = loader.load(RenderStageSelect.get().getFgLocation1());
+            stageAmbientLayer2 = loader.load(RenderStageSelect.get().getFgLocation2());
             phys = loader.load("images/t_physical.png");
             cel = loader.load("images/t_celestia.png");
             itm = loader.load("images/t_item.png");
             fury1 = loader.load("images/fury.gif");
             fury2 = loader.load("images/furyo.png");
             furyPlaceholder = fury2;
-            particlesLayer1 = loader.load("images/bgBG" + RenderStageSelect.get().getHoveredStage().filePrefix() + "a.png");
-            particlesLayer2 = loader.load("images/bgBG" + RenderStageSelect.get().getHoveredStage().filePrefix() + "b.png");
+
             furyBar = loader.load("images/furyBar.png");
             quePic1 = loader.load("images/queB.png");
             quePic2 = loader.load("images/que.gif");
             oppBar = loader.load("images/oppBar.png");
             attackCategory = new Image[]{phys, cel, itm};
-            //stat1 = loader.load("images/stats/stat1.png", 90, 24);
-            //stat2 = loader.load("images/stats/stat2.png", 90, 24);
-            //stat3 = loader.load("images/stats/stat3.png", 90, 24);
-            //stat4 = loader.load("images/stats/stat4.png", 90, 24);
             hud1 = loader.load("images/hud1.png");
             hud2 = loader.load("images/hud2.png");
             win = loader.load("images/win.png");

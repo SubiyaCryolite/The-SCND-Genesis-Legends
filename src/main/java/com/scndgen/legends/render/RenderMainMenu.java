@@ -493,7 +493,7 @@ public class RenderMainMenu extends MainMenu {
     public void loadAssetsIml() {
         if (!loadAssets) return;
         menuFont = loadFont(fontSize);
-        gameLogo = loader.load("logo/gameLogo");
+        gameLogo = loader.load("logo/gameLogo.png");
         menuLogo = loader.load("images/sglogo.png");
         if (time >= 0 && time <= 9) {
             backgroundPixelated = loader.load("images/blur/bgBG1.png");
