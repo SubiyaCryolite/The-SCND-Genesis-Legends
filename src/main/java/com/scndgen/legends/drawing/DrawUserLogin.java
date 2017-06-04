@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.drawing;
 
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.State;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +44,7 @@ public class DrawUserLogin extends Pane {
     private Font font;
 
     public DrawUserLogin(LoginScreen p) {
-        //font = p.getMyFont(LoginScreen.normalTxtSize);
+        //font = p.getMyFont(LoginScreen.NORMAL_TXT_SIZE);
         cal = Calendar.getInstance();
         setPrefSize(310, 100);
     }
@@ -52,10 +52,10 @@ public class DrawUserLogin extends Pane {
     public void render(GraphicsContext gc, double x, double y) {
         gc.setFill(Color.BLACK);
         gc.fillRoundRect(0, 0, 310, 82, 15, 10); //54+lines x 14
-        stat1 = Language.getInstance().get(118) + ": " + shortStr(GameState.getInstance().getLogin().getUserName());
-        stat2 = Language.getInstance().get(119) + ": " + shortStr(GameState.getInstance().getLogin().getPoints() + "");
-        cal.setTimeInMillis(GameState.getInstance().getLogin().getPlayTime() * 1000);
-        stat3 = Language.getInstance().get(120) + ": " + timeCal(GameState.getInstance().getLogin().getPlayTime());
+        stat1 = Language.get().get(118) + ": " + shortStr(State.get().getLogin().getUserName());
+        stat2 = Language.get().get(119) + ": " + shortStr(State.get().getLogin().getPoints() + "");
+        cal.setTimeInMillis(State.get().getLogin().getPlayTime() * 1000);
+        stat3 = Language.get().get(120) + ": " + timeCal(State.get().getLogin().getPlayTime());
         gc.setFill(Color.WHITE);
         gc.setFont(font);
         gc.fillText(stat1, offset, 48 - 3);

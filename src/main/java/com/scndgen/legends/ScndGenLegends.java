@@ -1,3 +1,24 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+
+ **************************************************************************/
 package com.scndgen.legends;
 
 import com.scndgen.legends.enums.ModeEnum;
@@ -26,12 +47,12 @@ public class ScndGenLegends extends Game {
     private double mouseY;
     private String targetIp = "192.168.1.103";
 
-    public static ScndGenLegends getInstance() {
+    public static ScndGenLegends get() {
         return instance;
     }
 
     public static void main(String[] main) {
-        Engine.applicationStage = ScndGenLegends.class;
+        Engine.gameClass = ScndGenLegends.class;
         Application.launch(Engine.class);
     }
 
@@ -47,34 +68,34 @@ public class ScndGenLegends extends Game {
         try {
             switch (modeEnum) {
                 case MAIN_MENU:
-                    RenderMainMenu.getInstance().newInstance();
-                    setMode(RenderMainMenu.getInstance());
+                    RenderMainMenu.get().newInstance();
+                    setMode(RenderMainMenu.get());
                     break;
                 case STORY_SELECT_SCREEN:
-                    RenderStoryMenu.getInstance().newInstance();
-                    setMode(RenderStoryMenu.getInstance());
+                    RenderStoryMenu.get().newInstance();
+                    setMode(RenderStoryMenu.get());
                     break;
                 case CHAR_SELECT_SCREEN:
-                    RenderCharacterSelection.getInstance().newInstance();
+                    RenderCharacterSelection.get().newInstance();
                     switch (getSubMode()) {
                         case LAN_HOST:
-                            NetworkManager.getInstance().asHost();
+                            NetworkManager.get().asHost();
                             break;
                         case LAN_CLIENT:
                             targetIp = FxDialogs.input("title", "header", "content", targetIp);
-                            NetworkManager.getInstance().asClient(targetIp);
+                            NetworkManager.get().asClient(targetIp);
                             break;
                     }
-                    setMode(RenderCharacterSelection.getInstance());
+                    setMode(RenderCharacterSelection.get());
                     break;
                 case STAGE_SELECT_SCREEN:
-                    RenderStageSelect.getInstance().newInstance();
-                    setMode(RenderStageSelect.getInstance());
+                    RenderStageSelect.get().newInstance();
+                    setMode(RenderStageSelect.get());
                     break;
                 case STANDARD_GAMEPLAY_START:
-                    RenderGamePlay.getInstance().newInstance();
-                    setMode(RenderGamePlay.getInstance());
-                    RenderGamePlay.getInstance().startFight();
+                    RenderGamePlay.get().newInstance();
+                    setMode(RenderGamePlay.get());
+                    RenderGamePlay.get().startFight();
                     break;
             }
         } catch (Exception ex) {
@@ -125,7 +146,7 @@ public class ScndGenLegends extends Game {
     }
 
     public void shutDown() {
-        NetworkManager.getInstance().close();
+        NetworkManager.get().close();
         AudioPlayback.closeAll();
     }
 

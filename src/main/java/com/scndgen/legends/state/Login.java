@@ -1,3 +1,24 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+
+ **************************************************************************/
 package com.scndgen.legends.state;
 
 import com.scndgen.legends.Language;
@@ -6,7 +27,6 @@ import com.scndgen.legends.enums.CharacterEnum;
 import io.github.subiyacryolite.jds.JdsEntity;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -16,7 +36,7 @@ import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
  * Created by ifunga on 22/04/2017.
  */
 @JdsEntityAnnotation(entityName = "Game Saves", entityId = 2)
-public class LoginState extends JdsEntity {
+public class Login extends JdsEntity {
     private final int diff0 = 0,
             diff1 = 1000,
             diff2 = 2500,
@@ -68,12 +88,12 @@ public class LoginState extends JdsEntity {
     private final SimpleIntegerProperty currentLanguage = new SimpleIntegerProperty(0);
     private final SimpleBooleanProperty leftHanded = new SimpleBooleanProperty(false);
     private final SimpleIntegerProperty consecutiveWins = new SimpleIntegerProperty(0);
-    private final SimpleFloatProperty musicVolume = new SimpleFloatProperty(100);
-    private final SimpleFloatProperty voiceVolume = new SimpleFloatProperty(100);
-    private final SimpleFloatProperty soundVolume = new SimpleFloatProperty(100);
+    private final SimpleIntegerProperty musicVolume = new SimpleIntegerProperty(100);
+    private final SimpleIntegerProperty voiceVolume = new SimpleIntegerProperty(100);
+    private final SimpleIntegerProperty soundVolume = new SimpleIntegerProperty(100);
     private final SimpleStringProperty txtSpeed = new SimpleStringProperty("Normal");
 
-    public LoginState() {
+    public Login() {
         map(LoginFields.USER_NAME, userName);
         map(LoginFields.POINTS, points);
         map(LoginFields.PLAY_TIME, playTime);
@@ -122,6 +142,12 @@ public class LoginState extends JdsEntity {
         map(LoginFields.SOUND_VOLUME, soundVolume);
         map(LoginFields.TEXT_SPEED_STRING, txtSpeed);
     }
+
+    public Login(String userName) {
+        this();
+        setUserName(userName);
+    }
+
 
     public void incrementAchievement(Achievements achievement) {
         switch (achievement) {
@@ -483,7 +509,7 @@ public class LoginState extends JdsEntity {
     public String getTimeLimitString() {
         switch (getTimeLimit()) {
             case INFINITE_TIME:
-                return "Infinite";
+                return Language.get().get(424);
             case 180:
                 return "180";
             case 150:
@@ -494,6 +520,8 @@ public class LoginState extends JdsEntity {
                 return "90";
             case 60:
                 return "60";
+            case 45:
+                return "45";
             case 30:
                 return "30";
         }
@@ -662,17 +690,17 @@ public class LoginState extends JdsEntity {
      * @return difficulty array index
      */
     public int resolveDifficultyInt() {
-        if (GameState.getInstance().getLogin().getDifficulty() == diff0)
+        if (State.get().getLogin().getDifficulty() == diff0)
             return 0;
-        if (GameState.getInstance().getLogin().getDifficulty() == diff1)
+        if (State.get().getLogin().getDifficulty() == diff1)
             return 1;
-        if (GameState.getInstance().getLogin().getDifficulty() == diff2)
+        if (State.get().getLogin().getDifficulty() == diff2)
             return 2;
-        if (GameState.getInstance().getLogin().getDifficulty() == diff3)
+        if (State.get().getLogin().getDifficulty() == diff3)
             return 3;
-        if (GameState.getInstance().getLogin().getDifficulty() == diff4)
+        if (State.get().getLogin().getDifficulty() == diff4)
             return 4;
-        if (GameState.getInstance().getLogin().getDifficulty() == diff5)
+        if (State.get().getLogin().getDifficulty() == diff5)
             return 5;
         return -1;
     }
@@ -680,19 +708,19 @@ public class LoginState extends JdsEntity {
     public String resolveDifficulty() {
         switch (resolveDifficultyInt()) {
             case 0:
-                return Language.getInstance().get(26);
+                return Language.get().get(26);
             case 1:
-                return Language.getInstance().get(27);
+                return Language.get().get(27);
             case 2:
-                return Language.getInstance().get(28);
+                return Language.get().get(28);
             case 3:
-                return Language.getInstance().get(29);
+                return Language.get().get(29);
             case 4:
-                return Language.getInstance().get(30);
+                return Language.get().get(30);
             case 5:
-                return Language.getInstance().get(31);
+                return Language.get().get(31);
         }
-        return Language.getInstance().get(26);
+        return Language.get().get(26);
     }
 
     public void setTextSpeed(String dex) {
@@ -772,27 +800,31 @@ public class LoginState extends JdsEntity {
         return getTimeLimit() != INFINITE_TIME;
     }
 
-    public float getMusicVolume() {
+    public int getMusicVolume() {
         return musicVolume.get();
     }
 
-    public float getVoiceVolume() {
+    public int getVoiceVolume() {
         return voiceVolume.get();
     }
 
-    public float getSoundVolume() {
+    public int getSoundVolume() {
         return soundVolume.get();
     }
 
-    public void setMusicVolume(float value) {
+    public void setMusicVolume(int value) {
         musicVolume.set(value);
     }
 
-    public void setVoiceVolume(float value) {
+    public void setVoiceVolume(int value) {
         voiceVolume.set(value);
     }
 
-    public void setSoundVolume(float value) {
+    public void setSoundVolume(int value) {
         soundVolume.set(value);
+    }
+
+    public String toString() {
+        return getUserName();
     }
 }

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is enumeration1 fighting game based on THE SCND GENESIS,
- enumeration1 webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ enumeration1 webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ public class LanHostWaitLobby extends Mode {
     private Enumeration enumeration1;
 
     public LanHostWaitLobby() {
-        normalFont = loadFont(LoginScreen.normalTxtSize);
+        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         loader = new Loader();
         try {
             enumeration = NetworkInterface.getNetworkInterfaces();
@@ -98,13 +98,13 @@ public class LanHostWaitLobby extends Mode {
         gc.drawImage(pic1, 0, 0);
         gc.drawImage(pic2, 100, 100);
         gc.setFill(Color.WHITE);
-        gc.fillText(Language.getInstance().get(167), 20, 300);
+        gc.fillText(Language.get().get(167), 20, 300);
         gc.fillText("\'" + name + "\',", 20, 314);
         gc.fillText("Or use \'" + ip + "\',", 20, 328);
-        gc.fillText(Language.getInstance().get(168), 20, 360);
-        gc.fillText(Language.getInstance().get(169), 20, 376);
-        gc.fillText(Language.getInstance().get(131), 20, 390);
-        Overlay.getInstance().overlay(gc,x,y);
+        gc.fillText(Language.get().get(168), 20, 360);
+        gc.fillText(Language.get().get(169), 20, 376);
+        gc.fillText(Language.get().get(131), 20, 390);
+        Overlay.get().overlay(gc,x,y);
     }
 
     public void stopRepaint() {

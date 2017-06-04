@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
     private String fname;
 
     public WindowUpdate(String updateVerStr, String fname, String[] updates, LoginScreen p) {
-        //normalFont = getMyFont(LoginScreen.normalTxtSize);
+        //normalFont = getMyFont(LoginScreen.NORMAL_TXT_SIZE);
         updateVer = updateVerStr;
         updateArr = updates;
         logo = new JPanel();
@@ -60,9 +60,9 @@ public class WindowUpdate extends JFrame implements ActionListener {
         logoPic = new BackgroundImages();
         logo.add(logoPic);
 
-        text = "The SCND Genesis: Legends " + updateVer + " " + Language.getInstance().get(58) + " "
+        text = "The SCND Genesis: Legends " + updateVer + " " + Language.get().get(58) + " "
                 + "\nhttp://www.sourceforge.com/projects/scndgen/files/executable/" + fname + "/download"
-                + "\n\n" + Language.getInstance().get(59) + ": \n"
+                + "\n\n" + Language.get().get(59) + ": \n"
                 + stringBuilder(updates)
                 + "\n\nThe SCND Genesis: Legends RMX. Copyright © " + GeneralConstants.years() + " Ifunga Ndana.";
 
@@ -78,10 +78,10 @@ public class WindowUpdate extends JFrame implements ActionListener {
         textHolder = new JPanel();
         textHolder.add(scroller);
 
-        get = new JButton(Language.getInstance().get(416));
+        get = new JButton(Language.get().get(416));
         //get.setFont(normalFont);
         get.addActionListener(this);
-        ok = new JButton(Language.getInstance().get(417));
+        ok = new JButton(Language.get().get(417));
         //ok.setFont(normalFont);
         ok.addActionListener(this);
         bottom = new JPanel();
@@ -91,7 +91,7 @@ public class WindowUpdate extends JFrame implements ActionListener {
         box.add(scroller);
         box.add(bottom);
 
-        setTitle(updateVer + " " + Language.getInstance().get(60));
+        setTitle(updateVer + " " + Language.get().get(60));
         add(box);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -7,8 +7,8 @@ The game has a hand-drawn comic book graphical style and has other anime style e
 This was my first big Java project that I created while in college and it shows. 
 Please use this only as a reference and not groundwork for new projects ^_^
 
-![ScreenShot](http://www.scndgen.com/game/Screenshot-12.jpg "Screenshot")
+![ScreenShot](([http://www.scndgen.com])/game/Screenshot-12.jpg "Screenshot")
 
-![ScreenShot](http://www.scndgen.com/game/Screenshot-13.jpg "Screenshot")
+![ScreenShot](([http://www.scndgen.com])/game/Screenshot-13.jpg "Screenshot")
 
-![ScreenShot](http://www.scndgen.com/game/Screenshot-18.jpg "Screenshot")
+![ScreenShot](([http://www.scndgen.com])/game/Screenshot-18.jpg "Screenshot")

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ public class Characters {
     private com.scndgen.legends.characters.Character character, opponent;
     private static Characters instance;
 
-    public static synchronized Characters getInstance() {
+    public static synchronized Characters get() {
         if (instance == null)
             instance = new Characters();
         return instance;
@@ -102,7 +102,7 @@ public class Characters {
      *
      */
     public void alterPoints2(int index) {
-        if (RenderGamePlay.getInstance().getCharacterQueuedAttacks() > 1) {
+        if (RenderGamePlay.get().getCharacterQueuedAttacks() > 1) {
             points += pointsArr[index];
         }
     }
@@ -221,11 +221,11 @@ public class Characters {
         }
 
         characterName = characterEnum.name();
-        RenderCharacterSelection.getInstance().setSelectedCharIndex(characterEnum.index());
+        RenderCharacterSelection.get().setSelectedCharIndex(characterEnum.index());
         activityRecoverRateChar = this.character.getAtbRecoveryRate();
         setPoints(this.character.getPoints());
-        RenderGamePlay.getInstance().setCharacterHp(this.character.getLife());
-        RenderGamePlay.getInstance().setMaxLife(this.character.getLife());
+        RenderGamePlay.get().setCharacterHp(this.character.getLife());
+        RenderGamePlay.get().setMaxLife(this.character.getLife());
     }
 
     public void prepareO(CharacterEnum characterEnum) {
@@ -273,10 +273,10 @@ public class Characters {
                 break;
         }
         opponentName = characterEnum.name();
-        RenderCharacterSelection.getInstance().setSelectedOppIndex(characterEnum.index());
+        RenderCharacterSelection.get().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
-        RenderGamePlay.getInstance().setOpponentHp(opponent.getLife());
-        RenderGamePlay.getInstance().setOpponentMaximumHp(opponent.getLife());
+        RenderGamePlay.get().setOpponentHp(opponent.getLife());
+        RenderGamePlay.get().setOpponentMaximumHp(opponent.getLife());
         opponent.setAiProf();
     }
 
@@ -289,7 +289,7 @@ public class Characters {
             opponent.resetLimits();
         if (character != null)
             character.resetLimits();
-        RenderCharacterSelection.getInstance().setSelectedCharacter(false);
-        RenderCharacterSelection.getInstance().setSelectedOpponent(false);
+        RenderCharacterSelection.get().setSelectedCharacter(false);
+        RenderCharacterSelection.get().setSelectedOpponent(false);
     }
 }

@@ -16,6 +16,18 @@ import java.util.Optional;
  * Created by ifunga on 03/06/2017.
  */
 public class FxDialogs {
+    public static void error(String title, String header, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            // Set expandable Exception into the dialog pane.
+            alert.showAndWait();
+        });
+    }
+
     public static void error(String title, String header, String content, Exception exception) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);

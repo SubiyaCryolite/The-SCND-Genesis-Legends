@@ -1,7 +1,7 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.constants.NetworkConstants;
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import javafx.application.Platform;
 import javafx.scene.control.ButtonBar;
@@ -38,12 +38,12 @@ public class NetworkServer extends NetworkBase implements Runnable {
             ButtonBar.ButtonData answer = FxDialogs.yesNo("Heads Up", "Someone wants to fight you!", "Wanna waste em?");
             switch (answer) {
                 case YES:
-                    NetworkManager.getInstance().setConnectedToPartner(true);
+                    NetworkManager.get().setConnectedToPartner(true);
                     sendData(CONNECT_TO_HOST);
-                    sendData(NetworkConstants.connectToHost(GameState.getInstance().getLogin().getTimeLimit()));
+                    sendData(NetworkConstants.connectToHost(State.get().getLogin().getTimeLimit()));
                     break;
                 case NO:
-                    NetworkManager.getInstance().setConnectedToPartner(false);
+                    NetworkManager.get().setConnectedToPartner(false);
                     sendData(NetworkConstants.DISCONNECT_FROM_HOST);
                     break;
             }
@@ -83,7 +83,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
             }
         } catch (Exception ex) {
             FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
-            NetworkManager.getInstance().close();
+            NetworkManager.get().close();
         }
     }
 

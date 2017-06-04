@@ -14,13 +14,13 @@ import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
 import com.scndgen.legends.windows.WindowOptions;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-
-import javax.swing.*;
 
 
 /**
@@ -56,24 +56,24 @@ public class RenderMainMenu extends MainMenu {
     private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
     private AudioPlayback menuMusic;
 
-    public static synchronized RenderMainMenu getInstance() {
+    public static synchronized RenderMainMenu get() {
         if (instance == null)
             instance = new RenderMainMenu();
         return instance;
     }
 
     public RenderMainMenu() {
-        strTutorial = Language.getInstance().get(319).toLowerCase();
-        strStoryMode = Language.getInstance().get(307).toLowerCase();
-        strQuickMatch = Language.getInstance().get(308).toLowerCase();
-        strHostLanMatch = Language.getInstance().get(309).toLowerCase();
-        strJoinLanMatch = Language.getInstance().get(310).toLowerCase();
-        strAchievementLocker = Language.getInstance().get(316).toLowerCase();
-        strYourStats = Language.getInstance().get(311).toLowerCase();
-        strOptions = Language.getInstance().get(312).toLowerCase();
-        strControls = Language.getInstance().get(313).toLowerCase();
-        strAbout = Language.getInstance().get(314).toLowerCase();
-        strExit = Language.getInstance().get(315).toLowerCase();
+        strTutorial = Language.get().get(319).toLowerCase();
+        strStoryMode = Language.get().get(307).toLowerCase();
+        strQuickMatch = Language.get().get(308).toLowerCase();
+        strHostLanMatch = Language.get().get(309).toLowerCase();
+        strJoinLanMatch = Language.get().get(310).toLowerCase();
+        strAchievementLocker = Language.get().get(316).toLowerCase();
+        strYourStats = Language.get().get(311).toLowerCase();
+        strOptions = Language.get().get(312).toLowerCase();
+        strControls = Language.get().get(313).toLowerCase();
+        strAbout = Language.get().get(314).toLowerCase();
+        strExit = Language.get().get(315).toLowerCase();
 
 
         (uiTutorial = new UiItem()).addJenesisEvent(new Event() {
@@ -139,8 +139,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.getInstance().setSubMode(SubMode.STORY_MODE);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.STORY_SELECT_SCREEN);
+                ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
+                ScndGenLegends.get().loadMode(ModeEnum.STORY_SELECT_SCREEN);
             }
 
             @Override
@@ -167,8 +167,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.getInstance().setSubMode(SubMode.SINGLE_PLAYER);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.get().setSubMode(SubMode.SINGLE_PLAYER);
+                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -195,8 +195,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_HOST);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.get().setSubMode(SubMode.LAN_HOST);
+                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -223,8 +223,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.getInstance().setSubMode(SubMode.LAN_CLIENT);
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.get().setSubMode(SubMode.LAN_CLIENT);
+                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -408,7 +408,14 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.getInstance().exit();
+                ButtonBar.ButtonData exit = FxDialogs.yesNo(Language.get().get(422), Language.get().get(110), "");
+                if (exit == ButtonBar.ButtonData.YES) {
+                    ButtonBar.ButtonData seriously = FxDialogs.yesNo(Language.get().get(423), Language.get().get(111), "");
+                    if (seriously == ButtonBar.ButtonData.YES) {
+                        FxDialogs.message("Later", Language.get().get(112), "");
+                        ScndGenLegends.get().exit();
+                    }
+                }
             }
 
             @Override
@@ -561,7 +568,7 @@ public class RenderMainMenu extends MainMenu {
             fillText(gc, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
-        Overlay.getInstance().overlay(gc, w, h);
+        Overlay.get().overlay(gc, w, h);
         gc.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, screenHeight - 10);
         gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
@@ -619,16 +626,4 @@ public class RenderMainMenu extends MainMenu {
     public Image[] getPics() {
         return new Image[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
     }
-
-    public void exit() {
-        int exit = JOptionPane.showConfirmDialog(null, Language.getInstance().get(110), "Exit", JOptionPane.YES_NO_OPTION);
-        if (exit == JOptionPane.YES_OPTION) {
-            int seriously = JOptionPane.showConfirmDialog(null, Language.getInstance().get(111), "Seriously", JOptionPane.YES_NO_OPTION);
-            if (seriously == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, Language.getInstance().get(112), "Later", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
-            }
-        }
-    }
-
 }

@@ -47,13 +47,13 @@ public class NetworkClient extends NetworkBase implements Runnable {
                     }
                     DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                     readMessage(dataInputStream.readUTF());
-                    thread.sleep(NetworkManager.getInstance().SERVER_LATENCY);
+                    thread.sleep(NetworkManager.get().SERVER_LATENCY);
                     sendData("");//keep stream alive
                 }
             }
         } catch (Exception ex) {
             FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
-            NetworkManager.getInstance().close();
+            NetworkManager.get().close();
         }
     }
 

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import com.scndgen.legends.Language;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.io.IOUtils;
@@ -81,21 +82,25 @@ public class WindowAbout extends Stage {
         txtSourceCode.setWrapText(true);
         scrlSourceCode = new ScrollPane(txtSourceCode);
 
-        Tab tab1 = new Tab("About");
-        tab1.setClosable(false);
-        Tab tab2 = new Tab("License");
-        tab2.setClosable(false);
-        Tab tab3 = new Tab("Develop");
-        tab3.setClosable(false);
+        Tab tabAbout = new Tab("About");
+        tabAbout.setClosable(false);
+        Tab tabLicense = new Tab("License");
+        tabLicense.setClosable(false);
+        Tab tabDevelop = new Tab("Develop");
+        tabDevelop.setClosable(false);
+        Tab tabChangelog = new Tab("Changelog");
+        tabChangelog.setClosable(false);
 
-        tab1.setContent(scrlAbout);
-        tab2.setContent(scrlLicense);
-        tab3.setContent(scrlSourceCode);
+        tabAbout.setContent(scrlAbout);
+        tabLicense.setContent(scrlLicense);
+        tabDevelop.setContent(scrlSourceCode);
+        tabChangelog.setContent(scrlChangeLog);
 
         tabPane = new TabPane();
-        tabPane.getTabs().add(tab1);
-        tabPane.getTabs().add(tab2);
-        tabPane.getTabs().add(tab3);
+        tabPane.getTabs().add(tabAbout);
+        tabPane.getTabs().add(tabLicense);
+        tabPane.getTabs().add(tabChangelog);
+        tabPane.getTabs().add(tabDevelop);
 
         btnOk = new Button("OK");
         btnOk.setOnAction(event -> {
@@ -103,12 +108,14 @@ public class WindowAbout extends Stage {
         });
 
         VBox vBox = new VBox();
+        vBox.setSpacing(4);
         vBox.getChildren().add(tabPane);
         vBox.getChildren().add(btnOk);
 
-        setTitle(Language.getInstance().get(57));
+        setTitle(Language.get().get(57));
         setScene(new Scene(vBox));
         setResizable(false);
+        initModality(Modality.APPLICATION_MODAL);
         show();
     }
 }

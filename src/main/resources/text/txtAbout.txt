@@ -1,38 +1,36 @@
-The SCND Genesis: Legends  2K17 RMX
+The SCND Genesis: Legends RMX. Copyright © 2011 - 2017 Ifunga Ndana.
 
 Based on the webcomic created by Ifunga Ndana
 Designed by Ifunga Ndana
 Coded by.....you guessed it, Ifunga Ndana
 Powered by Java and the Jenesis Engine v1.0
+Hope you enjoy the game!!!!!
+
+Official Site: ([http://www.scndgen.com])
+GitHub: https://github.com/SubiyaCryolite/The-SCND-Genesis-Legends
+email: ifungandana@gmail.com
 
 Special Thanks:
-   -God
-   -Jesus
-   -Susan Ndana
-   -Monde Ndana
-   -Chisomo Mwanza
-   -Atupele Mboya
-   -Daniel Chuck
+   -Life
+   -My family
+   -My Homies
    -Codehead
-   -The Official Game Programming Wiki Forums
-
+   -Floating Rabbit (https://soundcloud.com/floatingrabbit/)
+   -GP Wiki (http://gpwiki.org)
+   -MakeGamesSA (http://makegamessa.com)
    -"Wildfire Games" for audio under Creative Commons Attribution-Share Alike 3.0
       * http://creativecommons.org/licenses/by-sa/3.0/
       * http://www.wildfiregames.com/
-
    -"Jordan Trudgett" for audio under Creative Commons Attribution-Share Alike 3.0
       * http://creativecommons.org/licenses/by-sa/3.0/
       * http://jordan.trudgett.com/cgi-bin/Page.py?pagestyle=download
 
-
-Hope you enjoy this game!!!!!
-Webcomic: http://scndgen.sourceforge.net
-SourceForge: http://www.sourceforge.com/projects/scndgen
-email: ifungandana@gmail.com
-
-Your Machine==========
-Java Runtime Environment: 1.8.0_131
-Operating System: null ( 10.0 ) amd64
+3rd Party:
+    Jenesis Data Store - Copyright (c) 2017 Ifunga Ndana. All Rights Reserved.
+    Apache Commons - Copyright (c) 2017 The Apache Software Foundation. All Rights Reserved.
+    SQLite JDBC Driver - Copyright (c) 2006, David Crawshaw. All rights reserved.
+    Jackson JSON processor - Apache License, version 2.0.
+    LWJGL - Copyright (c) 2017 Lightweight Java Game Library. All rights reserved.
 
 
-The SCND Genesis: Legends copyright © 2011 - 2017 Ifunga Ndana.
+

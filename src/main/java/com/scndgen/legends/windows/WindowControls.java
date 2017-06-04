@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -51,32 +52,32 @@ public class WindowControls extends Stage {
         backgroundImages = new BackgroundImages();
         BackgroundImage backgroundImage = new BackgroundImage(backgroundImages.getImage(), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         gridPane = new GridPane();
-        //gridPane.setBackground(new Background(backgroundImage));
-        //gridPane.setPrefSize(852, 480);
+        gridPane.setHgap(4);
+        gridPane.setVgap(4);
 
-        btnOk = new Button(Language.getInstance().get(36));
+        btnOk = new Button(Language.get().get(36));
         btnOk.setOnAction(event -> close());
 
-        lLabel = new Label(Language.getInstance().get(37));
-        l1 = new Label(Language.getInstance().get(38));
-        l2 = new Label(Language.getInstance().get(40));
-        l17 = new Label(Language.getInstance().get(39));
-        l18 = new Label(Language.getInstance().get(41));
-        l3 = new Label(Language.getInstance().get(42));
+        lLabel = new Label(Language.get().get(37));
+        l1 = new Label(Language.get().get(38));
+        l2 = new Label(Language.get().get(40));
+        l17 = new Label(Language.get().get(39));
+        l18 = new Label(Language.get().get(41));
+        l3 = new Label(Language.get().get(42));
         l4 = new Label("F12");
-        l5 = new Label(Language.getInstance().get(43));
+        l5 = new Label(Language.get().get(43));
         l6 = new Label("ESC");
-        l7 = new Label(Language.getInstance().get(44));
+        l7 = new Label(Language.get().get(44));
         l8 = new Label("L");
-        l9 = new Label(Language.getInstance().get(45));
+        l9 = new Label(Language.get().get(45));
         l10 = new Label("Left");
-        l11 = new Label(Language.getInstance().get(46));
+        l11 = new Label(Language.get().get(46));
         l12 = new Label("Right");
-        l13 = new Label(Language.getInstance().get(47));
+        l13 = new Label(Language.get().get(47));
         l14 = new Label("Up");
-        l15 = new Label(Language.getInstance().get(48));
-        l16 = new Label(Language.getInstance().get(49));
-        l19 = new Label(Language.getInstance().get(50));
+        l15 = new Label(Language.get().get(48));
+        l16 = new Label(Language.get().get(49));
+        l19 = new Label(Language.get().get(50));
         l20 = new Label("F4");
 
         //keyboard
@@ -104,31 +105,32 @@ public class WindowControls extends Stage {
         gridPane.add(l20, 2, 11);
 
         //Mouse
-        mLabel = new Label(Language.getInstance().get(51));
+        mLabel = new Label(Language.get().get(51));
         gridPane.add(mLabel, 1, 12, 2, 1);
         GridPane.setHalignment(mLabel, HPos.CENTER);
 
-        gridPane.add(m2 = new Label(Language.getInstance().get(45)), 1, 13);
-        gridPane.add(m1 = new Label(Language.getInstance().get(52)), 2, 13);
+        gridPane.add(m2 = new Label(Language.get().get(45)), 1, 13);
+        gridPane.add(m1 = new Label(Language.get().get(52)), 2, 13);
 
-        gridPane.add(m4 = new Label(Language.getInstance().get(46)), 1, 14);
-        gridPane.add(m3 = new Label(Language.getInstance().get(53)), 2, 14);
+        gridPane.add(m4 = new Label(Language.get().get(46)), 1, 14);
+        gridPane.add(m3 = new Label(Language.get().get(53)), 2, 14);
 
-        gridPane.add(m6 = new Label(Language.getInstance().get(38)), 1, 15);
-        gridPane.add(m5 = new Label(Language.getInstance().get(54)), 2, 15);
+        gridPane.add(m6 = new Label(Language.get().get(38)), 1, 15);
+        gridPane.add(m5 = new Label(Language.get().get(54)), 2, 15);
 
-        gridPane.add(m8 = new Label(Language.getInstance().get(44)), 1, 16);
-        gridPane.add(new Label(Language.getInstance().get(55)), 2, 16);
+        gridPane.add(m8 = new Label(Language.get().get(44)), 1, 16);
+        gridPane.add(new Label(Language.get().get(55)), 2, 16);
 
-        gridPane.add(m10 = new Label(Language.getInstance().get(39)), 1, 17);
-        gridPane.add(m9 = new Label(Language.getInstance().get(56)), 2, 17);
+        gridPane.add(m10 = new Label(Language.get().get(39)), 1, 17);
+        gridPane.add(m9 = new Label(Language.get().get(56)), 2, 17);
 
         gridPane.add(btnOk, 1, 18, 2, 1);
         GridPane.setHalignment(btnOk, HPos.CENTER);
 
-        setTitle(Language.getInstance().get(57));
+        setTitle(Language.get().get(57));
         setScene(new Scene(gridPane));
         setResizable(false);
+        initModality(Modality.APPLICATION_MODAL);
         show();
     }
 

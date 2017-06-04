@@ -1,3 +1,24 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+
+ **************************************************************************/
 package com.scndgen.legends.state;
 
 import io.github.subiyacryolite.jds.JdsField;
@@ -51,8 +72,9 @@ public class LoginFields {
     public static final JdsField CURRENT_LANGUAGE = new JdsField(42, "CURRENT_LANGUAGE", JdsFieldType.INT);
     public static final JdsField LEFT_HANDED = new JdsField(43, "LEFT_HANDED", JdsFieldType.BOOLEAN);
     public static final JdsField CONSECUTIVE_WINS = new JdsField(44, "CONSECUTIVE_WINS", JdsFieldType.INT);
-    public static final JdsField MUSIC_VOLUME  = new JdsField(45, "MUSIC_VOLUME", JdsFieldType.FLOAT);
-    public static final JdsField VOICE_VOLUME  = new JdsField(46, "VOICE_VOLUME", JdsFieldType.FLOAT);
-    public static final JdsField SOUND_VOLUME  = new JdsField(47, "SOUND_VOLUME", JdsFieldType.FLOAT);
+    public static final JdsField MUSIC_VOLUME  = new JdsField(45, "MUSIC_VOLUME", JdsFieldType.INT);
+    public static final JdsField VOICE_VOLUME  = new JdsField(46, "VOICE_VOLUME", JdsFieldType.INT);
+    public static final JdsField SOUND_VOLUME  = new JdsField(47, "SOUND_VOLUME", JdsFieldType.INT);
     public static final JdsField TEXT_SPEED_STRING  = new JdsField(48, "TEXT_SPEED", JdsFieldType.TEXT);
+    public static final JdsField LAST_LOGIN_ACCOUNT  = new JdsField(49, "LAST_LOGIN_ACCOUNT", JdsFieldType.TEXT);
 }

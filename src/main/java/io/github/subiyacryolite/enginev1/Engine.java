@@ -8,7 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
-    public static Class<? extends Game> applicationStage;
+    public static Class<? extends Game> gameClass;
     private Game game;
     private Canvas canvas;
 
@@ -16,7 +16,7 @@ public class Engine extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            game = applicationStage.newInstance();
+            game = gameClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -30,13 +30,12 @@ public class Engine extends Application {
         Group group = new Group();
         group.getChildren().add(canvas);
         stage.setScene(new Scene(group));
-        stage.setOnCloseRequest(closeRequest->game.onCloseRequest(closeRequest));
+        stage.setOnCloseRequest(closeRequest -> game.onCloseRequest(closeRequest));
         game.setStage(stage);
         stage.show();
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                //canvas.getGraphicsContext2D().setGlobalBlendMode(BlendMode.ADD);
                 if (game == null) return;
                 if (game.getMode() != null && !game.isSwitchingModes()) {
                     game.getMode().logic(now);

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ public abstract class StageSelect extends Mode {
         stagePreviews[Stage.RANDOM.index()] = "bgBG12";
         stagePreviews[Stage.HIDDEN_CAVE_NIGHT.index()] = "bgBG15";
         //===============================================================
-        Language language = Language.getInstance();
+        Language language = Language.get();
         lookupStageNames.clear();
         lookupStageNames.put(Stage.IBEX_HILL, language.get(152));
         lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.get(153));
@@ -157,234 +157,228 @@ public abstract class StageSelect extends Mode {
                 selectScorchedRuinsNight();
                 break;
         }
-        if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.getInstance().getSubMode() == SubMode.WATCH) {
-            if (NetworkManager.getInstance().isServer()) {
-                NetworkManager.getInstance().send(hoveredStage.shortCode());
-                NetworkManager.getInstance().send(NetworkConstants.GAME_START);
+        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.get().getSubMode() == SubMode.WATCH) {
+            if (NetworkManager.get().isServer()) {
+                NetworkManager.get().send(hoveredStage.shortCode());
+                NetworkManager.get().send(NetworkConstants.GAME_START);
             }
             start();
         }
     }
 
     public void defaultStageValues() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 10;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 10;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.VERTICAL;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BOTH;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 4;
-        RenderGamePlay.getInstance().ambSpeed2 = 3;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 10;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 10;
+        RenderGamePlay.get().animationDirection = AnimationDirection.VERTICAL;
+        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 4;
+        RenderGamePlay.get().ambSpeed2 = 3;
+    }
+
+    protected void selectIbexHill() {
+        defaultStageValues();
+        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
         ambientMusicIndex = 0;
     }
 
-    protected void selectIbexHill() //
-    {
+    protected void selectIbexHillNight() {
         defaultStageValues();
+        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        ambientMusicIndex = 4;
     }
 
     protected void selectChelsonCityDocks() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.NONE;
-        RenderGamePlay.getInstance().delay = 66;
-        RenderGamePlay.getInstance().ambSpeed1 = 0;
-        RenderGamePlay.getInstance().ambSpeed2 = 0;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().delay = 66;
+        RenderGamePlay.get().ambSpeed1 = 0;
+        RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 1;
     }
 
     protected void selectDesertRuins() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 5;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 4;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.FOREGROUND;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 2;
     }
 
     protected void selectChelstonCityStreets() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.NONE;
-        RenderGamePlay.getInstance().delay = 66;
-        RenderGamePlay.getInstance().ambSpeed1 = 0;
-        RenderGamePlay.getInstance().ambSpeed2 = 0;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().delay = 66;
+        RenderGamePlay.get().ambSpeed1 = 0;
+        RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 3;
     }
 
-    protected void selectIbexHillNight() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 10;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 10;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.VERTICAL;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BOTH;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 4;
-        RenderGamePlay.getInstance().ambSpeed2 = 3;
-        ambientMusicIndex = 4;
-    }
-
     protected void selectScorchedRuins() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 5;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 4;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.FOREGROUND;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 5;
     }
 
     protected void selectDistantSnowField() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 10;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 5;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 4;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BOTH;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 10;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 6;
     }
 
     protected void selectDistantIsle() {
-        RenderGamePlay.getInstance().foreGroundPositionX = -40;
-        RenderGamePlay.getInstance().foreGroundPositionY = 20;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 2;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.ROTATION;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BACKGROUND;
-        RenderGamePlay.getInstance().delay = 25;
-        RenderGamePlay.getInstance().ambSpeed1 = 1;
-        RenderGamePlay.getInstance().ambSpeed2 = 2;
+        RenderGamePlay.get().foreGroundPositionX = -40;
+        RenderGamePlay.get().foreGroundPositionY = 20;
+        RenderGamePlay.get().foreGroundXIncrement = 2;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.ROTATION;
+        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().delay = 25;
+        RenderGamePlay.get().ambSpeed1 = 1;
+        RenderGamePlay.get().ambSpeed2 = 2;
         ambientMusicIndex = 0;
     }
 
     protected void selectDistantIsleNight() {
-        RenderGamePlay.getInstance().foreGroundPositionX = -40;
-        RenderGamePlay.getInstance().foreGroundPositionY = 20;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 2;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.ROTATION;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BACKGROUND;
-        RenderGamePlay.getInstance().delay = 25;
-        RenderGamePlay.getInstance().ambSpeed1 = 1;
-        RenderGamePlay.getInstance().ambSpeed2 = 2;
+        RenderGamePlay.get().foreGroundPositionX = -40;
+        RenderGamePlay.get().foreGroundPositionY = 20;
+        RenderGamePlay.get().foreGroundXIncrement = 2;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.ROTATION;
+        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().delay = 25;
+        RenderGamePlay.get().ambSpeed1 = 1;
+        RenderGamePlay.get().ambSpeed2 = 2;
         ambientMusicIndex = 1;
     }
 
     protected void selectHiddenCave() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.NONE;
-        RenderGamePlay.getInstance().delay = 66;
-        RenderGamePlay.getInstance().ambSpeed1 = 0;
-        RenderGamePlay.getInstance().ambSpeed2 = 0;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().delay = 66;
+        RenderGamePlay.get().ambSpeed1 = 0;
+        RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 2;
     }
 
     protected void selectHiddenCaveNight() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.NONE;
-        RenderGamePlay.getInstance().delay = 66;
-        RenderGamePlay.getInstance().ambSpeed1 = 0;
-        RenderGamePlay.getInstance().ambSpeed2 = 0;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().delay = 66;
+        RenderGamePlay.get().ambSpeed1 = 0;
+        RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 2;
     }
 
     protected void selectAfricanVillage() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BACKGROUND;
-        RenderGamePlay.getInstance().delay = 122;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().delay = 122;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 3;
     }
 
     protected void selectApocalypto() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 5;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 4;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.BOTH;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 4;
     }
 
     protected void selectDesertRuinsNight() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 5;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 4;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.FOREGROUND;
-        RenderGamePlay.getInstance().delay = 33;
-        RenderGamePlay.getInstance().ambSpeed1 = 2;
-        RenderGamePlay.getInstance().ambSpeed2 = 1;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 1;
     }
 
     protected void selectScorchedRuinsNight() {
-        RenderGamePlay.getInstance().foreGroundPositionX = 0;
-        RenderGamePlay.getInstance().foreGroundPositionY = 0;
-        RenderGamePlay.getInstance().foreGroundXIncrement = 1;
-        RenderGamePlay.getInstance().foreGroundYIncrement = 1;
-        RenderGamePlay.getInstance().animationLoops = 20;
-        RenderGamePlay.getInstance().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.getInstance().animLayer = StageAnimation.NONE;
-        RenderGamePlay.getInstance().delay = 66;
-        RenderGamePlay.getInstance().ambSpeed1 = 0;
-        RenderGamePlay.getInstance().ambSpeed2 = 0;
+        RenderGamePlay.get().foreGroundPositionX = 0;
+        RenderGamePlay.get().foreGroundPositionY = 0;
+        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().animationLoops = 20;
+        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().delay = 66;
+        RenderGamePlay.get().ambSpeed1 = 0;
+        RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 3;
     }
 
     public void start() {
-        if (ScndGenLegends.getInstance().getSubMode() != SubMode.STORY_MODE)
-            RenderGamePlay.getInstance().playBGMusic();
-        ScndGenLegends.getInstance().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
+        if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE)
+            RenderGamePlay.get().playBGMusic();
+        ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
     }
 
     public String getBgLocation() {

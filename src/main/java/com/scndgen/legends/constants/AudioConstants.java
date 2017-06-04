@@ -69,11 +69,11 @@ public class AudioConstants {
     }
 
     public static String selectSound() {
-        return "audio/menu-small-select.ogg";
+        return "audio/menu-small-select.oga";
     }
 
     public static String charSelectSound() {
-        return "audio/menu-back.ogg";
+        return "audio/menu-back.oga";
     }
 
     public static String itemSound1() {

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -62,12 +62,13 @@ public class RenderGamePlay extends GamePlay {
     private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
     private Image[] attackCategory, numberPix;
-    private Image[] characterPortraits;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
     private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, furyPlaceholder, fury1, fury2, phys, cel, itm, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
     private Image[] charSprites, oppSprites;
-    private Image[] storyPicArr;
-    private Image characterPortrait, storyPic;
+    private Image[] characterPortraits;
+    private int characterPortraitIndex;
+    private Image[] storyBoards;
+    private int storyBoardIndex;
     private final UiItem attackOne;
     private final UiItem attackTwo;
     private final UiItem attackThree;
@@ -331,7 +332,7 @@ public class RenderGamePlay extends GamePlay {
 
     }
 
-    public static synchronized RenderGamePlay getInstance() {
+    public static synchronized RenderGamePlay get() {
         if (instance == null)
             instance = new RenderGamePlay();
         return instance;
@@ -340,12 +341,12 @@ public class RenderGamePlay extends GamePlay {
     public void loadAssetsIml() {
         loadAssets = false;
         notSelected = loadFont(12);
-        largeFont = loadFont(LoginScreen.bigTxtSize);
-        normalFont = loadFont(LoginScreen.normalTxtSize);
+        largeFont = loadFont(LoginScreen.LARGE_TXT_SIZE);
+        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         setCharMoveset();
         cacheNumPix();
         loadSprites();
-        charPointInc = Characters.getInstance().getPoints();
+        charPointInc = Characters.get().getPoints();
     }
 
     public void cleanAssets() {
@@ -359,29 +360,25 @@ public class RenderGamePlay extends GamePlay {
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, width, height);
             if (opacityPic < 0.98f) {
-                opacityPic = opacityPic + 0.02f;
+                opacityPic += 0.02f;
             }
-            gc.setGlobalAlpha((opacityPic));
-            gc.drawImage(storyPic, 0, 0);
-            gc.setGlobalAlpha((10 * 0.1f));
+            gc.setGlobalAlpha(opacityPic);
+            gc.drawImage(storyBoardIndex >= 0 ? storyBoards[storyBoardIndex] : null, 0, 0);
+            gc.setGlobalAlpha(1.0f);
 
-            gc.setGlobalAlpha((0.5f));
+            gc.setGlobalAlpha(0.5f);
             gc.fillRoundRect(0, 424, width, 48, 48, 48); //mid minus half the font size (430-6)
-            gc.setGlobalAlpha((10 * 0.1f));
+            gc.setGlobalAlpha(1.0f);
 
             gc.setFill(Color.WHITE);
             gc.setFont(normalFont);
-            gc.fillText(Language.getInstance().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(146) + " >>", gc.getFont())), 462);
-
-
+            gc.setGlobalAlpha((opacityTxt));
+            gc.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2) - 50, 424);
+            gc.fillText(battleInformation.toString(), ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
+            gc.setGlobalAlpha(1.0f);
             if (opacityTxt < 0.98f) {
                 opacityTxt = opacityTxt + 0.02f;
             }
-            gc.setGlobalAlpha((opacityTxt));
-            gc.drawImage(characterPortrait, ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2) - 50, 424);
-            gc.fillText(battleInformation.toString(), ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
-            gc.setGlobalAlpha((10 * 0.1f));
-
         } else if (!gameOver && !playingCutscene) {
             gc.drawImage(stageBackground, 0, 0);
             gc.setFont(notSelected);
@@ -435,7 +432,7 @@ public class RenderGamePlay extends GamePlay {
                 gc.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 gc.setFill(Color.WHITE);
                 gc.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
-                gc.setGlobalAlpha((10 * 0.1f)); //op onBackCancel to normal for other drawings
+                gc.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
             }
 
             drawTimer(gc);
@@ -453,11 +450,11 @@ public class RenderGamePlay extends GamePlay {
             gc.setFill(Color.BLACK);
             gc.setGlobalAlpha((5 * 0.1f));//initial val between 1 and 10
             gc.fillRect(0, 0, width, height);
-            gc.setGlobalAlpha((10 * 0.1f));
+            gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
-            gc.fillText(Language.getInstance().get(148), 400, 240);
-            gc.fillText(Language.getInstance().get(149), 400, 260);
-            gc.fillText(Language.getInstance().get(150), 400, 280);
+            gc.fillText(Language.get().get(148), 400, 240);
+            gc.fillText(Language.get().get(149), 400, 260);
+            gc.fillText(Language.get().get(150), 400, 280);
         }
 
         //when gameover
@@ -467,7 +464,7 @@ public class RenderGamePlay extends GamePlay {
             gc.setFill(Color.BLACK);
             gc.setGlobalAlpha((8 * 0.1f));//initial val between 1 and 10
             gc.fillRect(0, 210, width, 121);
-            gc.setGlobalAlpha((10 * 0.1f));
+            gc.setGlobalAlpha(1.0f);
             gc.drawImage(status, 0, 210);
             gc.setFill(Color.WHITE);
             gc.setFont(notSelected);
@@ -477,9 +474,9 @@ public class RenderGamePlay extends GamePlay {
                 gc.fillText(achievementClass[unlockedAchievementInstance], 400, 268);
                 gc.fillText(achievementPoints[unlockedAchievementInstance], 400, 282);
             }
-            gc.fillText("<< " + Language.getInstance().get(146) + " >>", 400, 296);
+            gc.fillText("<< " + Language.get().get(146) + " >>", 400, 296);
         }
-        Overlay.getInstance().overlay(gc, width, height);
+        Overlay.get().overlay(gc, width, height);
     }
 
     private void drawStageBackground(GraphicsContext gc) {
@@ -677,13 +674,16 @@ public class RenderGamePlay extends GamePlay {
     /**
      * Change storyboard pic
      */
-    public void changeStoryBoard(int here2) {
-        try {
-            storyPic = storyPicArr[here2 + 1];
-            opacityPic = 0.0f;
-        } catch (Exception e) {
-            storyPic = storyPicArr[1];
-        }
+    public void characterPortrait(CharacterEnum characterEnum) {
+        characterPortraitIndex = characterEnum.index();
+    }
+
+    /**
+     * Change storyboard pic
+     */
+    public void storyBoard(int index) {
+        storyBoardIndex = index;
+        opacityPic = 0.0f;
     }
 
     private void checkFuryStatus() {
@@ -746,12 +746,12 @@ public class RenderGamePlay extends GamePlay {
      * Caches number
      */
     private void cacheNumPix() {
-        attackMenuXPos = GameState.getInstance().getLogin().isLeftHanded() ? 0 : 547;
+        attackMenuXPos = State.get().getLogin().isLeftHanded() ? 0 : 547;
         attackMenuTextXPos = attackMenuXPos + 25;
         attackMenuTextYPos = 366;
         Loader pix = new Loader();
         counterPane = pix.load("images/countPane.png");
-        foreGround = pix.load(RenderStageSelect.getInstance().getFgLocation());
+        foreGround = pix.load(RenderStageSelect.get().getFgLocation());
         num0 = pix.load("images/fig/0.png");
         num1 = pix.load("images/fig/1.png");
         num2 = pix.load("images/fig/2.png");
@@ -779,28 +779,28 @@ public class RenderGamePlay extends GamePlay {
     private void loadSprites() {
         try {
             Loader loader = new Loader();
-            Characters.getInstance().getCharacter().loadMeHigh();
-            Characters.getInstance().getOpponent().loadMeHigh();
+            Characters.get().getCharacter().loadMeHigh();
+            Characters.get().getOpponent().loadMeHigh();
 
-            charSprites = new Image[Characters.getInstance().getCharacter().getNumberOfSprites()];
+            charSprites = new Image[Characters.get().getCharacter().getNumberOfSprites()];
             for (int i = 0; i < charSprites.length; i++)
-                charSprites[i] = Characters.getInstance().getCharacter().getSprite(i);
+                charSprites[i] = Characters.get().getCharacter().getSprite(i);
 
-            oppSprites = new Image[Characters.getInstance().getOpponent().getNumberOfSprites()];
+            oppSprites = new Image[Characters.get().getOpponent().getNumberOfSprites()];
             for (int i = 0; i < oppSprites.length; i++)
-                oppSprites[i] = Characters.getInstance().getOpponent().getSprite(i);
+                oppSprites[i] = Characters.get().getOpponent().getSprite(i);
 
             comboPicArray = new Image[9];
             for (int u = 0; u < 6; u++)
                 comboPicArray[u] = loader.load("images/screenTxt/" + u + ".png");
             comboPicArray[7] = loader.load("images/screenTxt/7.png");
-            comboPicArray[8] = Characters.getInstance().getCharacter().getSprite(11);
+            comboPicArray[8] = Characters.get().getCharacter().getSprite(11);
 
             comicBookText = new Image[10];
-            comicBookText[0] = Characters.getInstance().getCharacter().getSprite(11);
+            comicBookText[0] = Characters.get().getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
                 comicBookText[bx] = loader.load("images/screenComic/" + (bx - 1) + ".png");
-            menuHold = loader.load("images/" + Characters.getInstance().getCharacter().getEnum().data() + "/menu.png");
+            menuHold = loader.load("images/" + Characters.get().getCharacter().getEnum().data() + "/menu.png");
             damageLayer = loader.load("images/damage1.png");
 
             time0i = loader.load("images/fig/0.png");
@@ -815,34 +815,27 @@ public class RenderGamePlay extends GamePlay {
             time9i = loader.load("images/fig/9.png");
             times = new Image[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
 
-            characterPortraits = new Image[charNames.length];
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
+            if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
+                characterPortraits = new Image[charNames.length];
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
                     characterPortraits[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/cap.png");
                 }
-            } else {
-                for (int p = 0; p < charNames.length; p++) {
-                    characterPortraits[p] = null;
+                storyBoards = new Image[12];
+                for (int u = 0; u < storyBoards.length; u++) {
+                    storyBoards[u] = loader.load("images/story/s" + u + ".png");
                 }
             }
             Image transBuf = loader.load("images/trans.png");
             hpHolder = loader.load("images/hpHolder.png");
-            stageBackground = loader.load(RenderStageSelect.getInstance().getBgLocation());
+            stageBackground = loader.load(RenderStageSelect.get().getBgLocation());
             phys = loader.load("images/t_physical.png");
             cel = loader.load("images/t_celestia.png");
             itm = loader.load("images/t_item.png");
             fury1 = loader.load("images/fury.gif");
             fury2 = loader.load("images/furyo.png");
             furyPlaceholder = fury2;
-            particlesLayer1 = loader.load("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "a.png");
-            particlesLayer2 = loader.load("images/bgBG" + RenderStageSelect.getInstance().getHoveredStage().filePrefix() + "b.png");
-            if (ScndGenLegends.getInstance().getSubMode() == SubMode.STORY_MODE) {
-                storyPicArr = new Image[13];
-                for (int u = 0; u < 11; u++) {
-                    storyPicArr[u] = loader.load("images/story/s" + u + ".png");
-                }
-                storyPic = storyPicArr[0];
-            }
+            particlesLayer1 = loader.load("images/bgBG" + RenderStageSelect.get().getHoveredStage().filePrefix() + "a.png");
+            particlesLayer2 = loader.load("images/bgBG" + RenderStageSelect.get().getHoveredStage().filePrefix() + "b.png");
             furyBar = loader.load("images/furyBar.png");
             quePic1 = loader.load("images/queB.png");
             quePic2 = loader.load("images/que.gif");
@@ -928,7 +921,7 @@ public class RenderGamePlay extends GamePlay {
      * Attack sounds
      */
     private void attackSoundChar() {
-        if (Characters.getInstance().getCharacter().isMale()) {
+        if (Characters.get().getCharacter().isMale()) {
             randSoundIntChar = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.MALE_HURT.length) {
                 AudioPlayback attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
@@ -944,7 +937,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     protected void attackSoundOpp() {
-        if (Characters.getInstance().getOpponent().isMale()) {
+        if (Characters.get().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.MALE_HURT.length) {
                 AudioPlayback attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
@@ -960,7 +953,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     protected void hurtSoundChar() {
-        if (Characters.getInstance().getOpponent().isMale()) {
+        if (Characters.get().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.MALE_ATTACKS.length) {
                 AudioPlayback hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
@@ -976,7 +969,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public void hurtSoundOpp() {
-        if (Characters.getInstance().getCharacter().isMale()) {
+        if (Characters.get().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.MALE_ATTACKS.length) {
                 AudioPlayback hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
@@ -1008,8 +1001,8 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public void comicText() {
-        if (GameState.getInstance().getLogin().getComicEffectOccurence() > 0) {
-            int randomInt = Math.round((float) (Math.random() * GameState.getInstance().getLogin().getComicEffectOccurence()));
+        if (State.get().getLogin().getComicEffectOccurence() > 0) {
+            int randomInt = Math.round((float) (Math.random() * State.get().getLogin().getComicEffectOccurence()));
             if (randomInt == 1) {
                 setRandomPic();
             }
@@ -1017,7 +1010,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public synchronized void playBGMusic() {
-        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.getInstance().getAmbientMusic()[RenderStageSelect.getInstance().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
+        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.get().getAmbientMusic()[RenderStageSelect.get().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
         ambientMusic.play();
     }
 
@@ -1028,17 +1021,8 @@ public class RenderGamePlay extends GamePlay {
     /**
      * Clear char port
      */
-    public void charPortBlank() {
-        characterPortrait = null;
-    }
-
-    /**
-     * Change port pic
-     *
-     * @param here - index of pic
-     */
-    public void setCharacterPortrait(int here) {
-        characterPortrait = characterPortraits[here];
+    public void characterPortrait() {
+        characterPortraitIndex = -1;
     }
 
 
@@ -1119,20 +1103,20 @@ public class RenderGamePlay extends GamePlay {
                     checkStatus();
                     showBattleMessage("Queued up " + getAttack(activeAttack));
                 } else {
-                    RenderCharacterSelection.getInstance().errorSound();
+                    RenderCharacterSelection.get().errorSound();
                 }
             } else if (playingCutscene) {
-                StoryMode.getInstance().onAccept();
+                StoryMode.get().onAccept();
             } else if (gameOver) {
                 updatePlayerProfile();
-                switch (ScndGenLegends.getInstance().getSubMode()) {
+                switch (ScndGenLegends.get().getSubMode()) {
                     case SINGLE_PLAYER:
                     case LAN_CLIENT:
                     case LAN_HOST:
                         closingThread(true);
                         break;
                     case STORY_MODE:
-                        StoryMode.getInstance().onAccept();
+                        StoryMode.get().onAccept();
                         break;
                     default:
                         closingThread(false);
@@ -1147,7 +1131,7 @@ public class RenderGamePlay extends GamePlay {
             if (!gameOver && playingCutscene == false) {
                 onTogglePause();
             } else if (playingCutscene) {
-                StoryMode.getInstance().onBackCancel();
+                StoryMode.get().onBackCancel();
             }
         }
 

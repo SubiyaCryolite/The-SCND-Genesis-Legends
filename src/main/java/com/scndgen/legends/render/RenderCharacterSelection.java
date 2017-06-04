@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -137,9 +137,9 @@ public class RenderCharacterSelection extends CharacterSelection {
                     }
                 } else {
                     //if both character and opponent selected move on to stage select after second accept
-                    if(NetworkManager.getInstance().isServer())
-                        NetworkManager.getInstance().send(NetworkConstants.TO_STAGE_SELECT);
-                    ScndGenLegends.getInstance().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                    if (NetworkManager.get().isServer())
+                        NetworkManager.get().send(NetworkConstants.TO_STAGE_SELECT);
+                    ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
                 }
             }
 
@@ -149,7 +149,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                 } else if (selectedCharacter) {
                     selectedCharacter = false;
                 } else {
-                    ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+                    ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
                 }
             }
 
@@ -277,7 +277,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         }
     }
 
-    public static synchronized RenderCharacterSelection getInstance() {
+    public static synchronized RenderCharacterSelection get() {
         if (instance == null) {
             instance = new RenderCharacterSelection();
         }
@@ -287,7 +287,7 @@ public class RenderCharacterSelection extends CharacterSelection {
     @Override
     public void newInstance() {
         super.newInstance();
-        Characters.getInstance().resetCharacters();
+        Characters.get().resetCharacters();
         setActiveItem(uiElements.get(0));
     }
 
@@ -312,7 +312,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         gc.drawImage(fg1, xCordCloud, 0);
         gc.drawImage(fg2, xCordCloud2, 0);
         gc.drawImage(fg3, 0, 0);
-        if (NetworkManager.getInstance().isOffline() || (NetworkManager.getInstance().isOnline() && NetworkManager.getInstance().isConnectedToPartner())) {
+        if (NetworkManager.get().isOffline() || (NetworkManager.get().isOnline() && NetworkManager.get().isConnectedToPartner())) {
             if (p1Opac < (1.0f - opacInc)) {
                 p1Opac += opacInc;
             }
@@ -331,7 +331,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                 gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
             }
             //opponent preview DYNAMIC change, only show if quick match, should change sprites
-            if (selectedCharacter && selectedOpponent != true && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+            if (selectedCharacter && selectedOpponent != true && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
                 gc.setGlobalAlpha((p1Opac));
                 gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
                 gc.setGlobalAlpha((1.0f));
@@ -359,7 +359,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                         if (!selectedCharacter) {
                             gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
-                        if (selectedCharacter && !selectedOpponent && ScndGenLegends.getInstance().getSubMode() == SubMode.SINGLE_PLAYER) {
+                        if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
                             gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
                     }
@@ -372,8 +372,8 @@ public class RenderCharacterSelection extends CharacterSelection {
                 gc.drawImage(fight, 0, 0);
                 gc.setFont(bigFont);
                 gc.setFill(Color.WHITE);
-                gc.fillText("<< " + Language.getInstance().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(146) + " >>", gc.getFont())) / 2, 360);
-                gc.fillText("<< " + Language.getInstance().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.getInstance().get(147) + " >>", gc.getFont())) / 2, 390);
+                gc.fillText("<< " + Language.get().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.get().get(146) + " >>", gc.getFont())) / 2, 360);
+                gc.fillText("<< " + Language.get().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.get().get(147) + " >>", gc.getFont())) / 2, 390);
             }
             gc.setFont(normalFont);
             gc.setFill(Color.WHITE);
@@ -392,21 +392,21 @@ public class RenderCharacterSelection extends CharacterSelection {
             if (x < 0) {
                 x = x + 2;
             }
-        } else if (NetworkManager.getInstance().isServer()) {
+        } else if (NetworkManager.get().isServer()) {
             gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
             gc.fillText("waiting for players to join", 553 + x, 400);
-        } else if (NetworkManager.getInstance().isClient()) {
+        } else if (NetworkManager.get().isClient()) {
             gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
             gc.fillText("waiting for host to respond", 553 + x, 400);
         }
-        Overlay.getInstance().overlay(gc, x, y);
+        Overlay.get().overlay(gc, x, y);
     }
 
     private void loadCaps() {
-        bigFont = loadFont(LoginScreen.extraTxtSize);
-        normalFont = loadFont(LoginScreen.normalTxtSize);
+        bigFont = loadFont(LoginScreen.EXTRA_LARGE_TXT_SIZE);
+        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         oppDescPic = loader.load("images/charInfoO.png");
         charDescPic = loader.load("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
@@ -424,7 +424,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         charBack = loader.load("images/selChar.png");
         oppBack = loader.load("images/selOpp.png");
         charHold = loader.load("images/charHold.png");
-        Image[] tmp = RenderMainMenu.getInstance().getPics();
+        Image[] tmp = RenderMainMenu.get().getPics();
         bg3 = tmp[0];
         fg1 = tmp[1];
         fg2 = tmp[2];
@@ -445,17 +445,18 @@ public class RenderCharacterSelection extends CharacterSelection {
 
 
     private void loadDesc() {
-        characterDescription[CharacterEnum.RAILA.index()] = Language.getInstance().get(134);
-        characterDescription[CharacterEnum.SUBIYA.index()] = Language.getInstance().get(135);
-        characterDescription[CharacterEnum.LYNX.index()] = Language.getInstance().get(136);
-        characterDescription[CharacterEnum.AISHA.index()] = Language.getInstance().get(137);
-        characterDescription[CharacterEnum.RAVAGE.index()] = Language.getInstance().get(138);
-        characterDescription[CharacterEnum.ADE.index()] = Language.getInstance().get(139);
-        characterDescription[CharacterEnum.JONAH.index()] = Language.getInstance().get(140);
-        characterDescription[CharacterEnum.ADAM.index()] = Language.getInstance().get(141);
-        characterDescription[CharacterEnum.NOVA_ADAM.index()] = Language.getInstance().get(142);
-        characterDescription[CharacterEnum.AZARIA.index()] = Language.getInstance().get(143);
-        characterDescription[CharacterEnum.SORROWE.index()] = Language.getInstance().get(144);
-        characterDescription[CharacterEnum.THING.index()] = Language.getInstance().get(145);
+        characterDescription = new String[CharacterEnum.values().length];
+        characterDescription[CharacterEnum.RAILA.index()] = Language.get().get(134);
+        characterDescription[CharacterEnum.SUBIYA.index()] = Language.get().get(135);
+        characterDescription[CharacterEnum.LYNX.index()] = Language.get().get(136);
+        characterDescription[CharacterEnum.AISHA.index()] = Language.get().get(137);
+        characterDescription[CharacterEnum.RAVAGE.index()] = Language.get().get(138);
+        characterDescription[CharacterEnum.ADE.index()] = Language.get().get(139);
+        characterDescription[CharacterEnum.JONAH.index()] = Language.get().get(140);
+        characterDescription[CharacterEnum.ADAM.index()] = Language.get().get(141);
+        characterDescription[CharacterEnum.NOVA_ADAM.index()] = Language.get().get(142);
+        characterDescription[CharacterEnum.AZARIA.index()] = Language.get().get(143);
+        characterDescription[CharacterEnum.SORROWE.index()] = Language.get().get(144);
+        characterDescription[CharacterEnum.THING.index()] = Language.get().get(145);
     }
 }

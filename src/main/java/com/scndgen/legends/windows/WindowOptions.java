@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,15 +22,16 @@
 package com.scndgen.legends.windows;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev1.AudioPlayback;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -55,7 +56,14 @@ public class WindowOptions extends Stage {
     private ComboBox<String> cmbTimeDuration;
     private ComboBox<String> cmbTextSpeed;
     private ComboBox<String> cmbComicTextOccurence;
+    private Spinner<Integer> soundVolume;
+    private Spinner<Integer> voiceVolume;
+    private Spinner<Integer> musicVolume;
+    private Label lblMusicVolume;
+    private Label lblSoundVolume;
+    private Label lblVoiceVolume;
     private Button btnSave;
+    private Button btnCancel;
 
     /**
      * Constructor
@@ -63,80 +71,126 @@ public class WindowOptions extends Stage {
     public WindowOptions() {
         super(StageStyle.UNDECORATED);
         gridPane = new GridPane();
-        isLeftHanded = FXCollections.observableArrayList(new String[]{Language.getInstance().get(172), Language.getInstance().get(171)});
-        timeLimits = FXCollections.observableArrayList(new String[]{"Infinite", "180", "150", "120", "90", "60", "30"});
-        comicTextOccurence = FXCollections.observableArrayList(new String[]{Language.getInstance().get(1), Language.getInstance().get(2), Language.getInstance().get(3), Language.getInstance().get(4)});
-        textSpeed = FXCollections.observableArrayList(new String[]{Language.getInstance().get(22), Language.getInstance().get(23), Language.getInstance().get(24), Language.getInstance().get(25)});
-        difficultySetting = FXCollections.observableArrayList(new String[]{Language.getInstance().get(26), Language.getInstance().get(27), Language.getInstance().get(28), Language.getInstance().get(29), Language.getInstance().get(30)});
+        gridPane.setHgap(4);
+        gridPane.setVgap(4);
+
+        isLeftHanded = FXCollections.observableArrayList(new String[]{Language.get().get(172), Language.get().get(171)});
+        timeLimits = FXCollections.observableArrayList(new String[]{Language.get().get(424), "180", "150", "120", "90", "60", "45","30"});
+        comicTextOccurence = FXCollections.observableArrayList(new String[]{Language.get().get(1), Language.get().get(2), Language.get().get(3), Language.get().get(4)});
+        textSpeed = FXCollections.observableArrayList(new String[]{Language.get().get(22), Language.get().get(23), Language.get().get(24), Language.get().get(25)});
+        difficultySetting = FXCollections.observableArrayList(new String[]{Language.get().get(26), Language.get().get(27), Language.get().get(28), Language.get().get(29), Language.get().get(30)});
 
         int row = 1;
 
         cmbDifficultySetting = new ComboBox(difficultySetting);
-        cmbDifficultySetting.setValue(GameState.getInstance().getLogin().resolveDifficulty());
+        cmbDifficultySetting.setValue(State.get().getLogin().resolveDifficulty());
         cmbDifficultySetting.getSelectionModel().selectedItemProperty().addListener((src, oldValue, newValue) -> {
-            GameState.getInstance().getLogin().setDifficultyDynamic(GameState.getInstance().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
-            GameState.getInstance().getLogin().setDifficulty(GameState.getInstance().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
+            State.get().getLogin().setDifficultyDynamic(State.get().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
+            State.get().getLogin().setDifficulty(State.get().getLogin().getDifficultyConstant(cmbDifficultySetting.getSelectionModel().getSelectedIndex()));
         });
-        lblDifficultySetting = new Label(Language.getInstance().get(6));
+        lblDifficultySetting = new Label(Language.get().get(6));
         gridPane.add(lblDifficultySetting, 1, row);
         gridPane.add(cmbDifficultySetting, 2, row);
         row++;
 
-        cmbTextSpeed = new ComboBox(textSpeed);
-        cmbTextSpeed.setValue(GameState.getInstance().getLogin().getTextSpeed());
-        cmbTextSpeed.getSelectionModel().selectedItemProperty().addListener((src, oldValue, newValue) -> {
-            GameState.getInstance().getLogin().setTextSpeed(newValue);
+        voiceVolume = new Spinner<>();
+        voiceVolume.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        voiceVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getVoiceVolume()));
+        voiceVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+            State.get().getLogin().setVoiceVolume(newValue);
+            AudioPlayback.volume(AudioType.VOICE, newValue);
         });
-        lblTextSpeed = new Label(Language.getInstance().get(7));
+        lblVoiceVolume = new Label(Language.get().get(420));
+        gridPane.add(lblVoiceVolume, 1, row);
+        gridPane.add(voiceVolume, 2, row);
+        row++;
+
+        soundVolume = new Spinner<>();
+        soundVolume.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        soundVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getSoundVolume()));
+        soundVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+            State.get().getLogin().setSoundVolume(newValue);
+            AudioPlayback.volume(AudioType.SOUND, newValue);
+        });
+        lblSoundVolume = new Label(Language.get().get(418));
+        gridPane.add(lblSoundVolume, 1, row);
+        gridPane.add(soundVolume, 2, row);
+        row++;
+
+        musicVolume = new Spinner<>();
+        musicVolume.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        musicVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getMusicVolume()));
+        musicVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+            State.get().getLogin().setMusicVolume(newValue);
+            AudioPlayback.volume(AudioType.MUSIC, newValue);
+        });
+        lblMusicVolume = new Label(Language.get().get(419));
+        gridPane.add(lblMusicVolume, 1, row);
+        gridPane.add(musicVolume, 2, row);
+        row++;
+
+        cmbTextSpeed = new ComboBox(textSpeed);
+        cmbTextSpeed.setValue(State.get().getLogin().getTextSpeed());
+        cmbTextSpeed.getSelectionModel().selectedItemProperty().addListener((src, oldValue, newValue) -> {
+            State.get().getLogin().setTextSpeed(newValue);
+        });
+        lblTextSpeed = new Label(Language.get().get(7));
         gridPane.add(lblTextSpeed, 1, row);
         gridPane.add(cmbTextSpeed, 2, row);
         row++;
 
-        lblTimeDuration = new Label(Language.getInstance().get(14));
+        lblTimeDuration = new Label(Language.get().get(14));
         cmbTimeDuration = new ComboBox(timeLimits);
-        cmbTimeDuration.setValue(GameState.getInstance().getLogin().getTimeLimitString());
+        cmbTimeDuration.setValue(State.get().getLogin().getTimeLimitString());
         cmbTimeDuration.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
             if (newValue.equalsIgnoreCase("infinite"))
-                GameState.getInstance().getLogin().setTimeLimit(INFINITE_TIME);
+                State.get().getLogin().setTimeLimit(INFINITE_TIME);
             else
-                GameState.getInstance().getLogin().setTimeLimit(Integer.parseInt(newValue));
+                State.get().getLogin().setTimeLimit(Integer.parseInt(newValue));
         });
         gridPane.add(lblTimeDuration, 1, row);
         gridPane.add(cmbTimeDuration, 2, row);
         row++;
 
         cmbIsLeftHanded = new ComboBox(isLeftHanded);
-        cmbIsLeftHanded.getSelectionModel().select(GameState.getInstance().getLogin().isLeftHanded() ? 0 : 1);
+        cmbIsLeftHanded.getSelectionModel().select(State.get().getLogin().isLeftHanded() ? 0 : 1);
         cmbIsLeftHanded.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
-            GameState.getInstance().getLogin().setLeftHanded(list.getValue().indexOf(newValue) == 0 ? true : false);
+            State.get().getLogin().setLeftHanded(list.getValue().indexOf(newValue) == 0 ? true : false);
         });
-        lblIsLeftHanded = new Label(Language.getInstance().get(173));
+        lblIsLeftHanded = new Label(Language.get().get(173));
         gridPane.add(lblIsLeftHanded, 1, row);
         gridPane.add(cmbIsLeftHanded, 2, row);
         row++;
 
         cmbComicTextOccurence = new ComboBox(comicTextOccurence);
-        cmbComicTextOccurence.getSelectionModel().select(GameState.getInstance().getLogin().getComicEffectOccurence());
+        cmbComicTextOccurence.getSelectionModel().select(State.get().getLogin().getComicEffectOccurence());
         cmbComicTextOccurence.getSelectionModel().selectedItemProperty().addListener((list, newv, oldv) -> {
 
         });
-        lblComicTextOccurence = new Label(Language.getInstance().get(17));
+        lblComicTextOccurence = new Label(Language.get().get(17));
         gridPane.add(lblComicTextOccurence, 1, row);
         gridPane.add(cmbComicTextOccurence, 2, row);
         row++;
 
-        btnSave = new Button(Language.getInstance().get(20));
+        btnSave = new Button(Language.get().get(20));
         btnSave.setOnAction(event -> {
-            GameState.getInstance().saveConfigFile();
+            State.get().saveConfigFile();
             close();
         });
-        gridPane.add(btnSave, 1, row, 2, 1);
+        btnCancel = new Button(Language.get().get(421));
+        btnCancel.setOnAction(event -> {
+            close();
+        });
+        gridPane.add(btnSave, 1, row);
+        gridPane.add(btnCancel, 2, row);
         GridPane.setHalignment(btnSave, HPos.CENTER);
+        GridPane.setHalignment(btnCancel, HPos.CENTER);
         row++;
 
-        setTitle(Language.getInstance().get(34));
+        setTitle(Language.get().get(34));
         setScene(new Scene(gridPane));
         setResizable(false);
+        initModality(Modality.APPLICATION_MODAL);
         show();
     }
 }

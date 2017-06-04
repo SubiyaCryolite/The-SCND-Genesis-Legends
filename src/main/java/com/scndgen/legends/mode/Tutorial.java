@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ public class Tutorial implements Runnable {
         backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
         bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
         loader = new Loader();
-        normalFont = getMyFont(LoginScreen.normalTxtSize);
+        normalFont = getMyFont(LoginScreen.NORMAL_TXT_SIZE);
         pixLoc = 0;
         sec = 0;
         slide = -1;
@@ -82,7 +82,7 @@ public class Tutorial implements Runnable {
     }
 
     public void beginTutorial() {
-        RenderMainMenu.getInstance().onLeaveMode();
+        RenderMainMenu.get().onLeaveMode();
         thread = null;
         thread = new Thread(this);
         thread.start();
@@ -140,16 +140,16 @@ public class Tutorial implements Runnable {
         gc.fillText(tutText, (852 - getToolkit().getFontLoader().computeStringWidth(tutText, gc.getFont())) / 2, 233);
         gc.setGlobalAlpha((1.0f));
 
-        gc.fillText(":: " + topText + " - " + Language.getInstance().get(365) + " " + sec + " ::", (852 - getToolkit().getFontLoader().computeStringWidth(":: " + topText + " - " + Language.getInstance().get(365) + " " + sec + " ::", gc.getFont())) / 2, 253);
+        gc.fillText(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", (852 - getToolkit().getFontLoader().computeStringWidth(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", gc.getFont())) / 2, 253);
 
-        gc.fillText(Language.getInstance().get(366) + ":", 10, cord);
-        gc.fillText("1 - " + Language.getInstance().get(356), 20, (cord + (1 * 14)));
-        gc.fillText("2 - " + Language.getInstance().get(360), 20, (cord + (2 * 14)));
-        gc.fillText("3 - " + Language.getInstance().get(355), 20, (cord + (3 * 14)));
-        gc.fillText("4 - " + Language.getInstance().get(358), 20, (cord + (4 * 14)));
-        gc.fillText("5 - " + Language.getInstance().get(357), 20, (cord + (5 * 14)));
-        gc.fillText("6 - " + Language.getInstance().get(359), 20, (cord + (6 * 14)));
-        gc.fillText(Language.getInstance().get(343), 20, (cord + (7 * 14)));
+        gc.fillText(Language.get().get(366) + ":", 10, cord);
+        gc.fillText("1 - " + Language.get().get(356), 20, (cord + (1 * 14)));
+        gc.fillText("2 - " + Language.get().get(360), 20, (cord + (2 * 14)));
+        gc.fillText("3 - " + Language.get().get(355), 20, (cord + (3 * 14)));
+        gc.fillText("4 - " + Language.get().get(358), 20, (cord + (4 * 14)));
+        gc.fillText("5 - " + Language.get().get(357), 20, (cord + (5 * 14)));
+        gc.fillText("6 - " + Language.get().get(359), 20, (cord + (6 * 14)));
+        gc.fillText(Language.get().get(343), 20, (cord + (7 * 14)));
 
     }
 
@@ -207,8 +207,8 @@ public class Tutorial implements Runnable {
                     sec = slide + 1;
                     setPic(0);
                     setArr(0);
-                    setTop(Language.getInstance().get(356)); //intro
-                    setTxt(Language.getInstance().get(320));
+                    setTop(Language.get().get(356)); //intro
+                    setTxt(Language.get().get(320));
                     sec3:
                     for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
                         if (skipSec) {
@@ -221,8 +221,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(356)); //intro
-                    setTxt(Language.getInstance().get(321));
+                    setTop(Language.get().get(356)); //intro
+                    setTxt(Language.get().get(321));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -237,8 +237,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(322));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(322));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -253,8 +253,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(344));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(344));
                     setPic(0);
                     setArr(6);
                     sec3:
@@ -269,8 +269,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(345));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(345));
                     setPic(0);
                     setArr(6);
                     sec3:
@@ -285,8 +285,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(323));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(323));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -301,8 +301,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(324));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(324));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -317,8 +317,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(325));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(325));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -333,8 +333,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(326));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(326));
                     setPic(0);
                     setArr(1);
                     sec3:
@@ -349,8 +349,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(360)); //basics
-                    setTxt(Language.getInstance().get(327));
+                    setTop(Language.get().get(360)); //basics
+                    setTxt(Language.get().get(327));
                     setPic(0);
                     setArr(2);
                     sec3:
@@ -365,8 +365,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(328));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(328));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -381,8 +381,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(329));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(329));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -397,8 +397,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(330));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(330));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -413,8 +413,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(331));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(331));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -429,8 +429,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(332));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(332));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -445,8 +445,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(333));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(333));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -461,8 +461,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(334));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(334));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -477,8 +477,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(335));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(335));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -493,8 +493,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(355)); //CM
-                    setTxt(Language.getInstance().get(336));
+                    setTop(Language.get().get(355)); //CM
+                    setTxt(Language.get().get(336));
                     setPic(0);
                     setArr(5);
                     sec3:
@@ -509,8 +509,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(352));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(352));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -525,8 +525,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(353));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(353));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -541,8 +541,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(354));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(354));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -557,8 +557,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(361));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(361));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -573,8 +573,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(362));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(362));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -589,8 +589,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(363));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(363));
                     setArr(8);
                     setPic(5);
                     sec3:
@@ -605,8 +605,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(358)); //FB
-                    setTxt(Language.getInstance().get(336));
+                    setTop(Language.get().get(358)); //FB
+                    setTxt(Language.get().get(336));
                     setArr(8);
                     setPic(4);
                     sec3:
@@ -621,8 +621,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(357)); //AB
-                    setTxt(Language.getInstance().get(337));
+                    setTop(Language.get().get(357)); //AB
+                    setTxt(Language.get().get(337));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -637,8 +637,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(357)); //AB
-                    setTxt(Language.getInstance().get(338));
+                    setTop(Language.get().get(357)); //AB
+                    setTxt(Language.get().get(338));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -653,8 +653,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(357)); //AB
-                    setTxt(Language.getInstance().get(339));
+                    setTop(Language.get().get(357)); //AB
+                    setTxt(Language.get().get(339));
                     setPic(4);
                     setArr(3);
                     sec3:
@@ -669,8 +669,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(357)); //AB
-                    setTxt(Language.getInstance().get(340));
+                    setTop(Language.get().get(357)); //AB
+                    setTxt(Language.get().get(340));
                     setPic(4);
                     setArr(4);
                     sec3:
@@ -685,8 +685,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(357)); //AB
-                    setTxt(Language.getInstance().get(341));
+                    setTop(Language.get().get(357)); //AB
+                    setTxt(Language.get().get(341));
                     setPic(0);
                     setArr(4);
                     sec3:
@@ -701,8 +701,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(346));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(346));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -717,8 +717,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(347));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(347));
                     setPic(4);
                     setArr(7);
                     sec3:
@@ -733,8 +733,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(348));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(348));
                     setPic(1);
                     setArr(7);
                     sec3:
@@ -749,8 +749,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(349));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(349));
                     setPic(2);
                     setArr(7);
                     sec3:
@@ -765,8 +765,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(350));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(350));
                     setPic(3);
                     setArr(0);
                     sec3:
@@ -781,8 +781,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(367));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(367));
                     setPic(3);
                     setArr(0);
                     sec3:
@@ -797,8 +797,8 @@ public class Tutorial implements Runnable {
                 slide++;
                 if (sec == slide) {
                     sec = slide + 1;
-                    setTop(Language.getInstance().get(359)); //MoveSel
-                    setTxt(Language.getInstance().get(351));
+                    setTop(Language.get().get(359)); //MoveSel
+                    setTxt(Language.get().get(351));
                     setArr(0);
                     setPic(3);
                     sec3:
@@ -812,7 +812,7 @@ public class Tutorial implements Runnable {
                 }
                 slide++;
                 if (sec == slide) {
-                    setTxt(Language.getInstance().get(393));
+                    setTxt(Language.get().get(393));
                     setPic(0);
                     setArr(0);
                     sec3:
@@ -843,8 +843,8 @@ public class Tutorial implements Runnable {
     public void onBackCancel() {
         bgSound.stop();
         thread.stop();
-        RenderMainMenu.getInstance().onEnterMode();
-        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
+        RenderMainMenu.get().onEnterMode();
+        RenderMainMenu.get().setOverlay(Overlay.PRIMARY_MENU);
     }
 
     public void onAccept() {

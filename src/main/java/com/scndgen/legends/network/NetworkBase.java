@@ -31,112 +31,112 @@ public abstract class NetworkBase {
                     if (!attackArray[i].isEmpty())
                         attackList.add(attackArray[i]);
                 }
-                RenderGamePlay.getInstance().opponentAttack(attackList);
+                RenderGamePlay.get().opponentAttack(attackList);
             } else if (line.startsWith(HOST_TIME_CONSTANT)) {
-                NetworkManager.getInstance().hostTimeLimit = Integer.parseInt(line.replace(HOST_TIME_CONSTANT, ""));
-                System.out.println("aquired time is " + NetworkManager.getInstance().hostTimeLimit);
+                NetworkManager.get().hostTimeLimit = Integer.parseInt(line.replace(HOST_TIME_CONSTANT, ""));
+                System.out.println("aquired time is " + NetworkManager.get().hostTimeLimit);
             } else {
                 switch (line) {
                     case SEL_SUBIYA:
-                        RenderCharacterSelection.getInstance().selSubiya(Player.OPPONENT);
+                        RenderCharacterSelection.get().selSubiya(Player.OPPONENT);
                         return;
                     case SEL_LYNX:
-                        RenderCharacterSelection.getInstance().selLynx(Player.OPPONENT);
+                        RenderCharacterSelection.get().selLynx(Player.OPPONENT);
                         return;
                     case SEL_ALEX:
-                        RenderCharacterSelection.getInstance().selAisha(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAisha(Player.OPPONENT);
                         return;
                     case SEL_ADE:
-                        RenderCharacterSelection.getInstance().selAde(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAde(Player.OPPONENT);
                         return;
                     case SEL_RAVAGE:
-                        RenderCharacterSelection.getInstance().selRav(Player.OPPONENT);
+                        RenderCharacterSelection.get().selRav(Player.OPPONENT);
                         return;
                     case SEL_JOHN:
-                        RenderCharacterSelection.getInstance().selJon(Player.OPPONENT);
+                        RenderCharacterSelection.get().selJon(Player.OPPONENT);
                         return;
                     case SEL_ADAM:
-                        RenderCharacterSelection.getInstance().selAdam(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAdam(Player.OPPONENT);
                         return;
                     case SEL_NOVA_ADAM:
-                        RenderCharacterSelection.getInstance().selNOVAAdam(Player.OPPONENT);
+                        RenderCharacterSelection.get().selNOVAAdam(Player.OPPONENT);
                         return;
                     case SEL_AZARIA:
-                        RenderCharacterSelection.getInstance().selAza(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAza(Player.OPPONENT);
                         return;
                     case SEL_SORROWE:
-                        RenderCharacterSelection.getInstance().selSorr(Player.OPPONENT);
+                        RenderCharacterSelection.get().selSorr(Player.OPPONENT);
                         return;
                     case SEL_THING:
-                        RenderCharacterSelection.getInstance().selThing(Player.OPPONENT);
+                        RenderCharacterSelection.get().selThing(Player.OPPONENT);
                         return;
                     case STAGE_IBEX_HILL:
-                        RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL);
+                        RenderStageSelect.get().selectStage(Stage.IBEX_HILL);
                         return;
                     case STAGE_CHELSTON_CITY_DOCKS:
-                        RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_DOCKS);
+                        RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_DOCKS);
                         return;
                     case STAGE_DESERT_RUINS:
-                        RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS);
+                        RenderStageSelect.get().selectStage(Stage.DESERT_RUINS);
                         return;
                     case STAGE_CHELSTON_CITY_STREETS:
-                        RenderStageSelect.getInstance().selectStage(Stage.CHELSTON_CITY_STREETS);
+                        RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_STREETS);
                         return;
                     case STAGE_IBEX_HILL_NIGHT:
-                        RenderStageSelect.getInstance().selectStage(Stage.IBEX_HILL_NIGHT);
+                        RenderStageSelect.get().selectStage(Stage.IBEX_HILL_NIGHT);
                         return;
                     case STAGE_SCORCHED_RUINS:
-                        RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS);
+                        RenderStageSelect.get().selectStage(Stage.SCORCHED_RUINS);
                         return;
                     case STAGE_FROZEN_WILDERNESS:
-                        RenderStageSelect.getInstance().selectStage(Stage.FROZEN_WILDERNESS);
+                        RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
                         return;
                     case STAGE_DISTANT_ISLE:
-                        RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE);
+                        RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE);
                         return;
                     case STAGE_HIDDEN_CAVE:
-                        RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE);
+                        RenderStageSelect.get().selectStage(Stage.HIDDEN_CAVE);
                         return;
                     case STAGE_HIDDEN_CAVE_NIGHT:
-                        RenderStageSelect.getInstance().selectStage(Stage.HIDDEN_CAVE_NIGHT);
+                        RenderStageSelect.get().selectStage(Stage.HIDDEN_CAVE_NIGHT);
                         return;
                     case STAGE_AFRICAN_VILLAGE:
-                        RenderStageSelect.getInstance().selectStage(Stage.AFRICAN_VILLAGE);
+                        RenderStageSelect.get().selectStage(Stage.AFRICAN_VILLAGE);
                         return;
                     case STAGE_APOCALYPTO:
-                        RenderStageSelect.getInstance().selectStage(Stage.APOCALYPTO);
+                        RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
                         return;
                     case STAGE_DISTANT_ISLE_NIGHT:
-                        RenderStageSelect.getInstance().selectStage(Stage.DISTANT_ISLE_NIGHT);
+                        RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE_NIGHT);
                         return;
                     case STAGE_RANDOM:
-                        RenderStageSelect.getInstance().selectStage(Stage.RANDOM);
+                        RenderStageSelect.get().selectStage(Stage.RANDOM);
                         return;
                     case STAGE_DESERT_RUINS_NIGHT:
-                        RenderStageSelect.getInstance().selectStage(Stage.DESERT_RUINS_NIGHT);
+                        RenderStageSelect.get().selectStage(Stage.DESERT_RUINS_NIGHT);
                         return;
                     case STAGE_SCORCHED_RUINS_NIGHT:
-                        RenderStageSelect.getInstance().selectStage(Stage.SCORCHED_RUINS_NIGHT);
+                        RenderStageSelect.get().selectStage(Stage.SCORCHED_RUINS_NIGHT);
                         return;
                     case TO_STAGE_SELECT:
-                        ScndGenLegends.getInstance().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                        ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
                         break;
                     case GAME_START:
-                        RenderStageSelect.getInstance().start();
+                        RenderStageSelect.get().start();
                         break;
                     case FURY_ATTACK:
-                        RenderGamePlay.getInstance().triggerFury(Player.OPPONENT);
+                        RenderGamePlay.get().triggerFury(Player.OPPONENT);
                         return;
                     case CONNECT_TO_HOST:
-                        if (NetworkManager.getInstance().isServer()) {
-                            NetworkManager.getInstance().promptServer();
+                        if (NetworkManager.get().isServer()) {
+                            NetworkManager.get().promptServer();
                         } else {
-                            NetworkManager.getInstance().setConnectedToPartner(true);
+                            NetworkManager.get().setConnectedToPartner(true);
                         }
                         break;
                     case DISCONNECT_FROM_HOST:
                         FxDialogs.message("Ouchies", "HARSH!", "The opponent doesnt want to fight you -_-");
-                        NetworkManager.getInstance().close();
+                        NetworkManager.get().close();
                         break;
                 }
             }

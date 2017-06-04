@@ -21,7 +21,7 @@ package io.github.subiyacryolite.enginev1;
 
 
 import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.State;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
@@ -100,13 +100,13 @@ public class AudioPlayback {
         heap.add(this);
         switch (audioType) {
             case MUSIC:
-                setVolume(GameState.getInstance().getLogin().getMusicVolume());
+                setVolume(State.get().getLogin().getMusicVolume());
                 break;
             case VOICE:
-                setVolume(GameState.getInstance().getLogin().getVoiceVolume());
+                setVolume(State.get().getLogin().getVoiceVolume());
                 break;
             case SOUND:
-                setVolume(GameState.getInstance().getLogin().getSoundVolume());
+                setVolume(State.get().getLogin().getSoundVolume());
                 break;
         }
     }

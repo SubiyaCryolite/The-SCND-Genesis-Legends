@@ -1,7 +1,6 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
@@ -24,7 +23,7 @@ import java.util.Hashtable;
 public abstract class CharacterSelection extends Mode {
     protected static String charDesc = "";
     protected int[] attacks;
-    protected String[] characterDescription = new String[LoginScreen.getInstance().charNames.length];
+    protected String[] characterDescription;
     protected final int numOfCharacters = CharacterEnum.values().length;
     protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
     protected Loader loader;
@@ -150,23 +149,23 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selRaila(Player type) {
-        primaryNotice(Language.getInstance().get(84));
+        primaryNotice(Language.get().get(84));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.RAILA;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_RAILA);
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_RAILA);
                 preventCharacterSelection();
             }
         } else if (type == Player.OPPONENT && selectedOpponent == false) {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.RAILA;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -179,15 +178,15 @@ public abstract class CharacterSelection extends Mode {
     public void selSubiya(Player type) {
         if (type == Player.CHARACTER) //when selecting char
         {
-            primaryNotice(Language.getInstance().get(85));
+            primaryNotice(Language.get().get(85));
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.SUBIYA;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_SUBIYA);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_SUBIYA);
                 preventCharacterSelection();
             }
         }
@@ -196,7 +195,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.SUBIYA;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -207,17 +206,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selLynx(Player type) {
-        primaryNotice(Language.getInstance().get(86));
+        primaryNotice(Language.get().get(86));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.LYNX;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_LYNX);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_LYNX);
                 preventCharacterSelection();
             }
         }
@@ -226,7 +225,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.LYNX;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -237,17 +236,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selAisha(Player type) {
-        primaryNotice(Language.getInstance().get(87));
+        primaryNotice(Language.get().get(87));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.AISHA;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_ALEX);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_ALEX);
                 preventCharacterSelection();
             }
         }
@@ -256,7 +255,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.AISHA;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -267,17 +266,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selAde(Player type) {
-        primaryNotice(Language.getInstance().get(88));
+        primaryNotice(Language.get().get(88));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.ADE;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_ADE);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_ADE);
                 preventCharacterSelection();
             }
         }
@@ -286,7 +285,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.ADE;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -297,17 +296,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selRav(Player type) {
-        primaryNotice(Language.getInstance().get(89));
+        primaryNotice(Language.get().get(89));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.RAVAGE;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_RAVAGE);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_RAVAGE);
                 preventCharacterSelection();
             }
         }
@@ -317,7 +316,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.RAVAGE;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -328,17 +327,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selJon(Player type) {
-        primaryNotice(Language.getInstance().get(90));
+        primaryNotice(Language.get().get(90));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.JONAH;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_JOHN);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_JOHN);
                 preventCharacterSelection();
             }
         }
@@ -348,7 +347,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.JONAH;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -359,17 +358,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selAdam(Player type) {
-        primaryNotice(Language.getInstance().get(91));
+        primaryNotice(Language.get().get(91));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.ADAM;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_ADAM);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_ADAM);
                 preventCharacterSelection();
             }
         }
@@ -379,7 +378,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.NOVA_ADAM;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -390,17 +389,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selNOVAAdam(Player type) {
-        primaryNotice(Language.getInstance().get(92));
+        primaryNotice(Language.get().get(92));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.NOVA_ADAM;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_NOVA_ADAM);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_NOVA_ADAM);
                 preventCharacterSelection();
             }
         }
@@ -410,7 +409,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.NOVA_ADAM;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -421,17 +420,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selAza(Player type) {
-        primaryNotice(Language.getInstance().get(93));
+        primaryNotice(Language.get().get(93));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.AZARIA;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_AZARIA);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_AZARIA);
                 preventCharacterSelection();
             }
         }
@@ -441,7 +440,7 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.AZARIA;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -452,17 +451,17 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
      */
     public void selSorr(Player type) {
-        primaryNotice(Language.getInstance().get(94));
+        primaryNotice(Language.get().get(94));
         if (type == Player.CHARACTER) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.SORROWE;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_SORROWE);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_SORROWE);
                 preventCharacterSelection();
             }
         }
@@ -471,7 +470,8 @@ public abstract class CharacterSelection extends Mode {
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.getInstance().prepareO(opponentEnum);
+            opponentEnum = CharacterEnum.SORROWE;
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -488,11 +488,11 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.THING;
-            Characters.getInstance().prepare(characterEnum);
+            Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.getInstance().getCharacter().getDescSmall();
-            if (NetworkManager.getInstance().isOnline()) {
-                NetworkManager.getInstance().send(NetworkConstants.SEL_THING);
+            charDesc = Characters.get().getCharacter().getDescSmall();
+            if (NetworkManager.get().isOnline()) {
+                NetworkManager.get().send(NetworkConstants.SEL_THING);
                 preventCharacterSelection();
             }
         }
@@ -502,16 +502,14 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
-        }
-
-        if (type == Player.BOSS && selectedOpponent == false) // when selecting opponent as boss
+        } else if (type == Player.BOSS && selectedOpponent == false) // when selecting opponent as boss
         {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
-            Characters.getInstance().prepareO(opponentEnum);
+            Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -544,7 +542,7 @@ public abstract class CharacterSelection extends Mode {
                         e.printStackTrace(System.err);
                     }
                 }
-                while (ScndGenLegends.getInstance().getSubMode() == SubMode.MAIN_MENU);
+                while (ScndGenLegends.get().getSubMode() == SubMode.MAIN_MENU);
                 animatorThreadRunning = false;
             }
         }.start();

@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.ui.Event;
@@ -103,7 +102,7 @@ public class RenderStoryMenu extends StoryMenu {
             }
 
             public void onBackCancel() {
-                ScndGenLegends.getInstance().loadMode(ModeEnum.MAIN_MENU);
+                ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
             }
 
             @Override
@@ -233,7 +232,7 @@ public class RenderStoryMenu extends StoryMenu {
         this.hoveredScene = hoveredScene;
     }
 
-    public static synchronized RenderStoryMenu getInstance() {
+    public static synchronized RenderStoryMenu get() {
         if (instance == null)
             instance = new RenderStoryMenu();
         return instance;
@@ -242,68 +241,53 @@ public class RenderStoryMenu extends StoryMenu {
     @Override
     public void render(GraphicsContext gc, final double w, final double h) {
         loadAssets();
-        if (loadingNow) {
-            gc.setFill(Color.BLACK);
-            gc.drawImage(storyPrev, charXcap + x, charYcap);
-            gc.setGlobalAlpha((0.7f));
-            gc.fillRect(0, 0, 852, 480);
-            gc.setGlobalAlpha((1.0f));
-            gc.setGlobalAlpha((0.5f));
-            gc.fillRect(200, 0, 452, 480);
-            gc.setGlobalAlpha((1.0f));
-            gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
-            gc.setFill(Color.WHITE);
-        } else if (ScndGenLegends.getInstance().getSubMode() != SubMode.LAN_CLIENT) {
-            gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, 852, 480);
-            gc.drawImage(storyPrev, charXcap + x, charYcap);
-            gc.setGlobalAlpha((0.7f));
-            gc.fillRect(0, 0, 852, 480);
-            gc.setGlobalAlpha((0.5f));
-            gc.fillRect(200, 0, 452, 480);
-            gc.setGlobalAlpha((1.0f));
-            for (int row = 0; row < rows; row++) {
-                for (int column = 0; column < columns; column++) {
-                    int computedPosition = (row * columns) + column;
-                    if (computedPosition >= unlockedStage.length) continue;
-                    UiItem currentEl = uiElements.get(computedPosition);
-                    drawImage(gc, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
-                    if (!currentEl.isHovered()) continue;
-                    gc.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
-                    if (!unlockedStage[hoveredScene]) continue;
-                    if (opacity < 0.95f)
-                        opacity += 0.05f;
-                    gc.setGlobalAlpha((opacity));
-                    gc.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
-                    gc.setGlobalAlpha((1.0f));
-                }
-                gc.setFill(Color.WHITE);
-                gc.setFont(header);
-                gc.fillText(Language.getInstance().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(307), gc.getFont()) / 2), 80);
-                gc.setFont(normal);
-                gc.fillText(Language.getInstance().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(368), gc.getFont()) / 2), 380);
-                showstoryName(hoveredScene);
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, 852, 480);
+        gc.drawImage(storyPrev, charXcap + x, charYcap);
+        gc.setGlobalAlpha((0.7f));
+        gc.fillRect(0, 0, 852, 480);
+        gc.setGlobalAlpha((0.5f));
+        gc.fillRect(200, 0, 452, 480);
+        gc.setGlobalAlpha((1.0f));
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                int computedPosition = (row * columns) + column;
+                if (computedPosition >= unlockedStage.length) continue;
+                UiItem currentEl = uiElements.get(computedPosition);
+                drawImage(gc, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
+                if (!currentEl.isHovered()) continue;
+                gc.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                if (!unlockedStage[hoveredScene]) continue;
+                if (opacity < 0.95f)
+                    opacity += 0.05f;
+                gc.setGlobalAlpha((opacity));
+                gc.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                gc.setGlobalAlpha((1.0f));
             }
-            Overlay.getInstance().overlay(gc, x, y);
+            gc.setFill(Color.WHITE);
+            gc.setFont(header);
+            gc.fillText(Language.get().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(307), gc.getFont()) / 2), 80);
+            gc.setFont(normal);
+            gc.fillText(Language.get().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(368), gc.getFont()) / 2), 380);
+            showstoryName(hoveredScene);
         }
+        Overlay.get().overlay(gc, x, y);
     }
 
     public void selectScene() {
         if (validIndex(hoveredScene)) {
-            StoryMode.getInstance().startStoryMode(hoveredScene);
-            AudioPlayback menuSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, false);
-            menuSound.play();
+            StoryMode.get().startStoryMode(hoveredScene);
+            new AudioPlayback("audio/menu-select.oga", AudioType.SOUND, false).play();
         } else {
-            AudioPlayback errorSound = new AudioPlayback("audio/menu-select.ogg", AudioType.SOUND, false);
-            errorSound.play();
+            new AudioPlayback("audio/menu-select.oga", AudioType.SOUND, false).play();
         }
     }
 
     public void loadAssetsIml() {
-        header = loadFont(LoginScreen.extraTxtSize);
-        normal = loadFont(LoginScreen.normalTxtSize);
+        header = loadFont(LoginScreen.EXTRA_LARGE_TXT_SIZE);
+        normal = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         Loader loader = new Loader();
-        RenderStageSelect.getInstance().setStageSelected(false);
+        RenderStageSelect.get().setStageSelected(false);
         try {
             for (int i = 0; i < numberOfScenes; i++) {
                 unlockedScene[i] = loader.load("images/story/locked/" + i + ".png");

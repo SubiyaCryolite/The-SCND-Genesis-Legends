@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ public class RenderStageSelect extends StageSelect {
             }
 
             public void onBackCancel() {
-                ScndGenLegends.getInstance().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
         };
 
@@ -251,7 +251,7 @@ public class RenderStageSelect extends StageSelect {
         }
     }
 
-    public static synchronized RenderStageSelect getInstance() {
+    public static synchronized RenderStageSelect get() {
         if (instance == null)
             instance = new RenderStageSelect();
         return instance;
@@ -260,7 +260,7 @@ public class RenderStageSelect extends StageSelect {
     @Override
     public void loadAssetsIml() {
         loader = new Loader();
-        normalFont = loadFont(LoginScreen.normalTxtSize);
+        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         loadCaps();
         setActiveItem(uiElements.get(0));
         loadAssets = false;
@@ -288,14 +288,14 @@ public class RenderStageSelect extends StageSelect {
             gc.setGlobalAlpha((1.0f));
             gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             gc.setFill(Color.WHITE);
-            gc.fillText(Language.getInstance().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.getInstance().get(165), gc.getFont())) / 2, 200);
-        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
+            gc.fillText(Language.get().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(165), gc.getFont())) / 2, 200);
+        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
             gc.setFill(Color.WHITE);
-            gc.fillText(">> " + Language.getInstance().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.getInstance().get(166) + " <<", gc.getFont())) / 2, 300);
-        } else if (ScndGenLegends.getInstance().getSubMode() == SubMode.LAN_CLIENT == false) {
+            gc.fillText(">> " + Language.get().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.get().get(166) + " <<", gc.getFont())) / 2, 300);
+        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT == false) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
@@ -317,7 +317,7 @@ public class RenderStageSelect extends StageSelect {
                 }
             }
         }
-        Overlay.getInstance().overlay(gc, x, y);
+        Overlay.get().overlay(gc, x, y);
     }
 
     private void loadCaps() {

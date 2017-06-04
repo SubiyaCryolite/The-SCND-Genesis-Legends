@@ -38,7 +38,7 @@ public abstract class Mode implements UiScreen {
      * @param message - the message to display
      */
     public final void primaryNotice(String message) {
-        Overlay.getInstance().primaryNotice(message);
+        Overlay.get().primaryNotice(message);
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class Mode implements UiScreen {
      * @param message - the message to display
      */
     public final void secondaryNotice(String message) {
-        Overlay.getInstance().secondaryNotice(message);
+        Overlay.get().secondaryNotice(message);
     }
 
     public void onLeft() {
@@ -181,8 +181,8 @@ public abstract class Mode implements UiScreen {
         double bottomRightX = upperLeftX + img.getWidth();
         double bottomRightY = upperLeftY + img.getHeight();
         /////////////////////////////////////
-        double mouseActualX = ScndGenLegends.getInstance().getMouseX();
-        double mouseActualY = ScndGenLegends.getInstance().getMouseY();
+        double mouseActualX = ScndGenLegends.get().getMouseX();
+        double mouseActualY = ScndGenLegends.get().getMouseY();
         boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
         boolean check2 = topLeftY <= mouseActualY && mouseActualY <= bottomRightY;
         if (check1 && check2) {
@@ -198,8 +198,8 @@ public abstract class Mode implements UiScreen {
         double bottomRightX = upperLeftX + Toolkit.getToolkit().getFontLoader().computeStringWidth(text, gc.getFont());
         double bottomRightY = upperLeftY - Toolkit.getToolkit().getFontLoader().getFontMetrics(gc.getFont()).getLineHeight();
         /////////////////////////////////////
-        double mouseActualX = ScndGenLegends.getInstance().getMouseX();
-        double mouseActualY = ScndGenLegends.getInstance().getMouseY();
+        double mouseActualX = ScndGenLegends.get().getMouseX();
+        double mouseActualY = ScndGenLegends.get().getMouseY();
         boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
         boolean check2 = topLeftY >= mouseActualY && mouseActualY >= bottomRightY;
         if (check1 && check2) {

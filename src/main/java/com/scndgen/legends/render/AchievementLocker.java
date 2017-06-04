@@ -1,9 +1,9 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana (http://www.scndgen.sf.net).
+ a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
 
- The SCND Genesis: Legends  © 2011 Ifunga Ndana.
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.Overlay;
-import com.scndgen.legends.state.GameState;
+import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -64,7 +64,7 @@ public class AchievementLocker {
     }
 
     public float getStoryProgression() {
-        return GameState.getInstance().getLogin().getLastStoryScene() / StoryMode.getInstance().max;
+        return State.get().getLogin().getLastStoryScene() / StoryMode.get().totalScenes;
     }
 
     public int getAchUnlockedPerc() {
@@ -82,9 +82,9 @@ public class AchievementLocker {
      */
     public void drawStats(GraphicsContext screen, double w, double h) {
         try {
-            denom = GameState.getInstance().getLogin().getWins() + GameState.getInstance().getLogin().getLosses();
-            gWin = 200 * (GameState.getInstance().getLogin().getWins() / denom);
-            gLoss = 200 * (GameState.getInstance().getLogin().getLosses() / denom);
+            denom = State.get().getLogin().getWins() + State.get().getLogin().getLosses();
+            gWin = 200 * (State.get().getLogin().getWins() / denom);
+            gLoss = 200 * (State.get().getLogin().getLosses() / denom);
             progression = 200 * getStoryProgression();
         } catch (Exception e) {
             gWin = 0;
@@ -119,9 +119,9 @@ public class AchievementLocker {
         //playStory progress
         screen.setFill(Color.WHITE);
 
-        screen.fillText(Language.getInstance().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
+        screen.fillText(Language.get().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
         screen.fillText(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
-        screen.fillText(Language.getInstance().get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
+        screen.fillText(Language.get().get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
         screen.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Integer.parseInt("" + Math.round(progression)), spacer);
         screen.fillRect(offset + 400, (48 - 3) + (spacer * 6) + 2, getGameCompletion() * 2, spacer);
 
@@ -130,7 +130,7 @@ public class AchievementLocker {
         screen.fillText(stat13, offset, (48 - 3) + (spacer * 8));
         screen.fillText(stat17, offset, (48 - 3) + (spacer * 9));
 
-        screen.fillText(Language.getInstance().get(131) + " >>>", offset, 430);
+        screen.fillText(Language.get().get(131) + " >>>", offset, 430);
     }
 
     /**
@@ -146,27 +146,27 @@ public class AchievementLocker {
         gc.setGlobalAlpha((1.0f));
         gc.setFill(Color.WHITE);
 
-        gc.fillText(numberOfTriggeredAchievements + " " + Language.getInstance().get(121), 530, 100);
-        gc.fillText(getAchUnlockedPerc() + " % " + Language.getInstance().get(132), 530, 114);
-        gc.fillText(Language.getInstance().get(130) + " " + getGameCompletion() + " %", 530, 128);
-        gc.fillText(Language.getInstance().get(131) + " >>>", 530, 470);
+        gc.fillText(numberOfTriggeredAchievements + " " + Language.get().get(121), 530, 100);
+        gc.fillText(getAchUnlockedPerc() + " % " + Language.get().get(132), 530, 114);
+        gc.fillText(Language.get().get(130) + " " + getGameCompletion() + " %", 530, 128);
+        gc.fillText(Language.get().get(131) + " >>>", 530, 470);
 
         //even
         for (Achievements achievement : Achievements.values()) {
             if (isAchievementActivated[achievement.id()]) {
                 gc.drawImage(achCap[achievement.id()], offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
                 gc.setFont(font1);
-                gc.fillText((achievement.id() + 1) + ":: " + Achievement.getInstance().achievementName(achievement) + " >>", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                gc.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement) + " >>", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
                 gc.setFont(font2);
-                gc.fillText(Achievement.getInstance().achievementDescription(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                gc.fillText(Language.getInstance().get(133) + " " + GameState.getInstance().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                gc.fillText(Achievement.get().achievementDescription(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
+                gc.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
             } else {
                 gc.drawImage(no, offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
                 gc.setFont(font1);
-                gc.fillText((achievement.id() + 1) + ":: " + Achievement.getInstance().achievementName(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                gc.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
                 gc.setFont(font2);
                 gc.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                gc.fillText(Language.getInstance().get(133) + " " + GameState.getInstance().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                gc.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
             }
         }
     }
@@ -223,27 +223,27 @@ public class AchievementLocker {
         numberOfTriggeredAchievements = 0.0f;
         isAchievementActivated = new boolean[Achievements.values().length];
         for (Achievements achievement : Achievements.values()) {
-            if (GameState.getInstance().getLogin().getAchievementTriggers(achievement) > 0) {
+            if (State.get().getLogin().getAchievementTriggers(achievement) > 0) {
                 isAchievementActivated[achievement.id()] = true;
                 numberOfTriggeredAchievements = numberOfTriggeredAchievements + 1.0f;
             }
         }
         percentageOfUnlockedAchievements = (int) ((numberOfTriggeredAchievements / (float) isAchievementActivated.length) * 100);
-        stat1 = Language.getInstance().get(118) + ": " + shortVer(GameState.getInstance().getLogin().getUserName());
-        stat2 = Language.getInstance().get(119) + ": " + shortVer(GameState.getInstance().getLogin().getPoints() + "");
-        stat3 = Language.getInstance().get(120) + ": " + timeCal(GameState.getInstance().getLogin().getPlayTime());
-        stat4 = Language.getInstance().get(121) + ": " + GameState.getInstance().getLogin().getUnlockedAch();
-        stat5 = Language.getInstance().get(122) + ": " + GameState.getInstance().getLogin().getNumberOfTimesAchivementTriggered() + " time(s)";
-        stat6 = Language.getInstance().get(123) + ": " + GameState.getInstance().getLogin().getNumberOfMatches();
+        stat1 = Language.get().get(118) + ": " + shortVer(State.get().getLogin().getUserName());
+        stat2 = Language.get().get(119) + ": " + shortVer(State.get().getLogin().getPoints() + "");
+        stat3 = Language.get().get(120) + ": " + timeCal(State.get().getLogin().getPlayTime());
+        stat4 = Language.get().get(121) + ": " + State.get().getLogin().getUnlockedAch();
+        stat5 = Language.get().get(122) + ": " + State.get().getLogin().getNumberOfTimesAchivementTriggered() + " time(s)";
+        stat6 = Language.get().get(123) + ": " + State.get().getLogin().getNumberOfMatches();
         try {
-            stat7 = Language.getInstance().get(124) + ": " + GameState.getInstance().getLogin().getPoints() / GameState.getInstance().getLogin().getNumberOfMatches();
+            stat7 = Language.get().get(124) + ": " + State.get().getLogin().getPoints() / State.get().getLogin().getNumberOfMatches();
         } catch (ArithmeticException ae) {
-            stat7 = Language.getInstance().get(124) + ": 0";
+            stat7 = Language.get().get(124) + ": 0";
         }
-        stat15 = Language.getInstance().get(125) + ": " + GameState.getInstance().getLogin().getWins();
-        stat16 = Language.getInstance().get(126) + ": " + GameState.getInstance().getLogin().getLosses();
-        stat13 = Language.getInstance().get(127) + ": " + GameState.getInstance().getLogin().userAwesomeness();
-        stat17 = Language.getInstance().get(128) + ": " + GameState.getInstance().getLogin().mostPopularCharEnum() + " " + GameState.getInstance().getLogin().mostPopularCharPercentage() + " %";
+        stat15 = Language.get().get(125) + ": " + State.get().getLogin().getWins();
+        stat16 = Language.get().get(126) + ": " + State.get().getLogin().getLosses();
+        stat13 = Language.get().get(127) + ": " + State.get().getLogin().userAwesomeness();
+        stat17 = Language.get().get(128) + ": " + State.get().getLogin().mostPopularCharEnum() + " " + State.get().getLogin().mostPopularCharPercentage() + " %";
     }
 
     public Font getMyFont(float size) {
@@ -286,7 +286,7 @@ public class AchievementLocker {
     }
 
     public void onBackCancel() {
-        RenderMainMenu.getInstance().setOverlay(Overlay.PRIMARY_MENU);
+        RenderMainMenu.get().setOverlay(Overlay.PRIMARY_MENU);
     }
 
     public void keyPressed(KeyEvent keyEvent) {
