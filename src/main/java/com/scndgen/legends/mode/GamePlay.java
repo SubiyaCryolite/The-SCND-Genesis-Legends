@@ -30,11 +30,11 @@ import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Mode;
+import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -42,8 +42,6 @@ import javafx.scene.paint.Color;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 
@@ -84,7 +82,6 @@ public abstract class GamePlay extends Mode {
     protected boolean gameOver;
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
     protected int damageDoneToCharacter, damageDoneToOpponent;
-    protected int limitTop = 1000;
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
     protected int lifeBarShakeIterations = 2, lifeBarShakeInnerIterations = 4;
@@ -300,14 +297,14 @@ public abstract class GamePlay extends Mode {
     /**
      * assigns pic to array index
      */
-    public void setSprites(Player player, int oneA, int Magic) {
+    public void setSprites(Player player, int meleeSprite, int statusSprite) {
         if (player == Player.CHARACTER) {
-            charMeleeSpriteStatus = oneA;
-            charCelestiaSpriteStatus = Magic;
+            charMeleeSpriteStatus = meleeSprite;
+            charCelestiaSpriteStatus = statusSprite;
         }
         if (player == Player.OPPONENT) {
-            oppMeleeSpriteStatus = oneA;
-            oppCelestiaSpriteStatus = Magic;
+            oppMeleeSpriteStatus = meleeSprite;
+            oppCelestiaSpriteStatus = statusSprite;
         }
     }
 
@@ -331,32 +328,11 @@ public abstract class GamePlay extends Mode {
      * Attacks the opponent
      */
     public void attack() {
-        if (!characterAttacks.isEmpty()) {
-            if (ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                disableSelection();
-                prepareCharacterAttack();
-            } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT) {
-                //clear active combos
-                setSprites(Player.CHARACTER, 9, 11);
-                setSprites(Player.OPPONENT, 9, 11);
-                //broadcast hurtChar on net
-                attackStr = String.format("%s:%s:%s:%s:%s:", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX);
-                NetworkManager.get().send(attackStr);
-                //attack on local
-                disableSelection();
-                prepareCharacterAttack();
-            } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_HOST) {
-                //clear active combos
-                setSprites(Player.CHARACTER, 9, 11);
-                setSprites(Player.OPPONENT, 9, 11);
-                //broadcast hurtChar on net
-                attackStr = String.format("%s:%s:%s:%s:%s:", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX);
-                NetworkManager.get().send(attackStr);
-                //attack on local
-                disableSelection();
-                prepareCharacterAttack();
-                setCharacterAtbValue(0);
-            }
+        if (characterAttacks.isEmpty()) return;
+        disableSelection();
+        prepareCharacterAttack();
+        if (NetworkManager.get().isOnline()) {
+            NetworkManager.get().send(attackStr = String.format("%s:%s:%s:%s:%s", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX));
         }
     }
 
@@ -376,15 +352,14 @@ public abstract class GamePlay extends Mode {
         opponentUiLoop = 0;
     }
 
-    private float maxAtb = 290f;
+    private final float maxAtb = 290f;
     private long timerDelta;
-    public int time, count2;
+    public int timeLimit, count2;
     public boolean playingCutscene;
     private boolean characterAtb = true, opponentAtb = true;
     public boolean isRunning = false;
     public String timeStr;//, scene;
     public int time1 = 10, time2 = 10, time3 = 10;
-    private boolean newMatch;
     private float characterAtbValue;
     private float opponentAtbValue;
     private float secondCount = 1000.0f;
@@ -497,7 +472,7 @@ public abstract class GamePlay extends Mode {
                     currentOpponentQueLoop++;
                     opponentUiLoop = 0;
                     if (opponentAttacks.isEmpty()) {
-                        revertToDefaultSprites(Player.OPPONENT);
+                        revertToDefaultSprites();
                         resumeOpponentAtb();
                         triggerOpponentAttack = false;
                     }
@@ -552,7 +527,7 @@ public abstract class GamePlay extends Mode {
                     currentCharacterQueLoop++;
                     characterUiLoop = 0;
                     if (characterAttacks.isEmpty()) {
-                        revertToDefaultSprites(Player.CHARACTER);
+                        revertToDefaultSprites();
                         resumeCharacterAtb();
                         triggerCharacterAttack = false;
                     }
@@ -629,15 +604,15 @@ public abstract class GamePlay extends Mode {
             if (opponentAtbValue <= maxAtb && opponentAtb && !playingCutscene) {
                 opponentAtbValue += Characters.get().getOppRecoverySpeed();
             }
-            if (time <= INFINITE_TIME && !playingCutscene) {
+            if (timeLimit <= INFINITE_TIME && !playingCutscene) {
                 if (secondCount < 1000) //continue till we make a second
                 {
                     secondCount += 16.67f;
                 } else {
                     try {
-                        if (time < INFINITE_TIME && time > 0) {
-                            time -= 1;
-                            timeStr = "" + time;
+                        if (timeLimit < INFINITE_TIME && timeLimit > 0) {
+                            timeLimit -= 1;
+                            timeStr = "" + timeLimit;
                             secondCount = 0.0f;
                             switch (timeStr.length()) {
                                 case 1:
@@ -770,6 +745,7 @@ public abstract class GamePlay extends Mode {
     }
 
     public void newInstance() {
+        gameOver = false;
         setCharacterAtbValue(0);
         setOpponentAtbValue(0);
         setFuryLevel(0);
@@ -777,6 +753,10 @@ public abstract class GamePlay extends Mode {
         opponentAttacks.clear();
         triggerCharacterAttack = false;
         triggerOpponentAttack = false;
+        currentCharacterQueLoop = 0;
+        currentOpponentQueLoop = 0;
+        revertToDefaultSprites();
+        revertToDefaultSprites();
         opponentAiTimeout = 0;
         unlockedAchievementInstance = 0;
         achievementName = new String[0];
@@ -802,23 +782,19 @@ public abstract class GamePlay extends Mode {
         Achievement.get().newInstance();
         if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
             playingCutscene = true;
-            time = StoryMode.get().timeLimit;
-        } //if LAN, client uses hosts time preset
-        else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT) {
-            time = NetworkManager.get().hostTimeLimit;
+            timeLimit = StoryMode.get().timeLimit;
+        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT) {
+            timeLimit = NetworkManager.get().hostTimeLimit;
         } else {
-            time = State.get().getLogin().getTimeLimit();
+            timeLimit = State.get().getLogin().getTimeLimit();
         }
         recordPlayTime();
-        characterAtbValue = 00;
-        opponentAtbValue = 00;
-        maxAtb = 290;
-        gameOver = false;
-        newMatch = true;
-
-        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE == false) {
+        if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE) {
             musNotice();
-            io.github.subiyacryolite.enginev1.Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
+            Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
+        } else {
+            Overlay.get().primaryNotice("");
+            Overlay.get().secondaryNotice("");
         }
         count2 = 0;
     }
@@ -872,7 +848,7 @@ public abstract class GamePlay extends Mode {
      */
     public void updateMatchStatus() {
         if (!gameOver) {
-            if (opponentHp < 0 || characterHp < 0 || (time <= 0 && State.get().getLogin().isTimeLimited())) {
+            if (opponentHp < 0 || characterHp < 0 || (timeLimit <= 0 && State.get().getLogin().isTimeLimited())) {
                 if (opponentHp / opponentMaximumHp > characterHp / characterMaximumHp || opponentHp / opponentMaximumHp < characterHp / characterMaximumHp) {
                     gameOver();
                 }
@@ -1040,23 +1016,17 @@ public abstract class GamePlay extends Mode {
     /**
      * Increment limit
      */
-    private void incLImit(int ThisMuch) {
-        final int inc = ThisMuch;
+    private void incrementFuryBarLevel(final int increment) {
         new Thread() {
-            //add one, make sure we dont go over 2000
-
-            @SuppressWarnings("static-access")
             @Override
             public void run() {
-                int icrement = inc;
-                setName("Fury bar increment lastStoryScene");
-                for (int o = 0; o < icrement; o++) {
-                    if (furyLevel < limitTop) {
+                for (int o = 0; o < increment; o++) {
+                    if (furyLevel < FURY_BAR_MAX) {
                         try {
-                            furyLevel = furyLevel + 1;
-                            this.sleep(15);
+                            furyLevel += 1;
+                            this.sleep(16);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(RenderGamePlay.class.getName()).log(Level.SEVERE, null, ex);
+                            ex.printStackTrace(System.err);
                         }
                     }
                 }
@@ -1081,6 +1051,7 @@ public abstract class GamePlay extends Mode {
      */
     public void limitBreak(Player player) {
         if (limitRunning) return;//one at a time folks :)
+        if (runningFury == null) return;
         switch (runningFury) {
             case CHARACTER:
                 if (!isCharacterAtbFull() || !isFuryBarFull()) return;
@@ -1117,7 +1088,7 @@ public abstract class GamePlay extends Mode {
         if (forWho == Player.CHARACTER) //Attack from player
         {
             damageDoneToCharacter = damageDone;
-            incLImit(damageDoneToCharacter);
+            incrementFuryBarLevel(damageDoneToCharacter);
             guiScreenChaos(damageDone * getDamageMultiplierOpp(), Player.OPPONENT);
             for (int m = 0; m < damageDoneToCharacter; m++) {
                 if (characterHp >= 0) {
@@ -1133,7 +1104,7 @@ public abstract class GamePlay extends Mode {
         if (forWho == Player.OPPONENT || forWho == Player.BOSS) //Attack from CPU pponent 1
         {
             damageDoneToOpponent = damageDone;
-            incLImit(damageDoneToOpponent);
+            incrementFuryBarLevel(damageDoneToOpponent);
             guiScreenChaos(damageDone * getDamageMultiplierChar(), Player.CHARACTER);
             for (int m = 0; m < damageDoneToOpponent; m++) {
                 if (opponentHp >= 0) {
@@ -1347,14 +1318,11 @@ public abstract class GamePlay extends Mode {
     /**
      * Animate attacks in graphics context
      *
-     * @param thischar - active characterEnum
      */
-    public void revertToDefaultSprites(Player thischar) {
-        if (thischar == Player.CHARACTER || thischar == Player.OPPONENT) {
-            //sprites back to normal poses
-            setSprites(Player.CHARACTER, 9, 11);
-            setSprites(Player.OPPONENT, 9, 11);
-        }
+    public void revertToDefaultSprites() {
+        setSprites(Player.OPPONENT, 9, 11);
+        setSprites(Player.CHARACTER, 9, 11);
+        setSprites(Player.BOSS, 9, 11);
     }
 
     /**
@@ -1586,16 +1554,13 @@ public abstract class GamePlay extends Mode {
     }
 
     private void incrementWinsOrLosses() {
-        if (newMatch) {
-            newMatch = false;
-            State.get().getLogin().setNumberOfMatches(State.get().getLogin().getNumberOfMatches() + 1);
-            if (getCharacterHp() < getOpponentHp()) {
-                State.get().getLogin().setLosses(State.get().getLogin().getLosses() + 1);
-                State.get().getLogin().setConsecutiveWins(0);
-            } else {
-                State.get().getLogin().setWins(State.get().getLogin().getWins() + 1);
-                State.get().getLogin().setConsecutiveWins(State.get().getLogin().getConsecutiveWins() + 1);
-            }
+        State.get().getLogin().setNumberOfMatches(State.get().getLogin().getNumberOfMatches() + 1);
+        if (getCharacterHp() < getOpponentHp()) {
+            State.get().getLogin().setLosses(State.get().getLogin().getLosses() + 1);
+            State.get().getLogin().setConsecutiveWins(0);
+        } else {
+            State.get().getLogin().setWins(State.get().getLogin().getWins() + 1);
+            State.get().getLogin().setConsecutiveWins(State.get().getLogin().getConsecutiveWins() + 1);
         }
     }
 

@@ -25,7 +25,7 @@ import com.scndgen.legends.Achievement;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.Achievements;
-import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
@@ -286,7 +286,7 @@ public class AchievementLocker {
     }
 
     public void onBackCancel() {
-        RenderMainMenu.get().setOverlay(Overlay.PRIMARY_MENU);
+        RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }
 
     public void keyPressed(KeyEvent keyEvent) {

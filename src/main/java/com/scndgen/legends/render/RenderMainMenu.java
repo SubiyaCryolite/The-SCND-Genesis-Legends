@@ -5,6 +5,7 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.constants.GeneralConstants;
 import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.MainMenu;
@@ -89,8 +90,8 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() != com.scndgen.legends.enums.Overlay.TUTORIAL) {
-                    setOverlay(com.scndgen.legends.enums.Overlay.TUTORIAL);
+                if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
+                    setMainMenuOverlay(MainMenuOverlay.TUTORIAL);
                     tutorial.beginTutorial();
                 } else {
                     tutorial.onAccept();
@@ -99,19 +100,19 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() != com.scndgen.legends.enums.Overlay.TUTORIAL) return;
+                if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) return;
                 tutorial.onBackCancel();
             }
 
             @Override
             public void onLeft() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.TUTORIAL) return;
+                if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) return;
                 tutorial.onLeft();
             }
 
             @Override
             public void onRight() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.TUTORIAL) return;
+                if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) return;
                 tutorial.onRight();
             }
 
@@ -251,21 +252,21 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
+                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onAccept();
                 else
-                    setOverlay(com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER);
+                    setMainMenuOverlay(MainMenuOverlay.ACHIEVEMENT_LOCKER);
             }
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
+                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onBackCancel();
             }
 
             @Override
             public void onDown() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
+                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onDown();
                 else {
                     setActiveItem(source.getDown());
@@ -274,7 +275,7 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onUp() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER)
+                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
                     achievementLocker.onUp();
                 else {
                     setActiveItem(source.getUp());
@@ -295,21 +296,21 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
+                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
                     achievementLocker.onAccept();
                 else
-                    setOverlay(com.scndgen.legends.enums.Overlay.STATISTICS);
+                    setMainMenuOverlay(MainMenuOverlay.STATISTICS);
             }
 
             @Override
             public void onBackCancel() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
+                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
                     achievementLocker.onBackCancel();
             }
 
             @Override
             public void onDown() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
+                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
                     achievementLocker.onDown();
                 else {
                     setActiveItem(source.getDown());
@@ -318,7 +319,7 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onUp() {
-                if (getOverlay() == com.scndgen.legends.enums.Overlay.STATISTICS)
+                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
                     achievementLocker.onUp();
                 else {
                     setActiveItem(source.getUp());
@@ -541,7 +542,7 @@ public class RenderMainMenu extends MainMenu {
         gc.drawImage(menuLogo, 0, 0);
         gc.setFill(Color.WHITE);
         gc.setFont(menuFont);
-        if (overlay == com.scndgen.legends.enums.Overlay.PRIMARY_MENU) {
+        if (mainMenuOverlay == MainMenuOverlay.PRIMARY_MENU) {
             menuItemIndex = 0;
             ///////////////////////////////////////////
             fillText(gc, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
@@ -575,13 +576,13 @@ public class RenderMainMenu extends MainMenu {
         gc.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
         gc.setGlobalAlpha((1.0f));
         gc.setFill(Color.WHITE);
-        if (overlay == com.scndgen.legends.enums.Overlay.STATISTICS) {
+        if (mainMenuOverlay == MainMenuOverlay.STATISTICS) {
             achievementLocker.drawStats(gc, w, h);
         }
-        if (overlay == com.scndgen.legends.enums.Overlay.ACHIEVEMENT_LOCKER) {
+        if (mainMenuOverlay == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
             achievementLocker.drawAch(gc, w, h);
         }
-        if (overlay == com.scndgen.legends.enums.Overlay.TUTORIAL) {
+        if (mainMenuOverlay == MainMenuOverlay.TUTORIAL) {
             tutorial.draw(gc, w, h);
         }
 

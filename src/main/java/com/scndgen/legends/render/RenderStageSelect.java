@@ -105,7 +105,8 @@ public class RenderStageSelect extends StageSelect {
             }
 
             public void onAccept() {
-                selectStage(hoveredStage);
+                if (NetworkManager.get().isOffline() || NetworkManager.get().isServer())
+                    selectStage(hoveredStage);
             }
 
             public void onBackCancel() {
@@ -113,8 +114,8 @@ public class RenderStageSelect extends StageSelect {
                     ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
                 else {
                     if (NetworkManager.get().isServer()) {
-                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT);
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT_CHANGE_SELECTION);
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, false);
                     }
                 }
             }

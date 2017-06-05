@@ -29,7 +29,7 @@ public class NetworkManager {
 
     public static final int PORT = 3074;
     public static final int SERVER_LATENCY = 16; //ms
-    public static final int TIMEOUT = 4000; //ms
+    public static final int TIMEOUT = 40000; //ms
     private static NetworkManager instance;
     public int hostTimeLimit;
     private NetworkServer server;
@@ -66,7 +66,7 @@ public class NetworkManager {
     private void closeTheServer() {
         server.close();
         server = null;
-        backToMainMenu("Closed server");
+        backToMainMenu();
     }
 
     /**
@@ -75,14 +75,13 @@ public class NetworkManager {
     private void closeTheClient() {
         client.close();
         client = null;
-        backToMainMenu("Closed client");
+        backToMainMenu();
     }
 
-    private void backToMainMenu(String x) {
+    private void backToMainMenu() {
         setConnectedToPartner(false);
         ScndGenLegends.get().setSubMode(SubMode.MAIN_MENU);
         ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
-        System.out.println(x);
     }
 
     public boolean isServer() {

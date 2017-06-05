@@ -26,12 +26,11 @@ import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
-import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
+import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
@@ -596,7 +595,7 @@ public class RenderGamePlay extends GamePlay {
 
     private void drawTimer(GraphicsContext gc) {
         gc.drawImage(counterPane, paneCord, 0);
-        if (time > 180) {
+        if (timeLimit > 180) {
             gc.drawImage(numberPix[11], (int) (386), 0);
         } else {
             if (times.length > time1)
@@ -873,6 +872,7 @@ public class RenderGamePlay extends GamePlay {
         playerDamageYCoord = 400;
         loadedUpdaters = true;
         setActiveItem(attackOne);
+        //======================
     }
 
     /**
@@ -1096,7 +1096,7 @@ public class RenderGamePlay extends GamePlay {
                     AudioPlayback sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
-                    characterAttacks.push(activeAttack); // count initially negative 1, add one to get to index 0
+                    characterAttacks.add(activeAttack); // count initially negative 1, add one to get to index 0
                     checkStatus();
                     showBattleMessage("Queued up " + getAttack(activeAttack));
                 } else {
@@ -1108,17 +1108,17 @@ public class RenderGamePlay extends GamePlay {
                 updatePlayerProfile();
                 switch (ScndGenLegends.get().getSubMode()) {
                     case SINGLE_PLAYER:
-                    case LAN_CLIENT:
-                    case LAN_HOST:
                         closingThread(true);
                         break;
                     case STORY_MODE:
                         StoryMode.get().onAccept();
                         break;
-                    default:
-                        closingThread(false);
+                    case LAN_HOST:
+                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT_NEW_MATCH);
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, true);
                         break;
                 }
+
             }
         }
 

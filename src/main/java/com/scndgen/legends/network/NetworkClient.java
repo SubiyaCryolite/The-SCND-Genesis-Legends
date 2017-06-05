@@ -27,6 +27,7 @@ public class NetworkClient extends NetworkBase implements Runnable {
         serverIpAddress = ip;
         sendData(NetworkConstants.CONNECT_TO_HOST);
         thread = new Thread(this);
+        thread.setDaemon(false);
         thread.start();
     }
 
@@ -54,6 +55,9 @@ public class NetworkClient extends NetworkBase implements Runnable {
         } catch (Exception ex) {
             FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
             NetworkManager.get().close();
+        }
+        finally {
+            System.out.println("Closed the Client");
         }
     }
 

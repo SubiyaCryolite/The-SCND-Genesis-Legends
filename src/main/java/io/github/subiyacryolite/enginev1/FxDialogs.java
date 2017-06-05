@@ -23,7 +23,6 @@ public class FxDialogs {
             alert.setHeaderText(header);
             alert.setContentText(content);
             alert.initModality(Modality.APPLICATION_MODAL);
-            // Set expandable Exception into the dialog pane.
             alert.showAndWait();
         });
     }

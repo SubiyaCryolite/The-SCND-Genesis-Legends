@@ -166,8 +166,8 @@
   "164": "Random Stage!!!",
   "165": "LOADING",
   "166": "Please wait while your opponent selects a stage",
-  "167": "Your machines name is:",
-  "168": "your partner has to enter you're user to fight you",
+  "167": "Your Machines Name is:",
+  "168": "your partner has to enter your Machine Name or Machine IP Address to fight you",
   "169": "",
   "170": "Screen-shot taken",
   "171": "Yes",
@@ -448,5 +448,8 @@
   "446": "So arrogant. I won’t let you leave this place alive",
   "447": "I see that you know him. He'll probably need your help",
   "448": "I didnt expect this much resistance",
-  "449": "Oh well, nothing a little mass murder cant fix"
+  "449": "Oh well, nothing a little mass murder cant fix",
+  "450": "Connect to host",
+  "451": "Please enter the hosts Machine Name or IP address",
+  "452": "Your Machines IP Address is:"
 }

@@ -25,7 +25,7 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.render.RenderMainMenu;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
@@ -844,7 +844,7 @@ public class Tutorial implements Runnable {
         bgSound.stop();
         thread.stop();
         RenderMainMenu.get().onEnterMode();
-        RenderMainMenu.get().setOverlay(Overlay.PRIMARY_MENU);
+        RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }
 
     public void onAccept() {

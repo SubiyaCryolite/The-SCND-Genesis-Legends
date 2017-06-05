@@ -23,8 +23,8 @@ import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
 public class NetworkServer extends NetworkBase implements Runnable {
 
     private Thread thread;
-    private boolean running;
     private String hostName, hostAddress;
+    private boolean running;
     private final LinkedList<String> messageQue = new LinkedList<>();
 
     /**
@@ -33,6 +33,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
     public NetworkServer() {
         initServerDetails();
         thread = new Thread(this);
+        thread.setDaemon(false);
         thread.start();
     }
 
@@ -72,21 +73,11 @@ public class NetworkServer extends NetworkBase implements Runnable {
         });
     }
 
-    /**
-     * Close the NetworkServer
-     */
-    public void close() {
-        try {
-            running = false;
-        } catch (Exception ex) {
-            ex.printStackTrace(System.err);
-        }
-    }
 
     @Override
     public void run() {
-        running = true;
         try {
+            running = true;
             System.out.printf("<Server> Started on %s.\n", InetAddress.getLocalHost());
             try (ServerSocket serverSocket = new ServerSocket(NetworkManager.PORT, 1); Socket socket = serverSocket.accept()) {
                 serverSocket.setSoTimeout(NetworkManager.TIMEOUT);
@@ -106,6 +97,8 @@ public class NetworkServer extends NetworkBase implements Runnable {
         } catch (Exception ex) {
             FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
             NetworkManager.get().close();
+        } finally {
+            System.out.println("Closed the server");
         }
     }
 
@@ -119,9 +112,15 @@ public class NetworkServer extends NetworkBase implements Runnable {
         messageQue.add(message);
     }
 
-    public String getHostName()
-    {return hostName;}
+    public String getHostName() {
+        return hostName;
+    }
 
-    public String getHostAddress()
-    {return hostAddress;}
+    public String getHostAddress() {
+        return hostAddress;
+    }
+
+    public void close() {
+        running = false;
+    }
 }

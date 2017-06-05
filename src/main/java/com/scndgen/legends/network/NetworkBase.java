@@ -37,8 +37,11 @@ public abstract class NetworkBase {
                 System.out.println("aquired time is " + NetworkManager.get().hostTimeLimit);
             } else {
                 switch (line) {
-                    case TO_CHARACTER_SELECT:
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                    case TO_CHARACTER_SELECT_CHANGE_SELECTION:
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, false);
+                        return;
+                    case TO_CHARACTER_SELECT_NEW_MATCH:
+                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, true);
                         return;
                     case CANCEL_CONNECTIVITY:
                         FxDialogs.message("Yikes", "Your opponent has terminated this network session", "Well, that sucks");

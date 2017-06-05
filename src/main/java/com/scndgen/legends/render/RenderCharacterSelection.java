@@ -98,7 +98,9 @@ public class RenderCharacterSelection extends CharacterSelection {
             }
 
             public void onAccept() {
-                if (!selectedCharacter || !selectedOpponent) {
+                boolean regularMode = NetworkManager.get().isOffline() && (!selectedCharacter || !selectedOpponent);
+                boolean onlineMode = NetworkManager.get().isOnline() && !selectedCharacter;
+                if (regularMode || onlineMode) {
                     switch (hoveredCharacter) {
                         case SUBIYA:
                             selSubiya(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
@@ -141,7 +143,9 @@ public class RenderCharacterSelection extends CharacterSelection {
                     //if both character and opponent selected move on to stage select after second accept
                     if (NetworkManager.get().isServer())
                         NetworkManager.get().send(NetworkConstants.TO_STAGE_SELECT);
-                    ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                    if (NetworkManager.get().isOffline() || NetworkManager.get().isServer()) {
+                        ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                    }
                 }
             }
 
@@ -408,8 +412,9 @@ public class RenderCharacterSelection extends CharacterSelection {
             gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
             gc.fillText(Language.get().get(167), 20, 300);
-            gc.fillText("\'" + NetworkManager.get().getHostName() + "\',", 20, 314);
-            gc.fillText("Or use \'" + NetworkManager.get().getHostAddress() + "\',", 20, 328);
+            gc.fillText(NetworkManager.get().getHostName(), 20, 314);
+            gc.fillText(Language.get().get(452), 20, 328);
+            gc.fillText(NetworkManager.get().getHostAddress(), 20, 346);
             gc.fillText(Language.get().get(168), 20, 360);
             gc.fillText(Language.get().get(169), 20, 376);
         } else if (NetworkManager.get().isClient()) {

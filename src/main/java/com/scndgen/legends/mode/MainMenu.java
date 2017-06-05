@@ -22,7 +22,7 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.enums.Overlay;
+import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.AchievementLocker;
 import io.github.subiyacryolite.enginev1.Mode;
@@ -44,7 +44,7 @@ public abstract class MainMenu extends Mode {
     protected final int fontSize = 16;
     protected Font font;
     protected int xMenu = 500;
-    protected Overlay overlay = Overlay.PRIMARY_MENU;
+    protected MainMenuOverlay mainMenuOverlay = MainMenuOverlay.PRIMARY_MENU;
     protected int menuItemIndex;
     protected int menuEntries = 11;
     protected int yMenu = ((576 - fontSize) - (fontSize * (menuEntries + 1))) / 2; //centered, multiply fontSize with number of menu items+1
@@ -60,7 +60,7 @@ public abstract class MainMenu extends Mode {
 
     public MainMenu() {
         ScndGenLegends.get().setSubMode(SubMode.MAIN_MENU);
-        setOverlay(Overlay.PRIMARY_MENU);
+        setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
         opacity = 3.0f;
         logoFadeOpacity = 1.0f;
         fadeOutFeedback = false;
@@ -103,15 +103,15 @@ public abstract class MainMenu extends Mode {
         return fontSize;
     }
 
-    public Overlay getOverlay() {
-        return overlay;
+    public MainMenuOverlay getMainMenuOverlay() {
+        return mainMenuOverlay;
     }
 
-    public void setOverlay(Overlay overlay) {
-        if (overlay == Overlay.TUTORIAL) {
+    public void setMainMenuOverlay(MainMenuOverlay mainMenuOverlay) {
+        if (mainMenuOverlay == MainMenuOverlay.TUTORIAL) {
             tutorial = new Tutorial();
         }
-        this.overlay = overlay;
+        this.mainMenuOverlay = mainMenuOverlay;
     }
 
     public void newInstance() {
@@ -119,7 +119,7 @@ public abstract class MainMenu extends Mode {
     }
 
     public void keyPressed(KeyEvent keyEvent) {
-        switch (getOverlay()) {
+        switch (getMainMenuOverlay()) {
             case TUTORIAL:
                 tutorial.keyPressed(keyEvent);
                 break;

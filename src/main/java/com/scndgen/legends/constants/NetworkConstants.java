@@ -39,9 +39,10 @@ public class NetworkConstants {
     public static final String HOST_TIME_CONSTANT = "HOST_TIME_CONSTANT";
     public static final String DISCONNECT_FROM_HOST = "DISCONNECT_FROM_HOST";
     public static final String TO_STAGE_SELECT = "TO_STAGE_SELECT";
-    public static final String TO_CHARACTER_SELECT = "TO_CHARACTER_SELECT";
+    public static final String TO_CHARACTER_SELECT_CHANGE_SELECTION = "TO_CHARACTER_SELECT_CHANGE_SELECTION";
     public static final String DESELECT_OPPONENT = "DESELECT_OPPONENT";
     public static final String CANCEL_CONNECTIVITY = "CANCEL_CONNECTIVITY";
+    public static final String TO_CHARACTER_SELECT_NEW_MATCH = "TO_CHARACTER_SELECT_NEW_MATCH";
 
     public static String connectToHost(int timeOut) {
         return String.format("%s%s", HOST_TIME_CONSTANT, timeOut);

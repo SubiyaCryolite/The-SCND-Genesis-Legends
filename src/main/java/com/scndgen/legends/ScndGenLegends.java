@@ -30,6 +30,7 @@ import io.github.subiyacryolite.enginev1.Engine;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Game;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -62,38 +63,52 @@ public class ScndGenLegends extends Game {
         loadMode(ModeEnum.MAIN_MENU);
     }
 
-    public void loadMode(ModeEnum modeEnum) {
+    public void loadMode(ModeEnum modeEnum, boolean newInstance) {
         this.modeEnum = modeEnum;
         setSwitchingModes(true);
         try {
             switch (modeEnum) {
                 case MAIN_MENU:
-                    RenderMainMenu.get().newInstance();
+                    if (newInstance)
+                        RenderMainMenu.get().newInstance();
                     setMode(RenderMainMenu.get());
                     break;
                 case STORY_SELECT_SCREEN:
-                    RenderStoryMenu.get().newInstance();
+                    if (newInstance)
+                        RenderStoryMenu.get().newInstance();
                     setMode(RenderStoryMenu.get());
                     break;
                 case CHAR_SELECT_SCREEN:
-                    RenderCharacterSelection.get().newInstance();
+                    if (newInstance)
+                        RenderCharacterSelection.get().newInstance();
                     switch (getSubMode()) {
                         case LAN_HOST:
-                            NetworkManager.get().asHost();
+                            if (!NetworkManager.get().isServer())
+                                NetworkManager.get().asHost();
+                            setMode(RenderCharacterSelection.get());
                             break;
                         case LAN_CLIENT:
-                            targetIp = FxDialogs.input("title", "header", "content", targetIp);
-                            NetworkManager.get().asClient(targetIp);
+                            Platform.runLater(() -> {
+                                if (!NetworkManager.get().isClient()) {
+                                    targetIp = FxDialogs.input(Language.get().get(450), Language.get().get(451), "", targetIp);
+                                    NetworkManager.get().asClient(targetIp);
+                                }
+                                setMode(RenderCharacterSelection.get());
+                            });
+                            break;
+                        default:
+                            setMode(RenderCharacterSelection.get());
                             break;
                     }
-                    setMode(RenderCharacterSelection.get());
                     break;
                 case STAGE_SELECT_SCREEN:
-                    RenderStageSelect.get().newInstance();
+                    if (newInstance)
+                        RenderStageSelect.get().newInstance();
                     setMode(RenderStageSelect.get());
                     break;
                 case STANDARD_GAMEPLAY_START:
-                    RenderGamePlay.get().newInstance();
+                    if (newInstance)
+                        RenderGamePlay.get().newInstance();
                     setMode(RenderGamePlay.get());
                     RenderGamePlay.get().startFight();
                     break;
@@ -103,6 +118,10 @@ public class ScndGenLegends extends Game {
         } finally {
             setSwitchingModes(false);
         }
+    }
+
+    public void loadMode(ModeEnum modeEnum) {
+        loadMode(modeEnum, true);
     }
 
     public SubMode getSubMode() {
