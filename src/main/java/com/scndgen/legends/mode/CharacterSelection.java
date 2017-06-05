@@ -25,18 +25,14 @@ public abstract class CharacterSelection extends Mode {
     protected int[] attacks;
     protected String[] characterDescription;
     protected final int numOfCharacters = CharacterEnum.values().length;
-    protected int currentSlot = 0, xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
+    protected int xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
     protected Loader loader;
-    protected int charDescIndex = 0;
     protected float opacInc, p1Opac, opacChar;
     protected CharacterEnum opponentEnum, characterEnum;
     protected int oppPrevLoc, charPrevLoc;
     protected boolean selectedCharacter, selectedOpponent, animatorThreadRunning;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
     protected final int columns = 3;
-    protected final int rows = numOfCharacters / columns;
-    protected final int rowsCiel = Math.round(Math.round(Math.ceil(numOfCharacters / (double) columns)));
-    protected final int columnsCiel = numOfCharacters % columns;
     protected boolean canSelectCharacter;
     protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
 
@@ -161,7 +157,7 @@ public abstract class CharacterSelection extends Mode {
                 NetworkManager.get().send(NetworkConstants.SEL_RAILA);
                 preventCharacterSelection();
             }
-        } else if (type == Player.OPPONENT && selectedOpponent == false) {
+        } else if (type == Player.OPPONENT && !selectedOpponent) {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.RAILA;
@@ -190,7 +186,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -220,7 +216,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -250,7 +246,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -280,7 +276,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -311,7 +307,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -342,7 +338,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -373,7 +369,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -404,7 +400,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -435,7 +431,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -466,7 +462,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -497,14 +493,14 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && selectedOpponent == false) // when selecting opponent
+        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
             Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
-        } else if (type == Player.BOSS && selectedOpponent == false) // when selecting opponent as boss
+        } else if (type == Player.BOSS && !selectedOpponent) // when selecting opponent as boss
         {
             playSelectSound();
             selectedOpponent = true;

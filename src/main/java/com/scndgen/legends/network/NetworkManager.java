@@ -131,4 +131,16 @@ public class NetworkManager {
         if (server != null)
             server.playerFound();
     }
+
+    public String getHostName() {
+        if (isServer())
+            return server.getHostName();
+        return "";
+    }
+
+    public String getHostAddress() {
+        if (isServer())
+            return server.getHostAddress();
+        return "";
+    }
 }

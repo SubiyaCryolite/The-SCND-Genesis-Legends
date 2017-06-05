@@ -407,11 +407,15 @@ public class RenderCharacterSelection extends CharacterSelection {
         } else if (NetworkManager.get().isServer()) {
             gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
-            gc.fillText("waiting for players to join", 553 + x, 400);
+            gc.fillText(Language.get().get(167), 20, 300);
+            gc.fillText("\'" + NetworkManager.get().getHostName() + "\',", 20, 314);
+            gc.fillText("Or use \'" + NetworkManager.get().getHostAddress() + "\',", 20, 328);
+            gc.fillText(Language.get().get(168), 20, 360);
+            gc.fillText(Language.get().get(169), 20, 376);
         } else if (NetworkManager.get().isClient()) {
             gc.setGlobalAlpha(1.0f);
             gc.setFill(Color.WHITE);
-            gc.fillText("waiting for host to respond", 553 + x, 400);
+            gc.fillText("Waiting for host to respond", 553 + x, 400);
         }
         Overlay.get().overlay(gc, x, y);
     }

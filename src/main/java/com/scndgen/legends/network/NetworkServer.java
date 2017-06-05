@@ -9,8 +9,10 @@ import javafx.scene.control.ButtonBar;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
 import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
@@ -22,14 +24,34 @@ public class NetworkServer extends NetworkBase implements Runnable {
 
     private Thread thread;
     private boolean running;
+    private String hostName, hostAddress;
     private final LinkedList<String> messageQue = new LinkedList<>();
 
     /**
      * Basic constructor
      */
     public NetworkServer() {
+        initServerDetails();
         thread = new Thread(this);
         thread.start();
+    }
+
+    private void initServerDetails() {
+        try {
+            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+            while (enumeration.hasMoreElements()) {
+                NetworkInterface networkInterface = enumeration.nextElement();
+                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                while (inetAddresses.hasMoreElements()) {
+                    InetAddress inetAddress = inetAddresses.nextElement();
+                    hostName = inetAddress.getLocalHost().getHostName();
+                    hostAddress = inetAddress.getLocalHost().getHostAddress();
+                }
+            }
+
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
     }
 
 
@@ -96,4 +118,10 @@ public class NetworkServer extends NetworkBase implements Runnable {
     public void sendData(String message) {
         messageQue.add(message);
     }
+
+    public String getHostName()
+    {return hostName;}
+
+    public String getHostAddress()
+    {return hostAddress;}
 }
