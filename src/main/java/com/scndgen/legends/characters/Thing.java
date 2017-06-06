@@ -36,7 +36,6 @@ public class Thing extends Character {
         attackStr = "";
         descSmall = "The Thing - Origins unknown";
         name = "The Thing";
-        bragRights = new String[]{"....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....", "....."};
         physical = new String[]{"Dash Strike", "Violent Thrust", "Epic Piercing", "Solar Flare"};
         celestia = new String[]{"Frost Bite", "Rock Rush", "Land Slide", "Solar Storm"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -67,6 +66,18 @@ public class Thing extends Character {
         }
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 0.85f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(), "....");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "....");
+        bragRights.put(CharacterEnum.LYNX.index(), "....");
+        bragRights.put(CharacterEnum.AISHA.index(), "....");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "....");
+        bragRights.put(CharacterEnum.ADE.index(), "....");
+        bragRights.put(CharacterEnum.JONAH.index(), "....");
+        bragRights.put(CharacterEnum.ADAM.index(), "....");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "....");
+        bragRights.put(CharacterEnum.AZARIA.index(), "....");
+        bragRights.put(CharacterEnum.SORROWE.index(), "....");
+        bragRights.put(CharacterEnum.THING.index(), "....");
     }
 
     @Override
@@ -76,49 +87,41 @@ public class Thing extends Character {
                 attackStr = physical[0];
                 damage = bonus + 130;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = bonus + 129;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = bonus + 128;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = bonus + 127;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = bonus + 130;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = bonus + 129;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = bonus + 128;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = bonus + 127;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -132,7 +135,6 @@ public class Thing extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -146,7 +148,6 @@ public class Thing extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -160,7 +161,6 @@ public class Thing extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -174,7 +174,6 @@ public class Thing extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

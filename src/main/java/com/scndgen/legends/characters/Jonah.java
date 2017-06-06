@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -35,7 +36,6 @@ public class Jonah extends Character {
         descSmall = "Jonah - a fighter specialised in Force combat";
         name = "Jonah";
         characterEnum = JONAH;
-        bragRights = new String[]{"I don't like fighting weakling, this'll be over soon", "Do achievements a favour.....die", "I'm not my brother, I'll destroy you", "You're no match for achievements", "Time for some tough love brother", "Sorry Ade, it can't be helped", "Let's do this", "NovaAdam, prove you're more than just talk", "So this is your true form.....I'LL DESTROY IT!!!!", "Out of my way!!! I've got stronger opponents to destroy", "You talk big for a tiny girl", "Terrible, just terrible"};
         physical = new String[]{"One!", "Two!!", "Ou!!!", "Jaw Breaker"};
         celestia = new String[]{"Force Rush", "Force Beam", "Force Slice", "Force Unleashed"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -47,6 +47,18 @@ public class Jonah extends Character {
         life = 29760;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 2.08f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(),"I don't like fighting weaklings, this'll be over soon");
+        bragRights.put(CharacterEnum.SUBIYA.index(),  "Do me a favour.....die");
+        bragRights.put(CharacterEnum.LYNX.index(),  "I'm not my brother, I'll destroy you" );
+        bragRights.put(CharacterEnum.AISHA.index(),   "You're no match for me");
+        bragRights.put(CharacterEnum.RAVAGE.index(),  "Time for some tough love brother");
+        bragRights.put(CharacterEnum.ADE.index(),  "Sorry Ade, it can't be helped");
+        bragRights.put(CharacterEnum.JONAH.index(),  "Let's do this");
+        bragRights.put(CharacterEnum.ADAM.index(),  "Prove you're more than just talk");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(),  "So this is your true form");
+        bragRights.put(CharacterEnum.AZARIA.index(), "A friendly sparring match?" );
+        bragRights.put(CharacterEnum.SORROWE.index(), "Out of my way!" );
+        bragRights.put(CharacterEnum.THING.index(),  "Terrible, just terrible");
     }
 
     @Override
@@ -56,49 +68,41 @@ public class Jonah extends Character {
                 attackStr = physical[0];
                 damage = 95;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 95;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 96;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 98;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 94;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 96;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 101;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 98;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -112,7 +116,6 @@ public class Jonah extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -126,7 +129,6 @@ public class Jonah extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -140,7 +142,6 @@ public class Jonah extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -154,7 +155,6 @@ public class Jonah extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

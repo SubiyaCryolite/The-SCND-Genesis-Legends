@@ -86,7 +86,6 @@ public class Login extends JdsEntity {
     private final SimpleIntegerProperty gameRating = new SimpleIntegerProperty(0);
     private final SimpleBooleanProperty usingController = new SimpleBooleanProperty(true);
     private final SimpleIntegerProperty currentLanguage = new SimpleIntegerProperty(0);
-    private final SimpleBooleanProperty leftHanded = new SimpleBooleanProperty(false);
     private final SimpleIntegerProperty consecutiveWins = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty musicVolume = new SimpleIntegerProperty(100);
     private final SimpleIntegerProperty voiceVolume = new SimpleIntegerProperty(100);
@@ -135,7 +134,6 @@ public class Login extends JdsEntity {
         map(LoginFields.GAME_RATING, gameRating);
         map(LoginFields.USING_CONTROLLER, usingController);
         map(LoginFields.CURRENT_LANGUAGE, currentLanguage);
-        map(LoginFields.LEFT_HANDED, leftHanded);
         map(LoginFields.CONSECUTIVE_WINS, consecutiveWins);
         map(LoginFields.MUSIC_VOLUME, musicVolume);
         map(LoginFields.VOICE_VOLUME, voiceVolume);
@@ -666,14 +664,6 @@ public class Login extends JdsEntity {
 
     public void setCurrentLanguage(final int currentLanguage) {
         this.currentLanguage.set(currentLanguage);
-    }
-
-    public boolean isLeftHanded() {
-        return leftHanded.get();
-    }
-
-    public void setLeftHanded(final boolean leftHanded) {
-        this.leftHanded.set(leftHanded);
     }
 
     public void setConsecutiveWins(int consecutiveWins) {

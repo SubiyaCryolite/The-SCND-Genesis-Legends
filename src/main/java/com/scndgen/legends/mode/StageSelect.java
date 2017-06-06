@@ -134,7 +134,7 @@ public abstract class StageSelect extends Mode {
                 selectScorchedRuins();
                 break;
             case FROZEN_WILDERNESS:
-                selectDistantSnowField();
+                selectFrozenWilderness();
                 break;
             case DISTANT_ISLE:
                 selectDistantIsle();
@@ -176,8 +176,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 10;
-        RenderGamePlay.get().animationDirection = AnimationDirection.VERTICAL;
-        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.VERTICAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 4;
         RenderGamePlay.get().ambSpeed2 = 3;
@@ -185,15 +186,15 @@ public abstract class StageSelect extends Mode {
 
     protected void selectIbexHill() {
         defaultStageValues();
-        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
-        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
         ambientMusicIndex = 0;
     }
 
     protected void selectIbexHillNight() {
         defaultStageValues();
-        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
-        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
         ambientMusicIndex = 4;
     }
 
@@ -203,8 +204,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.NONE;
         RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
@@ -217,8 +219,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
@@ -231,8 +234,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.NONE;
         RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
@@ -245,22 +249,24 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 5;
     }
 
-    protected void selectDistantSnowField() {
+    protected void selectFrozenWilderness() {
         RenderGamePlay.get().foreGroundPositionX = 0;
         RenderGamePlay.get().foreGroundPositionY = 10;
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.VERTICAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
@@ -273,8 +279,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 2;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.ROTATION;
-        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.VERTICAL;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
         RenderGamePlay.get().delay = 25;
         RenderGamePlay.get().ambSpeed1 = 1;
         RenderGamePlay.get().ambSpeed2 = 2;
@@ -287,8 +294,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 2;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.ROTATION;
-        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.VERTICAL;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
         RenderGamePlay.get().delay = 25;
         RenderGamePlay.get().ambSpeed1 = 1;
         RenderGamePlay.get().ambSpeed2 = 2;
@@ -301,8 +309,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.NONE;
         RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
@@ -315,8 +324,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.NONE;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.NONE;
         RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
@@ -329,8 +339,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 1;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.NONE;
-        RenderGamePlay.get().animLayer = StageAnimation.BACKGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
         RenderGamePlay.get().delay = 122;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
@@ -343,8 +354,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
-        RenderGamePlay.get().animLayer = StageAnimation.BOTH;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
@@ -357,8 +369,9 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
         RenderGamePlay.get().animationLoops = 4;
-        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
-        RenderGamePlay.get().animLayer = StageAnimation.FOREGROUND;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
         RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
@@ -368,14 +381,15 @@ public abstract class StageSelect extends Mode {
     protected void selectScorchedRuinsNight() {
         RenderGamePlay.get().foreGroundPositionX = 0;
         RenderGamePlay.get().foreGroundPositionY = 0;
-        RenderGamePlay.get().foreGroundXIncrement = 1;
+        RenderGamePlay.get().foreGroundXIncrement = 5;
         RenderGamePlay.get().foreGroundYIncrement = 1;
-        RenderGamePlay.get().animationLoops = 20;
-        RenderGamePlay.get().animationDirection = AnimationDirection.HORIZONTAL;
-        RenderGamePlay.get().animLayer = StageAnimation.NONE;
-        RenderGamePlay.get().delay = 66;
-        RenderGamePlay.get().ambSpeed1 = 0;
-        RenderGamePlay.get().ambSpeed2 = 0;
+        RenderGamePlay.get().animationLoops = 4;
+        RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
+        RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
+        RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
+        RenderGamePlay.get().delay = 33;
+        RenderGamePlay.get().ambSpeed1 = 2;
+        RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 3;
     }
 

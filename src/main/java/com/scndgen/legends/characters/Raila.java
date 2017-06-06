@@ -37,7 +37,6 @@ public class Raila extends Character {
         points = 2500;
         life = 25600;
         limit = new int[]{0, 0, 0, 0, 0};
-        bragRights = new String[]{"Let's do this", "I won't go easy on you bro", "Let's do this cuz", "This'll be fun", "You scum, prepare to be owned", "You're powers are intersting. Lets see how you do against my speed", "You're definately the better looking twin, though, you won't look so good afterwards", "NovaAdam, the stiuff of legend, show achievements your power", "An awakened being? Lets do this!!!!", "One of te original Saints, show achievements your power!!", "Genius  vs Genius , this'll be fun", "What in the world?"};
         physical = new String[]{"Strike", "Chant", "Blue Embrace", "Blue Blitz"};
         celestia = new String[]{"Nova Storm", "Eternal Flame", "Frozen Breeze", "Dark Cloud"};
         status = new String[]{"Heal Plus", "Heal EX", "Energy Juice", "Weaken Opponent"};
@@ -56,6 +55,18 @@ public class Raila extends Character {
         weakness[6] = 0.70f;    //physicalAttacks
         weakness[7] = 0.30f;    //fire
         atbRecoveryRate = 2.5f;//2.5;
+        bragRights.put(CharacterEnum.RAILA.index(), "Let's do this");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "I won't go easy on you bro");
+        bragRights.put(CharacterEnum.LYNX.index(), "Let's do this cuz");
+        bragRights.put(CharacterEnum.AISHA.index(), "This'll be fun");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "You scum, prepare to be owned");
+        bragRights.put(CharacterEnum.ADE.index(), "Your powers are interesting. Lets see how you do against my speed");
+        bragRights.put(CharacterEnum.JONAH.index(), "You're definately the better looking twin, though, you won't look so good afterwards");
+        bragRights.put(CharacterEnum.ADAM.index(), "Adam, the stuff of legend, show me your power");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "An awakened being? Lets do this!!!!");
+        bragRights.put(CharacterEnum.AZARIA.index(), "One of te original Saints, show achievements your power!!");
+        bragRights.put(CharacterEnum.SORROWE.index(), "Genius  vs Genius , this'll be fun");
+        bragRights.put(CharacterEnum.THING.index(), "What in the world?");
     }
 
     @Override
@@ -65,51 +76,41 @@ public class Raila extends Character {
                 attackStr = physical[0];
                 damage = 83;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 82;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
-                //GamePlay.specialEffect(2,true);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 82;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
-                //GamePlay.specialEffect(2,true);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 81;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 88;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 85;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 85;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 83;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -123,7 +124,6 @@ public class Raila extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -137,7 +137,6 @@ public class Raila extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 limit[1] = limit[1] + 1;
@@ -152,9 +151,6 @@ public class Raila extends Character {
                         gamePlay.setStatusPic(Player.OPPONENT);
                         gamePlay.alterDamageCounter(Player.CHARACTER, +1);
                     }
-                    gamePlay.showBattleMessage(name + " strengthened himself!!!");
-                } else {
-                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
             case "12":
@@ -171,9 +167,6 @@ public class Raila extends Character {
                         gamePlay.setStatusPic(Player.CHARACTER);
                         gamePlay.alterDamageCounter(Player.OPPONENT, -1);
                     }
-                    gamePlay.showBattleMessage(name + " weakened his opponent!!!");
-                } else {
-                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
         }

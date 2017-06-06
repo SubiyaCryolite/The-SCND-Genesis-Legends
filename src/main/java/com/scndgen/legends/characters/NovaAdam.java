@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -35,7 +36,6 @@ public class NovaAdam extends Character {
         descSmall = "Nova Adam - an awakened Celestia Being specialised in celestiaAttacks combat";
         name = "NovaAdam";
         characterEnum = NOVA_ADAM;
-        bragRights = new String[]{"Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "Resistance is futile !!!", "*blank stare* Dude"};
         physical = new String[]{"Dark Flame", "Dark Rush", "Dark Slice", "Dark Ascent"};
         celestia = new String[]{"Nova Blitz", "Nova Torrent", "Nova Blaze", "Nova Frost"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -47,6 +47,18 @@ public class NovaAdam extends Character {
         life = 38400;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 1.10f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(), "Resistance is futile !!!");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.LYNX.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.AISHA.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.RAVAGE.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.ADE.index(),  "Resistance is futile !!!");
+        bragRights.put(CharacterEnum.JONAH.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.ADAM.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "Resistance is... Hold on?" );
+        bragRights.put(CharacterEnum.AZARIA.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.SORROWE.index(), "Resistance is futile !!!" );
+        bragRights.put(CharacterEnum.THING.index(),  "Resistance is futile !!!");
     }
 
     @Override
@@ -56,49 +68,41 @@ public class NovaAdam extends Character {
                 attackStr = physical[0];
                 damage = 128;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 123;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 122;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 123;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 122;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 121;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 125;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 125;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -112,7 +116,6 @@ public class NovaAdam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -126,7 +129,6 @@ public class NovaAdam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -140,7 +142,6 @@ public class NovaAdam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -154,7 +155,6 @@ public class NovaAdam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

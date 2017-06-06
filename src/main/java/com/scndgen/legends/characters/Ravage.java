@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -37,7 +38,6 @@ public class Ravage extends Character {
         characterEnum = RAVAGE;
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};
-        bragRights = new String[]{"Pathetic weakling", "Prepare to be owned", "I owe you one....a beating that is", "Lowly Saint, be gone!!!", "Let's do this", "Lets see if you're strong enough", "Lets do this bro", "I won't hold onBackCancel NovaAdam", "Goodie, no holding onBackCancel, HA HA HA!!!", "I'll destroy you!!", "Don't get all high and mighty brat!!!", "?????"};
         physical = new String[]{"Strike", "Impale", "Stone Summon", "Deadly Snare"};
         celestia = new String[]{"Siezmic Slam", "Fist-Full", "Quake", "Boulder Rush"};
         status = new String[]{"Heal Plus", "Heal EX", "Energy Juice", "Weaken Opponent"};
@@ -47,6 +47,18 @@ public class Ravage extends Character {
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         atbRecoveryRate = 1.70f;
+        bragRights.put(CharacterEnum.RAILA.index(), "Pathetic weakling");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Prepare to be owned");
+        bragRights.put(CharacterEnum.LYNX.index(), "I owe you one....a beating that is");
+        bragRights.put(CharacterEnum.AISHA.index(), "Lowly Saint, be gone!!!");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "Let's do this");
+        bragRights.put(CharacterEnum.ADE.index(), "Lets see if you're strong enough");
+        bragRights.put(CharacterEnum.JONAH.index(), "Lets do this bro");
+        bragRights.put(CharacterEnum.ADAM.index(), "I won't hold back");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "Goodie, no holding back, HA HA HA!!!");
+        bragRights.put(CharacterEnum.AZARIA.index(), "I'll destroy you!!");
+        bragRights.put(CharacterEnum.SORROWE.index(), "Don't get all high and mighty brat!!!");
+        bragRights.put(CharacterEnum.THING.index(), "?????");
     }
 
     @Override
@@ -56,50 +68,41 @@ public class Ravage extends Character {
                 attackStr = physical[0];
                 damage = 108;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
-                //GamePlay.specialEffect(2,true);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 101;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 107;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -113,7 +116,6 @@ public class Ravage extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -127,7 +129,6 @@ public class Ravage extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 limit[1] = limit[1] + 1;
@@ -142,10 +143,6 @@ public class Ravage extends Character {
                         gamePlay.setStatusPic(Player.OPPONENT);
                         gamePlay.alterDamageCounter(Player.CHARACTER, +1);
                     }
-                    gamePlay.showBattleMessage(name + " strengthened himself!!!");
-                } else {
-                    // disble this move
-                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
             case "12":
@@ -162,10 +159,6 @@ public class Ravage extends Character {
                         gamePlay.setStatusPic(Player.CHARACTER);
                         gamePlay.alterDamageCounter(Player.OPPONENT, -1);
                     }
-                    gamePlay.showBattleMessage(name + " weakened his opponent!!!");
-                } else {
-                    // disble this move
-                    gamePlay.showBattleMessage(name + " cant use his attack!!!!");
                 }
                 break;
         }

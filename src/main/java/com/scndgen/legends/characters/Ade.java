@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -32,7 +33,6 @@ public class Ade extends Character {
     public Ade() {
         descSmall = "Ade - a fighter utilising the air element";
         name = "Ade";
-        bragRights = new String[]{"Be gone", "Weakling", "Pathetic", "Is this a joke", "Not you again", "Lets do this", "You have more sense than you're brother, give up now", "I won't hold onBackCancel", "It's an honour to face you in this form", "Your title doesn't scare achievements, I'll still destroy you", "Sorrowe, don't get big headed", "This is it?"};
         physical = new String[]{"Tornado Blast", "Hurricane Sphere", "Hurricane Barrage", "Violent Burst"};
         celestia = new String[]{"Crush Down", "Vortex Blades", "Cursed Seal", "Dark Swirl"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Wound Spray"};
@@ -45,6 +45,18 @@ public class Ade extends Character {
         life = 33600;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 1.60f;
+        bragRights.put(CharacterEnum.RAILA.index(), "Be gone");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Weakling");
+        bragRights.put(CharacterEnum.LYNX.index(), "Pathetic");
+        bragRights.put(CharacterEnum.AISHA.index(), "Is this a joke?");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "Not you again");
+        bragRights.put(CharacterEnum.ADE.index(), "Lets do this");
+        bragRights.put(CharacterEnum.JONAH.index(), "You have more sense than you're brother, give up now");
+        bragRights.put(CharacterEnum.ADAM.index(), "I won't hold back");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "It's an honour to face you in this form");
+        bragRights.put(CharacterEnum.AZARIA.index(), "Your title doesn't scare me, I'll still destroy you");
+        bragRights.put(CharacterEnum.SORROWE.index(), "Sorrowe, don't get big headed");
+        bragRights.put(CharacterEnum.THING.index(), "I've dealt with worse?");
     }
 
     @Override
@@ -54,55 +66,46 @@ public class Ade extends Character {
                 attackStr = physical[0];
                 damage = 50;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "01":
                 attackStr = physical[0];
                 damage = 110;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 106;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 110;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 108;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 107;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 106;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 108;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 113;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -116,7 +119,6 @@ public class Ade extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -130,7 +132,6 @@ public class Ade extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -144,7 +145,6 @@ public class Ade extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -158,7 +158,6 @@ public class Ade extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

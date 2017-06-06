@@ -35,7 +35,6 @@ public class Adam extends Character {
         descSmall = "Adam - a Celestia Being specialised in celestiaAttacks combat";
         name = "Adam";
         characterEnum = CharacterEnum.ADAM;
-        bragRights = new String[]{"Worthless little boy", "You're so weak, it's not even funny", "Standards truly have fallen", "Ladies first...to the grave that is", "I'm not in the mood for your nonsense", "My best desciple, don't dissapoint achievements", "Show achievements your skill Jonah", "Lets do this", "Oh look, its achievements", "Azaria, I'll show you no mercy", "You might have what it takes to surpass achievements", "So that what it looks like"};
         physical = new String[]{"Silver Flame", "Silver Rush", "Silver Slice", "Silver Ascent"};
         celestia = new String[]{"Celestia Blitz", "Celestia Torrent", "Celestia Blaze", "Celestia Frost"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -49,6 +48,18 @@ public class Adam extends Character {
         life = 35200;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 1.60f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(), "Worthless little boy");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "You're so weak, it's not even funny");
+        bragRights.put(CharacterEnum.LYNX.index(), "Standards truly have fallen");
+        bragRights.put(CharacterEnum.AISHA.index(), "Ladies first...to the grave that is");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "I'm not in the mood for your nonsense");
+        bragRights.put(CharacterEnum.ADE.index(), "My best disciple, don't disapoint me");
+        bragRights.put(CharacterEnum.JONAH.index(), "Show me your skill Jonah");
+        bragRights.put(CharacterEnum.ADAM.index(), "Lets do this");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "Oh look, its me");
+        bragRights.put(CharacterEnum.AZARIA.index(), "Azaria, I'll show you no mercy");
+        bragRights.put(CharacterEnum.SORROWE.index(), "You might have what it takes to surpass me");
+        bragRights.put(CharacterEnum.THING.index(), "So that what it looks like?");
     }
 
     @Override
@@ -58,49 +69,41 @@ public class Adam extends Character {
                 attackStr = physical[0];
                 damage = 118;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 113;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 112;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 113;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 112;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 111;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 115;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 115;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -114,7 +117,6 @@ public class Adam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -128,7 +130,6 @@ public class Adam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -142,7 +143,6 @@ public class Adam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -156,7 +156,6 @@ public class Adam extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -35,7 +36,6 @@ public class Subiya extends Character {
         descSmall = "Subiya - a fighter specialised in melee combat";
         name = "Subiya";
         characterEnum = SUBIYA;
-        bragRights = new String[]{"Lets do this!!", "Sorry bro, it had to be done", "Students always surpass their masters", "Hate to beat down on a lady", "PAYBACK TIME !!!", "You're definately strong, just not strong enough", "I hope you're nothing like your brother", "How does it feel to fall from grace", "Is this how far you've fallen", "Forgive achievements, I must defeat you", "I'll admit, you're rather beutiful", "What is that thing?!"};
         physical = new String[]{"Thunder Clap", "Knee Strike", "Thunder Clap", "Knee Strike EX2"};
         celestia = new String[]{"Flaming Pillars", "Blaze", "Flaming Vortex", "Blazing Comet"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Pain Killer"};
@@ -48,6 +48,18 @@ public class Subiya extends Character {
         life = 27200;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 1.97f;//2.25;
+        bragRights.put(CharacterEnum.RAILA.index(), "Lets do this!!");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Sorry bro, it had to be done");
+        bragRights.put(CharacterEnum.LYNX.index(), "Students always surpass their masters");
+        bragRights.put(CharacterEnum.AISHA.index(),"Hate to beat down on a lady" );
+        bragRights.put(CharacterEnum.RAVAGE.index(), "PAYBACK TIME !!!");
+        bragRights.put(CharacterEnum.ADE.index(),"You're definately strong, just not strong enough" );
+        bragRights.put(CharacterEnum.JONAH.index(), "I hope you're nothing like your brother");
+        bragRights.put(CharacterEnum.ADAM.index(),"How does it feel to fall from grace");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "Is this how far you've fallen");
+        bragRights.put(CharacterEnum.AZARIA.index(), "Forgive me, I must defeat you");
+        bragRights.put(CharacterEnum.SORROWE.index(), "I'll admit, you're rather beautiful");
+        bragRights.put(CharacterEnum.THING.index(), "What is that thing?!");
     }
 
     @Override
@@ -57,49 +69,41 @@ public class Subiya extends Character {
                 attackStr = physical[0];
                 damage = 85;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 87;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 90;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 87;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 88;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 86;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 88;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 93;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -113,7 +117,6 @@ public class Subiya extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -127,7 +130,6 @@ public class Subiya extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -141,7 +143,6 @@ public class Subiya extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -155,7 +156,6 @@ public class Subiya extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

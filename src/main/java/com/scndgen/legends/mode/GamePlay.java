@@ -58,28 +58,29 @@ public abstract class GamePlay extends Mode {
     protected boolean triggerOpponentAttack;
     protected LinkedList<Integer> characterAttacks = new LinkedList<>();
     protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
-    protected int startDrawing = 0, menuBarY;
+    protected int startDrawing = 0;
     protected Color currentColor = Color.RED;
     protected boolean safeToSelect;
     protected int unlockedAchievementInstance;
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
-    protected int particlesLayer1PositionX = 0, particlesLayer1PositionY = 0, particlesLayer2PositionX = 0, particlesLayer2PositionY = 0;
+    protected int ambientForegroundX = 0, ambientForegroundY = 0, ambientBackgroundX = 0, ambientBackgroundY = 0;
     protected int numOfComicPics = 9;
     protected int foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops, delay;
-    protected AnimationDirection animationDirection = AnimationDirection.VERTICAL;
+    protected AnimationDirection ambientDirection = AnimationDirection.VERTICAL;
+    protected AnimationDirection foregroundDirection = AnimationDirection.VERTICAL;
     protected int oppXcord = 10;
     protected int playerDamageXLoc, opponentDamageXLoc;
     protected String[] storyPicArrStr;
     protected CharacterEnum[] charNames = LoginScreen.charNames;
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInformation = new StringBuilder("");
-    protected StageAnimation animLayer;
+    protected AmbientMode ambientMode;
     protected boolean loadedUpdaters;
     protected float daNum, daNum2;
     protected long lifePlain, lifeTotalPlain, lifePlain2, lifeTotalPlain2;
     protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
     protected boolean fancyBWAnimeEffectEnabled;
-    protected boolean gameOver;
+    protected boolean gameOver, showBrag;
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
     protected int damageDoneToCharacter, damageDoneToOpponent;
     protected float opponentLifePercentage, characterLifePercentage;
@@ -107,8 +108,7 @@ public abstract class GamePlay extends Mode {
     protected int oppBarYOffset, attackMenuXPos, attackMenuTextXPos, attackMenuTextYPos, y = 0;
     protected float opacityTxt = 10, opacityPic = 0.0f;
     protected boolean limitRunning;
-    protected float angleRaw, charPointInc;
-    protected int result;
+    protected float charPointInc;
     protected float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
     protected int comboPicArrayPosOpp = 8;
     protected String manipulateThis;
@@ -312,7 +312,7 @@ public abstract class GamePlay extends Mode {
      * Makes text white, meaning its OK to select a move
      */
     protected void enableSelection() {
-        currentColor = javafx.scene.paint.Color.WHITE;
+        currentColor = Color.BLACK;
         safeToSelect = true;
     }
 
@@ -380,13 +380,27 @@ public abstract class GamePlay extends Mode {
         if (playingCutscene) return;
         if (paused) return;
         if (!gameOver) {
+            if (!showBrag) {
+                if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE) {
+                    musNotice();
+                    Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
+                } else {
+                    Overlay.get().primaryNotice("");
+                    Overlay.get().secondaryNotice("");
+                }
+                showBrag = true;
+            }
+            if (getCharacterAtbPercent() >= 1.0f)
+                enableSelection();
+            else
+                disableSelection();
             handleOpponentAi(delta);
             handleOpponentAttacks(delta);
             handleCharacterAttacks(delta);
             animateTimer(delta);
-            animateLoopA(delta);
+            animateForeground(delta);
             animateLoopB(delta);
-            animateLoopC(delta);
+            animateAmbientLayers(delta);
             animateLoopD(delta);
             updateMatchStatus();
             if ((delta - animationLoopEDelta) > MS1320) {
@@ -547,35 +561,35 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateLoopC(long delta) {
+    private void animateAmbientLayers(long delta) {
         if ((delta - animationLoopCDelta) > MS16) {
             animationLoopCDelta = delta;
-            if (getAnimationDirection() != AnimationDirection.VERTICAL) {
-                setParticlesLayer1PositionX(getParticlesLayer1PositionX() - getAmbSpeed1());
-                setParticlesLayer2PositionX(getParticlesLayer2PositionX() - getAmbSpeed2());
-                if (getParticlesLayer1PositionX() < -960) {
-                    setParticlesLayer1PositionX(852);
+            if (getAmbientDirection() == AnimationDirection.HORIZONTAL) {
+                setAmbientForegroundX(getAmbientForegroundX() - getAmbSpeed1());
+                setAmbientBackgroundX(getAmbientBackgroundX() - getAmbSpeed2());
+                if (getAmbientForegroundX() < -960) {
+                    setAmbientForegroundX(852);
                 }
-                if (getParticlesLayer2PositionX() < (-960)) {
-                    setParticlesLayer2PositionX(852);
+                if (getAmbientBackgroundX() < (-960)) {
+                    setAmbientBackgroundX(852);
                 }
-            } else {
-                setParticlesLayer1PositionY(getParticlesLayer1PositionY() + getAmbSpeed1());
-                setParticlesLayer2PositionY(getParticlesLayer2PositionY() + getAmbSpeed2());
-                if (getParticlesLayer1PositionY() > 480) {
-                    setParticlesLayer1PositionY(-480);
+            } else if (getAmbientDirection() == AnimationDirection.VERTICAL) {
+                setAmbientForegroundY(getAmbientForegroundY() + getAmbSpeed1());
+                setAmbientBackgroundY(getAmbientBackgroundY() + getAmbSpeed2());
+                if (getAmbientForegroundY() > 480) {
+                    setAmbientForegroundY(-480);
                 }
-                if (getParticlesLayer2PositionY() > 480) {
-                    setParticlesLayer2PositionY(-480);
+                if (getAmbientBackgroundY() > 480) {
+                    setAmbientBackgroundY(-480);
                 }
             }
         }
     }
 
-    private void animateLoopA(long delta) {
+    private void animateForeground(long delta) {
         if ((delta - animationLoopADelta) > MS33) {
             animationLoopADelta = delta;
-            if (animateLoopALogic(animationLoopA)) {
+            if (animateForegroundImpl(animationLoopA)) {
                 animationLoopA++;
             } else {
                 animationLoopA = 0;
@@ -661,9 +675,9 @@ public abstract class GamePlay extends Mode {
         return false;
     }
 
-    private boolean animateLoopALogic(int loop) {
+    private boolean animateForegroundImpl(int loop) {
         int computedPosition = -1;//so that we start from zero
-        switch (getAnimationDirection()) {
+        switch (getForegroundDirection()) {
             case ROTATION:
                 for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
                     computedPosition++;
@@ -702,7 +716,7 @@ public abstract class GamePlay extends Mode {
                 for (int inner = 0; inner <= getAnimationLoops(); inner++) {
                     computedPosition++;
                     if (loop == computedPosition) {
-                        switch (getAnimationDirection()) {
+                        switch (getForegroundDirection()) {
                             case VERTICAL_HORIZONTAL:
                                 setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
                                 setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
@@ -720,7 +734,7 @@ public abstract class GamePlay extends Mode {
                 for (int inner = 0; inner <= getAnimationLoops(); inner++) {
                     computedPosition++;
                     if (loop == computedPosition) {
-                        switch (getAnimationDirection()) {
+                        switch (getForegroundDirection()) {
                             case VERTICAL_HORIZONTAL:
                                 setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
                                 setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
@@ -746,6 +760,7 @@ public abstract class GamePlay extends Mode {
 
     public void newInstance() {
         gameOver = false;
+        showBrag = false;
         setCharacterAtbValue(0);
         setOpponentAtbValue(0);
         setFuryLevel(0);
@@ -773,10 +788,15 @@ public abstract class GamePlay extends Mode {
         statIndexOpp = 0;
         oppBarYOffset = 435;
         paneCord = 306;
-        menuBarY = 360;
         furyBarY = 130;
         itemX = 215;
         itemY = 360;
+        ambientForegroundX = 0;
+        ambientForegroundY = 0;
+        ambientBackgroundX = 0;
+        ambientBackgroundX = 0;
+        foreGroundPositionY = 0;
+        foreGroundPositionX = 0;
         setForeGroundPositionX(0);
         setForeGroundPositionY(0);
         Achievement.get().newInstance();
@@ -789,13 +809,6 @@ public abstract class GamePlay extends Mode {
             timeLimit = State.get().getLogin().getTimeLimit();
         }
         recordPlayTime();
-        if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE) {
-            musNotice();
-            Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
-        } else {
-            Overlay.get().primaryNotice("");
-            Overlay.get().secondaryNotice("");
-        }
         count2 = 0;
     }
 
@@ -1050,9 +1063,11 @@ public abstract class GamePlay extends Mode {
      * limit break, wee!!!
      */
     public void limitBreak(Player player) {
+        if (gameOver) return;
+        if (playingCutscene) return;
+        if (paused) return;
         if (limitRunning) return;//one at a time folks :)
-        if (runningFury == null) return;
-        switch (runningFury) {
+        switch (player) {
             case CHARACTER:
                 if (!isCharacterAtbFull() || !isFuryBarFull()) return;
                 if (NetworkManager.get().isOnline()) {
@@ -1145,8 +1160,12 @@ public abstract class GamePlay extends Mode {
 
     protected abstract void attackSoundOpp();
 
-    public AnimationDirection getAnimationDirection() {
-        return animationDirection;
+    public AnimationDirection getAmbientDirection() {
+        return ambientDirection;
+    }
+
+    public AnimationDirection getForegroundDirection() {
+        return foregroundDirection;
     }
 
     public float getCharacterHpAsPercent() {
@@ -1218,45 +1237,36 @@ public abstract class GamePlay extends Mode {
         return ambSpeed2;
     }
 
-    public int getParticlesLayer1PositionX() {
-        return particlesLayer1PositionX;
+    public int getAmbientForegroundX() {
+        return ambientForegroundX;
     }
 
-    public void setParticlesLayer1PositionX(int particlesLayer1PositionX) {
-        this.particlesLayer1PositionX = particlesLayer1PositionX;
+    public void setAmbientForegroundX(int ambientForegroundX) {
+        this.ambientForegroundX = ambientForegroundX;
     }
 
-    public int getParticlesLayer2PositionX() {
-        return particlesLayer2PositionX;
+    public int getAmbientBackgroundX() {
+        return ambientBackgroundX;
     }
 
-    public void setParticlesLayer2PositionX(int particlesLayer2PositionX) {
-        this.particlesLayer2PositionX = particlesLayer2PositionX;
+    public void setAmbientBackgroundX(int ambientBackgroundX) {
+        this.ambientBackgroundX = ambientBackgroundX;
     }
 
-    public int getParticlesLayer1PositionY() {
-        return particlesLayer1PositionY;
+    public int getAmbientForegroundY() {
+        return ambientForegroundY;
     }
 
-    public void setParticlesLayer1PositionY(int particlesLayer1PositionY) {
-        this.particlesLayer1PositionY = particlesLayer1PositionY;
+    public void setAmbientForegroundY(int ambientForegroundY) {
+        this.ambientForegroundY = ambientForegroundY;
     }
 
-    public int getParticlesLayer2PositionY() {
-        return particlesLayer2PositionY;
+    public int getAmbientBackgroundY() {
+        return ambientBackgroundY;
     }
 
-    public void setParticlesLayer2PositionY(int particlesLayer2PositionY) {
-        this.particlesLayer2PositionY = particlesLayer2PositionY;
-    }
-
-    /**
-     * Draws battle message at bottom of screen
-     *
-     * @param message - what to display
-     */
-    public void showBattleMessage(String message) {
-        storyText(message);
+    public void setAmbientBackgroundY(int ambientBackgroundY) {
+        this.ambientBackgroundY = ambientBackgroundY;
     }
 
     /**
@@ -1317,7 +1327,6 @@ public abstract class GamePlay extends Mode {
 
     /**
      * Animate attacks in graphics context
-     *
      */
     public void revertToDefaultSprites() {
         setSprites(Player.OPPONENT, 9, 11);
@@ -1340,7 +1349,7 @@ public abstract class GamePlay extends Mode {
             array = Characters.get().getOpponent().getAiProfile2();
         } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.50 && getOpponentHp() / getOpponentMaximumHp() < 0.75) {
-            if (getFuryLevel() == 1000 && limitRunning) {
+            if (isFuryBarFull() && !limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1348,7 +1357,7 @@ public abstract class GamePlay extends Mode {
             }
         } //when doing isWithinRange, 4 buffs + 2 moves
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.25 && getOpponentHp() / getOpponentMaximumHp() < 0.50) {
-            if (getFuryLevel() == 1000 && limitRunning) {
+            if (isFuryBarFull() && !limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1356,7 +1365,7 @@ public abstract class GamePlay extends Mode {
             }
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
-            if (getFuryLevel() == 1000 && limitRunning) {
+            if (isFuryBarFull() && !limitRunning) {
                 triggerFury(Player.OPPONENT);
                 array = new int[]{};
             } else {
@@ -1392,7 +1401,6 @@ public abstract class GamePlay extends Mode {
             case 0:
                 gamePlay.setSprites(source, 9, 11);
                 gamePlay.setSprites(destination, 9, 11);
-                gamePlay.showBattleMessage("");
                 break;
             case 1:
                 attackIdentifier = "01";
@@ -1463,6 +1471,10 @@ public abstract class GamePlay extends Mode {
 
     public float getCharacterAtbValue() {
         return characterAtbValue;
+    }
+
+    public float getCharacterAtbPercent() {
+        return (characterAtbValue / maxAtb);
     }
 
     public void setCharacterAtbValue(float thisNum) {

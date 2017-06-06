@@ -31,6 +31,8 @@ import io.github.subiyacryolite.enginev1.AudioPlayback;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.image.Image;
 
+import java.util.HashMap;
+
 
 /**
  * Basic characterEnum template
@@ -40,7 +42,8 @@ import javafx.scene.image.Image;
 public abstract class Character {
 
     public String descSmall, name, attackStr;
-    public String[] physical, celestia, status, bragRights;
+    public String[] physical, celestia, status;
+    public final HashMap<Integer,String> bragRights = new HashMap<>();
     public int points, life, damage;
     public float damageMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
@@ -54,7 +57,6 @@ public abstract class Character {
     private int numberOfSprites = 12;
 
     public Character() {
-        bragRights = new String[]{"", "", "", "", "", "", "", "", "", ""};
         isMale = true;
     }
 
@@ -158,11 +160,11 @@ public abstract class Character {
     /**
      * Gets characterEnum to characterEnum battle taunts
      *
-     * @param indx, the characterEnum
+     * @param index, the characterEnum
      * @return bragging text
      */
-    public String getBraggingRights(int indx) {
-        return name + ": " + bragRights[indx];
+    public String getBraggingRights(int index) {
+        return name + ": " + bragRights.get(index);
     }
 
     /**
@@ -198,28 +200,23 @@ public abstract class Character {
     public void setAiProf() {
     }
 
-    public int[] getAiProfile1()
-    {
+    public int[] getAiProfile1() {
         return behaviours1;
     }
 
-    public int[] getAiProfile2()
-    {
+    public int[] getAiProfile2() {
         return behaviours2;
     }
 
-    public int[] getAiProfile3()
-    {
+    public int[] getAiProfile3() {
         return behaviours3;
     }
 
-    public int[] getAiProfile4()
-    {
+    public int[] getAiProfile4() {
         return behaviours4;
     }
 
-    public int[] getAiProfile5()
-    {
+    public int[] getAiProfile5() {
         return behaviours5;
     }
 
@@ -249,8 +246,7 @@ public abstract class Character {
         damageMultiplier = value;
     }
 
-    public void play()
-    {
+    public void play() {
         AudioPlayback sound3 = new AudioPlayback(AudioConstants.itemSound1(), AudioType.SOUND, false);
         sound3.play();
     }

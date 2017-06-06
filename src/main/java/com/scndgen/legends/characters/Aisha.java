@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -36,7 +37,6 @@ public class Aisha extends Character {
         name = "Aisha";
         characterEnum = AISHA;
         isNotMale();
-        bragRights = new String[]{"Show achievements what you got Rai", "Prove you aren't just a waste of space ;D", "Fun fact! My single blade beats both of yours.", "Let's do this", "I'll keep slicing you till you're a pile of dirt!", "You fight with skill and grace, but thats not enough to stop achievements", "You won't be able to touch achievements!!!", "So you're the legend. Lets see what you got", "Wow!! So thats what you really look like", "Girl power! WOOT! WOOT!", "I won't go easy on you little girl", "Unbelievable!!"};
         physical = new String[]{"Phantom Strike", "Phantom Rush", "Dead Rising", "Silver Slash"};
         celestia = new String[]{"Violet Flame", "Violet Rush", "Violet Revolution", "Violet Blitz"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Wound Spray"};
@@ -48,6 +48,18 @@ public class Aisha extends Character {
         life = 29440;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 2.14f;//1.90;
+        bragRights.put(CharacterEnum.RAILA.index(), "Show me what you got Rai");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Prove you aren't just a waste of space");
+        bragRights.put(CharacterEnum.LYNX.index(), "My blade beats both of yours.");
+        bragRights.put(CharacterEnum.AISHA.index(), "Let's do this");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "I'll keep slicing you till you're a pile of dirt!");
+        bragRights.put(CharacterEnum.ADE.index(), "You fight with skill and grace, but thats not enough to stop me");
+        bragRights.put(CharacterEnum.JONAH.index(), "You won't be able to touch me!!!");
+        bragRights.put(CharacterEnum.ADAM.index(), "So you're the legend. Lets see what you got");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "Wow!! So thats what you really look like");
+        bragRights.put(CharacterEnum.AZARIA.index(), "Girl power! WOOT! WOOT!");
+        bragRights.put(CharacterEnum.SORROWE.index(), "I won't go easy on you princess");
+        bragRights.put(CharacterEnum.THING.index(), "Unbelievable!!");
     }
 
     @Override
@@ -57,55 +69,46 @@ public class Aisha extends Character {
                 attackStr = physical[0];
                 damage = 50;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "01":
                 attackStr = physical[0];
                 damage = 93;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 100;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 95;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 94;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 94;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 95;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 97;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 97;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -120,7 +123,6 @@ public class Aisha extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -134,7 +136,6 @@ public class Aisha extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -148,7 +149,6 @@ public class Aisha extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -162,7 +162,6 @@ public class Aisha extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

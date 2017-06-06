@@ -43,9 +43,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 
 import static com.sun.javafx.tk.Toolkit.getToolkit;
@@ -57,12 +55,10 @@ public class RenderGamePlay extends GamePlay {
     private static RenderGamePlay instance;
     private Font largeFont, normalFont;
     private Font notSelected;
-    private Image stageAmbientLayer1, stageAmbientLayer2, stageForeground;
-    private LinearGradient gradient1 = new LinearGradient(xLocal, 10, 255, 10, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
-    private LinearGradient gradient3 = new LinearGradient(0, 0, 100, 100, true, CycleMethod.REFLECT, new Stop(0.0, Color.YELLOW), new Stop(1.0, Color.RED));
-    private Image[] attackCategory, numberPix;
+    private Image stageAmbientForeground, stageAmbientBackground, stageForeground;
+    private Image[] numberPix;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, quePic1, furyBar, counterPane, quePic2, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, hud2, win, lose, status, menuHold, furyPlaceholder, fury1, fury2, phys, cel, itm, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
+    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
     private Image[] charSprites, oppSprites;
     private Image[] characterPortraits;
     private int characterPortraitIndex;
@@ -93,8 +89,12 @@ public class RenderGamePlay extends GamePlay {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                if (!gameOver && !playingCutscene && !paused)
-                    triggerFury(Player.CHARACTER);
+                triggerFury(Player.CHARACTER);
+            }
+
+            @Override
+            public void onHover() {
+                setActiveItem(fury);
             }
 
             @Override
@@ -386,8 +386,7 @@ public class RenderGamePlay extends GamePlay {
                 drawStageCharacters(gc, width, height);
                 drawStageForeground(gc);
                 drawDamageLayer(gc);
-                gc.setGlobalAlpha((1.0f));
-                drawCharacterMenuAndQueSlots(gc);
+                gc.setGlobalAlpha(1.0f);
                 drawComicBookText(gc);
                 drawBattleInformation(gc);
                 if (statusEffectCharacterOpacity > 0.02f) {
@@ -410,12 +409,14 @@ public class RenderGamePlay extends GamePlay {
                 //---opponrnt activity bar + text
 
                 gc.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                gc.setFill(Color.ORANGE);
                 gc.setFill(Color.WHITE);
                 gc.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
+
                 gc.setFill(Color.BLACK);
                 gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
-                gc.setFill(gradient1);
+                gc.setFill(Color.ORANGE);
                 gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, getOpponentAtbValue(), 6, 6, 6);
 
                 //------------player 1 HUD---------------------//
@@ -424,11 +425,11 @@ public class RenderGamePlay extends GamePlay {
                 gc.drawImage(hud1, (lbx2 - 498) + uiShakeEffectOffsetCharacter, (lby2 - 417) - uiShakeEffectOffsetCharacter);
                 //inner
                 //gc.setFill(Color.RED);
-                gc.setFill(gradient3);
-                gc.arc(lbx2 - 493 + uiShakeEffectOffsetCharacter, lby2 - 412 - uiShakeEffectOffsetCharacter, 90, 90, 0, phyAngle());
+                gc.setFill(Color.ORANGE);
+                gc.fillArc(lbx2 - 493 + uiShakeEffectOffsetCharacter, lby2 - 412 - uiShakeEffectOffsetCharacter, 90, 90, 0, phyAngle(), ArcType.ROUND);
                 //inner loop
                 gc.setFill(Color.BLACK);
-                gc.drawImage(hud2, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
+                gc.drawImage(characterHpBar, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 gc.setFill(Color.WHITE);
                 gc.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
                 gc.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
@@ -479,13 +480,13 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawStageBackground(GraphicsContext gc) {
-        switch (animLayer) {
-            case BOTH:
-                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+        switch (ambientMode) {
+            case INDEPENDENT:
+                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
                 break;
-            case BACKGROUND:
-                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+            case BOTH_IN_BACKGROUND:
+                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
+                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
                 break;
         }
     }
@@ -499,13 +500,13 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawStageForeground(GraphicsContext gc) {
-        switch (animLayer) {
-            case BOTH:
-                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
+        switch (ambientMode) {
+            case INDEPENDENT:
+                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
                 break;
-            case FOREGROUND:
-                gc.drawImage(stageAmbientLayer1, particlesLayer1PositionX, particlesLayer1PositionY);
-                gc.drawImage(stageAmbientLayer2, particlesLayer2PositionX, particlesLayer2PositionY);
+            case BOTH_IN_FOREGROUND:
+                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
+                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
                 break;
         }
         gc.drawImage(stageForeground, foreGroundPositionX, foreGroundPositionY);
@@ -517,18 +518,6 @@ public class RenderGamePlay extends GamePlay {
         }
         gc.setGlobalAlpha(damageLayerOpacity * 0.1f);
         gc.drawImage(damageLayer, 0, 0);
-    }
-
-    private void drawCharacterMenuAndQueSlots(GraphicsContext gc) {
-        gc.drawImage(menuHold, attackMenuXPos, menuBarY);
-        for (int queItem = 0; queItem < 4; queItem++) {
-            gc.drawImage(quePic1, (queItem * 70 + 5 + attackMenuXPos), 440);
-        }
-        if (characterAttacks.size() >= 1) {
-            for (int queItem = 0; queItem < characterAttacks.size(); queItem++) {
-                gc.drawImage(quePic2, (queItem * 70 + 5 + attackMenuXPos), 440);
-            }
-        }
     }
 
     private void drawComicBookText(GraphicsContext gc) {
@@ -555,42 +544,86 @@ public class RenderGamePlay extends GamePlay {
         if (opac < 0.95f) {
             opac = opac + 0.05f;
         }
-        gc.setGlobalAlpha((opac));
-        gc.setFill(currentColor);
-        gc.drawImage(attackCategory[columnIndex], itemX + attackMenuXPos, itemY);
+        gc.setGlobalAlpha(opac);
+        /*
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 7), physicalAttacks[0], attackOne);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 6), physicalAttacks[1], attackTwo);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 5), physicalAttacks[2], attackThree);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 4), physicalAttacks[3], attackFour);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 3), celestiaAttacks[0], attackFive);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 2), celestiaAttacks[1], attackSix);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 1), celestiaAttacks[2], attackSeven);
+        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 0), celestiaAttacks[3], attackEight);
+        drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), itemAttacks[0], attackNine);
+        drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
+        drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
+        drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
+*/
         switch (columnIndex) {
             case 0:
-                gc.setFont(attackOne.isHovered() ? largeFont : normalFont);
-                fillText(gc, physicalAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackOne);
-                gc.setFont(attackTwo.isHovered() ? largeFont : normalFont);
-                fillText(gc, physicalAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTwo);
-                gc.setFont(attackThree.isHovered() ? largeFont : normalFont);
-                fillText(gc, physicalAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackThree);
-                gc.setFont(attackFour.isHovered() ? largeFont : normalFont);
-                fillText(gc, physicalAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackFour);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), physicalAttacks[0], attackOne);
+                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), physicalAttacks[1], attackTwo);
+                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), physicalAttacks[2], attackThree);
+                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), physicalAttacks[3], attackFour);
                 break;
             case 1:
-                gc.setFont(attackFive.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestiaAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackFive);
-                gc.setFont(attackSix.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestiaAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackSix);
-                gc.setFont(attackSeven.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestiaAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackSeven);
-                gc.setFont(attackEight.isHovered() ? largeFont : normalFont);
-                fillText(gc, celestiaAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackEight);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), celestiaAttacks[0], attackFive);
+                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), celestiaAttacks[1], attackSix);
+                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), celestiaAttacks[2], attackSeven);
+                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), celestiaAttacks[3], attackEight);
                 break;
             case 2:
-                gc.setFont(attackNine.isHovered() ? largeFont : normalFont);
-                fillText(gc, itemAttacks[0], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0], attackNine);
-                gc.setFont(attackTen.isHovered() ? largeFont : normalFont);
-                fillText(gc, itemAttacks[1], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1], attackTen);
-                gc.setFont(attackEleven.isHovered() ? largeFont : normalFont);
-                fillText(gc, itemAttacks[2], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2], attackEleven);
-                gc.setFont(attackTwelve.isHovered() ? largeFont : normalFont);
-                fillText(gc, itemAttacks[3], attackMenuTextXPos, attackMenuTextYPos + fontSizes[0] + 2 + fontSizes[1] + 2 + fontSizes[2] + 2 + fontSizes[3], attackTwelve);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), itemAttacks[0], attackNine);
+                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
+                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
+                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
                 break;
         }
+
+        gc.setGlobalAlpha(1.0f);
+        gc.setFill(Color.BLACK);
+        double diameter = 40;
+        gc.fillArc(426 - 100, 420, diameter, diameter, 0, 360, ArcType.ROUND);
+        gc.fillArc(426 - 50, 420, diameter, diameter, 0, 360, ArcType.ROUND);
+        gc.fillArc(426 + 5, 420, diameter, diameter, 0, 360, ArcType.ROUND);
+        gc.fillArc(426 + 55, 420, diameter, diameter, 0, 360, ArcType.ROUND);
+        gc.fillRect(426 - 70, 438, 140, 4);
+        gc.setFill(Color.WHITE);
+        diameter = 35;
+        if (characterAttacks.size() >= 1 || triggerCharacterAttack)
+            gc.fillArc(426 - 97.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
+        if (characterAttacks.size() >= 2 || triggerCharacterAttack)
+            gc.fillArc(426 - 47.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
+        if (characterAttacks.size() >= 3 || triggerCharacterAttack)
+            gc.fillArc(426 + 7.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
+        if (characterAttacks.size() >= 4 || triggerCharacterAttack)
+            gc.fillArc(426 + 52.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.setGlobalAlpha((1.0f));
+    }
+
+    private void drawAttackItem(GraphicsContext gc, int x, int y, String attack, UiItem uiItem) {
+        gc.setFont(uiItem.isHovered() ? largeFont : normalFont);
+
+        int half = 2;
+        int full = 6;
+        boolean validHighlight = uiItem.isHovered() && safeToSelect;
+
+        double computedSize = getToolkit().getFontLoader().computeStringWidth(attack, gc.getFont()) + full;
+        double width = computedSize < 150 ? 150 : computedSize;
+        double height = gc.getFont().getSize() + full;
+
+        gc.setFill(validHighlight ? Color.WHITE : Color.BLACK);
+        gc.strokeRoundRect(x - half, y - gc.getFont().getSize() - half, width, height, half, half);
+
+        gc.setFill(validHighlight ? Color.BLACK : Color.WHITE);
+        gc.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
+        gc.fillRoundRect(x - half, y - gc.getFont().getSize() - half, width, height, half, half);
+
+        gc.setFill(validHighlight ? Color.WHITE : Color.BLACK);
+        gc.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
+        fillText(gc, attack, x, y, uiItem, width, height);
+
+
     }
 
     private void drawTimer(GraphicsContext gc) {
@@ -608,7 +641,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawFuryBar(GraphicsContext gc) {
-        drawImage(gc, furyPlaceholder, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), fury);
+        drawImage(gc, furyState, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), fury);
         gc.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
         gc.setFill(Color.RED);
         gc.fillRoundRect(12 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 132 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 12, getFuryLevel() / 5, 12, 12);
@@ -686,14 +719,7 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void checkFuryStatus() {
-        if (isFuryBarFull()) {
-            furyPlaceholder = fury1;
-        } else {
-            furyPlaceholder = fury2;
-        }
-        if (gameOver == true) {
-            //slow mo!!!!
-        }
+        furyState = isFuryBarFull() ? furyActive : furyInactive;
     }
 
     public void setOpponentDamage(int oneA, int twoA, int threeA, int fourA) {
@@ -745,7 +771,7 @@ public class RenderGamePlay extends GamePlay {
      * Caches number
      */
     private void cacheNumPix() {
-        attackMenuXPos = State.get().getLogin().isLeftHanded() ? 0 : 547;
+        attackMenuXPos = 670;
         attackMenuTextXPos = attackMenuXPos + 25;
         attackMenuTextYPos = 366;
         Loader pix = new Loader();
@@ -798,7 +824,6 @@ public class RenderGamePlay extends GamePlay {
             comicBookText[0] = Characters.get().getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
                 comicBookText[bx] = loader.load("images/screenComic/" + (bx - 1) + ".png");
-            menuHold = loader.load("images/" + Characters.get().getCharacter().getEnum().data() + "/menu.png");
             damageLayer = loader.load("images/damage1.png");
 
             time0i = loader.load("images/fig/0.png");
@@ -827,22 +852,16 @@ public class RenderGamePlay extends GamePlay {
             hpHolder = loader.load("images/hpHolder.png");
             stageBackground = loader.load(RenderStageSelect.get().getStageBackground());
             stageForeground = loader.load(RenderStageSelect.get().getStageForeground());
-            stageAmbientLayer1 = loader.load(RenderStageSelect.get().getFgLocation1());
-            stageAmbientLayer2 = loader.load(RenderStageSelect.get().getFgLocation2());
-            phys = loader.load("images/t_physical.png");
-            cel = loader.load("images/t_celestia.png");
-            itm = loader.load("images/t_item.png");
-            fury1 = loader.load("images/fury.gif");
-            fury2 = loader.load("images/furyo.png");
-            furyPlaceholder = fury2;
+            stageAmbientForeground = loader.load(RenderStageSelect.get().getFgLocation1());
+            stageAmbientBackground = loader.load(RenderStageSelect.get().getFgLocation2());
+            furyActive = loader.load("images/fury.gif");
+            furyInactive = loader.load("images/furyo.png");
+            furyState = furyInactive;
 
             furyBar = loader.load("images/furyBar.png");
-            quePic1 = loader.load("images/queB.png");
-            quePic2 = loader.load("images/que.gif");
             oppBar = loader.load("images/oppBar.png");
-            attackCategory = new Image[]{phys, cel, itm};
             hud1 = loader.load("images/hud1.png");
-            hud2 = loader.load("images/hud2.png");
+            characterHpBar = loader.load("images/hud2.png");
             win = loader.load("images/win.png");
             lose = loader.load("images/lose.png");
             status = transBuf;
@@ -1028,16 +1047,8 @@ public class RenderGamePlay extends GamePlay {
      *
      * @return circel angle
      */
-    private int phyAngle() {
-        float start = getCharacterAtbValue() / 290.0f;
-        angleRaw = start * 360;
-        result = Integer.parseInt("" + Math.round(angleRaw));
-        if (result >= 360) {
-            enableSelection();
-        } else {
-            disableSelection();
-        }
-        return result;
+    private float phyAngle() {
+        return getCharacterAtbPercent() * 360;
     }
 
     public void keyPressed(KeyEvent keyEvent) {
@@ -1098,7 +1109,6 @@ public class RenderGamePlay extends GamePlay {
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
                     characterAttacks.add(activeAttack); // count initially negative 1, add one to get to index 0
                     checkStatus();
-                    showBattleMessage("Queued up " + getAttack(activeAttack));
                 } else {
                     RenderCharacterSelection.get().errorSound();
                 }

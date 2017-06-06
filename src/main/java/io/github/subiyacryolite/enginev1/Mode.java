@@ -192,13 +192,30 @@ public abstract class Mode implements UiScreen {
         }
     }
 
-    public void fillText(GraphicsContext gc, String text, double upperLeftX, double upperLeftY, UiItem uiTile) {
-        gc.fillText(text, upperLeftX, upperLeftY);
+    public void fillText(GraphicsContext gc, String text, double x, double y, UiItem uiTile) {
+        gc.fillText(text, x, y);
         /////////////////////////////////////
-        double topLeftX = upperLeftX;
-        double topLeftY = upperLeftY;
-        double bottomRightX = upperLeftX + Toolkit.getToolkit().getFontLoader().computeStringWidth(text, gc.getFont());
-        double bottomRightY = upperLeftY - Toolkit.getToolkit().getFontLoader().getFontMetrics(gc.getFont()).getLineHeight();
+        double topLeftX = x;
+        double topLeftY = y;
+        double bottomRightX = x + Toolkit.getToolkit().getFontLoader().computeStringWidth(text, gc.getFont());
+        double bottomRightY = y - Toolkit.getToolkit().getFontLoader().getFontMetrics(gc.getFont()).getLineHeight();
+        /////////////////////////////////////
+        double mouseActualX = ScndGenLegends.get().getMouseX();
+        double mouseActualY = ScndGenLegends.get().getMouseY();
+        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
+        boolean check2 = topLeftY >= mouseActualY && mouseActualY >= bottomRightY;
+        if (check1 && check2) {
+            setActiveItem(uiTile);
+        }
+    }
+
+    public void fillText(GraphicsContext gc, String text, double x, double y, UiItem uiTile, double width, double height) {
+        gc.fillText(text, x, y);
+        /////////////////////////////////////
+        double topLeftX = x;
+        double topLeftY = y;
+        double bottomRightX = x + width;
+        double bottomRightY = y - height;
         /////////////////////////////////////
         double mouseActualX = ScndGenLegends.get().getMouseX();
         double mouseActualY = ScndGenLegends.get().getMouseY();

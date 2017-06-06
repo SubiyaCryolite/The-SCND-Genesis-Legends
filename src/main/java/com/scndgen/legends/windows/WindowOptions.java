@@ -44,15 +44,13 @@ import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
  */
 public class WindowOptions extends Stage {
 
-    private Label lblDifficultySetting, lblTimeDuration, lblTextSpeed, lblComicTextOccurence, lblIsLeftHanded;
+    private Label lblDifficultySetting, lblTimeDuration, lblTextSpeed, lblComicTextOccurence;
     private GridPane gridPane;
     private ObservableList<String> comicTextOccurence;
     private ObservableList<String> textSpeed;
     private ObservableList<String> difficultySetting;
     private ObservableList<String> timeLimits;
-    private ObservableList<String> isLeftHanded;
     private ComboBox<String> cmbDifficultySetting;
-    private ComboBox<String> cmbIsLeftHanded;
     private ComboBox<String> cmbTimeDuration;
     private ComboBox<String> cmbTextSpeed;
     private ComboBox<String> cmbComicTextOccurence;
@@ -74,7 +72,6 @@ public class WindowOptions extends Stage {
         gridPane.setHgap(4);
         gridPane.setVgap(4);
 
-        isLeftHanded = FXCollections.observableArrayList(new String[]{Language.get().get(172), Language.get().get(171)});
         timeLimits = FXCollections.observableArrayList(new String[]{Language.get().get(424), "180", "150", "120", "90", "60", "45","30"});
         comicTextOccurence = FXCollections.observableArrayList(new String[]{Language.get().get(1), Language.get().get(2), Language.get().get(3), Language.get().get(4)});
         textSpeed = FXCollections.observableArrayList(new String[]{Language.get().get(22), Language.get().get(23), Language.get().get(24), Language.get().get(25)});
@@ -150,16 +147,6 @@ public class WindowOptions extends Stage {
         });
         gridPane.add(lblTimeDuration, 1, row);
         gridPane.add(cmbTimeDuration, 2, row);
-        row++;
-
-        cmbIsLeftHanded = new ComboBox(isLeftHanded);
-        cmbIsLeftHanded.getSelectionModel().select(State.get().getLogin().isLeftHanded() ? Language.get().get(171) : Language.get().get(172));
-        cmbIsLeftHanded.getSelectionModel().selectedItemProperty().addListener((list, oldValue, newValue) -> {
-            State.get().getLogin().setLeftHanded(newValue.equals(Language.get().get(171)) ? true : false);
-        });
-        lblIsLeftHanded = new Label(Language.get().get(173));
-        gridPane.add(lblIsLeftHanded, 1, row);
-        gridPane.add(cmbIsLeftHanded, 2, row);
         row++;
 
         cmbComicTextOccurence = new ComboBox(comicTextOccurence);

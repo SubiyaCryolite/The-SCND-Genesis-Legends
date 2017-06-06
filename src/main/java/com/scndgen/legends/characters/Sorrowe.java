@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -41,7 +42,6 @@ public class Sorrowe extends Character {
         name = "Sorrowe";
         characterEnum = SORROWE;
         isNotMale();
-        bragRights = new String[]{"Look what the cat dragged in", "Sorry, you're not my type", "A rea challenge, 'bout time", "Weakling !!", "You're incredibly annoying", "Don't go easy on achievements", "Lets have some fun!", "NovaAdam, I shall surpass even you", "That power will soon be mine", "You don't scare achievements", "Let's do this", "Ugh, disgusting"};
         physical = new String[]{"Lashing", "Whip-nado", "Lash assault", "Snared"};
         celestia = new String[]{"Hell Falme", "Hell Judgement", "Hell Blast", "Hell Blade"};
         status = new String[]{"Heal", "Cura EX", "Health ++", "E-Juice"};
@@ -54,6 +54,18 @@ public class Sorrowe extends Character {
         life = 31360;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 2.02f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(), "Look what the cat dragged in");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Sorry, you're not my type");
+        bragRights.put(CharacterEnum.LYNX.index(), "A rea challenge, 'bout time");
+        bragRights.put(CharacterEnum.AISHA.index(), "Weakling !!");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "You're incredibly annoying");
+        bragRights.put(CharacterEnum.ADE.index(), "Don't go easy on me");
+        bragRights.put(CharacterEnum.JONAH.index(), "Lets have some fun!");
+        bragRights.put(CharacterEnum.ADAM.index(), "I shall surpass even you");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "That power will soon be mine");
+        bragRights.put(CharacterEnum.AZARIA.index(), "You don't scare me");
+        bragRights.put(CharacterEnum.SORROWE.index(), "Let's do this");
+        bragRights.put(CharacterEnum.THING.index(), "Ugh, disgusting");
     }
 
     @Override
@@ -63,49 +75,41 @@ public class Sorrowe extends Character {
                 attackStr = physical[0];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 105;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 101;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 108;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 105;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -120,7 +124,6 @@ public class Sorrowe extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -134,7 +137,6 @@ public class Sorrowe extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -148,7 +150,6 @@ public class Sorrowe extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -162,7 +163,6 @@ public class Sorrowe extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

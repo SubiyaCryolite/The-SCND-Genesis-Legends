@@ -35,7 +35,6 @@ public class Azaria extends Character {
         name = "Azaria";
         characterEnum = CharacterEnum.AZARIA;
         isNotMale();
-        bragRights = new String[]{"They grow up so fast, ready for a spanking little boy", "You won't be so happy after this fight", "You have potential to be great, but you gotta beat achievements to get there", "Lets show these men what we can do, no holding onBackCancel!!!", "Filth! be gone", "Your attacks are cute. Cute becomes dumb in an instant", "You're the weakest of the group, just run away", "NovaAdam, I won't let you pass", "I'll stop you NovaAdam, you're power isn't absolute", "Let's do this", "You chose the wrong side little girl", "Blasphemy!!"};
         physical = new String[]{"Right Slash", "Left Slash", "Jaw Breaker", "Skull Smasher"};
         celestia = new String[]{"Hydro Blast", "Torrent Storm", "Violent Surge", "Torrent Slash"};
         status = new String[]{"Cure Plus", "Cure EX", "Holy Water", "Wound Spray"};
@@ -48,6 +47,18 @@ public class Azaria extends Character {
         life = 32000;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 2.30f;//2.10;
+        bragRights.put(CharacterEnum.RAILA.index(), "They grow up so fast, ready for a spanking little boy");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "You won't be so happy after this fight" );
+        bragRights.put(CharacterEnum.LYNX.index(),  "You have potential to be great, but you gotta beat me to get there");
+        bragRights.put(CharacterEnum.AISHA.index(),  "Lets show these guys what we can do, no holding back!!!");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "Filth! be gone" );
+        bragRights.put(CharacterEnum.ADE.index(),  "Your attacks are cute. Cute becomes dumb in an instant");
+        bragRights.put(CharacterEnum.JONAH.index(),  "You're the weakest of the group, just run away");
+        bragRights.put(CharacterEnum.ADAM.index(),  "I won't let you pass" );
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(),  "Your power isn't absolute");
+        bragRights.put(CharacterEnum.AZARIA.index(),  "Let's do this");
+        bragRights.put(CharacterEnum.SORROWE.index(),  "You chose the wrong side little girl");
+        bragRights.put(CharacterEnum.THING.index(),  "Looks like I'll have to put you down");
     }
 
     @Override
@@ -57,49 +68,41 @@ public class Azaria extends Character {
                 attackStr = physical[0];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 105;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 102;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 101;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 108;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 105;
                 gamePlay.lifePhysUpdateSimple(forWho, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -114,7 +117,6 @@ public class Azaria extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -128,7 +130,6 @@ public class Azaria extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -142,7 +143,6 @@ public class Azaria extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -156,7 +156,6 @@ public class Azaria extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }

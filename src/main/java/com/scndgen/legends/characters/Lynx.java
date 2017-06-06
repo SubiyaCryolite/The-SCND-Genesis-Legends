@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.Player;
 import com.scndgen.legends.mode.GamePlay;
 
@@ -35,7 +36,6 @@ public class Lynx extends Character {
         descSmall = "Lynx - a fighter specialised in dual blade combat";
         name = "Lynx";
         characterEnum = LYNX;
-        bragRights = new String[]{"Don't expect achievements to go easy on ya!", "Show achievements what you've learnt", "Let's do this", "This'll be fun. Don't hold onBackCancel Aisha!!!", "I don't take kindly to scum", "A worthy opponent, lets do this!!!", "This'll be over quick, brace yourself", "The sword of Genesis, show achievements its strength", "So this is an awakened one, I'll show no mercy", "It's an honour to battle you", "I don't wanna fight a little girl", "Abomination much?"};
         physical = new String[]{"Blade Barrage", "Dual Slice", "Basic Slice", "Fatal DESCENT"};
         celestia = new String[]{"Deadly Crescent", "Double Impact", "Raging Torrent", "Optical Illusion"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -47,6 +47,18 @@ public class Lynx extends Character {
         life = 30400;
         limit = new int[]{0, 0, 0, 0, 0};
         atbRecoveryRate = 2.20f;//1.75;
+        bragRights.put(CharacterEnum.RAILA.index(), "Don't expect me to go easy on ya!");
+        bragRights.put(CharacterEnum.SUBIYA.index(), "Show me what you've learnt");
+        bragRights.put(CharacterEnum.LYNX.index(), "Let's do this");
+        bragRights.put(CharacterEnum.AISHA.index(), "This'll be fun. Don't hold back Aisha!!!");
+        bragRights.put(CharacterEnum.RAVAGE.index(), "I don't take kindly to scum");
+        bragRights.put(CharacterEnum.ADE.index(), "A worthy opponent, lets do this!!!");
+        bragRights.put(CharacterEnum.JONAH.index(), "This'll be over quick, brace yourself");
+        bragRights.put(CharacterEnum.ADAM.index(), "The sword of Genesis, show me its strength");
+        bragRights.put(CharacterEnum.NOVA_ADAM.index(), "So this is an awakened one, I'll show no mercy");
+        bragRights.put(CharacterEnum.AZARIA.index(), "It's an honour to battle you");
+        bragRights.put(CharacterEnum.SORROWE.index(), "I don't wanna fight a little girl");
+        bragRights.put(CharacterEnum.THING.index(), "Abomination much?");
     }
 
     @Override
@@ -56,49 +68,41 @@ public class Lynx extends Character {
                 attackStr = physical[0];
                 damage = 100;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 98;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 97;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 96;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 98;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 97;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 103;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 100;
                 gamePlay.lifePhysUpdateSimple(player, damage);
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "09":
                 play();
@@ -112,7 +116,6 @@ public class Lynx extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "10":
                 play();
@@ -126,7 +129,6 @@ public class Lynx extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "11":
                 play();
@@ -140,7 +142,6 @@ public class Lynx extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
             case "12":
                 play();
@@ -154,7 +155,6 @@ public class Lynx extends Character {
                     gamePlay.updateOpponentLife(damage);
                     gamePlay.setStatusPic(Player.OPPONENT);
                 }
-                gamePlay.showBattleMessage(name + " used " + attackStr);
                 break;
         }
     }
