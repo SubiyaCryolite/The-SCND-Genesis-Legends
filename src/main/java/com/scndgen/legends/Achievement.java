@@ -168,7 +168,7 @@ public class Achievement {
             State.get().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.getAttackType(Player.CHARACTER) == AttackType.FURY && gamePlay.isGameOver() && gamePlay.hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
+        if (gamePlay.getAttackType(PlayerType.PLAYER1) == AttackType.FURY && gamePlay.isGameOver() && gamePlay.hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
             achievement = Achievements.RAGE;
             name.add(achievementName.get(achievement));
             Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
@@ -190,7 +190,7 @@ public class Achievement {
             State.get().getLogin().incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.getAttackType(Player.OPPONENT) == AttackType.FURY && gamePlay.hasWon() && gamePlay.isGameOver() && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
+        if (gamePlay.getAttackType(PlayerType.PLAYER2) == AttackType.FURY && gamePlay.hasWon() && gamePlay.isGameOver() && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
             achievement = Achievements.BUZZ_KILL;
             name.add(achievementName.get(achievement));
             Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));

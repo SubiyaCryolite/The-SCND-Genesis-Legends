@@ -65,7 +65,7 @@ public abstract class GamePlay extends Mode {
     protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
     protected int ambientForegroundX = 0, ambientForegroundY = 0, ambientBackgroundX = 0, ambientBackgroundY = 0;
     protected int numOfComicPics = 9;
-    protected int foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops, delay;
+    protected float foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops;
     protected AnimationDirection ambientDirection = AnimationDirection.VERTICAL;
     protected AnimationDirection foregroundDirection = AnimationDirection.VERTICAL;
     protected int oppXcord = 10;
@@ -82,7 +82,7 @@ public abstract class GamePlay extends Mode {
     protected boolean fancyBWAnimeEffectEnabled;
     protected boolean gameOver, showBrag;
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
-    protected int damageDoneToCharacter, damageDoneToOpponent;
+    protected float damageDoneToCharacter, damageDoneToOpponent;
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
     protected int lifeBarShakeIterations = 2, lifeBarShakeInnerIterations = 4;
@@ -93,14 +93,14 @@ public abstract class GamePlay extends Mode {
     protected int itemX = 0, itemY = 0;
     protected int lbx2 = 500;
     protected int lby2 = 420;
-    protected AttackType characterAttackType = AttackType.PHYSICAL;
-    protected AttackType opponentAttackType = AttackType.PHYSICAL;
+    protected AttackType characterAttackType = AttackType.REGULAR;
+    protected AttackType opponentAttackType = AttackType.REGULAR;
     protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
     protected float statusEffectCharacterOpacity, statusEffectOpponentOpacity;
     protected int furyBarY = 0;
     protected int[] fontSizes = {LoginScreen.LARGE_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE};
     protected String attackStr;
-    protected Player runningFury;
+    protected PlayerType runningFury;
     protected String[] achievementName, achievementDescription, achievementClass, achievementPoints;
     protected int activeAttack = 0;
     protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
@@ -143,13 +143,13 @@ public abstract class GamePlay extends Mode {
         statIndex = dex;
     }
 
-    public void setStatusPic(Player player) {
-        if (player == Player.CHARACTER) {
+    public void setStatusPic(PlayerType playerType) {
+        if (playerType == PlayerType.PLAYER1) {
             statusEffectCharacterOpacity = 1.0f;
             statusEffectCharacterYCoord = 0;
             statIndexChar = statIndex;
         }
-        if (player == Player.OPPONENT) {
+        if (playerType == PlayerType.PLAYER2) {
             statusEffectOpponentOpacity = 1.0f;
             statusEffectOpponentYCoord = 0;
             statIndexOpp = statIndex;
@@ -218,11 +218,11 @@ public abstract class GamePlay extends Mode {
      *
      * @return hurtChar type
      */
-    public AttackType getAttackType(Player player) {
-        AttackType result = AttackType.PHYSICAL;
-        if (player == Player.CHARACTER) {
+    public AttackType getAttackType(PlayerType playerType) {
+        AttackType result = AttackType.REGULAR;
+        if (playerType == PlayerType.PLAYER1) {
             result = characterAttackType;
-        } else if (player == Player.OPPONENT) {
+        } else if (playerType == PlayerType.PLAYER2) {
             result = opponentAttackType;
         }
         return result;
@@ -231,11 +231,11 @@ public abstract class GamePlay extends Mode {
     /**
      * set hurtChar type, normal or fury
      */
-    public void setAttackType(AttackType attackType, Player player) {
-        if (player == Player.CHARACTER) {
+    public void setAttackType(AttackType attackType, PlayerType playerType) {
+        if (playerType == PlayerType.PLAYER1) {
             characterAttackType = attackType;
         }
-        if (player == Player.OPPONENT) {
+        if (playerType == PlayerType.PLAYER2) {
             opponentAttackType = attackType;
         }
     }
@@ -297,12 +297,12 @@ public abstract class GamePlay extends Mode {
     /**
      * assigns pic to array index
      */
-    public void setSprites(Player player, int meleeSprite, int statusSprite) {
-        if (player == Player.CHARACTER) {
+    public void setSprites(PlayerType playerType, int meleeSprite, int statusSprite) {
+        if (playerType == PlayerType.PLAYER1) {
             charMeleeSpriteStatus = meleeSprite;
             charCelestiaSpriteStatus = statusSprite;
         }
-        if (player == Player.OPPONENT) {
+        if (playerType == PlayerType.PLAYER2) {
             oppMeleeSpriteStatus = meleeSprite;
             oppCelestiaSpriteStatus = statusSprite;
         }
@@ -405,9 +405,8 @@ public abstract class GamePlay extends Mode {
             updateMatchStatus();
             if ((delta - animationLoopEDelta) > MS1320) {
                 animationLoopEDelta = delta;
-                if (getFuryLevel() > 5 && getFuryLevel() < 999) {
+                if (!isFuryBarFull())
                     incrementFuryLevel(-furyBarCoolDownFactor);
-                }
             }
         } else {
             if ((delta - achievementDelta) > MS1320) {
@@ -441,10 +440,10 @@ public abstract class GamePlay extends Mode {
     }
 
     private void handleOpponentAttacks(long delta) {
-        if (limitRunning && runningFury == Player.OPPONENT) {
+        if (limitRunning && runningFury == PlayerType.PLAYER2) {
             if (currentOpponentQueLoop < 9) {
-                setSprites(Player.OPPONENT, currentOpponentQueLoop, 11);
-                setSprites(Player.CHARACTER, 0, 11);
+                setSprites(PlayerType.PLAYER2, currentOpponentQueLoop + 1, 11);
+                setSprites(PlayerType.PLAYER1, 0, 11);
                 if ((delta - opponentQueDelta) > MS33) {
                     opponentQueDelta = delta;
                     if (shakeCharacterLifeBar(opponentUiLoop)) {
@@ -452,7 +451,7 @@ public abstract class GamePlay extends Mode {
                     } else {
                         furySound();
                         hurtSoundChar();
-                        lifePhysUpdateSimple(Player.CHARACTER, 100);
+                        lifePhysUpdateSimple(PlayerType.PLAYER1, 100);
                         comboPicArrayPosOpp = opponentUiLoop;
                         furyComboOpacity = 1.0f;
                         currentOpponentQueLoop++;
@@ -462,10 +461,10 @@ public abstract class GamePlay extends Mode {
             } else {
                 comboPicArrayPosOpp = 8;
                 resumeOpponentAtb();
-                setSprites(Player.OPPONENT, 9, 11);
-                setSprites(Player.CHARACTER, 9, 11);
+                setSprites(PlayerType.PLAYER2, 9, 11);
+                setSprites(PlayerType.PLAYER1, 9, 11);
                 resetBreak();
-                setAttackType(AttackType.PHYSICAL, Player.OPPONENT);
+                setAttackType(AttackType.REGULAR, PlayerType.PLAYER2);
                 limitRunning = false;
             }
         } else if (triggerOpponentAttack) {
@@ -476,7 +475,7 @@ public abstract class GamePlay extends Mode {
             if (lastOpponentQueLoop != currentOpponentQueLoop && !opponentAttacks.isEmpty()) {
                 opponentQueDelta = delta;
                 lastOpponentQueLoop = currentOpponentQueLoop;
-                setAttackSpritesAndTrigger(opponentAttacks.pop(), Player.OPPONENT, Player.CHARACTER, this, Characters.get().getCharacter());//add mode reference here
+                setAttackSpritesAndTrigger(opponentAttacks.pop(), PlayerType.PLAYER2, PlayerType.PLAYER1, this, Characters.get().getOpponent());//add mode reference here
             }
             if ((delta - opponentQueDelta) > MS33) {
                 opponentQueDelta = delta;
@@ -496,10 +495,10 @@ public abstract class GamePlay extends Mode {
     }
 
     private void handleCharacterAttacks(long delta) {
-        if (limitRunning && runningFury == Player.CHARACTER) {
+        if (limitRunning && runningFury == PlayerType.PLAYER1) {
             if (currentCharacterQueLoop < 9) {
-                setSprites(Player.CHARACTER, currentCharacterQueLoop, 11);
-                setSprites(Player.OPPONENT, 0, 11);
+                setSprites(PlayerType.PLAYER1, currentCharacterQueLoop + 1, 11);
+                setSprites(PlayerType.PLAYER2, 0, 11);
                 if ((delta - characterQueDelta) > MS33) {
                     characterQueDelta = delta;
                     if (shakeOpponentLifeBar(characterUiLoop)) {
@@ -507,7 +506,7 @@ public abstract class GamePlay extends Mode {
                     } else {
                         furySound();
                         hurtSoundOpp();
-                        lifePhysUpdateSimple(Player.OPPONENT, 100);
+                        lifePhysUpdateSimple(PlayerType.PLAYER2, 100);
                         currentCharacterQueLoop++;
                         comboPicArrayPosOpp = currentCharacterQueLoop;
                         furyComboOpacity = 1.0f;
@@ -517,10 +516,10 @@ public abstract class GamePlay extends Mode {
             } else {
                 comboPicArrayPosOpp = 8;
                 resumeCharacterAtb();
-                setSprites(Player.CHARACTER, 9, 11);
-                setSprites(Player.OPPONENT, 9, 11);
+                setSprites(PlayerType.PLAYER1, 9, 11);
+                setSprites(PlayerType.PLAYER2, 9, 11);
                 resetBreak();
-                setAttackType(AttackType.PHYSICAL, Player.CHARACTER);
+                setAttackType(AttackType.REGULAR, PlayerType.PLAYER1);
                 limitRunning = false;
             }
         } else if (triggerCharacterAttack) {
@@ -531,7 +530,7 @@ public abstract class GamePlay extends Mode {
             if (lastCharacterQueLoop != currentCharacterQueLoop && !characterAttacks.isEmpty()) {
                 characterQueDelta = delta;
                 lastCharacterQueLoop = currentCharacterQueLoop;
-                setAttackSpritesAndTrigger(characterAttacks.pop(), Player.CHARACTER, Player.OPPONENT, this, Characters.get().getOpponent());//add mode reference here
+                setAttackSpritesAndTrigger(characterAttacks.pop(), PlayerType.PLAYER1, PlayerType.PLAYER2, this, Characters.get().getCharacter());//add mode reference here
             }
             if ((delta - characterQueDelta) > MS33) {
                 characterQueDelta = delta;
@@ -761,6 +760,8 @@ public abstract class GamePlay extends Mode {
     public void newInstance() {
         gameOver = false;
         showBrag = false;
+        characterAtb = true;
+        opponentAtb = true;
         setCharacterAtbValue(0);
         setOpponentAtbValue(0);
         setFuryLevel(0);
@@ -843,8 +844,8 @@ public abstract class GamePlay extends Mode {
      *
      * @return the damage multiplier
      */
-    public float getDamageMultiplierChar() {
-        return Characters.get().getCharacter().getDamageMultiplier();
+    public float getCharacterStrengthMultiplier() {
+        return Characters.get().getCharacter().getStrengthMultiplier();
     }
 
     /**
@@ -852,8 +853,8 @@ public abstract class GamePlay extends Mode {
      *
      * @return the damage multiplier
      */
-    public float getDamageMultiplierOpp() {
-        return Characters.get().getOpponent().getDamageMultiplier();
+    public float getOpponentStrengthMultiplier() {
+        return Characters.get().getOpponent().getStrengthMultiplier();
     }
 
     /**
@@ -914,16 +915,16 @@ public abstract class GamePlay extends Mode {
         characterHp = characterMaximumHp;
         opponentHp = opponentMaximumHp;
         furyLevel = 5;
-        Characters.get().getCharacter().setDamageMultiplier(Characters.get().getDamageMultiplier(Player.CHARACTER));
-        Characters.get().getOpponent().setDamageMultiplier(Characters.get().getDamageMultiplier(Player.OPPONENT));
+        Characters.get().getCharacter().setStrengthMultiplier(10.0f);
+        Characters.get().getOpponent().setStrengthMultiplier(10.0f);
     }
 
     /**
      * Starts an actual fight
      */
     public void startFight() {
-        resetGame();
         newInstance();
+        resetGame();
         startDrawing = 1;
         characterHpAsPercent = 100;
         opponentHpAsPercent = 100;
@@ -942,7 +943,7 @@ public abstract class GamePlay extends Mode {
     }
 
     /**
-     * logic Player 1 characterHp
+     * logic PlayerType 1 characterHp
      *
      * @param value - value
      */
@@ -1003,16 +1004,15 @@ public abstract class GamePlay extends Mode {
     /**
      * Alter damage multipliers, used to strengthen/weaken attacks
      *
-     * @param per      the person calling the method
-     * @param thisMuch the number to alter by
+     * @param playerType the person calling the method
+     * @param thisMuch   the number to alter by
      */
-    public void alterDamageCounter(Player per, int thisMuch) {
-        if (per == Player.CHARACTER && Characters.get().getOpponent().getDamageMultiplier() > 0 && Characters.get().getOpponent().getDamageMultiplier() < 20) {
-            Characters.get().getOpponent().setDamageMultiplier(Characters.get().getOpponent().getDamageMultiplier() + thisMuch);
+    public void alterStrength(PlayerType playerType, int thisMuch) {
+        if (playerType == PlayerType.PLAYER1 && Characters.get().getOpponent().getStrengthMultiplier() > 0 && Characters.get().getOpponent().getStrengthMultiplier() < 20) {
+            Characters.get().getOpponent().setStrengthMultiplier(Characters.get().getOpponent().getStrengthMultiplier() + thisMuch);
         }
-
-        if (per == Player.OPPONENT && Characters.get().getCharacter().getDamageMultiplier() > 0 && Characters.get().getCharacter().getDamageMultiplier() < 20) {
-            Characters.get().getCharacter().setDamageMultiplier(Characters.get().getCharacter().getDamageMultiplier() + thisMuch);
+        if (playerType == PlayerType.PLAYER2 && Characters.get().getCharacter().getStrengthMultiplier() > 0 && Characters.get().getCharacter().getStrengthMultiplier() < 20) {
+            Characters.get().getCharacter().setStrengthMultiplier(Characters.get().getCharacter().getStrengthMultiplier() + thisMuch);
         }
     }
 
@@ -1029,7 +1029,7 @@ public abstract class GamePlay extends Mode {
     /**
      * Increment limit
      */
-    private void incrementFuryBarLevel(final int increment) {
+    private void incrementFuryBarLevel(final float increment) {
         new Thread() {
             @Override
             public void run() {
@@ -1047,7 +1047,7 @@ public abstract class GamePlay extends Mode {
         }.start();
     }
 
-    public void triggerFury(Player who) {
+    public void triggerFury(PlayerType who) {
         limitBreak(who);
     }
 
@@ -1062,31 +1062,31 @@ public abstract class GamePlay extends Mode {
     /**
      * limit break, wee!!!
      */
-    public void limitBreak(Player player) {
+    public void limitBreak(PlayerType playerType) {
         if (gameOver) return;
         if (playingCutscene) return;
         if (paused) return;
         if (limitRunning) return;//one at a time folks :)
-        switch (player) {
-            case CHARACTER:
+        switch (playerType) {
+            case PLAYER1:
                 if (!isCharacterAtbFull() || !isFuryBarFull()) return;
                 if (NetworkManager.get().isOnline()) {
                     NetworkManager.get().send(NetworkConstants.FURY_ATTACK);
                 }
-                setAttackType(AttackType.FURY, Player.CHARACTER);
+                setAttackType(AttackType.FURY, PlayerType.PLAYER1);
                 pauseCharacterAtb();
                 setCharacterAtbValue(0);
                 prepareCharacterAttack();
-                runningFury = player;
+                runningFury = playerType;
                 limitRunning = true;
                 break;
-            case OPPONENT:
+            case PLAYER2:
                 if (!isOpponentAtbFull() || !isFuryBarFull()) return;
-                setAttackType(AttackType.FURY, Player.OPPONENT);
+                setAttackType(AttackType.FURY, PlayerType.PLAYER2);
                 pauseOpponentAtb();
                 setOpponentAtbValue(0);
                 prepareOpponentAttack();
-                runningFury = player;
+                runningFury = playerType;
                 limitRunning = true;
                 break;
         }
@@ -1095,37 +1095,33 @@ public abstract class GamePlay extends Mode {
     /**
      * Updates the characterHp of CharacterEnum
      *
-     * @param forWho     the person affected
+     * @param playerType the person affected
      * @param damageDone the characterHp to add/subtract
      */
-    public void lifePhysUpdateSimple(Player forWho, int damageDone) {
+    public void lifePhysUpdateSimple(PlayerType playerType, int damageDone) {
 
-        if (forWho == Player.CHARACTER) //Attack from player
+        if (playerType == PlayerType.PLAYER1) //Attack from player
         {
-            damageDoneToCharacter = damageDone;
-            incrementFuryBarLevel(damageDoneToCharacter);
-            guiScreenChaos(damageDone * getDamageMultiplierOpp(), Player.OPPONENT);
-            for (int m = 0; m < damageDoneToCharacter; m++) {
-                if (characterHp >= 0) {
-                    characterHp -= getDamageMultiplierOpp();
-                }
-            }
+            damageDoneToCharacter = damageDone * getOpponentStrengthMultiplier();
+            incrementFuryBarLevel(damageDoneToCharacter / 10);
+            guiScreenChaos(damageDoneToCharacter, PlayerType.PLAYER2);
+            for (int m = 0; m < damageDoneToCharacter; m++)
+                if (characterHp >= 0)
+                    characterHp -= 1;
             daNum = ((getCharacterHp() / getCharacterMaximumHp()) * 100); //perc characterHp x characterHp bar length
             lifePlain = Math.round(daNum); // round off
             lifeTotalPlain = Math.round(getCharacterHp()); // for text
             characterHpAsPercent = Math.round(lifePlain);
         }
 
-        if (forWho == Player.OPPONENT || forWho == Player.BOSS) //Attack from CPU pponent 1
+        if (playerType == PlayerType.PLAYER2 || playerType == PlayerType.BOSS) //Attack from CPU pponent 1
         {
-            damageDoneToOpponent = damageDone;
-            incrementFuryBarLevel(damageDoneToOpponent);
-            guiScreenChaos(damageDone * getDamageMultiplierChar(), Player.CHARACTER);
-            for (int m = 0; m < damageDoneToOpponent; m++) {
-                if (opponentHp >= 0) {
-                    opponentHp -= getDamageMultiplierOpp();
-                }
-            }
+            damageDoneToOpponent = damageDone * getCharacterStrengthMultiplier();
+            incrementFuryBarLevel(damageDoneToOpponent / 10);
+            guiScreenChaos(damageDoneToOpponent, PlayerType.PLAYER1);
+            for (int m = 0; m < damageDoneToOpponent; m++)
+                if (opponentHp >= 0)
+                    opponentHp -= 1;
             daNum2 = ((getOpponentHp() / getOpponentMaximumHp()) * 100); //perc characterHp x characterHp bar length
             lifePlain2 = Math.round(daNum2); // round off
             lifeTotalPlain2 = Math.round(getOpponentHp()); // for text
@@ -1150,7 +1146,7 @@ public abstract class GamePlay extends Mode {
         furyLevel += change;
     }
 
-    protected abstract void guiScreenChaos(float damageAmount, Player who);
+    protected abstract void guiScreenChaos(float damageAmount, PlayerType who);
 
     protected abstract void furySound();
 
@@ -1192,35 +1188,31 @@ public abstract class GamePlay extends Mode {
         oppYcord = value;
     }
 
-    public int getAnimationLoops() {
+    public float getAnimationLoops() {
         return animationLoops;
     }
 
-    public long getDelay() {
-        return delay;
-    }
-
-    public int getForeGroundPositionX() {
+    public float getForeGroundPositionX() {
         return foreGroundPositionX;
     }
 
-    public void setForeGroundPositionX(int foreGroundPositionX) {
+    public void setForeGroundPositionX(float foreGroundPositionX) {
         this.foreGroundPositionX = foreGroundPositionX;
     }
 
-    public int getForeGroundPositionY() {
+    public float getForeGroundPositionY() {
         return foreGroundPositionY;
     }
 
-    public void setForeGroundPositionY(int foreGroundPositionY) {
+    public void setForeGroundPositionY(float foreGroundPositionY) {
         this.foreGroundPositionY = foreGroundPositionY;
     }
 
-    public int getForeGroundXIncrement() {
+    public float getForeGroundXIncrement() {
         return foreGroundXIncrement;
     }
 
-    public int getForeGroundYIncrement() {
+    public float getForeGroundYIncrement() {
         return foreGroundYIncrement;
     }
 
@@ -1285,7 +1277,7 @@ public abstract class GamePlay extends Mode {
                 onAccept();
                 break;
             case MIDDLE:
-                triggerFury(Player.CHARACTER);
+                triggerFury(PlayerType.PLAYER1);
                 break;
             case SECONDARY:
                 onBackCancel();
@@ -1329,9 +1321,9 @@ public abstract class GamePlay extends Mode {
      * Animate attacks in graphics context
      */
     public void revertToDefaultSprites() {
-        setSprites(Player.OPPONENT, 9, 11);
-        setSprites(Player.CHARACTER, 9, 11);
-        setSprites(Player.BOSS, 9, 11);
+        setSprites(PlayerType.PLAYER2, 9, 11);
+        setSprites(PlayerType.PLAYER1, 9, 11);
+        setSprites(PlayerType.BOSS, 9, 11);
     }
 
     /**
@@ -1350,7 +1342,7 @@ public abstract class GamePlay extends Mode {
         } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.50 && getOpponentHp() / getOpponentMaximumHp() < 0.75) {
             if (isFuryBarFull() && !limitRunning) {
-                triggerFury(Player.OPPONENT);
+                triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
                 array = Characters.get().getOpponent().getAiProfile3();
@@ -1358,7 +1350,7 @@ public abstract class GamePlay extends Mode {
         } //when doing isWithinRange, 4 buffs + 2 moves
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.25 && getOpponentHp() / getOpponentMaximumHp() < 0.50) {
             if (isFuryBarFull() && !limitRunning) {
-                triggerFury(Player.OPPONENT);
+                triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
                 array = Characters.get().getOpponent().getAiProfile4();
@@ -1366,7 +1358,7 @@ public abstract class GamePlay extends Mode {
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
             if (isFuryBarFull() && !limitRunning) {
-                triggerFury(Player.OPPONENT);
+                triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
                 array = Characters.get().getOpponent().getAiProfile5();
@@ -1392,11 +1384,8 @@ public abstract class GamePlay extends Mode {
      *
      * @param attack - the move to execute
      */
-    public void setAttackSpritesAndTrigger(int attack, Player source, Player destination, GamePlay gamePlay, Character defaultOpponent) {
+    public void setAttackSpritesAndTrigger(int attack, PlayerType source, PlayerType destination, GamePlay gamePlay, Character character) {
         String attackIdentifier = "";
-        if (attack > 8) {
-            destination = Player.SELF;
-        }
         switch (attack) {
             case 0:
                 gamePlay.setSprites(source, 9, 11);
@@ -1440,28 +1429,24 @@ public abstract class GamePlay extends Mode {
                 break;
         }
         setAttackSprites(gamePlay, source, destination, attack);
-        triggerAttack(gamePlay, attackIdentifier, defaultOpponent, destination);
+        triggerAttack(gamePlay, attackIdentifier, character, destination);
     }
 
     /**
      * call specific attack
      */
-    public void setAttackSprites(GamePlay gamePlay, Player source, Player destination, int attack) {
-        gamePlay.isCharacterAttacking(source == Player.CHARACTER);
-        if (destination == Player.SELF) {
-            gamePlay.setSprites(source, 10, 11); //USE ITEM
-        } else {
-            //status moves use 10 (pose sprite)
-            gamePlay.setSprites(source, attack > 9 ? 10 : attack, 11); //attack
-            gamePlay.setSprites(destination, 0, 11); //defend
-        }
+    public void setAttackSprites(GamePlay gamePlay, PlayerType source, PlayerType destination, int attack) {
+        gamePlay.isCharacterAttacking(source == PlayerType.PLAYER1);
+        //status moves use 10 (pose sprite)
+        gamePlay.setSprites(source, attack > 9 ? 10 : attack, 11); //attack
+        gamePlay.setSprites(destination, 0, 11); //defend
     }
 
     /**
      * ATTAAAAAAACK!!!!!!!
      */
-    public void triggerAttack(GamePlay gamePlay, String attackIdentifier, Character opponent, Player destination) {
-        opponent.attack(attackIdentifier, destination, gamePlay);
+    public void triggerAttack(GamePlay gamePlay, String attackIdentifier, Character character, PlayerType destination) {
+        character.attack(attackIdentifier, destination, gamePlay);
     }
 
     //////////////////////////////////

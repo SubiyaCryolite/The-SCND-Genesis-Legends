@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 
 /**
@@ -70,59 +70,59 @@ public class Raila extends Character {
     }
 
     @Override
-    public void attack(String attack, Player player, GamePlay gamePlay) {
+    public void attack(String attack, PlayerType playerType, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 83;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 82;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 82;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 81;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 88;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 85;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 85;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 83;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "09":
                 play();
                 attackStr = status[0];
                 damage = 72;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "10":
@@ -130,12 +130,12 @@ public class Raila extends Character {
                 attackStr = status[1];
                 damage = 79;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "11":
@@ -144,12 +144,12 @@ public class Raila extends Character {
                     play();
                     attackStr = status[2];
                     gamePlay.setStatIndex(3);
-                    if (player == Player.OPPONENT) {
-                        gamePlay.setStatusPic(Player.CHARACTER);
-                        gamePlay.alterDamageCounter(Player.OPPONENT, +1);
+                    if (playerType == PlayerType.PLAYER2) {
+                        gamePlay.setStatusPic(PlayerType.PLAYER1);
+                        gamePlay.alterStrength(PlayerType.PLAYER2, +1);
                     } else {
-                        gamePlay.setStatusPic(Player.OPPONENT);
-                        gamePlay.alterDamageCounter(Player.CHARACTER, +1);
+                        gamePlay.setStatusPic(PlayerType.PLAYER2);
+                        gamePlay.alterStrength(PlayerType.PLAYER1, +1);
                     }
                 }
                 break;
@@ -159,13 +159,13 @@ public class Raila extends Character {
                     play();
                     attackStr = status[3];
                     gamePlay.setStatIndex(4);
-                    if (player == Player.OPPONENT) {
-                        //as a player(2) yo8u attack the opponent(1)
-                        gamePlay.setStatusPic(Player.OPPONENT);
-                        gamePlay.alterDamageCounter(Player.CHARACTER, -1);
+                    if (playerType == PlayerType.PLAYER2) {
+                        //as a playerType(2) yo8u attack the opponent(1)
+                        gamePlay.setStatusPic(PlayerType.PLAYER2);
+                        gamePlay.alterStrength(PlayerType.PLAYER1, -1);
                     } else {
-                        gamePlay.setStatusPic(Player.CHARACTER);
-                        gamePlay.alterDamageCounter(Player.OPPONENT, -1);
+                        gamePlay.setStatusPic(PlayerType.PLAYER1);
+                        gamePlay.alterStrength(PlayerType.PLAYER2, -1);
                     }
                 }
                 break;

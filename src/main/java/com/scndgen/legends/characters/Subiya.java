@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 
 import static com.scndgen.legends.enums.CharacterEnum.SUBIYA;
@@ -63,59 +63,59 @@ public class Subiya extends Character {
     }
 
     @Override
-    public void attack(String attack, Player player, GamePlay gamePlay) {
+    public void attack(String attack, PlayerType playerType, GamePlay gamePlay) {
         switch (attack) {
             case "01":
                 attackStr = physical[0];
                 damage = 85;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "02":
                 attackStr = physical[1];
                 damage = 87;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "03":
                 attackStr = physical[2];
                 damage = 90;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "04":
                 attackStr = physical[3];
                 damage = 87;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "05":
                 attackStr = celestia[0];
                 damage = 88;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "06":
                 attackStr = celestia[1];
                 damage = 86;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "07":
                 attackStr = celestia[2];
                 damage = 88;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "08":
                 attackStr = celestia[3];
                 damage = 93;
-                gamePlay.lifePhysUpdateSimple(player, damage);
+                gamePlay.lifePhysUpdateSimple(playerType, damage);
                 break;
             case "09":
                 play();
                 attackStr = status[0];
                 damage = 79;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "10":
@@ -123,12 +123,12 @@ public class Subiya extends Character {
                 attackStr = status[1];
                 damage = 69;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "11":
@@ -136,12 +136,12 @@ public class Subiya extends Character {
                 attackStr = status[2];
                 damage = 73;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "12":
@@ -149,12 +149,12 @@ public class Subiya extends Character {
                 attackStr = status[3];
                 damage = 72;
                 gamePlay.setStatIndex(1);
-                if (player == Player.OPPONENT) {
+                if (playerType == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
         }

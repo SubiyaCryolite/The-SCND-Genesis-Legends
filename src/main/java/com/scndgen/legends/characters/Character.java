@@ -24,7 +24,7 @@ package com.scndgen.legends.characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -45,7 +45,7 @@ public abstract class Character {
     public String[] physical, celestia, status;
     public final HashMap<Integer,String> bragRights = new HashMap<>();
     public int points, life, damage;
-    public float damageMultiplier;
+    public float strengthMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
     public float[] weakness;
     public float atbRecoveryRate;
@@ -117,7 +117,7 @@ public abstract class Character {
         return sprites[i];
     }
 
-    public abstract void attack(String attack, Player forWho, GamePlay gamePlay);
+    public abstract void attack(String attack, PlayerType forWho, GamePlay gamePlay);
 
     /**
      * Gets the move set of the characterEnum
@@ -238,12 +238,12 @@ public abstract class Character {
         return celestiaMultiplier;
     }
 
-    public final float getDamageMultiplier() {
-        return damageMultiplier;
+    public final float getStrengthMultiplier() {
+        return strengthMultiplier;
     }
 
-    public final void setDamageMultiplier(float value) {
-        damageMultiplier = value;
+    public final void setStrengthMultiplier(float value) {
+        strengthMultiplier = value;
     }
 
     public void play() {

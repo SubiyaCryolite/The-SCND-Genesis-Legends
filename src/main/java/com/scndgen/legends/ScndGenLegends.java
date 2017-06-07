@@ -170,6 +170,7 @@ public class ScndGenLegends extends Game {
     }
 
     public void onCloseRequest(WindowEvent closeRequest) {
+
         shutDown();
     }
 

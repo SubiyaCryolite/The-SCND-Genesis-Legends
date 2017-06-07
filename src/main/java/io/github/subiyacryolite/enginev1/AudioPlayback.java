@@ -145,7 +145,7 @@ public class AudioPlayback {
 
     // play the MP3 file to the sound card
     public void play() {
-        new Thread(() -> {
+        Thread thread = new Thread(() -> {
             try {
                 source = currentBuffer();
                 buffer = alGenBuffers();
@@ -170,7 +170,9 @@ public class AudioPlayback {
             } finally {
                 close();
             }
-        }).start();
+        });
+        thread.setDaemon(false);
+        thread.start();
     }
 
     private void setVolume(float volume) {
@@ -236,6 +238,13 @@ public class AudioPlayback {
         for (int source : sources) {
             alDeleteSources(source);
         }
+        do {
+            try {
+                Thread.sleep(1);
+            } catch (Exception ex) {
+                ex.printStackTrace(System.err);
+            }
+        } while (!heap.isEmpty());
         alcDestroyContext(audioContext);
         alcCloseDevice(audioDevice);
     }

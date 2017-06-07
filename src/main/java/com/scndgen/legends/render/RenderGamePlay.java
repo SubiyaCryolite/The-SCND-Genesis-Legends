@@ -58,7 +58,7 @@ public class RenderGamePlay extends GamePlay {
     private Image stageAmbientForeground, stageAmbientBackground, stageForeground;
     private Image[] numberPix;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
+    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hpHolderOpponent,hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
     private Image[] charSprites, oppSprites;
     private Image[] characterPortraits;
     private int characterPortraitIndex;
@@ -89,7 +89,7 @@ public class RenderGamePlay extends GamePlay {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                triggerFury(Player.CHARACTER);
+                triggerFury(PlayerType.PLAYER1);
             }
 
             @Override
@@ -409,12 +409,10 @@ public class RenderGamePlay extends GamePlay {
                 //---opponrnt activity bar + text
 
                 gc.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
-                gc.setFill(Color.ORANGE);
+                gc.drawImage(hpHolderOpponent, (55 + 56 + x2) + uiShakeEffectOffsetOpponent, (4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 gc.setFill(Color.WHITE);
                 gc.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
-
-                gc.setFill(Color.BLACK);
                 gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 gc.setFill(Color.ORANGE);
                 gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, getOpponentAtbValue(), 6, 6, 6);
@@ -588,7 +586,7 @@ public class RenderGamePlay extends GamePlay {
         gc.fillArc(426 + 5, 420, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.fillArc(426 + 55, 420, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.fillRect(426 - 70, 438, 140, 4);
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.ORANGE);
         diameter = 35;
         if (characterAttacks.size() >= 1 || triggerCharacterAttack)
             gc.fillArc(426 - 97.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
@@ -597,7 +595,7 @@ public class RenderGamePlay extends GamePlay {
         if (characterAttacks.size() >= 3 || triggerCharacterAttack)
             gc.fillArc(426 + 7.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
         if (characterAttacks.size() >= 4 || triggerCharacterAttack)
-            gc.fillArc(426 + 52.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
+            gc.fillArc(426 + 57.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.setGlobalAlpha((1.0f));
     }
 
@@ -850,6 +848,7 @@ public class RenderGamePlay extends GamePlay {
             }
             Image transBuf = loader.load("images/trans.png");
             hpHolder = loader.load("images/hpHolder.png");
+            hpHolderOpponent = loader.load("images/hpHolderOpponent.png");
             stageBackground = loader.load(RenderStageSelect.get().getStageBackground());
             stageForeground = loader.load(RenderStageSelect.get().getStageForeground());
             stageAmbientForeground = loader.load(RenderStageSelect.get().getFgLocation1());
@@ -900,9 +899,9 @@ public class RenderGamePlay extends GamePlay {
      * @param damageAmount - damage dealt
      * @param who          - who dealt the damage
      */
-    public void guiScreenChaos(float damageAmount, Player who) {
+    public void guiScreenChaos(float damageAmount, PlayerType who) {
         manipulateThis = "" + Math.round(damageAmount);
-        if (who == Player.CHARACTER) {
+        if (who == PlayerType.PLAYER1) {
             if (manipulateThis.length() == 1) {
                 setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }
@@ -917,7 +916,7 @@ public class RenderGamePlay extends GamePlay {
             }
         }
 
-        if (who == Player.OPPONENT) {
+        if (who == PlayerType.PLAYER2) {
             if (manipulateThis.length() == 1) {
                 setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
             }

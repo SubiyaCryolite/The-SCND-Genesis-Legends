@@ -3,7 +3,7 @@ package com.scndgen.legends.network;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.Stage;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
@@ -51,37 +51,37 @@ public abstract class NetworkBase {
                         RenderCharacterSelection.get().setSelectedOpponent(false);
                         return;
                     case SEL_SUBIYA:
-                        RenderCharacterSelection.get().selSubiya(Player.OPPONENT);
+                        RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER2);
                         return;
                     case SEL_LYNX:
-                        RenderCharacterSelection.get().selLynx(Player.OPPONENT);
+                        RenderCharacterSelection.get().selLynx(PlayerType.PLAYER2);
                         return;
                     case SEL_ALEX:
-                        RenderCharacterSelection.get().selAisha(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAisha(PlayerType.PLAYER2);
                         return;
                     case SEL_ADE:
-                        RenderCharacterSelection.get().selAde(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAde(PlayerType.PLAYER2);
                         return;
                     case SEL_RAVAGE:
-                        RenderCharacterSelection.get().selRav(Player.OPPONENT);
+                        RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
                         return;
                     case SEL_JOHN:
-                        RenderCharacterSelection.get().selJon(Player.OPPONENT);
+                        RenderCharacterSelection.get().selJon(PlayerType.PLAYER2);
                         return;
                     case SEL_ADAM:
-                        RenderCharacterSelection.get().selAdam(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAdam(PlayerType.PLAYER2);
                         return;
                     case SEL_NOVA_ADAM:
-                        RenderCharacterSelection.get().selNOVAAdam(Player.OPPONENT);
+                        RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
                         return;
                     case SEL_AZARIA:
-                        RenderCharacterSelection.get().selAza(Player.OPPONENT);
+                        RenderCharacterSelection.get().selAza(PlayerType.PLAYER2);
                         return;
                     case SEL_SORROWE:
-                        RenderCharacterSelection.get().selSorr(Player.OPPONENT);
+                        RenderCharacterSelection.get().selSorr(PlayerType.PLAYER2);
                         return;
                     case SEL_THING:
-                        RenderCharacterSelection.get().selThing(Player.OPPONENT);
+                        RenderCharacterSelection.get().selThing(PlayerType.PLAYER2);
                         return;
                     case STAGE_IBEX_HILL:
                         RenderStageSelect.get().selectStage(Stage.IBEX_HILL);
@@ -138,7 +138,7 @@ public abstract class NetworkBase {
                         RenderStageSelect.get().start();
                         break;
                     case FURY_ATTACK:
-                        RenderGamePlay.get().triggerFury(Player.OPPONENT);
+                        RenderGamePlay.get().triggerFury(PlayerType.PLAYER2);
                         return;
                     case CONNECT_TO_HOST:
                         if (NetworkManager.get().isServer()) {

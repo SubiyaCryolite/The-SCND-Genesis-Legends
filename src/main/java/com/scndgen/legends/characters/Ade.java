@@ -22,7 +22,7 @@
 package com.scndgen.legends.characters;
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 
 /**
@@ -60,7 +60,7 @@ public class Ade extends Character {
     }
 
     @Override
-    public void attack(String attack, Player forWho, GamePlay gamePlay) {
+    public void attack(String attack, PlayerType forWho, GamePlay gamePlay) {
         switch (attack) {
             case "00":
                 attackStr = physical[0];
@@ -112,12 +112,12 @@ public class Ade extends Character {
                 attackStr = status[0];
                 damage = 77;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (forWho == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "10":
@@ -125,12 +125,12 @@ public class Ade extends Character {
                 attackStr = status[1];
                 damage = 79;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (forWho == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "11":
@@ -138,12 +138,12 @@ public class Ade extends Character {
                 attackStr = status[2];
                 damage = 73;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (forWho == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
             case "12":
@@ -151,12 +151,12 @@ public class Ade extends Character {
                 attackStr = status[3];
                 damage = 75;
                 gamePlay.setStatIndex(1);
-                if (forWho == Player.OPPONENT) {
+                if (forWho == PlayerType.PLAYER2) {
                     gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(Player.CHARACTER);
+                    gamePlay.setStatusPic(PlayerType.PLAYER1);
                 } else {
                     gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(Player.OPPONENT);
+                    gamePlay.setStatusPic(PlayerType.PLAYER2);
                 }
                 break;
         }

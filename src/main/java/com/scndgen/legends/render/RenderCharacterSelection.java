@@ -103,47 +103,47 @@ public class RenderCharacterSelection extends CharacterSelection {
                 if (regularMode || onlineMode) {
                     switch (hoveredCharacter) {
                         case SUBIYA:
-                            selSubiya(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selSubiya(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case RAILA:
-                            selRaila(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selRaila(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case LYNX:
-                            selLynx(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selLynx(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case AISHA:
-                            selAisha(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selAisha(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case ADE:
-                            selAde(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selAde(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case RAVAGE:
-                            selRav(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selRav(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case JONAH:
-                            selJon(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selJon(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case ADAM:
-                            selAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case NOVA_ADAM:
-                            selNOVAAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selNOVAAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case AZARIA:
-                            selAza(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selAza(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case SORROWE:
-                            selSorr(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selSorr(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                         case THING:
-                            selThing(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                            selThing(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                             break;
                     }
                 } else {
                     //if both character and opponent selected move on to stage select after second accept
                     if (NetworkManager.get().isServer())
                         NetworkManager.get().send(NetworkConstants.TO_STAGE_SELECT);
-                    if (NetworkManager.get().isOffline() || NetworkManager.get().isServer()) {
+                    if (NetworkManager.get().isOffline() || (NetworkManager.get().isServer() && selectedOpponent)) {
                         ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
                     }
                 }

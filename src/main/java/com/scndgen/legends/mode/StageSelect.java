@@ -106,6 +106,7 @@ public abstract class StageSelect extends Mode {
 
     public void selectStage(Stage stage) {
         stageSelected = true;
+        hoveredStage = stage;//seems redundant but is necessary for online mode
         if (stageSelectionMode != StageSelectionMode.NORMAL) {
             stage = stageLookup.getOrDefault((int) (Math.random() * (numberOfStages - 1)), Stage.IBEX_HILL);//for this to work RANDOM SHOULD ALWAYS BE LAST
         }
@@ -179,7 +180,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.VERTICAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 4;
         RenderGamePlay.get().ambSpeed2 = 3;
     }
@@ -207,7 +207,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.NONE;
-        RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 1;
@@ -222,7 +221,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 2;
@@ -237,7 +235,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.NONE;
-        RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 3;
@@ -252,7 +249,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 5;
@@ -267,7 +263,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.VERTICAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 6;
@@ -277,12 +272,11 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundPositionX = -40;
         RenderGamePlay.get().foreGroundPositionY = 20;
         RenderGamePlay.get().foreGroundXIncrement = 2;
-        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 0.5f;
         RenderGamePlay.get().animationLoops = 20;
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.VERTICAL;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        RenderGamePlay.get().delay = 25;
         RenderGamePlay.get().ambSpeed1 = 1;
         RenderGamePlay.get().ambSpeed2 = 2;
         ambientMusicIndex = 0;
@@ -292,12 +286,11 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().foreGroundPositionX = -40;
         RenderGamePlay.get().foreGroundPositionY = 20;
         RenderGamePlay.get().foreGroundXIncrement = 2;
-        RenderGamePlay.get().foreGroundYIncrement = 1;
+        RenderGamePlay.get().foreGroundYIncrement = 0.5f;
         RenderGamePlay.get().animationLoops = 20;
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.VERTICAL;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        RenderGamePlay.get().delay = 25;
         RenderGamePlay.get().ambSpeed1 = 1;
         RenderGamePlay.get().ambSpeed2 = 2;
         ambientMusicIndex = 1;
@@ -312,7 +305,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.NONE;
-        RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 2;
@@ -327,7 +319,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.NONE;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.NONE;
-        RenderGamePlay.get().delay = 66;
         RenderGamePlay.get().ambSpeed1 = 0;
         RenderGamePlay.get().ambSpeed2 = 0;
         ambientMusicIndex = 2;
@@ -342,7 +333,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        RenderGamePlay.get().delay = 122;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 3;
@@ -357,7 +347,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 4;
@@ -372,7 +361,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 1;
@@ -387,7 +375,6 @@ public abstract class StageSelect extends Mode {
         RenderGamePlay.get().ambientDirection = AnimationDirection.HORIZONTAL;
         RenderGamePlay.get().foregroundDirection = AnimationDirection.NONE;
         RenderGamePlay.get().ambientMode = AmbientMode.INDEPENDENT;
-        RenderGamePlay.get().delay = 33;
         RenderGamePlay.get().ambSpeed1 = 2;
         RenderGamePlay.get().ambSpeed2 = 1;
         ambientMusicIndex = 3;

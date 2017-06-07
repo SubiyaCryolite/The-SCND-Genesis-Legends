@@ -5,7 +5,5 @@ package com.scndgen.legends.enums;
  */
 public enum AttackType {
     FURY,
-    CELESTIA,
-    PHYSICAL,
-    ITEM
+    REGULAR,
 }

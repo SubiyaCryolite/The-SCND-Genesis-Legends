@@ -7,7 +7,7 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev1.AudioPlayback;
@@ -93,11 +93,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Depending on scene, sets
      */
-    private static void sortMode(Player who) {
+    private static void sortMode(PlayerType who) {
         /**
          * If you choose a characterEnum in lan, you can't choose your opponent
          */
-        if (who == Player.CHARACTER) {
+        if (who == PlayerType.PLAYER1) {
         }
     }
 
@@ -142,11 +142,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Raila
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selRaila(Player type) {
+    public void selRaila(PlayerType type) {
         primaryNotice(Language.get().get(84));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -156,7 +156,7 @@ public abstract class CharacterSelection extends Mode {
                 NetworkManager.get().send(NetworkConstants.SEL_RAILA);
                 preventCharacterSelection();
             }
-        } else if (type == Player.OPPONENT && !selectedOpponent) {
+        } else if (type == PlayerType.PLAYER2 && !selectedOpponent) {
             playSelectSound();
             selectedOpponent = true;
             Characters.get().prepareO(opponentEnum = CharacterEnum.RAILA);
@@ -167,10 +167,10 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Subiya
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selSubiya(Player type) {
-        if (type == Player.CHARACTER) //when selecting char
+    public void selSubiya(PlayerType type) {
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             primaryNotice(Language.get().get(85));
             playSelectSound();
@@ -183,7 +183,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -195,11 +195,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Lynx
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selLynx(Player type) {
+    public void selLynx(PlayerType type) {
         primaryNotice(Language.get().get(86));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -211,7 +211,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -223,11 +223,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Aisha
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selAisha(Player type) {
+    public void selAisha(PlayerType type) {
         primaryNotice(Language.get().get(87));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -239,7 +239,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -251,11 +251,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Ade
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selAde(Player type) {
+    public void selAde(PlayerType type) {
         primaryNotice(Language.get().get(88));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -267,7 +267,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -279,11 +279,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Aisha
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selRav(Player type) {
+    public void selRav(PlayerType type) {
         primaryNotice(Language.get().get(89));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -296,7 +296,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -308,11 +308,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Jonah
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selJon(Player type) {
+    public void selJon(PlayerType type) {
         primaryNotice(Language.get().get(90));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -325,7 +325,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -337,11 +337,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting NovaAdam
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selAdam(Player type) {
+    public void selAdam(PlayerType type) {
         primaryNotice(Language.get().get(91));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -353,7 +353,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -365,11 +365,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting NOVA NovaAdam
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selNOVAAdam(Player type) {
+    public void selNOVAAdam(PlayerType type) {
         primaryNotice(Language.get().get(92));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -382,7 +382,7 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -394,11 +394,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Azaria
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selAza(Player type) {
+    public void selAza(PlayerType type) {
         primaryNotice(Language.get().get(93));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -410,7 +410,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -422,11 +422,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selSorr(Player type) {
+    public void selSorr(PlayerType type) {
         primaryNotice(Language.get().get(94));
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -438,7 +438,7 @@ public abstract class CharacterSelection extends Mode {
                 preventCharacterSelection();
             }
         }
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
@@ -450,11 +450,11 @@ public abstract class CharacterSelection extends Mode {
     /**
      * Selecting Sorrowe
      *
-     * @param type - opponent (Player.OPPONENT) or characterEnum (Player.CHARACTER)
+     * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
-    public void selThing(Player type) {
+    public void selThing(PlayerType type) {
         primaryNotice("..........");
-        if (type == Player.CHARACTER) //when selecting char
+        if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
@@ -468,14 +468,14 @@ public abstract class CharacterSelection extends Mode {
             }
         }
 
-        if (type == Player.OPPONENT && !selectedOpponent) // when selecting opponent
+        if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
             Characters.get().prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
-        } else if (type == Player.BOSS && !selectedOpponent) // when selecting opponent as boss
+        } else if (type == PlayerType.BOSS && !selectedOpponent) // when selecting opponent as boss
         {
             playSelectSound();
             selectedOpponent = true;
@@ -532,40 +532,40 @@ public abstract class CharacterSelection extends Mode {
         CharacterEnum character = characterLookup.get(computedPosition);
         switch (character) {
             case SUBIYA:
-                selSubiya(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selSubiya(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case RAILA:
-                selRaila(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selRaila(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case LYNX:
-                selLynx(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selLynx(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case AISHA:
-                selAisha(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selAisha(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case ADE:
-                selAde(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selAde(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case RAVAGE:
-                selRav(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selRav(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case JONAH:
-                selJon(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selJon(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case ADAM:
-                selAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case NOVA_ADAM:
-                selNOVAAdam(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selNOVAAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case AZARIA:
-                selAza(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selAza(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case SORROWE:
-                selSorr(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selSorr(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
             case THING:
-                selThing(selectedCharacter ? Player.OPPONENT : Player.CHARACTER);
+                selThing(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
                 break;
         }
     }

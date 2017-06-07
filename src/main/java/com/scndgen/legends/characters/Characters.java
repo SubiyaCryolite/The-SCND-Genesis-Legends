@@ -23,7 +23,7 @@ package com.scndgen.legends.characters;
 
 
 import com.scndgen.legends.enums.CharacterEnum;
-import com.scndgen.legends.enums.Player;
+import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
 
@@ -110,24 +110,24 @@ public class Characters {
     /**
      * SET damage multipliers, used to strengthen/weaken attacks
      *
-     * @param player the person calling the method
+     * @param playerType the person calling the method
      * @param thisMuch       the number to alter by
      */
-    public void setDamageCounter(Player player, int thisMuch) {
-        if (player == Player.CHARACTER) {
+    public void setDamageCounter(PlayerType playerType, int thisMuch) {
+        if (playerType == PlayerType.PLAYER1) {
             damageMultiplierOpp = thisMuch;
         }
 
-        if (player == Player.OPPONENT) {
+        if (playerType == PlayerType.PLAYER2) {
             damageMultiplierChar = thisMuch;
         }
     }
 
-    public float getDamageMultiplier(Player per) {
+    public float getDamageMultiplier(PlayerType per) {
         float myInt = 0;
-        if (per == Player.CHARACTER) {
+        if (per == PlayerType.PLAYER1) {
             myInt = damageMultiplierOpp;
-        } else if (per == Player.OPPONENT) {
+        } else if (per == PlayerType.PLAYER2) {
             myInt = damageMultiplierChar;
         }
         return myInt;
@@ -141,11 +141,11 @@ public class Characters {
         return activityRecoveryRateOpp;
     }
 
-    public void incrementSpeedRate(Player who, float thisMuch) {
-        if (who == Player.CHARACTER) {
+    public void incrementSpeedRate(PlayerType who, float thisMuch) {
+        if (who == PlayerType.PLAYER1) {
             activityRecoverRateChar = activityRecoverRateChar + thisMuch;
         }
-        if (who == Player.OPPONENT) {
+        if (who == PlayerType.PLAYER2) {
             activityRecoveryRateOpp = activityRecoveryRateOpp + thisMuch;
         }
     }
@@ -179,7 +179,7 @@ public class Characters {
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
-        setDamageCounter(Player.CHARACTER, 12);
+        setDamageCounter(PlayerType.PLAYER1, 12);
 
         switch (characterEnum) {
             case SUBIYA:
@@ -233,7 +233,7 @@ public class Characters {
         currOppLife = 100;
         minCharlife = 100;
         currCharLife = 100;
-        setDamageCounter(Player.OPPONENT, 12);
+        setDamageCounter(PlayerType.PLAYER2, 12);
         switch (characterEnum) {
             case SUBIYA:
                 opponent = new Subiya();

@@ -74,86 +74,86 @@ public class StoryMode implements Runnable {
             case 0:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.START;
-                RenderCharacterSelection.get().selRaila(Player.CHARACTER);
-                RenderCharacterSelection.get().selRav(Player.OPPONENT);
+                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.IBEX_HILL);
                 break;
             case 1:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selLynx(Player.CHARACTER);
-                RenderCharacterSelection.get().selRaila(Player.OPPONENT);
+                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE);
                 break;
             case 2:
                 timeLimit = 30;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selAisha(Player.CHARACTER);
-                RenderCharacterSelection.get().selLynx(Player.OPPONENT);
+                RenderCharacterSelection.get().selAisha(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.IBEX_HILL_NIGHT);
                 break;
             case 3:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selRaila(Player.CHARACTER);
-                RenderCharacterSelection.get().selSubiya(Player.OPPONENT);
+                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_STREETS);
                 break;
             case 4:
                 timeLimit = 45;
                 storyProgress = StoryProgress.HALFWAY;
-                RenderCharacterSelection.get().selRav(Player.CHARACTER);
-                RenderCharacterSelection.get().selAde(Player.OPPONENT);
+                RenderCharacterSelection.get().selRav(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selAde(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 5:
                 timeLimit = 45;
                 storyProgress = StoryProgress.NORMAL;
                 RenderGamePlay.get().setNumOfBoards(2);
-                RenderCharacterSelection.get().selAdam(Player.CHARACTER);
-                RenderCharacterSelection.get().selJon(Player.OPPONENT);
+                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selJon(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 6:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selAza(Player.CHARACTER);
-                RenderCharacterSelection.get().selNOVAAdam(Player.OPPONENT);
+                RenderCharacterSelection.get().selAza(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
                 break;
             case 7:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selSubiya(Player.CHARACTER);
-                RenderCharacterSelection.get().selRav(Player.OPPONENT);
+                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_DOCKS);
                 break;
             case 8:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selLynx(Player.CHARACTER);
-                RenderCharacterSelection.get().selAdam(Player.OPPONENT);
+                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
                 break;
             case 9:
                 timeLimit = 60;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selRaila(Player.CHARACTER);
-                RenderCharacterSelection.get().selSorr(Player.OPPONENT);
+                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selSorr(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
                 break;
             case 10:
                 timeLimit = 90;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selSubiya(Player.CHARACTER);
-                RenderCharacterSelection.get().selNOVAAdam(Player.OPPONENT);
+                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
                 RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE_NIGHT);
                 break;
             case 11:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.END;
-                RenderCharacterSelection.get().selAdam(Player.CHARACTER);
-                RenderCharacterSelection.get().selThing(Player.BOSS);
+                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER1);
+                RenderCharacterSelection.get().selThing(PlayerType.BOSS);
                 RenderStageSelect.get().selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }
@@ -811,7 +811,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().characterPortrait(CharacterEnum.THING);
 
                     //set difficulty - hard
-                    Characters.get().setDamageCounter(Player.OPPONENT, 18);
+                    Characters.get().setDamageCounter(PlayerType.PLAYER2, 18);
 
                     RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
                     RenderGamePlay.get().storyText(text = Language.get().get(294));
