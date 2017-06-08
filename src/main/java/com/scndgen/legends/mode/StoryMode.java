@@ -31,7 +31,7 @@ import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 
@@ -43,7 +43,7 @@ public class StoryMode implements Runnable {
     public StoryProgress storyProgress = StoryProgress.NORMAL;
     public final int totalScenes = 12;
     public int timeLimit;
-    private AudioPlayback storyMusic;
+    private Audio storyMusic;
     private String text;
     private int textSpeed, currentScene;
     private static Thread thread;
@@ -66,7 +66,7 @@ public class StoryMode implements Runnable {
     }
 
     private void setScene(int scene) {
-        storyMusic = new AudioPlayback(AudioConstants.storySound(), AudioType.MUSIC, false);
+        storyMusic = new Audio(AudioConstants.storySound(), AudioType.MUSIC, false);
         textSpeed = State.get().getLogin().getTextSpeedInt();
         RenderCharacterSelection.get().newInstance();
         RenderStageSelect.get().newInstance();
@@ -172,7 +172,7 @@ public class StoryMode implements Runnable {
     /**
      * In playStory scene chars and opp should generate nothin
      */
-    private void storyIn() {
+    private void beginCinematic() {
         storyMusic.play();
         RenderGamePlay.get().reloadAssets();//set new properties, load relevant sprites
         RenderGamePlay.get().characterPortrait();
@@ -182,10 +182,9 @@ public class StoryMode implements Runnable {
         RenderGamePlay.get().pauseOpponentAtb();
     }
 
-    private void storyOut(boolean terminateMode) {
+    public void exitCinematic(boolean terminateMode) {
         if (terminateMode) {
-            storyMusic.stop();
-            RenderGamePlay.get().playMusicNow();
+            stopMusic();
             RenderGamePlay.get().musNotice();
         }
         RenderGamePlay.get().playBGMusic();
@@ -203,7 +202,7 @@ public class StoryMode implements Runnable {
             setScene(currentScene);
             ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
             ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
-            storyIn();
+            beginCinematic();
             RenderGamePlay.get().storyBoard(currentScene);
             switch (currentScene) {
                 case 0:
@@ -268,7 +267,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(182));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 1:
                     //UPDATED
@@ -303,7 +302,7 @@ public class StoryMode implements Runnable {
 
                     RenderGamePlay.get().storyText(text = Language.get().get(146));
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 2:
                     //UPDATED
@@ -382,7 +381,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(205));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 3: //scene 4
                     //UPDATED and reviewed
@@ -448,7 +447,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(430));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 4:
                     //DONE
@@ -505,7 +504,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(230));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 5:
                     //DONE
@@ -591,7 +590,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(250));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 6:
                     //DONE
@@ -642,7 +641,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(262));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 7:
                     //DONE
@@ -685,7 +684,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(446));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 8:
                     //DONE
@@ -731,7 +730,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(279));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 9:
                     //DONE
@@ -803,7 +802,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(293));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 10:
                     //DONE
@@ -869,7 +868,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(306));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
                 case 11: //scene 12
 
@@ -951,7 +950,7 @@ public class StoryMode implements Runnable {
                     RenderGamePlay.get().storyText(text = Language.get().get(392));
                     Thread.sleep(text.length() * textSpeed);
 
-                    storyOut(false);
+                    exitCinematic(false);
                     break;
             }
         } catch (Exception ex) {
@@ -960,7 +959,7 @@ public class StoryMode implements Runnable {
     }
 
     public void startFight() {
-        storyOut(false);
+        exitCinematic(false);
     }
 
     public void pauseDialogue() {
@@ -989,7 +988,7 @@ public class StoryMode implements Runnable {
                 RenderGamePlay.get().onLeaveMode();//stop music!!
             }
         } else {
-            storyMusic.stop(2000);
+            stopMusic();
             startFight();
         }
     }
@@ -1001,6 +1000,10 @@ public class StoryMode implements Runnable {
     public void incrementMode() {
         if (currentScene < totalScenes)
             currentScene += 1;
-        State.get().getLogin().setLastStoryScene(currentScene);
+        State.get().getLogin().setHighestStoryScene(currentScene + 1);
+    }
+
+    private void stopMusic() {
+        storyMusic.stop(2000);
     }
 }

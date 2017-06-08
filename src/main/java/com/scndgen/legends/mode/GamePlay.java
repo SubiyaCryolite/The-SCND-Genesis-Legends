@@ -53,22 +53,19 @@ import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
  */
 public abstract class GamePlay extends Mode {
     protected final String[] physicalAttacks = new String[]{"", "", "", ""}, celestiaAttacks = new String[]{"", "", "", ""}, itemAttacks = new String[]{"", "", "", ""};
-    protected float characterHpAsPercent = 100, opponentHpAsPercent = 100;
     protected boolean triggerCharacterAttack;
     protected boolean triggerOpponentAttack;
     protected LinkedList<Integer> characterAttacks = new LinkedList<>();
     protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
-    protected int startDrawing = 0;
+    protected int startDrawing;
     protected Color currentColor = Color.RED;
     protected boolean safeToSelect;
     protected int unlockedAchievementInstance;
-    protected int charXcord = 10, charYcord = 10, oppYcord = 10, statIndex = 0;
-    protected int ambientForegroundX = 0, ambientForegroundY = 0, ambientBackgroundX = 0, ambientBackgroundY = 0;
-    protected int numOfComicPics = 9;
+    protected int charXcord, charYcord, oppYcord, statIndex;
+    protected int ambientForegroundX, ambientForegroundY, ambientBackgroundX, ambientBackgroundY;
     protected float foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops;
     protected AnimationDirection ambientDirection = AnimationDirection.VERTICAL;
     protected AnimationDirection foregroundDirection = AnimationDirection.VERTICAL;
-    protected int oppXcord = 10;
     protected int playerDamageXLoc, opponentDamageXLoc;
     protected String[] storyPicArrStr;
     protected CharacterEnum[] charNames = LoginScreen.charNames;
@@ -78,45 +75,46 @@ public abstract class GamePlay extends Mode {
     protected boolean loadedUpdaters;
     protected float daNum, daNum2;
     protected long lifePlain, lifeTotalPlain, lifePlain2, lifeTotalPlain2;
-    protected int fancyBWAnimeEffect = 0;     //toggle fancy effect when HP low
+    protected int fancyBWAnimeEffect;     //toggle fancy effect when HP low
     protected boolean fancyBWAnimeEffectEnabled;
     protected boolean gameOver, showBrag;
     protected float characterHp, characterMaximumHp, opponentHp, opponentMaximumHp;
     protected float damageDoneToCharacter, damageDoneToOpponent;
     protected float opponentLifePercentage, characterLifePercentage;
     protected Object source;
-    protected int lifeBarShakeIterations = 2, lifeBarShakeInnerIterations = 4;
-    protected int x2 = 560, comX = 380, comY = 100;
-    protected int xLocal = 470;
-    protected int y2 = 435;
+    protected int lifeBarShakeIterations, lifeBarShakeInnerIterations;
+    protected int x2, comX, comY;
+    protected int y2;
+    protected int oppXcord;
+    protected int numOfComicPics;
+    protected float characterHpAsPercent, opponentHpAsPercent;
+    protected int lbx2;
+    protected int lby2;
+    protected int charMeleeSpriteStatus, oppMeleeSpriteStatus, charCelestiaSpriteStatus, oppCelestiaSpriteStatus;
+    protected int spacer, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt;
+    protected int x;
+    protected float opacityTxt, opacityPic;
+    protected int comboPicArrayPosOpp;
     protected int statIndexOpp, statIndexChar, statusEffectCharacterYCoord, statusEffectOpponentYCoord, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
-    protected int itemX = 0, itemY = 0;
-    protected int lbx2 = 500;
-    protected int lby2 = 420;
+    protected int itemX, itemY;
     protected AttackType characterAttackType = AttackType.REGULAR;
     protected AttackType opponentAttackType = AttackType.REGULAR;
-    protected int charMeleeSpriteStatus = 9, oppMeleeSpriteStatus = 9, charCelestiaSpriteStatus = 11, oppCelestiaSpriteStatus = 11;
     protected float statusEffectCharacterOpacity, statusEffectOpponentOpacity;
-    protected int furyBarY = 0;
-    protected int[] fontSizes = {LoginScreen.LARGE_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE, LoginScreen.NORMAL_TXT_SIZE};
+    protected int furyBarY;
     protected String attackStr;
     protected PlayerType runningFury;
     protected String[] achievementName, achievementDescription, achievementClass, achievementPoints;
-    protected int activeAttack = 0;
-    protected int InfoBarYPose, spacer = 27, randSoundIntChar, randSoundIntOpp, randSoundIntOppHurt, randSoundIntCharHurt, YOffset = 15;
-    protected int x = 2;
-    protected int oppBarYOffset, attackMenuXPos, attackMenuTextXPos, attackMenuTextYPos, y = 0;
-    protected float opacityTxt = 10, opacityPic = 0.0f;
+    protected int activeAttack;
+    protected int oppBarYOffset, attackMenuXPos, attackMenuTextXPos, attackMenuTextYPos, y;
     protected boolean limitRunning;
     protected float charPointInc;
     protected float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
-    protected int comboPicArrayPosOpp = 8;
     protected String manipulateThis;
     protected int one, two, three, four, oneO, twoO, threeO, fourO;
     protected int comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord;
-    protected float opac = 1.0f;
+    protected float opac;
     protected float damageLayerOpacity;
-    protected int charOp = 10, comicBookTextIndex = 0;
+    protected int comicBookTextIndex;
     protected int furyLevel;
     protected boolean isCharacterAttacking;
     protected int columnIndex;
@@ -127,6 +125,27 @@ public abstract class GamePlay extends Mode {
     private long characterQueDelta, opponentQueDelta;
     private long opponentAiTimeout, opponentAiDelta;
     private int furyBarCoolDownFactor;
+    private final float maxAtb = 290f;
+    private long timerDelta;
+    public int timeLimit, count2;
+    public boolean playingCutscene;
+    private boolean characterAtb = true, opponentAtb = true;
+    public boolean isRunning = false;
+    public String timeStr;//, scene;
+    public int time1, time2, time3;
+    private float characterAtbValue;
+    private float opponentAtbValue;
+    private float secondCount;
+    private int matchDuration, playTimeCounter;
+    private long animationLoopADelta;
+    private int animationLoopA;
+    private long animationLoopBDelta;
+    private int animationLoopB;
+    private long animationLoopCDelta;
+    private long animationLoopDDelta;
+    private int animationLoopD;
+    private long animationLoopEDelta;
+    private long achievementDelta;
     protected final int FURY_BAR_MAX = 1000;
 
 
@@ -352,28 +371,6 @@ public abstract class GamePlay extends Mode {
         opponentUiLoop = 0;
     }
 
-    private final float maxAtb = 290f;
-    private long timerDelta;
-    public int timeLimit, count2;
-    public boolean playingCutscene;
-    private boolean characterAtb = true, opponentAtb = true;
-    public boolean isRunning = false;
-    public String timeStr;//, scene;
-    public int time1 = 10, time2 = 10, time3 = 10;
-    private float characterAtbValue;
-    private float opponentAtbValue;
-    private float secondCount = 1000.0f;
-    private int matchDuration, playTimeCounter;
-    private long animationLoopADelta;
-    private int animationLoopA;
-    private long animationLoopBDelta;
-    private int animationLoopB;
-    private long animationLoopCDelta;
-    private long animationLoopDDelta;
-    private int animationLoopD;
-    private long animationLoopEDelta;
-    private long achievementDelta;
-
     public void update(long delta) {
         super.update(delta);
         if (loadAssets) return;
@@ -444,18 +441,18 @@ public abstract class GamePlay extends Mode {
             if (currentOpponentQueLoop < 9) {
                 setSprites(PlayerType.PLAYER2, currentOpponentQueLoop + 1, 11);
                 setSprites(PlayerType.PLAYER1, 0, 11);
-                if ((delta - opponentQueDelta) > MS33) {
-                    opponentQueDelta = delta;
-                    if (shakeCharacterLifeBar(opponentUiLoop)) {
-                        opponentUiLoop++;
+                if ((delta - characterQueDelta) > MS33) {
+                    characterQueDelta = delta;
+                    if (shakeOpponentLifeBar(characterUiLoop)) {
+                        characterUiLoop++;
                     } else {
                         furySound();
-                        hurtSoundChar();
+                        hurtSoundOpp();
                         lifePhysUpdateSimple(PlayerType.PLAYER1, 100);
-                        comboPicArrayPosOpp = opponentUiLoop;
-                        furyComboOpacity = 1.0f;
                         currentOpponentQueLoop++;
-                        opponentUiLoop = 0;
+                        comboPicArrayPosOpp = currentOpponentQueLoop;
+                        furyComboOpacity = 1.0f;
+                        characterUiLoop = 0;
                     }
                 }
             } else {
@@ -464,7 +461,7 @@ public abstract class GamePlay extends Mode {
                 setSprites(PlayerType.PLAYER2, 9, 11);
                 setSprites(PlayerType.PLAYER1, 9, 11);
                 resetBreak();
-                setAttackType(AttackType.REGULAR, PlayerType.PLAYER2);
+                setAttackType(AttackType.REGULAR, PlayerType.PLAYER1);
                 limitRunning = false;
             }
         } else if (triggerOpponentAttack) {
@@ -811,6 +808,40 @@ public abstract class GamePlay extends Mode {
         }
         recordPlayTime();
         count2 = 0;
+        //===========================================
+        charXcord = 10;
+        charYcord = 10;
+        oppYcord = 10;
+        opac = 1.0f;
+        lifeBarShakeIterations = 2;
+        lifeBarShakeInnerIterations = 4;
+        x2 = 560;
+        comX = 380;
+        comY = 100;
+        y2 = 435;
+        oppXcord = 10;
+        numOfComicPics = 9;
+        characterHpAsPercent = 100;
+        opponentHpAsPercent = 100;
+        lbx2 = 500;
+        lby2 = 420;
+        charMeleeSpriteStatus = 9;
+        oppMeleeSpriteStatus = 9;
+        charCelestiaSpriteStatus = 11;
+        oppCelestiaSpriteStatus = 11;
+        spacer = 27;
+        x = 2;
+        opacityTxt = 10;
+        comboPicArrayPosOpp = 8;
+        uiShakeEffectOffsetCharacter = 1;
+        uiShakeEffectOffsetOpponent = 1;
+        characterAtb = true;
+        opponentAtb = true;
+        isRunning = false;
+        time1 = 10;
+        time2 = 10;
+        time3 = 10;
+        secondCount = 1000.0f;
     }
 
     protected abstract void playBGMusic();
@@ -915,8 +946,8 @@ public abstract class GamePlay extends Mode {
         characterHp = characterMaximumHp;
         opponentHp = opponentMaximumHp;
         furyLevel = 5;
-        Characters.get().getCharacter().setStrengthMultiplier(10.0f);
-        Characters.get().getOpponent().setStrengthMultiplier(10.0f);
+        Characters.get().getCharacter().setStrengthMultiplier(12.0f);
+        Characters.get().getOpponent().setStrengthMultiplier(12.0f);
     }
 
     /**
@@ -1047,22 +1078,7 @@ public abstract class GamePlay extends Mode {
         }.start();
     }
 
-    public void triggerFury(PlayerType who) {
-        limitBreak(who);
-    }
-
-
-    /**
-     * Sets limit onBackCancel to initial value
-     */
-    public void resetBreak() {
-        furyLevel = 5;
-    }
-
-    /**
-     * limit break, wee!!!
-     */
-    public void limitBreak(PlayerType playerType) {
+    public void triggerFury(PlayerType playerType) {
         if (gameOver) return;
         if (playingCutscene) return;
         if (paused) return;
@@ -1092,6 +1108,14 @@ public abstract class GamePlay extends Mode {
         }
     }
 
+
+    /**
+     * Sets limit onBackCancel to initial value
+     */
+    public void resetBreak() {
+        furyLevel = 5;
+    }
+
     /**
      * Updates the characterHp of CharacterEnum
      *
@@ -1099,33 +1123,32 @@ public abstract class GamePlay extends Mode {
      * @param damageDone the characterHp to add/subtract
      */
     public void lifePhysUpdateSimple(PlayerType playerType, int damageDone) {
-
-        if (playerType == PlayerType.PLAYER1) //Attack from player
-        {
-            damageDoneToCharacter = damageDone * getOpponentStrengthMultiplier();
-            incrementFuryBarLevel(damageDoneToCharacter / 10);
-            guiScreenChaos(damageDoneToCharacter, PlayerType.PLAYER2);
-            for (int m = 0; m < damageDoneToCharacter; m++)
-                if (characterHp >= 0)
-                    characterHp -= 1;
-            daNum = ((getCharacterHp() / getCharacterMaximumHp()) * 100); //perc characterHp x characterHp bar length
-            lifePlain = Math.round(daNum); // round off
-            lifeTotalPlain = Math.round(getCharacterHp()); // for text
-            characterHpAsPercent = Math.round(lifePlain);
-        }
-
-        if (playerType == PlayerType.PLAYER2 || playerType == PlayerType.BOSS) //Attack from CPU pponent 1
-        {
-            damageDoneToOpponent = damageDone * getCharacterStrengthMultiplier();
-            incrementFuryBarLevel(damageDoneToOpponent / 10);
-            guiScreenChaos(damageDoneToOpponent, PlayerType.PLAYER1);
-            for (int m = 0; m < damageDoneToOpponent; m++)
-                if (opponentHp >= 0)
-                    opponentHp -= 1;
-            daNum2 = ((getOpponentHp() / getOpponentMaximumHp()) * 100); //perc characterHp x characterHp bar length
-            lifePlain2 = Math.round(daNum2); // round off
-            lifeTotalPlain2 = Math.round(getOpponentHp()); // for text
-            opponentHpAsPercent = Math.round(lifePlain2);
+        switch (playerType) {
+            case PLAYER1:
+                damageDoneToCharacter = damageDone * getOpponentStrengthMultiplier();
+                incrementFuryBarLevel(damageDoneToCharacter / 10);
+                guiScreenChaos(damageDoneToCharacter, PlayerType.PLAYER2);
+                for (int m = 0; m < damageDoneToCharacter; m++)
+                    if (characterHp >= 0)
+                        characterHp -= 1;
+                daNum = ((getCharacterHp() / getCharacterMaximumHp()) * 100);
+                lifePlain = Math.round(daNum);
+                lifeTotalPlain = Math.round(getCharacterHp());
+                characterHpAsPercent = Math.round(lifePlain);
+                break;
+            case PLAYER2:
+            case BOSS:
+                damageDoneToOpponent = damageDone * getCharacterStrengthMultiplier();
+                incrementFuryBarLevel(damageDoneToOpponent / 10);
+                guiScreenChaos(damageDoneToOpponent, PlayerType.PLAYER1);
+                for (int m = 0; m < damageDoneToOpponent; m++)
+                    if (opponentHp >= 0)
+                        opponentHp -= 1;
+                daNum2 = ((getOpponentHp() / getOpponentMaximumHp()) * 100);
+                lifePlain2 = Math.round(daNum2);
+                lifeTotalPlain2 = Math.round(getOpponentHp());
+                opponentHpAsPercent = Math.round(lifePlain2);
+                break;
         }
     }
 
@@ -1288,6 +1311,8 @@ public abstract class GamePlay extends Mode {
     protected void cancelMatch() {
         ButtonBar.ButtonData firstPrompt = FxDialogs.yesNo("Confirmation", "Dude!?", "Are you sure you wanna quit?");
         if (firstPrompt == ButtonBar.ButtonData.YES) {
+            if (playingCutscene)
+                StoryMode.get().exitCinematic(true);
             if (NetworkManager.get().isOffline()) {
                 if (isPaused()) {
                     onTogglePause();
@@ -1589,15 +1614,6 @@ public abstract class GamePlay extends Mode {
 
     public void musNotice() {
         io.github.subiyacryolite.enginev1.Overlay.get().secondaryNotice(RenderStageSelect.get().getAmbientMusicMetaData()[RenderStageSelect.get().getAmbientMusicIndex()]);
-    }
-
-    public void playMusicNow() {
-        try {
-
-            io.github.subiyacryolite.enginev1.Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
-        } catch (Exception ex) {
-            System.out.println("Dude, something went wrong " + ex.getMessage());
-        }
     }
 
     public boolean isGameOver() {

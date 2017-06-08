@@ -67,7 +67,7 @@ public class Login extends JdsEntity {
     private final SimpleBooleanProperty isAudioOn = new SimpleBooleanProperty(true);
     private final SimpleIntegerProperty difficulty = new SimpleIntegerProperty(diff3);
     private final SimpleIntegerProperty difficultyDynamic = new SimpleIntegerProperty(diff3);
-    private final SimpleIntegerProperty lastStoryScene = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty highestStoryScene = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty timeLimit = new SimpleIntegerProperty(90);
     private final SimpleStringProperty graphicsSetting = new SimpleStringProperty("");
     private final SimpleIntegerProperty char0 = new SimpleIntegerProperty(0);
@@ -115,7 +115,7 @@ public class Login extends JdsEntity {
         map(LoginFields.AUDIO_ON, isAudioOn);
         map(LoginFields.DIFFICULTY, difficulty);
         map(LoginFields.DIFFICULTY_DYNAMIC, difficultyDynamic);
-        map(LoginFields.LAST_STORY_SCENE, lastStoryScene);
+        map(LoginFields.LAST_STORY_SCENE, highestStoryScene);
         map(LoginFields.TIME_LIMIT, timeLimit);
         map(LoginFields.GRAPHICS_SETTING, graphicsSetting);
         map(LoginFields.D_027, char0);
@@ -488,12 +488,12 @@ public class Login extends JdsEntity {
         this.difficultyDynamic.set(difficultyDynamic);
     }
 
-    public int getLastStoryScene() {
-        return lastStoryScene.get();
+    public int getHighestStoryScene() {
+        return highestStoryScene.get();
     }
 
-    public void setLastStoryScene(final int lastStoryScene) {
-        this.lastStoryScene.set(lastStoryScene);
+    public void setHighestStoryScene(final int lastStoryScene) {
+        this.highestStoryScene.set(lastStoryScene);
     }
 
     public int getTimeLimit() {

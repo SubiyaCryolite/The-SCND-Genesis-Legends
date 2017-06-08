@@ -30,7 +30,7 @@ import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -86,10 +86,10 @@ public class RenderStageSelect extends StageSelect {
     private final UiItem scorchedRuinsNight;
     private final UiItem hiddenCaveNight;
     private final UiItem random;
-    private AudioPlayback menuMusic;
+    private Audio menuMusic;
 
     public void onEnterMode() {
-        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - i LOST MY SOUL.ogg", AudioType.MUSIC, true);
+        menuMusic = new Audio("audio/scotty/Scotty Zepplin - i LOST MY SOUL.ogg", AudioType.MUSIC, true);
         menuMusic.play();
     }
 

@@ -28,7 +28,7 @@ import com.scndgen.legends.enums.SubMode;
 public class NetworkManager {
 
     public static final int PORT = 3074;
-    public static final int SERVER_LATENCY = 16; //ms
+    public static final int SERVER_LATENCY = 4; //ms
     public static final int TIMEOUT = 4000; //ms
     private static NetworkManager instance;
     public int hostTimeLimit;

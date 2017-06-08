@@ -25,7 +25,7 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.*;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Engine;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Game;
@@ -166,7 +166,7 @@ public class ScndGenLegends extends Game {
 
     public void shutDown() {
         NetworkManager.get().close();
-        AudioPlayback.closeAll();
+        Audio.closeAll();
     }
 
     public void onCloseRequest(WindowEvent closeRequest) {

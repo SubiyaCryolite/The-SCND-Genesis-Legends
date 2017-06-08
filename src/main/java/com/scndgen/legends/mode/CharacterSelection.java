@@ -10,7 +10,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Mode;
 import javafx.scene.input.MouseEvent;
@@ -57,7 +57,7 @@ public abstract class CharacterSelection extends Mode {
     }
 
     protected void playSelectSound() {
-        AudioPlayback sound = new AudioPlayback(AudioConstants.charSelectSound(), AudioType.SOUND, false);
+        Audio sound = new Audio(AudioConstants.charSelectSound(), AudioType.SOUND, false);
         sound.play();
     }
 
@@ -574,7 +574,7 @@ public abstract class CharacterSelection extends Mode {
      * Plays error sound
      */
     public void errorSound() {
-        AudioPlayback error = new AudioPlayback("audio/error.ogg", AudioType.SOUND, false);
+        Audio error = new Audio("audio/error.ogg", AudioType.SOUND, false);
         error.play();
     }
 

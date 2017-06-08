@@ -23,9 +23,9 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Achievement;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.MainMenuOverlay;
+import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
@@ -64,7 +64,9 @@ public class AchievementLocker {
     }
 
     public float getStoryProgression() {
-        return State.get().getLogin().getLastStoryScene() / StoryMode.get().totalScenes;
+        int highest = State.get().getLogin().getHighestStoryScene();
+        float progress = highest / (float) StoryMode.get().totalScenes;
+        return progress;
     }
 
     public int getAchUnlockedPerc() {

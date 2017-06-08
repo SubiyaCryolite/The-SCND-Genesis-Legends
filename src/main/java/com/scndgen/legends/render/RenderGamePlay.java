@@ -34,7 +34,7 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,7 +58,7 @@ public class RenderGamePlay extends GamePlay {
     private Image stageAmbientForeground, stageAmbientBackground, stageForeground;
     private Image[] numberPix;
     private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hpHolderOpponent,hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
+    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hpHolderOpponent, hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
     private Image[] charSprites, oppSprites;
     private Image[] characterPortraits;
     private int characterPortraitIndex;
@@ -77,7 +77,7 @@ public class RenderGamePlay extends GamePlay {
     private final UiItem attackEleven;
     private final UiItem attackTwelve;
     private final UiItem fury;
-    private AudioPlayback ambientMusic;
+    private Audio ambientMusic;
 
     public void onLeaveMode() {
         if (ambientMusic != null)
@@ -586,7 +586,7 @@ public class RenderGamePlay extends GamePlay {
         gc.fillArc(426 + 5, 420, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.fillArc(426 + 55, 420, diameter, diameter, 0, 360, ArcType.ROUND);
         gc.fillRect(426 - 70, 438, 140, 4);
-        gc.setFill(Color.ORANGE);
+        gc.setFill(Color.WHITE);
         diameter = 35;
         if (characterAttacks.size() >= 1 || triggerCharacterAttack)
             gc.fillArc(426 - 97.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
@@ -939,13 +939,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.get().getCharacter().isMale()) {
             randSoundIntChar = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.MALE_HURT.length) {
-                AudioPlayback attackChar = new AudioPlayback(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
+                Audio attackChar = new Audio(AudioConstants.maleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         } else {
             randSoundIntChar = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntChar < AudioConstants.FEMALE_HURT.length) {
-                AudioPlayback attackChar = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntChar), AudioType.VOICE, false);
+                Audio attackChar = new Audio(AudioConstants.femaleAttack(randSoundIntChar), AudioType.VOICE, false);
                 attackChar.play();
             }
         }
@@ -955,13 +955,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.get().getOpponent().isMale()) {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.MALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.MALE_HURT.length) {
-                AudioPlayback attackOpp = new AudioPlayback(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
+                Audio attackOpp = new Audio(AudioConstants.maleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         } else {
             randSoundIntOpp = (int) (Math.random() * AudioConstants.FEMALE_HURT.length * 2);
             if (randSoundIntOpp < AudioConstants.FEMALE_HURT.length) {
-                AudioPlayback attackOpp = new AudioPlayback(AudioConstants.femaleAttack(randSoundIntOpp), AudioType.VOICE, false);
+                Audio attackOpp = new Audio(AudioConstants.femaleAttack(randSoundIntOpp), AudioType.VOICE, false);
                 attackOpp.play();
             }
         }
@@ -971,13 +971,13 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.get().getOpponent().isMale()) {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.MALE_ATTACKS.length) {
-                AudioPlayback hurtChar = new AudioPlayback(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
+                Audio hurtChar = new Audio(AudioConstants.maleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         } else {
             randSoundIntCharHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntCharHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                AudioPlayback hurtChar = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
+                Audio hurtChar = new Audio(AudioConstants.femaleHurt(randSoundIntCharHurt), AudioType.VOICE, false);
                 hurtChar.play();
             }
         }
@@ -987,25 +987,25 @@ public class RenderGamePlay extends GamePlay {
         if (Characters.get().getCharacter().isMale()) {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.MALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.MALE_ATTACKS.length) {
-                AudioPlayback hurtOpp = new AudioPlayback(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
+                Audio hurtOpp = new Audio(AudioConstants.maleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         } else {
             randSoundIntOppHurt = (int) (Math.random() * AudioConstants.FEMALE_ATTACKS.length * 2);
             if (randSoundIntOppHurt < AudioConstants.FEMALE_ATTACKS.length) {
-                AudioPlayback hurtOpp = new AudioPlayback(AudioConstants.femaleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
+                Audio hurtOpp = new Audio(AudioConstants.femaleHurt(randSoundIntOppHurt), AudioType.VOICE, false);
                 hurtOpp.play();
             }
         }
     }
 
     public void furySound() {
-        AudioPlayback furySound = new AudioPlayback(AudioConstants.furyAttck(), AudioType.SOUND, false);
+        Audio furySound = new Audio(AudioConstants.furyAttck(), AudioType.SOUND, false);
         furySound.play();
     }
 
     private void nrmlDamageSound() {
-        AudioPlayback damageSound = new AudioPlayback(AudioConstants.playerAttack(), AudioType.SOUND, false);
+        Audio damageSound = new Audio(AudioConstants.playerAttack(), AudioType.SOUND, false);
         damageSound.play();
     }
 
@@ -1025,12 +1025,13 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public synchronized void playBGMusic() {
-        ambientMusic = new AudioPlayback("audio/" + RenderStageSelect.get().getAmbientMusic()[RenderStageSelect.get().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
+        ambientMusic = new Audio("audio/" + RenderStageSelect.get().getAmbientMusic()[RenderStageSelect.get().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
         ambientMusic.play();
     }
 
     public void closeAudio() {
-        ambientMusic.stop(1000);
+        if (ambientMusic != null)
+            ambientMusic.stop(2000);
     }
 
     /**
@@ -1103,7 +1104,7 @@ public class RenderGamePlay extends GamePlay {
         public void onAccept() {
             if (!gameOver && !playingCutscene) {
                 if (safeToSelect) {
-                    AudioPlayback sound = new AudioPlayback(AudioConstants.selectSound(), AudioType.SOUND, false);
+                    Audio sound = new Audio(AudioConstants.selectSound(), AudioType.SOUND, false);
                     sound.play();
                     activeAttack = (columnIndex * 4) + (rowIndex + 1);
                     characterAttacks.add(activeAttack); // count initially negative 1, add one to get to index 0

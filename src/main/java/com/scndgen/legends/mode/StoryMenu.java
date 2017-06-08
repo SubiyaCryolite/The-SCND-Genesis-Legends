@@ -26,7 +26,7 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Mode;
 
 import javax.swing.*;
@@ -39,7 +39,7 @@ public abstract class StoryMenu extends Mode {
     protected final int rows = numberOfScenes / columns;
     protected int oldId = -1;
     protected boolean[] unlockedStage;
-    protected int currentScene = State.get().getLogin().getLastStoryScene();
+    protected int currentScene = State.get().getLogin().getHighestStoryScene();
 
     public void newInstance() {
         loadAssets = true;
@@ -58,7 +58,7 @@ public abstract class StoryMenu extends Mode {
      * Find out the lastStoryScene the player is on
      */
     public void resetCurrentStage() {
-        currentScene = State.get().getLogin().getLastStoryScene();
+        currentScene = State.get().getLogin().getHighestStoryScene();
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class StoryMenu extends Mode {
             //incrementMode();
             //go onBackCancel to user difficulty
             State.get().getLogin().setDifficultyDynamic(State.get().getLogin().getDifficulty());
-            AudioPlayback victorySound = new AudioPlayback(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
+            Audio victorySound = new Audio(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
             JOptionPane.showMessageDialog(null, Language.get().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
             answer = false;

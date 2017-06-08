@@ -14,7 +14,7 @@ import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.windows.WindowAbout;
 import com.scndgen.legends.windows.WindowControls;
 import com.scndgen.legends.windows.WindowOptions;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
@@ -55,7 +55,7 @@ public class RenderMainMenu extends MainMenu {
     private Loader loader = new Loader();
     private Image menuLogo, gameLogo;
     private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
-    private AudioPlayback menuMusic;
+    private Audio menuMusic;
 
     public static synchronized RenderMainMenu get() {
         if (instance == null)
@@ -413,7 +413,6 @@ public class RenderMainMenu extends MainMenu {
                 if (exit == ButtonBar.ButtonData.YES) {
                     ButtonBar.ButtonData seriously = FxDialogs.yesNo(Language.get().get(423), Language.get().get(111), "");
                     if (seriously == ButtonBar.ButtonData.YES) {
-                        FxDialogs.message("Later", Language.get().get(112), "");
                         ScndGenLegends.get().exit();
                     }
                 }
@@ -482,7 +481,7 @@ public class RenderMainMenu extends MainMenu {
     }
 
     public void onEnterMode() {
-        menuMusic = new AudioPlayback(AudioConstants.menuMus(), AudioType.MUSIC, true);
+        menuMusic = new Audio(AudioConstants.menuMus(), AudioType.MUSIC, true);
         menuMusic.play();
     }
 

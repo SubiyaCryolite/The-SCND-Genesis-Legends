@@ -32,7 +32,7 @@ import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.FxDialogs;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
@@ -77,10 +77,10 @@ public class RenderCharacterSelection extends CharacterSelection {
     private Image fg1, fg2, fg3, bg3;
     private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private CharacterEnum hoveredCharacter;
-    private AudioPlayback menuMusic;
+    private Audio menuMusic;
 
     public void onEnterMode() {
-        menuMusic = new AudioPlayback("audio/scotty/Scotty Zepplin - Rays.ogg", AudioType.MUSIC, true);
+        menuMusic = new Audio("audio/scotty/Scotty Zepplin - Rays.ogg", AudioType.MUSIC, true);
         menuMusic.play();
     }
 

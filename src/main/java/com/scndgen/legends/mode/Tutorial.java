@@ -27,7 +27,7 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.render.RenderMainMenu;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Loader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -52,11 +52,11 @@ public class Tutorial implements Runnable {
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
     private Font normalFont;
-    private final AudioPlayback bgSound, backSound;
+    private final Audio bgSound, backSound;
 
     public Tutorial() {
-        backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
-        bgSound = new AudioPlayback(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
+        backSound = new Audio(AudioConstants.soundBack(), AudioType.SOUND, false);
+        bgSound = new Audio(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
         loader = new Loader();
         normalFont = getMyFont(LoginScreen.NORMAL_TXT_SIZE);
         pixLoc = 0;
@@ -179,12 +179,12 @@ public class Tutorial implements Runnable {
     }
 
     private void playBackSound() {
-        AudioPlayback backSound = new AudioPlayback(AudioConstants.soundBack(), AudioType.SOUND, false);
+        Audio backSound = new Audio(AudioConstants.soundBack(), AudioType.SOUND, false);
         backSound.play();
     }
 
     private void playForwardSound() {
-        AudioPlayback nextSound = new AudioPlayback(AudioConstants.soundNext(), AudioType.SOUND, false);
+        Audio nextSound = new Audio(AudioConstants.soundNext(), AudioType.SOUND, false);
         nextSound.play();
     }
 

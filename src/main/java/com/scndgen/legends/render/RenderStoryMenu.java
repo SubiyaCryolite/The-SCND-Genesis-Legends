@@ -30,7 +30,7 @@ import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import io.github.subiyacryolite.enginev1.Loader;
 import io.github.subiyacryolite.enginev1.Overlay;
 import javafx.scene.canvas.GraphicsContext;
@@ -71,10 +71,10 @@ public class RenderStoryMenu extends StoryMenu {
     private final UiItem scene11;
     private final UiItem scene12;
     private final UiItem scene13;
-    private AudioPlayback menuMusic;
+    private Audio menuMusic;
 
     public void onEnterMode() {
-        menuMusic = new AudioPlayback("audio/scotty/scotty zepplin - We Are.ogg", AudioType.MUSIC, true);
+        menuMusic = new Audio("audio/scotty/scotty zepplin - We Are.ogg", AudioType.MUSIC, true);
         menuMusic.play();
     }
 
@@ -277,9 +277,9 @@ public class RenderStoryMenu extends StoryMenu {
     public void selectScene() {
         if (validIndex(hoveredScene)) {
             StoryMode.get().startStoryMode(hoveredScene);
-            new AudioPlayback("audio/menu-select.oga", AudioType.SOUND, false).play();
+            new Audio("audio/menu-select.oga", AudioType.SOUND, false).play();
         } else {
-            new AudioPlayback("audio/menu-select.oga", AudioType.SOUND, false).play();
+            new Audio("audio/menu-select.oga", AudioType.SOUND, false).play();
         }
     }
 

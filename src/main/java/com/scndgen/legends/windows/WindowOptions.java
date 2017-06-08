@@ -24,7 +24,7 @@ package com.scndgen.legends.windows;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.AudioPlayback;
+import io.github.subiyacryolite.enginev1.Audio;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -95,7 +95,7 @@ public class WindowOptions extends Stage {
         voiceVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getVoiceVolume()));
         voiceVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
             State.get().getLogin().setVoiceVolume(newValue);
-            AudioPlayback.volume(AudioType.VOICE, newValue);
+            Audio.volume(AudioType.VOICE, newValue);
         });
         lblVoiceVolume = new Label(Language.get().get(420));
         gridPane.add(lblVoiceVolume, 1, row);
@@ -107,7 +107,7 @@ public class WindowOptions extends Stage {
         soundVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getSoundVolume()));
         soundVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
             State.get().getLogin().setSoundVolume(newValue);
-            AudioPlayback.volume(AudioType.SOUND, newValue);
+            Audio.volume(AudioType.SOUND, newValue);
         });
         lblSoundVolume = new Label(Language.get().get(418));
         gridPane.add(lblSoundVolume, 1, row);
@@ -119,7 +119,7 @@ public class WindowOptions extends Stage {
         musicVolume.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, State.get().getLogin().getMusicVolume()));
         musicVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
             State.get().getLogin().setMusicVolume(newValue);
-            AudioPlayback.volume(AudioType.MUSIC, newValue);
+            Audio.volume(AudioType.MUSIC, newValue);
         });
         lblMusicVolume = new Label(Language.get().get(419));
         gridPane.add(lblMusicVolume, 1, row);
