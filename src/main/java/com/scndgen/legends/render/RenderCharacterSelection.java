@@ -143,7 +143,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                     //if both character and opponent selected move on to stage select after second accept
                     if (NetworkManager.get().isServer())
                         NetworkManager.get().send(NetworkConstants.TO_STAGE_SELECT);
-                    if (NetworkManager.get().isOffline() || (NetworkManager.get().isServer() && selectedOpponent)) {
+                    if (NetworkManager.get().isOffline() || (NetworkManager.get().isServer() && selectedOpponent && selectedCharacter)) {
                         ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
                     }
                 }

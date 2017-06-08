@@ -65,6 +65,7 @@ public class NetworkManager {
      */
     private void closeTheServer() {
         server.close();
+        server.shutdownKillServer();
         server = null;
         backToMainMenu();
     }
@@ -74,6 +75,7 @@ public class NetworkManager {
      */
     private void closeTheClient() {
         client.close();
+        client.shutdownKillClient();
         client = null;
         backToMainMenu();
     }

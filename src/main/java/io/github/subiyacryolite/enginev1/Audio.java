@@ -51,6 +51,7 @@ public class Audio {
     //========================================
     private static long audioDevice;
     private static long audioContext;
+    private boolean lockVolume;
 
     static {
         audioDevice = alcOpenDevice((ByteBuffer) null);
@@ -86,13 +87,13 @@ public class Audio {
         heap.add(this);
         switch (audioType) {
             case MUSIC:
-                setVolume(State.get().getLogin().getMusicVolume());
+                setVolume(State.get().getLogin().getMusicVolume(), false);
                 break;
             case VOICE:
-                setVolume(State.get().getLogin().getVoiceVolume());
+                setVolume(State.get().getLogin().getVoiceVolume(), false);
                 break;
             case SOUND:
-                setVolume(State.get().getLogin().getSoundVolume());
+                setVolume(State.get().getLogin().getSoundVolume(), false);
                 break;
         }
     }
@@ -124,7 +125,7 @@ public class Audio {
     public static void volume(AudioType audioType, float volume) {
         heap.stream().forEach(elem -> {
             if (elem.getAudioType() == audioType) {
-                elem.setVolume(volume);
+                elem.setVolume(volume, false);
             }
         });
     }
@@ -163,8 +164,11 @@ public class Audio {
         thread.start();
     }
 
-    private void setVolume(float volume) {
+    private void setVolume(float volume, boolean ignoreLock) {
         this.volume = volume;
+        if (lockVolume)
+            if (!ignoreLock)
+                return;
         if (source == null) return;
         if (source.get(0) > 0)
             alSourcef(source.get(0), AL_GAIN, volume / 100.0f);
@@ -201,10 +205,11 @@ public class Audio {
     }
 
     public void stop(int milliFadeTimeout) {
+        lockVolume = true;
         float volumeDecrement = volume / milliFadeTimeout;
         new Thread(() -> {
             while (volume > 0.0f) {
-                setVolume(volume - volumeDecrement);
+                setVolume(volume - volumeDecrement, true);
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {

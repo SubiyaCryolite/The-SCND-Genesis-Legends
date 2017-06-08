@@ -81,4 +81,9 @@ public class NetworkClient extends NetworkBase implements Runnable {
             exception.printStackTrace(System.err);
         }
     }
+
+    public void shutdownKillClient()
+    {
+        thread.stop();
+    }
 }

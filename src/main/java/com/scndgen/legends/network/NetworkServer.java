@@ -123,4 +123,9 @@ public class NetworkServer extends NetworkBase implements Runnable {
     public void close() {
         running = false;
     }
+
+    public void shutdownKillServer()
+    {
+        thread.stop();
+    }
 }
