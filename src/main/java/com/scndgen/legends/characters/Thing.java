@@ -36,6 +36,7 @@ public class Thing extends Character {
         attackStr = "";
         descSmall = "The Thing - Origins unknown";
         name = "The Thing";
+        characterEnum = CharacterEnum.THING;
         physical = new String[]{"Dash Strike", "Violent Thrust", "Epic Piercing", "Solar Flare"};
         celestia = new String[]{"Frost Bite", "Rock Rush", "Land Slide", "Solar Storm"};
         status = new String[]{"Heal Plus", "Heal EX", "Pain Killer", "Wound Spray"};
@@ -56,11 +57,9 @@ public class Thing extends Character {
         points = 1800;
         damage = 0;
         if (y == 0) {
-            characterEnum = CharacterEnum.THING;
             life = 40000;
             bonus = 0;
         } else {
-            characterEnum = CharacterEnum.THING;
             life = 60000;
             bonus = 5;
         }
