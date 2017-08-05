@@ -1572,7 +1572,11 @@ public abstract class GamePlay extends Mode {
         incrementWinsOrLosses();
         State.get().getLogin().setPoints(Achievement.get().getNewUserPoints());
         //save profile
-        State.get().saveConfigFile();
+        try {
+            State.get().saveConfigFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void incrementWinsOrLosses() {

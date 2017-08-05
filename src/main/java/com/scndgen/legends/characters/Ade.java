@@ -25,6 +25,8 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 
+import static com.scndgen.legends.enums.CharacterEnum.ADE;
+
 /**
  * @author ndana
  */
@@ -33,6 +35,7 @@ public class Ade extends Character {
     public Ade() {
         descSmall = "Ade - a fighter utilising the air element";
         name = "Ade";
+        characterEnum = ADE;
         physical = new String[]{"Tornado Blast", "Hurricane Sphere", "Hurricane Barrage", "Violent Burst"};
         celestia = new String[]{"Crush Down", "Vortex Blades", "Cursed Seal", "Dark Swirl"};
         status = new String[]{"Heal Plus", "Heal EX", "Bandage", "Wound Spray"};

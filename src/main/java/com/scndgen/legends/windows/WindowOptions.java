@@ -161,7 +161,11 @@ public class WindowOptions extends Stage {
 
         btnSave = new Button(Language.get().get(20));
         btnSave.setOnAction(event -> {
-            State.get().saveConfigFile();
+            try {
+                State.get().saveConfigFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             close();
         });
         btnCancel = new Button(Language.get().get(421));

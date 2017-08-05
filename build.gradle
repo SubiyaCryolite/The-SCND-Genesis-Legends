@@ -11,10 +11,14 @@ project.ext.lwjglVersion = "3.1.2"
 
 repositories {
     mavenCentral()
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
+    maven { url "https://maven.atlassian.com/3rdparty/" }
+    maven { url "http://clojars.org/repo/" }
 }
 
 dependencies {
-    compile 'io.github.subiyacryolite:jds:1.170414'
+    compile 'io.github.subiyacryolite:jds:3.2.2-SNAPSHOT'
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-lang:commons-lang:2.6'
     compile 'commons-io:commons-io:2.5'

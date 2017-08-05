@@ -24,7 +24,6 @@ package com.scndgen.legends.state;
 import io.github.subiyacryolite.enginev1.Overlay;
 import io.github.subiyacryolite.jds.*;
 import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
-import io.github.subiyacryolite.jds.enums.JdsImplementation;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -32,6 +31,9 @@ import javafx.collections.ObservableList;
 import org.sqlite.SQLiteConfig;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +45,7 @@ import static com.scndgen.legends.state.LoginFields.LAST_LOGIN_ACCOUNT;
 @JdsEntityAnnotation(entityName = "Game State", entityId = 1)
 public class State extends JdsEntity {
     private static State instance;
-    private static JdsDataBase jdsDatabase;
+    private static JdsDb jdsDb;
     public static final int DIFFICULTY_BASE = 8000;
     public static final int DIFFICULTY_SCALE = 1333;
     private final SimpleListProperty<Login> logins = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -57,24 +59,28 @@ public class State extends JdsEntity {
 
     public static synchronized State get() {
         if (instance == null) {
-            initGameState(getEmbeddedDatabaseAndCreateIfNotExist());
+            try {
+                initGameState(getEmbeddedDatabaseAndCreateIfNotExist());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return instance;
     }
 
-    private static void initGameState(String databaseIfNotExists) {
+    private static void initGameState(String databaseIfNotExists) throws Exception {
         createLocalDatabase(databaseIfNotExists);
         bindClasses();
         loadStateInstance();
     }
 
-    private static void loadStateInstance() {
-        List<State> states = JdsLoad.load(jdsDatabase, State.class);
+    private static void loadStateInstance() throws Exception {
+        List<State> states = JdsLoad.load(jdsDb, State.class);
         State state;
         if (states.size() == 0) {
             state = new State();
             System.out.printf("Created game state %s\n", state.toString());
-            JdsSave.save(jdsDatabase, 0, state);
+            JdsSave.save(jdsDb, 0, state);
         } else {
             state = states.get(0);
             System.out.printf("Loaded game state %s\n", state.toString());
@@ -83,16 +89,21 @@ public class State extends JdsEntity {
     }
 
     private static void createLocalDatabase(String databaseIfNotExists) {
-        SQLiteConfig sqLiteConfig = new SQLiteConfig();
-        sqLiteConfig.enforceForeignKeys(true);
-        jdsDatabase = JdsDataBase.getImplementation(JdsImplementation.SQLITE);
-        jdsDatabase.setConnectionProperties("jdbc:sqlite:" + databaseIfNotExists, sqLiteConfig.toProperties());
-        jdsDatabase.init();
+        jdsDb = new JdsDbSqlite() {
+            @Override
+            public Connection getConnection() throws ClassNotFoundException, SQLException {
+                Class.forName("org.sqlite.JDBC");
+                SQLiteConfig sqLiteConfig = new SQLiteConfig();
+                sqLiteConfig.enforceForeignKeys(true);
+                return DriverManager.getConnection("jdbc:sqlite:" + databaseIfNotExists, sqLiteConfig.toProperties());
+            }
+        };
+        jdsDb.init();
     }
 
     private static void bindClasses() {
-        JdsEntityClasses.map(Login.class);
-        JdsEntityClasses.map(State.class);
+        jdsDb.map(Login.class);
+        jdsDb.map(State.class);
     }
 
     private static String getEmbeddedDatabaseAndCreateIfNotExist() {
@@ -110,8 +121,8 @@ public class State extends JdsEntity {
         return fileLocation;
     }
 
-    public void saveConfigFile() {
-        JdsSave.save(jdsDatabase, 1, this);
+    public void saveConfigFile() throws Exception {
+        JdsSave.save(jdsDb, 1, this);
         Overlay.get().primaryNotice("Saved File");
     }
 
