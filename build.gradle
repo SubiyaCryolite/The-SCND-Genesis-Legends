@@ -1,43 +1,52 @@
+plugins {
+    id "java"
+    id "application"
+    id "org.openjfx.javafxplugin" version "0.0.12"
+}
+
 group 'com.scndgen'
 version '2.170608'
-apply plugin: 'java'
-apply plugin: 'application'
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 project.ext.mainClass = 'com.scndgen.legends.ScndGenLegends'
-project.ext.lwjglVersion = "3.1.2"
+project.ext.lwjglVersion = "3.3.1"
+
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+}
+
 
 repositories {
     mavenCentral()
-    jcenter()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
-    maven { url "https://maven.atlassian.com/3rdparty/" }
-    maven { url "http://clojars.org/repo/" }
 }
 
 dependencies {
-    compile 'io.github.subiyacryolite:jds:3.2.2-SNAPSHOT'
-    compile 'commons-codec:commons-codec:1.9'
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'commons-io:commons-io:2.5'
-    compile 'org.xerial:sqlite-jdbc:3.7.2'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr2'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.9.0.pr2'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr2'
-    compile "org.lwjgl:lwjgl:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
-    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
-    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
-    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
-    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
-    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
-    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
-    runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
-    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
-    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
+    implementation 'io.github.subiyacryolite:jds:3.2.2-SNAPSHOT'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.2'
+    implementation "org.lwjgl:lwjgl:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
 }
 
 jar {
@@ -47,14 +56,9 @@ jar {
                 "Implementation-Version": project.version,
                 "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
                 "Main-Class": project.ext.mainClass,
-                "Class-Path": configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
         )
     }
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
 }
-
-task copyDependencies(type: Copy) {
-    from configurations.runtime
-    into "$buildDir/libs/lib"
-}
-
-jar.dependsOn(copyDependencies)

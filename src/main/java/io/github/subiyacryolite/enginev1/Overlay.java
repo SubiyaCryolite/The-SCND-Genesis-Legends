@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,11 +16,12 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package io.github.subiyacryolite.enginev1;
 
+import com.scndgen.legends.Utils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -62,7 +63,7 @@ public class Overlay {
             increasePrimaryOpacity = false;
             fadeOutPrimaryNotification = true;
         }
-        if (increasePrimaryOpacity == false && fadeOutPrimaryNotification) {
+        if (!increasePrimaryOpacity) {
             if (primaryTimeout < (180.0f)) {//show for 3 seconds
                 primaryTimeout = primaryTimeout + 1.0f;
             } else if (primaryOpacity > 0.01f) {
@@ -70,10 +71,10 @@ public class Overlay {
             }
         }
         gc.setGlobalAlpha((primaryOpacity / 2.5f));
-        gc.fillRoundRect((w - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
+        gc.fillRoundRect((w - 5 - 5 -Utils.computeStringWidth(primaryNotification, gc.getFont())), 55, 14 + (primaryNotification.length() * 8), 20, 10, 10);
         gc.setGlobalAlpha((primaryOpacity));
         gc.setFill(Color.WHITE);
-        gc.fillText(primaryNotification, (w - 5 - getToolkit().getFontLoader().computeStringWidth(primaryNotification, gc.getFont())), 70);
+        gc.fillText(primaryNotification, (w - 5 - Utils.computeStringWidth(primaryNotification, gc.getFont())), 70);
         gc.setGlobalAlpha((1.0f));
 
         if (increaseSecondaryOpacity && secondaryOpacity < 0.99f) {//fade up
@@ -82,7 +83,7 @@ public class Overlay {
             increaseSecondaryOpacity = false;
             fadeOutSecondaryNotification = true;
         }
-        if (increaseSecondaryOpacity == false && fadeOutSecondaryNotification) {
+        if (!increaseSecondaryOpacity) {
             if (secondaryTimeout < (360.0f)) {//show for 6 seconds
                 secondaryTimeout = secondaryTimeout + 1.0f;
             } else if (secondaryOpacity > 0.01f) {
@@ -91,10 +92,10 @@ public class Overlay {
         }
         gc.setFill(Color.BLACK);
         gc.setGlobalAlpha((secondaryOpacity / 2.5f));
-        gc.fillRoundRect((w - 5 - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
+        gc.fillRoundRect((w - 5 - 5 -Utils.computeStringWidth(secondaryNotification, gc.getFont())), 35, 14 + (secondaryNotification.length() * 8), 20, 10, 10);
         gc.setGlobalAlpha((secondaryOpacity));
         gc.setFill(Color.WHITE);
-        gc.fillText(secondaryNotification, (w - 5 - getToolkit().getFontLoader().computeStringWidth(secondaryNotification, gc.getFont())), 50);
+        gc.fillText(secondaryNotification, (w - 5 -Utils.computeStringWidth(secondaryNotification, gc.getFont())), 50);
         gc.setGlobalAlpha((1.0F));
     }
 

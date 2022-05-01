@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,7 +16,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package com.scndgen.legends.mode;
@@ -960,14 +960,6 @@ public class StoryMode implements Runnable {
 
     public void startFight() {
         exitCinematic(false);
-    }
-
-    public void pauseDialogue() {
-        thread.suspend();
-    }
-
-    public void resumeDialogue() {
-        thread.resume();
     }
 
     public void onBackCancel() {

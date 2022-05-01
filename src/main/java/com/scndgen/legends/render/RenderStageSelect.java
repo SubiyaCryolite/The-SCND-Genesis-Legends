@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,7 +16,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package com.scndgen.legends.render;
@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.StageSelect;
@@ -298,13 +299,13 @@ public class RenderStageSelect extends StageSelect {
             gc.setGlobalAlpha((1.0f));
             gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             gc.setFill(Color.WHITE);
-            gc.fillText(Language.get().get(165), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(165), gc.getFont())) / 2, 200);
+            gc.fillText(Language.get().get(165), (852 - Utils.computeStringWidth(Language.get().get(165), gc.getFont())) / 2, 200);
         } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, 852, 480);
             gc.setFill(Color.WHITE);
-            gc.fillText(">> " + Language.get().get(166) + " <<", (852 - getToolkit().getFontLoader().computeStringWidth(">> " + Language.get().get(166) + " <<", gc.getFont())) / 2, 300);
+            gc.fillText(">> " + Language.get().get(166) + " <<", (852 -Utils.computeStringWidth(">> " + Language.get().get(166) + " <<", gc.getFont())) / 2, 300);
         } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT == false) {
             gc.setFont(normalFont);
             gc.setFill(Color.BLACK);

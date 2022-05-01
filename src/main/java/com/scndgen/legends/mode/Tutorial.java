@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,13 +16,14 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.MainMenuOverlay;
@@ -137,10 +138,10 @@ public class Tutorial implements Runnable {
             opacityTxt = opacityTxt + 0.02f;
         }
         gc.setGlobalAlpha((opacityTxt));
-        gc.fillText(tutText, (852 - getToolkit().getFontLoader().computeStringWidth(tutText, gc.getFont())) / 2, 233);
+        gc.fillText(tutText, (852 -Utils.computeStringWidth(tutText, gc.getFont())) / 2, 233);
         gc.setGlobalAlpha((1.0f));
 
-        gc.fillText(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", (852 - getToolkit().getFontLoader().computeStringWidth(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", gc.getFont())) / 2, 253);
+        gc.fillText(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", (852 - Utils.computeStringWidth(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", gc.getFont())) / 2, 253);
 
         gc.fillText(Language.get().get(366) + ":", 10, cord);
         gc.fillText("1 - " + Language.get().get(356), 20, (cord + (1 * 14)));

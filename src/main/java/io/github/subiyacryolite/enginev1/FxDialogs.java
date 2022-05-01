@@ -77,7 +77,7 @@ public class FxDialogs {
         Optional<String> result = textInputDialog.showAndWait();
 
         result.ifPresent(name -> System.out.println("Your name: " + name));
-        return result.isPresent() ? result.get() : null;
+        return result.orElse(null);
     }
 
     public static String input(String title, String header, String content) {
@@ -91,8 +91,7 @@ public class FxDialogs {
         choiceDialog.setContentText(content);
         choiceDialog.initModality(Modality.APPLICATION_MODAL);
 
-        Optional<T> result = choiceDialog.showAndWait();
-        return result;
+        return choiceDialog.showAndWait();
     }
 
     public static ButtonBar.ButtonData yesNo(String title, String header, String content) {

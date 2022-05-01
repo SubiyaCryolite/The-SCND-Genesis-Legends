@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,7 +16,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package com.scndgen.legends.render;
@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.mode.StoryMenu;
@@ -266,9 +267,9 @@ public class RenderStoryMenu extends StoryMenu {
             }
             gc.setFill(Color.WHITE);
             gc.setFont(header);
-            gc.fillText(Language.get().get(307), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(307), gc.getFont()) / 2), 80);
+            gc.fillText(Language.get().get(307), (852 - Utils.computeStringWidth(Language.get().get(307), gc.getFont()) / 2), 80);
             gc.setFont(normal);
-            gc.fillText(Language.get().get(368), (852 - getToolkit().getFontLoader().computeStringWidth(Language.get().get(368), gc.getFont()) / 2), 380);
+            gc.fillText(Language.get().get(368), (852 -Utils.computeStringWidth(Language.get().get(368), gc.getFont()) / 2), 380);
             showstoryName(hoveredScene);
         }
         Overlay.get().overlay(gc, x, y);

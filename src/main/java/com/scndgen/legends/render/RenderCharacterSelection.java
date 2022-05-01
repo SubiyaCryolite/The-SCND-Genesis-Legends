@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,14 +16,14 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
-
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
  **************************************************************************/
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.constants.NetworkConstants;
@@ -388,8 +388,8 @@ public class RenderCharacterSelection extends CharacterSelection {
                 gc.drawImage(fight, 0, 0);
                 gc.setFont(bigFont);
                 gc.setFill(Color.WHITE);
-                gc.fillText("<< " + Language.get().get(146) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.get().get(146) + " >>", gc.getFont())) / 2, 360);
-                gc.fillText("<< " + Language.get().get(147) + " >>", (852 - getToolkit().getFontLoader().computeStringWidth("<< " + Language.get().get(147) + " >>", gc.getFont())) / 2, 390);
+                gc.fillText("<< " + Language.get().get(146) + " >>", (852 - Utils.computeStringWidth("<< " + Language.get().get(146) + " >>", gc.getFont())) / 2, 360);
+                gc.fillText("<< " + Language.get().get(147) + " >>", (852 - Utils.computeStringWidth("<< " + Language.get().get(147) + " >>", gc.getFont())) / 2, 390);
             }
             gc.setFont(normalFont);
             gc.setFill(Color.WHITE);
@@ -401,7 +401,7 @@ public class RenderCharacterSelection extends CharacterSelection {
             if (selectedCharacter && !selectedOpponent) {
                 //select opponent
                 gc.drawImage(oppDescPic, 452, 450);
-                gc.fillText(characterDescription[hoveredCharacter.index()], 852 - getToolkit().getFontLoader().computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
+                gc.fillText(characterDescription[hoveredCharacter.index()], 852 - Utils.computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
             }
             gc.drawImage(p1, 0, 180);
             gc.drawImage(p2, 812, 180);

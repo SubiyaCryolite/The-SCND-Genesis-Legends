@@ -1,7 +1,7 @@
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([http://www.scndgen.com]))).
+ a webcomic created by Ifunga Ndana ((([<a href="http://www.scndgen.com">http://www.scndgen.com</a>]))).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -16,7 +16,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <http://www.gnu.org/licenses/>.
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
 package com.scndgen.legends.render;
@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.constants.NetworkConstants;
@@ -372,8 +373,8 @@ public class RenderGamePlay extends GamePlay {
             gc.setFill(Color.WHITE);
             gc.setFont(normalFont);
             gc.setGlobalAlpha((opacityTxt));
-            gc.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2) - 50, 424);
-            gc.fillText(battleInformation.toString(), ((852 - getToolkit().getFontLoader().computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
+            gc.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 -Utils.computeStringWidth(battleInformation.toString(), gc.getFont())) / 2) - 50, 424);
+            gc.fillText(battleInformation.toString(), ((852 - Utils.computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
             gc.setGlobalAlpha(1.0f);
             if (opacityTxt < 0.98f) {
                 opacityTxt = opacityTxt + 0.02f;
@@ -606,7 +607,7 @@ public class RenderGamePlay extends GamePlay {
         int full = 6;
         boolean validHighlight = uiItem.isHovered() && safeToSelect;
 
-        double computedSize = getToolkit().getFontLoader().computeStringWidth(attack, gc.getFont()) + full;
+        double computedSize =Utils.computeStringWidth(attack, gc.getFont()) + full;
         double width = computedSize < 150 ? 150 : computedSize;
         double height = gc.getFont().getSize() + full;
 
