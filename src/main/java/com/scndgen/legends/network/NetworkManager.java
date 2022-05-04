@@ -34,7 +34,6 @@ public class NetworkManager {
     public int hostTimeLimit;
     private NetworkServer server;
     private NetworkClient client;
-    private String remoteIpAddress = "";
     private boolean connectedToPartner;
 
     private NetworkManager() {
@@ -56,8 +55,7 @@ public class NetworkManager {
     public void asClient(String ip) {
         if (server != null)
             closeTheServer();
-        this.remoteIpAddress = ip;
-        client = new NetworkClient(remoteIpAddress);
+        client = new NetworkClient(ip);
     }
 
     /**

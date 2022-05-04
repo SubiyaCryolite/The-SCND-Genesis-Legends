@@ -45,7 +45,8 @@ public class StoryMode implements Runnable {
     public int timeLimit;
     private Audio storyMusic;
     private String text;
-    private int textSpeed, currentScene;
+    private long textSpeed;
+    private int currentScene;
     private static Thread thread;
 
     private StoryMode() {

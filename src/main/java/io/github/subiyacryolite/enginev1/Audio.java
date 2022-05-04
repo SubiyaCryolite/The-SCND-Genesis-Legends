@@ -6,12 +6,12 @@
  *
  *  Plays an MP3 file using the JLayer MP3 library.
  *
- *  Reference:  http://www.javazoom.net/javalayer/sources.html
+ *  Reference:  <a href="http://www.javazoom.net/javalayer/sources.html">http://www.javazoom.net/javalayer/sources.html</a>
  *
  *
  *  To execute, get the file jl1.0.jar from the website above or from
  *
- *      http://www.cs.princeton.edu/introcs/24inout/jl1.0.jar
+ *      <a href="http://www.cs.princeton.edu/introcs/24inout/jl1.0.jar">http://www.cs.princeton.edu/introcs/24inout/jl1.0.jar</a>
  *
  *  and put it in your working directory with this file MP3.java.
  *  small edits by Ifunga Ndana
@@ -49,8 +49,8 @@ public class Audio {
 
     private static final Set<Audio> heap = new HashSet<>();
     //========================================
-    private static long audioDevice;
-    private static long audioContext;
+    private static final long audioDevice;
+    private static final long audioContext;
     private boolean lockVolume;
 
     static {
@@ -72,13 +72,13 @@ public class Audio {
         System.out.println("ALC_STEREO_SOURCES: " + alcGetInteger(audioDevice, ALC_STEREO_SOURCES));
     }
 
-    private String fileName;
+    private final String fileName;
     private boolean paused;
-    private AudioType audioType;
-    private boolean looping = false;
+    private final AudioType audioType;
+    private boolean looping;
     private float volume = 0.0f;
-    private IntBuffer source;
-    private IntBuffer buffer;
+    private int source = 0;
+    private int buffer = 0;
 
     public Audio(String filename, AudioType audioType, boolean loop) {
         this.fileName = filename;
@@ -123,7 +123,7 @@ public class Audio {
     }
 
     public static void volume(AudioType audioType, float volume) {
-        heap.stream().forEach(elem -> {
+        heap.forEach(elem -> {
             if (elem.getAudioType() == audioType) {
                 elem.setVolume(volume, false);
             }
@@ -134,27 +134,25 @@ public class Audio {
     public void play() {
         Thread thread = new Thread(() -> {
             try {
-                source = memAllocInt(1);
-                buffer = memAllocInt(1);
-                alGenSources(source);
-                alGenBuffers(buffer);
+                source= alGenSources();
+                buffer = alGenBuffers();
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     ShortBuffer pcm = readVorbis(fileName, info);
-                    alBufferData(buffer.get(0), info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
+                    alBufferData(buffer, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
                     free(pcm);
                 }
-                alSourcei(source.get(0), AL_BUFFER, 0);//reset
-                alSourcei(source.get(0), AL_BUFFER, buffer.get(0));
-                alSourcei(source.get(0), AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
-                alSourcef(source.get(0), AL_GAIN, volume / 100.0f);
-                alSourcePlay(source.get(0));
+                alSourcei(source, AL_BUFFER, 0);//reset
+                alSourcei(source, AL_BUFFER, buffer);
+                alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
+                alSourcef(source, AL_GAIN, volume / 100.0f);
+                alSourcePlay(source);
                 int state;
                 do {
-                    state = alGetSourcei(source.get(0), AL_SOURCE_STATE);
+                    state = alGetSourcei(source, AL_SOURCE_STATE);
                     Thread.sleep(1);//wait till done
                 } while (state == AL_PLAYING || state == AL_PAUSED);
             } catch (Exception ex) {
-                System.err.printf("Problem with [%s - %s] %s\n", source.get(0), buffer, fileName);
+                System.err.printf("Problem with [%s - %s] %s\n", source, buffer, fileName);
                 ex.printStackTrace(System.err);
             } finally {
                 close();
@@ -169,9 +167,9 @@ public class Audio {
         if (lockVolume)
             if (!ignoreLock)
                 return;
-        if (source == null) return;
-        if (source.get(0) > 0)
-            alSourcef(source.get(0), AL_GAIN, volume / 100.0f);
+        if (source == 0) return;
+        if (source > 0)
+            alSourcef(source, AL_GAIN, volume / 100.0f);
     }
 
     public AudioType getAudioType() {
@@ -188,19 +186,19 @@ public class Audio {
 
     public void pause() {
         paused = true;
-        if (source == null) return;
-        alSourcePause(source.get(0));
+        if (source == 0) return;
+        alSourcePause(source);
     }
 
     public void resume() {
         paused = false;
-        if (source == null) return;
-        alSourcePlay(source.get(0));
+        if (source == 0) return;
+        alSourcePlay(source);
     }
 
     public void stop() {
-        if (source == null) return;
-        alSourceStop(source.get(0));
+        if (source == 0) return;
+        alSourceStop(source);
         looping = false;
     }
 
@@ -223,12 +221,10 @@ public class Audio {
 
     public void close() {
         heap.remove(this);
-        alSourceStop(source.get(0));
-        alSourcei(source.get(0), AL_BUFFER, 0);
+        alSourceStop(source);
+        alSourcei(source, AL_BUFFER, 0);
         alDeleteBuffers(buffer);
-        free(buffer);
         alDeleteSources(source);
-        free(source);
     }
 
 

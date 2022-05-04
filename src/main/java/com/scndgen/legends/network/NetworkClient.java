@@ -14,8 +14,8 @@ import java.util.LinkedList;
  */
 public class NetworkClient extends NetworkBase implements Runnable {
 
-    private Thread thread;
-    private String serverIpAddress;
+    private final Thread thread;
+    private final String serverIpAddress;
     private boolean running;
     private final LinkedList<String> messageQue = new LinkedList<>();
 

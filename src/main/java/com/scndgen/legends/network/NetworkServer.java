@@ -22,7 +22,7 @@ import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
  */
 public class NetworkServer extends NetworkBase implements Runnable {
 
-    private Thread thread;
+    private final Thread thread;
     private String hostName, hostAddress;
     private boolean running;
     private final LinkedList<String> messageQue = new LinkedList<>();
@@ -41,13 +41,8 @@ public class NetworkServer extends NetworkBase implements Runnable {
         try {
             Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
             while (enumeration.hasMoreElements()) {
-                NetworkInterface networkInterface = enumeration.nextElement();
-                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-                while (inetAddresses.hasMoreElements()) {
-                    InetAddress inetAddress = inetAddresses.nextElement();
-                    hostName = inetAddress.getLocalHost().getHostName();
-                    hostAddress = inetAddress.getLocalHost().getHostAddress();
-                }
+                hostName = InetAddress.getLocalHost().getHostName();
+                hostAddress = InetAddress.getLocalHost().getHostAddress();
             }
 
         } catch (Exception ex) {
@@ -124,8 +119,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
         running = false;
     }
 
-    public void shutdownKillServer()
-    {
+    public void shutdownKillServer() {
         thread.stop();
     }
 }

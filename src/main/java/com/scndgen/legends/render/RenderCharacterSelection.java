@@ -340,14 +340,14 @@ public class RenderCharacterSelection extends CharacterSelection {
             gc.fillRect(0, 0, 853, 480);
             gc.setGlobalAlpha(1.0f);
             //characterEnum preview DYNAMIC change
-            if (selectedCharacter != true) {
+            if (!selectedCharacter) {
                 gc.setGlobalAlpha((p1Opac));
                 gc.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
                 gc.setGlobalAlpha((1.0f));
                 gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
             }
             //opponent preview DYNAMIC change, only show if quick match, should change sprites
-            if (selectedCharacter && selectedOpponent != true && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
+            if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
                 gc.setGlobalAlpha((p1Opac));
                 gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
                 gc.setGlobalAlpha((1.0f));

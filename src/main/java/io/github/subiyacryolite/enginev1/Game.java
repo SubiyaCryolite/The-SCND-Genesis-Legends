@@ -17,7 +17,7 @@ public abstract class Game {
     private Mode mode;
     private ModeEnum modeEnum;
     private boolean switchingModes;
-    private boolean running;
+    private final boolean running;
     private double width;
     private double height;
     private Stage stage;

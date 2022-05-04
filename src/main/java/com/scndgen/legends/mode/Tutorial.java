@@ -49,7 +49,8 @@ public class Tutorial implements Runnable {
     private Thread thread;
     private Loader loader;
     private boolean skipSec;
-    private int cord, tutSpeed, sec, pixLoc, arrowLoc, slide;
+    private long tutSpeed;
+    private int cord, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
     private Font normalFont;
@@ -291,7 +292,7 @@ public class Tutorial implements Runnable {
                     setPic(0);
                     setArr(1);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
@@ -307,7 +308,7 @@ public class Tutorial implements Runnable {
                     setPic(0);
                     setArr(1);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
@@ -499,12 +500,12 @@ public class Tutorial implements Runnable {
                     setPic(0);
                     setArr(5);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
                         }
-                        thread.sleep(16);
+                        Thread.sleep(16);
                     }
                 }
                 slide++;
@@ -515,12 +516,12 @@ public class Tutorial implements Runnable {
                     setArr(8);
                     setPic(4);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
                         }
-                        thread.sleep(16);
+                        Thread.sleep(16);
                     }
                 }
                 slide++;
@@ -547,12 +548,12 @@ public class Tutorial implements Runnable {
                     setArr(8);
                     setPic(5);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
                         }
-                        thread.sleep(16);
+                        Thread.sleep(16);
                     }
                 }
                 slide++;
@@ -563,12 +564,12 @@ public class Tutorial implements Runnable {
                     setArr(8);
                     setPic(5);
                     sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
+                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
                         if (skipSec) {
                             skipSec = false;
                             break sec3;
                         }
-                        thread.sleep(16);
+                        Thread.sleep(16);
                     }
                 }
                 slide++;
