@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id "java"
     id "application"
@@ -7,19 +9,36 @@ plugins {
 group 'com.scndgen'
 version '22.05.04'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 project.ext.mainClass = 'com.scndgen.legends.ScndGenLegends'
 project.ext.lwjglVersion = "3.3.1"
 
-javafx {
-    version = "11"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        def osArch = System.getProperty("os.arch")
+        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+                : "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        def osArch = System.getProperty("os.arch")
+        project.ext.lwjglNatives = osArch.contains("64")
+                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+                : "natives-windows-x86"
+        break
 }
 
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+}
 
 repositories {
     mavenCentral()
@@ -27,26 +46,21 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.subiyacryolite:jds:3.2.2-SNAPSHOT'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.2'
-    implementation "org.lwjgl:lwjgl:${lwjglVersion}"
-    implementation "org.lwjgl:lwjgl-openal:${lwjglVersion}"
-    implementation "org.lwjgl:lwjgl-stb:${lwjglVersion}"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation "io.github.subiyacryolite:jds:3.2.2-SNAPSHOT"
+    implementation "commons-codec:commons-codec:1.15"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+    implementation "commons-io:commons-io:2.11.0"
+    implementation "org.xerial:sqlite-jdbc:3.36.0.3"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.13.2.2"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.13.2"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-stb"
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 }
 
 jar {
