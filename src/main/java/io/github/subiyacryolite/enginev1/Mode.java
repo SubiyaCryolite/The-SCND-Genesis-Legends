@@ -1,6 +1,7 @@
 package io.github.subiyacryolite.enginev1;
 
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.Utils;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.ui.UiScreen;
@@ -195,7 +196,7 @@ public abstract class Mode implements UiScreen {
     public void fillText(GraphicsContext gc, String text, double x, double y, UiItem uiTile) {
         gc.fillText(text, x, y);
         /////////////////////////////////////
-        double bottomRightX = x;// + Toolkit.getToolkit().getFontLoader().computeStringWidth(text, gc.getFont());
+        double bottomRightX = x + Utils.computeStringWidth(text, gc.getFont());
         double bottomRightY = y - Toolkit.getToolkit().getFontLoader().getFontMetrics(gc.getFont()).getLineHeight();
         /////////////////////////////////////
         double mouseActualX = ScndGenLegends.get().getMouseX();
