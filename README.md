@@ -2,7 +2,7 @@ The SCND Genesis: Legends is a fighting game based on the comic The SCND Genesis
 
 You can grab the game on [Itch.io](https://subiyacryolite.itch.io/the-scnd-genesis-legends-rmx)
 
-You can discover more on the [official website](https://www.scndgen.com)
+You can discover more on the [official website](https://www.scndgen.com/legends)
 
 ![ScreenShot](screenshot_a.png?raw=true)
 
