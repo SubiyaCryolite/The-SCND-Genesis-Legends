@@ -6,7 +6,7 @@ Coded by.....you guessed it, Ifunga Ndana
 Powered by Java and the Jenesis Engine v1.0
 Hope you enjoy the game!!!!!
 
-Official Site: ([http://www.scndgen.com])
+Official Site: ([https://www.scndgen.com])
 GitHub: https://github.com/SubiyaCryolite/The-SCND-Genesis-Legends
 email: ifungandana@gmail.com
 
