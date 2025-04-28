@@ -2,6 +2,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     id "java"
+    id 'java-library'
     id "application"
     id "org.openjfx.javafxplugin" version "0.0.13"
 }
@@ -9,13 +10,27 @@ plugins {
 group 'com.scndgen'
 version '22.05.04'
 
-sourceCompatibility = 17
-targetCompatibility = 17
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 project.ext.mainClass = 'com.scndgen.legends.ScndGenLegends'
-project.ext.lwjglVersion = "3.3.1"
+project.ext.lwjglVersion = "3.3.6"
 
 switch (OperatingSystem.current()) {
     case OperatingSystem.LINUX:
@@ -35,11 +50,6 @@ switch (OperatingSystem.current()) {
         break
 }
 
-javafx {
-    version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
-}
-
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
@@ -50,10 +60,10 @@ dependencies {
     implementation "io.github.subiyacryolite:jds:3.2.2-SNAPSHOT"
     implementation "commons-codec:commons-codec:1.15"
     implementation "org.apache.commons:commons-lang3:3.12.0"
-    implementation "commons-io:commons-io:2.11.0"
-    implementation "org.xerial:sqlite-jdbc:3.36.0.3"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.13.2.2"
-    implementation "com.fasterxml.jackson.core:jackson-core:2.13.2"
+    implementation 'commons-io:commons-io:2.14.0'
+    implementation 'org.xerial:sqlite-jdbc:3.41.2.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
     implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-openal"
