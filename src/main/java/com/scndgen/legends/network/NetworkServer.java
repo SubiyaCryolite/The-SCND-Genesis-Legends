@@ -22,7 +22,6 @@ import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
  */
 public class NetworkServer extends NetworkBase implements Runnable {
 
-    private final Thread thread;
     private String hostName, hostAddress;
     private boolean running;
     private final LinkedList<String> messageQue = new LinkedList<>();
@@ -32,7 +31,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
      */
     public NetworkServer() {
         initServerDetails();
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.setDaemon(false);
         thread.start();
     }
@@ -46,7 +45,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
             }
 
         } catch (Exception ex) {
-            System.out.print(ex);
+            ex.printStackTrace(System.err);
         }
     }
 
@@ -85,7 +84,7 @@ public class NetworkServer extends NetworkBase implements Runnable {
                     }
                     DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                     readMessage(dataInputStream.readUTF());
-                    thread.sleep(NetworkManager.SERVER_LATENCY);
+                    Thread.sleep(NetworkManager.SERVER_LATENCY);
                     sendData("");//keep stream alive
                 }
             }
@@ -120,6 +119,6 @@ public class NetworkServer extends NetworkBase implements Runnable {
     }
 
     public void shutdownKillServer() {
-        thread.stop();
+        close();
     }
 }

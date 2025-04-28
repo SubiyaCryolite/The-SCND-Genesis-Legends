@@ -560,19 +560,19 @@ public class RenderGamePlay extends GamePlay {
 */
         switch (columnIndex) {
             case 0:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), physicalAttacks[0], attackOne);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), physicalAttacks[0], attackOne);
                 drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), physicalAttacks[1], attackTwo);
                 drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), physicalAttacks[2], attackThree);
                 drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), physicalAttacks[3], attackFour);
                 break;
             case 1:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), celestiaAttacks[0], attackFive);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), celestiaAttacks[0], attackFive);
                 drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), celestiaAttacks[1], attackSix);
                 drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), celestiaAttacks[2], attackSeven);
                 drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), celestiaAttacks[3], attackEight);
                 break;
             case 2:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), itemAttacks[0], attackNine);
+                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), itemAttacks[0], attackNine);
                 drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
                 drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
                 drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
@@ -661,7 +661,7 @@ public class RenderGamePlay extends GamePlay {
         gc.setGlobalAlpha((opponentDamageOpacity));
         //opp damage loader
         gc.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
-        gc.drawImage(figGuiSrc2, playerDamageXLoc + (spacer * 1) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
+        gc.drawImage(figGuiSrc2, playerDamageXLoc + (spacer) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         gc.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         gc.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         gc.setGlobalAlpha((1.0f));
@@ -676,7 +676,7 @@ public class RenderGamePlay extends GamePlay {
         gc.setGlobalAlpha((playerDamageOpacity));
         //char damage loader
         gc.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
-        gc.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer * 1) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
+        gc.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         gc.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         gc.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         gc.setGlobalAlpha((1.0f));
@@ -904,31 +904,31 @@ public class RenderGamePlay extends GamePlay {
         manipulateThis = "" + Math.round(damageAmount);
         if (who == PlayerType.PLAYER1) {
             if (manipulateThis.length() == 1) {
-                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0)), 10, 10, 10);
             }
             if (manipulateThis.length() == 2) {
-                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), 10, 10);
             }
             if (manipulateThis.length() == 3) {
-                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), Integer.parseInt("" + manipulateThis.charAt(2)), 10);
             }
             if (manipulateThis.length() == 4) {
-                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+                setPlayerDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), Integer.parseInt("" + manipulateThis.charAt(2)), Integer.parseInt("" + manipulateThis.charAt(3)));
             }
         }
 
         if (who == PlayerType.PLAYER2) {
             if (manipulateThis.length() == 1) {
-                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), 10, 10, 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0)), 10, 10, 10);
             }
             if (manipulateThis.length() == 2) {
-                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), 10, 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), 10, 10);
             }
             if (manipulateThis.length() == 3) {
-                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), 10);
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), Integer.parseInt("" + manipulateThis.charAt(2)), 10);
             }
             if (manipulateThis.length() == 4) {
-                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0) + ""), Integer.parseInt("" + manipulateThis.charAt(1) + ""), Integer.parseInt("" + manipulateThis.charAt(2) + ""), Integer.parseInt("" + manipulateThis.charAt(3) + ""));
+                setOpponentDamage(Integer.parseInt("" + manipulateThis.charAt(0)), Integer.parseInt("" + manipulateThis.charAt(1)), Integer.parseInt("" + manipulateThis.charAt(2)), Integer.parseInt("" + manipulateThis.charAt(3)));
             }
         }
     }
@@ -1136,7 +1136,7 @@ public class RenderGamePlay extends GamePlay {
         @Override
         public void onBackCancel() {
             //closeTheServer();
-            if (!gameOver && playingCutscene == false) {
+            if (!gameOver && !playingCutscene) {
                 onTogglePause();
             } else if (playingCutscene) {
                 StoryMode.get().onBackCancel();
