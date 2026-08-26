@@ -38,6 +38,7 @@ public abstract class Mode implements UiScreen {
     protected UiItem activeItem;
     protected GlfwEngine engine;
     protected AssetLoader assets;
+    protected AssetLoader.AssetBag bag;
 
     /** Shared ~60 Hz tick; advanced in {@link #tick(double)}. */
     protected final Accumulator tick60 = Accumulator.atFrequency(60);
@@ -54,6 +55,17 @@ public abstract class Mode implements UiScreen {
 
     public final AssetLoader assets() {
         return assets;
+    }
+
+    /** Mode-owned image bag; images loaded here are freed in {@link #cleanAssets()}. */
+    public final AssetLoader.AssetBag bag() {
+        if (bag == null) {
+            if (assets == null) {
+                throw new IllegalStateException("Mode is not bound to an AssetLoader");
+            }
+            bag = assets.openBag();
+        }
+        return bag;
     }
 
     public final GlfwEngine engine() {
@@ -161,13 +173,25 @@ public abstract class Mode implements UiScreen {
         if (!loadAssets) {
             return;
         }
+        if (bag == null && assets != null) {
+            bag = assets.openBag();
+        }
         loadAssetsIml();
         ensureActiveUiItemSet();
     }
 
     public abstract void loadAssetsIml();
 
-    public abstract void cleanAssets();
+    /**
+     * Frees NanoVG images owned by this mode's {@link #bag()}. Subclasses should null fields then call {@code super.cleanAssets()}.
+     */
+    public void cleanAssets() {
+        if (bag != null) {
+            bag.close();
+            bag = null;
+        }
+        loadAssets = true;
+    }
 
     public void setFont(DrawContext draw, float size) {
         draw.setFont("menu", size);
@@ -237,6 +261,7 @@ public abstract class Mode implements UiScreen {
     }
 
     public void onLeaveMode() {
+        cleanAssets();
     }
 
     public void onEnterMode() {

@@ -56,7 +56,6 @@ public class AchievementLocker {
     private float numberOfTriggeredAchievements = 0.0f;
 
     public AchievementLocker() {
-        loadFontAndPictures();
         refreshStats();
     }
 
@@ -136,6 +135,7 @@ public class AchievementLocker {
      * Draw user Achievements
      */
     public void drawAch(DrawContext draw) {
+        ensureImagesLoaded();
         float w = 852;
         float h = 480;
         //BG
@@ -174,13 +174,26 @@ public class AchievementLocker {
     /**
      * Load images
      */
-    private void loadFontAndPictures() {
+    private void ensureImagesLoaded() {
+        if (achCap != null) {
+            return;
+        }
         AssetLoader pix = ScndGenLegends.get().loader();
         achCap = new NvgImage[Achievements.values().length];
         for (int u = 0; u < achCap.length; u++) {
             achCap[u] = pix.loadImage("images/ach/" + u + ".png");
         }
         no = pix.loadImage("images/ach/no.png");
+    }
+
+    public void freeImages() {
+        AssetLoader pix = ScndGenLegends.get().loader();
+        if (pix != null) {
+            pix.free(achCap);
+            pix.free(no);
+        }
+        achCap = null;
+        no = null;
     }
 
     /**
@@ -276,6 +289,7 @@ public class AchievementLocker {
     }
 
     public void onBackCancel() {
+        freeImages();
         RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }
 

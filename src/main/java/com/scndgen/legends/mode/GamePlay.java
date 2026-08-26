@@ -28,11 +28,12 @@ import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
+import com.scndgen.legends.mode.gameplay.FuryBar;
+import com.scndgen.legends.mode.gameplay.MatchPlayClock;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Mode;
 import io.github.subiyacryolite.enginev2.Overlay;
 import io.github.subiyacryolite.enginev2.Rgba;
@@ -117,7 +118,6 @@ public abstract class GamePlay extends Mode {
     protected float opac;
     protected float damageLayerOpacity;
     protected int comicBookTextIndex;
-    protected int furyLevel;
     protected boolean isCharacterAttacking;
     protected int columnIndex;
     protected int rowIndex;
@@ -139,11 +139,8 @@ public abstract class GamePlay extends Mode {
     private float characterAtbValue;
     private float opponentAtbValue;
     private float secondCount;
-    private int matchDuration, playTimeCounter;
-    private boolean trackingPlayTime;
-    private final Accumulator playTimeTick = Accumulator.atFrequency(1);
-    private final Accumulator furyTick = Accumulator.atFrequency(60);
-    private int pendingFuryIncrements;
+    private final MatchPlayClock playClock = new MatchPlayClock();
+    private final FuryBar furyBar = new FuryBar();
     private double animationLoopADelta;
     private int animationLoopA;
     private double animationLoopBDelta;
@@ -153,7 +150,7 @@ public abstract class GamePlay extends Mode {
     private int animationLoopD;
     private double animationLoopEDelta;
     private double achievementDelta;
-    protected final int FURY_BAR_MAX = 1000;
+    protected final int FURY_BAR_MAX = FuryBar.MAX;
 
 
     protected GamePlay() {
@@ -382,16 +379,8 @@ public abstract class GamePlay extends Mode {
         super.update(deltaSeconds);
         if (loadAssets) return;
 
-        if (trackingPlayTime) {
-            playTimeTick.advance(deltaSeconds);
-            while (playTimeTick.consume()) {
-                playTimeCounter++;
-                matchDuration++;
-                if (gameOver) {
-                    trackingPlayTime = false;
-                    break;
-                }
-            }
+        if (playClock.isTracking()) {
+            playClock.tick(deltaSeconds, gameOver);
         }
 
         if (playingCutscene) {
@@ -401,16 +390,7 @@ public abstract class GamePlay extends Mode {
         if (paused) return;
 
         double now = elapsedSeconds();
-        furyTick.advance(deltaSeconds);
-        while (furyTick.consume()) {
-            if (pendingFuryIncrements > 0 && furyLevel < FURY_BAR_MAX) {
-                furyLevel++;
-                pendingFuryIncrements--;
-            } else if (pendingFuryIncrements < 0) {
-                furyLevel--;
-                pendingFuryIncrements++;
-            }
-        }
+        furyBar.tick(deltaSeconds);
 
         if (!gameOver) {
             if (!showBrag) {
@@ -798,10 +778,8 @@ public abstract class GamePlay extends Mode {
         setCharacterAtbValue(0);
         setOpponentAtbValue(0);
         setFuryLevel(0);
-        pendingFuryIncrements = 0;
-        furyTick.reset();
-        trackingPlayTime = false;
-        playTimeTick.reset();
+        furyBar.reset();
+        playClock.reset();
         characterAttacks.clear();
         opponentAttacks.clear();
         triggerCharacterAttack = false;
@@ -985,7 +963,7 @@ public abstract class GamePlay extends Mode {
     public void resetGame() {
         characterHp = characterMaximumHp;
         opponentHp = opponentMaximumHp;
-        furyLevel = 5;
+        furyBar.setLevel(5);
         Characters.get().getCharacter().setStrengthMultiplier(12.0f);
         Characters.get().getOpponent().setStrengthMultiplier(12.0f);
     }
@@ -1101,7 +1079,7 @@ public abstract class GamePlay extends Mode {
      * Queue fury bar changes; drained at 60 Hz in {@link #update(double)}.
      */
     private void incrementFuryBarLevel(final float increment) {
-        pendingFuryIncrements += (int) increment;
+        furyBar.queue((int) increment);
     }
 
     public void triggerFury(PlayerType playerType) {
@@ -1139,7 +1117,7 @@ public abstract class GamePlay extends Mode {
      * Sets limit onBackCancel to initial value
      */
     public void resetBreak() {
-        furyLevel = 5;
+        furyBar.setLevel(5);
     }
 
     /**
@@ -1184,15 +1162,15 @@ public abstract class GamePlay extends Mode {
      * @return break status
      */
     public int getFuryLevel() {
-        return furyLevel;
+        return furyBar.level();
     }
 
     public void setFuryLevel(int level) {
-        furyLevel = level;
+        furyBar.setLevel(level);
     }
 
     public void incrementFuryLevel(int change) {
-        furyLevel += change;
+        furyBar.queue(change);
     }
 
     protected abstract void guiScreenChaos(float damageAmount, PlayerType who);
@@ -1548,7 +1526,7 @@ public abstract class GamePlay extends Mode {
     public void gameOver() {
         gameOver = true;
         closeAudio();
-        State.get().getLogin().setPlayTime(playTimeCounter);
+        State.get().getLogin().setPlayTime(playClock.playTimeCounter());
         Achievement.get().scan(this);
         //if not playStory scene, increment char usage
         if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE == false) {
@@ -1571,14 +1549,11 @@ public abstract class GamePlay extends Mode {
     protected abstract void showLoseLabel();
 
     private void recordPlayTime() {
-        matchDuration = 0;
-        playTimeCounter = State.get().getLogin().getPlayTime();
-        playTimeTick.reset();
-        trackingPlayTime = true;
+        playClock.start(State.get().getLogin().getPlayTime());
     }
 
     public int getMatchTime() {
-        return matchDuration;
+        return playClock.matchDuration();
     }
 
     /**
@@ -1660,6 +1635,6 @@ public abstract class GamePlay extends Mode {
     }
 
     protected boolean isFuryBarFull() {
-        return getFuryLevel() >= FURY_BAR_MAX;
+        return furyBar.isFull();
     }
 }

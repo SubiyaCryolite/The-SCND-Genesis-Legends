@@ -270,7 +270,11 @@ public class RenderStageSelect extends StageSelect {
 
     @Override
     public void cleanAssets() {
-        loadAssets = true;
+        captionHighlight = null;
+        loading = null;
+        java.util.Arrays.fill(stageCap, null);
+        java.util.Arrays.fill(stagePrev, null);
+        super.cleanAssets();
     }
 
     @Override
@@ -325,11 +329,11 @@ public class RenderStageSelect extends StageSelect {
 
     private void loadCaps() {
         try {
-            captionHighlight = assets().loadImage("images/stageCaptionHighlight.png");
-            loading = assets().loadImage("images/loading.gif");
+            captionHighlight = bag().loadImage("images/stageCaptionHighlight.png");
+            loading = bag().loadImage("images/loading.gif");
             for (int index = 0; index < stagePreviews.length; index++) {
-                stageCap[index] = assets().loadImage("images/t_" + stagePreviews[index] + ".png");
-                stagePrev[index] = assets().loadImage("images/prev/" + stagePreviews[index] + ".jpg");
+                stageCap[index] = bag().loadImage("images/t_" + stagePreviews[index] + ".png");
+                stagePrev[index] = bag().loadImage("images/prev/" + stagePreviews[index] + ".jpg");
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

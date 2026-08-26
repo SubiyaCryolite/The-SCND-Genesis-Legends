@@ -155,14 +155,14 @@ public final class DrawContext {
     }
 
     public void drawImage(NvgImage image, float x, float y) {
-        if (image == null) {
+        if (image == null || !image.isValid()) {
             return;
         }
         drawImage(image, x, y, image.width(), image.height());
     }
 
     public void drawImage(NvgImage image, float x, float y, float w, float h) {
-        if (image == null) {
+        if (image == null || !image.isValid()) {
             return;
         }
         try (MemoryStack stack = stackPush()) {
@@ -179,7 +179,7 @@ public final class DrawContext {
      * Horizontal flip (negative destination width).
      */
     public void drawImageFlippedHorizontal(NvgImage image, float x, float y) {
-        if (image == null) {
+        if (image == null || !image.isValid()) {
             return;
         }
         float w = image.width();

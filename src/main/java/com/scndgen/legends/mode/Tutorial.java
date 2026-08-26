@@ -110,7 +110,6 @@ public class Tutorial {
     public Tutorial() {
         backSound = new Audio(AudioConstants.soundBack(), AudioType.SOUND, false);
         bgSound = new Audio(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
-        AssetLoader loader = ScndGenLegends.get().loader();
         pixLoc = 0;
         sec = 0;
         opacityTxt = 1.0f;
@@ -118,22 +117,47 @@ public class Tutorial {
         arrowOpac = 1.0f;
         tutSpeed = 8;
         cord = 360;
+        tutText = "TUTORIAL";
+    }
 
+    private void ensureImagesLoaded() {
+        if (slides != null) {
+            return;
+        }
+        AssetLoader assets = ScndGenLegends.get().loader();
         slides = new NvgImage[6];
         for (int u = 0; u < slides.length; u++) {
-            slides[u] = loader.loadImage("images/tutorial/" + u + ".png");
+            slides[u] = assets.loadImage("images/tutorial/" + u + ".png");
         }
         arrows = new NvgImage[9];
         for (int u = 0; u < arrows.length; u++) {
-            arrows[u] = loader.loadImage("images/tutorial/a" + u + ".png");
+            arrows[u] = assets.loadImage("images/tutorial/a" + u + ".png");
         }
-        forward = loader.loadImage("images/tutorial/list_item_arrow_r.png");
-        back = loader.loadImage("images/tutorial/list_item_arrow_l.png");
-        tutText = "TUTORIAL";
+        forward = assets.loadImage("images/tutorial/list_item_arrow_r.png");
+        back = assets.loadImage("images/tutorial/list_item_arrow_l.png");
+    }
+
+    public void freeImages() {
+        AssetLoader assets = ScndGenLegends.get().loader();
+        if (assets == null) {
+            slides = null;
+            arrows = null;
+            forward = null;
+            back = null;
+            return;
+        }
+        assets.free(slides);
+        assets.free(arrows);
+        assets.free(forward, back);
+        slides = null;
+        arrows = null;
+        forward = null;
+        back = null;
     }
 
     public void beginTutorial() {
         RenderMainMenu.get().onLeaveMode();
+        ensureImagesLoaded();
         running = true;
         skipSec = false;
         sec = 0;
@@ -305,6 +329,7 @@ public class Tutorial {
     public void onBackCancel() {
         running = false;
         bgSound.stop();
+        freeImages();
         RenderMainMenu.get().onEnterMode();
         RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }

@@ -289,7 +289,24 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     public void cleanAssets() {
-        loadAssets = true;
+        java.util.Arrays.fill(thumbnailNormal, null);
+        java.util.Arrays.fill(thumbnailBlurred, null);
+        java.util.Arrays.fill(portrait, null);
+        java.util.Arrays.fill(portraitFlipped, null);
+        java.util.Arrays.fill(caption, null);
+        fg1 = null;
+        fg2 = null;
+        fg3 = null;
+        bg3 = null;
+        charBack = null;
+        oppBack = null;
+        charHold = null;
+        p1 = null;
+        p2 = null;
+        fight = null;
+        charDescPic = null;
+        oppDescPic = null;
+        super.cleanAssets();
     }
 
     @Override
@@ -402,8 +419,8 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     private void loadCaps() {
-        oppDescPic = assets().loadImage("images/charInfoO.png");
-        charDescPic = assets().loadImage("images/charInfoC.png");
+        oppDescPic = bag().loadImage("images/charInfoO.png");
+        charDescPic = bag().loadImage("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
         loadUiContent(CharacterEnum.SUBIYA);
         loadUiContent(CharacterEnum.LYNX);
@@ -416,38 +433,38 @@ public class RenderCharacterSelection extends CharacterSelection {
         loadUiContent(CharacterEnum.AZARIA);
         loadUiContent(CharacterEnum.SORROWE);
         loadUiContent(CharacterEnum.THING);
-        charBack = assets().loadImage("images/selChar.png");
-        oppBack = assets().loadImage("images/selOpp.png");
-        charHold = assets().loadImage("images/charHold.png");
+        charBack = bag().loadImage("images/selChar.png");
+        oppBack = bag().loadImage("images/selOpp.png");
+        charHold = bag().loadImage("images/charHold.png");
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         if (hour >= 0 && hour <= 9) {
-            bg3 = assets().loadImage("images/blur/bgBG1.png");
-            fg1 = assets().loadImage("images/blur/bgBG1a.png");
-            fg2 = assets().loadImage("images/blur/bgBG1b.png");
-            fg3 = assets().loadImage("images/blur/bgBG1fg.png");
+            bg3 = bag().loadImage("images/blur/bgBG1.png");
+            fg1 = bag().loadImage("images/blur/bgBG1a.png");
+            fg2 = bag().loadImage("images/blur/bgBG1b.png");
+            fg3 = bag().loadImage("images/blur/bgBG1fg.png");
         } else if (hour > 9 && hour <= 16) {
-            bg3 = assets().loadImage("images/blur/bgBG6.png");
-            fg1 = assets().loadImage("images/blur/bgBG6a.png");
-            fg2 = assets().loadImage("images/blur/bgBG6b.png");
-            fg3 = assets().loadImage("images/blur/bgBG6fg.png");
+            bg3 = bag().loadImage("images/blur/bgBG6.png");
+            fg1 = bag().loadImage("images/blur/bgBG6a.png");
+            fg2 = bag().loadImage("images/blur/bgBG6b.png");
+            fg3 = bag().loadImage("images/blur/bgBG6fg.png");
         } else {
-            bg3 = assets().loadImage("images/blur/bgBG5.png");
-            fg1 = assets().loadImage("images/blur/bgBG5a.png");
-            fg2 = assets().loadImage("images/blur/bgBG5b.png");
-            fg3 = assets().loadImage("images/blur/bgBG5fg.png");
+            bg3 = bag().loadImage("images/blur/bgBG5.png");
+            fg1 = bag().loadImage("images/blur/bgBG5a.png");
+            fg2 = bag().loadImage("images/blur/bgBG5b.png");
+            fg3 = bag().loadImage("images/blur/bgBG5fg.png");
         }
-        p1 = assets().loadImage("images/player1.png");
-        p2 = assets().loadImage("images/player2.png");
-        fight = assets().loadImage("images/fight.png");
+        p1 = bag().loadImage("images/player1.png");
+        p2 = bag().loadImage("images/player2.png");
+        fight = bag().loadImage("images/fight.png");
         charDesc[0] = Raila.class.getName();
     }
 
     public void loadUiContent(CharacterEnum characterEnum) {
-        thumbnailNormal[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/cap.png");
-        thumbnailBlurred[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/capB.png");
-        caption[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/name.png");
-        portrait[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/Prev.png");
-        portraitFlipped[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/PrevO.png");
+        thumbnailNormal[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/PrevO.png");
     }
 
 

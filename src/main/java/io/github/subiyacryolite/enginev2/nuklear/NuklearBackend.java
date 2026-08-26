@@ -215,11 +215,15 @@ public final class NuklearBackend implements AutoCloseable {
     private static final int MAX_VERTEX_BUFFER = 512 * 1024;
     private static final int MAX_ELEMENT_BUFFER = 128 * 1024;
     private static final int FONT_HEIGHT = 18;
-    private static final int BITMAP_W = 1024;
-    private static final int BITMAP_H = 1024;
-    /** Packed range: Latin-1 printable (32..255). Out-of-range glyphs fall back to '?'. */
+    private static final int BITMAP_W = 2048;
+    private static final int BITMAP_H = 2048;
+    /**
+     * Packed contiguous range: Basic Latin + Latin-1 + Latin Extended-A (U+0020..U+017F).
+     * Out-of-range glyphs fall back to '?'.
+     */
     private static final int FONT_FIRST_CODEPOINT = 32;
-    private static final int FONT_CHAR_COUNT = 224;
+    private static final int FONT_LAST_CODEPOINT = 0x017F;
+    private static final int FONT_CHAR_COUNT = FONT_LAST_CODEPOINT - FONT_FIRST_CODEPOINT + 1;
 
     private static final NkAllocator ALLOCATOR = NkAllocator.create()
             .alloc((handle, old, size) -> nmemAllocChecked(size))
@@ -631,7 +635,7 @@ public final class NuklearBackend implements AutoCloseable {
             ByteBuffer bitmap = memAlloc(BITMAP_W * BITMAP_H);
             STBTTPackContext pc = STBTTPackContext.malloc(stack);
             stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL);
-            stbtt_PackSetOversampling(pc, 4, 4);
+            stbtt_PackSetOversampling(pc, 2, 2);
             stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, FONT_FIRST_CODEPOINT, cdata);
             stbtt_PackEnd(pc);
 
