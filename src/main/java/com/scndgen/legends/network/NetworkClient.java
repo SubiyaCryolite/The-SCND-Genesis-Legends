@@ -1,7 +1,8 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
-import io.github.subiyacryolite.enginev1.FxDialogs;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -53,7 +54,11 @@ public class NetworkClient extends NetworkBase implements Runnable {
                 }
             }
         } catch (Exception ex) {
-            FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
+            ScndGenLegends.get().engine().ui().push(NkDialogs.message(
+                    "Network Error",
+                    "Something went wrong during the online session",
+                    ex.getMessage() == null ? "" : ex.getMessage()
+            ));
             NetworkManager.get().close();
         }
         finally {

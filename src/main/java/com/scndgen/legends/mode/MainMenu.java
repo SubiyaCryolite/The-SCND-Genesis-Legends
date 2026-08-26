@@ -25,14 +25,13 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.render.AchievementLocker;
-import io.github.subiyacryolite.enginev1.Mode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.Mode;
 
 import java.awt.*;
 import java.net.URI;
 import java.util.Calendar;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @Author: Ifunga Ndana
@@ -42,7 +41,6 @@ import java.util.Calendar;
 public abstract class MainMenu extends Mode {
 
     protected final int fontSize = 16;
-    protected Font font;
     protected int xMenu = 500;
     protected MainMenuOverlay mainMenuOverlay = MainMenuOverlay.PRIMARY_MENU;
     protected int menuItemIndex;
@@ -55,7 +53,6 @@ public abstract class MainMenu extends Mode {
     protected boolean fadeOutFeedback;
     protected float logoFadeOpacity = 1.0f;
     protected Calendar cal;
-    protected Font menuFont;
     protected Tutorial tutorial;
 
     public MainMenu() {
@@ -68,7 +65,6 @@ public abstract class MainMenu extends Mode {
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
-        font = loadFont(fontSize - 2);
         new Thread() {
             @Override
             public void run() {
@@ -118,66 +114,38 @@ public abstract class MainMenu extends Mode {
         loadAssets = true;
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
+    @Override
+    public void keyPressed(int glfwKey) {
         switch (getMainMenuOverlay()) {
-            case TUTORIAL:
-                tutorial.keyPressed(keyEvent);
-                break;
-            case STATISTICS:
-            case ACHIEVEMENT_LOCKER:
-                achievementLocker.keyPressed(keyEvent);
-                break;
-            case PRIMARY_MENU:
-                switch (keyEvent.getCode()) {
-                    case ENTER:
-                        onAccept();
-                        break;
-                    case ESCAPE:
-                    case BACK_SPACE:
-                        onBackCancel();
-                        break;
-                    case UP:
-                    case W:
-                        onUp();
-                        break;
-                    case DOWN:
-                    case S:
-                        onDown();
-                        break;
-                    case LEFT:
-                    case A:
-                        onLeft();
-                        break;
-                    case RIGHT:
-                    case D:
-                        onRight();
-                        break;
-                    case F:
-                        provideFeedback('f');
-                        break;
-                    case B:
-                        provideFeedback('b');
-                        break;
-                    case L:
-                        provideFeedback('l');
-                        break;
+            case TUTORIAL -> tutorial.keyPressed(glfwKey);
+            case STATISTICS, ACHIEVEMENT_LOCKER -> achievementLocker.keyPressed(glfwKey);
+            case PRIMARY_MENU -> {
+                switch (glfwKey) {
+                    case GLFW_KEY_ENTER -> onAccept();
+                    case GLFW_KEY_ESCAPE, GLFW_KEY_BACKSPACE -> onBackCancel();
+                    case GLFW_KEY_UP, GLFW_KEY_W -> onUp();
+                    case GLFW_KEY_DOWN, GLFW_KEY_S -> onDown();
+                    case GLFW_KEY_LEFT, GLFW_KEY_A -> onLeft();
+                    case GLFW_KEY_RIGHT, GLFW_KEY_D -> onRight();
+                    case GLFW_KEY_F -> provideFeedback('f');
+                    case GLFW_KEY_B -> provideFeedback('b');
+                    case GLFW_KEY_L -> provideFeedback('l');
+                    default -> {
+                    }
                 }
-                break;
+            }
+            default -> {
+            }
         }
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-            switch (mouseEvent.getButton()) {
-                case PRIMARY:
-                    onAccept();
-                    break;
-                case SECONDARY:
-                    onBackCancel();
-                    break;
-            }
+    @Override
+    public void mouseClicked(float x, float y) {
+        onAccept();
     }
 
-    public void mouseMoved(final MouseEvent mouseEvent) {
+    @Override
+    public void mouseMoved(float x, float y) {
     }
 
     private void provideFeedback(char code) {
@@ -187,18 +155,10 @@ public abstract class MainMenu extends Mode {
         URI uri;
         try {
             switch (code) {
-                case 'f':
-                    uri = new URI("https://docs.google.com/spreadsheet/viewform?formkey=dGppbVViZHE5QWxZYkRBazZNcUtTRHc6MQ");
-                    break;
-                case 'b':
-                    uri = new URI("https://subiyacryolite.github.io/");
-                    break;
-                case 'l':
-                    uri = new URI("http://www.facebook.com/pages/THE-SCND-GENESIS/111839318834780");
-                    break;
-                default:
-                    uri = new URI("([https://www.scndgen.com])");
-                    break;
+                case 'f' -> uri = new URI("https://docs.google.com/spreadsheet/viewform?formkey=dGppbVViZHE5QWxZYkRBazZNcUtTRHc6MQ");
+                case 'b' -> uri = new URI("https://subiyacryolite.github.io/");
+                case 'l' -> uri = new URI("http://www.facebook.com/pages/THE-SCND-GENESIS/111839318834780");
+                default -> uri = new URI("([https://www.scndgen.com])");
             }
             desktop.browse(uri);
         } catch (Exception e) {

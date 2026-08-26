@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryUtil.memFree;
 
 /**
  * GLFW window + OpenGL 3.3 core + NanoVG scene rendering + Nuklear UI overlays.
- * Scenes always draw in {@link DesignViewport} design space; window size only changes scale.
+ * Scenes always draw in {@link DesignViewport} 16:9 design space; the window is letterboxed.
  */
 public final class GlfwEngine implements AutoCloseable {
     public interface Scene {
@@ -55,6 +55,10 @@ public final class GlfwEngine implements AutoCloseable {
 
         /** Mouse position is already converted to design space. */
         default void onMouseButton(int button, int action, float designX, float designY) {
+        }
+
+        /** Vertical scroll (positive = up / away from user, GLFW convention). */
+        default void onScroll(double yOffset) {
         }
 
         default void onWindowResize(int windowWidth, int windowHeight) {
@@ -127,14 +131,15 @@ public final class GlfwEngine implements AutoCloseable {
             if (nuklearUi.isBlocking()) {
                 return;
             }
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                glfwSetWindowShouldClose(win, true);
-                return;
-            }
             scene.onKey(key, action, mods);
         });
         glfwSetCharCallback(window, (win, codepoint) -> nuklearUi.onChar(codepoint));
-        glfwSetScrollCallback(window, (win, x, y) -> nuklearUi.onScroll(x, y));
+        glfwSetScrollCallback(window, (win, x, y) -> {
+            nuklearUi.onScroll(x, y);
+            if (!nuklearUi.isBlocking()) {
+                scene.onScroll(y);
+            }
+        });
         glfwSetCursorPosCallback(window, (win, x, y) -> {
             nuklearUi.onCursorPos(x, y);
             if (!nuklearUi.isBlocking()) {
@@ -229,7 +234,7 @@ public final class GlfwEngine implements AutoCloseable {
     }
 
     /**
-     * Resize the GLFW window. Horizontal size drives design scale; height is letterboxed.
+     * Resize the GLFW window. Design 16:9 is letterboxed/pillarboxed into the window.
      */
     public void applyResolution(int width, int height) {
         if (window == NULL || width < 1 || height < 1) {

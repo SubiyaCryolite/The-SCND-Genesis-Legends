@@ -21,9 +21,8 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.Utils;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.constants.NetworkConstants;
@@ -32,19 +31,13 @@ import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.FxDialogs;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
+import java.util.Calendar;
 import java.util.HashMap;
-
-import static com.sun.javafx.tk.Toolkit.getToolkit;
 
 /**
  * @author: Ifunga Ndana
@@ -55,11 +48,11 @@ public class RenderCharacterSelection extends CharacterSelection {
 
     private static RenderCharacterSelection instance;
     private final String[] charDesc = new String[numOfCharacters];
-    private final Image[] thumbnailNormal = new Image[numOfCharacters];
-    private final Image[] thumbnailBlurred = new Image[numOfCharacters];
-    private final Image[] portrait = new Image[numOfCharacters];
-    private final Image[] portraitFlipped = new Image[numOfCharacters];
-    private final Image[] caption = new Image[numOfCharacters];
+    private final NvgImage[] thumbnailNormal = new NvgImage[numOfCharacters];
+    private final NvgImage[] thumbnailBlurred = new NvgImage[numOfCharacters];
+    private final NvgImage[] portrait = new NvgImage[numOfCharacters];
+    private final NvgImage[] portraitFlipped = new NvgImage[numOfCharacters];
+    private final NvgImage[] caption = new NvgImage[numOfCharacters];
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
     private final UiItem subiya;
     private final UiItem raila;
@@ -73,9 +66,8 @@ public class RenderCharacterSelection extends CharacterSelection {
     private final UiItem azaria;
     private final UiItem sorrowe;
     private final UiItem thing;
-    private Font bigFont, normalFont;
-    private Image fg1, fg2, fg3, bg3;
-    private Image charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
+    private NvgImage fg1, fg2, fg3, bg3;
+    private NvgImage charBack, oppBack, charHold, p1, p2, fight, charDescPic, oppDescPic;
     private CharacterEnum hoveredCharacter;
     private Audio menuMusic;
 
@@ -101,43 +93,20 @@ public class RenderCharacterSelection extends CharacterSelection {
                 boolean regularMode = NetworkManager.get().isOffline() && (!selectedCharacter || !selectedOpponent);
                 boolean onlineMode = NetworkManager.get().isOnline() && !selectedCharacter;
                 if (regularMode || onlineMode) {
+                    PlayerType type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
                     switch (hoveredCharacter) {
-                        case SUBIYA:
-                            selSubiya(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case RAILA:
-                            selRaila(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case LYNX:
-                            selLynx(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case AISHA:
-                            selAisha(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case ADE:
-                            selAde(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case RAVAGE:
-                            selRav(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case JONAH:
-                            selJon(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case ADAM:
-                            selAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case NOVA_ADAM:
-                            selNOVAAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case AZARIA:
-                            selAza(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case SORROWE:
-                            selSorr(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
-                        case THING:
-                            selThing(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                            break;
+                        case SUBIYA -> selSubiya(type);
+                        case RAILA -> selRaila(type);
+                        case LYNX -> selLynx(type);
+                        case AISHA -> selAisha(type);
+                        case ADE -> selAde(type);
+                        case RAVAGE -> selRav(type);
+                        case JONAH -> selJon(type);
+                        case ADAM -> selAdam(type);
+                        case NOVA_ADAM -> selNOVAAdam(type);
+                        case AZARIA -> selAza(type);
+                        case SORROWE -> selSorr(type);
+                        case THING -> selThing(type);
                     }
                 } else {
                     //if both character and opponent selected move on to stage select after second accept
@@ -158,11 +127,17 @@ public class RenderCharacterSelection extends CharacterSelection {
                         NetworkManager.get().send(NetworkConstants.DESELECT_OPPONENT);
                 } else {
                     if (NetworkManager.get().isOnline()) {
-                        ButtonBar.ButtonData answer = FxDialogs.yesNo("Are you sure?", "This will terminate the current network session", "Nuke from orbit?");
-                        if (answer == ButtonBar.ButtonData.YES) {
-                            NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
-                            NetworkManager.get().close();
-                        }
+                        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                                "Are you sure?",
+                                "This will terminate the current network session",
+                                "Nuke from orbit?",
+                                answer -> {
+                                    if (answer == NkDialogs.Answer.YES) {
+                                        NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                                        NetworkManager.get().close();
+                                    }
+                                }
+                        ));
                     } else {
                         ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
                     }
@@ -308,7 +283,6 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     public void loadAssetsIml() {
-        loader = new Loader();
         loadCaps();
         loadDesc();
         loadAssets = false;
@@ -319,15 +293,15 @@ public class RenderCharacterSelection extends CharacterSelection {
     }
 
     @Override
-    public void render(final GraphicsContext gc, final double w, final double h) {
+    public void render(final DrawContext draw) {
         loadAssets();
-        gc.setFont(normalFont);
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, 852, 480);
-        gc.drawImage(bg3, 0, 0);
-        gc.drawImage(fg1, xCordCloud, 0);
-        gc.drawImage(fg2, xCordCloud2, 0);
-        gc.drawImage(fg3, 0, 0);
+        setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+        draw.setFill(1f, 1f, 1f);
+        draw.fillRect(0, 0, 852, 480);
+        draw.drawImage(bg3, 0, 0);
+        draw.drawImage(fg1, xCordCloud, 0);
+        draw.drawImage(fg2, xCordCloud2, 0);
+        draw.drawImage(fg3, 0, 0);
         if (NetworkManager.get().isOffline() || (NetworkManager.get().isOnline() && NetworkManager.get().isConnectedToPartner())) {
             if (p1Opac < (1.0f - opacInc)) {
                 p1Opac += opacInc;
@@ -335,35 +309,35 @@ public class RenderCharacterSelection extends CharacterSelection {
             if (opacChar < (1.0f - (opacInc * 2))) {
                 opacChar += (opacInc * 2);
             }
-            gc.setFill(Color.BLACK);
-            gc.setGlobalAlpha(0.70f);
-            gc.fillRect(0, 0, 853, 480);
-            gc.setGlobalAlpha(1.0f);
+            draw.setFill(0f, 0f, 0f);
+            draw.setGlobalAlpha(0.70f);
+            draw.fillRect(0, 0, 853, 480);
+            draw.setGlobalAlpha(1.0f);
             //characterEnum preview DYNAMIC change
             if (!selectedCharacter) {
-                gc.setGlobalAlpha((p1Opac));
-                gc.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
-                gc.setGlobalAlpha((1.0f));
-                gc.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
+                draw.setGlobalAlpha(p1Opac);
+                draw.drawImage(portrait[hoveredCharacter.index()], charXcap + x, charYcap);
+                draw.setGlobalAlpha(1.0f);
+                draw.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
             }
             //opponent preview DYNAMIC change, only show if quick match, should change sprites
             if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
-                gc.setGlobalAlpha((p1Opac));
-                gc.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
-                gc.setGlobalAlpha((1.0f));
-                gc.drawImage(caption[hoveredCharacter.index()], 553 + x, 400);
+                draw.setGlobalAlpha(p1Opac);
+                draw.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
+                draw.setGlobalAlpha(1.0f);
+                draw.drawImage(caption[hoveredCharacter.index()], 553 + x, 400);
             }
             //if characterEnum selected draw FIXED prev
             if (selectedCharacter) {
-                gc.drawImage(portrait[charPrevLoc], charXcap, charYcap);
-                gc.drawImage(caption[selectedCharIndex], 40, 380);
+                draw.drawImage(portrait[charPrevLoc], charXcap, charYcap);
+                draw.drawImage(caption[selectedCharIndex], 40, 380);
             }
             //if opp selected, draw FIXED prev
             if (selectedOpponent) {
-                gc.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
-                gc.drawImage(caption[selectedOppIndex], 553, 380);
+                draw.drawImage(portraitFlipped[oppPrevLoc], 512, charYcap);
+                draw.drawImage(caption[selectedOppIndex], 553, 380);
             }
-            gc.drawImage(charHold, 311, 0);
+            draw.drawImage(charHold, 311, 0);
             for (int row = 0; row <= (thumbnailNormal.length / columns); row++) {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (columns * row) + column;
@@ -373,63 +347,63 @@ public class RenderCharacterSelection extends CharacterSelection {
                     if (notAllCharactersSelect && uiElements.get(computedPosition).isHovered() && characterOpenToSelection)//clear
                     {
                         if (!selectedCharacter) {
-                            gc.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
+                            draw.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
                         if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
-                            gc.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
+                            draw.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
                     }
-                    gc.setGlobalAlpha(opacChar);
-                    drawImage(gc, thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
-                    gc.setGlobalAlpha((1.0f));
+                    draw.setGlobalAlpha(opacChar);
+                    drawImage(draw, thumbnailNormal[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
+                    draw.setGlobalAlpha(1.0f);
                 }
             }
             if (selectedCharacter && selectedOpponent) {
-                gc.drawImage(fight, 0, 0);
-                gc.setFont(bigFont);
-                gc.setFill(Color.WHITE);
-                gc.fillText("<< " + Language.get().get(146) + " >>", (852 - Utils.computeStringWidth("<< " + Language.get().get(146) + " >>", gc.getFont())) / 2, 360);
-                gc.fillText("<< " + Language.get().get(147) + " >>", (852 - Utils.computeStringWidth("<< " + Language.get().get(147) + " >>", gc.getFont())) / 2, 390);
+                draw.drawImage(fight, 0, 0);
+                setFont(draw, UiConstants.EXTRA_LARGE_TXT_SIZE);
+                draw.setFill(1f, 1f, 1f);
+                String line146 = "<< " + Language.get().get(146) + " >>";
+                String line147 = "<< " + Language.get().get(147) + " >>";
+                draw.fillText(line146, (852 - draw.measureText(line146)) / 2, 360);
+                draw.fillText(line147, (852 - draw.measureText(line147)) / 2, 390);
             }
-            gc.setFont(normalFont);
-            gc.setFill(Color.WHITE);
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.setFill(1f, 1f, 1f);
             if (!selectedCharacter) {
                 //select character
-                gc.drawImage(charDescPic, 0, 0);
-                gc.fillText(characterDescription[hoveredCharacter.index()], 4 + x, 18);
+                draw.drawImage(charDescPic, 0, 0);
+                draw.fillText(characterDescription[hoveredCharacter.index()], 4 + x, 18);
             }
             if (selectedCharacter && !selectedOpponent) {
                 //select opponent
-                gc.drawImage(oppDescPic, 452, 450);
-                gc.fillText(characterDescription[hoveredCharacter.index()], 852 - Utils.computeStringWidth(characterDescription[hoveredCharacter.index()], gc.getFont()) + x, 468);
+                draw.drawImage(oppDescPic, 452, 450);
+                String desc = characterDescription[hoveredCharacter.index()];
+                draw.fillText(desc, 852 - draw.measureText(desc) + x, 468);
             }
-            gc.drawImage(p1, 0, 180);
-            gc.drawImage(p2, 812, 180);
+            draw.drawImage(p1, 0, 180);
+            draw.drawImage(p2, 812, 180);
             if (x < 0) {
                 x = x + 2;
             }
         } else if (NetworkManager.get().isServer()) {
-            gc.setGlobalAlpha(1.0f);
-            gc.setFill(Color.WHITE);
-            gc.fillText(Language.get().get(167), 20, 300);
-            gc.fillText(NetworkManager.get().getHostName(), 20, 314);
-            gc.fillText(Language.get().get(452), 20, 328);
-            gc.fillText(NetworkManager.get().getHostAddress(), 20, 346);
-            gc.fillText(Language.get().get(168), 20, 360);
-            gc.fillText(Language.get().get(169), 20, 376);
+            draw.setGlobalAlpha(1.0f);
+            draw.setFill(1f, 1f, 1f);
+            draw.fillText(Language.get().get(167), 20, 300);
+            draw.fillText(NetworkManager.get().getHostName(), 20, 314);
+            draw.fillText(Language.get().get(452), 20, 328);
+            draw.fillText(NetworkManager.get().getHostAddress(), 20, 346);
+            draw.fillText(Language.get().get(168), 20, 360);
+            draw.fillText(Language.get().get(169), 20, 376);
         } else if (NetworkManager.get().isClient()) {
-            gc.setGlobalAlpha(1.0f);
-            gc.setFill(Color.WHITE);
-            gc.fillText("Waiting for host to respond", 553 + x, 400);
+            draw.setGlobalAlpha(1.0f);
+            draw.setFill(1f, 1f, 1f);
+            draw.fillText("Waiting for host to respond", 553 + x, 400);
         }
-        Overlay.get().overlay(gc, x, y);
     }
 
     private void loadCaps() {
-        bigFont = loadFont(LoginScreen.EXTRA_LARGE_TXT_SIZE);
-        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
-        oppDescPic = loader.load("images/charInfoO.png");
-        charDescPic = loader.load("images/charInfoC.png");
+        oppDescPic = assets().loadImage("images/charInfoO.png");
+        charDescPic = assets().loadImage("images/charInfoC.png");
         loadUiContent(CharacterEnum.RAILA);
         loadUiContent(CharacterEnum.SUBIYA);
         loadUiContent(CharacterEnum.LYNX);
@@ -442,26 +416,38 @@ public class RenderCharacterSelection extends CharacterSelection {
         loadUiContent(CharacterEnum.AZARIA);
         loadUiContent(CharacterEnum.SORROWE);
         loadUiContent(CharacterEnum.THING);
-        charBack = loader.load("images/selChar.png");
-        oppBack = loader.load("images/selOpp.png");
-        charHold = loader.load("images/charHold.png");
-        Image[] tmp = RenderMainMenu.get().getPics();
-        bg3 = tmp[0];
-        fg1 = tmp[1];
-        fg2 = tmp[2];
-        fg3 = tmp[3];
-        p1 = loader.load("images/player1.png");
-        p2 = loader.load("images/player2.png");
-        fight = loader.load("images/fight.png");
+        charBack = assets().loadImage("images/selChar.png");
+        oppBack = assets().loadImage("images/selOpp.png");
+        charHold = assets().loadImage("images/charHold.png");
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 0 && hour <= 9) {
+            bg3 = assets().loadImage("images/blur/bgBG1.png");
+            fg1 = assets().loadImage("images/blur/bgBG1a.png");
+            fg2 = assets().loadImage("images/blur/bgBG1b.png");
+            fg3 = assets().loadImage("images/blur/bgBG1fg.png");
+        } else if (hour > 9 && hour <= 16) {
+            bg3 = assets().loadImage("images/blur/bgBG6.png");
+            fg1 = assets().loadImage("images/blur/bgBG6a.png");
+            fg2 = assets().loadImage("images/blur/bgBG6b.png");
+            fg3 = assets().loadImage("images/blur/bgBG6fg.png");
+        } else {
+            bg3 = assets().loadImage("images/blur/bgBG5.png");
+            fg1 = assets().loadImage("images/blur/bgBG5a.png");
+            fg2 = assets().loadImage("images/blur/bgBG5b.png");
+            fg3 = assets().loadImage("images/blur/bgBG5fg.png");
+        }
+        p1 = assets().loadImage("images/player1.png");
+        p2 = assets().loadImage("images/player2.png");
+        fight = assets().loadImage("images/fight.png");
         charDesc[0] = Raila.class.getName();
     }
 
     public void loadUiContent(CharacterEnum characterEnum) {
-        thumbnailNormal[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/cap.png");
-        thumbnailBlurred[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/capB.png");
-        caption[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/name.png");
-        portrait[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/Prev.png");
-        portraitFlipped[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/PrevO.png");
+        thumbnailNormal[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/cap.png");
+        thumbnailBlurred[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/capB.png");
+        caption[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/name.png");
+        portrait[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/Prev.png");
+        portraitFlipped[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/PrevO.png");
     }
 
 

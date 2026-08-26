@@ -22,8 +22,8 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
@@ -31,18 +31,12 @@ import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.Rgba;
 
 import java.util.HashMap;
-
-import static com.sun.javafx.tk.Toolkit.getToolkit;
 
 
 /**
@@ -53,10 +47,9 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
 public class RenderStoryMenu extends StoryMenu {
 
     private static RenderStoryMenu instance;
-    private Font header, normal;
-    private Image stageHover, loading;
-    private Image[] unlockedScene, unlockedCaptions, lockedScene;
-    private Image storyPrev;
+    private NvgImage stageHover, loading;
+    private NvgImage[] unlockedScene, unlockedCaptions, lockedScene;
+    private NvgImage storyPrev;
     private int hoveredScene;
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
     private final UiItem scene1;
@@ -85,9 +78,9 @@ public class RenderStoryMenu extends StoryMenu {
 
 
     public RenderStoryMenu() {
-        lockedScene = new Image[numberOfScenes];
-        unlockedScene = new Image[numberOfScenes];
-        unlockedCaptions = new Image[numberOfScenes];
+        lockedScene = new NvgImage[numberOfScenes];
+        unlockedScene = new NvgImage[numberOfScenes];
+        unlockedCaptions = new NvgImage[numberOfScenes];
         unlockedStage = new boolean[numberOfScenes];
         for (int u = 0; u < unlockedStage.length; u++) {
             unlockedStage[u] = u <= currentScene;
@@ -240,39 +233,38 @@ public class RenderStoryMenu extends StoryMenu {
     }
 
     @Override
-    public void render(GraphicsContext gc, final double w, final double h) {
+    public void render(DrawContext draw) {
         loadAssets();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, 852, 480);
-        gc.drawImage(storyPrev, charXcap + x, charYcap);
-        gc.setGlobalAlpha((0.7f));
-        gc.fillRect(0, 0, 852, 480);
-        gc.setGlobalAlpha((0.5f));
-        gc.fillRect(200, 0, 452, 480);
-        gc.setGlobalAlpha((1.0f));
+        draw.setFill(Rgba.BLACK);
+        draw.fillRect(0, 0, 852, 480);
+        draw.drawImage(storyPrev, charXcap + x, charYcap);
+        draw.setGlobalAlpha(0.7f);
+        draw.fillRect(0, 0, 852, 480);
+        draw.setGlobalAlpha(0.5f);
+        draw.fillRect(200, 0, 452, 480);
+        draw.setGlobalAlpha(1.0f);
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 int computedPosition = (row * columns) + column;
                 if (computedPosition >= unlockedStage.length) continue;
                 UiItem currentEl = uiElements.get(computedPosition);
-                drawImage(gc, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
+                drawImage(draw, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
                 if (!currentEl.isHovered()) continue;
-                gc.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                draw.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
                 if (!unlockedStage[hoveredScene]) continue;
                 if (opacity < 0.95f)
                     opacity += 0.05f;
-                gc.setGlobalAlpha((opacity));
-                gc.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
-                gc.setGlobalAlpha((1.0f));
+                draw.setGlobalAlpha(opacity);
+                draw.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                draw.setGlobalAlpha(1.0f);
             }
-            gc.setFill(Color.WHITE);
-            gc.setFont(header);
-            gc.fillText(Language.get().get(307), (852 - Utils.computeStringWidth(Language.get().get(307), gc.getFont()) / 2), 80);
-            gc.setFont(normal);
-            gc.fillText(Language.get().get(368), (852 -Utils.computeStringWidth(Language.get().get(368), gc.getFont()) / 2), 380);
+            draw.setFill(Rgba.WHITE);
+            setFont(draw, UiConstants.EXTRA_LARGE_TXT_SIZE);
+            draw.fillText(Language.get().get(307), (852 - Utils.computeStringWidth(Language.get().get(307), draw) / 2), 80);
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.fillText(Language.get().get(368), (852 - Utils.computeStringWidth(Language.get().get(368), draw) / 2), 380);
             showstoryName(hoveredScene);
         }
-        Overlay.get().overlay(gc, x, y);
     }
 
     public void selectScene() {
@@ -285,42 +277,29 @@ public class RenderStoryMenu extends StoryMenu {
     }
 
     public void loadAssetsIml() {
-        header = loadFont(LoginScreen.EXTRA_LARGE_TXT_SIZE);
-        normal = loadFont(LoginScreen.NORMAL_TXT_SIZE);
-        Loader loader = new Loader();
         RenderStageSelect.get().setStageSelected(false);
         try {
             for (int i = 0; i < numberOfScenes; i++) {
-                unlockedScene[i] = loader.load("images/story/locked/" + i + ".png");
-                unlockedCaptions[i] = loader.load("images/story/captions/" + i + ".png");
-                lockedScene[i] = loader.load("images/story/blur/" + i + ".png");
+                unlockedScene[i] = assets().loadImage("images/story/locked/" + i + ".png");
+                unlockedCaptions[i] = assets().loadImage("images/story/captions/" + i + ".png");
+                lockedScene[i] = assets().loadImage("images/story/blur/" + i + ".png");
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-        loading = loader.load("images/loading.gif");
-        stageHover = loader.load("images/story/frame.png");
+        loading = assets().loadImage("images/loading.gif");
+        stageHover = assets().loadImage("images/story/frame.png");
         int random = (int) (Math.random() * 4);
-        switch (random) {
-            case 0:
-                storyPrev = loader.load("images/story/blur/s4.png");
-                break;
-            case 1:
-                storyPrev = loader.load("images/story/blur/s5.png");
-                break;
-            case 2:
-                storyPrev = loader.load("images/story/blur/s6.png");
-                break;
-            default:
-                storyPrev = loader.load("images/story/blur/s6.png");
-                break;
-        }
+        storyPrev = switch (random) {
+            case 0 -> assets().loadImage("images/story/blur/s4.png");
+            case 1 -> assets().loadImage("images/story/blur/s5.png");
+            case 2 -> assets().loadImage("images/story/blur/s6.png");
+            default -> assets().loadImage("images/story/blur/s6.png");
+        };
         loadAssets = false;
     }
 
     public void cleanAssets() {
-        header = null;
-        normal = null;
         stageHover = null;
         loading = null;
         unlockedCaptions = null;
@@ -333,14 +312,8 @@ public class RenderStoryMenu extends StoryMenu {
         super.newInstance();
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-        switch (mouseEvent.getButton()) {
-            case PRIMARY:
-                onAccept();
-                break;
-            case SECONDARY:
-                onBackCancel();
-                break;
-        }
+    @Override
+    public void mouseClicked(float x, float y) {
+        onAccept();
     }
 }

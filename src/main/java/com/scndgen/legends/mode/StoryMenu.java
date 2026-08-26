@@ -22,14 +22,14 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Mode;
-
-import javax.swing.*;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.Mode;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
 public abstract class StoryMenu extends Mode {
 
@@ -96,7 +96,11 @@ public abstract class StoryMenu extends Mode {
             State.get().getLogin().setDifficultyDynamic(State.get().getLogin().getDifficulty());
             Audio victorySound = new Audio(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
-            JOptionPane.showMessageDialog(null, Language.get().get(115), "Sweetness!!!", JOptionPane.INFORMATION_MESSAGE);
+            ScndGenLegends.get().engine().ui().push(NkDialogs.message(
+                    "Sweetness!!!",
+                    Language.get().get(115),
+                    ""
+            ));
             answer = false;
         }
         return answer;

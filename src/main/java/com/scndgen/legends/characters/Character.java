@@ -27,9 +27,9 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.render.RenderGamePlay;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import javafx.scene.image.Image;
+import io.github.subiyacryolite.enginev2.AssetLoader;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.NvgImage;
 
 import java.util.HashMap;
 
@@ -50,8 +50,7 @@ public abstract class Character {
     public float[] weakness;
     public float atbRecoveryRate;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
-    private Image[] sprites;
-    private Loader pix;
+    private NvgImage[] sprites;
     private String[] location;
     private boolean isMale;
     private int numberOfSprites = 12;
@@ -75,20 +74,19 @@ public abstract class Character {
     protected final int celestiaMultiplier = 10;
 
     private void sortQue() {
-        pix = new Loader();
         location = new String[numberOfSprites];
-        location[0] = "images/" + characterEnum.data() + "/D.png";  //1
-        location[1] = "images/" + characterEnum.data() + "/M1.png"; //2
-        location[2] = "images/" + characterEnum.data() + "/M2.png"; //3
-        location[3] = "images/" + characterEnum.data() + "/M3.png"; //4
-        location[4] = "images/" + characterEnum.data() + "/M4.png"; //5
-        location[5] = "images/" + characterEnum.data() + "/M5.png"; //6
-        location[6] = "images/" + characterEnum.data() + "/M6.png"; //7
-        location[7] = "images/" + characterEnum.data() + "/M7.png"; //8
-        location[8] = "images/" + characterEnum.data() + "/M8.png"; //9
-        location[9] = "images/" + characterEnum.data() + "/N.png"; //10
-        location[10] = "images/" + characterEnum.data() + "/P.png"; //11
-        location[11] = "images/trans.png"; //12
+        location[0] = "images/" + characterEnum.data() + "/D.png";
+        location[1] = "images/" + characterEnum.data() + "/M1.png";
+        location[2] = "images/" + characterEnum.data() + "/M2.png";
+        location[3] = "images/" + characterEnum.data() + "/M3.png";
+        location[4] = "images/" + characterEnum.data() + "/M4.png";
+        location[5] = "images/" + characterEnum.data() + "/M5.png";
+        location[6] = "images/" + characterEnum.data() + "/M6.png";
+        location[7] = "images/" + characterEnum.data() + "/M7.png";
+        location[8] = "images/" + characterEnum.data() + "/M8.png";
+        location[9] = "images/" + characterEnum.data() + "/N.png";
+        location[10] = "images/" + characterEnum.data() + "/P.png";
+        location[11] = "images/trans.png";
         System.out.println("Loaded " + characterEnum.data());
     }
 
@@ -96,24 +94,27 @@ public abstract class Character {
         return numberOfSprites;
     }
 
-    public void loadMeHigh() {
+    public void loadMeHigh(AssetLoader assets) {
         sortQue();
-        sprites = new Image[numberOfSprites];
-        sprites[0] = pix.load(location[0]);
-        sprites[1] = pix.load(location[1]);
-        sprites[2] = pix.load(location[2]);
-        sprites[3] = pix.load(location[3]);
-        sprites[4] = pix.load(location[4]);
-        sprites[5] = pix.load(location[5]);
-        sprites[6] = pix.load(location[6]);
-        sprites[7] = pix.load(location[7]);
-        sprites[8] = pix.load(location[8]);
-        sprites[9] = pix.load(location[9]);
-        sprites[10] = pix.load(location[10]);
-        sprites[11] = pix.load(location[11]);
+        sprites = new NvgImage[numberOfSprites];
+        for (int i = 0; i < numberOfSprites; i++) {
+            sprites[i] = assets.loadImage(location[i]);
+        }
     }
 
-    public Image getSprite(int i) {
+    /**
+     * @deprecated Prefer {@link #loadMeHigh(AssetLoader)}
+     */
+    @Deprecated
+    public void loadMeHigh() {
+        var legends = com.scndgen.legends.ScndGenLegends.get();
+        if (legends == null || legends.loader() == null) {
+            throw new IllegalStateException("Cannot load character sprites before the GLFW engine is ready");
+        }
+        loadMeHigh(legends.loader());
+    }
+
+    public NvgImage getSprite(int i) {
         return sprites[i];
     }
 

@@ -11,17 +11,14 @@ import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.MainMenu;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import com.scndgen.legends.windows.WindowAbout;
-import com.scndgen.legends.windows.WindowControls;
-import com.scndgen.legends.windows.WindowOptions;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.FxDialogs;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.Rgba;
+import io.github.subiyacryolite.enginev2.nuklear.AboutOverlay;
+import io.github.subiyacryolite.enginev2.nuklear.ControlsOverlay;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
+import io.github.subiyacryolite.enginev2.nuklear.OptionsOverlay;
 
 
 /**
@@ -52,9 +49,8 @@ public class RenderMainMenu extends MainMenu {
     private final UiItem uiControls;
     private final UiItem uiAbout;
     private final UiItem uiExit;
-    private Loader loader = new Loader();
-    private Image menuLogo, gameLogo;
-    private Image foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
+    private NvgImage menuLogo, gameLogo;
+    private NvgImage foregroundPixelated, particlesLayer1, backgroundPixelated, particlesLayer2;
     private Audio menuMusic;
 
     public static synchronized RenderMainMenu get() {
@@ -329,7 +325,7 @@ public class RenderMainMenu extends MainMenu {
         (uiOptions = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                new WindowOptions();
+                engine().ui().push(new OptionsOverlay(engine()));
             }
 
             @Override
@@ -355,7 +351,7 @@ public class RenderMainMenu extends MainMenu {
         (uiControls = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                new WindowControls();
+                engine().ui().push(new ControlsOverlay());
             }
 
             @Override
@@ -382,7 +378,7 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                new WindowAbout();
+                engine().ui().push(new AboutOverlay());
             }
 
             @Override
@@ -409,13 +405,25 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ButtonBar.ButtonData exit = FxDialogs.yesNo(Language.get().get(422), Language.get().get(110), "");
-                if (exit == ButtonBar.ButtonData.YES) {
-                    ButtonBar.ButtonData seriously = FxDialogs.yesNo(Language.get().get(423), Language.get().get(111), "");
-                    if (seriously == ButtonBar.ButtonData.YES) {
-                        ScndGenLegends.get().exit();
-                    }
-                }
+                engine().ui().push(NkDialogs.yesNo(
+                        Language.get().get(422),
+                        Language.get().get(110),
+                        "",
+                        answer -> {
+                            if (answer == NkDialogs.Answer.YES) {
+                                engine().ui().push(NkDialogs.yesNo(
+                                        Language.get().get(423),
+                                        Language.get().get(111),
+                                        "",
+                                        confirm -> {
+                                            if (confirm == NkDialogs.Answer.YES) {
+                                                ScndGenLegends.get().exit();
+                                            }
+                                        }
+                                ));
+                            }
+                        }
+                ));
             }
 
             @Override
@@ -492,24 +500,23 @@ public class RenderMainMenu extends MainMenu {
     @Override
     public void loadAssetsIml() {
         if (!loadAssets) return;
-        menuFont = loadFont(fontSize);
-        gameLogo = loader.load("logo/gameLogo.png");
-        menuLogo = loader.load("images/sglogo.png");
+        gameLogo = assets().loadImage("logo/gameLogo.png");
+        menuLogo = assets().loadImage("images/sglogo.png");
         if (time >= 0 && time <= 9) {
-            backgroundPixelated = loader.load("images/blur/bgBG1.png");
-            foregroundPixelated = loader.load("images/blur/bgBG1fg.png");
-            particlesLayer1 = loader.load("images/blur/bgBG1a.png");
-            particlesLayer2 = loader.load("images/blur/bgBG1b.png");
+            backgroundPixelated = assets().loadImage("images/blur/bgBG1.png");
+            foregroundPixelated = assets().loadImage("images/blur/bgBG1fg.png");
+            particlesLayer1 = assets().loadImage("images/blur/bgBG1a.png");
+            particlesLayer2 = assets().loadImage("images/blur/bgBG1b.png");
         } else if (time > 9 && time <= 16) {
-            backgroundPixelated = loader.load("images/blur/bgBG6.png");
-            foregroundPixelated = loader.load("images/blur/bgBG6fg.png");
-            particlesLayer1 = loader.load("images/blur/bgBG6a.png");
-            particlesLayer2 = loader.load("images/blur/bgBG6b.png");
+            backgroundPixelated = assets().loadImage("images/blur/bgBG6.png");
+            foregroundPixelated = assets().loadImage("images/blur/bgBG6fg.png");
+            particlesLayer1 = assets().loadImage("images/blur/bgBG6a.png");
+            particlesLayer2 = assets().loadImage("images/blur/bgBG6b.png");
         } else if (time > 16 && time <= 24) {
-            backgroundPixelated = loader.load("images/blur/bgBG5.png");
-            foregroundPixelated = loader.load("images/blur/bgBG5fg.png");
-            particlesLayer1 = loader.load("images/blur/bgBG5a.png");
-            particlesLayer2 = loader.load("images/blur/bgBG5b.png");
+            backgroundPixelated = assets().loadImage("images/blur/bgBG5.png");
+            foregroundPixelated = assets().loadImage("images/blur/bgBG5fg.png");
+            particlesLayer1 = assets().loadImage("images/blur/bgBG5a.png");
+            particlesLayer2 = assets().loadImage("images/blur/bgBG5b.png");
         }
         loadAssets = false;
         setActiveItem(uiTutorial);
@@ -527,79 +534,75 @@ public class RenderMainMenu extends MainMenu {
     }
 
     @Override
-    public void render(GraphicsContext gc, final double w, final double h) {
+    public void render(DrawContext draw) {
         loadAssets();
-        //gc.setGlobalAlpha((1));
-        gc.drawImage(backgroundPixelated, 0, 0);
-        gc.drawImage(foregroundPixelated, 0, 0);
-        gc.drawImage(particlesLayer2, cloudOnePositionX, yCordCloud);
-        gc.drawImage(particlesLayer1, cloudTwoPositionX, yCordCloud2);
-        gc.setFill(Color.BLACK);
-        gc.setGlobalAlpha((0.50f));
-        gc.fillRect(0, 0, screenWidth, screenHeight);
-        gc.setGlobalAlpha((1.0f));
-        gc.drawImage(menuLogo, 0, 0);
-        gc.setFill(Color.WHITE);
-        gc.setFont(menuFont);
+        draw.drawImage(backgroundPixelated, 0, 0);
+        draw.drawImage(foregroundPixelated, 0, 0);
+        draw.drawImage(particlesLayer2, cloudOnePositionX, yCordCloud);
+        draw.drawImage(particlesLayer1, cloudTwoPositionX, yCordCloud2);
+        draw.setFill(Rgba.BLACK);
+        draw.setGlobalAlpha(0.50f);
+        draw.fillRect(0, 0, screenWidth, screenHeight);
+        draw.setGlobalAlpha(1.0f);
+        draw.drawImage(menuLogo, 0, 0);
+        draw.setFill(Rgba.WHITE);
+        setFont(draw, fontSize);
         if (mainMenuOverlay == MainMenuOverlay.PRIMARY_MENU) {
             menuItemIndex = 0;
-            ///////////////////////////////////////////
-            fillText(gc, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
+            fillText(draw, strTutorial, xMenu, yMenu + (fontSize * menuItemIndex), uiTutorial);
             menuItemIndex++;
-            fillText(gc, strStoryMode, xMenu, yMenu + (fontSize * menuItemIndex), uiStoryMode);
+            fillText(draw, strStoryMode, xMenu, yMenu + (fontSize * menuItemIndex), uiStoryMode);
             menuItemIndex++;
-            fillText(gc, strQuickMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiQuickMatch);
+            fillText(draw, strQuickMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiQuickMatch);
             menuItemIndex++;
-            fillText(gc, strHostLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiHostLanMatch);
+            fillText(draw, strHostLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiHostLanMatch);
             menuItemIndex++;
-            fillText(gc, strJoinLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiJoinLanMatch);
+            fillText(draw, strJoinLanMatch, xMenu, yMenu + (fontSize * menuItemIndex), uiJoinLanMatch);
             menuItemIndex++;
-/////////////////////////////////////////////////////
-            fillText(gc, strAchievementLocker, xMenu, yMenu + (fontSize * menuItemIndex), uiAchievementLocker);
+            fillText(draw, strAchievementLocker, xMenu, yMenu + (fontSize * menuItemIndex), uiAchievementLocker);
             menuItemIndex++;
-            fillText(gc, strYourStats, xMenu, yMenu + (fontSize * menuItemIndex), uiYourStats);
+            fillText(draw, strYourStats, xMenu, yMenu + (fontSize * menuItemIndex), uiYourStats);
             menuItemIndex++;
-            fillText(gc, strOptions, xMenu, yMenu + (fontSize * menuItemIndex), uiOptions);
+            fillText(draw, strOptions, xMenu, yMenu + (fontSize * menuItemIndex), uiOptions);
             menuItemIndex++;
-            fillText(gc, strControls, xMenu, yMenu + (fontSize * menuItemIndex), uiControls);
+            fillText(draw, strControls, xMenu, yMenu + (fontSize * menuItemIndex), uiControls);
             menuItemIndex++;
-            fillText(gc, strAbout, xMenu, yMenu + (fontSize * menuItemIndex), uiAbout);
+            fillText(draw, strAbout, xMenu, yMenu + (fontSize * menuItemIndex), uiAbout);
             menuItemIndex++;
-            fillText(gc, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
+            fillText(draw, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
-        Overlay.get().overlay(gc, w, h);
-        gc.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, screenHeight - 10);
-        gc.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
-        gc.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
-        gc.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
-        gc.setGlobalAlpha((1.0f));
-        gc.setFill(Color.WHITE);
+        draw.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, screenHeight - 10);
+        draw.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
+        draw.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
+        draw.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
+        draw.setGlobalAlpha(1.0f);
+        draw.setFill(Rgba.WHITE);
         if (mainMenuOverlay == MainMenuOverlay.STATISTICS) {
-            achievementLocker.drawStats(gc, w, h);
+            achievementLocker.drawStats(draw);
         }
         if (mainMenuOverlay == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
-            achievementLocker.drawAch(gc, w, h);
+            achievementLocker.drawAch(draw);
         }
         if (mainMenuOverlay == MainMenuOverlay.TUTORIAL) {
-            tutorial.draw(gc, w, h);
+            tutorial.draw(draw);
         }
 
         if (opacity > 0.0f) {
-            gc.setGlobalAlpha((1));
+            draw.setGlobalAlpha(1);
             if (opacity <= 1.0f) {
-                gc.setGlobalAlpha((opacity));
+                draw.setGlobalAlpha(opacity);
             }
-            gc.setFill(Color.WHITE);
-            gc.fillRect(0, 0, 852, 480);
+            draw.setFill(Rgba.WHITE);
+            draw.fillRect(0, 0, 852, 480);
             if (opacity > 2.0f) {
-                gc.setGlobalAlpha((1.0f));
+                draw.setGlobalAlpha(1.0f);
             } else if (opacity <= 2.0f && opacity > 1.0f) {
-                gc.setGlobalAlpha((opacity - 1.0f));//TODO this one
+                draw.setGlobalAlpha(opacity - 1.0f);
             } else {
-                gc.setGlobalAlpha((0f));
+                draw.setGlobalAlpha(0f);
             }
-            gc.drawImage(gameLogo, 0, 0);
+            draw.drawImage(gameLogo, 0, 0);
             opacity -= 0.0125f;
         }
     }
@@ -623,7 +626,7 @@ public class RenderMainMenu extends MainMenu {
         }
     }
 
-    public Image[] getPics() {
-        return new Image[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
+    public NvgImage[] getPics() {
+        return new NvgImage[]{backgroundPixelated, particlesLayer1, particlesLayer2, foregroundPixelated};
     }
 }

@@ -17,7 +17,7 @@ import static org.lwjgl.nuklear.Nuklear.nk_layout_row_dynamic;
 import static org.lwjgl.nuklear.Nuklear.nk_rect;
 
 /**
- * Nuklear replacement for {@code WindowControls}.
+ * Controls help overlay.
  */
 public final class ControlsOverlay implements UiOverlay {
     private boolean open = true;

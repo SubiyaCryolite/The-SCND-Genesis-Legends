@@ -1,8 +1,9 @@
 package io.github.subiyacryolite.enginev2;
 
 /**
- * Fixed game design resolution mapped onto the real window.
- * Scale is driven only by horizontal size; vertical mismatch is letterboxed.
+ * Fixed 852×480 (16:9) design space mapped onto the real window.
+ * Scale uses the limiting axis so the design aspect is preserved:
+ * wider windows (e.g. 21:9) get side bars; taller windows (e.g. 4:3) get top/bottom bars.
  * Scenes draw in design space; {@link #begin(long)} / {@link #end(long)} apply NanoVG scale.
  */
 public final class DesignViewport {
@@ -18,8 +19,10 @@ public final class DesignViewport {
     public void update(int windowWidth, int windowHeight) {
         this.windowWidth = Math.max(1, windowWidth);
         this.windowHeight = Math.max(1, windowHeight);
-        scale = this.windowWidth / (float) DESIGN_WIDTH;
-        offsetX = 0f;
+        float scaleX = this.windowWidth / (float) DESIGN_WIDTH;
+        float scaleY = this.windowHeight / (float) DESIGN_HEIGHT;
+        scale = Math.min(scaleX, scaleY);
+        offsetX = (this.windowWidth - DESIGN_WIDTH * scale) * 0.5f;
         offsetY = (this.windowHeight - DESIGN_HEIGHT * scale) * 0.5f;
     }
 

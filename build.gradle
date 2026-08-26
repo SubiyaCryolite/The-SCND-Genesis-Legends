@@ -4,16 +4,10 @@ plugins {
     id "java"
     id 'java-library'
     id "application"
-    id "org.openjfx.javafxplugin" version "0.0.13"
 }
 
 group 'com.scndgen'
 version '22.05.04'
-
-javafx {
-    version = "21"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
-}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -54,24 +48,6 @@ repositories {
     mavenCentral()
 }
 
-sourceSets {
-    // Scene-by-scene NanoVG migration: enginev2 + game code needed for migrated scenes.
-    nanovgPrototype {
-        java {
-            srcDirs = ['src/main/java']
-            include 'io/github/subiyacryolite/enginev2/**'
-            include 'com/scndgen/legends/enums/**'
-            include 'com/scndgen/legends/constants/**'
-            include 'com/scndgen/legends/Language.java'
-            include 'com/scndgen/legends/state/**'
-            include 'com/scndgen/legends/ui/**'
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-}
-
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
     implementation "commons-codec:commons-codec:1.15"
@@ -94,38 +70,10 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-
-    nanovgPrototypeImplementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    nanovgPrototypeImplementation 'commons-io:commons-io:2.14.0'
-    nanovgPrototypeImplementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
-    nanovgPrototypeImplementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
-    nanovgPrototypeImplementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-glfw"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-opengl"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-nanovg"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-nuklear"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-stb"
-    nanovgPrototypeImplementation "org.lwjgl:lwjgl-openal"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
 }
 
 application {
     mainClass = project.ext.mainClass
-}
-
-tasks.register('runNanoVgPrototype', JavaExec) {
-    group = 'application'
-    description = 'Runs the GLFW + OpenGL 3.3 + NanoVG rendering prototype / migrated scenes'
-    dependsOn sourceSets.nanovgPrototype.classesTaskName
-    classpath = sourceSets.nanovgPrototype.runtimeClasspath
-    mainClass = 'io.github.subiyacryolite.enginev2.NanoVgPrototype'
 }
 
 jar {

@@ -1,10 +1,9 @@
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.FxDialogs;
-import javafx.application.Platform;
-import javafx.scene.control.ButtonBar;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -51,20 +50,26 @@ public class NetworkServer extends NetworkBase implements Runnable {
 
 
     public void playerFound() {
-        Platform.runLater(() -> {
-            ButtonBar.ButtonData answer = FxDialogs.yesNo("Heads Up", "Someone wants to fight you!", "Wanna waste em?");
-            switch (answer) {
-                case YES:
-                    NetworkManager.get().setConnectedToPartner(true);
-                    sendData(CONNECT_TO_HOST);
-                    sendData(NetworkConstants.connectToHost(State.get().getLogin().getTimeLimit()));
-                    break;
-                case NO:
-                    NetworkManager.get().setConnectedToPartner(false);
-                    sendData(NetworkConstants.DISCONNECT_FROM_HOST);
-                    break;
-            }
-        });
+        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                "Heads Up",
+                "Someone wants to fight you!",
+                "Wanna waste em?",
+                answer -> {
+                    switch (answer) {
+                        case YES -> {
+                            NetworkManager.get().setConnectedToPartner(true);
+                            sendData(CONNECT_TO_HOST);
+                            sendData(NetworkConstants.connectToHost(State.get().getLogin().getTimeLimit()));
+                        }
+                        case NO -> {
+                            NetworkManager.get().setConnectedToPartner(false);
+                            sendData(NetworkConstants.DISCONNECT_FROM_HOST);
+                        }
+                        default -> {
+                        }
+                    }
+                }
+        ));
     }
 
 
@@ -89,7 +94,11 @@ public class NetworkServer extends NetworkBase implements Runnable {
                 }
             }
         } catch (Exception ex) {
-            FxDialogs.error("Network Error", "Something went wrong during the online session", "", ex);
+            ScndGenLegends.get().engine().ui().push(NkDialogs.message(
+                    "Network Error",
+                    "Something went wrong during the online session",
+                    ex.getMessage() == null ? "" : ex.getMessage()
+            ));
             NetworkManager.get().close();
         } finally {
             System.out.println("Closed the server");
