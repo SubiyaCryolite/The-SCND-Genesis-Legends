@@ -27,6 +27,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.state.Login;
 import io.github.subiyacryolite.enginev1.FxDialogs;
+import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -65,7 +66,7 @@ public class LoginScreen extends Stage {
 
         });
 
-        cmbUsers = new ComboBox(State.get().getLogins());
+        cmbUsers = new ComboBox<>(FXCollections.observableList(State.get().getLogins()));
         cmbUsers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
         });
 
@@ -101,7 +102,8 @@ public class LoginScreen extends Stage {
     }
 
     private void updateComboboxAndUi() {
-        if (State.get().getLogins().size() == 0) {
+        cmbUsers.setItems(FXCollections.observableList(State.get().getLogins()));
+        if (State.get().getLogins().isEmpty()) {
             btnEnter.setDisable(true);
         } else {
             txtActiveAccount.setText(State.get().getLogin().toString());

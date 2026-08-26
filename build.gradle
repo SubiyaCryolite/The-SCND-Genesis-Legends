@@ -52,25 +52,80 @@ switch (OperatingSystem.current()) {
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
+}
+
+sourceSets {
+    // Scene-by-scene NanoVG migration: enginev2 + game code needed for migrated scenes.
+    nanovgPrototype {
+        java {
+            srcDirs = ['src/main/java']
+            include 'io/github/subiyacryolite/enginev2/**'
+            include 'com/scndgen/legends/enums/**'
+            include 'com/scndgen/legends/constants/**'
+            include 'com/scndgen/legends/Language.java'
+            include 'com/scndgen/legends/state/**'
+            include 'com/scndgen/legends/ui/**'
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
 }
 
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    implementation "io.github.subiyacryolite:jds:3.2.2-SNAPSHOT"
     implementation "commons-codec:commons-codec:1.15"
     implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation 'commons-io:commons-io:2.14.0'
-    implementation 'org.xerial:sqlite-jdbc:3.41.2.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
     implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
     implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-nanovg"
+    implementation "org.lwjgl:lwjgl-nuklear"
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-stb"
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
+    nanovgPrototypeImplementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    nanovgPrototypeImplementation 'commons-io:commons-io:2.14.0'
+    nanovgPrototypeImplementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+    nanovgPrototypeImplementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
+    nanovgPrototypeImplementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-glfw"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-opengl"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-nanovg"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-nuklear"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-stb"
+    nanovgPrototypeImplementation "org.lwjgl:lwjgl-openal"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    nanovgPrototypeRuntimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+}
+
+application {
+    mainClass = project.ext.mainClass
+}
+
+tasks.register('runNanoVgPrototype', JavaExec) {
+    group = 'application'
+    description = 'Runs the GLFW + OpenGL 3.3 + NanoVG rendering prototype / migrated scenes'
+    dependsOn sourceSets.nanovgPrototype.classesTaskName
+    classpath = sourceSets.nanovgPrototype.runtimeClasspath
+    mainClass = 'io.github.subiyacryolite.enginev2.NanoVgPrototype'
 }
 
 jar {
