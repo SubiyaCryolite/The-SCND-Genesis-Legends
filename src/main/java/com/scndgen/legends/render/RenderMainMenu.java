@@ -607,22 +607,28 @@ public class RenderMainMenu extends MainMenu {
         }
     }
 
-    protected void update(final long delta) {
-        if (!isDelta60fps()) return;
-        if (cloudOnePositionX < -960) {
-            cloudOnePositionX = screenWidth;
-        } else {
-            cloudOnePositionX = cloudOnePositionX - 1;
+    @Override
+    protected void update(double deltaSeconds) {
+        super.update(deltaSeconds);
+        while (tick60.consume()) {
+            if (cloudOnePositionX < -960) {
+                cloudOnePositionX = screenWidth;
+            } else {
+                cloudOnePositionX = cloudOnePositionX - 1;
+            }
+            if (cloudTwoPositionX < -960) {
+                cloudTwoPositionX = screenWidth;
+            } else {
+                cloudTwoPositionX = cloudTwoPositionX - 2;
+            }
+            if (cloudThreePositionX < -960) {
+                cloudThreePositionX = screenWidth;
+            } else {
+                cloudThreePositionX = cloudThreePositionX - 3;
+            }
         }
-        if (cloudTwoPositionX < -960) {
-            cloudTwoPositionX = screenWidth;
-        } else {
-            cloudTwoPositionX = cloudTwoPositionX - 2;
-        }
-        if (cloudThreePositionX < -960) {
-            cloudThreePositionX = screenWidth;
-        } else {
-            cloudThreePositionX = cloudThreePositionX - 3;
+        if (tutorial != null && getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
+            tutorial.tick(deltaSeconds);
         }
     }
 

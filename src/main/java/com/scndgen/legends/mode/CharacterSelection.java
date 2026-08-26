@@ -10,6 +10,7 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
+import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.Mode;
 
@@ -27,17 +28,20 @@ public abstract class CharacterSelection extends Mode {
     protected float opacInc, p1Opac, opacChar;
     protected CharacterEnum opponentEnum, characterEnum;
     protected int oppPrevLoc, charPrevLoc;
-    protected boolean selectedCharacter, selectedOpponent, animatorThreadRunning;
+    protected boolean selectedCharacter, selectedOpponent, animateClouds;
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
     protected final int columns = 3;
     protected boolean canSelectCharacter;
     protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
+    private final Accumulator cloudTick = Accumulator.atInterval(0.033);
 
     public void newInstance() {
         loadAssets = true;
         canSelectCharacter = true;
         selectedCharacter = false;
         selectedOpponent = false;
+        animateClouds = false;
+        cloudTick.reset();
         refreshSelections();
         characterLookup.clear();
         for (CharacterEnum character : CharacterEnum.values()) {
@@ -485,33 +489,26 @@ public abstract class CharacterSelection extends Mode {
     }
 
     public void animateCharSelect() {
-        if (animatorThreadRunning) return;
-        new Thread() {
-            @Override
-            public void run() {
-                this.setName("CharacterEnum select bg animation thread");
-                do {
-                    animatorThreadRunning = true;
-                    try {
-                        for (int x = 0; x > (-1440 + 852); x++) {
-                            this.sleep(0033);
-                            xCordCloud = xCordCloud - 3;
-                            xCordCloud2 = xCordCloud2 - 5;
-                            if (xCordCloud < -960) {
-                                xCordCloud = 852;
-                            }
-                            if (xCordCloud2 < -960) {
-                                xCordCloud2 = 852;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
-                }
-                while (ScndGenLegends.get().getSubMode() == SubMode.MAIN_MENU);
-                animatorThreadRunning = false;
+        animateClouds = true;
+        cloudTick.reset();
+    }
+
+    @Override
+    protected void update(double deltaSeconds) {
+        if (!animateClouds) {
+            return;
+        }
+        cloudTick.advance(deltaSeconds);
+        while (cloudTick.consume()) {
+            xCordCloud -= 3;
+            xCordCloud2 -= 5;
+            if (xCordCloud < -960) {
+                xCordCloud = 852;
             }
-        }.start();
+            if (xCordCloud2 < -960) {
+                xCordCloud2 = 852;
+            }
+        }
     }
 
     /**

@@ -54,6 +54,7 @@ public abstract class MainMenu extends Mode {
     protected float logoFadeOpacity = 1.0f;
     protected Calendar cal;
     protected Tutorial tutorial;
+    private double logoFadeDelaySeconds = 15.0;
 
     public MainMenu() {
         ScndGenLegends.get().setSubMode(SubMode.MAIN_MENU);
@@ -61,22 +62,21 @@ public abstract class MainMenu extends Mode {
         opacity = 3.0f;
         logoFadeOpacity = 1.0f;
         fadeOutFeedback = false;
+        logoFadeDelaySeconds = 15.0;
         achievementLocker = new AchievementLocker();
         cal = Calendar.getInstance();
         time = (cal.get(Calendar.HOUR_OF_DAY));
         System.out.println("Hour: " + time);
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    fadeOutFeedback = false;
-                    logoFadeOpacity = 1.0f;
-                    this.sleep(15000);
-                    fadeOutFeedback = true;
-                } catch (Exception e) {
-                }
+    }
+
+    @Override
+    protected void update(double deltaSeconds) {
+        if (!fadeOutFeedback && logoFadeDelaySeconds > 0.0) {
+            logoFadeDelaySeconds -= deltaSeconds;
+            if (logoFadeDelaySeconds <= 0.0) {
+                fadeOutFeedback = true;
             }
-        }.start();
+        }
     }
 
     /**

@@ -29,6 +29,7 @@ import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.render.RenderMainMenu;
+import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.AssetLoader;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DrawContext;
@@ -39,19 +40,72 @@ import static org.lwjgl.glfw.GLFW.*;
 
 
 /**
+ * Scripted tutorial overlay driven by {@link Accumulator} at 60 Hz (former Thread + sleep(16)).
+ *
  * @author ndana
  */
-public class Tutorial implements Runnable {
+public class Tutorial {
+
+    private record Section(int topLangId, int textLangId, int pic, int arr, boolean fixedFrames, int frameCount) {
+        Section(int topLangId, int textLangId, int pic, int arr) {
+            this(topLangId, textLangId, pic, arr, false, 0);
+        }
+    }
+
+    private static final Section[] SECTIONS = {
+            new Section(356, 320, 0, 0),
+            new Section(356, 321, 0, 0),
+            new Section(360, 322, 0, 0),
+            new Section(360, 344, 0, 6),
+            new Section(360, 345, 0, 6),
+            new Section(360, 323, 0, 1),
+            new Section(360, 324, 0, 1),
+            new Section(360, 325, 0, 1),
+            new Section(360, 326, 0, 1),
+            new Section(360, 327, 0, 2),
+            new Section(355, 328, 0, 5),
+            new Section(355, 329, 0, 5),
+            new Section(355, 330, 0, 5),
+            new Section(355, 331, 0, 5),
+            new Section(355, 332, 0, 5),
+            new Section(355, 333, 0, 5),
+            new Section(355, 334, 0, 5),
+            new Section(355, 335, 0, 5),
+            new Section(355, 336, 0, 5),
+            new Section(358, 352, 4, 8),
+            new Section(358, 353, 4, 8),
+            new Section(358, 354, 5, 8),
+            new Section(358, 361, 5, 8),
+            new Section(358, 362, 5, 8),
+            new Section(358, 363, 5, 8),
+            new Section(358, 336, 4, 8),
+            new Section(357, 337, 4, 3),
+            new Section(357, 338, 4, 3),
+            new Section(357, 339, 4, 3),
+            new Section(357, 340, 4, 4),
+            new Section(357, 341, 0, 4),
+            new Section(359, 346, 0, 0),
+            new Section(359, 347, 4, 7),
+            new Section(359, 348, 1, 7),
+            new Section(359, 349, 2, 7),
+            new Section(359, 350, 3, 0),
+            new Section(359, 367, 3, 0),
+            new Section(359, 351, 3, 0),
+            new Section(-1, 393, 0, 0, true, 16 * 30), // last: no top change, no sec increment
+    };
 
     private NvgImage[] slides, arrows;
     private NvgImage forward, back;
-    private Thread thread;
     private boolean skipSec;
-    private long tutSpeed;
-    private int cord, sec, pixLoc, arrowLoc, slide;
+    private boolean running;
+    private boolean needSetup;
+    private final long tutSpeed;
+    private int cord, sec, pixLoc, arrowLoc;
+    private int remainingFrames;
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
     private final Audio bgSound, backSound;
+    private final Accumulator waitAccum = Accumulator.atFrequency(60);
 
     public Tutorial() {
         backSound = new Audio(AudioConstants.soundBack(), AudioType.SOUND, false);
@@ -59,7 +113,6 @@ public class Tutorial implements Runnable {
         AssetLoader loader = ScndGenLegends.get().loader();
         pixLoc = 0;
         sec = 0;
-        slide = -1;
         opacityTxt = 1.0f;
         picOpac = 1.0f;
         arrowOpac = 1.0f;
@@ -81,10 +134,63 @@ public class Tutorial implements Runnable {
 
     public void beginTutorial() {
         RenderMainMenu.get().onLeaveMode();
-        thread = null;
-        thread = new Thread(this);
-        thread.start();
+        running = true;
+        skipSec = false;
+        sec = 0;
+        remainingFrames = 0;
+        needSetup = true;
+        waitAccum.setFrequency(60);
+        waitAccum.reset();
         bgSound.play();
+    }
+
+    public void tick(double deltaSeconds) {
+        if (!running) {
+            return;
+        }
+        waitAccum.advance(deltaSeconds);
+        while (waitAccum.consume()) {
+            stepFrame();
+        }
+    }
+
+    private void stepFrame() {
+        if (skipSec) {
+            skipSec = false;
+            remainingFrames = 0;
+            needSetup = true;
+        }
+        if (remainingFrames > 0) {
+            remainingFrames--;
+            if (remainingFrames == 0) {
+                needSetup = true;
+            }
+            return;
+        }
+        if (needSetup) {
+            setupSection(sec);
+            needSetup = false;
+        }
+    }
+
+    private void setupSection(int index) {
+        if (index < 0 || index >= SECTIONS.length) {
+            return;
+        }
+        Section section = SECTIONS[index];
+        if (section.topLangId >= 0) {
+            setTop(Language.get().get(section.topLangId));
+        }
+        setTxt(Language.get().get(section.textLangId));
+        setPic(section.pic);
+        setArr(section.arr);
+        if (section.fixedFrames) {
+            remainingFrames = section.frameCount;
+            // last slide should not increment sec — re-runs when frames expire
+        } else {
+            remainingFrames = (int) (tutSpeed * tutText.length());
+            sec = index + 1;
+        }
     }
 
     public void onLeft() {
@@ -196,644 +302,9 @@ public class Tutorial implements Runnable {
         topText = p;
     }
 
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                slide = -1;
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setPic(0);
-                    setArr(0);
-                    setTop(Language.get().get(356)); //intro
-                    setTxt(Language.get().get(320));
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(356)); //intro
-                    setTxt(Language.get().get(321));
-                    setPic(0);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(322));
-                    setPic(0);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(344));
-                    setPic(0);
-                    setArr(6);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(345));
-                    setPic(0);
-                    setArr(6);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(323));
-                    setPic(0);
-                    setArr(1);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(324));
-                    setPic(0);
-                    setArr(1);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(325));
-                    setPic(0);
-                    setArr(1);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(326));
-                    setPic(0);
-                    setArr(1);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(360)); //basics
-                    setTxt(Language.get().get(327));
-                    setPic(0);
-                    setArr(2);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(328));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(329));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(330));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(331));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(332));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(333));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(334));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(335));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(355)); //CM
-                    setTxt(Language.get().get(336));
-                    setPic(0);
-                    setArr(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        Thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(352));
-                    setArr(8);
-                    setPic(4);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        Thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(353));
-                    setArr(8);
-                    setPic(4);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(354));
-                    setArr(8);
-                    setPic(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        Thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(361));
-                    setArr(8);
-                    setPic(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length())); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        Thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(362));
-                    setArr(8);
-                    setPic(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(363));
-                    setArr(8);
-                    setPic(5);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(358)); //FB
-                    setTxt(Language.get().get(336));
-                    setArr(8);
-                    setPic(4);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(357)); //AB
-                    setTxt(Language.get().get(337));
-                    setPic(4);
-                    setArr(3);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(357)); //AB
-                    setTxt(Language.get().get(338));
-                    setPic(4);
-                    setArr(3);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(357)); //AB
-                    setTxt(Language.get().get(339));
-                    setPic(4);
-                    setArr(3);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(357)); //AB
-                    setTxt(Language.get().get(340));
-                    setPic(4);
-                    setArr(4);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(357)); //AB
-                    setTxt(Language.get().get(341));
-                    setPic(0);
-                    setArr(4);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(346));
-                    setPic(0);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(347));
-                    setPic(4);
-                    setArr(7);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(348));
-                    setPic(1);
-                    setArr(7);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(349));
-                    setPic(2);
-                    setArr(7);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(350));
-                    setPic(3);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(367));
-                    setPic(3);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    sec = slide + 1;
-                    setTop(Language.get().get(359)); //MoveSel
-                    setTxt(Language.get().get(351));
-                    setArr(0);
-                    setPic(3);
-                    sec3:
-                    for (int i = 0; i < (tutSpeed * (tutText.length()) * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                }
-                slide++;
-                if (sec == slide) {
-                    setTxt(Language.get().get(393));
-                    setPic(0);
-                    setArr(0);
-                    sec3:
-                    for (int i = 0; i < (16 * 30 * 1); i++) {
-                        if (skipSec) {
-                            skipSec = false;
-                            break sec3;
-                        }
-                        thread.sleep(16);
-                    }
-                    //last slide should not inc
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
     public void onBackCancel() {
+        running = false;
         bgSound.stop();
-        thread.stop();
         RenderMainMenu.get().onEnterMode();
         RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }

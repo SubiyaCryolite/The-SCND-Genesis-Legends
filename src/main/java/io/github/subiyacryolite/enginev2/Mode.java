@@ -5,30 +5,47 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.UiItem;
 import com.scndgen.legends.ui.UiScreen;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 /**
  * Base class for NanoVG game modes (menus, gameplay, etc.).
+ * Frame timing comes from {@link #tick(double)} on the GLFW thread.
  */
 public abstract class Mode implements UiScreen {
 
-    protected static final double MS33 = 3.3e+7;
-    protected static final double MS16 = 1.6e+7;
-    protected static final double MS1320 = 132.0e+7;
+    /** ~60 Hz interval in seconds. */
+    protected static final double DT_60 = 1.0 / 60.0;
+    /** ~30 Hz interval in seconds. */
+    protected static final double DT_30 = 1.0 / 30.0;
+    /** Legacy “1.32s” hold used by gameplay achievement/fury cool-down. */
+    protected static final double DT_1320 = 1.32;
+
     protected int screenWidth = 852;
     protected int screenHeight = 480;
     protected float opacity;
     protected boolean loadAssets = true;
-    protected long lastDelta;
-    protected long diff;
     protected boolean paused;
     protected UiItem activeItem;
-    private long accumulator16ms;
-    private long accumulator33ms;
     protected GlfwEngine engine;
     protected AssetLoader assets;
 
-    /** Called by the router when this mode becomes active. */
+    /** Shared ~60 Hz tick; advanced in {@link #tick(double)}. */
+    protected final Accumulator tick60 = Accumulator.atFrequency(60);
+    /** Shared ~30 Hz tick; advanced in {@link #tick(double)}. */
+    protected final Accumulator tick30 = Accumulator.atFrequency(30);
+    private double elapsedSeconds;
+    private double lastFrameDeltaSeconds;
+
     public final void bind(GlfwEngine engine, AssetLoader assets) {
         this.engine = engine;
         this.assets = assets;
@@ -41,6 +58,28 @@ public abstract class Mode implements UiScreen {
 
     public final GlfwEngine engine() {
         return engine;
+    }
+
+    /**
+     * Called once per GLFW frame with {@code glfwGetTime()} delta in seconds.
+     * Advances {@link #tick60} / {@link #tick30}; modes call {@code while (tick60.consume())} in {@link #update(double)}.
+     */
+    public final void tick(double deltaSeconds) {
+        lastFrameDeltaSeconds = deltaSeconds;
+        double clamped = Math.max(0.0, Math.min(deltaSeconds, 0.25));
+        elapsedSeconds += clamped;
+        tick60.advance(deltaSeconds);
+        tick30.advance(deltaSeconds);
+        update(deltaSeconds);
+    }
+
+    /** Monotonic time since this mode started receiving ticks (seconds). */
+    public final double elapsedSeconds() {
+        return elapsedSeconds;
+    }
+
+    public final double lastFrameDeltaSeconds() {
+        return lastFrameDeltaSeconds;
     }
 
     public final void primaryNotice(String message) {
@@ -87,15 +126,7 @@ public abstract class Mode implements UiScreen {
 
     public abstract void render(DrawContext draw);
 
-    public final void logic(final long delta) {
-        lastDelta = delta;
-        diff = lastDelta == 0 ? 0 : delta - lastDelta;
-        accumulator16ms += delta;
-        accumulator33ms += delta;
-        update(delta);
-    }
-
-    protected void update(final long delta) {
+    protected void update(double deltaSeconds) {
     }
 
     public void keyReleased(int glfwKey) {
@@ -124,22 +155,6 @@ public abstract class Mode implements UiScreen {
         mouseClicked(x, y);
     }
 
-    protected boolean isDelta60fps() {
-        if (accumulator16ms >= MS16) {
-            accumulator16ms = 0;
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean isDelta30fps() {
-        if (accumulator33ms >= MS33) {
-            accumulator33ms = 0;
-            return true;
-        }
-        return false;
-    }
-
     public abstract void newInstance();
 
     public final void loadAssets() {
@@ -154,24 +169,18 @@ public abstract class Mode implements UiScreen {
 
     public abstract void cleanAssets();
 
-    /**
-     * Select the shared "menu" face at the given size.
-     */
     public void setFont(DrawContext draw, float size) {
         draw.setFont("menu", size);
     }
 
     public void drawImage(DrawContext draw, NvgImage img, float upperLeftX, float upperLeftY, UiItem uiTile) {
         draw.drawImage(img, upperLeftX, upperLeftY);
-        float topLeftX = upperLeftX;
-        float topLeftY = upperLeftY;
         float bottomRightX = upperLeftX + (img == null ? 0 : img.width());
         float bottomRightY = upperLeftY + (img == null ? 0 : img.height());
-        float mouseActualX = (float) ScndGenLegends.get().getMouseX();
-        float mouseActualY = (float) ScndGenLegends.get().getMouseY();
-        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= topLeftX;
-        boolean check2 = topLeftY <= mouseActualY && mouseActualY <= bottomRightY;
-        if (check1 && check2) {
+        float mouseActualX = ScndGenLegends.get().getMouseX();
+        float mouseActualY = ScndGenLegends.get().getMouseY();
+        if (bottomRightX >= mouseActualX && mouseActualX >= upperLeftX
+                && upperLeftY <= mouseActualY && mouseActualY <= bottomRightY) {
             setActiveItem(uiTile);
         }
     }
@@ -180,24 +189,20 @@ public abstract class Mode implements UiScreen {
         draw.fillText(text, x, y);
         float bottomRightX = x + draw.measureText(text);
         float bottomRightY = y - draw.getFontSize();
-        float mouseActualX = (float) ScndGenLegends.get().getMouseX();
-        float mouseActualY = (float) ScndGenLegends.get().getMouseY();
-        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= x;
-        boolean check2 = y >= mouseActualY && mouseActualY >= bottomRightY;
-        if (check1 && check2) {
+        float mouseActualX = ScndGenLegends.get().getMouseX();
+        float mouseActualY = ScndGenLegends.get().getMouseY();
+        if (bottomRightX >= mouseActualX && mouseActualX >= x
+                && y >= mouseActualY && mouseActualY >= bottomRightY) {
             setActiveItem(uiTile);
         }
     }
 
     public void fillText(DrawContext draw, String text, float x, float y, UiItem uiTile, float width, float height) {
         draw.fillText(text, x, y);
-        float bottomRightX = x + width;
-        float bottomRightY = y - height;
-        float mouseActualX = (float) ScndGenLegends.get().getMouseX();
-        float mouseActualY = (float) ScndGenLegends.get().getMouseY();
-        boolean check1 = bottomRightX >= mouseActualX && mouseActualX >= x;
-        boolean check2 = y >= mouseActualY && mouseActualY >= bottomRightY;
-        if (check1 && check2) {
+        float mouseActualX = ScndGenLegends.get().getMouseX();
+        float mouseActualY = ScndGenLegends.get().getMouseY();
+        if (x + width >= mouseActualX && mouseActualX >= x
+                && y >= mouseActualY && mouseActualY >= y - height) {
             setActiveItem(uiTile);
         }
     }
@@ -235,5 +240,8 @@ public abstract class Mode implements UiScreen {
     }
 
     public void onEnterMode() {
+        elapsedSeconds = 0.0;
+        tick60.reset();
+        tick30.reset();
     }
 }
