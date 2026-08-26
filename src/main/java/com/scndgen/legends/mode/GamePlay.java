@@ -32,6 +32,7 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Mode;
 import io.github.subiyacryolite.enginev2.Overlay;
 import io.github.subiyacryolite.enginev2.Rgba;
@@ -123,11 +124,12 @@ public abstract class GamePlay extends Mode {
     private int currentCharacterQueLoop, currentOpponentQueLoop;
     private int lastCharacterQueLoop, lastOpponentQueLoop;
     private int characterUiLoop, opponentUiLoop;
-    private long characterQueDelta, opponentQueDelta;
-    private long opponentAiTimeout, opponentAiDelta;
+    private double characterQueDelta, opponentQueDelta;
+    private long opponentAiTimeout;
+    private double opponentAiDelta;
     private int furyBarCoolDownFactor;
     private final float maxAtb = 290f;
-    private long timerDelta;
+    private double timerDelta;
     public int timeLimit, count2;
     public boolean playingCutscene;
     private boolean characterAtb = true, opponentAtb = true;
@@ -138,15 +140,19 @@ public abstract class GamePlay extends Mode {
     private float opponentAtbValue;
     private float secondCount;
     private int matchDuration, playTimeCounter;
-    private long animationLoopADelta;
+    private boolean trackingPlayTime;
+    private final Accumulator playTimeTick = Accumulator.atFrequency(1);
+    private final Accumulator furyTick = Accumulator.atFrequency(60);
+    private int pendingFuryIncrements;
+    private double animationLoopADelta;
     private int animationLoopA;
-    private long animationLoopBDelta;
+    private double animationLoopBDelta;
     private int animationLoopB;
-    private long animationLoopCDelta;
-    private long animationLoopDDelta;
+    private double animationLoopCDelta;
+    private double animationLoopDDelta;
     private int animationLoopD;
-    private long animationLoopEDelta;
-    private long achievementDelta;
+    private double animationLoopEDelta;
+    private double achievementDelta;
     protected final int FURY_BAR_MAX = 1000;
 
 
@@ -372,11 +378,40 @@ public abstract class GamePlay extends Mode {
         opponentUiLoop = 0;
     }
 
-    public void update(long delta) {
-        super.update(delta);
+    public void update(double deltaSeconds) {
+        super.update(deltaSeconds);
         if (loadAssets) return;
-        if (playingCutscene) return;
+
+        if (trackingPlayTime) {
+            playTimeTick.advance(deltaSeconds);
+            while (playTimeTick.consume()) {
+                playTimeCounter++;
+                matchDuration++;
+                if (gameOver) {
+                    trackingPlayTime = false;
+                    break;
+                }
+            }
+        }
+
+        if (playingCutscene) {
+            StoryMode.get().tick(deltaSeconds);
+            return;
+        }
         if (paused) return;
+
+        double now = elapsedSeconds();
+        furyTick.advance(deltaSeconds);
+        while (furyTick.consume()) {
+            if (pendingFuryIncrements > 0 && furyLevel < FURY_BAR_MAX) {
+                furyLevel++;
+                pendingFuryIncrements--;
+            } else if (pendingFuryIncrements < 0) {
+                furyLevel--;
+                pendingFuryIncrements++;
+            }
+        }
+
         if (!gameOver) {
             if (!showBrag) {
                 if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE) {
@@ -392,23 +427,23 @@ public abstract class GamePlay extends Mode {
                 enableSelection();
             else
                 disableSelection();
-            handleOpponentAi(delta);
-            handleOpponentAttacks(delta);
-            handleCharacterAttacks(delta);
-            animateTimer(delta);
-            animateForeground(delta);
-            animateLoopB(delta);
-            animateAmbientLayers(delta);
-            animateLoopD(delta);
+            handleOpponentAi(now);
+            handleOpponentAttacks(now);
+            handleCharacterAttacks(now);
+            animateTimer(now);
+            animateForeground(now);
+            animateLoopB(now);
+            animateAmbientLayers(now);
+            animateLoopD(now);
             updateMatchStatus();
-            if ((delta - animationLoopEDelta) > MS1320) {
-                animationLoopEDelta = delta;
+            if ((now - animationLoopEDelta) > DT_1320) {
+                animationLoopEDelta = now;
                 if (!isFuryBarFull())
-                    incrementFuryLevel(-furyBarCoolDownFactor);
+                    incrementFuryBarLevel(-furyBarCoolDownFactor);
             }
         } else {
-            if ((delta - achievementDelta) > MS1320) {
-                achievementDelta = delta;
+            if ((now - achievementDelta) > DT_1320) {
+                achievementDelta = now;
                 if (unlockedAchievementInstance < achievementClass.length - 1)
                     unlockedAchievementInstance++;
                 else
@@ -417,11 +452,11 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void handleOpponentAi(long delta) {
+    private void handleOpponentAi(double now) {
         boolean singlePlayerOrStoryMode = ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE;
         if (singlePlayerOrStoryMode && !triggerOpponentAttack && !playingCutscene && !NetworkManager.get().isOnline()) {
-            if (singlePlayerOrStoryMode && (delta - opponentAiDelta) > MS16) {
-                opponentAiDelta = delta;
+            if (singlePlayerOrStoryMode && (now - opponentAiDelta) > DT_60) {
+                opponentAiDelta = now;
                 if (opponentAiTimeout < State.get().getLogin().getDifficultyDynamic()) {
                     opponentAiTimeout += 16;
                 } else if (isOpponentAtbFull()) {
@@ -437,13 +472,13 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void handleOpponentAttacks(long delta) {
+    private void handleOpponentAttacks(double now) {
         if (limitRunning && runningFury == PlayerType.PLAYER2) {
             if (currentOpponentQueLoop < 9) {
                 setSprites(PlayerType.PLAYER2, currentOpponentQueLoop + 1, 11);
                 setSprites(PlayerType.PLAYER1, 0, 11);
-                if ((delta - characterQueDelta) > MS33) {
-                    characterQueDelta = delta;
+                if ((now - characterQueDelta) > DT_30) {
+                    characterQueDelta = now;
                     if (shakeOpponentLifeBar(characterUiLoop)) {
                         characterUiLoop++;
                     } else {
@@ -471,12 +506,12 @@ public abstract class GamePlay extends Mode {
                 setOpponentAtbValue(0);
             }
             if (lastOpponentQueLoop != currentOpponentQueLoop && !opponentAttacks.isEmpty()) {
-                opponentQueDelta = delta;
+                opponentQueDelta = now;
                 lastOpponentQueLoop = currentOpponentQueLoop;
                 setAttackSpritesAndTrigger(opponentAttacks.pop(), PlayerType.PLAYER2, PlayerType.PLAYER1, this, Characters.get().getOpponent());//add mode reference here
             }
-            if ((delta - opponentQueDelta) > MS33) {
-                opponentQueDelta = delta;
+            if ((now - opponentQueDelta) > DT_30) {
+                opponentQueDelta = now;
                 if (shakeCharacterLifeBar(opponentUiLoop)) {
                     opponentUiLoop++;
                 } else {
@@ -492,13 +527,13 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void handleCharacterAttacks(long delta) {
+    private void handleCharacterAttacks(double now) {
         if (limitRunning && runningFury == PlayerType.PLAYER1) {
             if (currentCharacterQueLoop < 9) {
                 setSprites(PlayerType.PLAYER1, currentCharacterQueLoop + 1, 11);
                 setSprites(PlayerType.PLAYER2, 0, 11);
-                if ((delta - characterQueDelta) > MS33) {
-                    characterQueDelta = delta;
+                if ((now - characterQueDelta) > DT_30) {
+                    characterQueDelta = now;
                     if (shakeOpponentLifeBar(characterUiLoop)) {
                         characterUiLoop++;
                     } else {
@@ -526,12 +561,12 @@ public abstract class GamePlay extends Mode {
                 setCharacterAtbValue(0);
             }
             if (lastCharacterQueLoop != currentCharacterQueLoop && !characterAttacks.isEmpty()) {
-                characterQueDelta = delta;
+                characterQueDelta = now;
                 lastCharacterQueLoop = currentCharacterQueLoop;
                 setAttackSpritesAndTrigger(characterAttacks.pop(), PlayerType.PLAYER1, PlayerType.PLAYER2, this, Characters.get().getCharacter());//add mode reference here
             }
-            if ((delta - characterQueDelta) > MS33) {
-                characterQueDelta = delta;
+            if ((now - characterQueDelta) > DT_30) {
+                characterQueDelta = now;
                 if (shakeOpponentLifeBar(characterUiLoop)) {
                     characterUiLoop++;
                 } else {
@@ -547,9 +582,9 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateLoopD(long delta) {
-        if ((delta - animationLoopDDelta) > MS33) {
-            animationLoopDDelta = delta;
+    private void animateLoopD(double now) {
+        if ((now - animationLoopDDelta) > DT_30) {
+            animationLoopDDelta = now;
             if (animateLoopDLogic(animationLoopD)) {
                 animationLoopD++;
             } else {
@@ -558,9 +593,9 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateAmbientLayers(long delta) {
-        if ((delta - animationLoopCDelta) > MS16) {
-            animationLoopCDelta = delta;
+    private void animateAmbientLayers(double now) {
+        if ((now - animationLoopCDelta) > DT_60) {
+            animationLoopCDelta = now;
             if (getAmbientDirection() == AnimationDirection.HORIZONTAL) {
                 setAmbientForegroundX(getAmbientForegroundX() - getAmbSpeed1());
                 setAmbientBackgroundX(getAmbientBackgroundX() - getAmbSpeed2());
@@ -583,9 +618,9 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateForeground(long delta) {
-        if ((delta - animationLoopADelta) > MS33) {
-            animationLoopADelta = delta;
+    private void animateForeground(double now) {
+        if ((now - animationLoopADelta) > DT_30) {
+            animationLoopADelta = now;
             if (animateForegroundImpl(animationLoopA)) {
                 animationLoopA++;
             } else {
@@ -594,9 +629,9 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateLoopB(long delta) {
-        if ((delta - animationLoopBDelta) > MS33) {
-            animationLoopBDelta = delta;
+    private void animateLoopB(double now) {
+        if ((now - animationLoopBDelta) > DT_30) {
+            animationLoopBDelta = now;
             if (animateLoopBLogic(animationLoopB)) {
                 animationLoopB++;
             } else {
@@ -605,9 +640,9 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateTimer(long delta) {
-        if ((delta - timerDelta) > MS16) {
-            timerDelta = delta;
+    private void animateTimer(double now) {
+        if ((now - timerDelta) > DT_60) {
+            timerDelta = now;
             Achievement.get().scan(this);
             if (characterAtbValue <= maxAtb && characterAtb) {
                 characterAtbValue += Characters.get().getCharRecoverySpeed();
@@ -763,6 +798,10 @@ public abstract class GamePlay extends Mode {
         setCharacterAtbValue(0);
         setOpponentAtbValue(0);
         setFuryLevel(0);
+        pendingFuryIncrements = 0;
+        furyTick.reset();
+        trackingPlayTime = false;
+        playTimeTick.reset();
         characterAttacks.clear();
         opponentAttacks.clear();
         triggerCharacterAttack = false;
@@ -1059,24 +1098,10 @@ public abstract class GamePlay extends Mode {
 
 
     /**
-     * Increment limit
+     * Queue fury bar changes; drained at 60 Hz in {@link #update(double)}.
      */
     private void incrementFuryBarLevel(final float increment) {
-        new Thread() {
-            @Override
-            public void run() {
-                for (int o = 0; o < increment; o++) {
-                    if (furyLevel < FURY_BAR_MAX) {
-                        try {
-                            furyLevel += 1;
-                            this.sleep(16);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace(System.err);
-                        }
-                    }
-                }
-            }
-        }.start();
+        pendingFuryIncrements += (int) increment;
     }
 
     public void triggerFury(PlayerType playerType) {
@@ -1548,21 +1573,8 @@ public abstract class GamePlay extends Mode {
     private void recordPlayTime() {
         matchDuration = 0;
         playTimeCounter = State.get().getLogin().getPlayTime();
-        new Thread() {
-            @Override
-            @SuppressWarnings("static-access")
-            public void run() {
-                do {
-                    try {
-                        this.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace(System.err);
-                    }
-                    playTimeCounter++;
-                    matchDuration++;
-                } while (!gameOver);
-            }
-        }.start();
+        playTimeTick.reset();
+        trackingPlayTime = true;
     }
 
     public int getMatchTime() {

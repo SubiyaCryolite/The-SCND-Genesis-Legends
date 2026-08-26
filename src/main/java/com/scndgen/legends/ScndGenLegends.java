@@ -76,8 +76,7 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
         if (switchingModes || mode == null) {
             return;
         }
-        long nanos = (long) (deltaSeconds * 1_000_000_000L);
-        mode.logic(Math.max(1L, nanos));
+        mode.tick(deltaSeconds);
     }
 
     @Override

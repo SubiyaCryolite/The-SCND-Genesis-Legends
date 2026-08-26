@@ -31,14 +31,20 @@ import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Audio;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 
 /**
+ * Story cutscenes driven by {@link Accumulator} waits (former Thread + sleep).
+ *
  * @author ndana
  */
-public class StoryMode implements Runnable {
+public class StoryMode {
     private static StoryMode instance;
     public StoryProgress storyProgress = StoryProgress.NORMAL;
     public final int totalScenes = 12;
@@ -47,7 +53,67 @@ public class StoryMode implements Runnable {
     private String text;
     private long textSpeed;
     private int currentScene;
-    private static Thread thread;
+    private boolean active;
+    private final Accumulator waitAccum = Accumulator.atInterval(1.0);
+    private final List<Step> steps = new ArrayList<>();
+    private int stepIndex;
+
+    private enum StepKind {
+        WAIT,
+        LINE,
+        LINE_NO_WAIT,
+        ACTION,
+        EXIT
+    }
+
+    private static final class Step {
+        final StepKind kind;
+        final CharacterEnum portrait; // null = leave as-is; CLEAR sentinel via clearPortrait
+        final boolean clearPortrait;
+        final boolean setPortrait;
+        final String line;
+        final double waitSeconds;
+        final Runnable action;
+
+        private Step(StepKind kind, CharacterEnum portrait, boolean setPortrait, boolean clearPortrait,
+                     String line, double waitSeconds, Runnable action) {
+            this.kind = kind;
+            this.portrait = portrait;
+            this.setPortrait = setPortrait;
+            this.clearPortrait = clearPortrait;
+            this.line = line;
+            this.waitSeconds = waitSeconds;
+            this.action = action;
+        }
+
+        static Step wait(double seconds) {
+            return new Step(StepKind.WAIT, null, false, false, null, seconds, null);
+        }
+
+        static Step line(String text, double waitSeconds) {
+            return new Step(StepKind.LINE, null, false, false, text, waitSeconds, null);
+        }
+
+        static Step line(CharacterEnum portrait, String text, double waitSeconds) {
+            return new Step(StepKind.LINE, portrait, true, false, text, waitSeconds, null);
+        }
+
+        static Step lineClearPortrait(String text, double waitSeconds) {
+            return new Step(StepKind.LINE, null, true, true, text, waitSeconds, null);
+        }
+
+        static Step lineNoWait(String text) {
+            return new Step(StepKind.LINE_NO_WAIT, null, false, false, text, 0, null);
+        }
+
+        static Step action(Runnable action) {
+            return new Step(StepKind.ACTION, null, false, false, null, 0, action);
+        }
+
+        static Step exit() {
+            return new Step(StepKind.EXIT, null, false, false, null, 0, null);
+        }
+    }
 
     private StoryMode() {
         storyProgress = StoryProgress.NORMAL;
@@ -163,11 +229,397 @@ public class StoryMode implements Runnable {
     public void startStoryMode(int x) {
         RenderGamePlay.get().newInstance();
         currentScene = x;
-        if (thread != null)
-            thread.stop();
-        thread = new Thread(this); //single static thread, always fire up new
-        thread.setName("playStory scene thread");
-        thread.start();
+        active = false;
+        steps.clear();
+        stepIndex = 0;
+        waitAccum.reset();
+
+        setScene(currentScene);
+        ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
+        ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
+        beginCinematic();
+        RenderGamePlay.get().storyBoard(currentScene);
+        buildSceneSteps(currentScene);
+        active = true;
+        stepIndex = 0;
+        scheduleFromCurrent();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void tick(double deltaSeconds) {
+        if (!active) {
+            return;
+        }
+        waitAccum.advance(deltaSeconds);
+        while (active && waitAccum.consume()) {
+            scheduleFromCurrent();
+        }
+    }
+
+    private void scheduleFromCurrent() {
+        while (active && stepIndex < steps.size()) {
+            Step step = steps.get(stepIndex++);
+            executeStep(step);
+            if (step.waitSeconds > 0) {
+                waitAccum.setInterval(step.waitSeconds);
+                waitAccum.reset();
+                return;
+            }
+            if (step.kind == StepKind.EXIT) {
+                return;
+            }
+        }
+        active = false;
+    }
+
+    private void executeStep(Step step) {
+        switch (step.kind) {
+            case WAIT -> {
+                // interval already set by scheduleFromCurrent
+            }
+            case LINE, LINE_NO_WAIT -> {
+                if (step.setPortrait) {
+                    if (step.clearPortrait) {
+                        RenderGamePlay.get().characterPortrait();
+                    } else {
+                        RenderGamePlay.get().characterPortrait(step.portrait);
+                    }
+                }
+                text = step.line;
+                RenderGamePlay.get().storyText(text);
+            }
+            case ACTION -> {
+                if (step.action != null) {
+                    step.action.run();
+                }
+            }
+            case EXIT -> exitCinematic(false);
+        }
+    }
+
+    private double textWait(String line) {
+        return (line.length() * textSpeed) / 1000.0;
+    }
+
+    private void addWait(double seconds) {
+        steps.add(Step.wait(seconds));
+    }
+
+    private void addLine(int langId) {
+        String line = Language.get().get(langId);
+        steps.add(Step.line(line, textWait(line)));
+    }
+
+    private void addLine(CharacterEnum portrait, int langId) {
+        String line = Language.get().get(langId);
+        steps.add(Step.line(portrait, line, textWait(line)));
+    }
+
+    private void addLineClear(int langId) {
+        String line = Language.get().get(langId);
+        steps.add(Step.lineClearPortrait(line, textWait(line)));
+    }
+
+    private void addLine(int langId, String suffix) {
+        String line = Language.get().get(langId) + suffix;
+        steps.add(Step.line(line, textWait(line)));
+    }
+
+    private void addLine(CharacterEnum portrait, int langId, String suffix) {
+        String line = Language.get().get(langId) + suffix;
+        steps.add(Step.line(portrait, line, textWait(line)));
+    }
+
+    private void addLineClear(int langId, String suffix) {
+        String line = Language.get().get(langId) + suffix;
+        steps.add(Step.lineClearPortrait(line, textWait(line)));
+    }
+
+    private void addLineNoWait(int langId) {
+        steps.add(Step.lineNoWait(Language.get().get(langId)));
+    }
+
+    private void addPortraitThen(CharacterEnum portrait) {
+        steps.add(Step.action(() -> RenderGamePlay.get().characterPortrait(portrait)));
+    }
+
+    private void addClearPortrait() {
+        steps.add(Step.action(() -> RenderGamePlay.get().characterPortrait()));
+    }
+
+    private void addExit() {
+        steps.add(Step.exit());
+    }
+
+    private void buildSceneSteps(int scene) {
+        steps.clear();
+        switch (scene) {
+            case 0 -> buildScene0();
+            case 1 -> buildScene1();
+            case 2 -> buildScene2();
+            case 3 -> buildScene3();
+            case 4 -> buildScene4();
+            case 5 -> buildScene5();
+            case 6 -> buildScene6();
+            case 7 -> buildScene7();
+            case 8 -> buildScene8();
+            case 9 -> buildScene9();
+            case 10 -> buildScene10();
+            case 11 -> buildScene11();
+            default -> {
+            }
+        }
+    }
+
+    private void buildScene0() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(174);
+        addLine(175);
+        addLine(176);
+        addLine(431);
+        addLine(432);
+        addLine(433);
+        addLine(434);
+        addLine(435);
+        addLine(436);
+        addLine(437);
+        addLine(CharacterEnum.RAILA, 438);
+        addLine(439);
+        addLine(440);
+        addLine(178);
+        addLine(CharacterEnum.RAVAGE, 179);
+        addLine(180);
+        addLine(CharacterEnum.RAILA, 181);
+        addLine(CharacterEnum.RAVAGE, 182);
+        addExit();
+    }
+
+    private void buildScene1() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(441);
+        addLine(183);
+        addLine(184);
+        addLine(185);
+        addLine(186);
+        addLine(CharacterEnum.LYNX, 443);
+        addLine(444);
+        addLineClear(187);
+        addLineNoWait(146);
+        addExit();
+    }
+
+    private void buildScene2() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(CharacterEnum.LYNX, 188);
+        addLine(CharacterEnum.RAILA, 189);
+        addLineClear(190, " .......");
+        addLine(CharacterEnum.AISHA, 191);
+        addLine(CharacterEnum.LYNX, 192);
+        addLine(CharacterEnum.AISHA, 193);
+        addLine(CharacterEnum.LYNX, 194);
+        addLine(CharacterEnum.AISHA, 195);
+        addLine(CharacterEnum.LYNX, 196);
+        addLine(CharacterEnum.RAILA, 197);
+        addLine(CharacterEnum.SUBIYA, 198);
+        addLineClear(199);
+        addLine(CharacterEnum.AISHA, 200);
+        addLine(CharacterEnum.LYNX, 201);
+        addLine(CharacterEnum.AISHA, 202);
+        addLine(CharacterEnum.LYNX, 203);
+        addLine(CharacterEnum.AISHA, 204);
+        addLine(CharacterEnum.AISHA, 205);
+        addExit();
+    }
+
+    private void buildScene3() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(CharacterEnum.SUBIYA, 206);
+        addLine(CharacterEnum.RAILA, 207);
+        addLine(CharacterEnum.SUBIYA, 208);
+        addLine(CharacterEnum.RAILA, 209);
+        addLine(CharacterEnum.SUBIYA, 210);
+        addLine(CharacterEnum.RAILA, 211);
+        addLine(212);
+        addLine(213);
+        addLine(214);
+        addLine(215);
+        addLine(CharacterEnum.SUBIYA, 216);
+        addLine(425);
+        addLine(426);
+        addLine(427);
+        addLine(428);
+        addLine(429);
+        addLine(CharacterEnum.RAILA, 430);
+        addExit();
+    }
+
+    private void buildScene4() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(218);
+        addLine(219);
+        addLine(CharacterEnum.ADE, 220);
+        addLine(CharacterEnum.SORROWE, 221);
+        addLine(CharacterEnum.ADE, 222);
+        addLine(CharacterEnum.RAVAGE, 223);
+        addLine(CharacterEnum.ADE, 224);
+        addLine(CharacterEnum.SORROWE, 225);
+        addLine(CharacterEnum.ADE, 226);
+        addLine(CharacterEnum.JONAH, 227);
+        addLine(CharacterEnum.RAVAGE, 228);
+        addLine(CharacterEnum.RAVAGE, 229);
+        addLine(CharacterEnum.ADE, 230);
+        addExit();
+    }
+
+    private void buildScene5() {
+        addWait(2.0);
+        addLine(CharacterEnum.RAVAGE, 231);
+        addLine(CharacterEnum.ADE, 232);
+        addLine(CharacterEnum.RAVAGE, 233);
+        addLine(CharacterEnum.JONAH, 234);
+        addLine(CharacterEnum.ADAM, 235);
+        addLine(CharacterEnum.JONAH, 236);
+        addLine(CharacterEnum.ADAM, 237);
+        addLine(CharacterEnum.JONAH, 238);
+        addLine(CharacterEnum.ADAM, 239);
+        addLine(CharacterEnum.JONAH, 240);
+        addLine(CharacterEnum.ADAM, 241);
+        addLine(CharacterEnum.ADE, 242);
+        addLine(CharacterEnum.ADAM, 243);
+        addLine(CharacterEnum.JONAH, 244);
+        addLine(CharacterEnum.JONAH, 245);
+        addLine(CharacterEnum.ADE, 246);
+        addLine(CharacterEnum.ADAM, 247);
+        addLine(CharacterEnum.ADAM, 248);
+        addLine(CharacterEnum.JONAH, 249);
+        addLine(CharacterEnum.ADAM, 250);
+        addExit();
+    }
+
+    private void buildScene6() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(251);
+        addLine(252);
+        addLine(253);
+        addLine(254);
+        addLine(CharacterEnum.AZARIA, 255);
+        addLine(CharacterEnum.ADAM, 256);
+        addLine(CharacterEnum.AZARIA, 257);
+        addLine(CharacterEnum.ADAM, 258);
+        addLine(CharacterEnum.ADAM, 259);
+        addLine(CharacterEnum.AZARIA, 260);
+        addLine(CharacterEnum.ADAM, 261);
+        addLine(CharacterEnum.ADAM, 262);
+        addExit();
+    }
+
+    private void buildScene7() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(CharacterEnum.SUBIYA, 263);
+        addLine(CharacterEnum.RAILA, 264);
+        addLine(CharacterEnum.RAVAGE, 265);
+        addLine(CharacterEnum.RAILA, 266);
+        addLine(CharacterEnum.RAVAGE, 267);
+        addLine(CharacterEnum.SUBIYA, 268);
+        addLine(CharacterEnum.RAILA, 269);
+        addLine(CharacterEnum.SUBIYA, 445);
+        addLine(CharacterEnum.RAVAGE, 446);
+        addExit();
+    }
+
+    private void buildScene8() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(270);
+        addLine(CharacterEnum.ADAM, 271);
+        addLine(CharacterEnum.ADAM, 272);
+        addLine(CharacterEnum.AZARIA, 273);
+        addLine(CharacterEnum.ADAM, 274);
+        addLine(CharacterEnum.LYNX, 275);
+        addLine(CharacterEnum.AZARIA, 276);
+        addLine(CharacterEnum.ADAM, 277);
+        addLine(CharacterEnum.LYNX, 278);
+        addLine(CharacterEnum.ADAM, 279);
+        addExit();
+    }
+
+    private void buildScene9() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(CharacterEnum.RAILA, 280);
+        addLine(CharacterEnum.AZARIA, 281);
+        addLine(CharacterEnum.RAILA, 282);
+        addLine(CharacterEnum.AZARIA, 283);
+        addLine(CharacterEnum.RAILA, 284);
+        addLine(CharacterEnum.AZARIA, 447);
+        addLine(CharacterEnum.RAILA, 285);
+        addLine(CharacterEnum.AZARIA, 286);
+        addLineClear(287);
+        addLine(CharacterEnum.SORROWE, 288);
+        addLine(448);
+        addLine(449);
+        addLine(CharacterEnum.RAILA, 289);
+        addLine(CharacterEnum.SORROWE, 290);
+        addLine(CharacterEnum.RAILA, 291);
+        addLine(292);
+        addLine(CharacterEnum.SORROWE, 293);
+        addExit();
+    }
+
+    private void buildScene10() {
+        addWait(2.0);
+        addPortraitThen(CharacterEnum.THING);
+        steps.add(Step.action(() -> Characters.get().setDamageCounter(PlayerType.PLAYER2, 18)));
+        addLine(CharacterEnum.SORROWE, 294);
+        addLine(CharacterEnum.SUBIYA, 231);
+        addLine(CharacterEnum.RAILA, 295);
+        addLine(CharacterEnum.RAILA, 296);
+        addLine(CharacterEnum.SORROWE, 297);
+        addLine(CharacterEnum.RAILA, 298);
+        addLine(CharacterEnum.SORROWE, 299);
+        addLine(CharacterEnum.ADAM, 300);
+        addLine(CharacterEnum.RAILA, 301);
+        addLine(CharacterEnum.NOVA_ADAM, 302, " !!!!!!!!!!!!!!");
+        addLine(CharacterEnum.RAILA, 303);
+        addLine(CharacterEnum.LYNX, 304);
+        addLine(CharacterEnum.RAILA, 305);
+        addLine(CharacterEnum.ADAM, 306);
+        addExit();
+    }
+
+    private void buildScene11() {
+        addWait(2.0);
+        addClearPortrait();
+        addLine(CharacterEnum.NOVA_ADAM, 373);
+        addLineClear(374);
+        addLine(CharacterEnum.RAILA, 375);
+        addLine(CharacterEnum.AZARIA, 376);
+        addLine(CharacterEnum.RAILA, 377);
+        addLineClear(378);
+        addLine(CharacterEnum.RAVAGE, 379);
+        addLine(CharacterEnum.ADE, 380);
+        addLine(381);
+        addLine(CharacterEnum.NOVA_ADAM, 383);
+        addLine(CharacterEnum.THING, 384);
+        addLine(CharacterEnum.SORROWE, 385);
+        addLine(CharacterEnum.AZARIA, 386);
+        addLine(CharacterEnum.NOVA_ADAM, 387);
+        addLine(CharacterEnum.JONAH, 388);
+        addLine(CharacterEnum.SORROWE, 389);
+        addLine(CharacterEnum.NOVA_ADAM, 390);
+        addLine(CharacterEnum.NOVA_ADAM, 391);
+        addLine(CharacterEnum.JONAH, 392);
+        addExit();
     }
 
     /**
@@ -191,772 +643,13 @@ public class StoryMode implements Runnable {
         RenderGamePlay.get().playBGMusic();
         RenderGamePlay.get().characterPortrait();
         RenderGamePlay.get().storyText("");
-        thread.stop();
+        active = false;
+        steps.clear();
+        stepIndex = 0;
+        waitAccum.reset();
         RenderGamePlay.get().playingCutscene = false;
         RenderGamePlay.get().resumeCharacterAtb();
         RenderGamePlay.get().resumeOpponentAtb();
-    }
-
-    @Override
-    public void run() {
-        try {
-            setScene(currentScene);
-            ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
-            ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
-            beginCinematic();
-            RenderGamePlay.get().storyBoard(currentScene);
-            switch (currentScene) {
-                case 0:
-                    //UPDATED
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(174));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(175));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(176));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(431));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(432));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(433));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(434));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(435));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(436));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(437));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(438));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(439));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(440));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(178));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(179));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(180));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(181));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(182));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 1:
-                    //UPDATED
-                    Thread.sleep(2000);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(441));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(183));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(184));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(185));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(186));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(443));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(444));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(187));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(146));
-
-                    exitCinematic(false);
-                    break;
-                case 2:
-                    //UPDATED
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX); //lynx
-                    RenderGamePlay.get().storyText(text = Language.get().get(188));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA); //raila
-                    RenderGamePlay.get().storyText(text = Language.get().get(189));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(190) + " .......");
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA); //aisha
-                    RenderGamePlay.get().storyText(text = Language.get().get(191));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(192));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(193));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(194));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(195));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(196));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(197));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(198));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(199));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(200));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(201));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(202));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(203));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(204));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AISHA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(205));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 3: //scene 4
-                    //UPDATED and reviewed
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(206));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(207));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(208));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(209));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(210));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(211));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(212));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(213));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(214));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(215));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(216));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(425));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(426));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(427));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(428));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(429));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(430));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 4:
-                    //DONE
-                    Thread.sleep(2000);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(218));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(219));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE); //ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(220));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE); //sorrowe
-                    RenderGamePlay.get().storyText(text = Language.get().get(221));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE); //ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(222));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE); //ravage
-                    RenderGamePlay.get().storyText(text = Language.get().get(223));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE); //ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(224));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(225));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE); //ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(226));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH); //jonah
-                    RenderGamePlay.get().storyText(text = Language.get().get(227));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(228));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(229));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE);//ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(230));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 5:
-                    //DONE
-                    Thread.sleep(2000);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(231));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE);//ade
-                    RenderGamePlay.get().storyText(text = Language.get().get(232));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(233));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(234));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(235));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(236));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(237));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(238));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(239));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(240));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(241));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(242));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(243));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(244));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(245));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(246));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(247));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(248));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(249));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(250));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 6:
-                    //DONE
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(251));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(252));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(253));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(254));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(255));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(256));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(257));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(258));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(259));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(260));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(261));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(262));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 7:
-                    //DONE
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(263));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(264));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(265));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(266));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(267));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(268));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(269));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(445));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(446));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 8:
-                    //DONE
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(270));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(271));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(272));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(273));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(274));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(275));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(276));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(277));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(278));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(279));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 9:
-                    //DONE
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(280));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(281));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(282));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(283));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(284));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(447));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(285));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(286));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(287));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(288));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(448));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(449));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(289));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(290));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(291));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(292));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(293));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 10:
-                    //DONE
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.THING);
-
-                    //set difficulty - hard
-                    Characters.get().setDamageCounter(PlayerType.PLAYER2, 18);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(294));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SUBIYA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(231));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(295));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(296));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(297));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(298));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(299));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(300));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(301));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(302) + " !!!!!!!!!!!!!!");
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(303));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.LYNX);
-                    RenderGamePlay.get().storyText(text = Language.get().get(304));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(305));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(306));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-                case 11: //scene 12
-
-                    Thread.sleep(2000);
-                    RenderGamePlay.get().characterPortrait();
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(373));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(374));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(375));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(376));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAILA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(377));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait();
-                    RenderGamePlay.get().storyText(text = Language.get().get(378));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.RAVAGE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(379));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.ADE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(380));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().storyText(text = Language.get().get(381));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(383));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.THING);
-                    RenderGamePlay.get().storyText(text = Language.get().get(384));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(385));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.AZARIA);
-                    RenderGamePlay.get().storyText(text = Language.get().get(386));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(387));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(388));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.SORROWE);
-                    RenderGamePlay.get().storyText(text = Language.get().get(389));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(390));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.NOVA_ADAM);
-                    RenderGamePlay.get().storyText(text = Language.get().get(391));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    RenderGamePlay.get().characterPortrait(CharacterEnum.JONAH);
-                    RenderGamePlay.get().storyText(text = Language.get().get(392));
-                    Thread.sleep(text.length() * textSpeed);
-
-                    exitCinematic(false);
-                    break;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace(System.err);
-        }
     }
 
     public void startFight() {
