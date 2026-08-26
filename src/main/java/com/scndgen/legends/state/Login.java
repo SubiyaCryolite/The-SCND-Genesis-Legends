@@ -21,6 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.state;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -61,12 +63,16 @@ public class Login {
     private int wins = 0;
     private int losses = 0;
     private int frames = 0;
-    private boolean isAudioOn = true;
+    @JsonProperty("audioOn")
+    private boolean audioOn = true;
     private int difficulty = diff3;
     private int difficultyDynamic = diff3;
     private int highestStoryScene = 0;
     private int timeLimit = 90;
     private String graphicsSetting = "";
+    private int letterboxR = 0;
+    private int letterboxG = 0;
+    private int letterboxB = 0;
     private int char0 = 0;
     private int char1 = 0;
     private int char2 = 0;
@@ -429,11 +435,17 @@ public class Login {
     }
 
     public boolean isAudioOn() {
-        return isAudioOn;
+        return audioOn;
     }
 
-    public void setIsAudioOn(final boolean isAudioOn) {
-        this.isAudioOn = isAudioOn;
+    public void setAudioOn(final boolean audioOn) {
+        this.audioOn = audioOn;
+    }
+
+    /** @deprecated use {@link #setAudioOn(boolean)} */
+    @JsonIgnore
+    public void setIsAudioOn(final boolean audioOn) {
+        this.audioOn = audioOn;
     }
 
     public int getDifficulty() {
@@ -496,6 +508,34 @@ public class Login {
 
     public void setGraphicsSetting(final String graphicsSetting) {
         this.graphicsSetting = graphicsSetting;
+    }
+
+    public int getLetterboxR() {
+        return letterboxR;
+    }
+
+    public void setLetterboxR(int letterboxR) {
+        this.letterboxR = clampByte(letterboxR);
+    }
+
+    public int getLetterboxG() {
+        return letterboxG;
+    }
+
+    public void setLetterboxG(int letterboxG) {
+        this.letterboxG = clampByte(letterboxG);
+    }
+
+    public int getLetterboxB() {
+        return letterboxB;
+    }
+
+    public void setLetterboxB(int letterboxB) {
+        this.letterboxB = clampByte(letterboxB);
+    }
+
+    private static int clampByte(int value) {
+        return Math.max(0, Math.min(255, value));
     }
 
     public int getChar0() {

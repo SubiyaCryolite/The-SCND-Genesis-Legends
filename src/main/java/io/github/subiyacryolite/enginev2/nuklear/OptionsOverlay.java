@@ -2,6 +2,8 @@ package io.github.subiyacryolite.enginev2.nuklear;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev2.DisplayModes;
+import io.github.subiyacryolite.enginev2.GlfwEngine;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.NkRect;
@@ -9,6 +11,7 @@ import org.lwjgl.nuklear.NkVec2;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.util.List;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 import static org.lwjgl.nuklear.Nuklear.NK_TEXT_LEFT;
@@ -29,16 +32,25 @@ import static org.lwjgl.nuklear.Nuklear.nk_widget_width;
 import static org.lwjgl.nuklear.Nuklear.nk_vec2;
 
 /**
- * Nuklear replacement for {@code WindowOptions}.
+ * Nuklear options: GLFW-queried resolutions, letterbox color, and gameplay settings.
  */
 public final class OptionsOverlay implements UiOverlay {
+    private final GlfwEngine engine;
+    private final List<DisplayModes.Mode> modes;
+    private final String[] resolutionLabels;
+
     private final IntBuffer voice = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getVoiceVolume());
     private final IntBuffer sound = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getSoundVolume());
     private final IntBuffer music = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getMusicVolume());
+    private final IntBuffer letterboxR = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getLetterboxR());
+    private final IntBuffer letterboxG = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getLetterboxG());
+    private final IntBuffer letterboxB = BufferUtils.createIntBuffer(1).put(0, State.get().getLogin().getLetterboxB());
+
     private int difficultyIndex = Math.max(0, State.get().getLogin().resolveDifficultyInt());
     private int textSpeedIndex;
     private int timeLimitIndex;
     private int comicIndex = State.get().getLogin().getComicEffectOccurence();
+    private int resolutionIndex;
     private boolean open = true;
 
     private final String[] difficulties;
@@ -46,7 +58,11 @@ public final class OptionsOverlay implements UiOverlay {
     private final String[] timeLimits;
     private final String[] comicRates;
 
-    public OptionsOverlay() {
+    public OptionsOverlay(GlfwEngine engine) {
+        this.engine = engine;
+        this.modes = DisplayModes.queryAll();
+        this.resolutionLabels = modes.stream().map(DisplayModes.Mode::label).toArray(String[]::new);
+
         Language lang = Language.get();
         difficulties = new String[]{lang.get(26), lang.get(27), lang.get(28), lang.get(29), lang.get(30)};
         textSpeeds = new String[]{lang.get(22), lang.get(23), lang.get(24), lang.get(25)};
@@ -55,6 +71,8 @@ public final class OptionsOverlay implements UiOverlay {
 
         textSpeedIndex = indexOf(textSpeeds, State.get().getLogin().getTextSpeed(), 2);
         timeLimitIndex = indexOf(timeLimits, State.get().getLogin().getTimeLimitString(), 4);
+        DisplayModes.Mode selected = DisplayModes.findByStorageKey(modes, State.get().getLogin().getGraphicsSetting());
+        resolutionIndex = DisplayModes.indexOf(modes, selected);
         if (difficultyIndex >= difficulties.length || difficultyIndex < 0) {
             difficultyIndex = 0;
         }
@@ -65,11 +83,24 @@ public final class OptionsOverlay implements UiOverlay {
         if (!open) {
             return false;
         }
-        float w = 420;
-        float h = 420;
+        float w = 460;
+        float h = 520;
         NkRect bounds = nk_rect((windowWidth - w) * 0.5f, (windowHeight - h) * 0.5f, w, h, NkRect.malloc(stack));
         Language lang = Language.get();
         if (nk_begin(ctx, lang.get(34), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
+            resolutionIndex = comboRow(ctx, stack, "Resolution (from displays)", resolutionLabels, resolutionIndex);
+            nk_layout_row_dynamic(ctx, 18, 1);
+            nk_label(ctx, "Scale follows width; 852×480 content letterboxes vertically.", NK_TEXT_LEFT);
+
+            nk_layout_row_dynamic(ctx, 24, 1);
+            nk_label(ctx, "Letterbox color", NK_TEXT_LEFT);
+            nk_layout_row_dynamic(ctx, 28, 1);
+            nk_property_int(ctx, "R", 0, letterboxR, 255, 1, 1);
+            nk_layout_row_dynamic(ctx, 28, 1);
+            nk_property_int(ctx, "G", 0, letterboxG, 255, 1, 1);
+            nk_layout_row_dynamic(ctx, 28, 1);
+            nk_property_int(ctx, "B", 0, letterboxB, 255, 1, 1);
+
             difficultyIndex = comboRow(ctx, stack, lang.get(6), difficulties, difficultyIndex);
             nk_layout_row_dynamic(ctx, 28, 1);
             nk_property_int(ctx, lang.get(420), 1, voice, 100, 1, 1);
@@ -109,6 +140,15 @@ public final class OptionsOverlay implements UiOverlay {
             login.setTimeLimit(Integer.parseInt(time));
         }
         login.setComicEffectOccurence(comicIndex);
+        login.setLetterboxR(letterboxR.get(0));
+        login.setLetterboxG(letterboxG.get(0));
+        login.setLetterboxB(letterboxB.get(0));
+
+        DisplayModes.Mode mode = modes.get(Math.max(0, Math.min(resolutionIndex, modes.size() - 1)));
+        login.setGraphicsSetting(mode.storageKey());
+        engine.applyResolution(mode.width(), mode.height());
+        engine.refreshLetterboxColor();
+
         try {
             State.get().saveConfigFile();
         } catch (Exception ex) {
@@ -117,11 +157,15 @@ public final class OptionsOverlay implements UiOverlay {
     }
 
     private static int comboRow(NkContext ctx, MemoryStack stack, String label, String[] items, int selected) {
+        if (items.length == 0) {
+            return 0;
+        }
         nk_layout_row_dynamic(ctx, 24, 1);
         nk_label(ctx, label, NK_TEXT_LEFT);
         nk_layout_row_dynamic(ctx, 28, 1);
         int clamped = Math.max(0, Math.min(selected, items.length - 1));
-        NkVec2 size = nk_vec2(nk_widget_width(ctx), items.length * 28f, NkVec2.malloc(stack));
+        float popupHeight = Math.min(items.length, 12) * 28f;
+        NkVec2 size = nk_vec2(nk_widget_width(ctx), popupHeight, NkVec2.malloc(stack));
         if (nk_combo_begin_label(ctx, items[clamped], size)) {
             nk_layout_row_dynamic(ctx, 25, 1);
             for (int i = 0; i < items.length; i++) {

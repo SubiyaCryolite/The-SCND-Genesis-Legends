@@ -15,19 +15,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.nanovg.NanoVG.nvgRestore;
-import static org.lwjgl.nanovg.NanoVG.nvgSave;
-import static org.lwjgl.nanovg.NanoVG.nvgScale;
-import static org.lwjgl.nanovg.NanoVG.nvgTranslate;
 
 /**
- * Migrated main-menu scene: NanoVG for game art, Nuklear for Options/Controls/About/dialogs.
+ * Migrated main-menu scene: NanoVG for game art (design space), Nuklear for overlays.
  *
  * <p>Run with: {@code ./gradlew runNanoVgPrototype}
  */
 public final class NanoVgPrototype implements GlfwEngine.Scene {
-    private static final int DESIGN_WIDTH = 852;
-    private static final int DESIGN_HEIGHT = 480;
     private static final String[] MENU_ITEMS = {
             "tutorial",
             "story mode",
@@ -54,14 +48,11 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
     private float cloudTwoX;
     private float introOpacity = 2.2f;
     private int selectedIndex;
-    private double mouseX;
-    private double mouseY;
-    private int windowWidth = DESIGN_WIDTH;
-    private int windowHeight = DESIGN_HEIGHT;
+    private float mouseX;
+    private float mouseY;
     private boolean showIntro = true;
 
     public static void main(String[] args) {
-        // Ensure a save profile exists for Options overlay.
         if (State.get().getLogins().isEmpty()) {
             State.get().createLogin("Player");
             try {
@@ -70,8 +61,6 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
             }
         }
         try (GlfwEngine engine = new GlfwEngine(
-                DESIGN_WIDTH,
-                DESIGN_HEIGHT,
                 "SCND Genesis — NanoVG + Nuklear (Esc to quit)",
                 new NanoVgPrototype()
         )) {
@@ -89,7 +78,6 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
         particles2 = loader.loadImage("images/blur/bgBG1b.png");
         menuLogo = loader.loadImage("images/sglogo.png");
         gameLogo = loader.loadImage("logo/gameLogo.png");
-        // Localize labels when translations are available.
         MENU_ITEMS[0] = Language.get().get(319).toLowerCase();
         MENU_ITEMS[1] = Language.get().get(307).toLowerCase();
         MENU_ITEMS[2] = Language.get().get(308).toLowerCase();
@@ -107,10 +95,10 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
     public void update(double deltaSeconds) {
         cloudOneX -= (float) (24.0 * deltaSeconds);
         cloudTwoX -= (float) (48.0 * deltaSeconds);
-        if (cloudOneX < -DESIGN_WIDTH) {
+        if (cloudOneX < -DesignViewport.DESIGN_WIDTH) {
             cloudOneX = 0;
         }
-        if (cloudTwoX < -DESIGN_WIDTH) {
+        if (cloudTwoX < -DesignViewport.DESIGN_WIDTH) {
             cloudTwoX = 0;
         }
         if (showIntro) {
@@ -121,20 +109,11 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
             }
         }
 
-        float scale = Math.min(
-                windowWidth / (float) DESIGN_WIDTH,
-                windowHeight / (float) DESIGN_HEIGHT
-        );
-        float offsetX = (windowWidth - DESIGN_WIDTH * scale) * 0.5f;
-        float offsetY = (windowHeight - DESIGN_HEIGHT * scale) * 0.5f;
-        float designX = (float) ((mouseX - offsetX) / scale);
-        float designY = (float) ((mouseY - offsetY) / scale);
-
         float xMenu = 600f;
         float yMenu = 270f;
         float fontSize = 16f;
-        if (designX >= xMenu && designX <= DESIGN_WIDTH - 20) {
-            int hovered = (int) Math.floor((designY - (yMenu - fontSize)) / fontSize);
+        if (mouseX >= xMenu && mouseX <= DesignViewport.DESIGN_WIDTH - 20) {
+            int hovered = (int) Math.floor((mouseY - (yMenu - fontSize)) / fontSize);
             if (hovered >= 0 && hovered < MENU_ITEMS.length) {
                 selectedIndex = hovered;
             }
@@ -142,29 +121,21 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
     }
 
     @Override
-    public void render(MemoryStack stack, DrawContext draw, int width, int height) {
-        windowWidth = width;
-        windowHeight = height;
-
-        float scale = Math.min(width / (float) DESIGN_WIDTH, height / (float) DESIGN_HEIGHT);
-        float offsetX = (width - DESIGN_WIDTH * scale) * 0.5f;
-        float offsetY = (height - DESIGN_HEIGHT * scale) * 0.5f;
-
-        nvgSave(draw.vg());
-        nvgTranslate(draw.vg(), offsetX, offsetY);
-        nvgScale(draw.vg(), scale, scale);
+    public void render(MemoryStack stack, DrawContext draw) {
+        int w = DesignViewport.DESIGN_WIDTH;
+        int h = DesignViewport.DESIGN_HEIGHT;
 
         draw.setGlobalAlpha(1f);
         draw.drawImage(background, 0, 0);
         draw.drawImage(foreground, 0, 0);
         draw.drawImage(particles2, cloudOneX, 0);
-        draw.drawImage(particles2, cloudOneX + DESIGN_WIDTH, 0);
+        draw.drawImage(particles2, cloudOneX + w, 0);
         draw.drawImage(particles1, cloudTwoX, 0);
-        draw.drawImage(particles1, cloudTwoX + DESIGN_WIDTH, 0);
+        draw.drawImage(particles1, cloudTwoX + w, 0);
 
         draw.setFill(0f, 0f, 0f);
         draw.setGlobalAlpha(0.50f);
-        draw.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
+        draw.fillRect(0, 0, w, h);
         draw.setGlobalAlpha(1f);
         draw.drawImage(menuLogo, 0, 0);
 
@@ -180,21 +151,27 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
 
         draw.setFontSize(14f);
         draw.setFill(1f, 1f, 1f);
-        draw.fillText("The SCND Genesis: Legends RMX | © " + GeneralConstants.years() + " Ifunga Ndana.", 10, DESIGN_HEIGHT - 10);
-        draw.fillText("Nuklear UI · Enter opens · Esc quits", 560, 24);
+        draw.fillText("The SCND Genesis: Legends RMX | © " + GeneralConstants.years() + " Ifunga Ndana.", 10, h - 10);
+        DesignViewport vp = engine.viewport();
+        draw.fillText(String.format(
+                "Scale %.2f · Window %dx%d · Design %dx%d",
+                vp.scale(),
+                vp.windowWidth(),
+                vp.windowHeight(),
+                DesignViewport.DESIGN_WIDTH,
+                DesignViewport.DESIGN_HEIGHT
+        ), 480, 24);
 
         if (showIntro || introOpacity > 0f) {
             float overlay = Math.min(1f, introOpacity);
             draw.setFill(0f, 0f, 0f);
             draw.setGlobalAlpha(overlay);
-            draw.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
+            draw.fillRect(0, 0, w, h);
             float logoAlpha = introOpacity > 1f ? introOpacity - 1f : 0f;
             draw.setGlobalAlpha(logoAlpha);
             draw.drawImage(gameLogo, 0, 0);
             draw.setGlobalAlpha(1f);
         }
-
-        nvgRestore(draw.vg());
     }
 
     @Override
@@ -212,13 +189,15 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
     }
 
     @Override
-    public void onMouseMove(double x, double y) {
-        mouseX = x;
-        mouseY = y;
+    public void onMouseMove(float designX, float designY) {
+        mouseX = designX;
+        mouseY = designY;
     }
 
     @Override
-    public void onMouseButton(int button, int action, double x, double y) {
+    public void onMouseButton(int button, int action, float designX, float designY) {
+        mouseX = designX;
+        mouseY = designY;
         if (action == GLFW_PRESS) {
             if (showIntro) {
                 showIntro = false;
@@ -233,7 +212,7 @@ public final class NanoVgPrototype implements GlfwEngine.Scene {
         showIntro = false;
         introOpacity = 0f;
         switch (selectedIndex) {
-            case 7 -> engine.ui().push(new OptionsOverlay());
+            case 7 -> engine.ui().push(new OptionsOverlay(engine));
             case 8 -> engine.ui().push(new ControlsOverlay());
             case 9 -> engine.ui().push(new AboutOverlay());
             case 10 -> engine.ui().push(NkDialogs.yesNo(
