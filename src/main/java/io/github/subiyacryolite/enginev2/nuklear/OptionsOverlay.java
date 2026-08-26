@@ -1,7 +1,9 @@
 package io.github.subiyacryolite.enginev2.nuklear;
 
 import com.scndgen.legends.Language;
+import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.state.State;
+import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DisplayModes;
 import io.github.subiyacryolite.enginev2.GlfwEngine;
 import org.lwjgl.BufferUtils;
@@ -90,7 +92,7 @@ public final class OptionsOverlay implements UiOverlay {
         if (nk_begin(ctx, lang.get(34), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
             resolutionIndex = comboRow(ctx, stack, "Resolution (from displays)", resolutionLabels, resolutionIndex);
             nk_layout_row_dynamic(ctx, 18, 1);
-            nk_label(ctx, "Scale follows width; 852×480 content letterboxes vertically.", NK_TEXT_LEFT);
+            nk_label(ctx, "852×480 (16:9) is preserved; bars fill unused edges.", NK_TEXT_LEFT);
 
             nk_layout_row_dynamic(ctx, 24, 1);
             nk_label(ctx, "Letterbox color", NK_TEXT_LEFT);
@@ -132,6 +134,9 @@ public final class OptionsOverlay implements UiOverlay {
         login.setVoiceVolume(voice.get(0));
         login.setSoundVolume(sound.get(0));
         login.setMusicVolume(music.get(0));
+        Audio.volume(AudioType.VOICE, voice.get(0));
+        Audio.volume(AudioType.SOUND, sound.get(0));
+        Audio.volume(AudioType.MUSIC, music.get(0));
         login.setTextSpeed(textSpeeds[textSpeedIndex]);
         String time = timeLimits[timeLimitIndex];
         if (time.equalsIgnoreCase(Language.get().get(424)) || time.equalsIgnoreCase("infinite")) {

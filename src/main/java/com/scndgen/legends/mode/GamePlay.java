@@ -22,8 +22,8 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Achievement;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.NetworkConstants;
@@ -32,18 +32,19 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.FxDialogs;
-import io.github.subiyacryolite.enginev1.Mode;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
+import io.github.subiyacryolite.enginev2.Mode;
+import io.github.subiyacryolite.enginev2.Overlay;
+import io.github.subiyacryolite.enginev2.Rgba;
+import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 
 /**
  * This class draws and manipulates all sprites, images and effects used in the game
@@ -58,7 +59,7 @@ public abstract class GamePlay extends Mode {
     protected LinkedList<Integer> characterAttacks = new LinkedList<>();
     protected LinkedList<Integer> opponentAttacks = new LinkedList<>();
     protected int startDrawing;
-    protected Color currentColor = Color.RED;
+    protected Rgba currentColor = Rgba.of(1f, 0f, 0f);
     protected boolean safeToSelect;
     protected int unlockedAchievementInstance;
     protected int charXcord, charYcord, oppYcord, statIndex;
@@ -68,7 +69,7 @@ public abstract class GamePlay extends Mode {
     protected AnimationDirection foregroundDirection = AnimationDirection.VERTICAL;
     protected int playerDamageXLoc, opponentDamageXLoc;
     protected String[] storyPicArrStr;
-    protected CharacterEnum[] charNames = LoginScreen.charNames;
+    protected CharacterEnum[] charNames = UiConstants.CHAR_NAMES;
     protected int ambSpeed1, ambSpeed2, paneCord;
     protected StringBuilder battleInformation = new StringBuilder("");
     protected AmbientMode ambientMode;
@@ -331,7 +332,7 @@ public abstract class GamePlay extends Mode {
      * Makes text white, meaning its OK to select a move
      */
     protected void enableSelection() {
-        currentColor = Color.BLACK;
+        currentColor = Rgba.BLACK;
         safeToSelect = true;
     }
 
@@ -339,7 +340,7 @@ public abstract class GamePlay extends Mode {
      * Makes text red, meaning its NOT OK to select a move
      */
     protected void disableSelection() {
-        currentColor = javafx.scene.paint.Color.RED;
+        currentColor = Rgba.of(1f, 0f, 0f);
         safeToSelect = false;
     }
 
@@ -1294,48 +1295,60 @@ public abstract class GamePlay extends Mode {
         battleInformation = new StringBuilder(message);
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-        switch (mouseEvent.getButton()) {
-            case PRIMARY:
-                onAccept();
-                break;
-            case MIDDLE:
-                triggerFury(PlayerType.PLAYER1);
-                break;
-            case SECONDARY:
-                onBackCancel();
-                break;
+    @Override
+    public void mouseClicked(float x, float y, int button) {
+        switch (button) {
+            case GLFW_MOUSE_BUTTON_LEFT -> onAccept();
+            case GLFW_MOUSE_BUTTON_MIDDLE -> triggerFury(PlayerType.PLAYER1);
+            case GLFW_MOUSE_BUTTON_RIGHT -> onBackCancel();
+            default -> {
+            }
         }
     }
 
     protected void cancelMatch() {
-        ButtonBar.ButtonData firstPrompt = FxDialogs.yesNo("Confirmation", "Dude!?", "Are you sure you wanna quit?");
-        if (firstPrompt == ButtonBar.ButtonData.YES) {
-            if (playingCutscene)
-                StoryMode.get().exitCinematic(true);
-            if (NetworkManager.get().isOffline()) {
-                if (isPaused()) {
-                    onTogglePause();
-                }
-                terminateGameplay();
-                RenderStageSelect.get().setStageSelected(false);
-                if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                    ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
-                } else {
-                    ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-                }
-            } else {
-                ButtonBar.ButtonData secondPrompt = FxDialogs.yesNo("Are you sure?", "This will terminate the current network session", "Nuke from orbit?");
-                if (secondPrompt == ButtonBar.ButtonData.YES) {
-                    if (isPaused()) {
-                        onTogglePause();
+        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                "Confirmation",
+                "Dude!?",
+                "Are you sure you wanna quit?",
+                answer -> {
+                    if (answer != NkDialogs.Answer.YES) {
+                        return;
                     }
-                    terminateGameplay();
-                    NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
-                    NetworkManager.get().close();
+                    if (playingCutscene) {
+                        StoryMode.get().exitCinematic(true);
+                    }
+                    if (NetworkManager.get().isOffline()) {
+                        if (isPaused()) {
+                            onTogglePause();
+                        }
+                        terminateGameplay();
+                        RenderStageSelect.get().setStageSelected(false);
+                        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
+                            ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                        } else {
+                            ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                        }
+                    } else {
+                        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                                "Are you sure?",
+                                "This will terminate the current network session",
+                                "Nuke from orbit?",
+                                confirm -> {
+                                    if (confirm != NkDialogs.Answer.YES) {
+                                        return;
+                                    }
+                                    if (isPaused()) {
+                                        onTogglePause();
+                                    }
+                                    terminateGameplay();
+                                    NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                                    NetworkManager.get().close();
+                                }
+                        ));
+                    }
                 }
-            }
-        }
+        ));
     }
 
     public void isCharacterAttacking(boolean value) {
@@ -1617,7 +1630,7 @@ public abstract class GamePlay extends Mode {
     }
 
     public void musNotice() {
-        io.github.subiyacryolite.enginev1.Overlay.get().secondaryNotice(RenderStageSelect.get().getAmbientMusicMetaData()[RenderStageSelect.get().getAmbientMusicIndex()]);
+        Overlay.get().secondaryNotice(RenderStageSelect.get().getAmbientMusicMetaData()[RenderStageSelect.get().getAmbientMusicIndex()]);
     }
 
     public boolean isGameOver() {

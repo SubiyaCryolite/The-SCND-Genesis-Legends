@@ -21,7 +21,7 @@ import static org.lwjgl.nuklear.Nuklear.nk_rect;
 import static org.lwjgl.nuklear.Nuklear.nk_spacing;
 
 /**
- * Nuklear replacement for {@code WindowAbout}.
+ * About / License / Changelog / Source overlay.
  */
 public final class AboutOverlay implements UiOverlay {
     private final String[] tabs = {"About", "License", "Changelog", "Source"};

@@ -31,7 +31,7 @@ import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import com.scndgen.legends.render.RenderStoryMenu;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.Audio;
+import io.github.subiyacryolite.enginev2.Audio;
 
 import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
 

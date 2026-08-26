@@ -22,21 +22,20 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
+import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.render.RenderMainMenu;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.AssetLoader;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.Rgba;
 
-import static com.sun.javafx.tk.Toolkit.getToolkit;
+import static org.lwjgl.glfw.GLFW.*;
 
 
 /**
@@ -44,23 +43,20 @@ import static com.sun.javafx.tk.Toolkit.getToolkit;
  */
 public class Tutorial implements Runnable {
 
-    private Image[] slides, arrows;
-    private Image forward, back;
+    private NvgImage[] slides, arrows;
+    private NvgImage forward, back;
     private Thread thread;
-    private Loader loader;
     private boolean skipSec;
     private long tutSpeed;
     private int cord, sec, pixLoc, arrowLoc, slide;
     private String tutText, topText;
     private float opacityTxt, picOpac, arrowOpac;
-    private Font normalFont;
     private final Audio bgSound, backSound;
 
     public Tutorial() {
         backSound = new Audio(AudioConstants.soundBack(), AudioType.SOUND, false);
         bgSound = new Audio(AudioConstants.tutorialSound(), AudioType.MUSIC, true);
-        loader = new Loader();
-        normalFont = getMyFont(LoginScreen.NORMAL_TXT_SIZE);
+        AssetLoader loader = ScndGenLegends.get().loader();
         pixLoc = 0;
         sec = 0;
         slide = -1;
@@ -70,16 +66,16 @@ public class Tutorial implements Runnable {
         tutSpeed = 8;
         cord = 360;
 
-        slides = new Image[6];
+        slides = new NvgImage[6];
         for (int u = 0; u < slides.length; u++) {
-            slides[u] = loader.load("images/tutorial/" + u + ".png");
+            slides[u] = loader.loadImage("images/tutorial/" + u + ".png");
         }
-        arrows = new Image[9];
+        arrows = new NvgImage[9];
         for (int u = 0; u < arrows.length; u++) {
-            arrows[u] = loader.load("images/tutorial/a" + u + ".png");
+            arrows[u] = loader.loadImage("images/tutorial/a" + u + ".png");
         }
-        forward = loader.load("images/tutorial/list_item_arrow_r.png");
-        back = loader.load("images/tutorial/list_item_arrow_l.png");
+        forward = loader.loadImage("images/tutorial/list_item_arrow_r.png");
+        back = loader.loadImage("images/tutorial/list_item_arrow_l.png");
         tutText = "TUTORIAL";
     }
 
@@ -106,52 +102,53 @@ public class Tutorial implements Runnable {
         playForwardSound();
     }
 
-    public void draw(GraphicsContext gc, double x, double y) {
-        gc.setFill(Color.BLACK);
-        gc.setFont(normalFont);
-        gc.fillRect(0, 0, 1024, 1024);
+    public void draw(DrawContext draw) {
+        draw.setFill(Rgba.BLACK);
+        draw.setFont("menu", UiConstants.NORMAL_TXT_SIZE);
+        draw.fillRect(0, 0, 1024, 1024);
 
         if (picOpac < 0.98f) {
             picOpac = picOpac + 0.02f;
         }
-        gc.setGlobalAlpha((picOpac));
-        gc.drawImage(slides[pixLoc], 0, 0);
-        gc.setGlobalAlpha((1.0f));
+        draw.setGlobalAlpha(picOpac);
+        draw.drawImage(slides[pixLoc], 0, 0);
+        draw.setGlobalAlpha(1.0f);
 
         if (arrowOpac < 0.98f) {
             arrowOpac = arrowOpac + 0.02f;
         }
-        gc.setGlobalAlpha((arrowOpac));
-        gc.drawImage(arrows[arrowLoc], 0, 0);
-        gc.setGlobalAlpha((1.0f));
+        draw.setGlobalAlpha(arrowOpac);
+        draw.drawImage(arrows[arrowLoc], 0, 0);
+        draw.setGlobalAlpha(1.0f);
 
-        gc.setGlobalAlpha((0.5f));
-        gc.setFill(Color.BLACK);
-        gc.fillRoundRect(0, 216, x, 48, 48, 48); //mid minus half the font size (430-6)
+        draw.setGlobalAlpha(0.5f);
+        draw.setFill(Rgba.BLACK);
+        draw.fillRoundRect(0, 216, 852, 48, 48);
 
-        gc.setGlobalAlpha((10 * 0.1f));
-        gc.setFill(Color.WHITE);
+        draw.setGlobalAlpha(1.0f);
+        draw.setFill(Rgba.WHITE);
 
-        gc.drawImage(back, 10, 224);
-        gc.drawImage(forward, 810, 224);
+        draw.drawImage(back, 10, 224);
+        draw.drawImage(forward, 810, 224);
 
         if (opacityTxt < 0.98f) {
             opacityTxt = opacityTxt + 0.02f;
         }
-        gc.setGlobalAlpha((opacityTxt));
-        gc.fillText(tutText, (852 -Utils.computeStringWidth(tutText, gc.getFont())) / 2, 233);
-        gc.setGlobalAlpha((1.0f));
+        draw.setGlobalAlpha(opacityTxt);
+        draw.fillText(tutText, (852 - Utils.computeStringWidth(tutText, draw)) / 2, 233);
+        draw.setGlobalAlpha(1.0f);
 
-        gc.fillText(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", (852 - Utils.computeStringWidth(":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::", gc.getFont())) / 2, 253);
+        var topLine = ":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::";
+        draw.fillText(topLine, (852 - Utils.computeStringWidth(topLine, draw)) / 2, 253);
 
-        gc.fillText(Language.get().get(366) + ":", 10, cord);
-        gc.fillText("1 - " + Language.get().get(356), 20, (cord + (1 * 14)));
-        gc.fillText("2 - " + Language.get().get(360), 20, (cord + (2 * 14)));
-        gc.fillText("3 - " + Language.get().get(355), 20, (cord + (3 * 14)));
-        gc.fillText("4 - " + Language.get().get(358), 20, (cord + (4 * 14)));
-        gc.fillText("5 - " + Language.get().get(357), 20, (cord + (5 * 14)));
-        gc.fillText("6 - " + Language.get().get(359), 20, (cord + (6 * 14)));
-        gc.fillText(Language.get().get(343), 20, (cord + (7 * 14)));
+        draw.fillText(Language.get().get(366) + ":", 10, cord);
+        draw.fillText("1 - " + Language.get().get(356), 20, (cord + (1 * 14)));
+        draw.fillText("2 - " + Language.get().get(360), 20, (cord + (2 * 14)));
+        draw.fillText("3 - " + Language.get().get(355), 20, (cord + (3 * 14)));
+        draw.fillText("4 - " + Language.get().get(358), 20, (cord + (4 * 14)));
+        draw.fillText("5 - " + Language.get().get(357), 20, (cord + (5 * 14)));
+        draw.fillText("6 - " + Language.get().get(359), 20, (cord + (6 * 14)));
+        draw.fillText(Language.get().get(343), 20, (cord + (7 * 14)));
 
     }
 
@@ -834,14 +831,6 @@ public class Tutorial implements Runnable {
         }
     }
 
-    public Font getMyFont(float size) {
-        try {
-            return Font.loadFont(getClass().getResourceAsStream("font/Sawasdee.ttf"), size);
-        } catch (Exception re) {
-            return new javafx.scene.text.Font("Sans", size);
-        }
-    }
-
     public void onBackCancel() {
         bgSound.stop();
         thread.stop();
@@ -853,50 +842,22 @@ public class Tutorial implements Runnable {
         onBackCancel();
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            case W:
-            case UP:
-                onUp();
-                break;
-            case S:
-            case DOWN:
-                onDown();
-                break;
-            case A:
-            case LEFT:
-                onLeft();
-                break;
-            case D:
-            case RIGHT:
-                onRight();
-                break;
-            case ENTER:
-            case SPACE:
-                onAccept();
-                break;
-            case DELETE:
-            case BACK_SPACE:
-                onBackCancel();
-                break;
-            case DIGIT1:
-                sktpToTut(0);
-                break;
-            case DIGIT2:
-                sktpToTut(3);
-                break;
-            case DIGIT3:
-                sktpToTut(11);
-                break;
-            case DIGIT4:
-                sktpToTut(20);
-                break;
-            case DIGIT5:
-                sktpToTut(27);
-                break;
-            case DIGIT6:
-                sktpToTut(32);
-                break;
+    public void keyPressed(int glfwKey) {
+        switch (glfwKey) {
+            case GLFW_KEY_W, GLFW_KEY_UP -> onUp();
+            case GLFW_KEY_S, GLFW_KEY_DOWN -> onDown();
+            case GLFW_KEY_A, GLFW_KEY_LEFT -> onLeft();
+            case GLFW_KEY_D, GLFW_KEY_RIGHT -> onRight();
+            case GLFW_KEY_ENTER, GLFW_KEY_SPACE -> onAccept();
+            case GLFW_KEY_DELETE, GLFW_KEY_BACKSPACE -> onBackCancel();
+            case GLFW_KEY_1 -> sktpToTut(0);
+            case GLFW_KEY_2 -> sktpToTut(3);
+            case GLFW_KEY_3 -> sktpToTut(11);
+            case GLFW_KEY_4 -> sktpToTut(20);
+            case GLFW_KEY_5 -> sktpToTut(27);
+            case GLFW_KEY_6 -> sktpToTut(32);
+            default -> {
+            }
         }
     }
 

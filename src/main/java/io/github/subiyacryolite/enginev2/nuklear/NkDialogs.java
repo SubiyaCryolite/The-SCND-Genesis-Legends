@@ -24,7 +24,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 
 /**
- * Immediate-mode replacements for JavaFX Alert / TextInputDialog.
+ * Immediate-mode message / confirm / text-input dialogs.
  */
 public final class NkDialogs {
 

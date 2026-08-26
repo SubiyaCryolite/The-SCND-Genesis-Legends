@@ -22,8 +22,8 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
@@ -35,35 +35,26 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DesignViewport;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
 
-import static com.sun.javafx.tk.Toolkit.getToolkit;
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author Ifunga Ndana
  */
 public class RenderGamePlay extends GamePlay {
     private static RenderGamePlay instance;
-    private Font largeFont, normalFont;
-    private Font notSelected;
-    private Image stageAmbientForeground, stageAmbientBackground, stageForeground;
-    private Image[] numberPix;
-    private Image[] comboPicArray, comicBookText, times, statusEffectSprites = new Image[5];
-    private Image oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hpHolderOpponent, hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
-    private Image[] charSprites, oppSprites;
-    private Image[] characterPortraits;
+    private NvgImage stageAmbientForeground, stageAmbientBackground, stageForeground;
+    private NvgImage[] numberPix;
+    private NvgImage[] comboPicArray, comicBookText, times, statusEffectSprites = new NvgImage[5];
+    private NvgImage oppBar, furyBar, counterPane, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, stageBackground, damageLayer, hpHolder, hpHolderOpponent, hud1, characterHpBar, win, lose, status, furyState, furyActive, furyInactive, numInfinite, figGuiSrc10, figGuiSrc20, figGuiSrc30, figGuiSrc40, figGuiSrc1, figGuiSrc2, figGuiSrc3, figGuiSrc4, time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i;
+    private NvgImage[] charSprites, oppSprites;
+    private NvgImage[] characterPortraits;
     private int characterPortraitIndex;
-    private Image[] storyBoards;
+    private NvgImage[] storyBoards;
     private int storyBoardIndex;
     private final UiItem attackOne;
     private final UiItem attackTwo;
@@ -340,9 +331,6 @@ public class RenderGamePlay extends GamePlay {
 
     public void loadAssetsIml() {
         loadAssets = false;
-        notSelected = loadFont(12);
-        largeFont = loadFont(LoginScreen.LARGE_TXT_SIZE);
-        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         setCharMoveset();
         cacheNumPix();
         loadSprites();
@@ -354,91 +342,93 @@ public class RenderGamePlay extends GamePlay {
     }
 
     @Override
-    public void render(GraphicsContext gc, double width, double height) {
+    public void render(DrawContext draw) {
         loadAssets();
+        float width = DesignViewport.DESIGN_WIDTH;
+        float height = DesignViewport.DESIGN_HEIGHT;
         if (playingCutscene) {
-            gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, width, height);
+            draw.setFill(0f, 0f, 0f);
+            draw.fillRect(0, 0, width, height);
             if (opacityPic < 0.98f) {
                 opacityPic += 0.02f;
             }
-            gc.setGlobalAlpha(opacityPic);
-            gc.drawImage(storyBoardIndex >= 0 ? storyBoards[storyBoardIndex] : null, 0, 0);
-            gc.setGlobalAlpha(1.0f);
+            draw.setGlobalAlpha(opacityPic);
+            draw.drawImage(storyBoardIndex >= 0 ? storyBoards[storyBoardIndex] : null, 0, 0);
+            draw.setGlobalAlpha(1.0f);
 
-            gc.setGlobalAlpha(0.5f);
-            gc.fillRoundRect(0, 424, width, 48, 48, 48); //mid minus half the font size (430-6)
-            gc.setGlobalAlpha(1.0f);
+            draw.setGlobalAlpha(0.5f);
+            draw.fillRoundRect(0, 424, width, 48, 48); //mid minus half the font size (430-6)
+            draw.setGlobalAlpha(1.0f);
 
-            gc.setFill(Color.WHITE);
-            gc.setFont(normalFont);
-            gc.setGlobalAlpha((opacityTxt));
-            gc.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 -Utils.computeStringWidth(battleInformation.toString(), gc.getFont())) / 2) - 50, 424);
-            gc.fillText(battleInformation.toString(), ((852 - Utils.computeStringWidth(battleInformation.toString(), gc.getFont())) / 2), 450);
-            gc.setGlobalAlpha(1.0f);
+            draw.setFill(1f, 1f, 1f);
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.setGlobalAlpha(opacityTxt);
+            float infoWidth = Utils.computeStringWidth(battleInformation.toString(), draw);
+            draw.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 - infoWidth) / 2) - 50, 424);
+            draw.fillText(battleInformation.toString(), ((852 - infoWidth) / 2), 450);
+            draw.setGlobalAlpha(1.0f);
             if (opacityTxt < 0.98f) {
                 opacityTxt = opacityTxt + 0.02f;
             }
         } else if (!gameOver && !playingCutscene) {
-            gc.drawImage(stageBackground, 0, 0);
-            gc.setFont(notSelected);
+            draw.drawImage(stageBackground, 0, 0);
+            setFont(draw, 12);
             if (getCharacterHp() >= 0) {
-                drawStageBackground(gc);
-                drawStageCharacters(gc, width, height);
-                drawStageForeground(gc);
-                drawDamageLayer(gc);
-                gc.setGlobalAlpha(1.0f);
-                drawComicBookText(gc);
-                drawBattleInformation(gc);
+                drawStageBackground(draw);
+                drawStageCharacters(draw);
+                drawStageForeground(draw);
+                drawDamageLayer(draw);
+                draw.setGlobalAlpha(1.0f);
+                drawComicBookText(draw);
+                drawBattleInformation(draw);
                 if (statusEffectCharacterOpacity > 0.02f) {
                     statusEffectCharacterOpacity = statusEffectCharacterOpacity - 0.02f;
                 }
-                gc.setGlobalAlpha((statusEffectCharacterOpacity));
-                gc.drawImage(statusEffectSprites[statIndexChar], 150 + uiShakeEffectOffsetCharacter, 100 + basicY - uiShakeEffectOffsetCharacter + statusEffectCharacterYCoord);
-                gc.setGlobalAlpha((1.0f));
+                draw.setGlobalAlpha(statusEffectCharacterOpacity);
+                draw.drawImage(statusEffectSprites[statIndexChar], 150 + uiShakeEffectOffsetCharacter, 100 + basicY - uiShakeEffectOffsetCharacter + statusEffectCharacterYCoord);
+                draw.setGlobalAlpha(1.0f);
                 statusEffectCharacterYCoord = statusEffectCharacterYCoord + 1;
 
 
                 if (statusEffectOpponentOpacity > 0.02f) {
                     statusEffectOpponentOpacity = statusEffectOpponentOpacity - 0.02f;
                 }
-                gc.setGlobalAlpha((statusEffectOpponentOpacity));
-                gc.drawImage(statusEffectSprites[statIndexOpp], 602 + uiShakeEffectOffsetOpponent, 100 + basicY - uiShakeEffectOffsetOpponent + statusEffectOpponentYCoord);
-                gc.setGlobalAlpha((1.0f));
+                draw.setGlobalAlpha(statusEffectOpponentOpacity);
+                draw.drawImage(statusEffectSprites[statIndexOpp], 602 + uiShakeEffectOffsetOpponent, 100 + basicY - uiShakeEffectOffsetOpponent + statusEffectOpponentYCoord);
+                draw.setGlobalAlpha(1.0f);
                 statusEffectOpponentYCoord = statusEffectOpponentYCoord + 1;
 
                 //---opponrnt activity bar + text
 
-                gc.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
-                gc.drawImage(hpHolderOpponent, (55 + 56 + x2) + uiShakeEffectOffsetOpponent, (4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
-                gc.setFill(Color.WHITE);
-                gc.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.drawImage(hpHolderOpponent, (55 + 56 + x2) + uiShakeEffectOffsetOpponent, (4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.setFill(1f, 1f, 1f);
+                draw.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
-                gc.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
-                gc.setFill(Color.ORANGE);
-                gc.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, getOpponentAtbValue(), 6, 6, 6);
+                draw.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.setFill(1f, 0.647f, 0f); // orange
+                draw.fillRoundRect((x2 - 17) + uiShakeEffectOffsetOpponent, (y2 + 22 - oppBarYOffset) - uiShakeEffectOffsetOpponent, getOpponentAtbValue(), 6, 6);
 
                 //------------player 1 HUD---------------------//
-                gc.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter); // HOLDS hp
+                draw.drawImage(hpHolder, (lbx2 - 438) + uiShakeEffectOffsetCharacter, (lby2 - 410) - uiShakeEffectOffsetCharacter); // HOLDS hp
                 //outline
-                gc.drawImage(hud1, (lbx2 - 498) + uiShakeEffectOffsetCharacter, (lby2 - 417) - uiShakeEffectOffsetCharacter);
+                draw.drawImage(hud1, (lbx2 - 498) + uiShakeEffectOffsetCharacter, (lby2 - 417) - uiShakeEffectOffsetCharacter);
                 //inner
-                //gc.setFill(Color.RED);
-                gc.setFill(Color.ORANGE);
-                gc.fillArc(lbx2 - 493 + uiShakeEffectOffsetCharacter, lby2 - 412 - uiShakeEffectOffsetCharacter, 90, 90, 0, phyAngle(), ArcType.ROUND);
+                draw.setFill(1f, 0.647f, 0f); // orange
+                draw.fillArc(lbx2 - 493 + uiShakeEffectOffsetCharacter, lby2 - 412 - uiShakeEffectOffsetCharacter, 90, 90, 0, phyAngle());
                 //inner loop
-                gc.setFill(Color.BLACK);
-                gc.drawImage(characterHpBar, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
-                gc.setFill(Color.WHITE);
-                gc.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
-                gc.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
+                draw.setFill(0f, 0f, 0f);
+                draw.drawImage(characterHpBar, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
+                draw.setFill(1f, 1f, 1f);
+                draw.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
+                draw.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
             }
 
-            drawTimer(gc);
-            drawAttackMenu(gc);
-            drawFuryBar(gc);
-            drawFuryComboEffects(gc);
-            drawDamageDigits(gc);
+            drawTimer(draw);
+            drawAttackMenu(draw);
+            drawFuryBar(draw);
+            drawFuryComboEffects(draw);
+            drawDamageDigits(draw);
             checkFuryStatus();
         }
 
@@ -446,225 +436,222 @@ public class RenderGamePlay extends GamePlay {
 
         //when paused
         if (paused) {
-            gc.setFill(Color.BLACK);
-            gc.setGlobalAlpha((5 * 0.1f));//initial val between 1 and 10
-            gc.fillRect(0, 0, width, height);
-            gc.setGlobalAlpha(1.0f);
-            gc.setFill(Color.WHITE);
-            gc.fillText(Language.get().get(148), 400, 240);
-            gc.fillText(Language.get().get(149), 400, 260);
-            gc.fillText(Language.get().get(150), 400, 280);
+            draw.setFill(0f, 0f, 0f);
+            draw.setGlobalAlpha(5 * 0.1f);//initial val between 1 and 10
+            draw.fillRect(0, 0, width, height);
+            draw.setGlobalAlpha(1.0f);
+            draw.setFill(1f, 1f, 1f);
+            draw.fillText(Language.get().get(148), 400, 240);
+            draw.fillText(Language.get().get(149), 400, 260);
+            draw.fillText(Language.get().get(150), 400, 280);
         }
 
         //when gameover
         if (gameOver) {
-            gc.setFill(Color.WHITE);
-            gc.fillRect(0, 0, width, height);
-            gc.setFill(Color.BLACK);
-            gc.setGlobalAlpha((8 * 0.1f));//initial val between 1 and 10
-            gc.fillRect(0, 210, width, 121);
-            gc.setGlobalAlpha(1.0f);
-            gc.drawImage(status, 0, 210);
-            gc.setFill(Color.WHITE);
-            gc.setFont(notSelected);
+            draw.setFill(1f, 1f, 1f);
+            draw.fillRect(0, 0, width, height);
+            draw.setFill(0f, 0f, 0f);
+            draw.setGlobalAlpha(8 * 0.1f);//initial val between 1 and 10
+            draw.fillRect(0, 210, width, 121);
+            draw.setGlobalAlpha(1.0f);
+            draw.drawImage(status, 0, 210);
+            draw.setFill(1f, 1f, 1f);
+            setFont(draw, 12);
             if (achievementName.length > unlockedAchievementInstance) {
-                gc.fillText(achievementName[unlockedAchievementInstance], 400, 240); //+14
-                gc.fillText(achievementDescription[unlockedAchievementInstance], 400, 254);
-                gc.fillText(achievementClass[unlockedAchievementInstance], 400, 268);
-                gc.fillText(achievementPoints[unlockedAchievementInstance], 400, 282);
+                draw.fillText(achievementName[unlockedAchievementInstance], 400, 240); //+14
+                draw.fillText(achievementDescription[unlockedAchievementInstance], 400, 254);
+                draw.fillText(achievementClass[unlockedAchievementInstance], 400, 268);
+                draw.fillText(achievementPoints[unlockedAchievementInstance], 400, 282);
             }
-            gc.fillText("<< " + Language.get().get(146) + " >>", 400, 296);
+            draw.fillText("<< " + Language.get().get(146) + " >>", 400, 296);
         }
-        Overlay.get().overlay(gc, width, height);
+        // Overlay is drawn by ScndGenLegends after mode.render
     }
 
-    private void drawStageBackground(GraphicsContext gc) {
+    private void drawStageBackground(DrawContext draw) {
         switch (ambientMode) {
-            case INDEPENDENT:
-                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
-                break;
-            case BOTH_IN_BACKGROUND:
-                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
-                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
-                break;
+            case INDEPENDENT -> draw.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
+            case BOTH_IN_BACKGROUND -> {
+                draw.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
+                draw.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
+            }
+            default -> {
+            }
         }
     }
 
-    private void drawStageCharacters(GraphicsContext gc, double width, double height) {
-        if (!isCharacterAttacking)
-            gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
-        gc.drawImage(oppSprites[oppMeleeSpriteStatus], oppXcord + uiShakeEffectOffsetCharacter, oppYcord + uiShakeEffectOffsetCharacter, width, height, width, 0, -width, height);
-        if (isCharacterAttacking)
-            gc.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
+    private void drawStageCharacters(DrawContext draw) {
+        if (!isCharacterAttacking) {
+            draw.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
+        }
+        draw.drawImageFlippedHorizontal(oppSprites[oppMeleeSpriteStatus], oppXcord + uiShakeEffectOffsetCharacter, oppYcord + uiShakeEffectOffsetCharacter);
+        if (isCharacterAttacking) {
+            draw.drawImage(charSprites[charMeleeSpriteStatus], charXcord + uiShakeEffectOffsetCharacter, charYcord - uiShakeEffectOffsetCharacter);
+        }
     }
 
-    private void drawStageForeground(GraphicsContext gc) {
+    private void drawStageForeground(DrawContext draw) {
         switch (ambientMode) {
-            case INDEPENDENT:
-                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
-                break;
-            case BOTH_IN_FOREGROUND:
-                gc.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
-                gc.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
-                break;
+            case INDEPENDENT -> draw.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
+            case BOTH_IN_FOREGROUND -> {
+                draw.drawImage(stageAmbientForeground, ambientForegroundX, ambientForegroundY);
+                draw.drawImage(stageAmbientBackground, ambientBackgroundX, ambientBackgroundY);
+            }
+            default -> {
+            }
         }
-        gc.drawImage(stageForeground, foreGroundPositionX, foreGroundPositionY);
+        draw.drawImage(stageForeground, foreGroundPositionX, foreGroundPositionY);
     }
 
-    private void drawDamageLayer(GraphicsContext gc) {
+    private void drawDamageLayer(DrawContext draw) {
         if ((getCharacterHp() / getCharacterMaximumHp()) < 0.66f) {
             damageLayerOpacity = 6.66f - ((getCharacterHp() / getCharacterMaximumHp()) * 10);
         }
-        gc.setGlobalAlpha(damageLayerOpacity * 0.1f);
-        gc.drawImage(damageLayer, 0, 0);
+        draw.setGlobalAlpha(damageLayerOpacity * 0.1f);
+        draw.drawImage(damageLayer, 0, 0);
     }
 
-    private void drawComicBookText(GraphicsContext gc) {
+    private void drawComicBookText(DrawContext draw) {
         if (comicBookTextOpacity >= 0.0f) {
             comicBookTextOpacity = comicBookTextOpacity - 0.0125f;
         }
-        gc.setGlobalAlpha((comicBookTextOpacity));
-        gc.drawImage(comicBookText[comicBookTextIndex], 170, 112 + basicY + comicBookTextPositionY);
-        gc.setGlobalAlpha((1.0f));
+        draw.setGlobalAlpha(comicBookTextOpacity);
+        draw.drawImage(comicBookText[comicBookTextIndex], 170, 112 + basicY + comicBookTextPositionY);
+        draw.setGlobalAlpha(1.0f);
         comicBookTextPositionY = comicBookTextPositionY + 3;
     }
 
-    private void drawBattleInformation(GraphicsContext gc) {
+    private void drawBattleInformation(DrawContext draw) {
         if (opacityTxt < 0.98f) {
             opacityTxt = opacityTxt + 0.02f;
         }
-        gc.setGlobalAlpha((opacityTxt));
-        gc.setFill(Color.WHITE);
-        gc.fillText(battleInformation.toString(), 32 + attackMenuXPos, 470);
-        gc.setGlobalAlpha((1.0f));
+        draw.setGlobalAlpha(opacityTxt);
+        draw.setFill(1f, 1f, 1f);
+        draw.fillText(battleInformation.toString(), 32 + attackMenuXPos, 470);
+        draw.setGlobalAlpha(1.0f);
     }
 
-    private void drawAttackMenu(GraphicsContext gc) {
+    private void drawAttackMenu(DrawContext draw) {
         if (opac < 0.95f) {
             opac = opac + 0.05f;
         }
-        gc.setGlobalAlpha(opac);
-        /*
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 7), physicalAttacks[0], attackOne);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 6), physicalAttacks[1], attackTwo);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 5), physicalAttacks[2], attackThree);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 4), physicalAttacks[3], attackFour);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 3), celestiaAttacks[0], attackFive);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 2), celestiaAttacks[1], attackSix);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 1), celestiaAttacks[2], attackSeven);
-        drawAttackItem(gc, attackMenuTextXPos, attackMenuTextYPos - (24 * 0), celestiaAttacks[3], attackEight);
-        drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24 * 1), itemAttacks[0], attackNine);
-        drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
-        drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
-        drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
-*/
+        draw.setGlobalAlpha(opac);
         switch (columnIndex) {
-            case 0:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), physicalAttacks[0], attackOne);
-                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), physicalAttacks[1], attackTwo);
-                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), physicalAttacks[2], attackThree);
-                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), physicalAttacks[3], attackFour);
-                break;
-            case 1:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), celestiaAttacks[0], attackFive);
-                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), celestiaAttacks[1], attackSix);
-                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), celestiaAttacks[2], attackSeven);
-                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), celestiaAttacks[3], attackEight);
-                break;
-            case 2:
-                drawAttackItem(gc, attackMenuTextXPos - 6, attackMenuTextYPos + (24), itemAttacks[0], attackNine);
-                drawAttackItem(gc, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
-                drawAttackItem(gc, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
-                drawAttackItem(gc, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
-                break;
+            case 0 -> {
+                drawAttackItem(draw, attackMenuTextXPos - 6, attackMenuTextYPos + (24), physicalAttacks[0], attackOne);
+                drawAttackItem(draw, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), physicalAttacks[1], attackTwo);
+                drawAttackItem(draw, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), physicalAttacks[2], attackThree);
+                drawAttackItem(draw, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), physicalAttacks[3], attackFour);
+            }
+            case 1 -> {
+                drawAttackItem(draw, attackMenuTextXPos - 6, attackMenuTextYPos + (24), celestiaAttacks[0], attackFive);
+                drawAttackItem(draw, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), celestiaAttacks[1], attackSix);
+                drawAttackItem(draw, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), celestiaAttacks[2], attackSeven);
+                drawAttackItem(draw, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), celestiaAttacks[3], attackEight);
+            }
+            case 2 -> {
+                drawAttackItem(draw, attackMenuTextXPos - 6, attackMenuTextYPos + (24), itemAttacks[0], attackNine);
+                drawAttackItem(draw, attackMenuTextXPos - 12, attackMenuTextYPos + (24 * 2), itemAttacks[1], attackTen);
+                drawAttackItem(draw, attackMenuTextXPos - 18, attackMenuTextYPos + (24 * 3), itemAttacks[2], attackEleven);
+                drawAttackItem(draw, attackMenuTextXPos - 24, attackMenuTextYPos + (24 * 4), itemAttacks[3], attackTwelve);
+            }
+            default -> {
+            }
         }
 
-        gc.setGlobalAlpha(1.0f);
-        gc.setFill(Color.BLACK);
-        double diameter = 40;
-        gc.fillArc(426 - 100, 420, diameter, diameter, 0, 360, ArcType.ROUND);
-        gc.fillArc(426 - 50, 420, diameter, diameter, 0, 360, ArcType.ROUND);
-        gc.fillArc(426 + 5, 420, diameter, diameter, 0, 360, ArcType.ROUND);
-        gc.fillArc(426 + 55, 420, diameter, diameter, 0, 360, ArcType.ROUND);
-        gc.fillRect(426 - 70, 438, 140, 4);
-        gc.setFill(Color.WHITE);
+        draw.setGlobalAlpha(1.0f);
+        draw.setFill(0f, 0f, 0f);
+        float diameter = 40;
+        draw.fillArc(426 - 100, 420, diameter, diameter, 0, 360);
+        draw.fillArc(426 - 50, 420, diameter, diameter, 0, 360);
+        draw.fillArc(426 + 5, 420, diameter, diameter, 0, 360);
+        draw.fillArc(426 + 55, 420, diameter, diameter, 0, 360);
+        draw.fillRect(426 - 70, 438, 140, 4);
+        draw.setFill(1f, 1f, 1f);
         diameter = 35;
-        if (characterAttacks.size() >= 1 || triggerCharacterAttack)
-            gc.fillArc(426 - 97.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
-        if (characterAttacks.size() >= 2 || triggerCharacterAttack)
-            gc.fillArc(426 - 47.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
-        if (characterAttacks.size() >= 3 || triggerCharacterAttack)
-            gc.fillArc(426 + 7.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
-        if (characterAttacks.size() >= 4 || triggerCharacterAttack)
-            gc.fillArc(426 + 57.5, 422.5, diameter, diameter, 0, 360, ArcType.ROUND);
-        gc.setGlobalAlpha((1.0f));
+        if (characterAttacks.size() >= 1 || triggerCharacterAttack) {
+            draw.fillArc(426 - 97.5f, 422.5f, diameter, diameter, 0, 360);
+        }
+        if (characterAttacks.size() >= 2 || triggerCharacterAttack) {
+            draw.fillArc(426 - 47.5f, 422.5f, diameter, diameter, 0, 360);
+        }
+        if (characterAttacks.size() >= 3 || triggerCharacterAttack) {
+            draw.fillArc(426 + 7.5f, 422.5f, diameter, diameter, 0, 360);
+        }
+        if (characterAttacks.size() >= 4 || triggerCharacterAttack) {
+            draw.fillArc(426 + 57.5f, 422.5f, diameter, diameter, 0, 360);
+        }
+        draw.setGlobalAlpha(1.0f);
     }
 
-    private void drawAttackItem(GraphicsContext gc, int x, int y, String attack, UiItem uiItem) {
-        gc.setFont(uiItem.isHovered() ? largeFont : normalFont);
+    private void drawAttackItem(DrawContext draw, int x, int y, String attack, UiItem uiItem) {
+        float fontSize = uiItem.isHovered() ? UiConstants.LARGE_TXT_SIZE : UiConstants.NORMAL_TXT_SIZE;
+        setFont(draw, fontSize);
 
         int half = 2;
         int full = 6;
         boolean validHighlight = uiItem.isHovered() && safeToSelect;
 
-        double computedSize =Utils.computeStringWidth(attack, gc.getFont()) + full;
-        double width = computedSize < 150 ? 150 : computedSize;
-        double height = gc.getFont().getSize() + full;
+        float computedSize = Utils.computeStringWidth(attack, draw) + full;
+        float width = computedSize < 150 ? 150 : computedSize;
+        float height = fontSize + full;
 
-        gc.setFill(validHighlight ? Color.WHITE : Color.BLACK);
-        gc.strokeRoundRect(x - half, y - gc.getFont().getSize() - half, width, height, half, half);
+        draw.setFill(validHighlight ? 1f : 0f, validHighlight ? 1f : 0f, validHighlight ? 1f : 0f);
+        draw.strokeRoundRect(x - half, y - fontSize - half, width, height, half, 1f);
 
-        gc.setFill(validHighlight ? Color.BLACK : Color.WHITE);
-        gc.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
-        gc.fillRoundRect(x - half, y - gc.getFont().getSize() - half, width, height, half, half);
+        draw.setFill(validHighlight ? 0f : 1f, validHighlight ? 0f : 1f, validHighlight ? 0f : 1f);
+        draw.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
+        draw.fillRoundRect(x - half, y - fontSize - half, width, height, half);
 
-        gc.setFill(validHighlight ? Color.WHITE : Color.BLACK);
-        gc.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
-        fillText(gc, attack, x, y, uiItem, width, height);
-
-
+        draw.setFill(validHighlight ? 1f : 0f, validHighlight ? 1f : 0f, validHighlight ? 1f : 0f);
+        draw.setGlobalAlpha(validHighlight ? 1.0f : 0.5f);
+        fillText(draw, attack, x, y, uiItem, width, height);
     }
 
-    private void drawTimer(GraphicsContext gc) {
-        gc.drawImage(counterPane, paneCord, 0);
+    private void drawTimer(DrawContext draw) {
+        draw.drawImage(counterPane, paneCord, 0);
         if (timeLimit > 180) {
-            gc.drawImage(numberPix[11], (int) (386), 0);
+            draw.drawImage(numberPix[11], 386, 0);
         } else {
-            if (times.length > time1)
-                gc.drawImage(times[time1], 356, 0);
-            if (times.length > time2)
-                gc.drawImage(times[time2], 356 + 40, 0);
-            if (times.length > time3)
-                gc.drawImage(times[time3], 356 + 80, 0);
+            if (times.length > time1) {
+                draw.drawImage(times[time1], 356, 0);
+            }
+            if (times.length > time2) {
+                draw.drawImage(times[time2], 356 + 40, 0);
+            }
+            if (times.length > time3) {
+                draw.drawImage(times[time3], 356 + 80, 0);
+            }
         }
     }
 
-    private void drawFuryBar(GraphicsContext gc) {
-        drawImage(gc, furyState, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), fury);
-        gc.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
-        gc.setFill(Color.RED);
-        gc.fillRoundRect(12 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 132 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), 12, getFuryLevel() / 5, 12, 12);
+    private void drawFuryBar(DrawContext draw) {
+        drawImage(draw, furyState, 20 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), 190 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), fury);
+        draw.drawImage(furyBar, 10 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), furyBarY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f));
+        draw.setFill(1f, 0f, 0f);
+        draw.fillRoundRect(12 + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), 132 - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), 12, getFuryLevel() / 5f, 12);
     }
 
-    private void drawFuryComboEffects(GraphicsContext gc) {
+    private void drawFuryComboEffects(DrawContext draw) {
         if (furyComboOpacity > 0.01f) {
             furyComboOpacity -= 0.01f;
         }
-        gc.setGlobalAlpha((furyComboOpacity));
-        if (comboPicArrayPosOpp < 9)
-            gc.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2));
-        gc.setGlobalAlpha((1.0f));
-        gc.setFont(notSelected);
+        draw.setGlobalAlpha(furyComboOpacity);
+        if (comboPicArrayPosOpp < 9) {
+            draw.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f));
+        }
+        draw.setGlobalAlpha(1.0f);
+        setFont(draw, 12);
     }
 
-    private void drawDamageDigits(GraphicsContext gc) {
-        gc.setGlobalAlpha((opponentDamageOpacity));
+    private void drawDamageDigits(DrawContext draw) {
+        draw.setGlobalAlpha(opponentDamageOpacity);
         //opp damage loader
-        gc.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
-        gc.drawImage(figGuiSrc2, playerDamageXLoc + (spacer) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
-        gc.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
-        gc.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
-        gc.setGlobalAlpha((1.0f));
+        draw.drawImage(figGuiSrc1, playerDamageXLoc + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
+        draw.drawImage(figGuiSrc2, playerDamageXLoc + (spacer) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
+        draw.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
+        draw.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
+        draw.setGlobalAlpha(1.0f);
         if (opponentDamageOpacity >= 0.0f) {
             opponentDamageOpacity = opponentDamageOpacity - 0.0125f;
         }
@@ -673,13 +660,13 @@ public class RenderGamePlay extends GamePlay {
         }
 
 
-        gc.setGlobalAlpha((playerDamageOpacity));
+        draw.setGlobalAlpha(playerDamageOpacity);
         //char damage loader
-        gc.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
-        gc.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
-        gc.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
-        gc.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
-        gc.setGlobalAlpha((1.0f));
+        draw.drawImage(figGuiSrc10, opponentDamageXLoc + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
+        draw.drawImage(figGuiSrc20, opponentDamageXLoc + (spacer) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
+        draw.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
+        draw.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
+        draw.setGlobalAlpha(1.0f);
         if (playerDamageOpacity >= 0.0f) {
             playerDamageOpacity = playerDamageOpacity - 0.0125f;
         }
@@ -773,26 +760,25 @@ public class RenderGamePlay extends GamePlay {
         attackMenuXPos = 670;
         attackMenuTextXPos = attackMenuXPos + 25;
         attackMenuTextYPos = 366;
-        Loader pix = new Loader();
-        counterPane = pix.load("images/countPane.png");
-        num0 = pix.load("images/fig/0.png");
-        num1 = pix.load("images/fig/1.png");
-        num2 = pix.load("images/fig/2.png");
-        num3 = pix.load("images/fig/3.png");
-        num4 = pix.load("images/fig/4.png");
-        num5 = pix.load("images/fig/5.png");
-        num6 = pix.load("images/fig/6.png");
-        num7 = pix.load("images/fig/7.png");
-        num8 = pix.load("images/fig/8.png");
-        num9 = pix.load("images/fig/9.png");
-        numInfinite = pix.load("images/fig/infinite.png");
-        numNull = pix.load("images/trans.png");
-        numberPix = new Image[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
-        statusEffectSprites[0] = pix.load("images/trans.png");
-        statusEffectSprites[1] = pix.load("images/stats/stat1.png");
-        statusEffectSprites[2] = pix.load("images/stats/stat2.png");
-        statusEffectSprites[3] = pix.load("images/stats/stat3.png");
-        statusEffectSprites[4] = pix.load("images/stats/stat4.png");
+        counterPane = assets().loadImage("images/countPane.png");
+        num0 = assets().loadImage("images/fig/0.png");
+        num1 = assets().loadImage("images/fig/1.png");
+        num2 = assets().loadImage("images/fig/2.png");
+        num3 = assets().loadImage("images/fig/3.png");
+        num4 = assets().loadImage("images/fig/4.png");
+        num5 = assets().loadImage("images/fig/5.png");
+        num6 = assets().loadImage("images/fig/6.png");
+        num7 = assets().loadImage("images/fig/7.png");
+        num8 = assets().loadImage("images/fig/8.png");
+        num9 = assets().loadImage("images/fig/9.png");
+        numInfinite = assets().loadImage("images/fig/infinite.png");
+        numNull = assets().loadImage("images/trans.png");
+        numberPix = new NvgImage[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
+        statusEffectSprites[0] = assets().loadImage("images/trans.png");
+        statusEffectSprites[1] = assets().loadImage("images/stats/stat1.png");
+        statusEffectSprites[2] = assets().loadImage("images/stats/stat2.png");
+        statusEffectSprites[3] = assets().loadImage("images/stats/stat3.png");
+        statusEffectSprites[4] = assets().loadImage("images/stats/stat4.png");
         System.out.println("loaded all loader");
     }
 
@@ -801,69 +787,68 @@ public class RenderGamePlay extends GamePlay {
      */
     private void loadSprites() {
         try {
-            Loader loader = new Loader();
             Characters.get().getCharacter().loadMeHigh();
             Characters.get().getOpponent().loadMeHigh();
 
-            charSprites = new Image[Characters.get().getCharacter().getNumberOfSprites()];
+            charSprites = new NvgImage[Characters.get().getCharacter().getNumberOfSprites()];
             for (int i = 0; i < charSprites.length; i++)
                 charSprites[i] = Characters.get().getCharacter().getSprite(i);
 
-            oppSprites = new Image[Characters.get().getOpponent().getNumberOfSprites()];
+            oppSprites = new NvgImage[Characters.get().getOpponent().getNumberOfSprites()];
             for (int i = 0; i < oppSprites.length; i++)
                 oppSprites[i] = Characters.get().getOpponent().getSprite(i);
 
-            comboPicArray = new Image[9];
+            comboPicArray = new NvgImage[9];
             for (int u = 0; u < 6; u++)
-                comboPicArray[u] = loader.load("images/screenTxt/" + u + ".png");
-            comboPicArray[7] = loader.load("images/screenTxt/7.png");
+                comboPicArray[u] = assets().loadImage("images/screenTxt/" + u + ".png");
+            comboPicArray[7] = assets().loadImage("images/screenTxt/7.png");
             comboPicArray[8] = Characters.get().getCharacter().getSprite(11);
 
-            comicBookText = new Image[10];
+            comicBookText = new NvgImage[10];
             comicBookText[0] = Characters.get().getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
-                comicBookText[bx] = loader.load("images/screenComic/" + (bx - 1) + ".png");
-            damageLayer = loader.load("images/damage1.png");
+                comicBookText[bx] = assets().loadImage("images/screenComic/" + (bx - 1) + ".png");
+            damageLayer = assets().loadImage("images/damage1.png");
 
-            time0i = loader.load("images/fig/0.png");
-            time1i = loader.load("images/fig/1.png");
-            time2i = loader.load("images/fig/2.png");
-            time3i = loader.load("images/fig/3.png");
-            time4i = loader.load("images/fig/4.png");
-            time5i = loader.load("images/fig/5.png");
-            time6i = loader.load("images/fig/6.png");
-            time7i = loader.load("images/fig/7.png");
-            time8i = loader.load("images/fig/8.png");
-            time9i = loader.load("images/fig/9.png");
-            times = new Image[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
+            time0i = assets().loadImage("images/fig/0.png");
+            time1i = assets().loadImage("images/fig/1.png");
+            time2i = assets().loadImage("images/fig/2.png");
+            time3i = assets().loadImage("images/fig/3.png");
+            time4i = assets().loadImage("images/fig/4.png");
+            time5i = assets().loadImage("images/fig/5.png");
+            time6i = assets().loadImage("images/fig/6.png");
+            time7i = assets().loadImage("images/fig/7.png");
+            time8i = assets().loadImage("images/fig/8.png");
+            time9i = assets().loadImage("images/fig/9.png");
+            times = new NvgImage[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
 
             if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                characterPortraits = new Image[charNames.length];
+                characterPortraits = new NvgImage[charNames.length];
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
-                    characterPortraits[characterEnum.index()] = loader.load("images/" + characterEnum.data() + "/cap.png");
+                    characterPortraits[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/cap.png");
                 }
-                storyBoards = new Image[12];
+                storyBoards = new NvgImage[12];
                 for (int u = 0; u < storyBoards.length; u++) {
-                    storyBoards[u] = loader.load("images/story/s" + u + ".png");
+                    storyBoards[u] = assets().loadImage("images/story/s" + u + ".png");
                 }
             }
-            Image transBuf = loader.load("images/trans.png");
-            hpHolder = loader.load("images/hpHolder.png");
-            hpHolderOpponent = loader.load("images/hpHolderOpponent.png");
-            stageBackground = loader.load(RenderStageSelect.get().getStageBackground());
-            stageForeground = loader.load(RenderStageSelect.get().getStageForeground());
-            stageAmbientForeground = loader.load(RenderStageSelect.get().getFgLocation1());
-            stageAmbientBackground = loader.load(RenderStageSelect.get().getFgLocation2());
-            furyActive = loader.load("images/fury.gif");
-            furyInactive = loader.load("images/furyo.png");
+            NvgImage transBuf = assets().loadImage("images/trans.png");
+            hpHolder = assets().loadImage("images/hpHolder.png");
+            hpHolderOpponent = assets().loadImage("images/hpHolderOpponent.png");
+            stageBackground = assets().loadImage(RenderStageSelect.get().getStageBackground());
+            stageForeground = assets().loadImage(RenderStageSelect.get().getStageForeground());
+            stageAmbientForeground = assets().loadImage(RenderStageSelect.get().getFgLocation1());
+            stageAmbientBackground = assets().loadImage(RenderStageSelect.get().getFgLocation2());
+            furyActive = assets().loadImage("images/fury.gif");
+            furyInactive = assets().loadImage("images/furyo.png");
             furyState = furyInactive;
 
-            furyBar = loader.load("images/furyBar.png");
-            oppBar = loader.load("images/oppBar.png");
-            hud1 = loader.load("images/hud1.png");
-            characterHpBar = loader.load("images/hud2.png");
-            win = loader.load("images/win.png");
-            lose = loader.load("images/lose.png");
+            furyBar = assets().loadImage("images/furyBar.png");
+            oppBar = assets().loadImage("images/oppBar.png");
+            hud1 = assets().loadImage("images/hud1.png");
+            characterHpBar = assets().loadImage("images/hud2.png");
+            win = assets().loadImage("images/win.png");
+            lose = assets().loadImage("images/lose.png");
             status = transBuf;
             System.out.println("loaded all char sprites loader");
             //ensures method is only run once
@@ -1052,40 +1037,26 @@ public class RenderGamePlay extends GamePlay {
         return getCharacterAtbPercent() * 360;
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
-        KeyCode keyCode = keyEvent.getCode();
-        switch (keyCode) {
-            case UP:
-            case W:
-                onUp();
-                break;
-            case DOWN:
-            case S:
-                onDown();
-                break;
-            case LEFT:
-            case D:
-                onLeft();
-                break;
-            case RIGHT:
-            case A:
-                onRight();
-                break;
-            case ENTER:
-                onAccept();
-                break;
-            case BACK_SPACE:
+    @Override
+    public void keyPressed(int glfwKey) {
+        switch (glfwKey) {
+            case GLFW_KEY_UP, GLFW_KEY_W -> onUp();
+            case GLFW_KEY_DOWN, GLFW_KEY_S -> onDown();
+            case GLFW_KEY_LEFT, GLFW_KEY_D -> onLeft();
+            case GLFW_KEY_RIGHT, GLFW_KEY_A -> onRight();
+            case GLFW_KEY_ENTER -> onAccept();
+            case GLFW_KEY_BACKSPACE -> {
                 unQueMove();
-            case ESCAPE:
                 onBackCancel();
-                break;
-            case L:
+            }
+            case GLFW_KEY_ESCAPE -> onBackCancel();
+            case GLFW_KEY_L -> {
                 setActiveItem(fury);
                 fury.accept();
-                break;
-            case F5:
-                cancelMatch();
-                break;
+            }
+            case GLFW_KEY_F5 -> cancelMatch();
+            default -> {
+            }
         }
     }
 
@@ -1093,11 +1064,13 @@ public class RenderGamePlay extends GamePlay {
         loadAssets = true;
     }
 
-    public void mouseScrolled(ScrollEvent scrollEvent) {
-        if (scrollEvent.getDeltaY() > 0)
+    @Override
+    public void mouseScrolled(double dy) {
+        if (dy > 0) {
             onLeft();
-        else
+        } else {
             onRight();
+        }
     }
 
     private class PauseAndNavigate extends Event {

@@ -27,12 +27,11 @@ import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderGamePlay;
-import io.github.subiyacryolite.enginev1.Mode;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import io.github.subiyacryolite.enginev2.Mode;
 
 import java.util.Hashtable;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author: Ifunga Ndana
@@ -116,51 +115,23 @@ public abstract class StageSelect extends Mode {
         stageAmbient1 = "images/bgBG" + stage.filePrefix() + "a.png";
         stageAmbient2 = "images/bgBG" + stage.filePrefix() + "b.png";
         switch (stage) {
-            case IBEX_HILL:
-                selectIbexHill();
-                break;
-            case CHELSTON_CITY_DOCKS:
-                selectChelsonCityDocks();
-                break;
-            case DESERT_RUINS:
-                selectDesertRuins();
-                break;
-            case CHELSTON_CITY_STREETS:
-                selectChelstonCityStreets();
-                break;
-            case IBEX_HILL_NIGHT:
-                selectIbexHillNight();
-                break;
-            case SCORCHED_RUINS:
-                selectScorchedRuins();
-                break;
-            case FROZEN_WILDERNESS:
-                selectFrozenWilderness();
-                break;
-            case DISTANT_ISLE:
-                selectDistantIsle();
-                break;
-            case HIDDEN_CAVE:
-                selectHiddenCave();
-                break;
-            case HIDDEN_CAVE_NIGHT:
-                selectHiddenCaveNight();
-                break;
-            case AFRICAN_VILLAGE:
-                selectAfricanVillage();
-                break;
-            case APOCALYPTO:
-                selectApocalypto();
-                break;
-            case DISTANT_ISLE_NIGHT:
-                selectDistantIsleNight();
-                break;
-            case DESERT_RUINS_NIGHT:
-                selectDesertRuinsNight();
-                break;
-            case SCORCHED_RUINS_NIGHT:
-                selectScorchedRuinsNight();
-                break;
+            case IBEX_HILL -> selectIbexHill();
+            case CHELSTON_CITY_DOCKS -> selectChelsonCityDocks();
+            case DESERT_RUINS -> selectDesertRuins();
+            case CHELSTON_CITY_STREETS -> selectChelstonCityStreets();
+            case IBEX_HILL_NIGHT -> selectIbexHillNight();
+            case SCORCHED_RUINS -> selectScorchedRuins();
+            case FROZEN_WILDERNESS -> selectFrozenWilderness();
+            case DISTANT_ISLE -> selectDistantIsle();
+            case HIDDEN_CAVE -> selectHiddenCave();
+            case HIDDEN_CAVE_NIGHT -> selectHiddenCaveNight();
+            case AFRICAN_VILLAGE -> selectAfricanVillage();
+            case APOCALYPTO -> selectApocalypto();
+            case DISTANT_ISLE_NIGHT -> selectDistantIsleNight();
+            case DESERT_RUINS_NIGHT -> selectDesertRuinsNight();
+            case SCORCHED_RUINS_NIGHT -> selectScorchedRuinsNight();
+            default -> {
+            }
         }
         if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.get().getSubMode() == SubMode.WATCH) {
             if (NetworkManager.get().isServer()) {
@@ -410,45 +381,22 @@ public abstract class StageSelect extends Mode {
         return hoveredStage;
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
-        KeyCode keyCode = keyEvent.getCode();
-        switch (keyCode) {
-            case ENTER:
-                onAccept();
-                break;
-            case ESCAPE:
-            case BACK_SPACE:
-                onBackCancel();
-                break;
-            case UP:
-            case W:
-                onUp();
-                break;
-            case DOWN:
-            case S:
-                onDown();
-                break;
-            case LEFT:
-            case A:
-                onLeft();
-                break;
-            case RIGHT:
-            case D:
-                onRight();
-                break;
+    @Override
+    public void keyPressed(int glfwKey) {
+        switch (glfwKey) {
+            case GLFW_KEY_ENTER -> onAccept();
+            case GLFW_KEY_ESCAPE, GLFW_KEY_BACKSPACE -> onBackCancel();
+            case GLFW_KEY_UP, GLFW_KEY_W -> onUp();
+            case GLFW_KEY_DOWN, GLFW_KEY_S -> onDown();
+            case GLFW_KEY_LEFT, GLFW_KEY_A -> onLeft();
+            case GLFW_KEY_RIGHT, GLFW_KEY_D -> onRight();
+            default -> {
+            }
         }
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-        switch (mouseEvent.getButton()) {
-            case PRIMARY:
-                onAccept();
-                break;
-            case SECONDARY:
-                onBackCancel();
-                break;
-            case MIDDLE:
-                break;
-        }
+    @Override
+    public void mouseClicked(float x, float y) {
+        onAccept();
     }
 }

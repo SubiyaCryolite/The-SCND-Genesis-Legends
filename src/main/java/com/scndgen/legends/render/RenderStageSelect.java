@@ -22,8 +22,8 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Language;
-import com.scndgen.legends.LoginScreen;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
@@ -31,17 +31,12 @@ import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Overlay;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.Rgba;
 
 import java.util.HashMap;
-
-import static com.sun.javafx.tk.Toolkit.getToolkit;
 
 
 public class RenderStageSelect extends StageSelect {
@@ -63,12 +58,10 @@ public class RenderStageSelect extends StageSelect {
             "scotty/Scotty Zepplin - tRAVELLING FIREFLIES",
             "scotty/scotty zepplin - We Are",
             "scotty/Scotty Zepplin - Rays"};
-    private Image captionHighlight, loading;
-    private Loader loader;
+    private NvgImage captionHighlight, loading;
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
-    private final Image[] stageCap = new Image[numberOfStages];
-    private final Image[] stagePrev = new Image[numberOfStages];
-    private Font normalFont;
+    private final NvgImage[] stageCap = new NvgImage[numberOfStages];
+    private final NvgImage[] stagePrev = new NvgImage[numberOfStages];
     private int hoveredStageIndex = -1;
     private Stage hoveredStage;
     private final UiItem ibexHill;
@@ -270,8 +263,6 @@ public class RenderStageSelect extends StageSelect {
 
     @Override
     public void loadAssetsIml() {
-        loader = new Loader();
-        normalFont = loadFont(LoginScreen.NORMAL_TXT_SIZE);
         loadCaps();
         setActiveItem(uiElements.get(0));
         loadAssets = false;
@@ -283,61 +274,62 @@ public class RenderStageSelect extends StageSelect {
     }
 
     @Override
-    public void render(GraphicsContext gc, double x, double y) {
+    public void render(DrawContext draw) {
         loadAssets();
         if (opacity < 0.98f) {
             opacity = opacity + 0.02f;
         }
         if (stageSelected) {
-            gc.setFill(Color.BLACK);
-            gc.drawImage(stagePrev[hoveredStage.index()], 0, 0);
-            gc.setGlobalAlpha((0.7f));
-            gc.fillRect(0, 0, 852, 480);
-            gc.setGlobalAlpha((1.0f));
-            gc.setGlobalAlpha((0.5f));
-            gc.fillRect(200, 0, 452, 480);
-            gc.setGlobalAlpha((1.0f));
-            gc.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
-            gc.setFill(Color.WHITE);
-            gc.fillText(Language.get().get(165), (852 - Utils.computeStringWidth(Language.get().get(165), gc.getFont())) / 2, 200);
+            draw.setFill(Rgba.BLACK);
+            draw.drawImage(stagePrev[hoveredStage.index()], 0, 0);
+            draw.setGlobalAlpha(0.7f);
+            draw.fillRect(0, 0, 852, 480);
+            draw.setGlobalAlpha(1.0f);
+            draw.setGlobalAlpha(0.5f);
+            draw.fillRect(200, 0, 452, 480);
+            draw.setGlobalAlpha(1.0f);
+            draw.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
+            draw.setFill(Rgba.WHITE);
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.fillText(Language.get().get(165), (852 - Utils.computeStringWidth(Language.get().get(165), draw)) / 2, 200);
         } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
-            gc.setFont(normalFont);
-            gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, 852, 480);
-            gc.setFill(Color.WHITE);
-            gc.fillText(">> " + Language.get().get(166) + " <<", (852 -Utils.computeStringWidth(">> " + Language.get().get(166) + " <<", gc.getFont())) / 2, 300);
-        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT == false) {
-            gc.setFont(normalFont);
-            gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, 852, 480);
-            gc.setGlobalAlpha(opacity);
-            gc.drawImage(stagePrev[hoveredStage.index()], 0, 0);
-            gc.setGlobalAlpha((1.0f));
-            gc.setGlobalAlpha((5 * 0.1F));
-            gc.fillRoundRect(283, 0, 285, 480, 30, 30);
-            gc.setGlobalAlpha((10 * 0.1F));
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.setFill(Rgba.BLACK);
+            draw.fillRect(0, 0, 852, 480);
+            draw.setFill(Rgba.WHITE);
+            var waiting = ">> " + Language.get().get(166) + " <<";
+            draw.fillText(waiting, (852 - Utils.computeStringWidth(waiting, draw)) / 2, 300);
+        } else if (ScndGenLegends.get().getSubMode() != SubMode.LAN_CLIENT) {
+            setFont(draw, UiConstants.NORMAL_TXT_SIZE);
+            draw.setFill(Rgba.BLACK);
+            draw.fillRect(0, 0, 852, 480);
+            draw.setGlobalAlpha(opacity);
+            draw.drawImage(stagePrev[hoveredStage.index()], 0, 0);
+            draw.setGlobalAlpha(1.0f);
+            draw.setGlobalAlpha(0.5f);
+            draw.fillRoundRect(283, 0, 285, 480, 30);
+            draw.setGlobalAlpha(1.0f);
             for (int row = 0; row <= rows; row++) {
                 for (int column = 0; column < columns; column++) {
                     int computedPosition = (row * columns) + column;
                     if (computedPosition >= stageCap.length) continue;
-                    drawImage(gc, stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
+                    drawImage(draw, stageCap[computedPosition], hPos + (hSpacer * column), firstLine + (vSpacer * row), uiElements.get(computedPosition));
                     if (uiElements.get(computedPosition).isHovered()) {
                         showStageName(hoveredStage);
-                        gc.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row));
+                        draw.drawImage(captionHighlight, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                     }
                 }
             }
         }
-        Overlay.get().overlay(gc, x, y);
     }
 
     private void loadCaps() {
         try {
-            captionHighlight = loader.load("images/stageCaptionHighlight.png");
-            loading = loader.load("images/loading.gif");
+            captionHighlight = assets().loadImage("images/stageCaptionHighlight.png");
+            loading = assets().loadImage("images/loading.gif");
             for (int index = 0; index < stagePreviews.length; index++) {
-                stageCap[index] = loader.load("images/t_" + stagePreviews[index] + ".png");
-                stagePrev[index] = loader.load("images/prev/" + stagePreviews[index] + ".jpg");
+                stageCap[index] = assets().loadImage("images/t_" + stagePreviews[index] + ".png");
+                stagePrev[index] = assets().loadImage("images/prev/" + stagePreviews[index] + ".jpg");
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

@@ -10,10 +10,8 @@ import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.network.NetworkManager;
-import io.github.subiyacryolite.enginev1.Audio;
-import io.github.subiyacryolite.enginev1.Loader;
-import io.github.subiyacryolite.enginev1.Mode;
-import javafx.scene.input.MouseEvent;
+import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.Mode;
 
 import java.util.Hashtable;
 
@@ -26,7 +24,6 @@ public abstract class CharacterSelection extends Mode {
     protected String[] characterDescription;
     protected final int numOfCharacters = CharacterEnum.values().length;
     protected int xCordCloud = 0, xCordCloud2 = 0, charYcap = 0, charXcap = 0, column = 1, x = 0, y = 0, row = 0, hSpacer = 48, vSpacer = 48, hPos = 354, firstLine = 105;
-    protected Loader loader;
     protected float opacInc, p1Opac, opacChar;
     protected CharacterEnum opponentEnum, characterEnum;
     protected int oppPrevLoc, charPrevLoc;
@@ -52,7 +49,6 @@ public abstract class CharacterSelection extends Mode {
      * Initialises the characterEnum select panel
      */
     public CharacterSelection() {
-
         attacks = new int[4];
     }
 
@@ -231,7 +227,7 @@ public abstract class CharacterSelection extends Mode {
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare( characterEnum = CharacterEnum.AISHA);
+            Characters.get().prepare(characterEnum = CharacterEnum.AISHA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
             if (NetworkManager.get().isOnline()) {
@@ -530,43 +526,20 @@ public abstract class CharacterSelection extends Mode {
         int column = getVindex();
         int computedPosition = (columns * column) + row;
         CharacterEnum character = characterLookup.get(computedPosition);
+        PlayerType type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
         switch (character) {
-            case SUBIYA:
-                selSubiya(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case RAILA:
-                selRaila(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case LYNX:
-                selLynx(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case AISHA:
-                selAisha(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case ADE:
-                selAde(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case RAVAGE:
-                selRav(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case JONAH:
-                selJon(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case ADAM:
-                selAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case NOVA_ADAM:
-                selNOVAAdam(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case AZARIA:
-                selAza(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case SORROWE:
-                selSorr(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
-            case THING:
-                selThing(selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
-                break;
+            case SUBIYA -> selSubiya(type);
+            case RAILA -> selRaila(type);
+            case LYNX -> selLynx(type);
+            case AISHA -> selAisha(type);
+            case ADE -> selAde(type);
+            case RAVAGE -> selRav(type);
+            case JONAH -> selJon(type);
+            case ADAM -> selAdam(type);
+            case NOVA_ADAM -> selNOVAAdam(type);
+            case AZARIA -> selAza(type);
+            case SORROWE -> selSorr(type);
+            case THING -> selThing(type);
         }
     }
 
@@ -650,19 +623,12 @@ public abstract class CharacterSelection extends Mode {
         this.selectedOppIndex = selectedOppIndex;
     }
 
-    public void mouseMoved(MouseEvent m) {
+    @Override
+    public void mouseMoved(float x, float y) {
     }
 
-    public void mouseClicked(MouseEvent mouseEvent) {
-        switch (mouseEvent.getButton()) {
-            case PRIMARY:
-                onAccept();
-                break;
-            case SECONDARY:
-                onBackCancel();
-                break;
-            case MIDDLE:
-                break;
-        }
+    @Override
+    public void mouseClicked(float x, float y) {
+        onAccept();
     }
 }

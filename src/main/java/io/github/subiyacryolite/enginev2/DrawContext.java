@@ -10,7 +10,7 @@ import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 /**
- * Thin immediate-mode drawing API modelled after the JavaFX GraphicsContext usage in this project.
+ * Thin immediate-mode drawing API for NanoVG scenes (design-space coordinates).
  * All NanoVG structs are allocated via {@link MemoryStack} (nested push per call).
  */
 public final class DrawContext {
@@ -65,6 +65,10 @@ public final class DrawContext {
         fillG = g;
         fillB = b;
         fillA = a;
+    }
+
+    public void setFill(Rgba rgba) {
+        setFill(rgba.r(), rgba.g(), rgba.b(), rgba.a());
     }
 
     public void setGlobalAlpha(float alpha) {
@@ -130,8 +134,8 @@ public final class DrawContext {
     }
 
     /**
-     * Pie/arc fill matching JavaFX fillArc(..., ArcType.ROUND) for HUD meters.
-     * Angles are degrees; 0 is east, positive is counter-clockwise (JavaFX convention).
+     * Pie/arc fill for HUD meters.
+     * Angles are degrees; 0 is east, positive is counter-clockwise.
      */
     public void fillArc(float x, float y, float w, float h, float startAngleDeg, float extentDeg) {
         float cx = x + w * 0.5f;
@@ -172,7 +176,7 @@ public final class DrawContext {
     }
 
     /**
-     * Horizontal flip equivalent to JavaFX drawImage with negative destination width.
+     * Horizontal flip (negative destination width).
      */
     public void drawImageFlippedHorizontal(NvgImage image, float x, float y) {
         if (image == null) {

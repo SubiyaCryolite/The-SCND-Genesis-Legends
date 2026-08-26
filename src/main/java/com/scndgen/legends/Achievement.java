@@ -26,7 +26,7 @@ import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.Overlay;
+import io.github.subiyacryolite.enginev2.Overlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;

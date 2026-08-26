@@ -23,16 +23,17 @@ package com.scndgen.legends.render;
 
 import com.scndgen.legends.Achievement;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.MainMenuOverlay;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.State;
-import io.github.subiyacryolite.enginev1.Loader;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import io.github.subiyacryolite.enginev2.AssetLoader;
+import io.github.subiyacryolite.enginev2.DrawContext;
+import io.github.subiyacryolite.enginev2.NvgImage;
+import io.github.subiyacryolite.enginev2.Rgba;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 
 /**
@@ -43,22 +44,18 @@ import javafx.scene.text.Font;
 public class AchievementLocker {
 
     private int spacer = 14;
-    private Font font2;
-    private Font font1;
     private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private int offset = 10, offset2 = 350, offset2x = 40, achPic = 40, achPicSpacer = 60, scroller = 0;
     private String stat1, stat2, stat3,
             stat4, stat5, stat6, stat7, stat13, stat15, stat16, text2 = "", stat17;
     private int percentageOfUnlockedAchievements = 0;
-    private Image no;
-    private Image[] achCap;
+    private NvgImage no;
+    private NvgImage[] achCap;
     private boolean[] isAchievementActivated;
-    private Loader pix;
     private float gWin, gLoss, denom, progression;
     private float numberOfTriggeredAchievements = 0.0f;
 
     public AchievementLocker() {
-        pix = new Loader();
         loadFontAndPictures();
         refreshStats();
     }
@@ -79,10 +76,10 @@ public class AchievementLocker {
 
     /**
      * Draw user statistics
-     *
-     * @param screen - Graphics2D context
      */
-    public void drawStats(GraphicsContext screen, double w, double h) {
+    public void drawStats(DrawContext draw) {
+        float w = 852;
+        float h = 480;
         try {
             denom = State.get().getLogin().getWins() + State.get().getLogin().getLosses();
             gWin = 200 * (State.get().getLogin().getWins() / denom);
@@ -94,97 +91,96 @@ public class AchievementLocker {
         }
 
         //50% opacity
-        screen.setGlobalAlpha((4 * 0.1F));
-        screen.setFill(Color.BLACK);
-        screen.fillRect(0, 0, w, h); //54+lines x 14
+        draw.setGlobalAlpha(0.4f);
+        draw.setFill(Rgba.BLACK);
+        draw.fillRect(0, 0, w, h);
 
         //onBackCancel to full opacity
-        screen.setGlobalAlpha((10 * 0.1F));
-        screen.setFill(Color.WHITE);
-        screen.setFont(font2);
-        screen.fillText(stat1, offset, 48 - 3);
-        screen.fillText(stat2, offset, (48 - 3) + (spacer * 1));
-        screen.fillText(stat3, offset, (48 - 3) + (spacer * 2));
-        screen.fillText(stat4, offset, (48 - 3) + (spacer * 3));
-        screen.fillText(stat5, offset, (48 - 3) + (spacer * 4));
-        screen.fillText(stat6, offset, (48 - 3) + (spacer * 5));
-        screen.fillText(stat7, offset, (48 - 3) + (spacer * 6));
-        screen.fillText(stat15, offset + 400, (48 - 3) + (spacer * 1));
+        draw.setGlobalAlpha(1.0f);
+        draw.setFill(Rgba.WHITE);
+        draw.setFont("menu", spacer - 1);
+        draw.fillText(stat1, offset, 48 - 3);
+        draw.fillText(stat2, offset, (48 - 3) + (spacer * 1));
+        draw.fillText(stat3, offset, (48 - 3) + (spacer * 2));
+        draw.fillText(stat4, offset, (48 - 3) + (spacer * 3));
+        draw.fillText(stat5, offset, (48 - 3) + (spacer * 4));
+        draw.fillText(stat6, offset, (48 - 3) + (spacer * 5));
+        draw.fillText(stat7, offset, (48 - 3) + (spacer * 6));
+        draw.fillText(stat15, offset + 400, (48 - 3) + (spacer * 1));
 
         //wins
-        screen.fillRect(offset + 400, 35, Integer.parseInt("" + Math.round(gWin)), spacer);
+        draw.fillRect(offset + 400, 35, Math.round(gWin), spacer);
         //losses
-        screen.setFill(Color.RED);
-        screen.fillText(stat16, offset + 500, (48 - 3) + (spacer * 1));
-        screen.fillRect(610 - Integer.parseInt("" + Math.round(gLoss)), 35, Integer.parseInt("" + Math.round(gLoss)), spacer);
+        draw.setFill(1f, 0f, 0f);
+        draw.fillText(stat16, offset + 500, (48 - 3) + (spacer * 1));
+        draw.fillRect(610 - Math.round(gLoss), 35, Math.round(gLoss), spacer);
 
         //playStory progress
-        screen.setFill(Color.WHITE);
+        draw.setFill(Rgba.WHITE);
 
-        screen.fillText(Language.get().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
-        screen.fillText(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
-        screen.fillText(Language.get().get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
-        screen.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Integer.parseInt("" + Math.round(progression)), spacer);
-        screen.fillRect(offset + 400, (48 - 3) + (spacer * 6) + 2, getGameCompletion() * 2, spacer);
+        draw.fillText(Language.get().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
+        draw.fillText(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
+        draw.fillText(Language.get().get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
+        draw.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Math.round(progression), spacer);
+        draw.fillRect(offset + 400, (48 - 3) + (spacer * 6) + 2, getGameCompletion() * 2, spacer);
 
-        screen.setFill(Color.WHITE);
+        draw.setFill(Rgba.WHITE);
         //last ACH spacer + 2
-        screen.fillText(stat13, offset, (48 - 3) + (spacer * 8));
-        screen.fillText(stat17, offset, (48 - 3) + (spacer * 9));
+        draw.fillText(stat13, offset, (48 - 3) + (spacer * 8));
+        draw.fillText(stat17, offset, (48 - 3) + (spacer * 9));
 
-        screen.fillText(Language.get().get(131) + " >>>", offset, 430);
+        draw.fillText(Language.get().get(131) + " >>>", offset, 430);
     }
 
     /**
      * Draw user Achievements
-     *
-     * @param gc - Graphics2D context
      */
-    public void drawAch(GraphicsContext gc, double w, double h) {
+    public void drawAch(DrawContext draw) {
+        float w = 852;
+        float h = 480;
         //BG
-        gc.setFill(Color.BLACK);
-        gc.setGlobalAlpha((0.75f));
-        gc.fillRect(0, 0, w, h);
-        gc.setGlobalAlpha((1.0f));
-        gc.setFill(Color.WHITE);
+        draw.setFill(Rgba.BLACK);
+        draw.setGlobalAlpha(0.75f);
+        draw.fillRect(0, 0, w, h);
+        draw.setGlobalAlpha(1.0f);
+        draw.setFill(Rgba.WHITE);
 
-        gc.fillText(numberOfTriggeredAchievements + " " + Language.get().get(121), 530, 100);
-        gc.fillText(getAchUnlockedPerc() + " % " + Language.get().get(132), 530, 114);
-        gc.fillText(Language.get().get(130) + " " + getGameCompletion() + " %", 530, 128);
-        gc.fillText(Language.get().get(131) + " >>>", 530, 470);
+        draw.fillText(numberOfTriggeredAchievements + " " + Language.get().get(121), 530, 100);
+        draw.fillText(getAchUnlockedPerc() + " % " + Language.get().get(132), 530, 114);
+        draw.fillText(Language.get().get(130) + " " + getGameCompletion() + " %", 530, 128);
+        draw.fillText(Language.get().get(131) + " >>>", 530, 470);
 
         //even
         for (Achievements achievement : Achievements.values()) {
             if (isAchievementActivated[achievement.id()]) {
-                gc.drawImage(achCap[achievement.id()], offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
-                gc.setFont(font1);
-                gc.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement) + " >>", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
-                gc.setFont(font2);
-                gc.fillText(Achievement.get().achievementDescription(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                gc.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                draw.drawImage(achCap[achievement.id()], offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
+                draw.setFont("menu", spacer + 2);
+                draw.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement) + " >>", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                draw.setFont("menu", spacer - 1);
+                draw.fillText(Achievement.get().achievementDescription(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
+                draw.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
             } else {
-                gc.drawImage(no, offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
-                gc.setFont(font1);
-                gc.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
-                gc.setFont(font2);
-                gc.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                gc.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                draw.drawImage(no, offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
+                draw.setFont("menu", spacer + 2);
+                draw.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                draw.setFont("menu", spacer - 1);
+                draw.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
+                draw.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
             }
         }
     }
 
 
     /**
-     * Load my loader
+     * Load images
      */
     private void loadFontAndPictures() {
-        font2 = getMyFont(spacer - 1);
-        font1 = getMyFont(spacer + 2);
-        achCap = new Image[Achievements.values().length];
+        AssetLoader pix = ScndGenLegends.get().loader();
+        achCap = new NvgImage[Achievements.values().length];
         for (int u = 0; u < achCap.length; u++) {
-            achCap[u] = pix.load("images/ach/" + u + ".png");
+            achCap[u] = pix.loadImage("images/ach/" + u + ".png");
         }
-        no = pix.load("images/ach/no.png");
+        no = pix.loadImage("images/ach/no.png");
     }
 
     /**
@@ -248,14 +244,6 @@ public class AchievementLocker {
         stat17 = Language.get().get(128) + ": " + State.get().getLogin().mostPopularCharEnum() + " " + State.get().getLogin().mostPopularCharPercentage() + " %";
     }
 
-    public Font getMyFont(float size) {
-        try {
-            return Font.loadFont(getClass().getResourceAsStream("font/Sawasdee.ttf"), size);
-        } catch (Exception re) {
-            return new javafx.scene.text.Font("Sans", size);
-        }
-    }
-
     public String timeCal(int timeInt) {
         if (timeInt > -1 && timeInt <= 3600) {
             int minutes = timeInt / 60;
@@ -291,32 +279,16 @@ public class AchievementLocker {
         RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }
 
-    public void keyPressed(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            case W:
-            case UP:
-                onUp();
-                break;
-            case S:
-            case DOWN:
-                onDown();
-                break;
-            case A:
-            case LEFT:
-                onLeft();
-                break;
-            case D:
-            case RIGHT:
-                onRight();
-                break;
-            case ENTER:
-            case SPACE:
-                onAccept();
-                break;
-            case DELETE:
-            case BACK_SPACE:
-                onBackCancel();
-                break;
+    public void keyPressed(int glfwKey) {
+        switch (glfwKey) {
+            case GLFW_KEY_W, GLFW_KEY_UP -> onUp();
+            case GLFW_KEY_S, GLFW_KEY_DOWN -> onDown();
+            case GLFW_KEY_A, GLFW_KEY_LEFT -> onLeft();
+            case GLFW_KEY_D, GLFW_KEY_RIGHT -> onRight();
+            case GLFW_KEY_ENTER, GLFW_KEY_SPACE -> onAccept();
+            case GLFW_KEY_DELETE, GLFW_KEY_BACKSPACE -> onBackCancel();
+            default -> {
+            }
         }
     }
 }
