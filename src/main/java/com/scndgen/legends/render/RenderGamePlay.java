@@ -338,7 +338,72 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public void cleanAssets() {
-        loadAssets = true;
+        stageAmbientForeground = null;
+        stageAmbientBackground = null;
+        stageForeground = null;
+        stageBackground = null;
+        numberPix = null;
+        comboPicArray = null;
+        comicBookText = null;
+        times = null;
+        java.util.Arrays.fill(statusEffectSprites, null);
+        oppBar = null;
+        furyBar = null;
+        counterPane = null;
+        num0 = null;
+        num1 = null;
+        num2 = null;
+        num3 = null;
+        num4 = null;
+        num5 = null;
+        num6 = null;
+        num7 = null;
+        num8 = null;
+        num9 = null;
+        numNull = null;
+        numInfinite = null;
+        damageLayer = null;
+        hpHolder = null;
+        hpHolderOpponent = null;
+        hud1 = null;
+        characterHpBar = null;
+        win = null;
+        lose = null;
+        status = null;
+        furyState = null;
+        furyActive = null;
+        furyInactive = null;
+        figGuiSrc10 = null;
+        figGuiSrc20 = null;
+        figGuiSrc30 = null;
+        figGuiSrc40 = null;
+        figGuiSrc1 = null;
+        figGuiSrc2 = null;
+        figGuiSrc3 = null;
+        figGuiSrc4 = null;
+        time0i = null;
+        time1i = null;
+        time2i = null;
+        time3i = null;
+        time4i = null;
+        time5i = null;
+        time6i = null;
+        time7i = null;
+        time8i = null;
+        time9i = null;
+        charSprites = null;
+        oppSprites = null;
+        characterPortraits = null;
+        storyBoards = null;
+        var character = Characters.get().getCharacter();
+        if (character != null) {
+            character.unloadSprites(assets());
+        }
+        var opponent = Characters.get().getOpponent();
+        if (opponent != null) {
+            opponent.unloadSprites(assets());
+        }
+        super.cleanAssets();
     }
 
     @Override
@@ -760,25 +825,25 @@ public class RenderGamePlay extends GamePlay {
         attackMenuXPos = 670;
         attackMenuTextXPos = attackMenuXPos + 25;
         attackMenuTextYPos = 366;
-        counterPane = assets().loadImage("images/countPane.png");
-        num0 = assets().loadImage("images/fig/0.png");
-        num1 = assets().loadImage("images/fig/1.png");
-        num2 = assets().loadImage("images/fig/2.png");
-        num3 = assets().loadImage("images/fig/3.png");
-        num4 = assets().loadImage("images/fig/4.png");
-        num5 = assets().loadImage("images/fig/5.png");
-        num6 = assets().loadImage("images/fig/6.png");
-        num7 = assets().loadImage("images/fig/7.png");
-        num8 = assets().loadImage("images/fig/8.png");
-        num9 = assets().loadImage("images/fig/9.png");
-        numInfinite = assets().loadImage("images/fig/infinite.png");
-        numNull = assets().loadImage("images/trans.png");
+        counterPane = bag().loadImage("images/countPane.png");
+        num0 = bag().loadImage("images/fig/0.png");
+        num1 = bag().loadImage("images/fig/1.png");
+        num2 = bag().loadImage("images/fig/2.png");
+        num3 = bag().loadImage("images/fig/3.png");
+        num4 = bag().loadImage("images/fig/4.png");
+        num5 = bag().loadImage("images/fig/5.png");
+        num6 = bag().loadImage("images/fig/6.png");
+        num7 = bag().loadImage("images/fig/7.png");
+        num8 = bag().loadImage("images/fig/8.png");
+        num9 = bag().loadImage("images/fig/9.png");
+        numInfinite = bag().loadImage("images/fig/infinite.png");
+        numNull = bag().loadImage("images/trans.png");
         numberPix = new NvgImage[]{num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numNull, numInfinite};
-        statusEffectSprites[0] = assets().loadImage("images/trans.png");
-        statusEffectSprites[1] = assets().loadImage("images/stats/stat1.png");
-        statusEffectSprites[2] = assets().loadImage("images/stats/stat2.png");
-        statusEffectSprites[3] = assets().loadImage("images/stats/stat3.png");
-        statusEffectSprites[4] = assets().loadImage("images/stats/stat4.png");
+        statusEffectSprites[0] = bag().loadImage("images/trans.png");
+        statusEffectSprites[1] = bag().loadImage("images/stats/stat1.png");
+        statusEffectSprites[2] = bag().loadImage("images/stats/stat2.png");
+        statusEffectSprites[3] = bag().loadImage("images/stats/stat3.png");
+        statusEffectSprites[4] = bag().loadImage("images/stats/stat4.png");
         System.out.println("loaded all loader");
     }
 
@@ -787,8 +852,8 @@ public class RenderGamePlay extends GamePlay {
      */
     private void loadSprites() {
         try {
-            Characters.get().getCharacter().loadMeHigh();
-            Characters.get().getOpponent().loadMeHigh();
+            Characters.get().getCharacter().loadMeHigh(assets());
+            Characters.get().getOpponent().loadMeHigh(assets());
 
             charSprites = new NvgImage[Characters.get().getCharacter().getNumberOfSprites()];
             for (int i = 0; i < charSprites.length; i++)
@@ -800,55 +865,55 @@ public class RenderGamePlay extends GamePlay {
 
             comboPicArray = new NvgImage[9];
             for (int u = 0; u < 6; u++)
-                comboPicArray[u] = assets().loadImage("images/screenTxt/" + u + ".png");
-            comboPicArray[7] = assets().loadImage("images/screenTxt/7.png");
+                comboPicArray[u] = bag().loadImage("images/screenTxt/" + u + ".png");
+            comboPicArray[7] = bag().loadImage("images/screenTxt/7.png");
             comboPicArray[8] = Characters.get().getCharacter().getSprite(11);
 
             comicBookText = new NvgImage[10];
             comicBookText[0] = Characters.get().getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
-                comicBookText[bx] = assets().loadImage("images/screenComic/" + (bx - 1) + ".png");
-            damageLayer = assets().loadImage("images/damage1.png");
+                comicBookText[bx] = bag().loadImage("images/screenComic/" + (bx - 1) + ".png");
+            damageLayer = bag().loadImage("images/damage1.png");
 
-            time0i = assets().loadImage("images/fig/0.png");
-            time1i = assets().loadImage("images/fig/1.png");
-            time2i = assets().loadImage("images/fig/2.png");
-            time3i = assets().loadImage("images/fig/3.png");
-            time4i = assets().loadImage("images/fig/4.png");
-            time5i = assets().loadImage("images/fig/5.png");
-            time6i = assets().loadImage("images/fig/6.png");
-            time7i = assets().loadImage("images/fig/7.png");
-            time8i = assets().loadImage("images/fig/8.png");
-            time9i = assets().loadImage("images/fig/9.png");
+            time0i = bag().loadImage("images/fig/0.png");
+            time1i = bag().loadImage("images/fig/1.png");
+            time2i = bag().loadImage("images/fig/2.png");
+            time3i = bag().loadImage("images/fig/3.png");
+            time4i = bag().loadImage("images/fig/4.png");
+            time5i = bag().loadImage("images/fig/5.png");
+            time6i = bag().loadImage("images/fig/6.png");
+            time7i = bag().loadImage("images/fig/7.png");
+            time8i = bag().loadImage("images/fig/8.png");
+            time9i = bag().loadImage("images/fig/9.png");
             times = new NvgImage[]{time0i, time1i, time2i, time3i, time4i, time5i, time6i, time7i, time8i, time9i};
 
             if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
                 characterPortraits = new NvgImage[charNames.length];
                 for (CharacterEnum characterEnum : CharacterEnum.values()) {
-                    characterPortraits[characterEnum.index()] = assets().loadImage("images/" + characterEnum.data() + "/cap.png");
+                    characterPortraits[characterEnum.index()] = bag().loadImage("images/" + characterEnum.data() + "/cap.png");
                 }
                 storyBoards = new NvgImage[12];
                 for (int u = 0; u < storyBoards.length; u++) {
-                    storyBoards[u] = assets().loadImage("images/story/s" + u + ".png");
+                    storyBoards[u] = bag().loadImage("images/story/s" + u + ".png");
                 }
             }
-            NvgImage transBuf = assets().loadImage("images/trans.png");
-            hpHolder = assets().loadImage("images/hpHolder.png");
-            hpHolderOpponent = assets().loadImage("images/hpHolderOpponent.png");
-            stageBackground = assets().loadImage(RenderStageSelect.get().getStageBackground());
-            stageForeground = assets().loadImage(RenderStageSelect.get().getStageForeground());
-            stageAmbientForeground = assets().loadImage(RenderStageSelect.get().getFgLocation1());
-            stageAmbientBackground = assets().loadImage(RenderStageSelect.get().getFgLocation2());
-            furyActive = assets().loadImage("images/fury.gif");
-            furyInactive = assets().loadImage("images/furyo.png");
+            NvgImage transBuf = bag().loadImage("images/trans.png");
+            hpHolder = bag().loadImage("images/hpHolder.png");
+            hpHolderOpponent = bag().loadImage("images/hpHolderOpponent.png");
+            stageBackground = bag().loadImage(RenderStageSelect.get().getStageBackground());
+            stageForeground = bag().loadImage(RenderStageSelect.get().getStageForeground());
+            stageAmbientForeground = bag().loadImage(RenderStageSelect.get().getFgLocation1());
+            stageAmbientBackground = bag().loadImage(RenderStageSelect.get().getFgLocation2());
+            furyActive = bag().loadImage("images/fury.gif");
+            furyInactive = bag().loadImage("images/furyo.png");
             furyState = furyInactive;
 
-            furyBar = assets().loadImage("images/furyBar.png");
-            oppBar = assets().loadImage("images/oppBar.png");
-            hud1 = assets().loadImage("images/hud1.png");
-            characterHpBar = assets().loadImage("images/hud2.png");
-            win = assets().loadImage("images/win.png");
-            lose = assets().loadImage("images/lose.png");
+            furyBar = bag().loadImage("images/furyBar.png");
+            oppBar = bag().loadImage("images/oppBar.png");
+            hud1 = bag().loadImage("images/hud1.png");
+            characterHpBar = bag().loadImage("images/hud2.png");
+            win = bag().loadImage("images/win.png");
+            lose = bag().loadImage("images/lose.png");
             status = transBuf;
             System.out.println("loaded all char sprites loader");
             //ensures method is only run once

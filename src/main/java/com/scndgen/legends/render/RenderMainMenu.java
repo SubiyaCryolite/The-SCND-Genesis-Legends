@@ -489,34 +489,36 @@ public class RenderMainMenu extends MainMenu {
     }
 
     public void onEnterMode() {
+        super.onEnterMode();
         menuMusic = new Audio(AudioConstants.menuMus(), AudioType.MUSIC, true);
         menuMusic.play();
     }
 
     public void onLeaveMode() {
         menuMusic.stop(2000);
+        super.onLeaveMode();
     }
 
     @Override
     public void loadAssetsIml() {
         if (!loadAssets) return;
-        gameLogo = assets().loadImage("logo/gameLogo.png");
-        menuLogo = assets().loadImage("images/sglogo.png");
+        gameLogo = bag().loadImage("logo/gameLogo.png");
+        menuLogo = bag().loadImage("images/sglogo.png");
         if (time >= 0 && time <= 9) {
-            backgroundPixelated = assets().loadImage("images/blur/bgBG1.png");
-            foregroundPixelated = assets().loadImage("images/blur/bgBG1fg.png");
-            particlesLayer1 = assets().loadImage("images/blur/bgBG1a.png");
-            particlesLayer2 = assets().loadImage("images/blur/bgBG1b.png");
+            backgroundPixelated = bag().loadImage("images/blur/bgBG1.png");
+            foregroundPixelated = bag().loadImage("images/blur/bgBG1fg.png");
+            particlesLayer1 = bag().loadImage("images/blur/bgBG1a.png");
+            particlesLayer2 = bag().loadImage("images/blur/bgBG1b.png");
         } else if (time > 9 && time <= 16) {
-            backgroundPixelated = assets().loadImage("images/blur/bgBG6.png");
-            foregroundPixelated = assets().loadImage("images/blur/bgBG6fg.png");
-            particlesLayer1 = assets().loadImage("images/blur/bgBG6a.png");
-            particlesLayer2 = assets().loadImage("images/blur/bgBG6b.png");
+            backgroundPixelated = bag().loadImage("images/blur/bgBG6.png");
+            foregroundPixelated = bag().loadImage("images/blur/bgBG6fg.png");
+            particlesLayer1 = bag().loadImage("images/blur/bgBG6a.png");
+            particlesLayer2 = bag().loadImage("images/blur/bgBG6b.png");
         } else if (time > 16 && time <= 24) {
-            backgroundPixelated = assets().loadImage("images/blur/bgBG5.png");
-            foregroundPixelated = assets().loadImage("images/blur/bgBG5fg.png");
-            particlesLayer1 = assets().loadImage("images/blur/bgBG5a.png");
-            particlesLayer2 = assets().loadImage("images/blur/bgBG5b.png");
+            backgroundPixelated = bag().loadImage("images/blur/bgBG5.png");
+            foregroundPixelated = bag().loadImage("images/blur/bgBG5fg.png");
+            particlesLayer1 = bag().loadImage("images/blur/bgBG5a.png");
+            particlesLayer2 = bag().loadImage("images/blur/bgBG5b.png");
         }
         loadAssets = false;
         setActiveItem(uiTutorial);
@@ -530,7 +532,13 @@ public class RenderMainMenu extends MainMenu {
         particlesLayer1 = null;
         backgroundPixelated = null;
         particlesLayer2 = null;
-        loadAssets = true;
+        if (achievementLocker != null) {
+            achievementLocker.freeImages();
+        }
+        if (tutorial != null) {
+            tutorial.freeImages();
+        }
+        super.cleanAssets();
     }
 
     @Override

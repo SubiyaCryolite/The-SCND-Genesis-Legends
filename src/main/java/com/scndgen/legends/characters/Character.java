@@ -95,11 +95,21 @@ public abstract class Character {
     }
 
     public void loadMeHigh(AssetLoader assets) {
+        unloadSprites(assets);
         sortQue();
         sprites = new NvgImage[numberOfSprites];
         for (int i = 0; i < numberOfSprites; i++) {
             sprites[i] = assets.loadImage(location[i]);
         }
+    }
+
+    public void unloadSprites(AssetLoader assets) {
+        if (sprites == null || assets == null) {
+            sprites = null;
+            return;
+        }
+        assets.free(sprites);
+        sprites = null;
     }
 
     /**

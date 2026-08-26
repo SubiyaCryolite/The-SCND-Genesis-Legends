@@ -30,9 +30,9 @@ public final class DisplayModes {
             return width + " x " + height + " @" + refreshRateHz + "Hz" + monitor;
         }
 
-        /** Window size key (refresh is display metadata for windowed mode). */
+        /** Persisted as {@code widthxheight@hz}. Windowed apply uses width×height. */
         public String storageKey() {
-            return width + "x" + height;
+            return width + "x" + height + "@" + refreshRateHz;
         }
 
         public int pixelCount() {
@@ -109,14 +109,32 @@ public final class DisplayModes {
                 return mode;
             }
         }
+        // Legacy "WxH" or "WxH@hz"
         int x = normalized.indexOf('x');
         if (x > 0) {
             try {
+                int w = Integer.parseInt(normalized.substring(0, x));
                 String rest = normalized.substring(x + 1);
                 int at = rest.indexOf('@');
-                int h = Integer.parseInt(at >= 0 ? rest.substring(0, at) : rest);
-                int w = Integer.parseInt(normalized.substring(0, x));
-                return new Mode(w, h, 60, "Saved");
+                int h;
+                int hz = 60;
+                if (at >= 0) {
+                    h = Integer.parseInt(rest.substring(0, at));
+                    hz = Integer.parseInt(rest.substring(at + 1));
+                } else {
+                    h = Integer.parseInt(rest);
+                }
+                for (Mode mode : modes) {
+                    if (mode.width() == w && mode.height() == h && mode.refreshRateHz() == hz) {
+                        return mode;
+                    }
+                }
+                for (Mode mode : modes) {
+                    if (mode.width() == w && mode.height() == h) {
+                        return mode;
+                    }
+                }
+                return new Mode(w, h, hz, "Saved");
             } catch (NumberFormatException ignored) {
             }
         }
@@ -129,13 +147,14 @@ public final class DisplayModes {
         }
         for (int i = 0; i < modes.size(); i++) {
             Mode candidate = modes.get(i);
-            if (candidate.storageKey().equals(mode.storageKey())
+            if (candidate.width() == mode.width()
+                    && candidate.height() == mode.height()
                     && candidate.refreshRateHz() == mode.refreshRateHz()) {
                 return i;
             }
         }
         for (int i = 0; i < modes.size(); i++) {
-            if (modes.get(i).storageKey().equals(mode.storageKey())) {
+            if (modes.get(i).storageKey().startsWith(mode.width() + "x" + mode.height())) {
                 return i;
             }
         }

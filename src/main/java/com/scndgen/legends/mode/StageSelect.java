@@ -29,7 +29,8 @@ import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev2.Mode;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -48,8 +49,8 @@ public abstract class StageSelect extends Mode {
     protected final int numberOfStages = Stage.values().length;
     protected final int columns = 3;
     protected final int rows = numberOfStages / columns;
-    protected final Hashtable<Integer, Stage> stageLookup = new Hashtable<>();
-    protected final Hashtable<Stage, String> lookupStageNames = new Hashtable<>();
+    protected final Map<Integer, Stage> stageLookup = new HashMap<>();
+    protected final Map<Stage, String> lookupStageNames = new HashMap<>();
     protected final String[] stagePreviews = new String[Stage.values().length];
     protected String stageForeground;
     protected String stageBackground;

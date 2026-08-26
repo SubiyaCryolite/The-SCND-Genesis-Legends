@@ -68,12 +68,14 @@ public class RenderStoryMenu extends StoryMenu {
     private Audio menuMusic;
 
     public void onEnterMode() {
+        super.onEnterMode();
         menuMusic = new Audio("audio/scotty/scotty zepplin - We Are.ogg", AudioType.MUSIC, true);
         menuMusic.play();
     }
 
     public void onLeaveMode() {
         menuMusic.stop(2000);
+        super.onLeaveMode();
     }
 
 
@@ -280,21 +282,21 @@ public class RenderStoryMenu extends StoryMenu {
         RenderStageSelect.get().setStageSelected(false);
         try {
             for (int i = 0; i < numberOfScenes; i++) {
-                unlockedScene[i] = assets().loadImage("images/story/locked/" + i + ".png");
-                unlockedCaptions[i] = assets().loadImage("images/story/captions/" + i + ".png");
-                lockedScene[i] = assets().loadImage("images/story/blur/" + i + ".png");
+                unlockedScene[i] = bag().loadImage("images/story/locked/" + i + ".png");
+                unlockedCaptions[i] = bag().loadImage("images/story/captions/" + i + ".png");
+                lockedScene[i] = bag().loadImage("images/story/blur/" + i + ".png");
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-        loading = assets().loadImage("images/loading.gif");
-        stageHover = assets().loadImage("images/story/frame.png");
+        loading = bag().loadImage("images/loading.gif");
+        stageHover = bag().loadImage("images/story/frame.png");
         int random = (int) (Math.random() * 4);
         storyPrev = switch (random) {
-            case 0 -> assets().loadImage("images/story/blur/s4.png");
-            case 1 -> assets().loadImage("images/story/blur/s5.png");
-            case 2 -> assets().loadImage("images/story/blur/s6.png");
-            default -> assets().loadImage("images/story/blur/s6.png");
+            case 0 -> bag().loadImage("images/story/blur/s4.png");
+            case 1 -> bag().loadImage("images/story/blur/s5.png");
+            case 2 -> bag().loadImage("images/story/blur/s6.png");
+            default -> bag().loadImage("images/story/blur/s6.png");
         };
         loadAssets = false;
     }
@@ -302,10 +304,17 @@ public class RenderStoryMenu extends StoryMenu {
     public void cleanAssets() {
         stageHover = null;
         loading = null;
-        unlockedCaptions = null;
-        lockedScene = null;
         storyPrev = null;
-        loadAssets = true;
+        if (unlockedScene != null) {
+            java.util.Arrays.fill(unlockedScene, null);
+        }
+        if (unlockedCaptions != null) {
+            java.util.Arrays.fill(unlockedCaptions, null);
+        }
+        if (lockedScene != null) {
+            java.util.Arrays.fill(lockedScene, null);
+        }
+        super.cleanAssets();
     }
 
     public void newInstance() {

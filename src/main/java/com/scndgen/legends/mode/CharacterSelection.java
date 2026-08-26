@@ -14,7 +14,8 @@ import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.Mode;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ifunga on 14/04/2017.
@@ -32,7 +33,7 @@ public abstract class CharacterSelection extends Mode {
     protected int selectedCharIndex = 0, selectedOppIndex = 0;
     protected final int columns = 3;
     protected boolean canSelectCharacter;
-    protected final Hashtable<Integer, CharacterEnum> characterLookup = new Hashtable<>();
+    protected final Map<Integer, CharacterEnum> characterLookup = new HashMap<>();
     private final Accumulator cloudTick = Accumulator.atInterval(0.033);
 
     public void newInstance() {
