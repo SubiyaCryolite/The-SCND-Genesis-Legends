@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.IntConsumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -31,7 +32,7 @@ import static org.lwjgl.system.MemoryUtil.memFree;
 
 /**
  * GLFW window + OpenGL 3.3 core + NanoVG scene rendering + Nuklear UI overlays.
- * Frame loop uses {@link MemoryStack} for short-lived native allocations.
+ * Scenes always draw in {@link DesignViewport} design space; window size only changes scale.
  */
 public final class GlfwEngine implements AutoCloseable {
     public interface Scene {
@@ -39,40 +40,55 @@ public final class GlfwEngine implements AutoCloseable {
 
         void update(double deltaSeconds);
 
-        void render(MemoryStack stack, DrawContext draw, int width, int height);
+        /**
+         * Draw in design coordinates ({@link DesignViewport#DESIGN_WIDTH} x {@link DesignViewport#DESIGN_HEIGHT}).
+         * Scale/letterbox is applied by the engine.
+         */
+        void render(MemoryStack stack, DrawContext draw);
 
         default void onKey(int key, int action, int mods) {
         }
 
-        default void onMouseMove(double x, double y) {
+        /** Mouse position is already converted to design space. */
+        default void onMouseMove(float designX, float designY) {
         }
 
-        default void onMouseButton(int button, int action, double x, double y) {
+        /** Mouse position is already converted to design space. */
+        default void onMouseButton(int button, int action, float designX, float designY) {
+        }
+
+        default void onWindowResize(int windowWidth, int windowHeight) {
         }
     }
 
-    private final int logicalWidth;
-    private final int logicalHeight;
     private final String title;
     private final Scene scene;
     private final List<ByteBuffer> retainedFontData = new ArrayList<>();
     private final NuklearUi nuklearUi = new NuklearUi();
+    private final DesignViewport viewport = new DesignViewport();
+    private final List<IntConsumer> resizeListeners = new ArrayList<>();
 
     private long window;
     private long vg;
     private DrawContext draw;
     private AssetLoader loader;
     private boolean running;
+    private volatile boolean resizePending;
+    private float letterboxRf;
+    private float letterboxGf;
+    private float letterboxBf;
 
-    public GlfwEngine(int logicalWidth, int logicalHeight, String title, Scene scene) {
-        this.logicalWidth = logicalWidth;
-        this.logicalHeight = logicalHeight;
+    public GlfwEngine(String title, Scene scene) {
         this.title = Objects.requireNonNull(title);
         this.scene = Objects.requireNonNull(scene);
     }
 
     public NuklearUi ui() {
         return nuklearUi;
+    }
+
+    public DesignViewport viewport() {
+        return viewport;
     }
 
     public void run() {
@@ -99,10 +115,12 @@ public final class GlfwEngine implements AutoCloseable {
         glfwWindowHint(GLFW_STENCIL_BITS, 8);
         glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
-        window = glfwCreateWindow(logicalWidth, logicalHeight, title, NULL, NULL);
+        DisplayModes.Mode initial = resolveSavedResolution();
+        window = glfwCreateWindow(initial.width(), initial.height(), title, NULL, NULL);
         if (window == NULL) {
             throw new IllegalStateException("Failed to create GLFW window (OpenGL 3.3 core)");
         }
+        refreshLetterboxColor();
 
         glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
             nuklearUi.onKey(key, action);
@@ -120,7 +138,7 @@ public final class GlfwEngine implements AutoCloseable {
         glfwSetCursorPosCallback(window, (win, x, y) -> {
             nuklearUi.onCursorPos(x, y);
             if (!nuklearUi.isBlocking()) {
-                scene.onMouseMove(x, y);
+                scene.onMouseMove(viewport.toDesignX(x), viewport.toDesignY(y));
             }
         });
         glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
@@ -130,15 +148,29 @@ public final class GlfwEngine implements AutoCloseable {
                 glfwGetCursorPos(win, xpos, ypos);
                 nuklearUi.onMouseButton(button, action, xpos.get(0), ypos.get(0));
                 if (!nuklearUi.isBlocking()) {
-                    scene.onMouseButton(button, action, xpos.get(0), ypos.get(0));
+                    scene.onMouseButton(
+                            button,
+                            action,
+                            viewport.toDesignX(xpos.get(0)),
+                            viewport.toDesignY(ypos.get(0))
+                    );
                 }
             }
+        });
+        glfwSetWindowSizeCallback(window, (win, width, height) -> {
+            viewport.update(width, height);
+            resizePending = true;
+            for (IntConsumer listener : resizeListeners) {
+                listener.accept(width);
+            }
+            scene.onWindowResize(width, height);
         });
 
         try (MemoryStack stack = stackPush()) {
             IntBuffer width = stack.mallocInt(1);
             IntBuffer height = stack.mallocInt(1);
             glfwGetWindowSize(window, width, height);
+            viewport.update(width.get(0), height.get(0));
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             if (vidMode != null) {
                 glfwSetWindowPos(
@@ -154,6 +186,18 @@ public final class GlfwEngine implements AutoCloseable {
         glfwShowWindow(window);
     }
 
+    private static DisplayModes.Mode resolveSavedResolution() {
+        try {
+            var modes = DisplayModes.queryAll();
+            return DisplayModes.findByStorageKey(
+                    modes,
+                    com.scndgen.legends.state.State.get().getLogin().getGraphicsSetting()
+            );
+        } catch (Exception ex) {
+            return DisplayModes.designFallback();
+        }
+    }
+
     private void initGlAndNanoVg() {
         GL.createCapabilities();
         vg = nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
@@ -166,6 +210,46 @@ public final class GlfwEngine implements AutoCloseable {
 
     public void retainFont(String name, String classpathResource) {
         retainedFontData.add(loader.loadFont(name, classpathResource));
+    }
+
+    /**
+     * Reload letterbox RGB from saved login state (0–255 → 0–1 clear color).
+     */
+    public void refreshLetterboxColor() {
+        try {
+            var login = com.scndgen.legends.state.State.get().getLogin();
+            letterboxRf = login.getLetterboxR() / 255f;
+            letterboxGf = login.getLetterboxG() / 255f;
+            letterboxBf = login.getLetterboxB() / 255f;
+        } catch (Exception ex) {
+            letterboxRf = 0f;
+            letterboxGf = 0f;
+            letterboxBf = 0f;
+        }
+    }
+
+    /**
+     * Resize the GLFW window. Horizontal size drives design scale; height is letterboxed.
+     */
+    public void applyResolution(int width, int height) {
+        if (window == NULL || width < 1 || height < 1) {
+            return;
+        }
+        glfwSetWindowSize(window, width, height);
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer w = stack.mallocInt(1);
+            IntBuffer h = stack.mallocInt(1);
+            glfwGetWindowSize(window, w, h);
+            viewport.update(w.get(0), h.get(0));
+            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            if (vidMode != null) {
+                glfwSetWindowPos(
+                        window,
+                        Math.max(0, (vidMode.width() - w.get(0)) / 2),
+                        Math.max(0, (vidMode.height() - h.get(0)) / 2)
+                );
+            }
+        }
     }
 
     private void loop() {
@@ -185,7 +269,7 @@ public final class GlfwEngine implements AutoCloseable {
                 IntBuffer framebufferHeight = stack.mallocInt(1);
                 glfwGetWindowSize(window, windowWidth, windowHeight);
                 glfwGetFramebufferSize(window, framebufferWidth, framebufferHeight);
-                // Mouse-grab handling must happen before nk_input_end.
+                viewport.update(windowWidth.get(0), windowHeight.get(0));
                 nuklearUi.backend().newFrame(
                         Math.max(1, windowWidth.get(0)),
                         Math.max(1, windowHeight.get(0)),
@@ -207,20 +291,27 @@ public final class GlfwEngine implements AutoCloseable {
                 int fbH = framebufferHeight.get(0);
                 int winW = Math.max(1, windowWidth.get(0));
                 int winH = Math.max(1, windowHeight.get(0));
+                viewport.update(winW, winH);
                 float pixelRatio = (float) fbW / (float) winW;
 
+                if (resizePending) {
+                    resizePending = false;
+                }
+
                 glViewport(0, 0, fbW, fbH);
-                glClearColor(0f, 0f, 0f, 1f);
+                glClearColor(letterboxRf, letterboxGf, letterboxBf, 1f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
                 if (!nuklearUi.isBlocking()) {
                     scene.update(delta);
                 }
+
                 draw.beginFrame(stack, winW, winH, pixelRatio);
-                scene.render(stack, draw, winW, winH);
+                viewport.begin(draw.vg());
+                scene.render(stack, draw);
+                viewport.end(draw.vg());
                 draw.endFrame();
 
-                // Sizes already refreshed in newFrame; layout overlays then draw Nuklear.
                 nuklearUi.layoutOverlays(stack, winW, winH);
                 nuklearUi.backend().render();
             }
