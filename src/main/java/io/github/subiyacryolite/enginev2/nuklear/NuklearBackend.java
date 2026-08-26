@@ -217,6 +217,9 @@ public final class NuklearBackend implements AutoCloseable {
     private static final int FONT_HEIGHT = 18;
     private static final int BITMAP_W = 1024;
     private static final int BITMAP_H = 1024;
+    /** Packed range: Latin-1 printable (32..255). Out-of-range glyphs fall back to '?'. */
+    private static final int FONT_FIRST_CODEPOINT = 32;
+    private static final int FONT_CHAR_COUNT = 224;
 
     private static final NkAllocator ALLOCATOR = NkAllocator.create()
             .alloc((handle, old, size) -> nmemAllocChecked(size))
@@ -238,7 +241,7 @@ public final class NuklearBackend implements AutoCloseable {
     private final NkDrawNullTexture nullTexture = NkDrawNullTexture.create();
 
     private final STBTTFontinfo fontInfo = STBTTFontinfo.create();
-    private final STBTTPackedchar.Buffer cdata = STBTTPackedchar.create(95);
+    private final STBTTPackedchar.Buffer cdata = STBTTPackedchar.create(FONT_CHAR_COUNT);
 
     private int width;
     private int height;
@@ -629,7 +632,7 @@ public final class NuklearBackend implements AutoCloseable {
             STBTTPackContext pc = STBTTPackContext.malloc(stack);
             stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL);
             stbtt_PackSetOversampling(pc, 4, 4);
-            stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, 32, cdata);
+            stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, FONT_FIRST_CODEPOINT, cdata);
             stbtt_PackEnd(pc);
 
             ByteBuffer texture = memAlloc(BITMAP_W * BITMAP_H * 4);
@@ -679,7 +682,21 @@ public final class NuklearBackend implements AutoCloseable {
                         STBTTAlignedQuad q = STBTTAlignedQuad.malloc(stack);
                         IntBuffer advance = stack.mallocInt(1);
 
-                        stbtt_GetPackedQuad(cdata, BITMAP_W, BITMAP_H, codepoint - 32, x, y, q, false);
+                        int glyphCodepoint = codepoint;
+                        if (glyphCodepoint < FONT_FIRST_CODEPOINT
+                                || glyphCodepoint >= FONT_FIRST_CODEPOINT + FONT_CHAR_COUNT) {
+                            glyphCodepoint = '?';
+                        }
+                        stbtt_GetPackedQuad(
+                                cdata,
+                                BITMAP_W,
+                                BITMAP_H,
+                                glyphCodepoint - FONT_FIRST_CODEPOINT,
+                                x,
+                                y,
+                                q,
+                                false
+                        );
                         stbtt_GetCodepointHMetrics(fontInfo, codepoint, advance, null);
 
                         NkUserFontGlyph ufg = NkUserFontGlyph.create(glyph);
