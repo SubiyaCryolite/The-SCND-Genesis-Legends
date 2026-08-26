@@ -6,8 +6,7 @@
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
  The SCND Genesis: Legends is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
+ it under the terms of the GNU General Public License as version 3 of the License, or
  (at your option) any later version.
 
  The SCND Genesis: Legends is distributed in the hope that it will be useful,
@@ -21,143 +20,139 @@
  **************************************************************************/
 package com.scndgen.legends.state;
 
-import io.github.subiyacryolite.enginev1.Overlay;
-import io.github.subiyacryolite.jds.*;
-import io.github.subiyacryolite.jds.annotations.JdsEntityAnnotation;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.sqlite.SQLiteConfig;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.scndgen.legends.state.LoginFields.LAST_LOGIN_ACCOUNT;
-
 /**
- * Created by ifunga on 22/04/2017.
+ * Game save root. Persisted as JSON under {@code ~/.config/scndgen/legends/state.json}.
  */
-@JdsEntityAnnotation(entityName = "Game State", entityId = 1)
-public class State extends JdsEntity {
+public class State {
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     private static State instance;
-    private static JdsDb jdsDb;
+
     public static final int DIFFICULTY_BASE = 8000;
     public static final int DIFFICULTY_SCALE = 1333;
-    private final SimpleListProperty<Login> logins = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final SimpleStringProperty lastLoginGuid = new SimpleStringProperty("");
+
+    private List<Login> logins = new ArrayList<>();
+    private String lastLoginGuid = "";
 
     public State() {
-        instance = this;
-        map(Login.class, logins);
-        map(LAST_LOGIN_ACCOUNT, lastLoginGuid);
     }
 
     public static synchronized State get() {
         if (instance == null) {
-            try {
-                initGameState(getEmbeddedDatabaseAndCreateIfNotExist());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            instance = loadOrCreate();
         }
         return instance;
     }
 
-    private static void initGameState(String databaseIfNotExists) throws Exception {
-        createLocalDatabase(databaseIfNotExists);
-        bindClasses();
-        loadStateInstance();
-    }
-
-    private static void loadStateInstance() throws Exception {
-        List<State> states = JdsLoad.load(jdsDb, State.class);
-        State state;
-        if (states.size() == 0) {
-            state = new State();
-            System.out.printf("Created game state %s\n", state.toString());
-            JdsSave.save(jdsDb, 0, state);
-        } else {
-            state = states.get(0);
-            System.out.printf("Loaded game state %s\n", state.toString());
-        }
-
-    }
-
-    private static void createLocalDatabase(String databaseIfNotExists) {
-        jdsDb = new JdsDbSqlite() {
-            @Override
-            public Connection getConnection() throws ClassNotFoundException, SQLException {
-                Class.forName("org.sqlite.JDBC");
-                SQLiteConfig sqLiteConfig = new SQLiteConfig();
-                sqLiteConfig.enforceForeignKeys(true);
-                return DriverManager.getConnection("jdbc:sqlite:" + databaseIfNotExists, sqLiteConfig.toProperties());
-            }
-        };
-        jdsDb.init();
-    }
-
-    private static void bindClasses() {
-        jdsDb.map(Login.class);
-        jdsDb.map(State.class);
-    }
-
-    private static String getEmbeddedDatabaseAndCreateIfNotExist() {
-        File databaseFileLocation = new File(System.getProperty("user.home") + File.separator + ".config" + File.separator + "scndgen" + File.separator + "legends");
-        String fileLocation = databaseFileLocation.getAbsolutePath() + File.separator + "config.db";
+    private static State loadOrCreate() {
+        File file = saveFile();
         try {
-            if (!new File(fileLocation).exists()) {
-                databaseFileLocation.mkdirs();
-                new File(fileLocation).createNewFile();
-                System.err.println("Creating database");
+            if (file.isFile() && file.length() > 0) {
+                State loaded = MAPPER.readValue(file, State.class);
+                if (loaded.logins == null) {
+                    loaded.logins = new ArrayList<>();
+                }
+                if (loaded.lastLoginGuid == null) {
+                    loaded.lastLoginGuid = "";
+                }
+                System.out.printf("Loaded game state from %s (%d login(s))%n", file, loaded.logins.size());
+                return loaded;
             }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+        } catch (IOException ex) {
+            System.err.println("Failed to load save file, creating a new one: " + ex.getMessage());
         }
-        return fileLocation;
+        State created = new State();
+        try {
+            created.saveConfigFile();
+            System.out.printf("Created game state at %s%n", file);
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+        }
+        return created;
+    }
+
+    private static File saveFile() {
+        File dir = new File(System.getProperty("user.home")
+                + File.separator + ".config"
+                + File.separator + "scndgen"
+                + File.separator + "legends");
+        if (!dir.exists() && !dir.mkdirs()) {
+            System.err.println("Unable to create save directory: " + dir);
+        }
+        return new File(dir, "state.json");
     }
 
     public void saveConfigFile() throws Exception {
-        JdsSave.save(jdsDb, 1, this);
-        Overlay.get().primaryNotice("Saved File");
+        File file = saveFile();
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            Files.createDirectories(parent.toPath());
+        }
+        MAPPER.writeValue(file, this);
+        System.out.println("Saved File");
     }
 
-    public ObservableList<Login> getLogins() {
-        return logins.get();
+    public List<Login> getLogins() {
+        return logins;
+    }
+
+    public void setLogins(List<Login> logins) {
+        this.logins = logins != null ? logins : new ArrayList<>();
+    }
+
+    public String getLastLoginGuid() {
+        return lastLoginGuid;
+    }
+
+    public void setLastLoginGuid(String lastLoginGuid) {
+        this.lastLoginGuid = lastLoginGuid != null ? lastLoginGuid : "";
     }
 
     public void addLoginState(Login login) {
         this.logins.add(login);
     }
 
+    @JsonIgnore
     public Login getLogin() {
-        if (logins.size() == 0) {
+        if (logins.isEmpty()) {
             createLogin("Temp");
         }
-        Optional<Login> optional = getLogins().stream().filter(elment -> elment.getEntityGuid().equals(lastLoginGuid.get())).findAny();
-        return optional.isPresent() ? optional.get() : null;
+        Optional<Login> optional = logins.stream()
+                .filter(element -> element.getId().equals(lastLoginGuid))
+                .findAny();
+        return optional.orElse(logins.get(0));
     }
 
     public void setCurrentLogin(Login login) {
-        lastLoginGuid.set(login.getEntityGuid());
+        if (login != null) {
+            lastLoginGuid = login.getId();
+        }
     }
 
     public void createLogin(String accountName) {
         Login login = new Login(accountName);
         addLoginState(login);
         setCurrentLogin(login);
-        setCurrentLogin(login);
     }
 
     @Override
     public String toString() {
         return "State{" +
-                "logins=" + logins.get() +
-                ", lastLoginGuid=" + lastLoginGuid.get() +
+                "logins=" + logins +
+                ", lastLoginGuid=" + lastLoginGuid +
                 '}';
     }
 }
