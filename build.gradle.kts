@@ -1,0 +1,99 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+    java
+    `java-library`
+    application
+}
+
+group = "com.scndgen"
+version = "26" // Major rewrite in 2026
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(21)
+    options.encoding = "UTF-8"
+}
+
+val mainClassName = "com.scndgen.legends.ScndGenLegends"
+val lwjglVersion = "3.3.6"
+
+val lwjglNatives: String = when {
+    OperatingSystem.current().isLinux -> {
+        val osArch = System.getProperty("os.arch")
+        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+            val suffix = if (osArch.contains("64") || osArch.startsWith("armv8")) "arm64" else "arm32"
+            "natives-linux-$suffix"
+        } else {
+            "natives-linux"
+        }
+    }
+    OperatingSystem.current().isMacOsX -> {
+        if (System.getProperty("os.arch").startsWith("aarch64")) "natives-macos-arm64" else "natives-macos"
+    }
+    OperatingSystem.current().isWindows -> {
+        val osArch = System.getProperty("os.arch")
+        if (osArch.contains("64")) {
+            "natives-windows${if (osArch.startsWith("aarch64")) "-arm64" else ""}"
+        } else {
+            "natives-windows-x86"
+        }
+    }
+    else -> error("Unsupported OS for LWJGL natives")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    implementation("commons-codec:commons-codec:1.15")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("commons-io:commons-io:2.14.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.15.0-rc1")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.2")
+    implementation("org.lwjgl:lwjgl")
+    implementation("org.lwjgl:lwjgl-glfw")
+    implementation("org.lwjgl:lwjgl-opengl")
+    implementation("org.lwjgl:lwjgl-nanovg")
+    implementation("org.lwjgl:lwjgl-nuklear")
+    implementation("org.lwjgl:lwjgl-openal")
+    implementation("org.lwjgl:lwjgl-stb")
+    runtimeOnly("org.lwjgl:lwjgl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-nanovg::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-nuklear::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
+}
+
+application {
+    mainClass.set(mainClassName)
+}
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes(
+            "Implementation-Title" to rootProject.name,
+            "Implementation-Version" to project.version,
+            "Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
+            "Main-Class" to mainClassName,
+        )
+    }
+    from({
+        configurations.runtimeClasspath.get()
+            .filter { it.name.endsWith("jar") }
+            .map { zipTree(it) }
+    })
+}
