@@ -107,14 +107,12 @@ public class NetworkManager {
 
     /**
      * Drain inbound protocol messages on the game/GLFW thread.
+     *
+     * @deprecated use {@link com.scndgen.legends.command.GameCommandBus#drainAndApply()}
      */
+    @Deprecated
     public void drainInbound() {
-        if (client != null) {
-            client.drainInbound();
-        }
-        if (server != null) {
-            server.drainInbound();
-        }
+        // no-op: network workers offer directly to GameCommandBus
     }
 
     public void close() {

@@ -18,6 +18,8 @@ Single source of guidance for this repo: edit fragments under [`docs/agents/`](d
 
 @docs/agents/jvm-source-header.md
 
+@docs/agents/game-command-queue.md
+
 ## Project pointers
 
 - Engine: LWJGL / OpenGL 3.3 + NanoVG + Nuklear (`io.github.subiyacryolite.enginev2`)

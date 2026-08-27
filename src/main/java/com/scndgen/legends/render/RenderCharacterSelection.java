@@ -17,6 +17,7 @@
 
  You should have received a copy of the GNU General Public License
  along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+
  **************************************************************************/
 package com.scndgen.legends.render;
 
@@ -25,7 +26,8 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
-import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.network.NetworkManager;
@@ -93,27 +95,13 @@ public class RenderCharacterSelection extends CharacterSelection {
                 boolean regularMode = NetworkManager.get().isOffline() && (!selectedCharacter || !selectedOpponent);
                 boolean onlineMode = NetworkManager.get().isOnline() && !selectedCharacter;
                 if (regularMode || onlineMode) {
-                    PlayerType type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
-                    switch (hoveredCharacter) {
-                        case SUBIYA -> selSubiya(type);
-                        case RAILA -> selRaila(type);
-                        case LYNX -> selLynx(type);
-                        case AISHA -> selAisha(type);
-                        case ADE -> selAde(type);
-                        case RAVAGE -> selRav(type);
-                        case JONAH -> selJon(type);
-                        case ADAM -> selAdam(type);
-                        case NOVA_ADAM -> selNOVAAdam(type);
-                        case AZARIA -> selAza(type);
-                        case SORROWE -> selSorr(type);
-                        case THING -> selThing(type);
-                    }
+                    var type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
+                    GameCommandBus.get().dispatch(new GameCommand.SelectCharacter(hoveredCharacter, type));
                 } else {
-                    //if both character and opponent selected move on to stage select after second accept
-                    if (NetworkManager.get().isServer())
-                        NetworkManager.get().send(NetworkConstants.TO_STAGE_SELECT);
-                    if (NetworkManager.get().isOffline() || (NetworkManager.get().isServer() && selectedOpponent && selectedCharacter)) {
-                        ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
+                    // if both character and opponent selected move on to stage select after second accept
+                    if (NetworkManager.get().isOffline()
+                            || (NetworkManager.get().isServer() && selectedOpponent && selectedCharacter)) {
+                        GameCommandBus.get().dispatch(new GameCommand.GoToStageSelect());
                     }
                 }
             }
@@ -123,24 +111,27 @@ public class RenderCharacterSelection extends CharacterSelection {
                     selectedOpponent = false;
                 } else if (selectedCharacter) {
                     selectedCharacter = false;
-                    if (NetworkManager.get().isOnline())
-                        NetworkManager.get().send(NetworkConstants.DESELECT_OPPONENT);
-                } else {
                     if (NetworkManager.get().isOnline()) {
-                        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
-                                "Are you sure?",
-                                "This will terminate the current network session",
-                                "Nuke from orbit?",
-                                answer -> {
-                                    if (answer == NkDialogs.Answer.YES) {
-                                        NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                        GameCommandBus.get().publish(new GameCommand.DeselectOpponentSlot());
+                    }
+                } else if (NetworkManager.get().isOnline()) {
+                    ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                            "Yikes",
+                            "Are you sure you want to cancel this network session?",
+                            "There's no going back!",
+                            answer -> {
+                                switch (answer) {
+                                    case YES -> {
+                                        GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
                                         NetworkManager.get().close();
                                     }
+                                    default -> {
+                                    }
                                 }
-                        ));
-                    } else {
-                        ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
-                    }
+                            }
+                    ));
+                } else {
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                 }
             }
 

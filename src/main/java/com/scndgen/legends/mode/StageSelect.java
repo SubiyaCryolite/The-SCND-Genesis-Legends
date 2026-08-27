@@ -23,9 +23,7 @@ package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
-import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev2.Mode;
 
@@ -133,13 +131,6 @@ public abstract class StageSelect extends Mode {
             case SCORCHED_RUINS_NIGHT -> selectScorchedRuinsNight();
             default -> {
             }
-        }
-        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE || ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.LAN_HOST || ScndGenLegends.get().getSubMode() == SubMode.WATCH) {
-            if (NetworkManager.get().isServer()) {
-                NetworkManager.get().send(hoveredStage.shortCode());
-                NetworkManager.get().send(NetworkConstants.GAME_START);
-            }
-            start();
         }
     }
 

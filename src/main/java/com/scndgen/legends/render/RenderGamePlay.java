@@ -26,12 +26,12 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
-import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
@@ -81,7 +81,7 @@ public class RenderGamePlay extends GamePlay {
         (fury = new UiItem()).addJenesisEvent(new Event() {
             @Override
             public void onAccept() {
-                triggerFury(PlayerType.PLAYER1);
+                requestCharacterFury();
             }
 
             @Override
@@ -1163,8 +1163,7 @@ public class RenderGamePlay extends GamePlay {
                         StoryMode.get().onAccept();
                         break;
                     case LAN_HOST:
-                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT_NEW_MATCH);
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, true);
+                        GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
                         break;
                 }
 
