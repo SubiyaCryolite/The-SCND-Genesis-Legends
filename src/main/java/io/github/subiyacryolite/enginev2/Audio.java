@@ -1,175 +1,60 @@
-/*************************************************************************
- *  Compilation:  javac -classpath .:jl1.0.jar MP3.java         (OS X)
- *                javac -classpath .;jl1.0.jar MP3.java         (Windows)
- *  Execution:    java -classpath .:jl1.0.jar MP3 filename.ogg  (OS X / Linux)
- *                java -classpath .;jl1.0.jar MP3 filename.ogg  (Windows)
- *
- *  Plays an MP3 file using the JLayer MP3 library.
- *
- *  Reference:  <a href="http://www.javazoom.net/javalayer/sources.html">http://www.javazoom.net/javalayer/sources.html</a>
- *
- *
- *  To execute, get the file jl1.0.jar from the website above or from
- *
- *      <a href="http://www.cs.princeton.edu/introcs/24inout/jl1.0.jar">http://www.cs.princeton.edu/introcs/24inout/jl1.0.jar</a>
- *
- *  and put it in your working directory with this file MP3.java.
- *  small edits by Ifunga Ndana
- *
- *************************************************************************/
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([<a href="https://www.scndgen.com">https://www.scndgen.com</a>]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+
+ **************************************************************************/
 package io.github.subiyacryolite.enginev2;
 
-
 import com.scndgen.legends.enums.AudioType;
-import com.scndgen.legends.state.State;
-import org.apache.commons.io.IOUtils;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCCapabilities;
-import org.lwjgl.stb.STBVorbisInfo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.openal.ALC11.ALC_MONO_SOURCES;
-import static org.lwjgl.openal.ALC11.ALC_STEREO_SOURCES;
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.libc.LibCStdlib.free;
-
+/**
+ * Handle to a voice on {@link AudioEngine}. OpenAL work stays on the game thread.
+ */
 public class Audio {
 
-    private static final Set<Audio> heap = new HashSet<>();
-    //========================================
-    private static final long audioDevice;
-    private static final long audioContext;
-    private boolean lockVolume;
-
-    static {
-        audioDevice = alcOpenDevice((ByteBuffer) null);
-        if (audioDevice == NULL)
-            throw new IllegalStateException("Failed to open the default device.");
-        ALCCapabilities deviceCaps = ALC.createCapabilities(audioDevice);
-        System.out.println("OpenALC10: " + deviceCaps.OpenALC10);
-        System.out.println("OpenALC11: " + deviceCaps.OpenALC11);
-        String defaultDeviceSpecifier = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
-        System.out.println("Default device: " + defaultDeviceSpecifier);
-        audioContext = alcCreateContext(audioDevice, (IntBuffer) null);
-        alcMakeContextCurrent(audioContext);
-        AL.createCapabilities(deviceCaps);
-        System.out.println("ALC_FREQUENCY: " + alcGetInteger(audioDevice, ALC_FREQUENCY) + "Hz");
-        System.out.println("ALC_REFRESH: " + alcGetInteger(audioDevice, ALC_REFRESH) + "Hz");
-        System.out.println("ALC_SYNC: " + (alcGetInteger(audioDevice, ALC_SYNC) == ALC_TRUE));
-        System.out.println("ALC_MONO_SOURCES: " + alcGetInteger(audioDevice, ALC_MONO_SOURCES));
-        System.out.println("ALC_STEREO_SOURCES: " + alcGetInteger(audioDevice, ALC_STEREO_SOURCES));
-    }
-
     private final String fileName;
-    private boolean paused;
     private final AudioType audioType;
-    private boolean looping;
-    private float volume = 0.0f;
-    private int source = 0;
-    private int buffer = 0;
+    private final boolean looping;
+    private int voiceId;
 
     public Audio(String filename, AudioType audioType, boolean loop) {
         this.fileName = filename;
-        this.looping = loop;
         this.audioType = audioType;
-        heap.add(this);
-        switch (audioType) {
-            case MUSIC:
-                setVolume(State.get().getLogin().getMusicVolume(), false);
-                break;
-            case VOICE:
-                setVolume(State.get().getLogin().getVoiceVolume(), false);
-                break;
-            case SOUND:
-                setVolume(State.get().getLogin().getSoundVolume(), false);
-                break;
-        }
-    }
-
-    static ShortBuffer readVorbis(String resource, STBVorbisInfo info) throws IOException {
-        ByteBuffer byteBuffer;
-        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            (byteBuffer = memAlloc(bytes.length)).put(bytes).rewind();
-        } catch (IOException ex) {
-            throw ex;
-        }
-        IntBuffer error = BufferUtils.createIntBuffer(1);
-        long decoder = stb_vorbis_open_memory(byteBuffer, error, null);
-        if (decoder == NULL) {
-            free(byteBuffer);
-            throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + error);
-        }
-        stb_vorbis_get_info(decoder, info);
-        int channels = info.channels();
-        int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
-        ShortBuffer pcm = memAllocShort(lengthSamples);
-        pcm.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm) * channels);
-        stb_vorbis_close(decoder);
-        free(byteBuffer);
-        return pcm;
+        this.looping = loop;
     }
 
     public static void volume(AudioType audioType, float volume) {
-        heap.forEach(elem -> {
-            if (elem.getAudioType() == audioType) {
-                elem.setVolume(volume, false);
-            }
-        });
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.setBusVolume(audioType, volume);
+        }
     }
 
-    // play the MP3 file to the sound card
+    public static void closeAll() {
+        AudioEngine.shutdown();
+    }
+
     public void play() {
-        Thread thread = new Thread(() -> {
-            try {
-                source= alGenSources();
-                buffer = alGenBuffers();
-                try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-                    ShortBuffer pcm = readVorbis(fileName, info);
-                    alBufferData(buffer, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
-                    free(pcm);
-                }
-                alSourcei(source, AL_BUFFER, 0);//reset
-                alSourcei(source, AL_BUFFER, buffer);
-                alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);//AL_LOOPING, looping ? AL_TRUE : AL_FALSE
-                alSourcef(source, AL_GAIN, volume / 100.0f);
-                alSourcePlay(source);
-                int state;
-                do {
-                    state = alGetSourcei(source, AL_SOURCE_STATE);
-                    Thread.sleep(1);//wait till done
-                } while (state == AL_PLAYING || state == AL_PAUSED);
-            } catch (Exception ex) {
-                System.err.printf("Problem with [%s - %s] %s\n", source, buffer, fileName);
-                ex.printStackTrace(System.err);
-            } finally {
-                close();
-            }
-        });
-        thread.setDaemon(false);
-        thread.start();
-    }
-
-    private void setVolume(float volume, boolean ignoreLock) {
-        this.volume = volume;
-        if (lockVolume)
-            if (!ignoreLock)
-                return;
-        if (source == 0) return;
-        if (source > 0)
-            alSourcef(source, AL_GAIN, volume / 100.0f);
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.play(this);
+        }
     }
 
     public AudioType getAudioType() {
@@ -177,64 +62,63 @@ public class Audio {
     }
 
     public void togglePause() {
-        paused = !paused;
-        if (paused)
-            pause();
-        else
-            resume();
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.togglePause(this);
+        }
     }
 
     public void pause() {
-        paused = true;
-        if (source == 0) return;
-        alSourcePause(source);
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.pause(this);
+        }
     }
 
     public void resume() {
-        paused = false;
-        if (source == 0) return;
-        alSourcePlay(source);
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.resume(this);
+        }
     }
 
     public void stop() {
-        if (source == 0) return;
-        alSourceStop(source);
-        looping = false;
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.stop(this);
+        }
     }
 
     public void stop(int milliFadeTimeout) {
-        lockVolume = true;
-        float volumeDecrement = volume / milliFadeTimeout;
-        new Thread(() -> {
-            while (volume > 0.0f) {
-                setVolume(volume - volumeDecrement, true);
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            stop();
-        }).start();
-
+        AudioEngine engine = AudioEngine.get();
+        if (engine != null) {
+            engine.fadeOut(this, milliFadeTimeout);
+        }
     }
 
     public void close() {
-        heap.remove(this);
-        alSourceStop(source);
-        alSourcei(source, AL_BUFFER, 0);
-        alDeleteBuffers(buffer);
-        alDeleteSources(source);
+        stop();
     }
 
+    String fileName() {
+        return fileName;
+    }
 
-    public static void closeAll() {
-        System.out.println("Attempting to terminate all audio");
-        for (Audio audio : heap) {
-            audio.stop();
+    boolean looping() {
+        return looping;
+    }
+
+    int voiceId() {
+        return voiceId;
+    }
+
+    void attach(int id) {
+        this.voiceId = id;
+    }
+
+    void detach(int id) {
+        if (this.voiceId == id) {
+            this.voiceId = 0;
         }
-        alcDestroyContext(audioContext);
-        alcCloseDevice(audioDevice);
-        System.out.println("Terminated all audio");
     }
 }

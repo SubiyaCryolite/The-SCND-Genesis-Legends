@@ -119,6 +119,7 @@ public final class GlfwEngine implements AutoCloseable {
     public void run() {
         initWindow();
         initGlAndNanoVg();
+        AudioEngine.init();
         nuklearUi.init(window);
         scene.init(this, loader, draw);
         loop();
@@ -331,6 +332,10 @@ public final class GlfwEngine implements AutoCloseable {
                 if (!nuklearUi.isBlocking()) {
                     scene.update(delta);
                 }
+                AudioEngine audio = AudioEngine.get();
+                if (audio != null) {
+                    audio.update(delta);
+                }
 
                 draw.beginFrame(stack, winW, winH, pixelRatio);
                 viewport.begin(draw.vg());
@@ -356,6 +361,7 @@ public final class GlfwEngine implements AutoCloseable {
     @Override
     public void close() {
         running = false;
+        AudioEngine.shutdown();
         nuklearUi.close();
         if (vg != NULL) {
             nvgDelete(vg);

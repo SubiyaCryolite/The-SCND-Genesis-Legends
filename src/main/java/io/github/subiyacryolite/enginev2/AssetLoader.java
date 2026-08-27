@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_IMAGE_NEAREST;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateImageMem;
 import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
@@ -56,11 +57,20 @@ public final class AssetLoader {
 
     /**
      * Load an image that the caller owns and must {@link #free(NvgImage)} later.
+     * Uses nearest-neighbor sampling so low-res sprites stay sharp when scaled.
      */
     public NvgImage loadImage(String classpathResource) {
+        return loadImage(classpathResource, NVG_IMAGE_NEAREST);
+    }
+
+    /**
+     * @param imageFlags NanoVG flags such as {@link org.lwjgl.nanovg.NanoVG#NVG_IMAGE_NEAREST}
+     *                   or {@code 0} for default linear filtering.
+     */
+    public NvgImage loadImage(String classpathResource, int imageFlags) {
         ByteBuffer data = readResource(classpathResource);
         try {
-            int handle = nvgCreateImageMem(vg, 0, data);
+            int handle = nvgCreateImageMem(vg, imageFlags, data);
             if (handle == 0) {
                 throw new IllegalArgumentException("Unable to decode image: " + classpathResource);
             }
@@ -152,8 +162,12 @@ public final class AssetLoader {
         }
 
         public NvgImage loadImage(String classpathResource) {
+            return loadImage(classpathResource, NVG_IMAGE_NEAREST);
+        }
+
+        public NvgImage loadImage(String classpathResource, int imageFlags) {
             ensureOpen();
-            NvgImage image = loader.loadImage(classpathResource);
+            NvgImage image = loader.loadImage(classpathResource, imageFlags);
             owned.add(image);
             return image;
         }
