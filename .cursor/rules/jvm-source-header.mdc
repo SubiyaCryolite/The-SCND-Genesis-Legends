@@ -1,3 +1,18 @@
+---
+description: Require the standard SCND Genesis GPL header on new JVM sources (Java, Kotlin, Gradle KTS)
+globs: "**/*.{java,kt,kts}"
+alwaysApply: false
+---
+
+# JVM source header
+
+Every new JVM source in this project — `.java`, `.kt`, and `.kts` (except third-party retained headers such as `Audio.java`) — must start with the project GPL banner **before** the `package` declaration (or at the top of the file when there is no package, e.g. Gradle scripts).
+
+Formatting: put `package` (or the first `import` / top-level statement) on the **next line** immediately after the closing `**************************************************************************/` — one newline, no blank line, never glued on the same line.
+
+Copy exactly from `.idea/fileTemplates/includes/File Header.java`, or use this block:
+
+```
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
@@ -19,4 +34,6 @@
  along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
 
  **************************************************************************/
-rootProject.name = "legends"
+```
+
+Do not invent a shorter or alternate license header. IntelliJ/Cursor templates and the Copyright profile also inject this text for new classes.
