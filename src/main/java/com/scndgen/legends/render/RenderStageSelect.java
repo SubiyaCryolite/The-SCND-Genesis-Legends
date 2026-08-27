@@ -25,7 +25,8 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
-import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.network.NetworkManager;
@@ -99,18 +100,24 @@ public class RenderStageSelect extends StageSelect {
             }
 
             public void onAccept() {
-                if (NetworkManager.get().isOffline() || NetworkManager.get().isServer())
-                    selectStage(hoveredStage);
+                if (!(NetworkManager.get().isOffline() || NetworkManager.get().isServer())) {
+                    return;
+                }
+                GameCommandBus.get().dispatch(new GameCommand.SelectStage(hoveredStage));
+                var subMode = ScndGenLegends.get().getSubMode();
+                if (subMode == SubMode.STORY_MODE
+                        || subMode == SubMode.SINGLE_PLAYER
+                        || subMode == SubMode.LAN_HOST
+                        || subMode == SubMode.WATCH) {
+                    GameCommandBus.get().dispatch(new GameCommand.StartMatch());
+                }
             }
 
             public void onBackCancel() {
-                if (NetworkManager.get().isOffline())
-                    ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-                else {
-                    if (NetworkManager.get().isServer()) {
-                        NetworkManager.get().send(NetworkConstants.TO_CHARACTER_SELECT_CHANGE_SELECTION);
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, false);
-                    }
+                if (NetworkManager.get().isOffline()) {
+                    GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
+                } else if (NetworkManager.get().isServer()) {
+                    GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(false));
                 }
             }
         };

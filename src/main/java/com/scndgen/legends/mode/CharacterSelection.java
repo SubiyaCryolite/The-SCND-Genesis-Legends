@@ -4,12 +4,10 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.PlayerType;
 import com.scndgen.legends.enums.SubMode;
-import com.scndgen.legends.network.NetworkManager;
 import io.github.subiyacryolite.enginev2.Accumulator;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.Mode;
@@ -153,10 +151,6 @@ public abstract class CharacterSelection extends Mode {
             selectedCharacter = true;
             Characters.get().prepare(characterEnum = CharacterEnum.RAILA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_RAILA);
-                preventCharacterSelection();
-            }
         } else if (type == PlayerType.PLAYER2 && !selectedOpponent) {
             playSelectSound();
             selectedOpponent = true;
@@ -179,10 +173,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.SUBIYA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_SUBIYA);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -207,10 +197,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.LYNX);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_LYNX);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -235,10 +221,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.AISHA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_ALEX);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -263,10 +245,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.ADE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_ADE);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -291,10 +269,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.RAVAGE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_RAVAGE);
-                preventCharacterSelection();
-            }
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
@@ -320,10 +294,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.JONAH);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_JOHN);
-                preventCharacterSelection();
-            }
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
@@ -349,10 +319,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.ADAM);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_ADAM);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -377,10 +343,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.NOVA_ADAM);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_NOVA_ADAM);
-                preventCharacterSelection();
-            }
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
@@ -406,10 +368,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.AZARIA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_AZARIA);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -434,10 +392,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum = CharacterEnum.SORROWE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_SORROWE);
-                preventCharacterSelection();
-            }
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
@@ -463,10 +417,6 @@ public abstract class CharacterSelection extends Mode {
             Characters.get().prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
             charDesc = Characters.get().getCharacter().getDescSmall();
-            if (NetworkManager.get().isOnline()) {
-                NetworkManager.get().send(NetworkConstants.SEL_THING);
-                preventCharacterSelection();
-            }
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent

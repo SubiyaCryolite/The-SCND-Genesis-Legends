@@ -2,6 +2,7 @@ package com.scndgen.legends;
 
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.render.RenderCharacterSelection;
 import com.scndgen.legends.render.RenderGamePlay;
@@ -76,7 +77,7 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
         if (switchingModes || mode == null) {
             return;
         }
-        NetworkManager.get().drainInbound();
+        GameCommandBus.get().drainAndApply();
         mode.tick(deltaSeconds);
     }
 

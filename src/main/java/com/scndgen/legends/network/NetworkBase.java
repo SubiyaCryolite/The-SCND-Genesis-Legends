@@ -21,15 +21,8 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.ScndGenLegends;
-import com.scndgen.legends.constants.NetworkConstants;
-import com.scndgen.legends.enums.ModeEnum;
-import com.scndgen.legends.enums.PlayerType;
-import com.scndgen.legends.enums.Stage;
-import com.scndgen.legends.render.RenderCharacterSelection;
-import com.scndgen.legends.render.RenderGamePlay;
-import com.scndgen.legends.render.RenderStageSelect;
-import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -37,26 +30,19 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static com.scndgen.legends.constants.NetworkConstants.*;
-
 /**
- * Shared UTF string session: outbound/inbound queues, cooperative socket shutdown,
- * and game-thread {@link #drainInbound()} for protocol side effects.
+ * Shared UTF string session I/O. Inbound strings are decoded into {@link GameCommand}s
+ * and offered to {@link GameCommandBus} for game-thread application.
  */
 public abstract class NetworkBase {
-
-    /** Enqueued by the I/O worker; drained on the game thread to show UI and close. */
-    public static final String SESSION_ERROR = "\0SESSION_ERROR";
 
     private static final int IO_POLL_TIMEOUT_MS = 50;
     private static final long JOIN_TIMEOUT_MS = 2000L;
 
     protected final BlockingQueue<String> outbound = new LinkedBlockingQueue<>();
-    protected final BlockingQueue<String> inbound = new LinkedBlockingQueue<>();
     protected volatile boolean running;
     protected volatile Socket socket;
     protected volatile ServerSocket serverSocket;
@@ -65,28 +51,6 @@ public abstract class NetworkBase {
     public void sendData(String message) {
         if (message != null) {
             outbound.offer(message);
-        }
-    }
-
-    /**
-     * Apply pending inbound protocol messages on the game/GLFW thread.
-     */
-    public void drainInbound() {
-        String line;
-        while ((line = inbound.poll()) != null) {
-            if (SESSION_ERROR.equals(line)) {
-                ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        "Network Error",
-                        "Something went wrong during the online session",
-                        ""
-                ));
-                NetworkManager.get().close();
-                continue;
-            }
-            if (line.isEmpty()) {
-                continue;
-            }
-            readMessage(line);
         }
     }
 
@@ -130,11 +94,11 @@ public abstract class NetworkBase {
     }
 
     protected void signalSessionError() {
-        inbound.offer(SESSION_ERROR);
+        GameCommandBus.get().offer(new GameCommand.SessionError(""));
     }
 
     /**
-     * Shared connected-socket pump: flush outbound, read inbound onto the game-thread queue.
+     * Shared connected-socket pump: flush outbound, decode inbound onto the command bus.
      */
     protected void runConnectedSocket(Socket connected) throws IOException {
         this.socket = connected;
@@ -148,7 +112,7 @@ public abstract class NetworkBase {
                     try {
                         var message = in.readUTF();
                         if (!message.isEmpty()) {
-                            inbound.offer(message);
+                            GameCommandBus.get().offerEncoded(message);
                         }
                     } catch (SocketTimeoutException ignored) {
                         outbound.offer(""); // keep-alive when idle
@@ -168,184 +132,5 @@ public abstract class NetworkBase {
             out.writeUTF(message);
         }
         out.flush();
-    }
-
-    /**
-     * Read incoming data stream (game thread only via {@link #drainInbound()}).
-     */
-    public void readMessage(String line) {
-        try {
-            if (line.endsWith(NetworkConstants.ATTACK_POSTFIX)) {
-                var attackArray = line.split(":");
-                var attackList = new ArrayList<String>(attackArray.length);
-                for (var i = 0; i < attackArray.length - 1; i++) {
-                    if (!attackArray[i].isEmpty()) {
-                        attackList.add(attackArray[i]);
-                    }
-                }
-                RenderGamePlay.get().opponentAttack(attackList);
-            } else if (line.startsWith(HOST_TIME_CONSTANT)) {
-                NetworkManager.get().hostTimeLimit = Integer.parseInt(line.replace(HOST_TIME_CONSTANT, ""));
-                System.out.println("aquired time is " + NetworkManager.get().hostTimeLimit);
-            } else {
-                switch (line) {
-                    case TO_CHARACTER_SELECT_CHANGE_SELECTION -> {
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, false);
-                        return;
-                    }
-                    case TO_CHARACTER_SELECT_NEW_MATCH -> {
-                        ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, true);
-                        return;
-                    }
-                    case CANCEL_CONNECTIVITY -> {
-                        ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                                "Yikes",
-                                "Your opponent has terminated this network session",
-                                "Well, that sucks"
-                        ));
-                        NetworkManager.get().close();
-                    }
-                    case DESELECT_OPPONENT -> {
-                        RenderCharacterSelection.get().setSelectedOpponent(false);
-                        return;
-                    }
-                    case SEL_SUBIYA -> {
-                        RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_LYNX -> {
-                        RenderCharacterSelection.get().selLynx(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_ALEX -> {
-                        RenderCharacterSelection.get().selAisha(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_ADE -> {
-                        RenderCharacterSelection.get().selAde(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_RAVAGE -> {
-                        RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_JOHN -> {
-                        RenderCharacterSelection.get().selJon(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_ADAM -> {
-                        RenderCharacterSelection.get().selAdam(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_NOVA_ADAM -> {
-                        RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_AZARIA -> {
-                        RenderCharacterSelection.get().selAza(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_SORROWE -> {
-                        RenderCharacterSelection.get().selSorr(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case SEL_THING -> {
-                        RenderCharacterSelection.get().selThing(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case STAGE_IBEX_HILL -> {
-                        RenderStageSelect.get().selectStage(Stage.IBEX_HILL);
-                        return;
-                    }
-                    case STAGE_CHELSTON_CITY_DOCKS -> {
-                        RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_DOCKS);
-                        return;
-                    }
-                    case STAGE_DESERT_RUINS -> {
-                        RenderStageSelect.get().selectStage(Stage.DESERT_RUINS);
-                        return;
-                    }
-                    case STAGE_CHELSTON_CITY_STREETS -> {
-                        RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_STREETS);
-                        return;
-                    }
-                    case STAGE_IBEX_HILL_NIGHT -> {
-                        RenderStageSelect.get().selectStage(Stage.IBEX_HILL_NIGHT);
-                        return;
-                    }
-                    case STAGE_SCORCHED_RUINS -> {
-                        RenderStageSelect.get().selectStage(Stage.SCORCHED_RUINS);
-                        return;
-                    }
-                    case STAGE_FROZEN_WILDERNESS -> {
-                        RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
-                        return;
-                    }
-                    case STAGE_DISTANT_ISLE -> {
-                        RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE);
-                        return;
-                    }
-                    case STAGE_HIDDEN_CAVE -> {
-                        RenderStageSelect.get().selectStage(Stage.HIDDEN_CAVE);
-                        return;
-                    }
-                    case STAGE_HIDDEN_CAVE_NIGHT -> {
-                        RenderStageSelect.get().selectStage(Stage.HIDDEN_CAVE_NIGHT);
-                        return;
-                    }
-                    case STAGE_AFRICAN_VILLAGE -> {
-                        RenderStageSelect.get().selectStage(Stage.AFRICAN_VILLAGE);
-                        return;
-                    }
-                    case STAGE_APOCALYPTO -> {
-                        RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
-                        return;
-                    }
-                    case STAGE_DISTANT_ISLE_NIGHT -> {
-                        RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE_NIGHT);
-                        return;
-                    }
-                    case STAGE_RANDOM -> {
-                        RenderStageSelect.get().selectStage(Stage.RANDOM);
-                        return;
-                    }
-                    case STAGE_DESERT_RUINS_NIGHT -> {
-                        RenderStageSelect.get().selectStage(Stage.DESERT_RUINS_NIGHT);
-                        return;
-                    }
-                    case STAGE_SCORCHED_RUINS_NIGHT -> {
-                        RenderStageSelect.get().selectStage(Stage.SCORCHED_RUINS_NIGHT);
-                        return;
-                    }
-                    case TO_STAGE_SELECT -> ScndGenLegends.get().loadMode(ModeEnum.STAGE_SELECT_SCREEN);
-                    case GAME_START -> RenderStageSelect.get().start();
-                    case FURY_ATTACK -> {
-                        RenderGamePlay.get().triggerFury(PlayerType.PLAYER2);
-                        return;
-                    }
-                    case CONNECT_TO_HOST -> {
-                        if (NetworkManager.get().isServer()) {
-                            NetworkManager.get().promptServer();
-                        } else {
-                            NetworkManager.get().setConnectedToPartner(true);
-                        }
-                    }
-                    case DISCONNECT_FROM_HOST -> {
-                        ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                                "Ouchies",
-                                "HARSH!",
-                                "The opponent doesnt want to fight you -_-"
-                        ));
-                        NetworkManager.get().close();
-                    }
-                    default -> {
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
-            ex.printStackTrace(System.err);
-            sendData("lastMess");
-        }
     }
 }

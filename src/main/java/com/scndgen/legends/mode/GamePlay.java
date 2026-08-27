@@ -26,7 +26,8 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Character;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.constants.NetworkConstants;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.mode.gameplay.FuryBar;
 import com.scndgen.legends.mode.gameplay.MatchPlayClock;
@@ -352,11 +353,19 @@ public abstract class GamePlay extends Mode {
      */
     public void attack() {
         if (characterAttacks.isEmpty()) return;
+        var moves = List.copyOf(characterAttacks);
+        disableSelection();
+        GameCommandBus.get().dispatch(new GameCommand.AttackQueue(PlayerType.PLAYER1, moves));
+    }
+
+    /**
+     * Apply a resolved character attack queue (local {@link GameCommand.AttackQueue} drain).
+     */
+    public void characterAttack(List<Integer> moves) {
+        characterAttacks.clear();
+        characterAttacks.addAll(moves);
         disableSelection();
         prepareCharacterAttack();
-        if (NetworkManager.get().isOnline()) {
-            NetworkManager.get().send(attackStr = String.format("%s:%s:%s:%s:%s", characterAttacks.get(0), characterAttacks.get(1), characterAttacks.get(2), characterAttacks.get(3), NetworkConstants.ATTACK_POSTFIX));
-        }
     }
 
     private void prepareCharacterAttack() {
@@ -1082,6 +1091,19 @@ public abstract class GamePlay extends Mode {
         furyBar.queue((int) increment);
     }
 
+    /**
+     * Local player requests fury via the shared command bus (offline and online).
+     */
+    public void requestCharacterFury() {
+        if (gameOver || playingCutscene || paused || limitRunning) {
+            return;
+        }
+        if (!isCharacterAtbFull() || !isFuryBarFull()) {
+            return;
+        }
+        GameCommandBus.get().dispatch(new GameCommand.TriggerFury(PlayerType.PLAYER1));
+    }
+
     public void triggerFury(PlayerType playerType) {
         if (gameOver) return;
         if (playingCutscene) return;
@@ -1090,9 +1112,6 @@ public abstract class GamePlay extends Mode {
         switch (playerType) {
             case PLAYER1:
                 if (!isCharacterAtbFull() || !isFuryBarFull()) return;
-                if (NetworkManager.get().isOnline()) {
-                    NetworkManager.get().send(NetworkConstants.FURY_ATTACK);
-                }
                 setAttackType(AttackType.FURY, PlayerType.PLAYER1);
                 pauseCharacterAtb();
                 setCharacterAtbValue(0);
@@ -1302,7 +1321,7 @@ public abstract class GamePlay extends Mode {
     public void mouseClicked(float x, float y, int button) {
         switch (button) {
             case GLFW_MOUSE_BUTTON_LEFT -> onAccept();
-            case GLFW_MOUSE_BUTTON_MIDDLE -> triggerFury(PlayerType.PLAYER1);
+            case GLFW_MOUSE_BUTTON_MIDDLE -> requestCharacterFury();
             case GLFW_MOUSE_BUTTON_RIGHT -> onBackCancel();
             default -> {
             }
@@ -1328,9 +1347,9 @@ public abstract class GamePlay extends Mode {
                         terminateGameplay();
                         RenderStageSelect.get().setStageSelected(false);
                         if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                            ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                         } else {
-                            ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                            GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
                         }
                     } else {
                         ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
@@ -1345,7 +1364,8 @@ public abstract class GamePlay extends Mode {
                                         onTogglePause();
                                     }
                                     terminateGameplay();
-                                    NetworkManager.get().send(NetworkConstants.CANCEL_CONNECTIVITY);
+                                    // Wire-only: peer applies CancelConnectivity; local UI already handled quit.
+                                    GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
                                     NetworkManager.get().close();
                                 }
                         ));
@@ -1561,9 +1581,9 @@ public abstract class GamePlay extends Mode {
      */
     public void closingThread(boolean goToCharacterSelect) {
         if (goToCharacterSelect) {
-            ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+            GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
         } else {
-            ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
         }
     }
 
