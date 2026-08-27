@@ -99,7 +99,7 @@ public abstract class Mode implements UiScreen {
      */
     public final void tick(double deltaSeconds) {
         lastFrameDeltaSeconds = deltaSeconds;
-        double clamped = Math.max(0.0, Math.min(deltaSeconds, 0.25));
+        double clamped = Math.clamp(deltaSeconds, 0.0, 0.25);
         elapsedSeconds += clamped;
         tick60.advance(deltaSeconds);
         tick30.advance(deltaSeconds);

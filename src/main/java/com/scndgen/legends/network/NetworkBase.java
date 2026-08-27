@@ -1,3 +1,24 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([<a href="https://www.scndgen.com">https://www.scndgen.com</a>]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+
+ **************************************************************************/
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
@@ -10,26 +31,157 @@ import com.scndgen.legends.render.RenderGamePlay;
 import com.scndgen.legends.render.RenderStageSelect;
 import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.scndgen.legends.constants.NetworkConstants.*;
 
 /**
- * Created by ifunga on 30/05/2017.
+ * Shared UTF string session: outbound/inbound queues, cooperative socket shutdown,
+ * and game-thread {@link #drainInbound()} for protocol side effects.
  */
 public abstract class NetworkBase {
+
+    /** Enqueued by the I/O worker; drained on the game thread to show UI and close. */
+    public static final String SESSION_ERROR = "\0SESSION_ERROR";
+
+    private static final int IO_POLL_TIMEOUT_MS = 50;
+    private static final long JOIN_TIMEOUT_MS = 2000L;
+
+    protected final BlockingQueue<String> outbound = new LinkedBlockingQueue<>();
+    protected final BlockingQueue<String> inbound = new LinkedBlockingQueue<>();
+    protected volatile boolean running;
+    protected volatile Socket socket;
+    protected volatile ServerSocket serverSocket;
+    protected Thread worker;
+
+    public void sendData(String message) {
+        if (message != null) {
+            outbound.offer(message);
+        }
+    }
+
     /**
-     * Read incoming data stream
+     * Apply pending inbound protocol messages on the game/GLFW thread.
+     */
+    public void drainInbound() {
+        String line;
+        while ((line = inbound.poll()) != null) {
+            if (SESSION_ERROR.equals(line)) {
+                ScndGenLegends.get().engine().ui().push(NkDialogs.message(
+                        "Network Error",
+                        "Something went wrong during the online session",
+                        ""
+                ));
+                NetworkManager.get().close();
+                continue;
+            }
+            if (line.isEmpty()) {
+                continue;
+            }
+            readMessage(line);
+        }
+    }
+
+    /**
+     * Stop the session: flag, close sockets (unblocks accept/read), interrupt and join worker.
+     */
+    public void close() {
+        running = false;
+        closeSockets();
+        var w = worker;
+        if (w != null && w != Thread.currentThread()) {
+            w.interrupt();
+            try {
+                w.join(JOIN_TIMEOUT_MS);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    protected void startWorker(String name, Runnable task) {
+        worker = Thread.ofVirtual().name(name).unstarted(task);
+        worker.start();
+    }
+
+    protected void closeSockets() {
+        closeQuietly(socket);
+        socket = null;
+        closeQuietly(serverSocket);
+        serverSocket = null;
+    }
+
+    protected static void closeQuietly(AutoCloseable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (Exception ignored) {
+        }
+    }
+
+    protected void signalSessionError() {
+        inbound.offer(SESSION_ERROR);
+    }
+
+    /**
+     * Shared connected-socket pump: flush outbound, read inbound onto the game-thread queue.
+     */
+    protected void runConnectedSocket(Socket connected) throws IOException {
+        this.socket = connected;
+        try {
+            connected.setTcpNoDelay(true);
+            connected.setSoTimeout(IO_POLL_TIMEOUT_MS);
+            try (var out = new DataOutputStream(connected.getOutputStream());
+                 var in = new DataInputStream(connected.getInputStream())) {
+                while (running && !Thread.currentThread().isInterrupted()) {
+                    flushOutbound(out);
+                    try {
+                        var message = in.readUTF();
+                        if (!message.isEmpty()) {
+                            inbound.offer(message);
+                        }
+                    } catch (SocketTimeoutException ignored) {
+                        outbound.offer(""); // keep-alive when idle
+                    }
+                }
+            }
+        } finally {
+            if (this.socket == connected) {
+                this.socket = null;
+            }
+        }
+    }
+
+    private void flushOutbound(DataOutputStream out) throws IOException {
+        String message;
+        while ((message = outbound.poll()) != null) {
+            out.writeUTF(message);
+        }
+        out.flush();
+    }
+
+    /**
+     * Read incoming data stream (game thread only via {@link #drainInbound()}).
      */
     public void readMessage(String line) {
         try {
             if (line.endsWith(NetworkConstants.ATTACK_POSTFIX)) {
-                String[] attackArray = line.split(":");
-                List<String> attackList = new LinkedList<>();
-                for (int i = 0; i < attackArray.length - 1; i++) {
-                    if (!attackArray[i].isEmpty())
+                var attackArray = line.split(":");
+                var attackList = new ArrayList<String>(attackArray.length);
+                for (var i = 0; i < attackArray.length - 1; i++) {
+                    if (!attackArray[i].isEmpty()) {
                         attackList.add(attackArray[i]);
+                    }
                 }
                 RenderGamePlay.get().opponentAttack(attackList);
             } else if (line.startsWith(HOST_TIME_CONSTANT)) {
@@ -192,17 +344,8 @@ public abstract class NetworkBase {
             }
         } catch (Exception ex) {
             System.err.println(ex);
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             sendData("lastMess");
         }
-    }
-
-    public abstract void sendData(String mess);
-
-    protected long keepAlive(long frames) {
-        if (frames % 60 == 0)
-            sendData("1");//keep stream alive
-        frames++;
-        return frames;
     }
 }

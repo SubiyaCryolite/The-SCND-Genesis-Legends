@@ -1,94 +1,62 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([<a href="https://www.scndgen.com">https://www.scndgen.com</a>]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+
+ **************************************************************************/
 package com.scndgen.legends.network;
 
-import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
-import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.LinkedList;
+import java.util.Objects;
 
 /**
- * Created by ifunga on 15/04/2017.
+ * Client session worker: connects to a host and pumps UTF messages via queues.
  */
-public class NetworkClient extends NetworkBase implements Runnable {
+public class NetworkClient extends NetworkBase {
 
-    private final Thread thread;
     private final String serverIpAddress;
-    private boolean running;
-    private final LinkedList<String> messageQue = new LinkedList<>();
 
-    /**
-     * Constructor, expects getInfo/ip address
-     */
     public NetworkClient(String ip) {
-        running = true;
         serverIpAddress = ip;
+        running = true;
         sendData(NetworkConstants.CONNECT_TO_HOST);
-        thread = new Thread(this);
-        thread.setDaemon(false);
-        thread.start();
+        startWorker("net-client", this::runSession);
     }
 
-    @Override
-    public void run() {
-        running = true;
+    private void runSession() {
         try {
-            InetAddress inetAddress = InetAddress.getByName(serverIpAddress);
-            System.out.printf("Attempting to connect to %s\n", inetAddress);
-            try (Socket socket = new Socket(inetAddress, NetworkManager.PORT)) {
-                System.out.println("Connected to " + socket.getInetAddress() + "\n");
-                socket.setSoTimeout(NetworkManager.TIMEOUT);
-                while (running) {
-                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                    if (!messageQue.isEmpty()) {
-                        dataOutputStream.writeUTF(messageQue.pop());
-                        dataOutputStream.flush();
-                    }
-                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                    readMessage(dataInputStream.readUTF());
-                    thread.sleep(NetworkManager.get().SERVER_LATENCY);
-                    sendData("");//keep stream alive
-                }
+            var address = InetAddress.getByName(serverIpAddress);
+            System.out.printf("Attempting to connect to %s%n", address);
+            try (var connected = new Socket(address, NetworkManager.PORT)) {
+                System.out.println("Connected to " + connected.getInetAddress());
+                runConnectedSocket(connected);
             }
         } catch (Exception ex) {
-            ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                    "Network Error",
-                    "Something went wrong during the online session",
-                    ex.getMessage() == null ? "" : ex.getMessage()
-            ));
-            NetworkManager.get().close();
-        }
-        finally {
+            if (running) {
+                System.err.println(Objects.requireNonNullElse(ex.getMessage(), ex.toString()));
+                signalSessionError();
+            }
+        } finally {
+            closeSockets();
             System.out.println("Closed the Client");
         }
-    }
-
-    /**
-     * Send a data stream
-     *
-     * @param message message to send
-     */
-    @Override
-    public void sendData(String message) {
-        messageQue.add(message);
-    }
-
-    /**
-     * Terminate client
-     */
-    public void close() {
-        try {
-            running = false;
-        } catch (Exception exception) {
-            exception.printStackTrace(System.err);
-        }
-    }
-
-    public void shutdownKillClient()
-    {
-        thread.stop();
     }
 }

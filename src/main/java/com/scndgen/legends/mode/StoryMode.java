@@ -66,26 +66,15 @@ public class StoryMode {
         EXIT
     }
 
-    private static final class Step {
-        final StepKind kind;
-        final CharacterEnum portrait; // null = leave as-is; CLEAR sentinel via clearPortrait
-        final boolean clearPortrait;
-        final boolean setPortrait;
-        final String line;
-        final double waitSeconds;
-        final Runnable action;
-
-        private Step(StepKind kind, CharacterEnum portrait, boolean setPortrait, boolean clearPortrait,
-                     String line, double waitSeconds, Runnable action) {
-            this.kind = kind;
-            this.portrait = portrait;
-            this.setPortrait = setPortrait;
-            this.clearPortrait = clearPortrait;
-            this.line = line;
-            this.waitSeconds = waitSeconds;
-            this.action = action;
-        }
-
+    private record Step(
+            StepKind kind,
+            CharacterEnum portrait, // null = leave as-is; CLEAR sentinel via clearPortrait
+            boolean setPortrait,
+            boolean clearPortrait,
+            String line,
+            double waitSeconds,
+            Runnable action
+    ) {
         static Step wait(double seconds) {
             return new Step(StepKind.WAIT, null, false, false, null, seconds, null);
         }

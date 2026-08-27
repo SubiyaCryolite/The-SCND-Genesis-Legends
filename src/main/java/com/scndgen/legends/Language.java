@@ -93,7 +93,7 @@ public final class Language {
         JsonMapper mapper = JsonMapper.builder().build();
         HashMap<Integer, String> jsonMap = null;
         try {
-            TypeReference<HashMap<Integer, String>> typeRef = new TypeReference<HashMap<Integer, String>>() {
+            TypeReference<HashMap<Integer, String>> typeRef = new TypeReference<>() {
             };
             jsonMap = mapper.readValue(Thread.currentThread().getContextClassLoader().getResourceAsStream(location), typeRef);
         } catch (JacksonException e) {

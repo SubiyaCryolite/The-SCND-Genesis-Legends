@@ -28,54 +28,58 @@ import com.scndgen.legends.enums.SubMode;
 public class NetworkManager {
 
     public static final int PORT = 3074;
-    public static final int SERVER_LATENCY = 4; //ms
+    public static final int SERVER_LATENCY = 4; //ms (legacy; I/O uses short socket timeouts)
     public static final int TIMEOUT = 4000; //ms
     private static NetworkManager instance;
-    public int hostTimeLimit;
+    public volatile int hostTimeLimit;
     private NetworkServer server;
     private NetworkClient client;
-    private boolean connectedToPartner;
+    private volatile boolean connectedToPartner;
+    private boolean closing;
 
     private NetworkManager() {
         instance = this;
     }
 
     public static NetworkManager get() {
-        if (instance == null)
+        if (instance == null) {
             instance = new NetworkManager();
+        }
         return instance;
     }
 
     public void asHost() {
-        if (client != null)
-            closeTheClient();
+        if (client != null) {
+            closeTheClient(false);
+        }
         server = new NetworkServer();
     }
 
     public void asClient(String ip) {
-        if (server != null)
-            closeTheServer();
+        if (server != null) {
+            closeTheServer(false);
+        }
         client = new NetworkClient(ip);
     }
 
-    /**
-     * Closes hosting NetworkServer
-     */
-    private void closeTheServer() {
-        server.close();
-        server.shutdownKillServer();
-        server = null;
-        backToMainMenu();
+    private void closeTheServer(boolean returnToMenu) {
+        if (server != null) {
+            server.close();
+            server = null;
+        }
+        if (returnToMenu) {
+            backToMainMenu();
+        }
     }
 
-    /**
-     * Closes client
-     */
-    private void closeTheClient() {
-        client.close();
-        client.shutdownKillClient();
-        client = null;
-        backToMainMenu();
+    private void closeTheClient(boolean returnToMenu) {
+        if (client != null) {
+            client.close();
+            client = null;
+        }
+        if (returnToMenu) {
+            backToMainMenu();
+        }
     }
 
     private void backToMainMenu() {
@@ -93,17 +97,41 @@ public class NetworkManager {
     }
 
     public void send(String message) {
-        if (isClient())
+        if (isClient()) {
             client.sendData(message);
-        if (isServer())
+        }
+        if (isServer()) {
             server.sendData(message);
+        }
+    }
+
+    /**
+     * Drain inbound protocol messages on the game/GLFW thread.
+     */
+    public void drainInbound() {
+        if (client != null) {
+            client.drainInbound();
+        }
+        if (server != null) {
+            server.drainInbound();
+        }
     }
 
     public void close() {
-        if (isClient())
-            closeTheClient();
-        if (isServer())
-            closeTheServer();
+        if (closing) {
+            return;
+        }
+        closing = true;
+        try {
+            var wasOnline = isOnline();
+            closeTheClient(false);
+            closeTheServer(false);
+            if (wasOnline) {
+                backToMainMenu();
+            }
+        } finally {
+            closing = false;
+        }
     }
 
     public boolean isOnline() {
@@ -127,19 +155,22 @@ public class NetworkManager {
     }
 
     public void promptServer() {
-        if (server != null)
+        if (server != null) {
             server.playerFound();
+        }
     }
 
     public String getHostName() {
-        if (isServer())
+        if (isServer()) {
             return server.getHostName();
+        }
         return "";
     }
 
     public String getHostAddress() {
-        if (isServer())
+        if (isServer()) {
             return server.getHostAddress();
+        }
         return "";
     }
 }

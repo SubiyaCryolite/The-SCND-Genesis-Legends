@@ -1,3 +1,24 @@
+/**************************************************************************
+
+ The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
+ a webcomic created by Ifunga Ndana ((([<a href="https://www.scndgen.com">https://www.scndgen.com</a>]))).
+
+ The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
+
+ The SCND Genesis: Legends is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ The SCND Genesis: Legends is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+
+ **************************************************************************/
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
@@ -5,49 +26,40 @@ import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.state.State;
 import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.Objects;
 
 import static com.scndgen.legends.constants.NetworkConstants.CONNECT_TO_HOST;
 
 /**
- * Created by ifunga on 15/04/2017.
+ * Host session worker: accepts one client and pumps UTF messages via queues.
  */
-public class NetworkServer extends NetworkBase implements Runnable {
+public class NetworkServer extends NetworkBase {
 
-    private String hostName, hostAddress;
-    private boolean running;
-    private final LinkedList<String> messageQue = new LinkedList<>();
+    private String hostName = "";
+    private String hostAddress = "";
 
-    /**
-     * Basic constructor
-     */
     public NetworkServer() {
         initServerDetails();
-        Thread thread = new Thread(this);
-        thread.setDaemon(false);
-        thread.start();
+        running = true;
+        startWorker("net-server", this::runSession);
     }
 
     private void initServerDetails() {
         try {
-            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
-            while (enumeration.hasMoreElements()) {
-                hostName = InetAddress.getLocalHost().getHostName();
-                hostAddress = InetAddress.getLocalHost().getHostAddress();
+            var interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                interfaces.nextElement();
+                var local = InetAddress.getLocalHost();
+                hostName = local.getHostName();
+                hostAddress = local.getHostAddress();
             }
-
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         }
     }
-
 
     public void playerFound() {
         ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
@@ -72,47 +84,29 @@ public class NetworkServer extends NetworkBase implements Runnable {
         ));
     }
 
-
-    @Override
-    public void run() {
+    private void runSession() {
         try {
-            running = true;
-            System.out.printf("<Server> Started on %s.\n", InetAddress.getLocalHost());
-            try (ServerSocket serverSocket = new ServerSocket(NetworkManager.PORT, 1); Socket socket = serverSocket.accept()) {
-                serverSocket.setSoTimeout(NetworkManager.TIMEOUT);
-                System.out.printf("Client [%s] connected to server.\n", socket);
-                while (running) {
-                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                    if (!messageQue.isEmpty()) {
-                        dataOutputStream.writeUTF(messageQue.pop());
-                        dataOutputStream.flush();
+            System.out.printf("<Server> Started on %s.%n", InetAddress.getLocalHost());
+            try (var listen = new ServerSocket(NetworkManager.PORT, 1)) {
+                this.serverSocket = listen;
+                listen.setSoTimeout(0);
+                try (var connected = listen.accept()) {
+                    System.out.printf("Client [%s] connected to server.%n", connected);
+                    if (this.serverSocket == listen) {
+                        this.serverSocket = null;
                     }
-                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                    readMessage(dataInputStream.readUTF());
-                    Thread.sleep(NetworkManager.SERVER_LATENCY);
-                    sendData("");//keep stream alive
+                    runConnectedSocket(connected);
                 }
             }
         } catch (Exception ex) {
-            ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                    "Network Error",
-                    "Something went wrong during the online session",
-                    ex.getMessage() == null ? "" : ex.getMessage()
-            ));
-            NetworkManager.get().close();
+            if (running) {
+                System.err.println(Objects.requireNonNullElse(ex.getMessage(), ex.toString()));
+                signalSessionError();
+            }
         } finally {
+            closeSockets();
             System.out.println("Closed the server");
         }
-    }
-
-    /**
-     * Send data stream
-     *
-     * @param message message to send
-     */
-    @Override
-    public void sendData(String message) {
-        messageQue.add(message);
     }
 
     public String getHostName() {
@@ -121,13 +115,5 @@ public class NetworkServer extends NetworkBase implements Runnable {
 
     public String getHostAddress() {
         return hostAddress;
-    }
-
-    public void close() {
-        running = false;
-    }
-
-    public void shutdownKillServer() {
-        close();
     }
 }

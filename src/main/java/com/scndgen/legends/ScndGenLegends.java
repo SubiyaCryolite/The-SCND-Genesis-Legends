@@ -76,6 +76,7 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
         if (switchingModes || mode == null) {
             return;
         }
+        NetworkManager.get().drainInbound();
         mode.tick(deltaSeconds);
     }
 
