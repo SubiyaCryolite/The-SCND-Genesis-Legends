@@ -1,0 +1,6 @@
+# Normalize Gradle wrapper scripts across OSes
+gradlew text eol=lf
+*.bat text eol=crlf
+*.java text eol=lf
+*.kt text eol=lf
+*.kts text eol=lf
