@@ -21,12 +21,13 @@
 package com.scndgen.legends.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,10 @@ import java.util.Optional;
  * Game save root. Persisted as JSON under {@code ~/.config/scndgen/legends/state.json}.
  */
 public class State {
-    private static final ObjectMapper MAPPER = new ObjectMapper()
+    private static final ObjectMapper MAPPER = JsonMapper.builder()
             .enable(SerializationFeature.INDENT_OUTPUT)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
     private static State instance;
 
     public static final int DIFFICULTY_BASE = 8000;
@@ -71,7 +73,7 @@ public class State {
                 System.out.printf("Loaded game state from %s (%d login(s))%n", file, loaded.logins.size());
                 return loaded;
             }
-        } catch (IOException ex) {
+        } catch (JacksonException ex) {
             System.err.println("Failed to load save file, creating a new one: " + ex.getMessage());
         }
         State created = new State();

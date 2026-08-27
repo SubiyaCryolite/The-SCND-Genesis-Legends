@@ -220,7 +220,7 @@ public final class GlfwEngine implements AutoCloseable {
                     com.scndgen.legends.state.State.get().getLogin().getGraphicsSetting()
             );
         } catch (Exception ex) {
-            return DisplayModes.designFallback();
+            return DisplayModes.defaultWindow();
         }
     }
 

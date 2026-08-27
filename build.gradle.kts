@@ -44,7 +44,6 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 val mainClassName = "com.scndgen.legends.ScndGenLegends"
-val lwjglVersion = "3.3.6"
 
 val lwjglNatives: String = when {
     OperatingSystem.current().isLinux -> {
@@ -75,13 +74,12 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    implementation(platform("org.lwjgl:lwjgl-bom:3.4.3"))
     implementation("commons-codec:commons-codec:1.15")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("commons-io:commons-io:2.14.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.15.0-rc1")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.2")
+    implementation(platform("tools.jackson:jackson-bom:3.2.2"))
+    implementation("tools.jackson.core:jackson-databind")
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
     implementation("org.lwjgl:lwjgl-opengl")

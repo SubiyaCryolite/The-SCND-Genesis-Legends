@@ -21,10 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -90,13 +90,13 @@ public final class Language {
     }
 
     public HashMap<Integer, String> getTranslation(String location) {
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().build();
         HashMap<Integer, String> jsonMap = null;
         try {
             TypeReference<HashMap<Integer, String>> typeRef = new TypeReference<HashMap<Integer, String>>() {
             };
             jsonMap = mapper.readValue(Thread.currentThread().getContextClassLoader().getResourceAsStream(location), typeRef);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             e.printStackTrace(System.err);
         }
         return jsonMap;

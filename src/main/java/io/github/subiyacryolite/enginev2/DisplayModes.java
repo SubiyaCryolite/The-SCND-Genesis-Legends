@@ -43,6 +43,10 @@ import static org.lwjgl.system.MemoryStack.stackPush;
  */
 public final class DisplayModes {
 
+    /** Default window size when no resolution is saved. Design space remains 852×480. */
+    public static final int DEFAULT_WIDTH = 1280;
+    public static final int DEFAULT_HEIGHT = 720;
+
     public record Mode(int width, int height, int refreshRateHz, String monitorName) {
         public String label() {
             String monitor = monitorName == null || monitorName.isBlank()
@@ -76,7 +80,7 @@ public final class DisplayModes {
     /**
      * Unique width×height×refresh modes from every connected monitor,
      * sorted by size (pixels) descending, then refresh rate descending.
-     * Always includes the design resolution.
+     * Always includes the default window size and the design resolution.
      * Must be called after {@code glfwInit()}.
      */
     public static List<Mode> queryAll() {
@@ -107,6 +111,10 @@ public final class DisplayModes {
         }
 
         unique.putIfAbsent(
+                DEFAULT_WIDTH + "x" + DEFAULT_HEIGHT + "@60",
+                new Mode(DEFAULT_WIDTH, DEFAULT_HEIGHT, 60, "Default")
+        );
+        unique.putIfAbsent(
                 DesignViewport.DESIGN_WIDTH + "x" + DesignViewport.DESIGN_HEIGHT + "@60",
                 new Mode(DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT, 60, "Design")
         );
@@ -122,7 +130,7 @@ public final class DisplayModes {
 
     public static Mode findByStorageKey(List<Mode> modes, String key) {
         if (key == null || key.isBlank()) {
-            return modes.isEmpty() ? designFallback() : preferredDefault(modes);
+            return modes.isEmpty() ? defaultWindow() : preferredDefault(modes);
         }
         String normalized = key.replace(" ", "").toLowerCase();
         for (Mode mode : modes) {
@@ -159,7 +167,7 @@ public final class DisplayModes {
             } catch (NumberFormatException ignored) {
             }
         }
-        return modes.isEmpty() ? designFallback() : preferredDefault(modes);
+        return modes.isEmpty() ? defaultWindow() : preferredDefault(modes);
     }
 
     public static int indexOf(List<Mode> modes, Mode mode) {
@@ -182,16 +190,20 @@ public final class DisplayModes {
         return 0;
     }
 
+    public static Mode defaultWindow() {
+        return new Mode(DEFAULT_WIDTH, DEFAULT_HEIGHT, 60, "Default");
+    }
+
     public static Mode designFallback() {
         return new Mode(DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT, 60, "Design");
     }
 
     private static Mode preferredDefault(List<Mode> modes) {
         for (Mode mode : modes) {
-            if (mode.width() == DesignViewport.DESIGN_WIDTH && mode.height() == DesignViewport.DESIGN_HEIGHT) {
+            if (mode.width() == DEFAULT_WIDTH && mode.height() == DEFAULT_HEIGHT) {
                 return mode;
             }
         }
-        return modes.get(modes.size() - 1);
+        return modes.isEmpty() ? defaultWindow() : modes.get(modes.size() - 1);
     }
 }
