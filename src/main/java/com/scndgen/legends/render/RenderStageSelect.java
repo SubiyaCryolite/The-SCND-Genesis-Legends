@@ -100,24 +100,28 @@ public class RenderStageSelect extends StageSelect {
             }
 
             public void onAccept() {
-                if (!(NetworkManager.get().isOffline() || NetworkManager.get().isServer())) {
+                var networkManager = NetworkManager.get();
+                if (!(networkManager.isOffline() || networkManager.isServer())) {
                     return;
                 }
-                GameCommandBus.get().dispatch(new GameCommand.SelectStage(hoveredStage));
+                var gameCommandBus = GameCommandBus.get();
+                gameCommandBus.dispatch(new GameCommand.SelectStage(hoveredStage));
                 var subMode = ScndGenLegends.get().getSubMode();
                 if (subMode == SubMode.STORY_MODE
                         || subMode == SubMode.SINGLE_PLAYER
                         || subMode == SubMode.LAN_HOST
                         || subMode == SubMode.WATCH) {
-                    GameCommandBus.get().dispatch(new GameCommand.StartMatch());
+                    gameCommandBus.dispatch(new GameCommand.StartMatch());
                 }
             }
 
             public void onBackCancel() {
-                if (NetworkManager.get().isOffline()) {
-                    GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
-                } else if (NetworkManager.get().isServer()) {
-                    GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(false));
+                var networkManager = NetworkManager.get();
+                var gameCommandBus = GameCommandBus.get();
+                if (networkManager.isOffline()) {
+                    gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(true));
+                } else if (networkManager.isServer()) {
+                    gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(false));
                 }
             }
         };
@@ -287,6 +291,7 @@ public class RenderStageSelect extends StageSelect {
     @Override
     public void render(DrawContext draw) {
         loadAssets();
+        var scndGenLegends = ScndGenLegends.get();
         if (opacity < 0.98f) {
             opacity = opacity + 0.02f;
         }
@@ -302,15 +307,16 @@ public class RenderStageSelect extends StageSelect {
             draw.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             draw.setFill(Rgba.WHITE);
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
-            draw.fillText(Language.get().get(165), (852 - Utils.computeStringWidth(Language.get().get(165), draw)) / 2, 200);
-        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
+            var lang165 = Language.get().get(165);
+            draw.fillText(lang165, (852 - Utils.computeStringWidth(lang165, draw)) / 2, 200);
+        } else if (scndGenLegends.getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
             draw.setFill(Rgba.BLACK);
             draw.fillRect(0, 0, 852, 480);
             draw.setFill(Rgba.WHITE);
             var waiting = ">> " + Language.get().get(166) + " <<";
             draw.fillText(waiting, (852 - Utils.computeStringWidth(waiting, draw)) / 2, 300);
-        } else if (ScndGenLegends.get().getSubMode() != SubMode.LAN_CLIENT) {
+        } else if (scndGenLegends.getSubMode() != SubMode.LAN_CLIENT) {
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
             draw.setFill(Rgba.BLACK);
             draw.fillRect(0, 0, 852, 480);

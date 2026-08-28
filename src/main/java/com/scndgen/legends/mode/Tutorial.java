@@ -330,8 +330,9 @@ public class Tutorial {
         running = false;
         bgSound.stop();
         freeImages();
-        RenderMainMenu.get().onEnterMode();
-        RenderMainMenu.get().setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
+        var renderMainMenu = RenderMainMenu.get();
+        renderMainMenu.onEnterMode();
+        renderMainMenu.setMainMenuOverlay(MainMenuOverlay.PRIMARY_MENU);
     }
 
     public void onAccept() {

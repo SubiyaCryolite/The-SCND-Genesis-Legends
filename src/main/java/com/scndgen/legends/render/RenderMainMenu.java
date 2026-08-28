@@ -136,8 +136,9 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
-                ScndGenLegends.get().loadMode(ModeEnum.STORY_SELECT_SCREEN);
+                var scndGenLegends = ScndGenLegends.get();
+                scndGenLegends.setSubMode(SubMode.STORY_MODE);
+                scndGenLegends.loadMode(ModeEnum.STORY_SELECT_SCREEN);
             }
 
             @Override
@@ -164,8 +165,9 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.get().setSubMode(SubMode.SINGLE_PLAYER);
-                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                var scndGenLegends = ScndGenLegends.get();
+                scndGenLegends.setSubMode(SubMode.SINGLE_PLAYER);
+                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -192,8 +194,9 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.get().setSubMode(SubMode.LAN_HOST);
-                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                var scndGenLegends = ScndGenLegends.get();
+                scndGenLegends.setSubMode(SubMode.LAN_HOST);
+                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override
@@ -220,8 +223,9 @@ public class RenderMainMenu extends MainMenu {
 
             @Override
             public void onAccept() {
-                ScndGenLegends.get().setSubMode(SubMode.LAN_CLIENT);
-                ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                var scndGenLegends = ScndGenLegends.get();
+                scndGenLegends.setSubMode(SubMode.LAN_CLIENT);
+                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
             }
 
             @Override

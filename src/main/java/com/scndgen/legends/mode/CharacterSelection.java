@@ -144,17 +144,18 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selRaila(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(84));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.RAILA);
+            characters.prepare(characterEnum = CharacterEnum.RAILA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
         } else if (type == PlayerType.PLAYER2 && !selectedOpponent) {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.RAILA);
+            characters.prepareO(opponentEnum = CharacterEnum.RAILA);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -165,20 +166,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selSubiya(PlayerType type) {
+        var characters = Characters.get();
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             primaryNotice(Language.get().get(85));
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.SUBIYA);
+            characters.prepare(characterEnum = CharacterEnum.SUBIYA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.SUBIYA);
+            characters.prepareO(opponentEnum = CharacterEnum.SUBIYA);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -189,20 +191,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selLynx(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(86));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.LYNX);
+            characters.prepare(characterEnum = CharacterEnum.LYNX);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.LYNX);
+            characters.prepareO(opponentEnum = CharacterEnum.LYNX);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -213,20 +216,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selAisha(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(87));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.AISHA);
+            characters.prepare(characterEnum = CharacterEnum.AISHA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.AISHA);
+            characters.prepareO(opponentEnum = CharacterEnum.AISHA);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -237,20 +241,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selAde(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(88));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.ADE);
+            characters.prepare(characterEnum = CharacterEnum.ADE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.ADE);
+            characters.prepareO(opponentEnum = CharacterEnum.ADE);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -261,21 +266,22 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selRav(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(89));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.RAVAGE);
+            characters.prepare(characterEnum = CharacterEnum.RAVAGE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.RAVAGE);
+            characters.prepareO(opponentEnum = CharacterEnum.RAVAGE);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -286,21 +292,22 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selJon(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(90));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.JONAH);
+            characters.prepare(characterEnum = CharacterEnum.JONAH);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.JONAH);
+            characters.prepareO(opponentEnum = CharacterEnum.JONAH);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -311,20 +318,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selAdam(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(91));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.ADAM);
+            characters.prepare(characterEnum = CharacterEnum.ADAM);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.ADAM);
+            characters.prepareO(opponentEnum = CharacterEnum.ADAM);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -335,21 +343,22 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selNOVAAdam(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(92));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.NOVA_ADAM);
+            characters.prepare(characterEnum = CharacterEnum.NOVA_ADAM);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.NOVA_ADAM);
+            characters.prepareO(opponentEnum = CharacterEnum.NOVA_ADAM);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -360,20 +369,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selAza(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(93));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.AZARIA);
+            characters.prepare(characterEnum = CharacterEnum.AZARIA);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.AZARIA);
+            characters.prepareO(opponentEnum = CharacterEnum.AZARIA);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -384,20 +394,21 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selSorr(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice(Language.get().get(94));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
-            Characters.get().prepare(characterEnum = CharacterEnum.SORROWE);
+            characters.prepare(characterEnum = CharacterEnum.SORROWE);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.SORROWE);
+            characters.prepareO(opponentEnum = CharacterEnum.SORROWE);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }
@@ -408,15 +419,16 @@ public abstract class CharacterSelection extends Mode {
      * @param type - opponent (PlayerType.PLAYER2) or characterEnum (PlayerType.PLAYER1)
      */
     public void selThing(PlayerType type) {
+        var characters = Characters.get();
         primaryNotice("..........");
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
             selectedCharacter = true;
             characterEnum = CharacterEnum.THING;
-            Characters.get().prepare(characterEnum);
+            characters.prepare(characterEnum);
             charPrevLoc = selectedCharIndex = characterEnum.index();
-            charDesc = Characters.get().getCharacter().getDescSmall();
+            charDesc = characters.getCharacter().getDescSmall();
         }
 
         if (type == PlayerType.PLAYER2 && !selectedOpponent) // when selecting opponent
@@ -424,13 +436,13 @@ public abstract class CharacterSelection extends Mode {
             playSelectSound();
             selectedOpponent = true;
             opponentEnum = CharacterEnum.THING;
-            Characters.get().prepareO(opponentEnum);
+            characters.prepareO(opponentEnum);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         } else if (type == PlayerType.BOSS && !selectedOpponent) // when selecting opponent as boss
         {
             playSelectSound();
             selectedOpponent = true;
-            Characters.get().prepareO(opponentEnum = CharacterEnum.THING);
+            characters.prepareO(opponentEnum = CharacterEnum.THING);
             selectedOppIndex = oppPrevLoc = opponentEnum.index();
         }
     }

@@ -224,8 +224,9 @@ public class Characters {
         RenderCharacterSelection.get().setSelectedCharIndex(characterEnum.index());
         activityRecoverRateChar = this.character.getAtbRecoveryRate();
         setPoints(this.character.getPoints());
-        RenderGamePlay.get().setCharacterHp(this.character.getLife());
-        RenderGamePlay.get().setMaxLife(this.character.getLife());
+        var renderGamePlay = RenderGamePlay.get();
+        renderGamePlay.setCharacterHp(this.character.getLife());
+        renderGamePlay.setMaxLife(this.character.getLife());
     }
 
     public void prepareO(CharacterEnum characterEnum) {
@@ -275,8 +276,9 @@ public class Characters {
         opponentName = characterEnum.name();
         RenderCharacterSelection.get().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
-        RenderGamePlay.get().setOpponentHp(opponent.getLife());
-        RenderGamePlay.get().setOpponentMaximumHp(opponent.getLife());
+        var renderGamePlay = RenderGamePlay.get();
+        renderGamePlay.setOpponentHp(opponent.getLife());
+        renderGamePlay.setOpponentMaximumHp(opponent.getLife());
         opponent.setAiProf();
     }
 
@@ -289,7 +291,8 @@ public class Characters {
             opponent.resetLimits();
         if (character != null)
             character.resetLimits();
-        RenderCharacterSelection.get().setSelectedCharacter(false);
-        RenderCharacterSelection.get().setSelectedOpponent(false);
+        var renderCharacterSelection = RenderCharacterSelection.get();
+        renderCharacterSelection.setSelectedCharacter(false);
+        renderCharacterSelection.setSelectedOpponent(false);
     }
 }

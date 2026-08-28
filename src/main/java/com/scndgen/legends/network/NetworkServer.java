@@ -67,14 +67,15 @@ public class NetworkServer extends NetworkBase {
                 "Someone wants to fight you!",
                 "Wanna waste em?",
                 answer -> {
+                    var networkManager = NetworkManager.get();
                     switch (answer) {
                         case YES -> {
-                            NetworkManager.get().setConnectedToPartner(true);
+                            networkManager.setConnectedToPartner(true);
                             sendData(CONNECT_TO_HOST);
                             sendData(NetworkConstants.connectToHost(State.get().getLogin().getTimeLimit()));
                         }
                         case NO -> {
-                            NetworkManager.get().setConnectedToPartner(false);
+                            networkManager.setConnectedToPartner(false);
                             sendData(NetworkConstants.DISCONNECT_FROM_HOST);
                         }
                         default -> {

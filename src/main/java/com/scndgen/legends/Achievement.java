@@ -110,38 +110,43 @@ public class Achievement {
      * Scan for conditions
      */
     public void scan(GamePlay gamePlay) {
+        var characters = Characters.get();
+        var overlay = Overlay.get();
+        var language = Language.get();
+        var login = State.get().getLogin();
+
         Achievements achievement;
-        if (Characters.get().getCharMinLife() <= 79 && gamePlay.getCharacterHpAsPercent() >= 82 && isAchievementLocked[Achievements.UPPER_HAND.id()]) {
+        if (characters.getCharMinLife() <= 79 && gamePlay.getCharacterHpAsPercent() >= 82 && isAchievementLocked[Achievements.UPPER_HAND.id()]) {
             achievement = Achievements.UPPER_HAND;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (Characters.get().getCharMinLife() <= 30 && gamePlay.getCharacterHpAsPercent() >= 50 && isAchievementLocked[Achievements.BEAT_THE_ODDS.id()]) {
+        if (characters.getCharMinLife() <= 30 && gamePlay.getCharacterHpAsPercent() >= 50 && isAchievementLocked[Achievements.BEAT_THE_ODDS.id()]) {
             achievement = Achievements.BEAT_THE_ODDS;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (((gamePlay.getCharacterHpAsPercent() - gamePlay.getOpponentHpAsPercent()) >= 50) && isAchievementLocked[Achievements.OWNAGE.id()]) {
             achievement = Achievements.OWNAGE;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
             isAchievementLocked[Achievements.MEANIE.id()] = false;
             isAchievementLocked[Achievements.HEARTLESS.id()] = false;
@@ -149,89 +154,89 @@ public class Achievement {
         if (((gamePlay.getCharacterHpAsPercent() - gamePlay.getOpponentHpAsPercent()) >= 40) && isAchievementLocked[Achievements.HEARTLESS.id()]) {
             achievement = Achievements.HEARTLESS;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (((gamePlay.getCharacterHpAsPercent() - gamePlay.getOpponentHpAsPercent()) >= 30) && isAchievementLocked[Achievements.MEANIE.id()]) {
             achievement = Achievements.MEANIE;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (gamePlay.getAttackType(PlayerType.PLAYER1) == AttackType.FURY && gamePlay.isGameOver() && gamePlay.hasWon() && isAchievementLocked[Achievements.RAGE.id()]) {
             achievement = Achievements.RAGE;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (gamePlay.hasWon() && gamePlay.isGameOver()) {
             achievement = Achievements.WINNER;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (gamePlay.getAttackType(PlayerType.PLAYER2) == AttackType.FURY && gamePlay.hasWon() && gamePlay.isGameOver() && isAchievementLocked[Achievements.BUZZ_KILL.id()]) {
             achievement = Achievements.BUZZ_KILL;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (gamePlay.hasWon() && gamePlay.isGameOver() && (gamePlay.getCharacterHpAsPercent() - gamePlay.getOpponentHpAsPercent() <= 30) && isAchievementLocked[Achievements.CLOSE_CALL.id()]) {
             achievement = Achievements.CLOSE_CALL;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
-        if (gamePlay.hasWon() && gamePlay.isGameOver() && State.get().getLogin().getConsecutiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
+        if (gamePlay.hasWon() && gamePlay.isGameOver() && login.getConsecutiveWins() >= 5 && isAchievementLocked[Achievements.ON_A_ROLL.id()]) {
             achievement = Achievements.ON_A_ROLL;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
         if (gamePlay.hasWon() && StoryMode.get().storyProgress == StoryProgress.HALFWAY && gamePlay.isGameOver() && isAchievementLocked[Achievements.HALF_WAY_THROUGH.id()]) {
             achievement = Achievements.HALF_WAY_THROUGH;
             name.add(achievementName.get(achievement));
-            Overlay.get().primaryNotice(Language.get().get(83) + ": " + achievementName.get(achievement));
+            overlay.primaryNotice(language.get(83) + ": " + achievementName.get(achievement));
             descriptions.add(achievementDescription.get(achievement));
             categories.add(achievement.achievementCategory());
             points.add(achievement.achievementCategory().points() + bonus);
             currentPoints += achievement.achievementCategory().points() + bonus;
-            State.get().getLogin().incrementAchievement(achievement);
+            login.incrementAchievement(achievement);
             isAchievementLocked[achievement.id()] = false;
         }
     }
@@ -253,11 +258,12 @@ public class Achievement {
         descriptions.clear();
         categories.clear();
         points.clear();
-        currentPoints = State.get().getLogin().getPoints();
+        var login = State.get().getLogin();
+        currentPoints = login.getPoints();
         for (int i = 0; i < Achievements.values().length; i++) {
             isAchievementLocked[i] = true;
         }
-        bonus = ((State.DIFFICULTY_BASE - State.get().getLogin().getDifficultyDynamic()) / State.DIFFICULTY_SCALE) * 5;
+        bonus = ((State.DIFFICULTY_BASE - login.getDifficultyDynamic()) / State.DIFFICULTY_SCALE) * 5;
         currentPoints += 20 + bonus;
     }
 

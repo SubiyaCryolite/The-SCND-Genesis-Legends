@@ -222,8 +222,9 @@ public abstract class Mode implements UiScreen {
         draw.drawImage(img, upperLeftX, upperLeftY);
         float bottomRightX = upperLeftX + (img == null ? 0 : img.width());
         float bottomRightY = upperLeftY + (img == null ? 0 : img.height());
-        float mouseActualX = ScndGenLegends.get().getMouseX();
-        float mouseActualY = ScndGenLegends.get().getMouseY();
+        var scndGenLegends = ScndGenLegends.get();
+        float mouseActualX = scndGenLegends.getMouseX();
+        float mouseActualY = scndGenLegends.getMouseY();
         if (bottomRightX >= mouseActualX && mouseActualX >= upperLeftX
                 && upperLeftY <= mouseActualY && mouseActualY <= bottomRightY) {
             setActiveItem(uiTile);
@@ -234,8 +235,9 @@ public abstract class Mode implements UiScreen {
         draw.fillText(text, x, y);
         float bottomRightX = x + draw.measureText(text);
         float bottomRightY = y - draw.getFontSize();
-        float mouseActualX = ScndGenLegends.get().getMouseX();
-        float mouseActualY = ScndGenLegends.get().getMouseY();
+        var scndGenLegends = ScndGenLegends.get();
+        float mouseActualX = scndGenLegends.getMouseX();
+        float mouseActualY = scndGenLegends.getMouseY();
         if (bottomRightX >= mouseActualX && mouseActualX >= x
                 && y >= mouseActualY && mouseActualY >= bottomRightY) {
             setActiveItem(uiTile);
@@ -244,8 +246,9 @@ public abstract class Mode implements UiScreen {
 
     public void fillText(DrawContext draw, String text, float x, float y, UiItem uiTile, float width, float height) {
         draw.fillText(text, x, y);
-        float mouseActualX = ScndGenLegends.get().getMouseX();
-        float mouseActualY = ScndGenLegends.get().getMouseY();
+        var scndGenLegends = ScndGenLegends.get();
+        float mouseActualX = scndGenLegends.getMouseX();
+        float mouseActualY = scndGenLegends.getMouseY();
         if (x + width >= mouseActualX && mouseActualX >= x
                 && y >= mouseActualY && mouseActualY >= y - height) {
             setActiveItem(uiTile);

@@ -124,99 +124,102 @@ public class StoryMode {
     private void setScene(int scene) {
         storyMusic = new Audio(AudioConstants.storySound(), AudioType.MUSIC, false);
         textSpeed = State.get().getLogin().getTextSpeedInt();
-        RenderCharacterSelection.get().newInstance();
-        RenderStageSelect.get().newInstance();
+        var renderCharacterSelection = RenderCharacterSelection.get();
+        var renderStageSelect = RenderStageSelect.get();
+        renderCharacterSelection.newInstance();
+        renderStageSelect.newInstance();
         switch (scene) {
             case 0:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.START;
-                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.IBEX_HILL);
+                renderCharacterSelection.selRaila(PlayerType.PLAYER1);
+                renderCharacterSelection.selRav(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.IBEX_HILL);
                 break;
             case 1:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE);
+                renderCharacterSelection.selLynx(PlayerType.PLAYER1);
+                renderCharacterSelection.selRaila(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.DISTANT_ISLE);
                 break;
             case 2:
                 timeLimit = 30;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selAisha(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.IBEX_HILL_NIGHT);
+                renderCharacterSelection.selAisha(PlayerType.PLAYER1);
+                renderCharacterSelection.selLynx(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.IBEX_HILL_NIGHT);
                 break;
             case 3:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_STREETS);
+                renderCharacterSelection.selRaila(PlayerType.PLAYER1);
+                renderCharacterSelection.selSubiya(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.CHELSTON_CITY_STREETS);
                 break;
             case 4:
                 timeLimit = 45;
                 storyProgress = StoryProgress.HALFWAY;
-                RenderCharacterSelection.get().selRav(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selAde(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
+                renderCharacterSelection.selRav(PlayerType.PLAYER1);
+                renderCharacterSelection.selAde(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 5:
                 timeLimit = 45;
                 storyProgress = StoryProgress.NORMAL;
                 RenderGamePlay.get().setNumOfBoards(2);
-                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selJon(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.FROZEN_WILDERNESS);
+                renderCharacterSelection.selAdam(PlayerType.PLAYER1);
+                renderCharacterSelection.selJon(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.FROZEN_WILDERNESS);
                 break;
             case 6:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selAza(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
+                renderCharacterSelection.selAza(PlayerType.PLAYER1);
+                renderCharacterSelection.selNOVAAdam(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.APOCALYPTO);
                 break;
             case 7:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selRav(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.CHELSTON_CITY_DOCKS);
+                renderCharacterSelection.selSubiya(PlayerType.PLAYER1);
+                renderCharacterSelection.selRav(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.CHELSTON_CITY_DOCKS);
                 break;
             case 8:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selLynx(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
+                renderCharacterSelection.selLynx(PlayerType.PLAYER1);
+                renderCharacterSelection.selAdam(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.APOCALYPTO);
                 break;
             case 9:
                 timeLimit = 60;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selRaila(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selSorr(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.APOCALYPTO);
+                renderCharacterSelection.selRaila(PlayerType.PLAYER1);
+                renderCharacterSelection.selSorr(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.APOCALYPTO);
                 break;
             case 10:
                 timeLimit = 90;
                 storyProgress = StoryProgress.NORMAL;
-                RenderCharacterSelection.get().selSubiya(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selNOVAAdam(PlayerType.PLAYER2);
-                RenderStageSelect.get().selectStage(Stage.DISTANT_ISLE_NIGHT);
+                renderCharacterSelection.selSubiya(PlayerType.PLAYER1);
+                renderCharacterSelection.selNOVAAdam(PlayerType.PLAYER2);
+                renderStageSelect.selectStage(Stage.DISTANT_ISLE_NIGHT);
                 break;
             case 11:
                 timeLimit = INFINITE_TIME;
                 storyProgress = StoryProgress.END;
-                RenderCharacterSelection.get().selAdam(PlayerType.PLAYER1);
-                RenderCharacterSelection.get().selThing(PlayerType.BOSS);
-                RenderStageSelect.get().selectStage(Stage.DESERT_RUINS_NIGHT);
+                renderCharacterSelection.selAdam(PlayerType.PLAYER1);
+                renderCharacterSelection.selThing(PlayerType.BOSS);
+                renderStageSelect.selectStage(Stage.DESERT_RUINS_NIGHT);
                 break;
         }
     }
 
     public void startStoryMode(int x) {
-        RenderGamePlay.get().newInstance();
+        var renderGamePlay = RenderGamePlay.get();
+        renderGamePlay.newInstance();
         currentScene = x;
         active = false;
         steps.clear();
@@ -224,10 +227,11 @@ public class StoryMode {
         waitAccum.reset();
 
         setScene(currentScene);
-        ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
-        ScndGenLegends.get().setSubMode(SubMode.STORY_MODE);
+        var scndGenLegends = ScndGenLegends.get();
+        scndGenLegends.loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
+        scndGenLegends.setSubMode(SubMode.STORY_MODE);
         beginCinematic();
-        RenderGamePlay.get().storyBoard(currentScene);
+        renderGamePlay.storyBoard(currentScene);
         buildSceneSteps(currentScene);
         active = true;
         stepIndex = 0;
@@ -616,29 +620,31 @@ public class StoryMode {
      */
     private void beginCinematic() {
         storyMusic.play();
-        RenderGamePlay.get().reloadAssets();//set new properties, load relevant sprites
-        RenderGamePlay.get().characterPortrait();
-        RenderGamePlay.get().storyText("");
-        RenderGamePlay.get().playingCutscene = true;
-        RenderGamePlay.get().pauseCharacterAtb();
-        RenderGamePlay.get().pauseOpponentAtb();
+        var renderGamePlay = RenderGamePlay.get();
+        renderGamePlay.reloadAssets();//set new properties, load relevant sprites
+        renderGamePlay.characterPortrait();
+        renderGamePlay.storyText("");
+        renderGamePlay.playingCutscene = true;
+        renderGamePlay.pauseCharacterAtb();
+        renderGamePlay.pauseOpponentAtb();
     }
 
     public void exitCinematic(boolean terminateMode) {
+        var renderGamePlay = RenderGamePlay.get();
         if (terminateMode) {
             stopMusic();
-            RenderGamePlay.get().musNotice();
+            renderGamePlay.musNotice();
         }
-        RenderGamePlay.get().playBGMusic();
-        RenderGamePlay.get().characterPortrait();
-        RenderGamePlay.get().storyText("");
+        renderGamePlay.playBGMusic();
+        renderGamePlay.characterPortrait();
+        renderGamePlay.storyText("");
         active = false;
         steps.clear();
         stepIndex = 0;
         waitAccum.reset();
-        RenderGamePlay.get().playingCutscene = false;
-        RenderGamePlay.get().resumeCharacterAtb();
-        RenderGamePlay.get().resumeOpponentAtb();
+        renderGamePlay.playingCutscene = false;
+        renderGamePlay.resumeCharacterAtb();
+        renderGamePlay.resumeOpponentAtb();
     }
 
     public void startFight() {
@@ -650,8 +656,9 @@ public class StoryMode {
     }
 
     public void onAccept() {
-        if (RenderGamePlay.get().isGameOver()) {
-            if (RenderGamePlay.get().hasWon()) {
+        var renderGamePlay = RenderGamePlay.get();
+        if (renderGamePlay.isGameOver()) {
+            if (renderGamePlay.hasWon()) {
                 incrementMode();
                 if (RenderStoryMenu.get().moreStages()) {
                     startStoryMode(currentScene);//play next scene
@@ -660,7 +667,7 @@ public class StoryMode {
                 }
             } else {
                 startStoryMode(currentScene);//try again
-                RenderGamePlay.get().onLeaveMode();//stop music!!
+                renderGamePlay.onLeaveMode();//stop music!!
             }
         } else {
             stopMusic();

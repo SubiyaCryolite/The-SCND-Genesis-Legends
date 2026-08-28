@@ -45,10 +45,11 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
     }
 
     public static void main(String[] args) {
-        if (State.get().getLogins().isEmpty()) {
-            State.get().createLogin("Player");
+        var state = State.get();
+        if (state.getLogins().isEmpty()) {
+            state.createLogin("Player");
             try {
-                State.get().saveConfigFile();
+                state.saveConfigFile();
             } catch (Exception ignored) {
             }
         }
@@ -142,57 +143,67 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
         try {
             switch (modeEnum) {
                 case MAIN_MENU -> {
+                    var renderMainMenu = RenderMainMenu.get();
                     if (newInstance) {
-                        RenderMainMenu.get().newInstance();
+                        renderMainMenu.newInstance();
                     }
-                    setMode(RenderMainMenu.get());
+                    setMode(renderMainMenu);
                 }
                 case STORY_SELECT_SCREEN -> {
+                    var renderStoryMenu = RenderStoryMenu.get();
                     if (newInstance) {
-                        RenderStoryMenu.get().newInstance();
+                        renderStoryMenu.newInstance();
                     }
-                    setMode(RenderStoryMenu.get());
+                    setMode(renderStoryMenu);
                 }
                 case CHAR_SELECT_SCREEN -> {
+                    var renderCharacterSelection = RenderCharacterSelection.get();
                     if (newInstance) {
-                        RenderCharacterSelection.get().newInstance();
+                        renderCharacterSelection.newInstance();
                     }
                     switch (getSubMode()) {
                         case LAN_HOST -> {
-                            if (!NetworkManager.get().isServer()) {
-                                NetworkManager.get().asHost();
+                            var networkManager = NetworkManager.get();
+                            if (!networkManager.isServer()) {
+                                networkManager.asHost();
                             }
-                            setMode(RenderCharacterSelection.get());
+                            setMode(renderCharacterSelection);
                         }
-                        case LAN_CLIENT -> engine.ui().push(NkDialogs.input(
-                                Language.get().get(450),
-                                Language.get().get(451),
-                                targetIp,
-                                value -> {
-                                    if (value != null && !value.isBlank()) {
-                                        targetIp = value.trim();
-                                        if (!NetworkManager.get().isClient()) {
-                                            NetworkManager.get().asClient(targetIp);
+                        case LAN_CLIENT -> {
+                            var language = Language.get();
+                            engine.ui().push(NkDialogs.input(
+                                    language.get(450),
+                                    language.get(451),
+                                    targetIp,
+                                    value -> {
+                                        if (value != null && !value.isBlank()) {
+                                            targetIp = value.trim();
+                                            var networkManager = NetworkManager.get();
+                                            if (!networkManager.isClient()) {
+                                                networkManager.asClient(targetIp);
+                                            }
                                         }
+                                        setMode(renderCharacterSelection);
                                     }
-                                    setMode(RenderCharacterSelection.get());
-                                }
-                        ));
-                        default -> setMode(RenderCharacterSelection.get());
+                            ));
+                        }
+                        default -> setMode(renderCharacterSelection);
                     }
                 }
                 case STAGE_SELECT_SCREEN -> {
+                    var renderStageSelect = RenderStageSelect.get();
                     if (newInstance) {
-                        RenderStageSelect.get().newInstance();
+                        renderStageSelect.newInstance();
                     }
-                    setMode(RenderStageSelect.get());
+                    setMode(renderStageSelect);
                 }
                 case STANDARD_GAMEPLAY_START -> {
+                    var renderGamePlay = RenderGamePlay.get();
                     if (newInstance) {
-                        RenderGamePlay.get().newInstance();
+                        renderGamePlay.newInstance();
                     }
-                    setMode(RenderGamePlay.get());
-                    RenderGamePlay.get().startFight();
+                    setMode(renderGamePlay);
+                    renderGamePlay.startFight();
                 }
                 default -> {
                 }

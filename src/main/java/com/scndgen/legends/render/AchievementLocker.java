@@ -80,9 +80,10 @@ public class AchievementLocker {
         float w = 852;
         float h = 480;
         try {
-            denom = State.get().getLogin().getWins() + State.get().getLogin().getLosses();
-            gWin = 200 * (State.get().getLogin().getWins() / denom);
-            gLoss = 200 * (State.get().getLogin().getLosses() / denom);
+            var login = State.get().getLogin();
+            denom = login.getWins() + login.getLosses();
+            gWin = 200 * (login.getWins() / denom);
+            gLoss = 200 * (login.getLosses() / denom);
             progression = 200 * getStoryProgression();
         } catch (Exception e) {
             gWin = 0;
@@ -117,9 +118,10 @@ public class AchievementLocker {
         //playStory progress
         draw.setFill(Rgba.WHITE);
 
-        draw.fillText(Language.get().get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
+        var language = Language.get();
+        draw.fillText(language.get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
         draw.fillText(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
-        draw.fillText(Language.get().get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
+        draw.fillText(language.get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
         draw.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Math.round(progression), spacer);
         draw.fillRect(offset + 400, (48 - 3) + (spacer * 6) + 2, getGameCompletion() * 2, spacer);
 
@@ -128,7 +130,7 @@ public class AchievementLocker {
         draw.fillText(stat13, offset, (48 - 3) + (spacer * 8));
         draw.fillText(stat17, offset, (48 - 3) + (spacer * 9));
 
-        draw.fillText(Language.get().get(131) + " >>>", offset, 430);
+        draw.fillText(language.get(131) + " >>>", offset, 430);
     }
 
     /**
@@ -144,28 +146,31 @@ public class AchievementLocker {
         draw.fillRect(0, 0, w, h);
         draw.setGlobalAlpha(1.0f);
         draw.setFill(Rgba.WHITE);
+        var language = Language.get();
+        var achievement = Achievement.get();
+        var login = State.get().getLogin();
 
-        draw.fillText(numberOfTriggeredAchievements + " " + Language.get().get(121), 530, 100);
-        draw.fillText(getAchUnlockedPerc() + " % " + Language.get().get(132), 530, 114);
-        draw.fillText(Language.get().get(130) + " " + getGameCompletion() + " %", 530, 128);
-        draw.fillText(Language.get().get(131) + " >>>", 530, 470);
+        draw.fillText(numberOfTriggeredAchievements + " " + language.get(121), 530, 100);
+        draw.fillText(getAchUnlockedPerc() + " % " + language.get(132), 530, 114);
+        draw.fillText(language.get(130) + " " + getGameCompletion() + " %", 530, 128);
+        draw.fillText(language.get(131) + " >>>", 530, 470);
 
         //even
-        for (Achievements achievement : Achievements.values()) {
-            if (isAchievementActivated[achievement.id()]) {
-                draw.drawImage(achCap[achievement.id()], offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
+        for (Achievements entry : Achievements.values()) {
+            if (isAchievementActivated[entry.id()]) {
+                draw.drawImage(achCap[entry.id()], offset2x, scroller + achPic + (entry.id() * achPicSpacer));
                 draw.setFont("menu", spacer + 2);
-                draw.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement) + " >>", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry) + " >>", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
-                draw.fillText(Achievement.get().achievementDescription(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                draw.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                draw.fillText(achievement.achievementDescription(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
+                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             } else {
-                draw.drawImage(no, offset2x, scroller + achPic + (achievement.id() * achPicSpacer));
+                draw.drawImage(no, offset2x, scroller + achPic + (entry.id() * achPicSpacer));
                 draw.setFont("menu", spacer + 2);
-                draw.fillText((achievement.id() + 1) + ":: " + Achievement.get().achievementName(achievement), offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 14);
+                draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
-                draw.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 28);
-                draw.fillText(Language.get().get(133) + " " + State.get().getLogin().getAchievementTriggers(achievement) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (achievement.id() * achPicSpacer) + 42);
+                draw.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
+                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             }
         }
     }
@@ -231,30 +236,32 @@ public class AchievementLocker {
      * Refresh STATS
      */
     public void refreshStats() {
+        var login = State.get().getLogin();
+        var language = Language.get();
         numberOfTriggeredAchievements = 0.0f;
         isAchievementActivated = new boolean[Achievements.values().length];
         for (Achievements achievement : Achievements.values()) {
-            if (State.get().getLogin().getAchievementTriggers(achievement) > 0) {
+            if (login.getAchievementTriggers(achievement) > 0) {
                 isAchievementActivated[achievement.id()] = true;
                 numberOfTriggeredAchievements = numberOfTriggeredAchievements + 1.0f;
             }
         }
         percentageOfUnlockedAchievements = (int) ((numberOfTriggeredAchievements / (float) isAchievementActivated.length) * 100);
-        stat1 = Language.get().get(118) + ": " + shortVer(State.get().getLogin().getUserName());
-        stat2 = Language.get().get(119) + ": " + shortVer(State.get().getLogin().getPoints() + "");
-        stat3 = Language.get().get(120) + ": " + timeCal(State.get().getLogin().getPlayTime());
-        stat4 = Language.get().get(121) + ": " + State.get().getLogin().getUnlockedAch();
-        stat5 = Language.get().get(122) + ": " + State.get().getLogin().getNumberOfTimesAchivementTriggered() + " time(s)";
-        stat6 = Language.get().get(123) + ": " + State.get().getLogin().getNumberOfMatches();
+        stat1 = language.get(118) + ": " + shortVer(login.getUserName());
+        stat2 = language.get(119) + ": " + shortVer(login.getPoints() + "");
+        stat3 = language.get(120) + ": " + timeCal(login.getPlayTime());
+        stat4 = language.get(121) + ": " + login.getUnlockedAch();
+        stat5 = language.get(122) + ": " + login.getNumberOfTimesAchivementTriggered() + " time(s)";
+        stat6 = language.get(123) + ": " + login.getNumberOfMatches();
         try {
-            stat7 = Language.get().get(124) + ": " + State.get().getLogin().getPoints() / State.get().getLogin().getNumberOfMatches();
+            stat7 = language.get(124) + ": " + login.getPoints() / login.getNumberOfMatches();
         } catch (ArithmeticException ae) {
-            stat7 = Language.get().get(124) + ": 0";
+            stat7 = language.get(124) + ": 0";
         }
-        stat15 = Language.get().get(125) + ": " + State.get().getLogin().getWins();
-        stat16 = Language.get().get(126) + ": " + State.get().getLogin().getLosses();
-        stat13 = Language.get().get(127) + ": " + State.get().getLogin().userAwesomeness();
-        stat17 = Language.get().get(128) + ": " + State.get().getLogin().mostPopularCharEnum() + " " + State.get().getLogin().mostPopularCharPercentage() + " %";
+        stat15 = language.get(125) + ": " + login.getWins();
+        stat16 = language.get(126) + ": " + login.getLosses();
+        stat13 = language.get(127) + ": " + login.userAwesomeness();
+        stat17 = language.get(128) + ": " + login.mostPopularCharEnum() + " " + login.mostPopularCharPercentage() + " %";
     }
 
     public String timeCal(int timeInt) {

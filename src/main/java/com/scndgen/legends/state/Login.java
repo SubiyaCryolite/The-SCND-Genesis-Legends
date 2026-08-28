@@ -680,17 +680,18 @@ public class Login {
      * @return difficulty array index
      */
     public int resolveDifficultyInt() {
-        if (State.get().getLogin().getDifficulty() == diff0)
+        var login = State.get().getLogin();
+        if (login.getDifficulty() == diff0)
             return 0;
-        if (State.get().getLogin().getDifficulty() == diff1)
+        if (login.getDifficulty() == diff1)
             return 1;
-        if (State.get().getLogin().getDifficulty() == diff2)
+        if (login.getDifficulty() == diff2)
             return 2;
-        if (State.get().getLogin().getDifficulty() == diff3)
+        if (login.getDifficulty() == diff3)
             return 3;
-        if (State.get().getLogin().getDifficulty() == diff4)
+        if (login.getDifficulty() == diff4)
             return 4;
-        if (State.get().getLogin().getDifficulty() == diff5)
+        if (login.getDifficulty() == diff5)
             return 5;
         return -1;
     }

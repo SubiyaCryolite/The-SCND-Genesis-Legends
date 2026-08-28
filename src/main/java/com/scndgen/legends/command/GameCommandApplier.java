@@ -57,10 +57,11 @@ public final class GameCommandApplier {
             case GameCommand.GoToCharacterSelect(var newInstance) ->
                     ScndGenLegends.get().loadMode(ModeEnum.CHAR_SELECT_SCREEN, newInstance);
             case GameCommand.AttackQueue(var attacker, var moves) -> {
+                var renderGamePlay = RenderGamePlay.get();
                 if (attacker == PlayerType.PLAYER2) {
-                    RenderGamePlay.get().opponentAttack(moves.stream().map(String::valueOf).toList());
+                    renderGamePlay.opponentAttack(moves.stream().map(String::valueOf).toList());
                 } else {
-                    RenderGamePlay.get().characterAttack(moves);
+                    renderGamePlay.characterAttack(moves);
                 }
             }
             case GameCommand.TriggerFury(var player) -> RenderGamePlay.get().triggerFury(player);
@@ -69,10 +70,11 @@ public final class GameCommandApplier {
                 System.out.println("aquired time is " + seconds);
             }
             case GameCommand.ConnectToHost() -> {
-                if (NetworkManager.get().isServer()) {
-                    NetworkManager.get().promptServer();
+                var networkManager = NetworkManager.get();
+                if (networkManager.isServer()) {
+                    networkManager.promptServer();
                 } else {
-                    NetworkManager.get().setConnectedToPartner(true);
+                    networkManager.setConnectedToPartner(true);
                 }
             }
             case GameCommand.DisconnectFromHost() -> {

@@ -195,13 +195,14 @@ public abstract class GamePlay extends Mode {
      * Draws Achievements
      */
     public void drawAchievements() {
-        int unlocks = Achievement.get().getNumberOfAchievements();
+        var achievement = Achievement.get();
+        int unlocks = achievement.getNumberOfAchievements();
         achievementName = new String[unlocks];
         achievementDescription = new String[unlocks];
         achievementClass = new String[unlocks];
         achievementPoints = new String[unlocks];
         for (int iteration = 0; iteration < unlocks; iteration++) {
-            String[] info = Achievement.get().getInfo(iteration);
+            String[] info = achievement.getInfo(iteration);
             achievementName[iteration] = info[0]; //getInfo
             achievementDescription[iteration] = info[1]; //desc
             achievementClass[iteration] = info[2]; //class
@@ -403,12 +404,13 @@ public abstract class GamePlay extends Mode {
 
         if (!gameOver) {
             if (!showBrag) {
+                var overlay = Overlay.get();
                 if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE) {
                     musNotice();
-                    Overlay.get().primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
+                    overlay.primaryNotice(Characters.get().getOpponent().getBraggingRights(RenderCharacterSelection.get().getSelectedCharIndex()));
                 } else {
-                    Overlay.get().primaryNotice("");
-                    Overlay.get().secondaryNotice("");
+                    overlay.primaryNotice("");
+                    overlay.secondaryNotice("");
                 }
                 showBrag = true;
             }
@@ -442,7 +444,8 @@ public abstract class GamePlay extends Mode {
     }
 
     private void handleOpponentAi(double now) {
-        boolean singlePlayerOrStoryMode = ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER || ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE;
+        var scndGenLegends = ScndGenLegends.get();
+        boolean singlePlayerOrStoryMode = scndGenLegends.getSubMode() == SubMode.SINGLE_PLAYER || scndGenLegends.getSubMode() == SubMode.STORY_MODE;
         if (singlePlayerOrStoryMode && !triggerOpponentAttack && !playingCutscene && !NetworkManager.get().isOnline()) {
             if (singlePlayerOrStoryMode && (now - opponentAiDelta) > DT_60) {
                 opponentAiDelta = now;
@@ -633,11 +636,12 @@ public abstract class GamePlay extends Mode {
         if ((now - timerDelta) > DT_60) {
             timerDelta = now;
             Achievement.get().scan(this);
+            var characters = Characters.get();
             if (characterAtbValue <= maxAtb && characterAtb) {
-                characterAtbValue += Characters.get().getCharRecoverySpeed();
+                characterAtbValue += characters.getCharRecoverySpeed();
             }
             if (opponentAtbValue <= maxAtb && opponentAtb && !playingCutscene) {
-                opponentAtbValue += Characters.get().getOppRecoverySpeed();
+                opponentAtbValue += characters.getOppRecoverySpeed();
             }
             if (timeLimit <= INFINITE_TIME && !playingCutscene) {
                 if (secondCount < 1000) //continue till we make a second
@@ -825,10 +829,11 @@ public abstract class GamePlay extends Mode {
         setForeGroundPositionX(0);
         setForeGroundPositionY(0);
         Achievement.get().newInstance();
-        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
+        var scndGenLegends = ScndGenLegends.get();
+        if (scndGenLegends.getSubMode() == SubMode.STORY_MODE) {
             playingCutscene = true;
             timeLimit = StoryMode.get().timeLimit;
-        } else if (ScndGenLegends.get().getSubMode() == SubMode.LAN_CLIENT) {
+        } else if (scndGenLegends.getSubMode() == SubMode.LAN_CLIENT) {
             timeLimit = NetworkManager.get().hostTimeLimit;
         } else {
             timeLimit = State.get().getLogin().getTimeLimit();
@@ -973,8 +978,9 @@ public abstract class GamePlay extends Mode {
         characterHp = characterMaximumHp;
         opponentHp = opponentMaximumHp;
         furyBar.setLevel(5);
-        Characters.get().getCharacter().setStrengthMultiplier(12.0f);
-        Characters.get().getOpponent().setStrengthMultiplier(12.0f);
+        var characters = Characters.get();
+        characters.getCharacter().setStrengthMultiplier(12.0f);
+        characters.getOpponent().setStrengthMultiplier(12.0f);
     }
 
     /**
@@ -1006,14 +1012,15 @@ public abstract class GamePlay extends Mode {
      * @param value - value
      */
     public void updatePlayerLife(int value) {
-        int scaled = Characters.get().getCharacter().getCelestiaMultiplier() * value;
+        var characters = Characters.get();
+        int scaled = characters.getCharacter().getCelestiaMultiplier() * value;
         characterHp += scaled;
         daNum = (getCharacterHp() / getCharacterMaximumHp()) * 100; //perc characterHp x characterHp bar length
         lifePlain = Math.round(daNum); // round off
         lifeTotalPlain = Math.round(getCharacterHp()); // for text
         characterHpAsPercent = Math.round(lifePlain);
-        Characters.get().setCurrLifeOpp(opponentHpAsPercent);
-        Characters.get().setCurrLifeChar(characterHpAsPercent);
+        characters.setCurrLifeOpp(opponentHpAsPercent);
+        characters.setCurrLifeChar(characterHpAsPercent);
     }
 
     /**
@@ -1022,14 +1029,15 @@ public abstract class GamePlay extends Mode {
      * @param value - value
      */
     public void updateOpponentLife(int value) {
-        int scaled = Characters.get().getOpponent().getCelestiaMultiplier() * value;
+        var characters = Characters.get();
+        int scaled = characters.getOpponent().getCelestiaMultiplier() * value;
         opponentHp += scaled;
         daNum2 = ((getOpponentHp() / getOpponentMaximumHp()) * 100); //perc characterHp x characterHp bar length
         lifePlain2 = Math.round(daNum2); // round off
         lifeTotalPlain2 = Math.round(getOpponentHp()); // for text
         opponentHpAsPercent = Math.round(lifePlain2);
-        Characters.get().setCurrLifeOpp(opponentHpAsPercent);
-        Characters.get().setCurrLifeChar(characterHpAsPercent);
+        characters.setCurrLifeOpp(opponentHpAsPercent);
+        characters.setCurrLifeChar(characterHpAsPercent);
     }
 
     /**
@@ -1066,11 +1074,12 @@ public abstract class GamePlay extends Mode {
      * @param thisMuch   the number to alter by
      */
     public void alterStrength(PlayerType playerType, int thisMuch) {
-        if (playerType == PlayerType.PLAYER1 && Characters.get().getOpponent().getStrengthMultiplier() > 0 && Characters.get().getOpponent().getStrengthMultiplier() < 20) {
-            Characters.get().getOpponent().setStrengthMultiplier(Characters.get().getOpponent().getStrengthMultiplier() + thisMuch);
+        var characters = Characters.get();
+        if (playerType == PlayerType.PLAYER1 && characters.getOpponent().getStrengthMultiplier() > 0 && characters.getOpponent().getStrengthMultiplier() < 20) {
+            characters.getOpponent().setStrengthMultiplier(characters.getOpponent().getStrengthMultiplier() + thisMuch);
         }
-        if (playerType == PlayerType.PLAYER2 && Characters.get().getCharacter().getStrengthMultiplier() > 0 && Characters.get().getCharacter().getStrengthMultiplier() < 20) {
-            Characters.get().getCharacter().setStrengthMultiplier(Characters.get().getCharacter().getStrengthMultiplier() + thisMuch);
+        if (playerType == PlayerType.PLAYER2 && characters.getCharacter().getStrengthMultiplier() > 0 && characters.getCharacter().getStrengthMultiplier() < 20) {
+            characters.getCharacter().setStrengthMultiplier(characters.getCharacter().getStrengthMultiplier() + thisMuch);
         }
     }
 
@@ -1329,7 +1338,10 @@ public abstract class GamePlay extends Mode {
     }
 
     protected void cancelMatch() {
-        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+        var scndGenLegends = ScndGenLegends.get();
+        var networkManager = NetworkManager.get();
+        var gameCommandBus = GameCommandBus.get();
+        scndGenLegends.engine().ui().push(NkDialogs.yesNo(
                 "Confirmation",
                 "Dude!?",
                 "Are you sure you wanna quit?",
@@ -1340,19 +1352,19 @@ public abstract class GamePlay extends Mode {
                     if (playingCutscene) {
                         StoryMode.get().exitCinematic(true);
                     }
-                    if (NetworkManager.get().isOffline()) {
+                    if (networkManager.isOffline()) {
                         if (isPaused()) {
                             onTogglePause();
                         }
                         terminateGameplay();
                         RenderStageSelect.get().setStageSelected(false);
-                        if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE) {
-                            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
+                        if (scndGenLegends.getSubMode() == SubMode.STORY_MODE) {
+                            gameCommandBus.dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                         } else {
-                            GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
+                            gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(true));
                         }
                     } else {
-                        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                        scndGenLegends.engine().ui().push(NkDialogs.yesNo(
                                 "Are you sure?",
                                 "This will terminate the current network session",
                                 "Nuke from orbit?",
@@ -1365,8 +1377,8 @@ public abstract class GamePlay extends Mode {
                                     }
                                     terminateGameplay();
                                     // Wire-only: peer applies CancelConnectivity; local UI already handled quit.
-                                    GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
-                                    NetworkManager.get().close();
+                                    gameCommandBus.publish(new GameCommand.CancelConnectivity());
+                                    networkManager.close();
                                 }
                         ));
                     }
@@ -1393,20 +1405,21 @@ public abstract class GamePlay extends Mode {
      * @return AI - Personality
      */
     public int[] updateAndGetOpponentAttackQue() {
+        var characters = Characters.get();
         int[] array = {};
         //when doing isWithinRange, all attacks
         if (getOpponentHp() / getOpponentMaximumHp() >= 1.00) {
-            array = Characters.get().getOpponent().getAiProfile1();
+            array = characters.getOpponent().getAiProfile1();
         } //when doing isWithinRange, all attacks + 2 buffs
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.75 && getOpponentHp() / getOpponentMaximumHp() < 1.00) {
-            array = Characters.get().getOpponent().getAiProfile2();
+            array = characters.getOpponent().getAiProfile2();
         } //when doing isWithinRange, 4 attacks + 2 buffs
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.50 && getOpponentHp() / getOpponentMaximumHp() < 0.75) {
             if (isFuryBarFull() && !limitRunning) {
                 triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
-                array = Characters.get().getOpponent().getAiProfile3();
+                array = characters.getOpponent().getAiProfile3();
             }
         } //when doing isWithinRange, 4 buffs + 2 moves
         else if (getOpponentHp() / getOpponentMaximumHp() >= 0.25 && getOpponentHp() / getOpponentMaximumHp() < 0.50) {
@@ -1414,7 +1427,7 @@ public abstract class GamePlay extends Mode {
                 triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
-                array = Characters.get().getOpponent().getAiProfile4();
+                array = characters.getOpponent().getAiProfile4();
             }
         } //first fury, when doing isWithinRange, 4 buffs + 2 moves
         else {
@@ -1422,7 +1435,7 @@ public abstract class GamePlay extends Mode {
                 triggerFury(PlayerType.PLAYER2);
                 array = new int[]{};
             } else {
-                array = Characters.get().getOpponent().getAiProfile5();
+                array = characters.getOpponent().getAiProfile5();
             }
         }
         shuffleArray(array);
@@ -1546,11 +1559,13 @@ public abstract class GamePlay extends Mode {
     public void gameOver() {
         gameOver = true;
         closeAudio();
-        State.get().getLogin().setPlayTime(playClock.playTimeCounter());
+        var login = State.get().getLogin();
+        var renderCharacterSelection = RenderCharacterSelection.get();
+        login.setPlayTime(playClock.playTimeCounter());
         Achievement.get().scan(this);
         //if not playStory scene, increment char usage
         if (ScndGenLegends.get().getSubMode() == SubMode.STORY_MODE == false) {
-            State.get().getLogin().setCharacterUsage(RenderCharacterSelection.get().getCharName());
+            login.setCharacterUsage(renderCharacterSelection.getCharName());
         }
         if (hasWon()) {
             showWinLabel();
@@ -1558,7 +1573,7 @@ public abstract class GamePlay extends Mode {
             showLoseLabel();
         }
         RenderStageSelect.get().newInstance();
-        RenderCharacterSelection.get().newInstance();
+        renderCharacterSelection.newInstance();
         drawAchievements();
     }
 
@@ -1580,33 +1595,36 @@ public abstract class GamePlay extends Mode {
      * This thread executes when a game is over, designed to free unused memory
      */
     public void closingThread(boolean goToCharacterSelect) {
+        var gameCommandBus = GameCommandBus.get();
         if (goToCharacterSelect) {
-            GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
+            gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(true));
         } else {
-            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
+            gameCommandBus.dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
         }
     }
 
     protected void updatePlayerProfile() {
         //logic profile operations
         incrementWinsOrLosses();
-        State.get().getLogin().setPoints(Achievement.get().getNewUserPoints());
+        var state = State.get();
+        state.getLogin().setPoints(Achievement.get().getNewUserPoints());
         //save profile
         try {
-            State.get().saveConfigFile();
+            state.saveConfigFile();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void incrementWinsOrLosses() {
-        State.get().getLogin().setNumberOfMatches(State.get().getLogin().getNumberOfMatches() + 1);
+        var login = State.get().getLogin();
+        login.setNumberOfMatches(login.getNumberOfMatches() + 1);
         if (getCharacterHp() < getOpponentHp()) {
-            State.get().getLogin().setLosses(State.get().getLogin().getLosses() + 1);
-            State.get().getLogin().setConsecutiveWins(0);
+            login.setLosses(login.getLosses() + 1);
+            login.setConsecutiveWins(0);
         } else {
-            State.get().getLogin().setWins(State.get().getLogin().getWins() + 1);
-            State.get().getLogin().setConsecutiveWins(State.get().getLogin().getConsecutiveWins() + 1);
+            login.setWins(login.getWins() + 1);
+            login.setConsecutiveWins(login.getConsecutiveWins() + 1);
         }
     }
 
@@ -1637,7 +1655,8 @@ public abstract class GamePlay extends Mode {
     }
 
     public void musNotice() {
-        Overlay.get().secondaryNotice(RenderStageSelect.get().getAmbientMusicMetaData()[RenderStageSelect.get().getAmbientMusicIndex()]);
+        var renderStageSelect = RenderStageSelect.get();
+        Overlay.get().secondaryNotice(renderStageSelect.getAmbientMusicMetaData()[renderStageSelect.getAmbientMusicIndex()]);
     }
 
     public boolean isGameOver() {

@@ -92,29 +92,31 @@ public class RenderCharacterSelection extends CharacterSelection {
             }
 
             public void onAccept() {
-                boolean regularMode = NetworkManager.get().isOffline() && (!selectedCharacter || !selectedOpponent);
-                boolean onlineMode = NetworkManager.get().isOnline() && !selectedCharacter;
+                var networkManager = NetworkManager.get();
+                boolean regularMode = networkManager.isOffline() && (!selectedCharacter || !selectedOpponent);
+                boolean onlineMode = networkManager.isOnline() && !selectedCharacter;
                 if (regularMode || onlineMode) {
                     var type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
                     GameCommandBus.get().dispatch(new GameCommand.SelectCharacter(hoveredCharacter, type));
                 } else {
                     // if both character and opponent selected move on to stage select after second accept
-                    if (NetworkManager.get().isOffline()
-                            || (NetworkManager.get().isServer() && selectedOpponent && selectedCharacter)) {
+                    if (networkManager.isOffline()
+                            || (networkManager.isServer() && selectedOpponent && selectedCharacter)) {
                         GameCommandBus.get().dispatch(new GameCommand.GoToStageSelect());
                     }
                 }
             }
 
             public void onBackCancel() {
-                if (selectedOpponent && NetworkManager.get().isOffline()) {
+                var networkManager = NetworkManager.get();
+                if (selectedOpponent && networkManager.isOffline()) {
                     selectedOpponent = false;
                 } else if (selectedCharacter) {
                     selectedCharacter = false;
-                    if (NetworkManager.get().isOnline()) {
+                    if (networkManager.isOnline()) {
                         GameCommandBus.get().publish(new GameCommand.DeselectOpponentSlot());
                     }
-                } else if (NetworkManager.get().isOnline()) {
+                } else if (networkManager.isOnline()) {
                     ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
                             "Yikes",
                             "Are you sure you want to cancel this network session?",
@@ -123,7 +125,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                                 switch (answer) {
                                     case YES -> {
                                         GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
-                                        NetworkManager.get().close();
+                                        networkManager.close();
                                     }
                                     default -> {
                                     }
@@ -310,7 +312,9 @@ public class RenderCharacterSelection extends CharacterSelection {
         draw.drawImage(fg1, xCordCloud, 0);
         draw.drawImage(fg2, xCordCloud2, 0);
         draw.drawImage(fg3, 0, 0);
-        if (NetworkManager.get().isOffline() || (NetworkManager.get().isOnline() && NetworkManager.get().isConnectedToPartner())) {
+        var networkManager = NetworkManager.get();
+        var scndGenLegends = ScndGenLegends.get();
+        if (networkManager.isOffline() || (networkManager.isOnline() && networkManager.isConnectedToPartner())) {
             if (p1Opac < (1.0f - opacInc)) {
                 p1Opac += opacInc;
             }
@@ -329,7 +333,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                 draw.drawImage(caption[hoveredCharacter.index()], 40 - x, 400);
             }
             //opponent preview DYNAMIC change, only show if quick match, should change sprites
-            if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
+            if (selectedCharacter && !selectedOpponent && scndGenLegends.getSubMode() == SubMode.SINGLE_PLAYER) {
                 draw.setGlobalAlpha(p1Opac);
                 draw.drawImage(portraitFlipped[hoveredCharacter.index()], 512 - x, charYcap);
                 draw.setGlobalAlpha(1.0f);
@@ -357,7 +361,7 @@ public class RenderCharacterSelection extends CharacterSelection {
                         if (!selectedCharacter) {
                             draw.drawImage(charBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
-                        if (selectedCharacter && !selectedOpponent && ScndGenLegends.get().getSubMode() == SubMode.SINGLE_PLAYER) {
+                        if (selectedCharacter && !selectedOpponent && scndGenLegends.getSubMode() == SubMode.SINGLE_PLAYER) {
                             draw.drawImage(oppBack, hPos + (hSpacer * column), firstLine + (vSpacer * row));
                         }
                     }
@@ -393,16 +397,16 @@ public class RenderCharacterSelection extends CharacterSelection {
             if (x < 0) {
                 x = x + 2;
             }
-        } else if (NetworkManager.get().isServer()) {
+        } else if (networkManager.isServer()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
             draw.fillText(Language.get().get(167), 20, 300);
-            draw.fillText(NetworkManager.get().getHostName(), 20, 314);
+            draw.fillText(networkManager.getHostName(), 20, 314);
             draw.fillText(Language.get().get(452), 20, 328);
-            draw.fillText(NetworkManager.get().getHostAddress(), 20, 346);
+            draw.fillText(networkManager.getHostAddress(), 20, 346);
             draw.fillText(Language.get().get(168), 20, 360);
             draw.fillText(Language.get().get(169), 20, 376);
-        } else if (NetworkManager.get().isClient()) {
+        } else if (networkManager.isClient()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
             draw.fillText("Waiting for host to respond", 553 + x, 400);

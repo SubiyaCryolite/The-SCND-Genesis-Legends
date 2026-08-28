@@ -395,11 +395,12 @@ public class RenderGamePlay extends GamePlay {
         oppSprites = null;
         characterPortraits = null;
         storyBoards = null;
-        var character = Characters.get().getCharacter();
+        var characters = Characters.get();
+        var character = characters.getCharacter();
         if (character != null) {
             character.unloadSprites(assets());
         }
-        var opponent = Characters.get().getOpponent();
+        var opponent = characters.getOpponent();
         if (opponent != null) {
             opponent.unloadSprites(assets());
         }
@@ -852,25 +853,26 @@ public class RenderGamePlay extends GamePlay {
      */
     private void loadSprites() {
         try {
-            Characters.get().getCharacter().loadMeHigh(assets());
-            Characters.get().getOpponent().loadMeHigh(assets());
+            var characters = Characters.get();
+            characters.getCharacter().loadMeHigh(assets());
+            characters.getOpponent().loadMeHigh(assets());
 
-            charSprites = new NvgImage[Characters.get().getCharacter().getNumberOfSprites()];
+            charSprites = new NvgImage[characters.getCharacter().getNumberOfSprites()];
             for (int i = 0; i < charSprites.length; i++)
-                charSprites[i] = Characters.get().getCharacter().getSprite(i);
+                charSprites[i] = characters.getCharacter().getSprite(i);
 
-            oppSprites = new NvgImage[Characters.get().getOpponent().getNumberOfSprites()];
+            oppSprites = new NvgImage[characters.getOpponent().getNumberOfSprites()];
             for (int i = 0; i < oppSprites.length; i++)
-                oppSprites[i] = Characters.get().getOpponent().getSprite(i);
+                oppSprites[i] = characters.getOpponent().getSprite(i);
 
             comboPicArray = new NvgImage[9];
             for (int u = 0; u < 6; u++)
                 comboPicArray[u] = bag().loadImage("images/screenTxt/" + u + ".png");
             comboPicArray[7] = bag().loadImage("images/screenTxt/7.png");
-            comboPicArray[8] = Characters.get().getCharacter().getSprite(11);
+            comboPicArray[8] = characters.getCharacter().getSprite(11);
 
             comicBookText = new NvgImage[10];
-            comicBookText[0] = Characters.get().getCharacter().getSprite(11);
+            comicBookText[0] = characters.getCharacter().getSprite(11);
             for (int bx = 1; bx < numOfComicPics + 1; bx++)
                 comicBookText[bx] = bag().loadImage("images/screenComic/" + (bx - 1) + ".png");
             damageLayer = bag().loadImage("images/damage1.png");
@@ -900,10 +902,11 @@ public class RenderGamePlay extends GamePlay {
             NvgImage transBuf = bag().loadImage("images/trans.png");
             hpHolder = bag().loadImage("images/hpHolder.png");
             hpHolderOpponent = bag().loadImage("images/hpHolderOpponent.png");
-            stageBackground = bag().loadImage(RenderStageSelect.get().getStageBackground());
-            stageForeground = bag().loadImage(RenderStageSelect.get().getStageForeground());
-            stageAmbientForeground = bag().loadImage(RenderStageSelect.get().getFgLocation1());
-            stageAmbientBackground = bag().loadImage(RenderStageSelect.get().getFgLocation2());
+            var renderStageSelect = RenderStageSelect.get();
+            stageBackground = bag().loadImage(renderStageSelect.getStageBackground());
+            stageForeground = bag().loadImage(renderStageSelect.getStageForeground());
+            stageAmbientForeground = bag().loadImage(renderStageSelect.getFgLocation1());
+            stageAmbientBackground = bag().loadImage(renderStageSelect.getFgLocation2());
             furyActive = bag().loadImage("images/fury.gif");
             furyInactive = bag().loadImage("images/furyo.png");
             furyState = furyInactive;
@@ -1067,8 +1070,9 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public void comicText() {
-        if (State.get().getLogin().getComicEffectOccurence() > 0) {
-            int randomInt = Math.round((float) (Math.random() * State.get().getLogin().getComicEffectOccurence()));
+        var login = State.get().getLogin();
+        if (login.getComicEffectOccurence() > 0) {
+            int randomInt = Math.round((float) (Math.random() * login.getComicEffectOccurence()));
             if (randomInt == 1) {
                 setRandomPic();
             }
@@ -1076,7 +1080,8 @@ public class RenderGamePlay extends GamePlay {
     }
 
     public synchronized void playBGMusic() {
-        ambientMusic = new Audio("audio/" + RenderStageSelect.get().getAmbientMusic()[RenderStageSelect.get().getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
+        var renderStageSelect = RenderStageSelect.get();
+        ambientMusic = new Audio("audio/" + renderStageSelect.getAmbientMusic()[renderStageSelect.getAmbientMusicIndex()] + ".ogg", AudioType.MUSIC, true);
         ambientMusic.play();
     }
 

@@ -84,8 +84,9 @@ public class NetworkManager {
 
     private void backToMainMenu() {
         setConnectedToPartner(false);
-        ScndGenLegends.get().setSubMode(SubMode.MAIN_MENU);
-        ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+        var scndGenLegends = ScndGenLegends.get();
+        scndGenLegends.setSubMode(SubMode.MAIN_MENU);
+        scndGenLegends.loadMode(ModeEnum.MAIN_MENU);
     }
 
     public boolean isServer() {

@@ -93,7 +93,8 @@ public abstract class StoryMenu extends Mode {
         else if (RenderGamePlay.get().hasWon()) {
             //incrementMode();
             //go onBackCancel to user difficulty
-            State.get().getLogin().setDifficultyDynamic(State.get().getLogin().getDifficulty());
+            var login = State.get().getLogin();
+            login.setDifficultyDynamic(login.getDifficulty());
             Audio victorySound = new Audio(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
             ScndGenLegends.get().engine().ui().push(NkDialogs.message(

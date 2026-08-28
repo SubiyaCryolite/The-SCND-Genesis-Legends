@@ -3,6 +3,7 @@
 When writing or editing JVM sources in this project (Java 21):
 
 - Prefer **`var`** for local variables when the type is obvious from the right-hand side.
+- Prefer caching repeated singleton getters in a local (`var renderGamePlay = RenderGamePlay.get();`) instead of calling `.get()` on every field/method access in the same block.
 - Prefer **try-with-resources** for `AutoCloseable` / `Closeable` (sockets, streams, channels). Do not leave manual `close()` in `finally` when try-with-resources fits.
 - Prefer **switch expressions**, arrow `case` labels, and exhaustive switches over legacy fall-through switches.
 - Prefer **records** for immutable data carriers; **sealed** types when a closed hierarchy helps.
