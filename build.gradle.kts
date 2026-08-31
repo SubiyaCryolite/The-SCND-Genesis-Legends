@@ -31,15 +31,15 @@ group = "com.scndgen"
 version = "26" // Major rewrite in 2026
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    options.release.set(25)
     options.encoding = "UTF-8"
 }
 
@@ -48,11 +48,10 @@ val mainClassName = "com.scndgen.legends.ScndGenLegends"
 val lwjglNatives: String = when {
     OperatingSystem.current().isLinux -> {
         val osArch = System.getProperty("os.arch")
-        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
-            val suffix = if (osArch.contains("64") || osArch.startsWith("armv8")) "arm64" else "arm32"
-            "natives-linux-$suffix"
-        } else {
-            "natives-linux"
+        when {
+            osArch.startsWith("aarch64") || osArch == "arm64" -> "natives-linux-arm64"
+            osArch.contains("64") -> "natives-linux"
+            else -> error("Unsupported Linux architecture: $osArch (64-bit required)")
         }
     }
     OperatingSystem.current().isMacOsX -> {
@@ -60,10 +59,10 @@ val lwjglNatives: String = when {
     }
     OperatingSystem.current().isWindows -> {
         val osArch = System.getProperty("os.arch")
-        if (osArch.contains("64")) {
-            "natives-windows${if (osArch.startsWith("aarch64")) "-arm64" else ""}"
-        } else {
-            "natives-windows-x86"
+        when {
+            osArch.startsWith("aarch64") -> "natives-windows-arm64"
+            osArch.contains("64") -> "natives-windows"
+            else -> error("Unsupported Windows architecture: $osArch (64-bit required)")
         }
     }
     else -> error("Unsupported OS for LWJGL natives")

@@ -21,37 +21,24 @@
  **************************************************************************/
 package com.scndgen.legends;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * @author ndana
  */
-public class Colors {
+public final class Colors {
 
-    private static Color thisColor = new Color(0, 0, 0);
+    private Colors() {
+    }
 
     public static Color getColor(String color) {
-
-        if (color.equalsIgnoreCase("blue")) {
-            thisColor = new Color(117, 227, 226);
-        }
-
-        if (color.equalsIgnoreCase("green")) {
-            thisColor = new Color(99, 232, 63);
-        }
-
-        if (color.equalsIgnoreCase("yellow")) {
-            thisColor = new Color(255, 255, 0);
-        }
-
-        if (color.equalsIgnoreCase("white")) {
-            thisColor = new Color(255, 255, 255);
-        }
-
-        if (color.equalsIgnoreCase("red")) {
-            thisColor = new Color(253, 20, 9);
-        }
-
-        return thisColor;
+        return switch (color.toLowerCase()) {
+            case "blue" -> new Color(117, 227, 226);
+            case "green" -> new Color(99, 232, 63);
+            case "yellow" -> new Color(255, 255, 0);
+            case "white" -> new Color(255, 255, 255);
+            case "red" -> new Color(253, 20, 9);
+            default -> Color.BLACK;
+        };
     }
 }

@@ -32,6 +32,7 @@ import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.NvgImage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -43,17 +44,15 @@ public abstract class Character {
 
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status;
-    public final HashMap<Integer,String> bragRights = new HashMap<>();
+    public final Map<Integer, String> bragRights = new HashMap<>();
     public int points, life, damage;
     public float strengthMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
-    public float[] weakness;
     public float atbRecoveryRate;
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private NvgImage[] sprites;
-    private String[] location;
     private boolean isMale;
-    private int numberOfSprites = 12;
+    private static final int NUMBER_OF_SPRITES = 12;
 
     public Character() {
         isMale = true;
@@ -73,34 +72,36 @@ public abstract class Character {
 
     protected final int celestiaMultiplier = 10;
 
-    private void sortQue() {
-        location = new String[numberOfSprites];
-        location[0] = "images/" + characterEnum.data() + "/D.png";
-        location[1] = "images/" + characterEnum.data() + "/M1.png";
-        location[2] = "images/" + characterEnum.data() + "/M2.png";
-        location[3] = "images/" + characterEnum.data() + "/M3.png";
-        location[4] = "images/" + characterEnum.data() + "/M4.png";
-        location[5] = "images/" + characterEnum.data() + "/M5.png";
-        location[6] = "images/" + characterEnum.data() + "/M6.png";
-        location[7] = "images/" + characterEnum.data() + "/M7.png";
-        location[8] = "images/" + characterEnum.data() + "/M8.png";
-        location[9] = "images/" + characterEnum.data() + "/N.png";
-        location[10] = "images/" + characterEnum.data() + "/P.png";
-        location[11] = "images/trans.png";
-        System.out.println("Loaded " + characterEnum.data());
+    private String[] spritePaths() {
+        var folder = characterEnum.data();
+        return new String[]{
+                "images/" + folder + "/D.png",
+                "images/" + folder + "/M1.png",
+                "images/" + folder + "/M2.png",
+                "images/" + folder + "/M3.png",
+                "images/" + folder + "/M4.png",
+                "images/" + folder + "/M5.png",
+                "images/" + folder + "/M6.png",
+                "images/" + folder + "/M7.png",
+                "images/" + folder + "/M8.png",
+                "images/" + folder + "/N.png",
+                "images/" + folder + "/P.png",
+                "images/trans.png"
+        };
     }
 
     public int getNumberOfSprites() {
-        return numberOfSprites;
+        return NUMBER_OF_SPRITES;
     }
 
     public void loadMeHigh(AssetLoader assets) {
         unloadSprites(assets);
-        sortQue();
-        sprites = new NvgImage[numberOfSprites];
-        for (int i = 0; i < numberOfSprites; i++) {
-            sprites[i] = assets.loadImage(location[i]);
+        var paths = spritePaths();
+        sprites = new NvgImage[NUMBER_OF_SPRITES];
+        for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+            sprites[i] = assets.loadImage(paths[i]);
         }
+        System.out.println("Loaded " + characterEnum.data());
     }
 
     public void unloadSprites(AssetLoader assets) {
@@ -136,7 +137,8 @@ public abstract class Character {
      * @return array of physicalAttacks attacks
      */
     public void setCharacterAttackArrays() {
-        RenderGamePlay.get().setCharacterAttackArrays(physical, celestia, status);
+        var renderGamePlay = RenderGamePlay.get();
+        renderGamePlay.setCharacterAttackArrays(physical, celestia, status);
     }
 
     /**
@@ -145,18 +147,17 @@ public abstract class Character {
      * @return The getInfo of the qued move
      */
     public String getMoveQued(int move) {
-        int yus = move - 1;
-        String txt = "";
-        if (yus < 4) {
-            txt = physical[yus];
+        int index = move - 1;
+        if (index < 4) {
+            return physical[index];
         }
-        if (yus >= 4 && yus <= 7) {
-            txt = celestia[yus - 4];
+        if (index <= 7) {
+            return celestia[index - 4];
         }
-        if (yus >= 8 && yus <= 11) {
-            txt = status[yus - 8];
+        if (index <= 11) {
+            return status[index - 8];
         }
-        return txt;
+        return "";
     }
 
     /**
@@ -258,7 +259,60 @@ public abstract class Character {
     }
 
     public void play() {
-        Audio sound3 = new Audio(AudioConstants.itemSound1(), AudioType.SOUND, false);
-        sound3.play();
+        new Audio(AudioConstants.itemSound1(), AudioType.SOUND, false).play();
+    }
+
+    protected void strike(GamePlay gamePlay, PlayerType forWho, String label, int dmg) {
+        attackStr = label;
+        damage = dmg;
+        gamePlay.lifePhysUpdateSimple(forWho, damage);
+    }
+
+    protected void restore(GamePlay gamePlay, PlayerType forWho, String label, int dmg) {
+        play();
+        attackStr = label;
+        damage = dmg;
+        gamePlay.setStatIndex(1);
+        if (forWho == PlayerType.PLAYER2) {
+            gamePlay.updatePlayerLife(damage);
+            gamePlay.setStatusPic(PlayerType.PLAYER1);
+        } else {
+            gamePlay.updateOpponentLife(damage);
+            gamePlay.setStatusPic(PlayerType.PLAYER2);
+        }
+    }
+
+    protected void boost(GamePlay gamePlay, PlayerType forWho) {
+        limit[1]++;
+        if (limit[1] > 4) {
+            return;
+        }
+        play();
+        attackStr = status[2];
+        gamePlay.setStatIndex(3);
+        if (forWho == PlayerType.PLAYER2) {
+            gamePlay.setStatusPic(PlayerType.PLAYER1);
+            gamePlay.alterStrength(PlayerType.PLAYER2, +1);
+        } else {
+            gamePlay.setStatusPic(PlayerType.PLAYER2);
+            gamePlay.alterStrength(PlayerType.PLAYER1, +1);
+        }
+    }
+
+    protected void weaken(GamePlay gamePlay, PlayerType forWho) {
+        limit[0]++;
+        if (limit[0] > 4) {
+            return;
+        }
+        play();
+        attackStr = status[3];
+        gamePlay.setStatIndex(4);
+        if (forWho == PlayerType.PLAYER2) {
+            gamePlay.setStatusPic(PlayerType.PLAYER2);
+            gamePlay.alterStrength(PlayerType.PLAYER1, -1);
+        } else {
+            gamePlay.setStatusPic(PlayerType.PLAYER1);
+            gamePlay.alterStrength(PlayerType.PLAYER2, -1);
+        }
     }
 }

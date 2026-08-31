@@ -12,6 +12,7 @@ import com.scndgen.legends.mode.MainMenu;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev2.Audio;
+import io.github.subiyacryolite.enginev2.DesignViewport;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
 import io.github.subiyacryolite.enginev2.Rgba;
@@ -554,7 +555,7 @@ public class RenderMainMenu extends MainMenu {
         draw.drawImage(particlesLayer1, cloudTwoPositionX, yCordCloud2);
         draw.setFill(Rgba.BLACK);
         draw.setGlobalAlpha(0.50f);
-        draw.fillRect(0, 0, screenWidth, screenHeight);
+        draw.fillRect(0, 0, DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT);
         draw.setGlobalAlpha(1.0f);
         draw.drawImage(menuLogo, 0, 0);
         draw.setFill(Rgba.WHITE);
@@ -584,7 +585,7 @@ public class RenderMainMenu extends MainMenu {
             fillText(draw, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
-        draw.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, screenHeight - 10);
+        draw.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, DesignViewport.DESIGN_HEIGHT - 10);
         draw.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
         draw.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
         draw.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
@@ -624,17 +625,17 @@ public class RenderMainMenu extends MainMenu {
         super.update(deltaSeconds);
         while (tick60.consume()) {
             if (cloudOnePositionX < -960) {
-                cloudOnePositionX = screenWidth;
+                cloudOnePositionX = DesignViewport.DESIGN_WIDTH;
             } else {
                 cloudOnePositionX = cloudOnePositionX - 1;
             }
             if (cloudTwoPositionX < -960) {
-                cloudTwoPositionX = screenWidth;
+                cloudTwoPositionX = DesignViewport.DESIGN_WIDTH;
             } else {
                 cloudTwoPositionX = cloudTwoPositionX - 2;
             }
             if (cloudThreePositionX < -960) {
-                cloudThreePositionX = screenWidth;
+                cloudThreePositionX = DesignViewport.DESIGN_WIDTH;
             } else {
                 cloudThreePositionX = cloudThreePositionX - 3;
             }

@@ -26,6 +26,6 @@ Single source of guidance for this repo: edit fragments under [`docs/agents/`](d
 
 - Engine: LWJGL / OpenGL 3.3 + NanoVG + Nuklear (`io.github.subiyacryolite.enginev2`)
 - Game entry: `com.scndgen.legends.ScndGenLegends`
-- Java **21**, Gradle Kotlin DSL (`build.gradle.kts`)
+- Java **25**, Gradle Kotlin DSL (`build.gradle.kts`)
 - Releases: tag `v*` → GitHub Actions multi-platform fat JARs
 - Network I/O: virtual-thread workers + inbound drain on the game thread; never `Thread.stop()`

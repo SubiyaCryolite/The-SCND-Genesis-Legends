@@ -64,102 +64,20 @@ public class Ravage extends Character {
     @Override
     public void attack(String attack, PlayerType target, GamePlay gamePlay) {
         switch (attack) {
-            case "01":
-                attackStr = physical[0];
-                damage = 108;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "02":
-                attackStr = physical[1];
-                damage = 102;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "03":
-                attackStr = physical[2];
-                damage = 103;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "04":
-                attackStr = physical[3];
-                damage = 103;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "05":
-                attackStr = celestia[0];
-                damage = 101;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "06":
-                attackStr = celestia[1];
-                damage = 107;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "07":
-                attackStr = celestia[2];
-                damage = 103;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "08":
-                attackStr = celestia[3];
-                damage = 102;
-                gamePlay.lifePhysUpdateSimple(target, damage);
-                break;
-            case "09":
-                play();
-                attackStr = status[0];
-                damage = 82;
-                gamePlay.setStatIndex(1);
-                if (target == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "10":
-                play();
-                attackStr = status[1];
-                damage = 99;
-                gamePlay.setStatIndex(1);
-                if (target == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "11":
-                limit[1] = limit[1] + 1;
-                if (limit[1] <= 4) {
-                    play();
-                    attackStr = status[2];
-                    gamePlay.setStatIndex(3);
-                    if (target == PlayerType.PLAYER2) {
-                        gamePlay.setStatusPic(PlayerType.PLAYER1);
-                        gamePlay.alterStrength(PlayerType.PLAYER2, +1);
-                    } else {
-                        gamePlay.setStatusPic(PlayerType.PLAYER2);
-                        gamePlay.alterStrength(PlayerType.PLAYER1, +1);
-                    }
-                }
-                break;
-            case "12":
-                limit[0] = limit[0] + 1;
-                if (limit[0] <= 4) {
-                    play();
-                    attackStr = status[3];
-                    gamePlay.setStatIndex(4);
-                    if (target == PlayerType.PLAYER2) {
-                        gamePlay.setStatusPic(PlayerType.PLAYER2);
-                        gamePlay.alterStrength(PlayerType.PLAYER1, -1);
-                    } else {
-                        gamePlay.setStatusPic(PlayerType.PLAYER1);
-                        gamePlay.alterStrength(PlayerType.PLAYER2, -1);
-                    }
-                }
-                break;
+            case "01" -> strike(gamePlay, target, physical[0], 108);
+            case "02" -> strike(gamePlay, target, physical[1], 102);
+            case "03" -> strike(gamePlay, target, physical[2], 103);
+            case "04" -> strike(gamePlay, target, physical[3], 103);
+            case "05" -> strike(gamePlay, target, celestia[0], 101);
+            case "06" -> strike(gamePlay, target, celestia[1], 107);
+            case "07" -> strike(gamePlay, target, celestia[2], 103);
+            case "08" -> strike(gamePlay, target, celestia[3], 102);
+            case "09" -> restore(gamePlay, target, status[0], 82);
+            case "10" -> restore(gamePlay, target, status[1], 99);
+            case "11" -> boost(gamePlay, target);
+            case "12" -> weaken(gamePlay, target);
+            default -> {
+            }
         }
     }
 }

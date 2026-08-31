@@ -1,6 +1,6 @@
 # Modern Java style
 
-When writing or editing JVM sources in this project (Java 21):
+When writing or editing JVM sources in this project (Java 25):
 
 - Prefer **`var`** for local variables when the type is obvious from the right-hand side.
 - Prefer caching repeated singleton getters in a local (`var renderGamePlay = RenderGamePlay.get();`) instead of calling `.get()` on every field/method access in the same block.

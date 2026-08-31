@@ -65,103 +65,21 @@ public class Ade extends Character {
     @Override
     public void attack(String attack, PlayerType forWho, GamePlay gamePlay) {
         switch (attack) {
-            case "00":
-                attackStr = physical[0];
-                damage = 50;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "01":
-                attackStr = physical[0];
-                damage = 110;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "02":
-                attackStr = physical[1];
-                damage = 106;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "03":
-                attackStr = physical[2];
-                damage = 110;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "04":
-                attackStr = physical[3];
-                damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "05":
-                attackStr = celestia[0];
-                damage = 107;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "06":
-                attackStr = celestia[1];
-                damage = 106;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "07":
-                attackStr = celestia[2];
-                damage = 108;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "08":
-                attackStr = celestia[3];
-                damage = 113;
-                gamePlay.lifePhysUpdateSimple(forWho, damage);
-                break;
-            case "09":
-                play();
-                attackStr = status[0];
-                damage = 77;
-                gamePlay.setStatIndex(1);
-                if (forWho == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "10":
-                play();
-                attackStr = status[1];
-                damage = 79;
-                gamePlay.setStatIndex(1);
-                if (forWho == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "11":
-                play();
-                attackStr = status[2];
-                damage = 73;
-                gamePlay.setStatIndex(1);
-                if (forWho == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "12":
-                play();
-                attackStr = status[3];
-                damage = 75;
-                gamePlay.setStatIndex(1);
-                if (forWho == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
+            case "00" -> strike(gamePlay, forWho, physical[0], 50);
+            case "01" -> strike(gamePlay, forWho, physical[0], 110);
+            case "02" -> strike(gamePlay, forWho, physical[1], 106);
+            case "03" -> strike(gamePlay, forWho, physical[2], 110);
+            case "04" -> strike(gamePlay, forWho, physical[3], 108);
+            case "05" -> strike(gamePlay, forWho, celestia[0], 107);
+            case "06" -> strike(gamePlay, forWho, celestia[1], 106);
+            case "07" -> strike(gamePlay, forWho, celestia[2], 108);
+            case "08" -> strike(gamePlay, forWho, celestia[3], 113);
+            case "09" -> restore(gamePlay, forWho, status[0], 77);
+            case "10" -> restore(gamePlay, forWho, status[1], 79);
+            case "11" -> restore(gamePlay, forWho, status[2], 73);
+            case "12" -> restore(gamePlay, forWho, status[3], 75);
+            default -> {
+            }
         }
     }
 }
