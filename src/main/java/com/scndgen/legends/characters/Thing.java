@@ -45,15 +45,6 @@ public class Thing extends Character {
         behaviours3 = new int[]{0, 1, 7, 8, 10, 11};
         behaviours4 = new int[]{0, 1, 9, 12, 10, 11};
         behaviours5 = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        weakness = new float[8];
-        weakness[0] = 0.66f;    //light
-        weakness[1] = 0.66f;    //dark
-        weakness[2] = 0.66f;    //nonElemental (lighting , wind)
-        weakness[3] = 0.90f;    //earth ( wood/ rock)
-        weakness[4] = 0.80f;    //water
-        weakness[5] = 0.30f;    //ice
-        weakness[6] = 0.70f;    //physicalAttacks
-        weakness[7] = 0.30f;    //fire
         points = 1800;
         damage = 0;
         if (y == 0) {
@@ -82,98 +73,20 @@ public class Thing extends Character {
     @Override
     public void attack(String attack, PlayerType playerType, GamePlay gamePlay) {
         switch (attack) {
-            case "01":
-                attackStr = physical[0];
-                damage = bonus + 130;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "02":
-                attackStr = physical[1];
-                damage = bonus + 129;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "03":
-                attackStr = physical[2];
-                damage = bonus + 128;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "04":
-                attackStr = physical[3];
-                damage = bonus + 127;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "05":
-                attackStr = celestia[0];
-                damage = bonus + 130;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "06":
-                attackStr = celestia[1];
-                damage = bonus + 129;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "07":
-                attackStr = celestia[2];
-                damage = bonus + 128;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "08":
-                attackStr = celestia[3];
-                damage = bonus + 127;
-                gamePlay.lifePhysUpdateSimple(playerType, damage);
-                break;
-            case "09":
-                play();
-                attackStr = status[0];
-                damage = bonus + 106;
-                gamePlay.setStatIndex(1);
-                if (playerType == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "10":
-                play();
-                attackStr = status[1];
-                damage = bonus + 100;
-                gamePlay.setStatIndex(1);
-                if (playerType == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "11":
-                play();
-                attackStr = status[2];
-                damage = bonus + 108;
-                gamePlay.setStatIndex(1);
-                if (playerType == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
-            case "12":
-                play();
-                attackStr = status[3];
-                damage = bonus + 102;
-                gamePlay.setStatIndex(1);
-                if (playerType == PlayerType.PLAYER2) {
-                    gamePlay.updatePlayerLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER1);
-                } else {
-                    gamePlay.updateOpponentLife(damage);
-                    gamePlay.setStatusPic(PlayerType.PLAYER2);
-                }
-                break;
+            case "01" -> strike(gamePlay, playerType, physical[0], bonus + 130);
+            case "02" -> strike(gamePlay, playerType, physical[1], bonus + 129);
+            case "03" -> strike(gamePlay, playerType, physical[2], bonus + 128);
+            case "04" -> strike(gamePlay, playerType, physical[3], bonus + 127);
+            case "05" -> strike(gamePlay, playerType, celestia[0], bonus + 130);
+            case "06" -> strike(gamePlay, playerType, celestia[1], bonus + 129);
+            case "07" -> strike(gamePlay, playerType, celestia[2], bonus + 128);
+            case "08" -> strike(gamePlay, playerType, celestia[3], bonus + 127);
+            case "09" -> restore(gamePlay, playerType, status[0], bonus + 106);
+            case "10" -> restore(gamePlay, playerType, status[1], bonus + 100);
+            case "11" -> restore(gamePlay, playerType, status[2], bonus + 108);
+            case "12" -> restore(gamePlay, playerType, status[3], bonus + 102);
+            default -> {
+            }
         }
     }
 }

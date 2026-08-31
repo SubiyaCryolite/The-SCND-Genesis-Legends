@@ -65,52 +65,36 @@ public class UiItem {
 
     public final void hover() {
         hovered = true;
-        events.stream().forEach((event) -> {
-            event.onHover();
-        });
+        events.forEach(Event::onHover);
     }
 
     public final void leave() {
         hovered = false;
-        events.stream().forEach((event) -> {
-            event.onLeave();
-        });
+        events.forEach(Event::onLeave);
     }
 
     public final void accept() {
-        events.stream().forEach((event) -> {
-            event.onAccept();
-        });
+        events.forEach(Event::onAccept);
     }
 
     public final void backCancel() {
-        events.stream().forEach((event) -> {
-            event.onBackCancel();
-        });
+        events.forEach(Event::onBackCancel);
     }
 
     public final void left() {
-        events.stream().forEach((event) -> {
-            event.onLeft();
-        });
+        events.forEach(Event::onLeft);
     }
 
     public final void right() {
-        events.stream().forEach((event) -> {
-            event.onRight();
-        });
+        events.forEach(Event::onRight);
     }
 
     public final void up() {
-        events.stream().forEach((event) -> {
-            event.onUp();
-        });
+        events.forEach(Event::onUp);
     }
 
     public final void down() {
-        events.stream().forEach((event) -> {
-            event.onDown();
-        });
+        events.forEach(Event::onDown);
     }
 
     public boolean isSelectable() {
@@ -122,31 +106,19 @@ public class UiItem {
     }
 
     public final UiItem getUp() {
-        if (up != null) {
-            return up;
-        }
-        return this;
+        return up != null ? up : this;
     }
 
     public final UiItem getDown() {
-        if (down != null) {
-            return down;
-        }
-        return this;
+        return down != null ? down : this;
     }
 
     public final UiItem getLeft() {
-        if (left != null) {
-            return left;
-        }
-        return this;
+        return left != null ? left : this;
     }
 
     public final UiItem getRight() {
-        if (right != null) {
-            return right;
-        }
-        return this;
+        return right != null ? right : this;
     }
 
     public final void setRelatives(final UiItem up, UiItem down, UiItem left, UiItem right) {

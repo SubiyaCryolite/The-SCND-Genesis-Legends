@@ -35,13 +35,13 @@ import static com.scndgen.legends.constants.GeneralConstants.INFINITE_TIME;
  * Created by ifunga on 22/04/2017.
  */
 public class Login {
-    private final int diff0 = 0,
-            diff1 = 1000,
-            diff2 = 2500,
-            diff3 = 3500,
-            diff4 = 4500,
-            diff5 = 6000;
-    private final int[] difficultyArray = {diff0, diff1, diff2, diff3, diff4, diff5};
+    private static final int DIFF_0 = 0;
+    private static final int DIFF_1 = 1000;
+    private static final int DIFF_2 = 2500;
+    private static final int DIFF_3 = 3500;
+    private static final int DIFF_4 = 4500;
+    private static final int DIFF_5 = 6000;
+    private static final int[] DIFFICULTY_STEPS = {DIFF_0, DIFF_1, DIFF_2, DIFF_3, DIFF_4, DIFF_5};
     //
     private String id;
     private String userName = "";
@@ -65,8 +65,8 @@ public class Login {
     private int frames = 0;
     @JsonProperty("audioOn")
     private boolean audioOn = true;
-    private int difficulty = diff3;
-    private int difficultyDynamic = diff3;
+    private int difficulty = DIFF_3;
+    private int difficultyDynamic = DIFF_3;
     private int highestStoryScene = 0;
     private int timeLimit = 90;
     private String graphicsSetting = "";
@@ -123,73 +123,36 @@ public class Login {
 
     public void incrementAchievement(Achievements achievement) {
         switch (achievement) {
-            case UPPER_HAND:
-                setAch0(getAch0() + 1);
-                break;
-            case BEAT_THE_ODDS:
-                setAch1(getAch1() + 1);
-                break;
-            case OWNAGE:
-                setAch2(getAch2() + 1);
-                break;
-            case HEARTLESS:
-                setAch3(getAch3() + 1);
-                break;
-            case MEANIE:
-                setAch4(getAch4() + 1);
-                break;
-            case RAGE:
-                setAch5(getAch5() + 1);
-                break;
-            case WINNER:
-                setAch6(getAch6() + 1);
-                break;
-            case BUZZ_KILL:
-                setAch7(getAch7() + 1);
-                break;
-            case CLOSE_CALL:
-                setAch8(getAch8() + 1);
-                break;
-            case ON_A_ROLL:
-                setAch9(getAch9() + 1);
-                break;
-            case HALF_WAY_THROUGH:
-                setAch10(getAch10() + 1);
-                break;
-            case Ach12:
-                setAch11(getAch11() + 1);
-                break;
+            case UPPER_HAND -> setAch0(getAch0() + 1);
+            case BEAT_THE_ODDS -> setAch1(getAch1() + 1);
+            case OWNAGE -> setAch2(getAch2() + 1);
+            case HEARTLESS -> setAch3(getAch3() + 1);
+            case MEANIE -> setAch4(getAch4() + 1);
+            case RAGE -> setAch5(getAch5() + 1);
+            case WINNER -> setAch6(getAch6() + 1);
+            case BUZZ_KILL -> setAch7(getAch7() + 1);
+            case CLOSE_CALL -> setAch8(getAch8() + 1);
+            case ON_A_ROLL -> setAch9(getAch9() + 1);
+            case HALF_WAY_THROUGH -> setAch10(getAch10() + 1);
+            case Ach12 -> setAch11(getAch11() + 1);
         }
     }
 
     public int getAchievementTriggers(Achievements achievement) {
-        switch (achievement) {
-            case UPPER_HAND:
-                return getAch0();
-            case BEAT_THE_ODDS:
-                return getAch1();
-            case OWNAGE:
-                return getAch2();
-            case HEARTLESS:
-                return getAch3();
-            case MEANIE:
-                return getAch4();
-            case RAGE:
-                return getAch5();
-            case WINNER:
-                return getAch6();
-            case BUZZ_KILL:
-                return getAch7();
-            case CLOSE_CALL:
-                return getAch8();
-            case ON_A_ROLL:
-                return getAch9();
-            case HALF_WAY_THROUGH:
-                return getAch10();
-            case Ach12:
-                return getAch11();
-        }
-        return 0;
+        return switch (achievement) {
+            case UPPER_HAND -> getAch0();
+            case BEAT_THE_ODDS -> getAch1();
+            case OWNAGE -> getAch2();
+            case HEARTLESS -> getAch3();
+            case MEANIE -> getAch4();
+            case RAGE -> getAch5();
+            case WINNER -> getAch6();
+            case BUZZ_KILL -> getAch7();
+            case CLOSE_CALL -> getAch8();
+            case ON_A_ROLL -> getAch9();
+            case HALF_WAY_THROUGH -> getAch10();
+            case Ach12 -> getAch11();
+        };
     }
 
     public int getNumberOfTimesAchivementTriggered() {
@@ -211,74 +174,36 @@ public class Login {
     }
 
     public int getCharacterUsage(CharacterEnum characterEnum) {
-        switch (characterEnum) {
-            case SUBIYA:
-                return getChar0();
-            case RAILA:
-                return getChar1();
-            case LYNX:
-                return getChar2();
-            case AISHA:
-                return getChar3();
-            case ADE:
-                return getChar4();
-            case RAVAGE:
-                return getChar5();
-            case JONAH:
-                return getChar6();
-            case ADAM:
-                return getChar7();
-            case NOVA_ADAM:
-                return getChar8();
-            case AZARIA:
-                return getChar9();
-            case SORROWE:
-                return getChar10();
-            case THING:
-                return getChar11();
-            default:
-                return 0;
-        }
+        return switch (characterEnum) {
+            case SUBIYA -> getChar0();
+            case RAILA -> getChar1();
+            case LYNX -> getChar2();
+            case AISHA -> getChar3();
+            case ADE -> getChar4();
+            case RAVAGE -> getChar5();
+            case JONAH -> getChar6();
+            case ADAM -> getChar7();
+            case NOVA_ADAM -> getChar8();
+            case AZARIA -> getChar9();
+            case SORROWE -> getChar10();
+            case THING -> getChar11();
+        };
     }
 
     public void setCharacterUsage(CharacterEnum characterEnum) {
         switch (characterEnum) {
-            case SUBIYA:
-                setChar0(getChar0() + 1);
-                break;
-            case RAILA:
-                setChar1(getChar1() + 1);
-                break;
-            case LYNX:
-                setChar2(getChar2() + 1);
-                break;
-            case AISHA:
-                setChar3(getChar3() + 1);
-                break;
-            case ADE:
-                setChar4(getChar4() + 1);
-                break;
-            case RAVAGE:
-                setChar5(getChar5() + 1);
-                break;
-            case JONAH:
-                setChar6(getChar6() + 1);
-                break;
-            case ADAM:
-                setChar7(getChar7() + 1);
-                break;
-            case NOVA_ADAM:
-                setChar8(getChar8() + 1);
-                break;
-            case AZARIA:
-                setChar9(getChar9() + 1);
-                break;
-            case SORROWE:
-                setChar10(getChar10() + 1);
-                break;
-            case THING:
-                setChar11(getChar11() + 1);
-                break;
+            case SUBIYA -> setChar0(getChar0() + 1);
+            case RAILA -> setChar1(getChar1() + 1);
+            case LYNX -> setChar2(getChar2() + 1);
+            case AISHA -> setChar3(getChar3() + 1);
+            case ADE -> setChar4(getChar4() + 1);
+            case RAVAGE -> setChar5(getChar5() + 1);
+            case JONAH -> setChar6(getChar6() + 1);
+            case ADAM -> setChar7(getChar7() + 1);
+            case NOVA_ADAM -> setChar8(getChar8() + 1);
+            case AZARIA -> setChar9(getChar9() + 1);
+            case SORROWE -> setChar10(getChar10() + 1);
+            case THING -> setChar11(getChar11() + 1);
         }
     }
 
@@ -443,6 +368,7 @@ public class Login {
     }
 
     /** @deprecated use {@link #setAudioOn(boolean)} */
+    @Deprecated
     @JsonIgnore
     public void setIsAudioOn(final boolean audioOn) {
         this.audioOn = audioOn;
@@ -481,25 +407,17 @@ public class Login {
     }
 
     public String getTimeLimitString() {
-        switch (getTimeLimit()) {
-            case INFINITE_TIME:
-                return Language.get().get(424);
-            case 180:
-                return "180";
-            case 150:
-                return "150";
-            case 120:
-                return "120";
-            case 90:
-                return "90";
-            case 60:
-                return "60";
-            case 45:
-                return "45";
-            case 30:
-                return "30";
-        }
-        return "90";
+        return switch (getTimeLimit()) {
+            case INFINITE_TIME -> Language.get().get(424);
+            case 180 -> "180";
+            case 150 -> "150";
+            case 120 -> "120";
+            case 90 -> "90";
+            case 60 -> "60";
+            case 45 -> "45";
+            case 30 -> "30";
+            default -> "90";
+        };
     }
 
     public String getGraphicsSetting() {
@@ -680,38 +598,28 @@ public class Login {
      * @return difficulty array index
      */
     public int resolveDifficultyInt() {
-        var login = State.get().getLogin();
-        if (login.getDifficulty() == diff0)
-            return 0;
-        if (login.getDifficulty() == diff1)
-            return 1;
-        if (login.getDifficulty() == diff2)
-            return 2;
-        if (login.getDifficulty() == diff3)
-            return 3;
-        if (login.getDifficulty() == diff4)
-            return 4;
-        if (login.getDifficulty() == diff5)
-            return 5;
-        return -1;
+        return switch (getDifficulty()) {
+            case DIFF_0 -> 0;
+            case DIFF_1 -> 1;
+            case DIFF_2 -> 2;
+            case DIFF_3 -> 3;
+            case DIFF_4 -> 4;
+            case DIFF_5 -> 5;
+            default -> -1;
+        };
     }
 
     public String resolveDifficulty() {
-        switch (resolveDifficultyInt()) {
-            case 0:
-                return Language.get().get(26);
-            case 1:
-                return Language.get().get(27);
-            case 2:
-                return Language.get().get(28);
-            case 3:
-                return Language.get().get(29);
-            case 4:
-                return Language.get().get(30);
-            case 5:
-                return Language.get().get(31);
-        }
-        return Language.get().get(26);
+        var language = Language.get();
+        return switch (resolveDifficultyInt()) {
+            case 0 -> language.get(26);
+            case 1 -> language.get(27);
+            case 2 -> language.get(28);
+            case 3 -> language.get(29);
+            case 4 -> language.get(30);
+            case 5 -> language.get(31);
+            default -> language.get(26);
+        };
     }
 
     public void setTextSpeed(String dex) {
@@ -723,21 +631,17 @@ public class Login {
     }
 
     public int getTextSpeedInt() {
-        switch (txtSpeed) {
-            case "Insane":
-                return 50;
-            case "Fast":
-                return 100;
-            case "Normal":
-                return 200;
-            case "Slow":
-                return 250;
-        }
-        return 200;
+        return switch (txtSpeed) {
+            case "Insane" -> 50;
+            case "Fast" -> 100;
+            case "Normal" -> 200;
+            case "Slow" -> 250;
+            default -> 200;
+        };
     }
 
     public int getDifficultyConstant(int dex) {
-        return difficultyArray[dex];
+        return DIFFICULTY_STEPS[dex];
     }
 
     public int mostPopularChar() {

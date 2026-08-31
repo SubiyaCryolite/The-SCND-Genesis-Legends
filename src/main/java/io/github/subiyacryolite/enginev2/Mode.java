@@ -51,8 +51,6 @@ public abstract class Mode implements UiScreen {
     /** Legacy “1.32s” hold used by gameplay achievement/fury cool-down. */
     protected static final double DT_1320 = 1.32;
 
-    protected int screenWidth = 852;
-    protected int screenHeight = 480;
     protected float opacity;
     protected boolean loadAssets = true;
     protected boolean paused;
