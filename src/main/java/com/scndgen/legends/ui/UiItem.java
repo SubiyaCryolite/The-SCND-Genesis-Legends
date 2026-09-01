@@ -54,7 +54,7 @@ public class UiItem {
 
     public void addJenesisEvent(Event event) {
         event.source = this;
-        event.source.isSelectable(true);
+        isSelectable(true);
         events.add(event);
     }
 
@@ -63,38 +63,46 @@ public class UiItem {
         events.remove(event);
     }
 
+    public final void dispatch(UiAction action) {
+        switch (action) {
+            case HOVER -> hovered = true;
+            case LEAVE -> hovered = false;
+            default -> {
+            }
+        }
+        events.forEach(event -> event.on(action));
+    }
+
     public final void hover() {
-        hovered = true;
-        events.forEach(Event::onHover);
+        dispatch(UiAction.HOVER);
     }
 
     public final void leave() {
-        hovered = false;
-        events.forEach(Event::onLeave);
+        dispatch(UiAction.LEAVE);
     }
 
     public final void accept() {
-        events.forEach(Event::onAccept);
+        dispatch(UiAction.ACCEPT);
     }
 
     public final void backCancel() {
-        events.forEach(Event::onBackCancel);
+        dispatch(UiAction.BACK_CANCEL);
     }
 
     public final void left() {
-        events.forEach(Event::onLeft);
+        dispatch(UiAction.LEFT);
     }
 
     public final void right() {
-        events.forEach(Event::onRight);
+        dispatch(UiAction.RIGHT);
     }
 
     public final void up() {
-        events.forEach(Event::onUp);
+        dispatch(UiAction.UP);
     }
 
     public final void down() {
-        events.forEach(Event::onDown);
+        dispatch(UiAction.DOWN);
     }
 
     public boolean isSelectable() {

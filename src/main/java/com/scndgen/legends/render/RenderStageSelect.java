@@ -32,6 +32,8 @@ import com.scndgen.legends.mode.StageSelect;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiItem;
+
+import static com.scndgen.legends.ui.UiAction.HOVER;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
@@ -65,22 +67,6 @@ public class RenderStageSelect extends StageSelect {
     private final NvgImage[] stagePrev = new NvgImage[numberOfStages];
     private int hoveredStageIndex = -1;
     private Stage hoveredStage;
-    private final UiItem ibexHill;
-    private final UiItem chelstonCityDocks;
-    private final UiItem desertRuins;
-    private final UiItem chelstonCityStreets;
-    private final UiItem ibexHillNight;
-    private final UiItem scorchedRuins;
-    private final UiItem frozenWilderness;
-    private final UiItem distantIsle;
-    private final UiItem hiddenCave;
-    private final UiItem africanVillage;
-    private final UiItem apocalypto;
-    private final UiItem distantIsleNight;
-    private final UiItem desertRuinsNight;
-    private final UiItem scorchedRuinsNight;
-    private final UiItem hiddenCaveNight;
-    private final UiItem random;
     private Audio menuMusic;
 
     public void onEnterMode() {
@@ -94,150 +80,70 @@ public class RenderStageSelect extends StageSelect {
 
 
     public RenderStageSelect() {
-        Event commonEvent = new Event() {
-            public void onHover() {
-                animateCaption();
-            }
-
-            public void onAccept() {
-                var networkManager = NetworkManager.get();
-                if (!(networkManager.isOffline() || networkManager.isServer())) {
-                    return;
+        Event commonEvent = Event.of(action -> {
+            switch (action) {
+                case HOVER -> animateCaption();
+                case ACCEPT -> {
+                    var networkManager = NetworkManager.get();
+                    if (!(networkManager.isOffline() || networkManager.isServer())) {
+                        return;
+                    }
+                    var gameCommandBus = GameCommandBus.get();
+                    gameCommandBus.dispatch(new GameCommand.SelectStage(hoveredStage));
+                    var subMode = ScndGenLegends.get().getSubMode();
+                    if (subMode == SubMode.STORY_MODE
+                            || subMode == SubMode.SINGLE_PLAYER
+                            || subMode == SubMode.LAN_HOST
+                            || subMode == SubMode.WATCH) {
+                        gameCommandBus.dispatch(new GameCommand.StartMatch());
+                    }
                 }
-                var gameCommandBus = GameCommandBus.get();
-                gameCommandBus.dispatch(new GameCommand.SelectStage(hoveredStage));
-                var subMode = ScndGenLegends.get().getSubMode();
-                if (subMode == SubMode.STORY_MODE
-                        || subMode == SubMode.SINGLE_PLAYER
-                        || subMode == SubMode.LAN_HOST
-                        || subMode == SubMode.WATCH) {
-                    gameCommandBus.dispatch(new GameCommand.StartMatch());
+                case BACK_CANCEL -> {
+                    var networkManager = NetworkManager.get();
+                    var gameCommandBus = GameCommandBus.get();
+                    if (networkManager.isOffline()) {
+                        gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(true));
+                    } else if (networkManager.isServer()) {
+                        gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(false));
+                    }
+                }
+                default -> {
                 }
             }
+        });
 
-            public void onBackCancel() {
-                var networkManager = NetworkManager.get();
-                var gameCommandBus = GameCommandBus.get();
-                if (networkManager.isOffline()) {
-                    gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(true));
-                } else if (networkManager.isServer()) {
-                    gameCommandBus.dispatch(new GameCommand.GoToCharacterSelect(false));
-                }
-            }
-        };
-
-
-        (ibexHill = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.IBEX_HILL;
-            }
-        });
-        ibexHill.addJenesisEvent(commonEvent);
-        ///////////////////
-        (chelstonCityDocks = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.CHELSTON_CITY_DOCKS;
-            }
-        });
-        chelstonCityDocks.addJenesisEvent(commonEvent);
-        ///////////////////
-        (desertRuins = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.DESERT_RUINS;
-            }
-        });
-        desertRuins.addJenesisEvent(commonEvent);
-        ///////////////////
-        (chelstonCityStreets = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.CHELSTON_CITY_STREETS;
-            }
-        });
-        chelstonCityStreets.addJenesisEvent(commonEvent);
-        ///////////////////
-        (ibexHillNight = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.IBEX_HILL_NIGHT;
-            }
-        });
-        ibexHillNight.addJenesisEvent(commonEvent);
-        ///////////////////
-        (scorchedRuins = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.SCORCHED_RUINS;
-            }
-        });
-        scorchedRuins.addJenesisEvent(commonEvent);
-        ///////////////////
-        (frozenWilderness = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.FROZEN_WILDERNESS;
-            }
-        });
-        frozenWilderness.addJenesisEvent(commonEvent);
-        ///////////////////
-        (distantIsle = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.DISTANT_ISLE;
-            }
-        });
-        distantIsle.addJenesisEvent(commonEvent);
-        ///////////////////
-        (hiddenCave = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.HIDDEN_CAVE;
-            }
-        });
-        hiddenCave.addJenesisEvent(commonEvent);
-        ///////////////////
-        (africanVillage = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.AFRICAN_VILLAGE;
-            }
-        });
-        africanVillage.addJenesisEvent(commonEvent);
-        ///////////////////
-        (apocalypto = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.APOCALYPTO;
-            }
-        });
-        apocalypto.addJenesisEvent(commonEvent);
-        ///////////////////
-        (distantIsleNight = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.DISTANT_ISLE_NIGHT;
-            }
-        });
-        distantIsleNight.addJenesisEvent(commonEvent);
-        ///////////////////
-        (desertRuinsNight = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.DESERT_RUINS_NIGHT;
-            }
-        });
-        desertRuinsNight.addJenesisEvent(commonEvent);
-        ///////////////////
-        (scorchedRuinsNight = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.SCORCHED_RUINS_NIGHT;
-            }
-        });
-        scorchedRuinsNight.addJenesisEvent(commonEvent);
-        ///////////////////
-        (hiddenCaveNight = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.HIDDEN_CAVE_NIGHT;
-            }
-        });
-        hiddenCaveNight.addJenesisEvent(commonEvent);
-        ///////////////////
-        (random = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredStage = Stage.RANDOM;
-            }
-        });
-        random.addJenesisEvent(commonEvent);
+        UiItem ibexHill;
+        bindStage(ibexHill = new UiItem(), Stage.IBEX_HILL, commonEvent);
+        UiItem chelstonCityDocks;
+        bindStage(chelstonCityDocks = new UiItem(), Stage.CHELSTON_CITY_DOCKS, commonEvent);
+        UiItem desertRuins;
+        bindStage(desertRuins = new UiItem(), Stage.DESERT_RUINS, commonEvent);
+        UiItem chelstonCityStreets;
+        bindStage(chelstonCityStreets = new UiItem(), Stage.CHELSTON_CITY_STREETS, commonEvent);
+        UiItem ibexHillNight;
+        bindStage(ibexHillNight = new UiItem(), Stage.IBEX_HILL_NIGHT, commonEvent);
+        UiItem scorchedRuins;
+        bindStage(scorchedRuins = new UiItem(), Stage.SCORCHED_RUINS, commonEvent);
+        UiItem frozenWilderness;
+        bindStage(frozenWilderness = new UiItem(), Stage.FROZEN_WILDERNESS, commonEvent);
+        UiItem distantIsle;
+        bindStage(distantIsle = new UiItem(), Stage.DISTANT_ISLE, commonEvent);
+        UiItem hiddenCave;
+        bindStage(hiddenCave = new UiItem(), Stage.HIDDEN_CAVE, commonEvent);
+        UiItem africanVillage;
+        bindStage(africanVillage = new UiItem(), Stage.AFRICAN_VILLAGE, commonEvent);
+        UiItem apocalypto;
+        bindStage(apocalypto = new UiItem(), Stage.APOCALYPTO, commonEvent);
+        UiItem distantIsleNight;
+        bindStage(distantIsleNight = new UiItem(), Stage.DISTANT_ISLE_NIGHT, commonEvent);
+        UiItem desertRuinsNight;
+        bindStage(desertRuinsNight = new UiItem(), Stage.DESERT_RUINS_NIGHT, commonEvent);
+        UiItem scorchedRuinsNight;
+        bindStage(scorchedRuinsNight = new UiItem(), Stage.SCORCHED_RUINS_NIGHT, commonEvent);
+        UiItem hiddenCaveNight;
+        bindStage(hiddenCaveNight = new UiItem(), Stage.HIDDEN_CAVE_NIGHT, commonEvent);
+        UiItem random;
+        bindStage(random = new UiItem(), Stage.RANDOM, commonEvent);
 
         uiElements.put(Stage.IBEX_HILL.index(), ibexHill);
         uiElements.put(Stage.CHELSTON_CITY_DOCKS.index(), chelstonCityDocks);
@@ -393,6 +299,11 @@ public class RenderStageSelect extends StageSelect {
     public void newInstance() {
         super.newInstance();
         stageSelected = false;
+    }
+
+    private void bindStage(UiItem item, Stage stage, Event commonEvent) {
+        item.addJenesisEvent(Event.on(HOVER, () -> hoveredStage = stage));
+        item.addJenesisEvent(commonEvent);
     }
 
 }

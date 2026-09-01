@@ -30,7 +30,10 @@ import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiAction;
 import com.scndgen.legends.ui.UiItem;
+
+import static com.scndgen.legends.ui.UiAction.HOVER;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
@@ -89,116 +92,34 @@ public class RenderStoryMenu extends StoryMenu {
         }
         //=======================================
         Event commonEvent = new Event() {
-            public void onHover() {
-                animateCaption();
-            }
-
-            public void onAccept() {
-                selectScene();
-            }
-
-            public void onBackCancel() {
-                ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
-            }
-
             @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-
-            @Override
-            public void onLeft() {
-                setActiveItem(source.getLeft());
-            }
-
-            @Override
-            public void onRight() {
-                setActiveItem(source.getRight());
+            public void on(UiAction action) {
+                switch (action) {
+                    case HOVER -> animateCaption();
+                    case ACCEPT -> selectScene();
+                    case BACK_CANCEL -> ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                    case DOWN -> setActiveItem(source.getDown());
+                    case UP -> setActiveItem(source.getUp());
+                    case LEFT -> setActiveItem(source.getLeft());
+                    case RIGHT -> setActiveItem(source.getRight());
+                    default -> {
+                    }
+                }
             }
         };
-        (scene1 = new UiItem()).addJenesisEvent(commonEvent);
-        scene1.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 0;
-            }
-        });
-        (scene2 = new UiItem()).addJenesisEvent(commonEvent);
-        scene2.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 1;
-            }
-        });
-        (scene3 = new UiItem()).addJenesisEvent(commonEvent);
-        scene3.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 2;
-            }
-        });
-        (scene4 = new UiItem()).addJenesisEvent(commonEvent);
-        scene4.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 3;
-            }
-        });
-        (scene5 = new UiItem()).addJenesisEvent(commonEvent);
-        scene5.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 4;
-            }
-        });
-        (scene6 = new UiItem()).addJenesisEvent(commonEvent);
-        scene6.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 5;
-            }
-        });
-        (scene7 = new UiItem()).addJenesisEvent(commonEvent);
-        scene7.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 6;
-            }
-        });
-        (scene8 = new UiItem()).addJenesisEvent(commonEvent);
-        scene8.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 7;
-            }
-        });
-        (scene9 = new UiItem()).addJenesisEvent(commonEvent);
-        scene9.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 8;
-            }
-        });
-        (scene10 = new UiItem()).addJenesisEvent(commonEvent);
-        scene10.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 9;
-            }
-        });
-        (scene11 = new UiItem()).addJenesisEvent(commonEvent);
-        scene11.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 10;
-            }
-        });
-        (scene12 = new UiItem()).addJenesisEvent(commonEvent);
-        scene12.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 11;
-            }
-        });
-        (scene13 = new UiItem()).addJenesisEvent(commonEvent);
-        scene13.addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredScene = 12;
-            }
-        });
+        bindScene(scene1 = new UiItem(), 0, commonEvent);
+        bindScene(scene2 = new UiItem(), 1, commonEvent);
+        bindScene(scene3 = new UiItem(), 2, commonEvent);
+        bindScene(scene4 = new UiItem(), 3, commonEvent);
+        bindScene(scene5 = new UiItem(), 4, commonEvent);
+        bindScene(scene6 = new UiItem(), 5, commonEvent);
+        bindScene(scene7 = new UiItem(), 6, commonEvent);
+        bindScene(scene8 = new UiItem(), 7, commonEvent);
+        bindScene(scene9 = new UiItem(), 8, commonEvent);
+        bindScene(scene10 = new UiItem(), 9, commonEvent);
+        bindScene(scene11 = new UiItem(), 10, commonEvent);
+        bindScene(scene12 = new UiItem(), 11, commonEvent);
+        bindScene(scene13 = new UiItem(), 12, commonEvent);
         uiElements.put(0, scene1);
         uiElements.put(1, scene2);
         uiElements.put(2, scene3);
@@ -324,5 +245,10 @@ public class RenderStoryMenu extends StoryMenu {
     @Override
     public void mouseClicked(float x, float y) {
         onAccept();
+    }
+
+    private void bindScene(UiItem item, int sceneIndex, Event commonEvent) {
+        item.addJenesisEvent(commonEvent);
+        item.addJenesisEvent(Event.on(HOVER, () -> hoveredScene = sceneIndex));
     }
 }

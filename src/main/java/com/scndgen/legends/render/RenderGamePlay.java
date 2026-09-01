@@ -34,6 +34,7 @@ import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
+import com.scndgen.legends.ui.UiAction;
 import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DesignViewport;
@@ -78,199 +79,30 @@ public class RenderGamePlay extends GamePlay {
 
 
     public RenderGamePlay() {
-        (fury = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onAccept() {
-                requestCharacterFury();
-            }
+        fury = new UiItem();
 
-            @Override
-            public void onHover() {
-                setActiveItem(fury);
+        (attackOne = new UiItem()).addJenesisEvent(attackSlot(0, 0, physicalAttacks));
+        (attackTwo = new UiItem()).addJenesisEvent(attackSlot(0, 1, physicalAttacks));
+        (attackThree = new UiItem()).addJenesisEvent(attackSlot(0, 2, physicalAttacks));
+        (attackFour = new UiItem()).addJenesisEvent(attackSlot(0, 3, physicalAttacks));
+        (attackFive = new UiItem()).addJenesisEvent(attackSlot(1, 0, celestiaAttacks));
+        (attackSix = new UiItem()).addJenesisEvent(attackSlot(1, 1, celestiaAttacks));
+        (attackSeven = new UiItem()).addJenesisEvent(attackSlot(1, 2, celestiaAttacks));
+        (attackEight = new UiItem()).addJenesisEvent(attackSlot(1, 3, celestiaAttacks));
+        (attackNine = new UiItem()).addJenesisEvent(attackSlot(2, 0, itemAttacks));
+        (attackTen = new UiItem()).addJenesisEvent(attackSlot(2, 1, itemAttacks));
+        (attackEleven = new UiItem()).addJenesisEvent(attackSlot(2, 2, itemAttacks));
+        (attackTwelve = new UiItem()).addJenesisEvent(attackSlot(2, 3, itemAttacks));
+        fury.addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case ACCEPT -> requestCharacterFury();
+                case HOVER -> setActiveItem(fury);
+                case BACK_CANCEL -> paused = !paused;
+                case LEFT, RIGHT, UP, DOWN -> setActiveItem(attackOne);
+                default -> {
+                }
             }
-
-            @Override
-            public void onBackCancel() {
-                paused = !paused;
-            }
-
-            @Override
-            public void onLeft() {
-                setActiveItem(attackOne);
-            }
-
-            @Override
-            public void onRight() {
-                setActiveItem(attackOne);
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(attackOne);
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(attackOne);
-            }
-        });
-
-        (attackOne = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 0;
-                rowIndex = 0;
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackTwo = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 0;
-                rowIndex = 1;
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackThree = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 0;
-                rowIndex = 2;
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackFour = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 0;
-                rowIndex = 3;
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                physicalAttacks[rowIndex] = physicalAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackFive = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 1;
-                rowIndex = 0;
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackSix = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 1;
-                rowIndex = 1;
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackSeven = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 1;
-                rowIndex = 2;
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackEight = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 1;
-                rowIndex = 3;
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                celestiaAttacks[rowIndex] = celestiaAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackNine = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 2;
-                rowIndex = 0;
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackTen = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 2;
-                rowIndex = 1;
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackEleven = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 2;
-                rowIndex = 2;
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
-            }
-        });
-        (attackTwelve = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                columnIndex = 2;
-                rowIndex = 3;
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                itemAttacks[rowIndex] = itemAttacks[rowIndex].toLowerCase();
-            }
-        });
+        }));
         fury.addJenesisEvent(new PauseAndNavigate());
         attackOne.addJenesisEvent(new PauseAndNavigate());
         attackTwo.addJenesisEvent(new PauseAndNavigate());
@@ -1143,66 +975,63 @@ public class RenderGamePlay extends GamePlay {
         }
     }
 
+    private Event attackSlot(int column, int row, String[] labels) {
+        return Event.of(action -> {
+            switch (action) {
+                case HOVER -> {
+                    columnIndex = column;
+                    rowIndex = row;
+                    labels[row] = labels[row].toUpperCase();
+                }
+                case LEAVE -> labels[row] = labels[row].toLowerCase();
+                default -> {
+                }
+            }
+        });
+    }
+
     private class PauseAndNavigate extends Event {
         @Override
-        public void onAccept() {
-            if (!gameOver && !playingCutscene) {
-                if (safeToSelect) {
-                    Audio sound = new Audio(AudioConstants.selectSound(), AudioType.SOUND, false);
-                    sound.play();
-                    activeAttack = (columnIndex * 4) + (rowIndex + 1);
-                    characterAttacks.add(activeAttack); // count initially negative 1, add one to get to index 0
-                    checkStatus();
-                } else {
-                    RenderCharacterSelection.get().errorSound();
-                }
-            } else if (playingCutscene) {
-                StoryMode.get().onAccept();
-            } else if (gameOver) {
-                updatePlayerProfile();
-                switch (ScndGenLegends.get().getSubMode()) {
-                    case SINGLE_PLAYER:
-                        closingThread(true);
-                        break;
-                    case STORY_MODE:
+        public void on(UiAction action) {
+            switch (action) {
+                case ACCEPT -> {
+                    if (!gameOver && !playingCutscene) {
+                        if (safeToSelect) {
+                            Audio sound = new Audio(AudioConstants.selectSound(), AudioType.SOUND, false);
+                            sound.play();
+                            activeAttack = (columnIndex * 4) + (rowIndex + 1);
+                            characterAttacks.add(activeAttack); // count initially negative 1, add one to get to index 0
+                            checkStatus();
+                        } else {
+                            RenderCharacterSelection.get().errorSound();
+                        }
+                    } else if (playingCutscene) {
                         StoryMode.get().onAccept();
-                        break;
-                    case LAN_HOST:
-                        GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
-                        break;
+                    } else if (gameOver) {
+                        updatePlayerProfile();
+                        switch (ScndGenLegends.get().getSubMode()) {
+                            case SINGLE_PLAYER -> closingThread(true);
+                            case STORY_MODE -> StoryMode.get().onAccept();
+                            case LAN_HOST -> GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
+                            default -> {
+                            }
+                        }
+                    }
                 }
-
+                case BACK_CANCEL -> {
+                    if (!gameOver && !playingCutscene) {
+                        onTogglePause();
+                    } else if (playingCutscene) {
+                        StoryMode.get().onBackCancel();
+                    }
+                }
+                case LEFT -> setActiveItem(source.getLeft());
+                case RIGHT -> setActiveItem(source.getRight());
+                case UP -> setActiveItem(source.getUp());
+                case DOWN -> setActiveItem(source.getDown());
+                default -> {
+                }
             }
-        }
-
-        @Override
-        public void onBackCancel() {
-            //closeTheServer();
-            if (!gameOver && !playingCutscene) {
-                onTogglePause();
-            } else if (playingCutscene) {
-                StoryMode.get().onBackCancel();
-            }
-        }
-
-        @Override
-        public void onLeft() {
-            setActiveItem(source.getLeft());
-        }
-
-        @Override
-        public void onRight() {
-            setActiveItem(source.getRight());
-        }
-
-        @Override
-        public void onUp() {
-            setActiveItem(source.getUp());
-        }
-
-        @Override
-        public void onDown() {
-            setActiveItem(source.getDown());
         }
     }
 }

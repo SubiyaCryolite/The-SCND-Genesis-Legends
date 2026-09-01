@@ -21,47 +21,16 @@
  **************************************************************************/
 package com.scndgen.legends.ui;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-
 /**
- * @author ndana
+ * Input and focus actions dispatched to {@link Event#on(UiAction)}.
  */
-public abstract class Event {
-
-    public UiItem source;
-
-    /**
-     * Handle a control or focus action for {@link #source}.
-     */
-    public abstract void on(UiAction action);
-
-    /**
-     * Listener that runs only for a single action (typical hover-only tiles).
-     */
-    public static Event on(UiAction type, Runnable handler) {
-        Objects.requireNonNull(type, "type");
-        Objects.requireNonNull(handler, "handler");
-        return new Event() {
-            @Override
-            public void on(UiAction action) {
-                if (action == type) {
-                    handler.run();
-                }
-            }
-        };
-    }
-
-    /**
-     * Listener that receives every action; use a switch in the consumer.
-     */
-    public static Event of(Consumer<UiAction> handler) {
-        Objects.requireNonNull(handler, "handler");
-        return new Event() {
-            @Override
-            public void on(UiAction action) {
-                handler.accept(action);
-            }
-        };
-    }
+public enum UiAction {
+    ACCEPT,
+    BACK_CANCEL,
+    HOVER,
+    LEAVE,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
 }

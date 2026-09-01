@@ -74,343 +74,210 @@ public class RenderMainMenu extends MainMenu {
         strExit = Language.get().get(315).toLowerCase();
 
 
-        (uiTutorial = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strTutorial = strTutorial.toUpperCase();
+        (uiTutorial = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strTutorial = strTutorial.toUpperCase();
+                case LEAVE -> strTutorial = strTutorial.toLowerCase();
+                case ACCEPT -> {
+                    if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
+                        setMainMenuOverlay(MainMenuOverlay.TUTORIAL);
+                        tutorial.beginTutorial();
+                    } else {
+                        tutorial.onAccept();
+                    }
+                }
+                case BACK_CANCEL -> {
+                    if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
+                        return;
+                    }
+                    tutorial.onBackCancel();
+                }
+                case LEFT -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
+                        return;
+                    }
+                    tutorial.onLeft();
+                }
+                case RIGHT -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
+                        return;
+                    }
+                    tutorial.onRight();
+                }
+                case DOWN -> setActiveItem(uiTutorial.getDown());
+                case UP -> setActiveItem(uiTutorial.getUp());
             }
+        }));
 
-            @Override
-            public void onLeave() {
-                strTutorial = strTutorial.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
-                    setMainMenuOverlay(MainMenuOverlay.TUTORIAL);
-                    tutorial.beginTutorial();
-                } else {
-                    tutorial.onAccept();
+        (uiStoryMode = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strStoryMode = strStoryMode.toUpperCase();
+                case LEAVE -> strStoryMode = strStoryMode.toLowerCase();
+                case ACCEPT -> {
+                    var scndGenLegends = ScndGenLegends.get();
+                    scndGenLegends.setSubMode(SubMode.STORY_MODE);
+                    scndGenLegends.loadMode(ModeEnum.STORY_SELECT_SCREEN);
+                }
+                case DOWN -> setActiveItem(uiStoryMode.getDown());
+                case UP -> setActiveItem(uiStoryMode.getUp());
+                default -> {
                 }
             }
+        }));
 
-            @Override
-            public void onBackCancel() {
-                if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) return;
-                tutorial.onBackCancel();
-            }
-
-            @Override
-            public void onLeft() {
-                if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) return;
-                tutorial.onLeft();
-            }
-
-            @Override
-            public void onRight() {
-                if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) return;
-                tutorial.onRight();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-
-        (uiStoryMode = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strStoryMode = strStoryMode.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strStoryMode = strStoryMode.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                var scndGenLegends = ScndGenLegends.get();
-                scndGenLegends.setSubMode(SubMode.STORY_MODE);
-                scndGenLegends.loadMode(ModeEnum.STORY_SELECT_SCREEN);
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-
-        (uiQuickMatch = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strQuickMatch = strQuickMatch.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strQuickMatch = strQuickMatch.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                var scndGenLegends = ScndGenLegends.get();
-                scndGenLegends.setSubMode(SubMode.SINGLE_PLAYER);
-                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-
-        (uiHostLanMatch = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strHostLanMatch = strHostLanMatch.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strHostLanMatch = strHostLanMatch.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                var scndGenLegends = ScndGenLegends.get();
-                scndGenLegends.setSubMode(SubMode.LAN_HOST);
-                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-
-        (uiJoinLanMatch = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strJoinLanMatch = strJoinLanMatch.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strJoinLanMatch = strJoinLanMatch.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                var scndGenLegends = ScndGenLegends.get();
-                scndGenLegends.setSubMode(SubMode.LAN_CLIENT);
-                scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-
-        (uiAchievementLocker = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strAchievementLocker = strAchievementLocker.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strAchievementLocker = strAchievementLocker.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
-                    achievementLocker.onAccept();
-                else
-                    setMainMenuOverlay(MainMenuOverlay.ACHIEVEMENT_LOCKER);
-            }
-
-            @Override
-            public void onBackCancel() {
-                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
-                    achievementLocker.onBackCancel();
-            }
-
-            @Override
-            public void onDown() {
-                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
-                    achievementLocker.onDown();
-                else {
-                    setActiveItem(source.getDown());
+        (uiQuickMatch = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strQuickMatch = strQuickMatch.toUpperCase();
+                case LEAVE -> strQuickMatch = strQuickMatch.toLowerCase();
+                case ACCEPT -> {
+                    var scndGenLegends = ScndGenLegends.get();
+                    scndGenLegends.setSubMode(SubMode.SINGLE_PLAYER);
+                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                }
+                case DOWN -> setActiveItem(uiQuickMatch.getDown());
+                case UP -> setActiveItem(uiQuickMatch.getUp());
+                default -> {
                 }
             }
+        }));
 
-            @Override
-            public void onUp() {
-                if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER)
-                    achievementLocker.onUp();
-                else {
-                    setActiveItem(source.getUp());
+        (uiHostLanMatch = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strHostLanMatch = strHostLanMatch.toUpperCase();
+                case LEAVE -> strHostLanMatch = strHostLanMatch.toLowerCase();
+                case ACCEPT -> {
+                    var scndGenLegends = ScndGenLegends.get();
+                    scndGenLegends.setSubMode(SubMode.LAN_HOST);
+                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                }
+                case DOWN -> setActiveItem(uiHostLanMatch.getDown());
+                case UP -> setActiveItem(uiHostLanMatch.getUp());
+                default -> {
                 }
             }
-        });
+        }));
 
-        (uiYourStats = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onHover() {
-                strYourStats = strYourStats.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strYourStats = strYourStats.toLowerCase();
-            }
-
-            @Override
-            public void onAccept() {
-                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
-                    achievementLocker.onAccept();
-                else
-                    setMainMenuOverlay(MainMenuOverlay.STATISTICS);
-            }
-
-            @Override
-            public void onBackCancel() {
-                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
-                    achievementLocker.onBackCancel();
-            }
-
-            @Override
-            public void onDown() {
-                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
-                    achievementLocker.onDown();
-                else {
-                    setActiveItem(source.getDown());
+        (uiJoinLanMatch = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strJoinLanMatch = strJoinLanMatch.toUpperCase();
+                case LEAVE -> strJoinLanMatch = strJoinLanMatch.toLowerCase();
+                case ACCEPT -> {
+                    var scndGenLegends = ScndGenLegends.get();
+                    scndGenLegends.setSubMode(SubMode.LAN_CLIENT);
+                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                }
+                case DOWN -> setActiveItem(uiJoinLanMatch.getDown());
+                case UP -> setActiveItem(uiJoinLanMatch.getUp());
+                default -> {
                 }
             }
+        }));
 
-            @Override
-            public void onUp() {
-                if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS)
-                    achievementLocker.onUp();
-                else {
-                    setActiveItem(source.getUp());
+        (uiAchievementLocker = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strAchievementLocker = strAchievementLocker.toUpperCase();
+                case LEAVE -> strAchievementLocker = strAchievementLocker.toLowerCase();
+                case ACCEPT -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
+                        achievementLocker.onAccept();
+                    } else {
+                        setMainMenuOverlay(MainMenuOverlay.ACHIEVEMENT_LOCKER);
+                    }
+                }
+                case BACK_CANCEL -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
+                        achievementLocker.onBackCancel();
+                    }
+                }
+                case DOWN -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
+                        achievementLocker.onDown();
+                    } else {
+                        setActiveItem(uiAchievementLocker.getDown());
+                    }
+                }
+                case UP -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.ACHIEVEMENT_LOCKER) {
+                        achievementLocker.onUp();
+                    } else {
+                        setActiveItem(uiAchievementLocker.getUp());
+                    }
+                }
+                default -> {
                 }
             }
-        });
-        (uiOptions = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onAccept() {
-                engine().ui().push(new OptionsOverlay(engine()));
-            }
+        }));
 
-            @Override
-            public void onHover() {
-                strOptions = strOptions.toUpperCase();
+        (uiYourStats = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case HOVER -> strYourStats = strYourStats.toUpperCase();
+                case LEAVE -> strYourStats = strYourStats.toLowerCase();
+                case ACCEPT -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS) {
+                        achievementLocker.onAccept();
+                    } else {
+                        setMainMenuOverlay(MainMenuOverlay.STATISTICS);
+                    }
+                }
+                case BACK_CANCEL -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS) {
+                        achievementLocker.onBackCancel();
+                    }
+                }
+                case DOWN -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS) {
+                        achievementLocker.onDown();
+                    } else {
+                        setActiveItem(uiYourStats.getDown());
+                    }
+                }
+                case UP -> {
+                    if (getMainMenuOverlay() == MainMenuOverlay.STATISTICS) {
+                        achievementLocker.onUp();
+                    } else {
+                        setActiveItem(uiYourStats.getUp());
+                    }
+                }
+                default -> {
+                }
             }
-
-            @Override
-            public void onLeave() {
-                strOptions = strOptions.toLowerCase();
+        }));
+        (uiOptions = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case ACCEPT -> engine().ui().push(new OptionsOverlay(engine()));
+                case HOVER -> strOptions = strOptions.toUpperCase();
+                case LEAVE -> strOptions = strOptions.toLowerCase();
+                case DOWN -> setActiveItem(uiOptions.getDown());
+                case UP -> setActiveItem(uiOptions.getUp());
+                default -> {
+                }
             }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
+        }));
+        (uiControls = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case ACCEPT -> engine().ui().push(new ControlsOverlay());
+                case HOVER -> strControls = strControls.toUpperCase();
+                case LEAVE -> strControls = strControls.toLowerCase();
+                case DOWN -> setActiveItem(uiControls.getDown());
+                case UP -> setActiveItem(uiControls.getUp());
+                default -> {
+                }
             }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
+        }));
+        (uiAbout = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case ACCEPT -> engine().ui().push(new AboutOverlay());
+                case HOVER -> strAbout = strAbout.toUpperCase();
+                case LEAVE -> strAbout = strAbout.toLowerCase();
+                case DOWN -> setActiveItem(uiAbout.getDown());
+                case UP -> setActiveItem(uiAbout.getUp());
+                default -> {
+                }
             }
-        });
-        (uiControls = new UiItem()).addJenesisEvent(new Event() {
-            @Override
-            public void onAccept() {
-                engine().ui().push(new ControlsOverlay());
-            }
-
-            @Override
-            public void onHover() {
-                strControls = strControls.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strControls = strControls.toLowerCase();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-        (uiAbout = new UiItem()).addJenesisEvent(new Event() {
-
-            @Override
-            public void onAccept() {
-                engine().ui().push(new AboutOverlay());
-            }
-
-            @Override
-            public void onHover() {
-                strAbout = strAbout.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strAbout = strAbout.toLowerCase();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
-        (uiExit = new UiItem()).addJenesisEvent(new Event() {
-
-            @Override
-            public void onAccept() {
-                engine().ui().push(NkDialogs.yesNo(
+        }));
+        (uiExit = new UiItem()).addJenesisEvent(Event.of(action -> {
+            switch (action) {
+                case ACCEPT -> engine().ui().push(NkDialogs.yesNo(
                         Language.get().get(422),
                         Language.get().get(110),
                         "",
@@ -429,28 +296,14 @@ public class RenderMainMenu extends MainMenu {
                             }
                         }
                 ));
+                case HOVER -> strExit = strExit.toUpperCase();
+                case LEAVE -> strExit = strExit.toLowerCase();
+                case DOWN -> setActiveItem(uiExit.getDown());
+                case UP -> setActiveItem(uiExit.getUp());
+                default -> {
+                }
             }
-
-            @Override
-            public void onHover() {
-                strExit = strExit.toUpperCase();
-            }
-
-            @Override
-            public void onLeave() {
-                strExit = strExit.toLowerCase();
-            }
-
-            @Override
-            public void onDown() {
-                setActiveItem(source.getDown());
-            }
-
-            @Override
-            public void onUp() {
-                setActiveItem(source.getUp());
-            }
-        });
+        }));
         uiTutorial.setDown(uiStoryMode);
         uiStoryMode.setDown(uiQuickMatch);
         uiQuickMatch.setDown(uiHostLanMatch);

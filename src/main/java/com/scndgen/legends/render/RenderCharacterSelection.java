@@ -21,6 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import java.util.Calendar;
+import java.util.HashMap;
+
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
@@ -28,18 +31,21 @@ import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.command.GameCommand;
 import com.scndgen.legends.command.GameCommandBus;
-import com.scndgen.legends.enums.*;
+import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.ModeEnum;
+import com.scndgen.legends.enums.PlayerType;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.CharacterSelection;
 import com.scndgen.legends.network.NetworkManager;
 import com.scndgen.legends.ui.Event;
+import static com.scndgen.legends.ui.UiAction.HOVER;
 import com.scndgen.legends.ui.UiItem;
+
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
 import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
-
-import java.util.Calendar;
-import java.util.HashMap;
 
 /**
  * @author: Ifunga Ndana
@@ -86,157 +92,71 @@ public class RenderCharacterSelection extends CharacterSelection {
         opacInc = 0.025f;
         loadAssets = true;
         uiElements.clear();
-        Event commonEvent = new Event() {
-            public void onHover() {
-                animatePortratit();
-            }
-
-            public void onAccept() {
-                var networkManager = NetworkManager.get();
-                boolean regularMode = networkManager.isOffline() && (!selectedCharacter || !selectedOpponent);
-                boolean onlineMode = networkManager.isOnline() && !selectedCharacter;
-                if (regularMode || onlineMode) {
-                    var type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
-                    GameCommandBus.get().dispatch(new GameCommand.SelectCharacter(hoveredCharacter, type));
-                } else {
-                    // if both character and opponent selected move on to stage select after second accept
-                    if (networkManager.isOffline()
+        Event commonEvent = Event.of(action -> {
+            switch (action) {
+                case HOVER -> animatePortratit();
+                case ACCEPT -> {
+                    var networkManager = NetworkManager.get();
+                    boolean regularMode = networkManager.isOffline() && (!selectedCharacter || !selectedOpponent);
+                    boolean onlineMode = networkManager.isOnline() && !selectedCharacter;
+                    if (regularMode || onlineMode) {
+                        var type = selectedCharacter ? PlayerType.PLAYER2 : PlayerType.PLAYER1;
+                        GameCommandBus.get().dispatch(new GameCommand.SelectCharacter(hoveredCharacter, type));
+                    } else if (networkManager.isOffline()
                             || (networkManager.isServer() && selectedOpponent && selectedCharacter)) {
                         GameCommandBus.get().dispatch(new GameCommand.GoToStageSelect());
                     }
                 }
-            }
-
-            public void onBackCancel() {
-                var networkManager = NetworkManager.get();
-                if (selectedOpponent && networkManager.isOffline()) {
-                    selectedOpponent = false;
-                } else if (selectedCharacter) {
-                    selectedCharacter = false;
-                    if (networkManager.isOnline()) {
-                        GameCommandBus.get().publish(new GameCommand.DeselectOpponentSlot());
-                    }
-                } else if (networkManager.isOnline()) {
-                    ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
-                            "Yikes",
-                            "Are you sure you want to cancel this network session?",
-                            "There's no going back!",
-                            answer -> {
-                                switch (answer) {
-                                    case YES -> {
-                                        GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
-                                        networkManager.close();
-                                    }
-                                    default -> {
+                case BACK_CANCEL -> {
+                    var networkManager = NetworkManager.get();
+                    if (selectedOpponent && networkManager.isOffline()) {
+                        selectedOpponent = false;
+                    } else if (selectedCharacter) {
+                        selectedCharacter = false;
+                        if (networkManager.isOnline()) {
+                            GameCommandBus.get().publish(new GameCommand.DeselectOpponentSlot());
+                        }
+                    } else if (networkManager.isOnline()) {
+                        ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
+                                "Yikes",
+                                "Are you sure you want to cancel this network session?",
+                                "There's no going back!",
+                                answer -> {
+                                    switch (answer) {
+                                        case YES -> {
+                                            GameCommandBus.get().publish(new GameCommand.CancelConnectivity());
+                                            networkManager.close();
+                                        }
+                                        default -> {
+                                        }
                                     }
                                 }
-                            }
-                    ));
-                } else {
-                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
+                        ));
+                    } else {
+                        GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
+                    }
+                }
+                case RIGHT -> setActiveItem(activeItem.getRight());
+                case LEFT -> setActiveItem(activeItem.getLeft());
+                case UP -> setActiveItem(activeItem.getUp());
+                case DOWN -> setActiveItem(activeItem.getDown());
+                default -> {
                 }
             }
-
-            public void onRight() {
-                setActiveItem(activeItem.getRight());
-            }
-
-            public void onLeft() {
-                setActiveItem(activeItem.getLeft());
-            }
-
-            public void onUp() {
-                setActiveItem(activeItem.getUp());
-            }
-
-            public void onDown() {
-                setActiveItem(activeItem.getDown());
-            }
-        };
-
-        (subiya = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.SUBIYA;
-            }
         });
-        subiya.addJenesisEvent(commonEvent);
 
-        (raila = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.RAILA;
-            }
-        });
-        raila.addJenesisEvent(commonEvent);
-
-        (lynx = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.LYNX;
-            }
-        });
-        lynx.addJenesisEvent(commonEvent);
-
-        (aisha = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.AISHA;
-            }
-        });
-        aisha.addJenesisEvent(commonEvent);
-
-        (ade = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.ADE;
-            }
-        });
-        ade.addJenesisEvent(commonEvent);
-
-        (ravage = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.RAVAGE;
-            }
-        });
-        ravage.addJenesisEvent(commonEvent);
-
-        (jonah = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.JONAH;
-            }
-        });
-        jonah.addJenesisEvent(commonEvent);
-
-        (adam = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.ADAM;
-            }
-        });
-        adam.addJenesisEvent(commonEvent);
-
-        (novaAdam = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.NOVA_ADAM;
-            }
-        });
-        novaAdam.addJenesisEvent(commonEvent);
-
-        (azaria = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.AZARIA;
-            }
-        });
-        azaria.addJenesisEvent(commonEvent);
-
-        (sorrowe = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.SORROWE;
-            }
-        });
-        sorrowe.addJenesisEvent(commonEvent);
-
-        (thing = new UiItem()).addJenesisEvent(new Event() {
-            public void onHover() {
-                hoveredCharacter = CharacterEnum.THING;
-            }
-        });
-        thing.addJenesisEvent(commonEvent);
+        bindCharacter(subiya = new UiItem(), CharacterEnum.SUBIYA, commonEvent);
+        bindCharacter(raila = new UiItem(), CharacterEnum.RAILA, commonEvent);
+        bindCharacter(lynx = new UiItem(), CharacterEnum.LYNX, commonEvent);
+        bindCharacter(aisha = new UiItem(), CharacterEnum.AISHA, commonEvent);
+        bindCharacter(ade = new UiItem(), CharacterEnum.ADE, commonEvent);
+        bindCharacter(ravage = new UiItem(), CharacterEnum.RAVAGE, commonEvent);
+        bindCharacter(jonah = new UiItem(), CharacterEnum.JONAH, commonEvent);
+        bindCharacter(adam = new UiItem(), CharacterEnum.ADAM, commonEvent);
+        bindCharacter(novaAdam = new UiItem(), CharacterEnum.NOVA_ADAM, commonEvent);
+        bindCharacter(azaria = new UiItem(), CharacterEnum.AZARIA, commonEvent);
+        bindCharacter(sorrowe = new UiItem(), CharacterEnum.SORROWE, commonEvent);
+        bindCharacter(thing = new UiItem(), CharacterEnum.THING, commonEvent);
 
         uiElements.put(CharacterEnum.SUBIYA.index(), subiya);
         uiElements.put(CharacterEnum.RAILA.index(), raila);
@@ -275,6 +195,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         setActiveItem(uiElements.get(0));
     }
 
+    @Override
     public void loadAssetsIml() {
         loadCaps();
         loadDesc();
@@ -477,5 +398,10 @@ public class RenderCharacterSelection extends CharacterSelection {
         characterDescription[CharacterEnum.AZARIA.index()] = Language.get().get(143);
         characterDescription[CharacterEnum.SORROWE.index()] = Language.get().get(144);
         characterDescription[CharacterEnum.THING.index()] = Language.get().get(145);
+    }
+
+    private void bindCharacter(UiItem item, CharacterEnum character, Event commonEvent) {
+        item.addJenesisEvent(Event.on(HOVER, () -> hoveredCharacter = character));
+        item.addJenesisEvent(commonEvent);
     }
 }
