@@ -149,6 +149,9 @@ public final class GlfwEngine implements AutoCloseable {
         refreshLetterboxColor();
 
         glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+            if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
+                Screenshot.captureScreenshot = true;
+            }
             nuklearUi.onKey(key, action);
             if (nuklearUi.isBlocking()) {
                 return;
@@ -345,6 +348,7 @@ public final class GlfwEngine implements AutoCloseable {
 
                 nuklearUi.layoutOverlays(stack, winW, winH);
                 nuklearUi.backend().render();
+                Screenshot.captureFramebufferIfRequested(fbW, fbH);
             }
 
             glfwSwapBuffers(window);
