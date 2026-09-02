@@ -429,8 +429,9 @@ public abstract class GamePlay extends Mode {
             updateMatchStatus();
             if ((now - animationLoopEDelta) > DT_1320) {
                 animationLoopEDelta = now;
-                if (!isFuryBarFull())
+                if (!limitRunning) {
                     incrementFuryBarLevel(-furyBarCoolDownFactor);
+                }
             }
         } else {
             if ((now - achievementDelta) > DT_1320) {
@@ -783,7 +784,13 @@ public abstract class GamePlay extends Mode {
         return false;
     }
 
-    public void newInstance() {
+    /**
+     * Match sim only: clocks, pause, ATB, queues, fury, and HUD counters.
+     * Does not request a GPU reload — that belongs on {@link #newInstance()}.
+     */
+    @Override
+    public void reset() {
+        super.reset();
         gameOver = false;
         showBrag = false;
         characterAtb = true;
@@ -792,6 +799,20 @@ public abstract class GamePlay extends Mode {
         setOpponentAtbValue(0);
         setFuryLevel(0);
         furyBar.reset();
+        furyBarCoolDownFactor = 30 - (8 + (State.get().getLogin().resolveDifficultyInt() * 2));
+        timerDelta = 0;
+        animationLoopADelta = 0;
+        animationLoopBDelta = 0;
+        animationLoopCDelta = 0;
+        animationLoopDDelta = 0;
+        animationLoopEDelta = 0;
+        achievementDelta = 0;
+        opponentAiDelta = 0;
+        characterQueDelta = 0;
+        opponentQueDelta = 0;
+        animationLoopA = 0;
+        animationLoopB = 0;
+        animationLoopD = 0;
         playClock.reset();
         characterAttacks.clear();
         opponentAttacks.clear();
@@ -799,6 +820,11 @@ public abstract class GamePlay extends Mode {
         triggerOpponentAttack = false;
         currentCharacterQueLoop = 0;
         currentOpponentQueLoop = 0;
+        lastCharacterQueLoop = -1;
+        lastOpponentQueLoop = -1;
+        characterUiLoop = 0;
+        opponentUiLoop = 0;
+        safeToSelect = false;
         revertToDefaultSprites();
         revertToDefaultSprites();
         opponentAiTimeout = 0;
@@ -808,7 +834,6 @@ public abstract class GamePlay extends Mode {
         achievementClass = new String[0];
         achievementPoints = new String[0];
         limitRunning = false;//incase match ended in fury
-        loadAssets = true;
         opponentDamageXLoc = 150;
         playerDamageXLoc = 575;
         statusEffectOpponentOpacity = 0.0f;
@@ -834,8 +859,10 @@ public abstract class GamePlay extends Mode {
             playingCutscene = true;
             timeLimit = StoryMode.get().timeLimit;
         } else if (scndGenLegends.getSubMode() == SubMode.LAN_CLIENT) {
+            playingCutscene = false;
             timeLimit = NetworkManager.get().hostTimeLimit;
         } else {
+            playingCutscene = false;
             timeLimit = State.get().getLogin().getTimeLimit();
         }
         recordPlayTime();
@@ -867,13 +894,17 @@ public abstract class GamePlay extends Mode {
         comboPicArrayPosOpp = 8;
         uiShakeEffectOffsetCharacter = 1;
         uiShakeEffectOffsetOpponent = 1;
-        characterAtb = true;
-        opponentAtb = true;
         isRunning = false;
         time1 = 10;
         time2 = 10;
         time3 = 10;
         secondCount = 1000.0f;
+    }
+
+    @Override
+    public void newInstance() {
+        reset();
+        loadAssets = true;
     }
 
     protected abstract void playBGMusic();
@@ -987,7 +1018,7 @@ public abstract class GamePlay extends Mode {
      * Starts an actual fight
      */
     public void startFight() {
-        newInstance();
+        reset();
         resetGame();
         startDrawing = 1;
         characterHpAsPercent = 100;

@@ -46,8 +46,10 @@ public final class FuryBar {
     public void tick(double deltaSeconds) {
         tick.advance(deltaSeconds);
         while (tick.consume()) {
-            if (pending > 0 && level < MAX) {
-                level++;
+            if (pending > 0) {
+                if (level < MAX) {
+                    level++;
+                }
                 pending--;
             } else if (pending < 0) {
                 if (level > 0) {
@@ -66,6 +68,7 @@ public final class FuryBar {
 
     public void setLevel(int level) {
         this.level = Math.max(0, Math.min(MAX, level));
+        pending = 0;
     }
 
     public boolean isFull() {

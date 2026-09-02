@@ -188,6 +188,18 @@ public abstract class Mode implements UiScreen {
 
     public abstract void newInstance();
 
+    /**
+     * Restores frame clocks and pause so a mode can be entered or a match restarted.
+     * Subclasses add their own session state; do not set {@link #loadAssets} here.
+     */
+    public void reset() {
+        elapsedSeconds = 0.0;
+        lastFrameDeltaSeconds = 0.0;
+        tick60.reset();
+        tick30.reset();
+        paused = false;
+    }
+
     public final void loadAssets() {
         if (!loadAssets) {
             return;
@@ -287,8 +299,6 @@ public abstract class Mode implements UiScreen {
     }
 
     public void onEnterMode() {
-        elapsedSeconds = 0.0;
-        tick60.reset();
-        tick30.reset();
+        reset();
     }
 }

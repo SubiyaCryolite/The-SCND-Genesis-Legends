@@ -761,8 +761,9 @@ public class RenderGamePlay extends GamePlay {
         opac = 0.0f;
     }
 
-    public void newInstance() {
-        super.newInstance();
+    @Override
+    public void reset() {
+        super.reset();
         damageLayerOpacity = 0;
         one = 10;
         two = 10;
@@ -776,7 +777,6 @@ public class RenderGamePlay extends GamePlay {
         playerDamageYCoord = 400;
         loadedUpdaters = true;
         setActiveItem(attackOne);
-        //======================
     }
 
     /**
