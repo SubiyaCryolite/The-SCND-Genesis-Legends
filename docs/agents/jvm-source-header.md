@@ -10,7 +10,7 @@ Copy exactly from `.idea/fileTemplates/includes/File Header.java`, or use this b
 /**************************************************************************
 
  The SCND Genesis: Legends is a fighting game based on THE SCND GENESIS,
- a webcomic created by Ifunga Ndana ((([<a href="https://www.scndgen.com">https://www.scndgen.com</a>]))).
+ a webcomic created by Ifunga Ndana (https://www.scndgen.com).
 
  The SCND Genesis: Legends RMX  © 2017 Ifunga Ndana.
 
@@ -25,7 +25,7 @@ Copy exactly from `.idea/fileTemplates/includes/File Header.java`, or use this b
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with The SCND Genesis: Legends. If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+ along with The SCND Genesis: Legends. If not, see <https://www.gnu.org/licenses/>.
 
  **************************************************************************/
 package com.example;
