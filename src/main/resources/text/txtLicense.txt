@@ -1,3 +1,12 @@
+NOTICE (not part of the GNU GPL text)
+
+The program source is GNU GPLv3 or later. Characters, original artwork,
+story, and original audio are NOT GPL; they are CC BY-NC 3.0 (Ifunga Ndana).
+Commercial forks must replace that content or obtain a separate license.
+Full terms: LICENSE.md in the source repository.
+
+----- GNU GPLv3 follows (do not edit the license text below) -----
+
 GNU General Public License, version 3 (GPLv3)
 
 GNU GENERAL PUBLIC LICENSE
