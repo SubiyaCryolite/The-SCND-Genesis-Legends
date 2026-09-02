@@ -111,7 +111,9 @@ public final class OptionsOverlay implements UiOverlay {
         NkRect bounds = nk_rect((windowWidth - w) * 0.5f, (windowHeight - h) * 0.5f, w, h, NkRect.malloc(stack));
         Language lang = Language.get();
         if (nk_begin(ctx, lang.get(34), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
-            resolutionIndex = comboRow(ctx, stack, "Resolution (from displays)", resolutionLabels, resolutionIndex);
+            resolutionIndex = comboRow(ctx, stack, "Resolution", resolutionLabels, resolutionIndex);
+            nk_layout_row_dynamic(ctx, 18, 1);
+            nk_label(ctx, "Refresh follows the monitor the window is on (vsync).", NK_TEXT_LEFT);
             nk_layout_row_dynamic(ctx, 18, 1);
             nk_label(ctx, "852×480 (16:9) is preserved; bars fill unused edges.", NK_TEXT_LEFT);
 

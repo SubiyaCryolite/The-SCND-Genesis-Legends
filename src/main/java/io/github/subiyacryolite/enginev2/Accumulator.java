@@ -29,12 +29,12 @@ package io.github.subiyacryolite.enginev2;
 public final class Accumulator {
 
     private static final double MAX_DELTA_SECONDS = 0.25;
-    private static final int MAX_CATCH_UP_TICKS = 8;
 
     private double intervalSeconds;
     private double accumulatedSeconds;
     private double lastDeltaSeconds;
     private long ticksConsumed;
+    private int maxCatchUpTicks = 8;
 
     public Accumulator() {
     }
@@ -65,7 +65,7 @@ public final class Accumulator {
         }
 
         accumulatedSeconds += clampedDelta;
-        double maxAccumulated = intervalSeconds * MAX_CATCH_UP_TICKS;
+        double maxAccumulated = intervalSeconds * maxCatchUpTicks;
         if (accumulatedSeconds > maxAccumulated) {
             accumulatedSeconds = maxAccumulated;
         }
@@ -94,6 +94,10 @@ public final class Accumulator {
             return;
         }
         intervalSeconds = seconds;
+    }
+
+    public void setMaxCatchUpTicks(int ticks) {
+        maxCatchUpTicks = Math.max(1, ticks);
     }
 
     public void reset() {

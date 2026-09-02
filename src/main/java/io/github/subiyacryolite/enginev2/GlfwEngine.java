@@ -212,6 +212,7 @@ public final class GlfwEngine implements AutoCloseable {
         }
 
         glfwMakeContextCurrent(window);
+        // Vsync on: present rate follows the monitor that currently owns the window.
         glfwSwapInterval(1);
         glfwShowWindow(window);
     }

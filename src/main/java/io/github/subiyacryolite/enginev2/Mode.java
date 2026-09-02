@@ -50,10 +50,13 @@ public abstract class Mode implements UiScreen {
     protected static final double DT_30 = 1.0 / 30.0;
     /** Legacy “1.32s” hold used by gameplay achievement/fury cool-down. */
     protected static final double DT_1320 = 1.32;
+    /** {@code animationScale == 1} is one historic 60 Hz frame ({@code deltaSeconds * 60}). */
+    protected static final float ANIM_BASELINE_HZ = 60f;
 
     protected float opacity;
     protected boolean loadAssets = true;
     protected boolean paused;
+    protected float animationScale = 1f;
     protected UiItem activeItem;
     protected GlfwEngine engine;
     protected AssetLoader assets;
@@ -63,6 +66,7 @@ public abstract class Mode implements UiScreen {
     protected final Accumulator tick60 = Accumulator.atFrequency(60);
     /** Shared ~30 Hz tick; advanced in {@link #tick(double)}. */
     protected final Accumulator tick30 = Accumulator.atFrequency(30);
+
     private double elapsedSeconds;
     private double lastFrameDeltaSeconds;
 
@@ -93,15 +97,20 @@ public abstract class Mode implements UiScreen {
 
     /**
      * Called once per GLFW frame with {@code glfwGetTime()} delta in seconds.
-     * Advances {@link #tick60} / {@link #tick30}; modes call {@code while (tick60.consume())} in {@link #update(double)}.
+     * Advances {@link #tick60} / {@link #tick30} for sim; sets {@link #animationScale}
+     * from this frame’s delta and runs {@link #processAnimation()} once.
      */
     public final void tick(double deltaSeconds) {
         lastFrameDeltaSeconds = deltaSeconds;
-        double clamped = Math.clamp(deltaSeconds, 0.0, 0.25);
+        var clamped = Math.clamp(deltaSeconds, 0.0, 0.25);
         elapsedSeconds += clamped;
+        animationScale = (float) (clamped * ANIM_BASELINE_HZ);
         tick60.advance(deltaSeconds);
         tick30.advance(deltaSeconds);
         update(deltaSeconds);
+        if (!loadAssets && !paused) {
+            processAnimation();
+        }
     }
 
     /** Monotonic time since this mode started receiving ticks (seconds). */
@@ -160,6 +169,13 @@ public abstract class Mode implements UiScreen {
     protected void update(double deltaSeconds) {
     }
 
+    /**
+     * One animation step per presented frame. {@link #animationScale} is already
+     * {@code clamp(delta, 0, 0.25) * 60} (1.0 = one historic 60 Hz frame).
+     */
+    protected void processAnimation() {
+    }
+
     public void keyReleased(int glfwKey) {
     }
 
@@ -195,6 +211,7 @@ public abstract class Mode implements UiScreen {
     public void reset() {
         elapsedSeconds = 0.0;
         lastFrameDeltaSeconds = 0.0;
+        animationScale = 1f;
         tick60.reset();
         tick30.reset();
         paused = false;

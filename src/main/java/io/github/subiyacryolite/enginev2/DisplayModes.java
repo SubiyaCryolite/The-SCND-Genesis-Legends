@@ -30,15 +30,14 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import static org.lwjgl.glfw.GLFW.glfwGetMonitorName;
 import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoModes;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 /**
- * Queries GLFW video modes across all monitors. Any aspect ratio is fine:
+ * Queries GLFW video modes across all monitors. Options list unique
+ * {@code width × height} sizes; refresh follows the window’s current monitor.
  * {@link DesignViewport} letterboxes the fixed 852×480 design space.
  */
 public final class DisplayModes {
@@ -47,30 +46,18 @@ public final class DisplayModes {
     public static final int DEFAULT_WIDTH = 1280;
     public static final int DEFAULT_HEIGHT = 720;
 
-    public record Mode(int width, int height, int refreshRateHz, String monitorName) {
+    public record Mode(int width, int height) {
         public String label() {
-            String monitor = monitorName == null || monitorName.isBlank()
-                    ? ""
-                    : " · " + asciiSafe(monitorName);
-            return width + " x " + height + " @" + refreshRateHz + "Hz" + monitor;
+            return width + " x " + height;
         }
 
-        /** Persisted as {@code widthxheight@hz}. Windowed apply uses width×height. */
+        /** Persisted as {@code widthxheight}. Legacy {@code widthxheight@hz} still loads. */
         public String storageKey() {
-            return width + "x" + height + "@" + refreshRateHz;
+            return width + "x" + height;
         }
 
         public int pixelCount() {
             return width * height;
-        }
-
-        private static String asciiSafe(String value) {
-            StringBuilder sb = new StringBuilder(value.length());
-            for (int i = 0; i < value.length(); i++) {
-                char c = value.charAt(i);
-                sb.append(c >= 32 && c < 256 ? c : '?');
-            }
-            return sb.toString();
         }
     }
 
@@ -78,9 +65,8 @@ public final class DisplayModes {
     }
 
     /**
-     * Unique width×height×refresh modes from every connected monitor,
-     * sorted by size (pixels) descending, then refresh rate descending.
-     * Always includes the default window size and the design resolution.
+     * Unique width×height sizes from every connected monitor, sorted by pixel
+     * count descending. Always includes the default window size and design space.
      * Must be called after {@code glfwInit()}.
      */
     public static List<Mode> queryAll() {
@@ -90,7 +76,6 @@ public final class DisplayModes {
             if (monitors != null) {
                 for (int m = 0; m < monitors.limit(); m++) {
                     long monitor = monitors.get(m);
-                    String monitorName = Objects.toString(glfwGetMonitorName(monitor), "Monitor " + (m + 1));
                     GLFWVidMode.Buffer modes = glfwGetVideoModes(monitor);
                     if (modes == null) {
                         continue;
@@ -99,32 +84,26 @@ public final class DisplayModes {
                         GLFWVidMode mode = modes.get(i);
                         int w = mode.width();
                         int h = mode.height();
-                        int hz = mode.refreshRate();
                         if (w < 1 || h < 1) {
                             continue;
                         }
-                        String key = w + "x" + h + "@" + hz;
-                        unique.putIfAbsent(key, new Mode(w, h, hz, monitorName));
+                        unique.putIfAbsent(w + "x" + h, new Mode(w, h));
                     }
                 }
             }
         }
 
+        unique.putIfAbsent(DEFAULT_WIDTH + "x" + DEFAULT_HEIGHT, defaultWindow());
         unique.putIfAbsent(
-                DEFAULT_WIDTH + "x" + DEFAULT_HEIGHT + "@60",
-                new Mode(DEFAULT_WIDTH, DEFAULT_HEIGHT, 60, "Default")
-        );
-        unique.putIfAbsent(
-                DesignViewport.DESIGN_WIDTH + "x" + DesignViewport.DESIGN_HEIGHT + "@60",
-                new Mode(DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT, 60, "Design")
+                DesignViewport.DESIGN_WIDTH + "x" + DesignViewport.DESIGN_HEIGHT,
+                designFallback()
         );
 
         List<Mode> result = new ArrayList<>(unique.values());
         result.sort(Comparator
                 .comparingInt(Mode::pixelCount).reversed()
                 .thenComparing(Comparator.comparingInt(Mode::width).reversed())
-                .thenComparing(Comparator.comparingInt(Mode::height).reversed())
-                .thenComparing(Comparator.comparingInt(Mode::refreshRateHz).reversed()));
+                .thenComparing(Comparator.comparingInt(Mode::height).reversed()));
         return result;
     }
 
@@ -133,37 +112,26 @@ public final class DisplayModes {
             return modes.isEmpty() ? defaultWindow() : preferredDefault(modes);
         }
         String normalized = key.replace(" ", "").toLowerCase();
+        int at = normalized.indexOf('@');
+        if (at >= 0) {
+            normalized = normalized.substring(0, at);
+        }
         for (Mode mode : modes) {
             if (mode.storageKey().equalsIgnoreCase(normalized)) {
                 return mode;
             }
         }
-        // Legacy "WxH" or "WxH@hz"
         int x = normalized.indexOf('x');
         if (x > 0) {
             try {
                 int w = Integer.parseInt(normalized.substring(0, x));
-                String rest = normalized.substring(x + 1);
-                int at = rest.indexOf('@');
-                int h;
-                int hz = 60;
-                if (at >= 0) {
-                    h = Integer.parseInt(rest.substring(0, at));
-                    hz = Integer.parseInt(rest.substring(at + 1));
-                } else {
-                    h = Integer.parseInt(rest);
-                }
-                for (Mode mode : modes) {
-                    if (mode.width() == w && mode.height() == h && mode.refreshRateHz() == hz) {
-                        return mode;
-                    }
-                }
+                int h = Integer.parseInt(normalized.substring(x + 1));
                 for (Mode mode : modes) {
                     if (mode.width() == w && mode.height() == h) {
                         return mode;
                     }
                 }
-                return new Mode(w, h, hz, "Saved");
+                return new Mode(w, h);
             } catch (NumberFormatException ignored) {
             }
         }
@@ -176,14 +144,7 @@ public final class DisplayModes {
         }
         for (int i = 0; i < modes.size(); i++) {
             Mode candidate = modes.get(i);
-            if (candidate.width() == mode.width()
-                    && candidate.height() == mode.height()
-                    && candidate.refreshRateHz() == mode.refreshRateHz()) {
-                return i;
-            }
-        }
-        for (int i = 0; i < modes.size(); i++) {
-            if (modes.get(i).storageKey().startsWith(mode.width() + "x" + mode.height())) {
+            if (candidate.width() == mode.width() && candidate.height() == mode.height()) {
                 return i;
             }
         }
@@ -191,11 +152,11 @@ public final class DisplayModes {
     }
 
     public static Mode defaultWindow() {
-        return new Mode(DEFAULT_WIDTH, DEFAULT_HEIGHT, 60, "Default");
+        return new Mode(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public static Mode designFallback() {
-        return new Mode(DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT, 60, "Design");
+        return new Mode(DesignViewport.DESIGN_WIDTH, DesignViewport.DESIGN_HEIGHT);
     }
 
     private static Mode preferredDefault(List<Mode> modes) {
@@ -204,6 +165,6 @@ public final class DisplayModes {
                 return mode;
             }
         }
-        return modes.isEmpty() ? defaultWindow() : modes.get(modes.size() - 1);
+        return modes.isEmpty() ? defaultWindow() : modes.getLast();
     }
 }

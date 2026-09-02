@@ -65,8 +65,9 @@ public abstract class GamePlay extends Mode {
     protected Rgba currentColor = Rgba.of(1f, 0f, 0f);
     protected boolean safeToSelect;
     protected int unlockedAchievementInstance;
-    protected int charXcord, charYcord, oppYcord, statIndex;
-    protected int ambientForegroundX, ambientForegroundY, ambientBackgroundX, ambientBackgroundY;
+    protected int charXcord, statIndex;
+    protected float charYcord, oppYcord;
+    protected float ambientForegroundX, ambientForegroundY, ambientBackgroundX, ambientBackgroundY;
     protected float foreGroundPositionX, foreGroundPositionY, foreGroundXIncrement, foreGroundYIncrement, animationLoops;
     protected AnimationDirection ambientDirection = AnimationDirection.VERTICAL;
     protected AnimationDirection foregroundDirection = AnimationDirection.VERTICAL;
@@ -99,7 +100,8 @@ public abstract class GamePlay extends Mode {
     protected int x;
     protected float opacityTxt, opacityPic;
     protected int comboPicArrayPosOpp;
-    protected int statIndexOpp, statIndexChar, statusEffectCharacterYCoord, statusEffectOpponentYCoord, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
+    protected int statIndexOpp, statIndexChar, uiShakeEffectOffsetCharacter = 1, uiShakeEffectOffsetOpponent = 1, basicY = 0;
+    protected float statusEffectCharacterYCoord, statusEffectOpponentYCoord;
     protected int itemX, itemY;
     protected AttackType characterAttackType = AttackType.REGULAR;
     protected AttackType opponentAttackType = AttackType.REGULAR;
@@ -115,7 +117,7 @@ public abstract class GamePlay extends Mode {
     protected float opponentDamageOpacity, playerDamageOpacity, comicBookTextOpacity, furyComboOpacity;
     protected String manipulateThis;
     protected int one, two, three, four, oneO, twoO, threeO, fourO;
-    protected int comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord;
+    protected float comicBookTextPositionY, opponentDamageYLoc, playerDamageYCoord;
     protected float opac;
     protected float damageLayerOpacity;
     protected int comicBookTextIndex;
@@ -142,13 +144,8 @@ public abstract class GamePlay extends Mode {
     private float secondCount;
     private final MatchPlayClock playClock = new MatchPlayClock();
     private final FuryBar furyBar = new FuryBar();
-    private double animationLoopADelta;
-    private int animationLoopA;
-    private double animationLoopBDelta;
-    private int animationLoopB;
-    private double animationLoopCDelta;
-    private double animationLoopDDelta;
-    private int animationLoopD;
+    private float foregroundPhase;
+    private float bobPhase;
     private double animationLoopEDelta;
     private double achievementDelta;
     protected final int FURY_BAR_MAX = FuryBar.MAX;
@@ -387,7 +384,9 @@ public abstract class GamePlay extends Mode {
 
     public void update(double deltaSeconds) {
         super.update(deltaSeconds);
-        if (loadAssets) return;
+        if (loadAssets) {
+            return;
+        }
 
         if (playClock.isTracking()) {
             playClock.tick(deltaSeconds, gameOver);
@@ -397,7 +396,9 @@ public abstract class GamePlay extends Mode {
             StoryMode.get().tick(deltaSeconds);
             return;
         }
-        if (paused) return;
+        if (paused) {
+            return;
+        }
 
         double now = elapsedSeconds();
         furyBar.tick(deltaSeconds);
@@ -422,10 +423,6 @@ public abstract class GamePlay extends Mode {
             handleOpponentAttacks(now);
             handleCharacterAttacks(now);
             animateTimer(now);
-            animateForeground(now);
-            animateLoopB(now);
-            animateAmbientLayers(now);
-            animateLoopD(now);
             updateMatchStatus();
             if ((now - animationLoopEDelta) > DT_1320) {
                 animationLoopEDelta = now;
@@ -442,6 +439,62 @@ public abstract class GamePlay extends Mode {
                     unlockedAchievementInstance = 0;
             }
         }
+    }
+
+    @Override
+    protected void processAnimation() {
+        tickAnimation();
+    }
+
+    private void tickAnimation() {
+        if (playingCutscene) {
+            if (opacityPic < 0.98f) {
+                opacityPic += 0.02f * animationScale;
+            }
+            if (opacityTxt < 0.98f) {
+                opacityTxt += 0.02f * animationScale;
+            }
+            return;
+        }
+        if (opac < 0.95f) {
+            opac += 0.05f * animationScale;
+        }
+        if (opacityTxt < 0.98f) {
+            opacityTxt += 0.02f * animationScale;
+        }
+        if (comicBookTextOpacity >= 0.0f) {
+            comicBookTextOpacity -= 0.0125f * animationScale;
+        }
+        comicBookTextPositionY += 3 * animationScale;
+        if (statusEffectCharacterOpacity > 0.02f) {
+            statusEffectCharacterOpacity -= 0.02f * animationScale;
+        }
+        statusEffectCharacterYCoord += animationScale;
+        if (statusEffectOpponentOpacity > 0.02f) {
+            statusEffectOpponentOpacity -= 0.02f * animationScale;
+        }
+        statusEffectOpponentYCoord += animationScale;
+        if (furyComboOpacity > 0.01f) {
+            furyComboOpacity -= 0.01f * animationScale;
+        }
+        if (opponentDamageOpacity >= 0.0f) {
+            opponentDamageOpacity -= 0.0125f * animationScale;
+        }
+        if (opponentDamageOpacity < 0.8f) {
+            opponentDamageYLoc -= 3 * animationScale;
+        }
+        if (playerDamageOpacity >= 0.0f) {
+            playerDamageOpacity -= 0.0125f * animationScale;
+        }
+        if (playerDamageOpacity < 0.8f) {
+            playerDamageYCoord -= 3 * animationScale;
+        }
+        if (gameOver || paused) {
+            return;
+        }
+        animateForeground();
+        animateAmbientLayers();
+        animateBob();
     }
 
     private void handleOpponentAi(double now) {
@@ -575,61 +628,93 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private void animateLoopD(double now) {
-        if ((now - animationLoopDDelta) > DT_30) {
-            animationLoopDDelta = now;
-            if (animateLoopDLogic(animationLoopD)) {
-                animationLoopD++;
-            } else {
-                animationLoopD = 0;
+    private void animateAmbientLayers() {
+        var scale = animationScale;
+        if (getAmbientDirection() == AnimationDirection.HORIZONTAL) {
+            setAmbientForegroundX(getAmbientForegroundX() - getAmbSpeed1() * scale);
+            setAmbientBackgroundX(getAmbientBackgroundX() - getAmbSpeed2() * scale);
+            if (getAmbientForegroundX() < -960) {
+                setAmbientForegroundX(852);
+            }
+            if (getAmbientBackgroundX() < (-960)) {
+                setAmbientBackgroundX(852);
+            }
+        } else if (getAmbientDirection() == AnimationDirection.VERTICAL) {
+            setAmbientForegroundY(getAmbientForegroundY() + getAmbSpeed1() * scale);
+            setAmbientBackgroundY(getAmbientBackgroundY() + getAmbSpeed2() * scale);
+            if (getAmbientForegroundY() > 480) {
+                setAmbientForegroundY(-480);
+            }
+            if (getAmbientBackgroundY() > 480) {
+                setAmbientBackgroundY(-480);
             }
         }
     }
 
-    private void animateAmbientLayers(double now) {
-        if ((now - animationLoopCDelta) > DT_60) {
-            animationLoopCDelta = now;
-            if (getAmbientDirection() == AnimationDirection.HORIZONTAL) {
-                setAmbientForegroundX(getAmbientForegroundX() - getAmbSpeed1());
-                setAmbientBackgroundX(getAmbientBackgroundX() - getAmbSpeed2());
-                if (getAmbientForegroundX() < -960) {
-                    setAmbientForegroundX(852);
+    private void animateForeground() {
+        var step = animationScale * 0.5f;
+        var seg = (int) getAnimationLoops() + 1;
+        var rotation = getForegroundDirection() == AnimationDirection.ROTATION;
+        var phases = rotation ? 4 : 2;
+        var span = seg * phases;
+        foregroundPhase += step;
+        while (foregroundPhase >= span) {
+            foregroundPhase -= span;
+        }
+        var phase = (int) (foregroundPhase / seg) % phases;
+        var dx = getForeGroundXIncrement() * step;
+        var dy = getForeGroundYIncrement() * step;
+        switch (getForegroundDirection()) {
+            case ROTATION -> {
+                switch (phase) {
+                    case 0 -> {
+                        setForeGroundPositionX(getForeGroundPositionX() + dx);
+                        setForeGroundPositionY(getForeGroundPositionY() + dy);
+                    }
+                    case 1 -> {
+                        setForeGroundPositionX(getForeGroundPositionX() - dx);
+                        setForeGroundPositionY(getForeGroundPositionY() + dy);
+                    }
+                    case 2 -> {
+                        setForeGroundPositionX(getForeGroundPositionX() - dx);
+                        setForeGroundPositionY(getForeGroundPositionY() - dy);
+                    }
+                    default -> {
+                        setForeGroundPositionX(getForeGroundPositionX() + dx);
+                        setForeGroundPositionY(getForeGroundPositionY() - dy);
+                    }
                 }
-                if (getAmbientBackgroundX() < (-960)) {
-                    setAmbientBackgroundX(852);
+            }
+            case VERTICAL_HORIZONTAL -> {
+                if (phase == 0) {
+                    setForeGroundPositionX(getForeGroundPositionX() + dx);
+                    setForeGroundPositionY(getForeGroundPositionY() + dy);
+                } else {
+                    setForeGroundPositionX(getForeGroundPositionX() - dx);
+                    setForeGroundPositionY(getForeGroundPositionY() - dy);
                 }
-            } else if (getAmbientDirection() == AnimationDirection.VERTICAL) {
-                setAmbientForegroundY(getAmbientForegroundY() + getAmbSpeed1());
-                setAmbientBackgroundY(getAmbientBackgroundY() + getAmbSpeed2());
-                if (getAmbientForegroundY() > 480) {
-                    setAmbientForegroundY(-480);
-                }
-                if (getAmbientBackgroundY() > 480) {
-                    setAmbientBackgroundY(-480);
-                }
+            }
+            case HORIZONTAL -> setForeGroundPositionX(getForeGroundPositionX() + (phase == 0 ? dx : -dx));
+            case VERTICAL -> setForeGroundPositionY(getForeGroundPositionY() + (phase == 0 ? dy : -dy));
+            default -> {
             }
         }
     }
 
-    private void animateForeground(double now) {
-        if ((now - animationLoopADelta) > DT_30) {
-            animationLoopADelta = now;
-            if (animateForegroundImpl(animationLoopA)) {
-                animationLoopA++;
-            } else {
-                animationLoopA = 0;
-            }
+    private void animateBob() {
+        var step = animationScale * 0.5f;
+        final int seg = 11;
+        final float span = seg * 2;
+        bobPhase += step;
+        while (bobPhase >= span) {
+            bobPhase -= span;
         }
-    }
-
-    private void animateLoopB(double now) {
-        if ((now - animationLoopBDelta) > DT_30) {
-            animationLoopBDelta = now;
-            if (animateLoopBLogic(animationLoopB)) {
-                animationLoopB++;
-            } else {
-                animationLoopB = 0;
-            }
+        if (bobPhase < seg) {
+            setCharYcord(getCharYcord() + step);
+            setOppYcord(getOppYcord() + step);
+        } else {
+            setCharYcord(getCharYcord() - step);
+            setOppYcord(getOppYcord() - step);
         }
     }
 
@@ -680,110 +765,6 @@ public abstract class GamePlay extends Mode {
         }
     }
 
-    private boolean animateLoopDLogic(int loop) {
-        int computedPosition = -1;
-        for (int iteration = 0; iteration <= 10; iteration++) {
-            computedPosition++;
-            if (loop == computedPosition) {
-                setCharYcord(getCharYcord() + 1);
-                setOppYcord(getOppYcord() + 1);
-                return true;
-            }
-        }
-        for (int iteration = 0; iteration <= 10; iteration++) {
-            computedPosition++;
-            if (loop == computedPosition) {
-                setCharYcord(getCharYcord() - 1);
-                setOppYcord(getOppYcord() - 1);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean animateForegroundImpl(int loop) {
-        int computedPosition = -1;//so that we start from zero
-        switch (getForegroundDirection()) {
-            case ROTATION:
-                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
-                        setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
-                        return true;
-                    }
-                }
-                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
-                        setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
-                        return true;
-                    }
-                }
-                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
-                        setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
-                        return true;
-                    }
-                }
-                for (int iteration = 0; iteration <= getAnimationLoops(); iteration++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
-                        setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
-                        return true;
-                    }
-                }
-                break;
-            default:
-                for (int inner = 0; inner <= getAnimationLoops(); inner++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        switch (getForegroundDirection()) {
-                            case VERTICAL_HORIZONTAL:
-                                setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
-                                setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
-                                break;
-                            case HORIZONTAL:
-                                setForeGroundPositionX(getForeGroundPositionX() + getForeGroundXIncrement());
-                                break;
-                            case VERTICAL:
-                                setForeGroundPositionY(getForeGroundPositionY() + getForeGroundYIncrement());
-                                break;
-                        }
-                        return true;
-                    }
-                }
-                for (int inner = 0; inner <= getAnimationLoops(); inner++) {
-                    computedPosition++;
-                    if (loop == computedPosition) {
-                        switch (getForegroundDirection()) {
-                            case VERTICAL_HORIZONTAL:
-                                setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
-                                setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
-                                break;
-                            case HORIZONTAL:
-                                setForeGroundPositionX(getForeGroundPositionX() - getForeGroundXIncrement());
-                                break;
-                            case VERTICAL:
-                                setForeGroundPositionY(getForeGroundPositionY() - getForeGroundYIncrement());
-                                break;
-                        }
-                        return true;
-                    }
-                }
-                break;
-        }
-        return false;
-    }
-
-    private boolean animateLoopBLogic(int loop) {
-        return false;
-    }
-
     /**
      * Match sim only: clocks, pause, ATB, queues, fury, and HUD counters.
      * Does not request a GPU reload — that belongs on {@link #newInstance()}.
@@ -801,18 +782,13 @@ public abstract class GamePlay extends Mode {
         furyBar.reset();
         furyBarCoolDownFactor = 30 - (8 + (State.get().getLogin().resolveDifficultyInt() * 2));
         timerDelta = 0;
-        animationLoopADelta = 0;
-        animationLoopBDelta = 0;
-        animationLoopCDelta = 0;
-        animationLoopDDelta = 0;
         animationLoopEDelta = 0;
         achievementDelta = 0;
         opponentAiDelta = 0;
         characterQueDelta = 0;
         opponentQueDelta = 0;
-        animationLoopA = 0;
-        animationLoopB = 0;
-        animationLoopD = 0;
+        foregroundPhase = 0;
+        bobPhase = 0;
         playClock.reset();
         characterAttacks.clear();
         opponentAttacks.clear();
@@ -1258,19 +1234,19 @@ public abstract class GamePlay extends Mode {
         return opponentHpAsPercent;
     }
 
-    public int getCharYcord() {
+    public float getCharYcord() {
         return charYcord;
     }
 
-    public void setCharYcord(int value) {
+    public void setCharYcord(float value) {
         charYcord = value;
     }
 
-    public int getOppYcord() {
+    public float getOppYcord() {
         return oppYcord;
     }
 
-    public void setOppYcord(int value) {
+    public void setOppYcord(float value) {
         oppYcord = value;
     }
 
@@ -1315,35 +1291,35 @@ public abstract class GamePlay extends Mode {
         return ambSpeed2;
     }
 
-    public int getAmbientForegroundX() {
+    public float getAmbientForegroundX() {
         return ambientForegroundX;
     }
 
-    public void setAmbientForegroundX(int ambientForegroundX) {
+    public void setAmbientForegroundX(float ambientForegroundX) {
         this.ambientForegroundX = ambientForegroundX;
     }
 
-    public int getAmbientBackgroundX() {
+    public float getAmbientBackgroundX() {
         return ambientBackgroundX;
     }
 
-    public void setAmbientBackgroundX(int ambientBackgroundX) {
+    public void setAmbientBackgroundX(float ambientBackgroundX) {
         this.ambientBackgroundX = ambientBackgroundX;
     }
 
-    public int getAmbientForegroundY() {
+    public float getAmbientForegroundY() {
         return ambientForegroundY;
     }
 
-    public void setAmbientForegroundY(int ambientForegroundY) {
+    public void setAmbientForegroundY(float ambientForegroundY) {
         this.ambientForegroundY = ambientForegroundY;
     }
 
-    public int getAmbientBackgroundY() {
+    public float getAmbientBackgroundY() {
         return ambientBackgroundY;
     }
 
-    public void setAmbientBackgroundY(int ambientBackgroundY) {
+    public void setAmbientBackgroundY(float ambientBackgroundY) {
         this.ambientBackgroundY = ambientBackgroundY;
     }
 

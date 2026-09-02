@@ -247,9 +247,6 @@ public class RenderGamePlay extends GamePlay {
         if (playingCutscene) {
             draw.setFill(0f, 0f, 0f);
             draw.fillRect(0, 0, width, height);
-            if (opacityPic < 0.98f) {
-                opacityPic += 0.02f;
-            }
             draw.setGlobalAlpha(opacityPic);
             draw.drawImage(storyBoardIndex >= 0 ? storyBoards[storyBoardIndex] : null, 0, 0);
             draw.setGlobalAlpha(1.0f);
@@ -265,9 +262,6 @@ public class RenderGamePlay extends GamePlay {
             draw.drawImage(characterPortraitIndex >= 0 ? characterPortraits[characterPortraitIndex] : null, ((852 - infoWidth) / 2) - 50, 424);
             draw.fillText(battleInformation.toString(), ((852 - infoWidth) / 2), 450);
             draw.setGlobalAlpha(1.0f);
-            if (opacityTxt < 0.98f) {
-                opacityTxt = opacityTxt + 0.02f;
-            }
         } else if (!gameOver && !playingCutscene) {
             draw.drawImage(stageBackground, 0, 0);
             setFont(draw, 12);
@@ -279,22 +273,13 @@ public class RenderGamePlay extends GamePlay {
                 draw.setGlobalAlpha(1.0f);
                 drawComicBookText(draw);
                 drawBattleInformation(draw);
-                if (statusEffectCharacterOpacity > 0.02f) {
-                    statusEffectCharacterOpacity = statusEffectCharacterOpacity - 0.02f;
-                }
                 draw.setGlobalAlpha(statusEffectCharacterOpacity);
                 draw.drawImage(statusEffectSprites[statIndexChar], 150 + uiShakeEffectOffsetCharacter, 100 + basicY - uiShakeEffectOffsetCharacter + statusEffectCharacterYCoord);
                 draw.setGlobalAlpha(1.0f);
-                statusEffectCharacterYCoord = statusEffectCharacterYCoord + 1;
 
-
-                if (statusEffectOpponentOpacity > 0.02f) {
-                    statusEffectOpponentOpacity = statusEffectOpponentOpacity - 0.02f;
-                }
                 draw.setGlobalAlpha(statusEffectOpponentOpacity);
                 draw.drawImage(statusEffectSprites[statIndexOpp], 602 + uiShakeEffectOffsetOpponent, 100 + basicY - uiShakeEffectOffsetOpponent + statusEffectOpponentYCoord);
                 draw.setGlobalAlpha(1.0f);
-                statusEffectOpponentYCoord = statusEffectOpponentYCoord + 1;
 
                 //---opponrnt activity bar + text
 
@@ -410,19 +395,12 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawComicBookText(DrawContext draw) {
-        if (comicBookTextOpacity >= 0.0f) {
-            comicBookTextOpacity = comicBookTextOpacity - 0.0125f;
-        }
         draw.setGlobalAlpha(comicBookTextOpacity);
         draw.drawImage(comicBookText[comicBookTextIndex], 170, 112 + basicY + comicBookTextPositionY);
         draw.setGlobalAlpha(1.0f);
-        comicBookTextPositionY = comicBookTextPositionY + 3;
     }
 
     private void drawBattleInformation(DrawContext draw) {
-        if (opacityTxt < 0.98f) {
-            opacityTxt = opacityTxt + 0.02f;
-        }
         draw.setGlobalAlpha(opacityTxt);
         draw.setFill(1f, 1f, 1f);
         draw.fillText(battleInformation.toString(), 32 + attackMenuXPos, 470);
@@ -430,9 +408,6 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawAttackMenu(DrawContext draw) {
-        if (opac < 0.95f) {
-            opac = opac + 0.05f;
-        }
         draw.setGlobalAlpha(opac);
         switch (columnIndex) {
             case 0 -> {
@@ -531,9 +506,6 @@ public class RenderGamePlay extends GamePlay {
     }
 
     private void drawFuryComboEffects(DrawContext draw) {
-        if (furyComboOpacity > 0.01f) {
-            furyComboOpacity -= 0.01f;
-        }
         draw.setGlobalAlpha(furyComboOpacity);
         if (comboPicArrayPosOpp < 9) {
             draw.drawImage(comboPicArray[comboPicArrayPosOpp], comX + ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f), comY - ((uiShakeEffectOffsetOpponent + uiShakeEffectOffsetCharacter) / 2f));
@@ -550,13 +522,6 @@ public class RenderGamePlay extends GamePlay {
         draw.drawImage(figGuiSrc3, playerDamageXLoc + (spacer * 2) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         draw.drawImage(figGuiSrc4, playerDamageXLoc + (spacer * 3) + uiShakeEffectOffsetCharacter, opponentDamageYLoc - uiShakeEffectOffsetCharacter);
         draw.setGlobalAlpha(1.0f);
-        if (opponentDamageOpacity >= 0.0f) {
-            opponentDamageOpacity = opponentDamageOpacity - 0.0125f;
-        }
-        if (opponentDamageOpacity < 0.8f) {
-            opponentDamageYLoc = opponentDamageYLoc - 3;
-        }
-
 
         draw.setGlobalAlpha(playerDamageOpacity);
         //char damage loader
@@ -565,12 +530,6 @@ public class RenderGamePlay extends GamePlay {
         draw.drawImage(figGuiSrc30, opponentDamageXLoc + (spacer * 2) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         draw.drawImage(figGuiSrc40, opponentDamageXLoc + (spacer * 3) + uiShakeEffectOffsetOpponent, playerDamageYCoord - uiShakeEffectOffsetOpponent);
         draw.setGlobalAlpha(1.0f);
-        if (playerDamageOpacity >= 0.0f) {
-            playerDamageOpacity = playerDamageOpacity - 0.0125f;
-        }
-        if (playerDamageOpacity < 0.8f) {
-            playerDamageYCoord = playerDamageYCoord - 3;
-        }
     }
 
     /**
