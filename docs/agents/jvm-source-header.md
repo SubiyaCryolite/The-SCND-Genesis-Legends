@@ -34,3 +34,5 @@ import java.util.Objects;
 ````
 
 Do not invent a shorter or alternate license header. IntelliJ/Cursor templates and the Copyright profile also inject this text for new classes.
+
+This banner licenses **source code**, not artwork or story. Assets are CC BY-NC 3.0 — see [licensing.md](licensing.md) and [`LICENSE.md`](../../LICENSE.md).

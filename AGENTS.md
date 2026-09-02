@@ -26,6 +26,8 @@ Single source of guidance for this repo: edit fragments under [`docs/agents/`](d
 
 @docs/agents/display-options.md
 
+@docs/agents/licensing.md
+
 ## Project pointers
 
 - Engine: LWJGL / OpenGL 3.3 + NanoVG + Nuklear (`io.github.subiyacryolite.enginev2`)

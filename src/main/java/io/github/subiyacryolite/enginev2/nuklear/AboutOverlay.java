@@ -75,7 +75,7 @@ public final class AboutOverlay implements UiOverlay {
             nk_layout_row_dynamic(ctx, 8, 1);
             nk_spacing(ctx, 1);
             String body = bodies[tab] == null ? "" : bodies[tab];
-            String[] lines = body.split("\\R", 24);
+            String[] lines = body.split("\\R", 48);
             for (String line : lines) {
                 nk_layout_row_dynamic(ctx, 16, 1);
                 nk_label(ctx, line.length() > 90 ? line.substring(0, 90) + "…" : line, NK_TEXT_LEFT);

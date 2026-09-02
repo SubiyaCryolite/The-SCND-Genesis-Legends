@@ -4,6 +4,8 @@ You can grab the game on [Itch.io](https://subiyacryolite.itch.io/the-scnd-genes
 
 You can discover more on the [official website](https://www.scndgen.com/legends)
 
+**License:** program source is [GPLv3](LICENSE.md); characters, original art, and story are [CC BY-NC 3.0](LICENSE.md) (Ifunga Ndana).
+
 ![ScreenShot](screenshot_a.png?raw=true)
 
 ![ScreenShot](screenshot_b.png?raw=true)
