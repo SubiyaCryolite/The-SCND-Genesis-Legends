@@ -1,4 +1,4 @@
-# Build platform fat JARs and attach them to a GitHub Release when a tag is pushed.
+# Build a platform zip (thin JAR + libs/) and attach it to a GitHub Release.
 # Example: git tag v22.05.05 && git push origin v22.05.05
 name: Release
 
@@ -44,24 +44,23 @@ jobs:
         with:
           cache-provider: basic
 
-      - name: Build fat JAR
+      - name: Package zip
         shell: bash
         run: |
           chmod +x ./gradlew
-          ./gradlew --no-daemon jar
+          ./gradlew --no-daemon packageZip -PbuildId="${GITHUB_REF_NAME}"
 
-      - name: Stage named JAR
+      - name: Stage archive
         shell: bash
         run: |
           mkdir -p dist
-          jar="$(ls build/libs/*.jar | head -n 1)"
-          cp "$jar" "dist/legends-${GITHUB_REF_NAME}-${{ matrix.label }}.jar"
+          cp build/dist/*.zip dist/
 
       - name: Upload build product
         uses: actions/upload-artifact@v4
         with:
           name: legends-${{ matrix.label }}
-          path: dist/*.jar
+          path: dist/*.zip
           if-no-files-found: error
           retention-days: 7
 
@@ -70,7 +69,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download all JARs
+      - name: Download all archives
         uses: actions/download-artifact@v4
         with:
           path: dist
@@ -79,6 +78,6 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.jar
+          files: dist/*.zip
           generate_release_notes: true
           fail_on_unmatched_files: true

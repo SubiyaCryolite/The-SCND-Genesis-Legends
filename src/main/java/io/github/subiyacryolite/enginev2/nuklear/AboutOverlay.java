@@ -51,7 +51,7 @@ public final class AboutOverlay implements UiOverlay {
     private boolean open = true;
 
     public AboutOverlay() {
-        bodies[0] = read("text/txtAbout.txt");
+        bodies[0] = "Build: " + readBuildId() + "\n\n" + read("text/txtAbout.txt");
         bodies[1] = read("text/txtLicense.txt");
         bodies[2] = read("text/txtChangelog.txt");
         bodies[3] = read("text/txtSourceCode.txt");
@@ -89,9 +89,20 @@ public final class AboutOverlay implements UiOverlay {
         return open;
     }
 
+    private static String readBuildId() {
+        try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("text/build-id.txt")) {
+            if (stream == null) {
+                return "dev";
+            }
+            var text = IOUtils.toString(stream, StandardCharsets.UTF_8).strip();
+            return text.isEmpty() ? "dev" : text;
+        } catch (Exception ex) {
+            return "dev";
+        }
+    }
+
     private static String read(String resource) {
-        try {
-            var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+        try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
             if (stream == null) {
                 return "(missing " + resource + ")";
             }

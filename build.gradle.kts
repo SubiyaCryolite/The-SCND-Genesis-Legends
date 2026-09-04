@@ -68,6 +68,13 @@ val lwjglNatives: String = when {
     else -> error("Unsupported OS for LWJGL natives")
 }
 
+val distClassifier: String = when (lwjglNatives) {
+    "natives-linux" -> "linux-x64"
+    "natives-windows" -> "windows-x64"
+    "natives-macos" -> "macos-x64"
+    else -> lwjglNatives.removePrefix("natives-")
+}
+
 repositories {
     mavenCentral()
 }
@@ -99,7 +106,47 @@ application {
     mainClass.set(mainClassName)
 }
 
+val runtimeJars = configurations.runtimeClasspath
+
+fun resolveBuildId(): String {
+    val fromProp = findProperty("buildId")?.toString()?.trim().orEmpty()
+    if (fromProp.isNotEmpty()) {
+        return fromProp
+    }
+    return try {
+        val proc = ProcessBuilder("git", "describe", "--always", "--dirty")
+            .directory(rootDir)
+            .redirectErrorStream(true)
+            .start()
+        val text = proc.inputStream.bufferedReader().readText().trim()
+        if (proc.waitFor() == 0 && text.isNotEmpty()) "dev-$text" else "dev"
+    } catch (_: Exception) {
+        "dev"
+    }
+}
+
+sourceSets.named("main") {
+    resources.srcDir(layout.buildDirectory.dir("generated/resources"))
+}
+
+tasks.register("generateBuildId") {
+    val output = layout.buildDirectory.file("generated/resources/text/build-id.txt")
+    val id = provider { resolveBuildId() }
+    inputs.property("buildId", id)
+    outputs.file(output)
+    doLast {
+        val file = output.get().asFile
+        file.parentFile.mkdirs()
+        file.writeText(id.get())
+    }
+}
+
+tasks.named<ProcessResources>("processResources") {
+    dependsOn("generateBuildId")
+}
+
 tasks.jar {
+    archiveBaseName.set("legends")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
@@ -109,9 +156,39 @@ tasks.jar {
             "Main-Class" to mainClassName,
         )
     }
-    from({
-        configurations.runtimeClasspath.get()
-            .filter { it.name.endsWith("jar") }
-            .map { zipTree(it) }
-    })
+    doFirst {
+        val classPath = runtimeJars.get()
+            .filter { it.extension.equals("jar", ignoreCase = true) }
+            .sortedBy { it.name }
+            .joinToString(" ") { "libs/${it.name}" }
+        manifest.attributes["Class-Path"] = classPath
+        manifest.attributes["Build-Id"] = resolveBuildId()
+    }
+}
+
+tasks.register<Sync>("stageDistribution") {
+    dependsOn(tasks.jar)
+    into(layout.buildDirectory.dir("distribution/legends-${version}-$distClassifier"))
+    from(tasks.jar)
+    from(runtimeJars) {
+        include("*.jar")
+        into("libs")
+    }
+}
+
+tasks.register<Zip>("packageZip") {
+    group = "distribution"
+    description = "Thin JAR plus libs/ as a zip"
+    dependsOn("stageDistribution")
+    archiveFileName.set("legends-$distClassifier.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("dist"))
+    from(layout.buildDirectory.dir("distribution"))
+}
+
+tasks.assemble {
+    dependsOn("packageZip")
+}
+
+tasks.test {
+    failOnNoDiscoveredTests = false
 }

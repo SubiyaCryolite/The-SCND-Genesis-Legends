@@ -1,4 +1,4 @@
-# Build downloadable fat JARs on every push to main.
+# Build a downloadable zip (thin JAR + libs/) on every push to main.
 # Each OS runner picks the matching LWJGL natives via build.gradle.
 name: Build artifacts
 
@@ -44,16 +44,16 @@ jobs:
         with:
           cache-provider: basic
 
-      - name: Build fat JAR
+      - name: Package zip
         shell: bash
         run: |
           chmod +x ./gradlew
-          ./gradlew --no-daemon jar
+          ./gradlew --no-daemon packageZip -PbuildId="dev-${GITHUB_SHA::7}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}-${{ github.sha }}
-          path: build/libs/*.jar
+          path: build/dist/*.zip
           if-no-files-found: error
           retention-days: 14
