@@ -21,7 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends.mode;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.StoryKey;
+import com.scndgen.legends.TextKey;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
@@ -301,38 +304,38 @@ public class StoryMode {
         steps.add(Step.wait(seconds));
     }
 
-    private void addLine(int langId) {
-        String line = Language.get().get(langId);
+    private void addLine(TextKey key) {
+        String line = Language.get().get(key);
         steps.add(Step.line(line, textWait(line)));
     }
 
-    private void addLine(CharacterEnum portrait, int langId) {
-        String line = Language.get().get(langId);
+    private void addLine(CharacterEnum portrait, TextKey key) {
+        String line = Language.get().get(key);
         steps.add(Step.line(portrait, line, textWait(line)));
     }
 
-    private void addLineClear(int langId) {
-        String line = Language.get().get(langId);
+    private void addLineClear(TextKey key) {
+        String line = Language.get().get(key);
         steps.add(Step.lineClearPortrait(line, textWait(line)));
     }
 
-    private void addLine(int langId, String suffix) {
-        String line = Language.get().get(langId) + suffix;
+    private void addLine(TextKey key, String suffix) {
+        String line = Language.get().get(key) + suffix;
         steps.add(Step.line(line, textWait(line)));
     }
 
-    private void addLine(CharacterEnum portrait, int langId, String suffix) {
-        String line = Language.get().get(langId) + suffix;
+    private void addLine(CharacterEnum portrait, TextKey key, String suffix) {
+        String line = Language.get().get(key) + suffix;
         steps.add(Step.line(portrait, line, textWait(line)));
     }
 
-    private void addLineClear(int langId, String suffix) {
-        String line = Language.get().get(langId) + suffix;
+    private void addLineClear(TextKey key, String suffix) {
+        String line = Language.get().get(key) + suffix;
         steps.add(Step.lineClearPortrait(line, textWait(line)));
     }
 
-    private void addLineNoWait(int langId) {
-        steps.add(Step.lineNoWait(Language.get().get(langId)));
+    private void addLineNoWait(TextKey key) {
+        steps.add(Step.lineNoWait(Language.get().get(key)));
     }
 
     private void addPortraitThen(CharacterEnum portrait) {
@@ -370,202 +373,202 @@ public class StoryMode {
     private void buildScene0() {
         addWait(2.0);
         addClearPortrait();
-        addLine(174);
-        addLine(175);
-        addLine(176);
-        addLine(431);
-        addLine(432);
-        addLine(433);
-        addLine(434);
-        addLine(435);
-        addLine(436);
-        addLine(437);
-        addLine(CharacterEnum.RAILA, 438);
-        addLine(439);
-        addLine(440);
-        addLine(178);
-        addLine(CharacterEnum.RAVAGE, 179);
-        addLine(180);
-        addLine(CharacterEnum.RAILA, 181);
-        addLine(CharacterEnum.RAVAGE, 182);
+        addLine(StoryKey.S1_01);
+        addLine(StoryKey.S1_02);
+        addLine(StoryKey.S1_03);
+        addLine(StoryKey.S1_04);
+        addLine(StoryKey.S1_05);
+        addLine(StoryKey.S1_06);
+        addLine(StoryKey.S1_07);
+        addLine(StoryKey.S1_08);
+        addLine(StoryKey.S1_09);
+        addLine(StoryKey.S1_10);
+        addLine(CharacterEnum.RAILA, StoryKey.S1_11);
+        addLine(StoryKey.S1_12);
+        addLine(StoryKey.S1_13);
+        addLine(StoryKey.S1_14);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S1_15);
+        addLine(StoryKey.S1_16);
+        addLine(CharacterEnum.RAILA, StoryKey.S1_17);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S1_18);
         addExit();
     }
 
     private void buildScene1() {
         addWait(2.0);
         addClearPortrait();
-        addLine(441);
-        addLine(183);
-        addLine(184);
-        addLine(185);
-        addLine(186);
-        addLine(CharacterEnum.LYNX, 443);
-        addLine(444);
-        addLineClear(187);
-        addLineNoWait(146);
+        addLine(StoryKey.S2_01);
+        addLine(StoryKey.S2_02);
+        addLine(StoryKey.S2_03);
+        addLine(StoryKey.S2_04);
+        addLine(StoryKey.S2_05);
+        addLine(CharacterEnum.LYNX, StoryKey.S2_06);
+        addLine(StoryKey.S2_07);
+        addLineClear(StoryKey.S2_08);
+        addLineNoWait(LangKey.PRESS_ENTER_PROCEED);
         addExit();
     }
 
     private void buildScene2() {
         addWait(2.0);
         addClearPortrait();
-        addLine(CharacterEnum.LYNX, 188);
-        addLine(CharacterEnum.RAILA, 189);
-        addLineClear(190, " .......");
-        addLine(CharacterEnum.AISHA, 191);
-        addLine(CharacterEnum.LYNX, 192);
-        addLine(CharacterEnum.AISHA, 193);
-        addLine(CharacterEnum.LYNX, 194);
-        addLine(CharacterEnum.AISHA, 195);
-        addLine(CharacterEnum.LYNX, 196);
-        addLine(CharacterEnum.RAILA, 197);
-        addLine(CharacterEnum.SUBIYA, 198);
-        addLineClear(199);
-        addLine(CharacterEnum.AISHA, 200);
-        addLine(CharacterEnum.LYNX, 201);
-        addLine(CharacterEnum.AISHA, 202);
-        addLine(CharacterEnum.LYNX, 203);
-        addLine(CharacterEnum.AISHA, 204);
-        addLine(CharacterEnum.AISHA, 205);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_01);
+        addLine(CharacterEnum.RAILA, StoryKey.S3_02);
+        addLineClear(StoryKey.S3_03, " .......");
+        addLine(CharacterEnum.AISHA, StoryKey.S3_04);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_05);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_06);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_07);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_08);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_09);
+        addLine(CharacterEnum.RAILA, StoryKey.S3_10);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S3_11);
+        addLineClear(StoryKey.S3_12);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_13);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_14);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_15);
+        addLine(CharacterEnum.LYNX, StoryKey.S3_16);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_17);
+        addLine(CharacterEnum.AISHA, StoryKey.S3_18);
         addExit();
     }
 
     private void buildScene3() {
         addWait(2.0);
         addClearPortrait();
-        addLine(CharacterEnum.SUBIYA, 206);
-        addLine(CharacterEnum.RAILA, 207);
-        addLine(CharacterEnum.SUBIYA, 208);
-        addLine(CharacterEnum.RAILA, 209);
-        addLine(CharacterEnum.SUBIYA, 210);
-        addLine(CharacterEnum.RAILA, 211);
-        addLine(212);
-        addLine(213);
-        addLine(214);
-        addLine(215);
-        addLine(CharacterEnum.SUBIYA, 216);
-        addLine(425);
-        addLine(426);
-        addLine(427);
-        addLine(428);
-        addLine(429);
-        addLine(CharacterEnum.RAILA, 430);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S4_01);
+        addLine(CharacterEnum.RAILA, StoryKey.S4_02);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S4_03);
+        addLine(CharacterEnum.RAILA, StoryKey.S4_04);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S4_05);
+        addLine(CharacterEnum.RAILA, StoryKey.S4_06);
+        addLine(StoryKey.S4_07);
+        addLine(StoryKey.S4_08);
+        addLine(StoryKey.S4_09);
+        addLine(StoryKey.S4_10);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S4_11);
+        addLine(StoryKey.S4_12);
+        addLine(StoryKey.S4_13);
+        addLine(StoryKey.S4_14);
+        addLine(StoryKey.S4_15);
+        addLine(StoryKey.S4_16);
+        addLine(CharacterEnum.RAILA, StoryKey.S4_17);
         addExit();
     }
 
     private void buildScene4() {
         addWait(2.0);
         addClearPortrait();
-        addLine(218);
-        addLine(219);
-        addLine(CharacterEnum.ADE, 220);
-        addLine(CharacterEnum.SORROWE, 221);
-        addLine(CharacterEnum.ADE, 222);
-        addLine(CharacterEnum.RAVAGE, 223);
-        addLine(CharacterEnum.ADE, 224);
-        addLine(CharacterEnum.SORROWE, 225);
-        addLine(CharacterEnum.ADE, 226);
-        addLine(CharacterEnum.JONAH, 227);
-        addLine(CharacterEnum.RAVAGE, 228);
-        addLine(CharacterEnum.RAVAGE, 229);
-        addLine(CharacterEnum.ADE, 230);
+        addLine(StoryKey.S5_01);
+        addLine(StoryKey.S5_02);
+        addLine(CharacterEnum.ADE, StoryKey.S5_03);
+        addLine(CharacterEnum.SORROWE, StoryKey.S5_04);
+        addLine(CharacterEnum.ADE, StoryKey.S5_05);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S5_06);
+        addLine(CharacterEnum.ADE, StoryKey.S5_07);
+        addLine(CharacterEnum.SORROWE, StoryKey.S5_08);
+        addLine(CharacterEnum.ADE, StoryKey.S5_09);
+        addLine(CharacterEnum.JONAH, StoryKey.S5_10);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S5_11);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S5_12);
+        addLine(CharacterEnum.ADE, StoryKey.S5_13);
         addExit();
     }
 
     private void buildScene5() {
         addWait(2.0);
-        addLine(CharacterEnum.RAVAGE, 231);
-        addLine(CharacterEnum.ADE, 232);
-        addLine(CharacterEnum.RAVAGE, 233);
-        addLine(CharacterEnum.JONAH, 234);
-        addLine(CharacterEnum.ADAM, 235);
-        addLine(CharacterEnum.JONAH, 236);
-        addLine(CharacterEnum.ADAM, 237);
-        addLine(CharacterEnum.JONAH, 238);
-        addLine(CharacterEnum.ADAM, 239);
-        addLine(CharacterEnum.JONAH, 240);
-        addLine(CharacterEnum.ADAM, 241);
-        addLine(CharacterEnum.ADE, 242);
-        addLine(CharacterEnum.ADAM, 243);
-        addLine(CharacterEnum.JONAH, 244);
-        addLine(CharacterEnum.JONAH, 245);
-        addLine(CharacterEnum.ADE, 246);
-        addLine(CharacterEnum.ADAM, 247);
-        addLine(CharacterEnum.ADAM, 248);
-        addLine(CharacterEnum.JONAH, 249);
-        addLine(CharacterEnum.ADAM, 250);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S6_01);
+        addLine(CharacterEnum.ADE, StoryKey.S6_02);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S6_03);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_04);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_05);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_06);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_07);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_08);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_09);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_10);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_11);
+        addLine(CharacterEnum.ADE, StoryKey.S6_12);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_13);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_14);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_15);
+        addLine(CharacterEnum.ADE, StoryKey.S6_16);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_17);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_18);
+        addLine(CharacterEnum.JONAH, StoryKey.S6_19);
+        addLine(CharacterEnum.ADAM, StoryKey.S6_20);
         addExit();
     }
 
     private void buildScene6() {
         addWait(2.0);
         addClearPortrait();
-        addLine(251);
-        addLine(252);
-        addLine(253);
-        addLine(254);
-        addLine(CharacterEnum.AZARIA, 255);
-        addLine(CharacterEnum.ADAM, 256);
-        addLine(CharacterEnum.AZARIA, 257);
-        addLine(CharacterEnum.ADAM, 258);
-        addLine(CharacterEnum.ADAM, 259);
-        addLine(CharacterEnum.AZARIA, 260);
-        addLine(CharacterEnum.ADAM, 261);
-        addLine(CharacterEnum.ADAM, 262);
+        addLine(StoryKey.S7_01);
+        addLine(StoryKey.S7_02);
+        addLine(StoryKey.S7_03);
+        addLine(StoryKey.S7_04);
+        addLine(CharacterEnum.AZARIA, StoryKey.S7_05);
+        addLine(CharacterEnum.ADAM, StoryKey.S7_06);
+        addLine(CharacterEnum.AZARIA, StoryKey.S7_07);
+        addLine(CharacterEnum.ADAM, StoryKey.S7_08);
+        addLine(CharacterEnum.ADAM, StoryKey.S7_09);
+        addLine(CharacterEnum.AZARIA, StoryKey.S7_10);
+        addLine(CharacterEnum.ADAM, StoryKey.S7_11);
+        addLine(CharacterEnum.ADAM, StoryKey.S7_12);
         addExit();
     }
 
     private void buildScene7() {
         addWait(2.0);
         addClearPortrait();
-        addLine(CharacterEnum.SUBIYA, 263);
-        addLine(CharacterEnum.RAILA, 264);
-        addLine(CharacterEnum.RAVAGE, 265);
-        addLine(CharacterEnum.RAILA, 266);
-        addLine(CharacterEnum.RAVAGE, 267);
-        addLine(CharacterEnum.SUBIYA, 268);
-        addLine(CharacterEnum.RAILA, 269);
-        addLine(CharacterEnum.SUBIYA, 445);
-        addLine(CharacterEnum.RAVAGE, 446);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S8_01);
+        addLine(CharacterEnum.RAILA, StoryKey.S8_02);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S8_03);
+        addLine(CharacterEnum.RAILA, StoryKey.S8_04);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S8_05);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S8_06);
+        addLine(CharacterEnum.RAILA, StoryKey.S8_07);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S8_08);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S8_09);
         addExit();
     }
 
     private void buildScene8() {
         addWait(2.0);
         addClearPortrait();
-        addLine(270);
-        addLine(CharacterEnum.ADAM, 271);
-        addLine(CharacterEnum.ADAM, 272);
-        addLine(CharacterEnum.AZARIA, 273);
-        addLine(CharacterEnum.ADAM, 274);
-        addLine(CharacterEnum.LYNX, 275);
-        addLine(CharacterEnum.AZARIA, 276);
-        addLine(CharacterEnum.ADAM, 277);
-        addLine(CharacterEnum.LYNX, 278);
-        addLine(CharacterEnum.ADAM, 279);
+        addLine(StoryKey.S9_01);
+        addLine(CharacterEnum.ADAM, StoryKey.S9_02);
+        addLine(CharacterEnum.ADAM, StoryKey.S9_03);
+        addLine(CharacterEnum.AZARIA, StoryKey.S9_04);
+        addLine(CharacterEnum.ADAM, StoryKey.S9_05);
+        addLine(CharacterEnum.LYNX, StoryKey.S9_06);
+        addLine(CharacterEnum.AZARIA, StoryKey.S9_07);
+        addLine(CharacterEnum.ADAM, StoryKey.S9_08);
+        addLine(CharacterEnum.LYNX, StoryKey.S9_09);
+        addLine(CharacterEnum.ADAM, StoryKey.S9_10);
         addExit();
     }
 
     private void buildScene9() {
         addWait(2.0);
         addClearPortrait();
-        addLine(CharacterEnum.RAILA, 280);
-        addLine(CharacterEnum.AZARIA, 281);
-        addLine(CharacterEnum.RAILA, 282);
-        addLine(CharacterEnum.AZARIA, 283);
-        addLine(CharacterEnum.RAILA, 284);
-        addLine(CharacterEnum.AZARIA, 447);
-        addLine(CharacterEnum.RAILA, 285);
-        addLine(CharacterEnum.AZARIA, 286);
-        addLineClear(287);
-        addLine(CharacterEnum.SORROWE, 288);
-        addLine(448);
-        addLine(449);
-        addLine(CharacterEnum.RAILA, 289);
-        addLine(CharacterEnum.SORROWE, 290);
-        addLine(CharacterEnum.RAILA, 291);
-        addLine(292);
-        addLine(CharacterEnum.SORROWE, 293);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_01);
+        addLine(CharacterEnum.AZARIA, StoryKey.S10_02);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_03);
+        addLine(CharacterEnum.AZARIA, StoryKey.S10_04);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_05);
+        addLine(CharacterEnum.AZARIA, StoryKey.S10_06);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_07);
+        addLine(CharacterEnum.AZARIA, StoryKey.S10_08);
+        addLineClear(StoryKey.S10_09);
+        addLine(CharacterEnum.SORROWE, StoryKey.S10_10);
+        addLine(StoryKey.S10_11);
+        addLine(StoryKey.S10_12);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_13);
+        addLine(CharacterEnum.SORROWE, StoryKey.S10_14);
+        addLine(CharacterEnum.RAILA, StoryKey.S10_15);
+        addLine(StoryKey.S10_16);
+        addLine(CharacterEnum.SORROWE, StoryKey.S10_17);
         addExit();
     }
 
@@ -573,45 +576,45 @@ public class StoryMode {
         addWait(2.0);
         addPortraitThen(CharacterEnum.THING);
         steps.add(Step.action(() -> Characters.get().setDamageCounter(PlayerType.PLAYER2, 18)));
-        addLine(CharacterEnum.SORROWE, 294);
-        addLine(CharacterEnum.SUBIYA, 231);
-        addLine(CharacterEnum.RAILA, 295);
-        addLine(CharacterEnum.RAILA, 296);
-        addLine(CharacterEnum.SORROWE, 297);
-        addLine(CharacterEnum.RAILA, 298);
-        addLine(CharacterEnum.SORROWE, 299);
-        addLine(CharacterEnum.ADAM, 300);
-        addLine(CharacterEnum.RAILA, 301);
-        addLine(CharacterEnum.NOVA_ADAM, 302, " !!!!!!!!!!!!!!");
-        addLine(CharacterEnum.RAILA, 303);
-        addLine(CharacterEnum.LYNX, 304);
-        addLine(CharacterEnum.RAILA, 305);
-        addLine(CharacterEnum.ADAM, 306);
+        addLine(CharacterEnum.SORROWE, StoryKey.S11_01);
+        addLine(CharacterEnum.SUBIYA, StoryKey.S11_02);
+        addLine(CharacterEnum.RAILA, StoryKey.S11_03);
+        addLine(CharacterEnum.RAILA, StoryKey.S11_04);
+        addLine(CharacterEnum.SORROWE, StoryKey.S11_05);
+        addLine(CharacterEnum.RAILA, StoryKey.S11_06);
+        addLine(CharacterEnum.SORROWE, StoryKey.S11_07);
+        addLine(CharacterEnum.ADAM, StoryKey.S11_08);
+        addLine(CharacterEnum.RAILA, StoryKey.S11_09);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S11_10, " !!!!!!!!!!!!!!");
+        addLine(CharacterEnum.RAILA, StoryKey.S11_11);
+        addLine(CharacterEnum.LYNX, StoryKey.S11_12);
+        addLine(CharacterEnum.RAILA, StoryKey.S11_13);
+        addLine(CharacterEnum.ADAM, StoryKey.S11_14);
         addExit();
     }
 
     private void buildScene11() {
         addWait(2.0);
         addClearPortrait();
-        addLine(CharacterEnum.NOVA_ADAM, 373);
-        addLineClear(374);
-        addLine(CharacterEnum.RAILA, 375);
-        addLine(CharacterEnum.AZARIA, 376);
-        addLine(CharacterEnum.RAILA, 377);
-        addLineClear(378);
-        addLine(CharacterEnum.RAVAGE, 379);
-        addLine(CharacterEnum.ADE, 380);
-        addLine(381);
-        addLine(CharacterEnum.NOVA_ADAM, 383);
-        addLine(CharacterEnum.THING, 384);
-        addLine(CharacterEnum.SORROWE, 385);
-        addLine(CharacterEnum.AZARIA, 386);
-        addLine(CharacterEnum.NOVA_ADAM, 387);
-        addLine(CharacterEnum.JONAH, 388);
-        addLine(CharacterEnum.SORROWE, 389);
-        addLine(CharacterEnum.NOVA_ADAM, 390);
-        addLine(CharacterEnum.NOVA_ADAM, 391);
-        addLine(CharacterEnum.JONAH, 392);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S12_01);
+        addLineClear(StoryKey.S12_02);
+        addLine(CharacterEnum.RAILA, StoryKey.S12_03);
+        addLine(CharacterEnum.AZARIA, StoryKey.S12_04);
+        addLine(CharacterEnum.RAILA, StoryKey.S12_05);
+        addLineClear(StoryKey.S12_06);
+        addLine(CharacterEnum.RAVAGE, StoryKey.S12_07);
+        addLine(CharacterEnum.ADE, StoryKey.S12_08);
+        addLine(StoryKey.S12_09);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S12_10);
+        addLine(CharacterEnum.THING, StoryKey.S12_11);
+        addLine(CharacterEnum.SORROWE, StoryKey.S12_12);
+        addLine(CharacterEnum.AZARIA, StoryKey.S12_13);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S12_14);
+        addLine(CharacterEnum.JONAH, StoryKey.S12_15);
+        addLine(CharacterEnum.SORROWE, StoryKey.S12_16);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S12_17);
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S12_18);
+        addLine(CharacterEnum.JONAH, StoryKey.S12_19);
         addExit();
     }
 

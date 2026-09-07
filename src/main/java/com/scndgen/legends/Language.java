@@ -92,7 +92,7 @@ public final class Language {
         return "No translation :: " + id;
     }
 
-    public String get(LangKey key) {
+    public String get(TextKey key) {
         return get(key.id());
     }
 
@@ -104,7 +104,7 @@ public final class Language {
         return applyArgs(pattern, args);
     }
 
-    public String get(LangKey key, Object... args) {
+    public String get(TextKey key, Object... args) {
         return get(key.id(), args);
     }
 

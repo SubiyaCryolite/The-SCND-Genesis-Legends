@@ -22,10 +22,10 @@
 package com.scndgen.legends;
 
 /**
- * Named indexes into {@code translations/*.json}. Story/tutorial body lines may still
- * use raw ints via {@link Language#get(int)}.
+ * Named indexes into {@code translations/*.json} for menus, HUD, and system copy.
+ * Story dialogue lives on {@link StoryKey}.
  */
-public enum LangKey {
+public enum LangKey implements TextKey {
     OFF(1),
     QUALITY_HIGH(2),
     QUALITY_MEDIUM(3),
@@ -228,6 +228,7 @@ public enum LangKey {
         this.id = id;
     }
 
+    @Override
     public int id() {
         return id;
     }

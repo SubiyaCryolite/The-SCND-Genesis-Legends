@@ -21,7 +21,10 @@
  **************************************************************************/
 package com.scndgen.legends.mode;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.TextKey;
+import com.scndgen.legends.TutorialKey;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
@@ -46,52 +49,52 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Tutorial {
 
-    private record Section(int topLangId, int textLangId, int pic, int arr, boolean fixedFrames, int frameCount) {
-        Section(int topLangId, int textLangId, int pic, int arr) {
-            this(topLangId, textLangId, pic, arr, false, 0);
+    private record Section(TextKey top, TextKey text, int pic, int arr, boolean fixedFrames, int frameCount) {
+        Section(TextKey top, TextKey text, int pic, int arr) {
+            this(top, text, pic, arr, false, 0);
         }
     }
 
     private static final Section[] SECTIONS = {
-            new Section(356, 320, 0, 0),
-            new Section(356, 321, 0, 0),
-            new Section(360, 322, 0, 0),
-            new Section(360, 344, 0, 6),
-            new Section(360, 345, 0, 6),
-            new Section(360, 323, 0, 1),
-            new Section(360, 324, 0, 1),
-            new Section(360, 325, 0, 1),
-            new Section(360, 326, 0, 1),
-            new Section(360, 327, 0, 2),
-            new Section(355, 328, 0, 5),
-            new Section(355, 329, 0, 5),
-            new Section(355, 330, 0, 5),
-            new Section(355, 331, 0, 5),
-            new Section(355, 332, 0, 5),
-            new Section(355, 333, 0, 5),
-            new Section(355, 334, 0, 5),
-            new Section(355, 335, 0, 5),
-            new Section(355, 336, 0, 5),
-            new Section(358, 352, 4, 8),
-            new Section(358, 353, 4, 8),
-            new Section(358, 354, 5, 8),
-            new Section(358, 361, 5, 8),
-            new Section(358, 362, 5, 8),
-            new Section(358, 363, 5, 8),
-            new Section(358, 336, 4, 8),
-            new Section(357, 337, 4, 3),
-            new Section(357, 338, 4, 3),
-            new Section(357, 339, 4, 3),
-            new Section(357, 340, 4, 4),
-            new Section(357, 341, 0, 4),
-            new Section(359, 346, 0, 0),
-            new Section(359, 347, 4, 7),
-            new Section(359, 348, 1, 7),
-            new Section(359, 349, 2, 7),
-            new Section(359, 350, 3, 0),
-            new Section(359, 367, 3, 0),
-            new Section(359, 351, 3, 0),
-            new Section(-1, 393, 0, 0, true, 16 * 30), // last: no top change, no sec increment
+            new Section(LangKey.TUTORIAL_INTRO, TutorialKey.INTRO_01, 0, 0),
+            new Section(LangKey.TUTORIAL_INTRO, TutorialKey.INTRO_02, 0, 0),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_01, 0, 0),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_02, 0, 6),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_03, 0, 6),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_04, 0, 1),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_05, 0, 1),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_06, 0, 1),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_07, 0, 1),
+            new Section(LangKey.TUTORIAL_HUD, TutorialKey.HUD_08, 0, 2),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_01, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_02, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_03, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_04, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_05, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_06, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_07, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_08, 0, 5),
+            new Section(LangKey.TUTORIAL_CM, TutorialKey.CM_09, 0, 5),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_01, 4, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_02, 4, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_03, 5, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_04, 5, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_05, 5, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_06, 5, 8),
+            new Section(LangKey.TUTORIAL_FB, TutorialKey.FURY_07, 4, 8),
+            new Section(LangKey.TUTORIAL_AB, TutorialKey.AB_01, 4, 3),
+            new Section(LangKey.TUTORIAL_AB, TutorialKey.AB_02, 4, 3),
+            new Section(LangKey.TUTORIAL_AB, TutorialKey.AB_03, 4, 3),
+            new Section(LangKey.TUTORIAL_AB, TutorialKey.AB_04, 4, 4),
+            new Section(LangKey.TUTORIAL_AB, TutorialKey.AB_05, 0, 4),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_01, 0, 0),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_02, 4, 7),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_03, 1, 7),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_04, 2, 7),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_05, 3, 0),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_06, 3, 0),
+            new Section(LangKey.TUTORIAL_ATTACKS, TutorialKey.ATTACKS_07, 3, 0),
+            new Section(null, TutorialKey.DONE, 0, 0, true, 16 * 30),
     };
 
     private NvgImage[] slides, arrows;
@@ -117,7 +120,8 @@ public class Tutorial {
         arrowOpac = 1.0f;
         tutSpeed = 8;
         cord = 360;
-        tutText = "TUTORIAL";
+        tutText = Language.get().get(LangKey.TUTORIAL);
+        Language.get().addLocaleListener(this::onLocaleChanged);
     }
 
     private void ensureImagesLoaded() {
@@ -202,10 +206,7 @@ public class Tutorial {
             return;
         }
         Section section = SECTIONS[index];
-        if (section.topLangId >= 0) {
-            setTop(Language.get().get(section.topLangId));
-        }
-        setTxt(Language.get().get(section.textLangId));
+        applyCopy(section);
         setPic(section.pic);
         setArr(section.arr);
         if (section.fixedFrames) {
@@ -268,17 +269,18 @@ public class Tutorial {
         draw.fillText(tutText, (852 - Utils.computeStringWidth(tutText, draw)) / 2, 233);
         draw.setGlobalAlpha(1.0f);
 
-        var topLine = ":: " + topText + " - " + Language.get().get(365) + " " + sec + " ::";
+        var language = Language.get();
+        var topLine = ":: " + topText + " - " + language.get(LangKey.SLIDE) + " " + sec + " ::";
         draw.fillText(topLine, (852 - Utils.computeStringWidth(topLine, draw)) / 2, 253);
 
-        draw.fillText(Language.get().get(366) + ":", 10, cord);
-        draw.fillText("1 - " + Language.get().get(356), 20, (cord + (1 * 14)));
-        draw.fillText("2 - " + Language.get().get(360), 20, (cord + (2 * 14)));
-        draw.fillText("3 - " + Language.get().get(355), 20, (cord + (3 * 14)));
-        draw.fillText("4 - " + Language.get().get(358), 20, (cord + (4 * 14)));
-        draw.fillText("5 - " + Language.get().get(357), 20, (cord + (5 * 14)));
-        draw.fillText("6 - " + Language.get().get(359), 20, (cord + (6 * 14)));
-        draw.fillText(Language.get().get(343), 20, (cord + (7 * 14)));
+        draw.fillText(language.get(LangKey.KEYBOARD_SHORTCUTS) + ":", 10, cord);
+        draw.fillText("1 - " + language.get(LangKey.TUTORIAL_INTRO), 20, (cord + (1 * 14)));
+        draw.fillText("2 - " + language.get(LangKey.TUTORIAL_HUD), 20, (cord + (2 * 14)));
+        draw.fillText("3 - " + language.get(LangKey.TUTORIAL_CM), 20, (cord + (3 * 14)));
+        draw.fillText("4 - " + language.get(LangKey.TUTORIAL_FB), 20, (cord + (4 * 14)));
+        draw.fillText("5 - " + language.get(LangKey.TUTORIAL_AB), 20, (cord + (5 * 14)));
+        draw.fillText("6 - " + language.get(LangKey.TUTORIAL_ATTACKS), 20, (cord + (6 * 14)));
+        draw.fillText(language.get(LangKey.PRESS_ENTER_SKIP), 20, (cord + (7 * 14)));
 
     }
 
@@ -324,6 +326,26 @@ public class Tutorial {
 
     private void setTop(String p) {
         topText = p;
+    }
+
+    private void applyCopy(Section section) {
+        var language = Language.get();
+        if (section.top() != null) {
+            setTop(language.get(section.top()));
+        }
+        setTxt(language.get(section.text()));
+    }
+
+    private void onLocaleChanged() {
+        if (!running) {
+            tutText = Language.get().get(LangKey.TUTORIAL);
+            return;
+        }
+        var index = Math.min(Math.max(sec, 0), SECTIONS.length - 1);
+        if (index < SECTIONS.length && !SECTIONS[index].fixedFrames() && sec > 0) {
+            index = sec - 1;
+        }
+        applyCopy(SECTIONS[Math.max(0, index)]);
     }
 
     public void onBackCancel() {
