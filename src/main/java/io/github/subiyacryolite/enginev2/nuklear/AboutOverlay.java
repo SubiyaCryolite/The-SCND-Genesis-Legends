@@ -21,6 +21,7 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev2.nuklear;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.nuklear.NkContext;
@@ -52,8 +53,8 @@ public final class AboutOverlay implements UiOverlay {
 
     public AboutOverlay() {
         var language = Language.get();
-        tabs = new String[]{language.get(314), language.get(486), language.get(487), language.get(488)};
-        bodies[0] = language.get(489) + " " + readBuildId() + "\n\n" + read("text/txtAbout.txt");
+        tabs = new String[]{language.get(LangKey.ABOUT), language.get(LangKey.LICENSE), language.get(LangKey.CHANGELOG), language.get(LangKey.SOURCE)};
+        bodies[0] = language.get(LangKey.BUILD) + " " + readBuildId() + "\n\n" + read("text/txtAbout.txt");
         bodies[1] = read("text/txtLicense.txt");
         bodies[2] = read("text/txtChangelog.txt");
         bodies[3] = read("text/txtSourceCode.txt");
@@ -67,7 +68,7 @@ public final class AboutOverlay implements UiOverlay {
         float w = 560;
         float h = 420;
         NkRect bounds = nk_rect((windowWidth - w) * 0.5f, (windowHeight - h) * 0.5f, w, h, NkRect.malloc(stack));
-        if (nk_begin(ctx, Language.get().get(314), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
+        if (nk_begin(ctx, Language.get().get(LangKey.ABOUT), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
             nk_layout_row_dynamic(ctx, 28, tabs.length);
             for (int i = 0; i < tabs.length; i++) {
                 if (nk_button_label(ctx, tabs[i])) {
@@ -83,7 +84,7 @@ public final class AboutOverlay implements UiOverlay {
                 nk_label(ctx, line.length() > 90 ? line.substring(0, 90) + "…" : line, NK_TEXT_LEFT);
             }
             nk_layout_row_dynamic(ctx, 32, 1);
-            if (nk_button_label(ctx, Language.get().get(36))) {
+            if (nk_button_label(ctx, Language.get().get(LangKey.OK))) {
                 open = false;
             }
         }

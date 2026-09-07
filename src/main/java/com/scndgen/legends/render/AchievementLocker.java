@@ -22,6 +22,7 @@
 package com.scndgen.legends.render;
 
 import com.scndgen.legends.Achievement;
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.Achievements;
@@ -56,6 +57,7 @@ public class AchievementLocker {
 
     public AchievementLocker() {
         refreshStats();
+        Language.get().addLocaleListener(this::refreshStats);
     }
 
     public float getStoryProgression() {
@@ -162,14 +164,14 @@ public class AchievementLocker {
                 draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry) + " >>", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
                 draw.fillText(achievement.achievementDescription(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
-                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + language.get(498), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
+                draw.fillText(language.get(LangKey.ACTIVATED) + " " + language.get(LangKey.TIMES, login.getAchievementTriggers(entry)), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             } else {
                 draw.drawImage(no, offset2x, scroller + achPic + (entry.id() * achPicSpacer));
                 draw.setFont("menu", spacer + 2);
                 draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
-                draw.fillText(language.get(499), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
-                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + language.get(498), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
+                draw.fillText(language.get(LangKey.HIDDEN_ACHIEVEMENT), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
+                draw.fillText(language.get(LangKey.ACTIVATED) + " " + language.get(LangKey.TIMES, login.getAchievementTriggers(entry)), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             }
         }
     }
@@ -250,7 +252,7 @@ public class AchievementLocker {
         stat2 = language.get(119) + ": " + shortVer(login.getPoints() + "");
         stat3 = language.get(120) + ": " + timeCal(login.getPlayTime());
         stat4 = language.get(121) + ": " + login.getUnlockedAch();
-        stat5 = language.get(122) + ": " + login.getNumberOfTimesAchivementTriggered() + language.get(498);
+        stat5 = language.get(LangKey.STAT_ACH_TRIGGERED) + ": " + language.get(LangKey.TIMES, login.getNumberOfTimesAchivementTriggered());
         stat6 = language.get(123) + ": " + login.getNumberOfMatches();
         try {
             stat7 = language.get(124) + ": " + login.getPoints() / login.getNumberOfMatches();
@@ -267,21 +269,18 @@ public class AchievementLocker {
         if (timeInt > -1 && timeInt <= 3600) {
             int minutes = timeInt / 60;
             int seconds = timeInt - (minutes * 60);
-            var language = Language.get();
-            return minutes + language.get(504) + seconds + language.get(505);
+            return Language.get().get(LangKey.PLAY_TIME_MINUTES, minutes, seconds);
         } else if (timeInt > 3600 && timeInt <= 86400) {
             int hours = timeInt / 3600;
             int minutes = (timeInt - (hours * 3600)) / 60;
             int seconds = timeInt - ((minutes * 60) + (hours * 3600));
-            var language = Language.get();
-            return hours + language.get(506) + minutes + language.get(507) + seconds + language.get(508);
+            return Language.get().get(LangKey.PLAY_TIME_HOURS, hours, minutes, seconds);
         } else {
             int days = timeInt / 86400;
             int hours = (days * 86400) / 3600;
             int minutes = (timeInt - (hours * 3600) - (days * 86400)) / 60;
             int seconds = timeInt - ((minutes * 60) + (hours * 3600) + (days * 86400));
-            var language = Language.get();
-            return days + language.get(509) + hours + language.get(510) + minutes + language.get(507) + seconds + language.get(508);
+            return Language.get().get(LangKey.PLAY_TIME_DAYS, days, hours, minutes, seconds);
         }
     }
 

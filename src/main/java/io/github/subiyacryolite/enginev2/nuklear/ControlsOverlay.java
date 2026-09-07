@@ -21,6 +21,7 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev2.nuklear;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.NkRect;
@@ -52,20 +53,20 @@ public final class ControlsOverlay implements UiOverlay {
         float w = 480;
         float h = 420;
         NkRect bounds = nk_rect((windowWidth - w) * 0.5f, (windowHeight - h) * 0.5f, w, h, NkRect.malloc(stack));
-        if (nk_begin(ctx, lang.get(313), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
-            row(ctx, lang.get(37), "");
-            row(ctx, lang.get(38), lang.get(40));
-            row(ctx, lang.get(39), lang.get(41));
-            row(ctx, lang.get(42), lang.get(492));
-            row(ctx, lang.get(43), lang.get(493));
-            row(ctx, lang.get(44), lang.get(494));
-            row(ctx, lang.get(45), lang.get(495));
-            row(ctx, lang.get(46), lang.get(496));
-            row(ctx, lang.get(47), lang.get(497));
-            row(ctx, lang.get(48), lang.get(49));
-            row(ctx, lang.get(50), lang.get(491));
+        if (nk_begin(ctx, lang.get(LangKey.VIEW_CONTROLS), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
+            row(ctx, lang.get(LangKey.KEYBOARD), "");
+            row(ctx, lang.get(LangKey.SELECT), lang.get(LangKey.ENTER));
+            row(ctx, lang.get(LangKey.CANCEL_SELECTION), lang.get(LangKey.BACKSPACE));
+            row(ctx, lang.get(LangKey.SCREENSHOT), lang.get(LangKey.KEY_F12));
+            row(ctx, lang.get(LangKey.PAUSE_RESUME), lang.get(LangKey.KEY_ESC));
+            row(ctx, lang.get(LangKey.TRIGGER_FURY), lang.get(LangKey.KEY_L));
+            row(ctx, lang.get(LangKey.LEFT_PREVIOUS), lang.get(LangKey.KEY_LEFT));
+            row(ctx, lang.get(LangKey.RIGHT_NEXT), lang.get(LangKey.KEY_RIGHT));
+            row(ctx, lang.get(LangKey.UP), lang.get(LangKey.KEY_UP));
+            row(ctx, lang.get(LangKey.DOWN), lang.get(LangKey.FIGURE_THIS_OUT));
+            row(ctx, lang.get(LangKey.EXIT_GAME), lang.get(LangKey.KEY_DOWN_ENTER));
             nk_layout_row_dynamic(ctx, 32, 1);
-            if (nk_button_label(ctx, lang.get(36))) {
+            if (nk_button_label(ctx, lang.get(LangKey.OK))) {
                 open = false;
             }
         }

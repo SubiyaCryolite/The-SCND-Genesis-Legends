@@ -21,6 +21,7 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev2.nuklear;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.state.State;
@@ -74,12 +75,15 @@ public final class OptionsOverlay implements UiOverlay {
     private int timeLimitIndex;
     private int comicIndex = State.get().getLogin().getComicEffectOccurence();
     private int resolutionIndex;
+    private int languageIndex;
     private boolean open = true;
 
     private final String[] difficulties;
     private final String[] textSpeeds;
     private final String[] timeLimits;
     private final String[] comicRates;
+    private final String[] languageNames;
+    private final List<Integer> languageIndexes;
 
     public OptionsOverlay(GlfwEngine engine) {
         this.engine = engine;
@@ -87,10 +91,13 @@ public final class OptionsOverlay implements UiOverlay {
         this.resolutionLabels = modes.stream().map(DisplayModes.Mode::label).toArray(String[]::new);
 
         Language lang = Language.get();
-        difficulties = new String[]{lang.get(26), lang.get(27), lang.get(28), lang.get(29), lang.get(30)};
-        textSpeeds = new String[]{lang.get(22), lang.get(23), lang.get(24), lang.get(25)};
-        timeLimits = new String[]{lang.get(424), "180", "150", "120", "90", "60", "45", "30"};
-        comicRates = new String[]{lang.get(1), lang.get(2), lang.get(3), lang.get(4)};
+        difficulties = new String[]{lang.get(LangKey.ARE_YOU_INSANE), lang.get(LangKey.HARD), lang.get(LangKey.MEDIUM), lang.get(LangKey.EASY), lang.get(LangKey.YOU_SUCK)};
+        textSpeeds = new String[]{lang.get(LangKey.SPEED_INSANE), lang.get(LangKey.SPEED_FAST), lang.get(LangKey.SPEED_NORMAL), lang.get(LangKey.SPEED_SLOW)};
+        timeLimits = new String[]{lang.get(LangKey.INFINITE), "180", "150", "120", "90", "60", "45", "30"};
+        comicRates = new String[]{lang.get(LangKey.OFF), lang.get(LangKey.QUALITY_HIGH), lang.get(LangKey.QUALITY_MEDIUM), lang.get(LangKey.QUALITY_LOW)};
+        languageIndexes = lang.availableIndexes();
+        languageNames = lang.getSupportedLanguages().toArray(String[]::new);
+        languageIndex = Math.max(0, languageIndexes.indexOf(State.get().getLogin().getCurrentLanguage()));
 
         textSpeedIndex = indexOf(textSpeeds, State.get().getLogin().getTextSpeed(), 2);
         timeLimitIndex = indexOf(timeLimits, State.get().getLogin().getTimeLimitString(), 4);
@@ -107,18 +114,18 @@ public final class OptionsOverlay implements UiOverlay {
             return false;
         }
         float w = 460;
-        float h = 520;
+        float h = 560;
         NkRect bounds = nk_rect((windowWidth - w) * 0.5f, (windowHeight - h) * 0.5f, w, h, NkRect.malloc(stack));
         Language lang = Language.get();
-        if (nk_begin(ctx, lang.get(34), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
-            resolutionIndex = comboRow(ctx, stack, lang.get(482), resolutionLabels, resolutionIndex);
+        if (nk_begin(ctx, lang.get(LangKey.GAME_OPTIONS), bounds, NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE)) {
+            resolutionIndex = comboRow(ctx, stack, lang.get(LangKey.RESOLUTION), resolutionLabels, resolutionIndex);
             nk_layout_row_dynamic(ctx, 18, 1);
-            nk_label(ctx, lang.get(483), NK_TEXT_LEFT);
+            nk_label(ctx, lang.get(LangKey.REFRESH_NOTE), NK_TEXT_LEFT);
             nk_layout_row_dynamic(ctx, 18, 1);
-            nk_label(ctx, lang.get(484), NK_TEXT_LEFT);
+            nk_label(ctx, lang.get(LangKey.LETTERBOX_NOTE), NK_TEXT_LEFT);
 
             nk_layout_row_dynamic(ctx, 24, 1);
-            nk_label(ctx, lang.get(485), NK_TEXT_LEFT);
+            nk_label(ctx, lang.get(LangKey.LETTERBOX_COLOR), NK_TEXT_LEFT);
             nk_layout_row_dynamic(ctx, 28, 1);
             nk_property_int(ctx, "R", 0, letterboxR, 255, 1, 1);
             nk_layout_row_dynamic(ctx, 28, 1);
@@ -126,23 +133,26 @@ public final class OptionsOverlay implements UiOverlay {
             nk_layout_row_dynamic(ctx, 28, 1);
             nk_property_int(ctx, "B", 0, letterboxB, 255, 1, 1);
 
-            difficultyIndex = comboRow(ctx, stack, lang.get(6), difficulties, difficultyIndex);
+            difficultyIndex = comboRow(ctx, stack, lang.get(LangKey.DIFFICULTY_SETTING), difficulties, difficultyIndex);
             nk_layout_row_dynamic(ctx, 28, 1);
-            nk_property_int(ctx, lang.get(420), 1, voice, 100, 1, 1);
+            nk_property_int(ctx, lang.get(LangKey.VOICE_VOLUME), 1, voice, 100, 1, 1);
             nk_layout_row_dynamic(ctx, 28, 1);
-            nk_property_int(ctx, lang.get(418), 1, sound, 100, 1, 1);
+            nk_property_int(ctx, lang.get(LangKey.SOUND_VOLUME), 1, sound, 100, 1, 1);
             nk_layout_row_dynamic(ctx, 28, 1);
-            nk_property_int(ctx, lang.get(419), 1, music, 100, 1, 1);
-            textSpeedIndex = comboRow(ctx, stack, lang.get(7), textSpeeds, textSpeedIndex);
-            timeLimitIndex = comboRow(ctx, stack, lang.get(14), timeLimits, timeLimitIndex);
-            comicIndex = comboRow(ctx, stack, lang.get(17), comicRates, comicIndex);
+            nk_property_int(ctx, lang.get(LangKey.MUSIC_VOLUME), 1, music, 100, 1, 1);
+            textSpeedIndex = comboRow(ctx, stack, lang.get(LangKey.DIALOGUE_SPEED), textSpeeds, textSpeedIndex);
+            timeLimitIndex = comboRow(ctx, stack, lang.get(LangKey.TIME_DURATION), timeLimits, timeLimitIndex);
+            comicIndex = comboRow(ctx, stack, lang.get(LangKey.COMIC_OCCURRENCE), comicRates, comicIndex);
+            if (languageNames.length > 0) {
+                languageIndex = comboRow(ctx, stack, lang.get(LangKey.SELECTED_LANGUAGE), languageNames, languageIndex);
+            }
 
             nk_layout_row_dynamic(ctx, 32, 2);
-            if (nk_button_label(ctx, lang.get(20))) {
+            if (nk_button_label(ctx, lang.get(LangKey.SAVE))) {
                 applyAndSave();
                 open = false;
             }
-            if (nk_button_label(ctx, lang.get(421))) {
+            if (nk_button_label(ctx, lang.get(LangKey.CANCEL))) {
                 open = false;
             }
         }
@@ -162,12 +172,17 @@ public final class OptionsOverlay implements UiOverlay {
         Audio.volume(AudioType.MUSIC, music.get(0));
         login.setTextSpeed(textSpeeds[textSpeedIndex]);
         String time = timeLimits[timeLimitIndex];
-        if (time.equalsIgnoreCase(Language.get().get(424)) || time.equalsIgnoreCase("infinite")) {
+        if (time.equalsIgnoreCase(Language.get().get(LangKey.INFINITE)) || time.equalsIgnoreCase("infinite")) {
             login.setTimeLimit(INFINITE_TIME);
         } else {
             login.setTimeLimit(Integer.parseInt(time));
         }
         login.setComicEffectOccurence(comicIndex);
+        if (!languageIndexes.isEmpty()) {
+            var selected = languageIndexes.get(Math.max(0, Math.min(languageIndex, languageIndexes.size() - 1)));
+            login.setCurrentLanguage(selected);
+            Language.get().setLanguage(selected);
+        }
         login.setLetterboxR(letterboxR.get(0));
         login.setLetterboxG(letterboxG.get(0));
         login.setLetterboxB(letterboxB.get(0));

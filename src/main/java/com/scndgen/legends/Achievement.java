@@ -50,18 +50,24 @@ public class Achievement {
 
     private Achievement() {
         instance = this;
-        setBinding(Achievements.UPPER_HAND, Language.get().get(61), Language.get().get(72));
-        setBinding(Achievements.BEAT_THE_ODDS, Language.get().get(62), Language.get().get(73));
-        setBinding(Achievements.OWNAGE, Language.get().get(63), Language.get().get(74));
-        setBinding(Achievements.HEARTLESS, Language.get().get(64), Language.get().get(75));
-        setBinding(Achievements.MEANIE, Language.get().get(65), Language.get().get(76));
-        setBinding(Achievements.RAGE, Language.get().get(66), Language.get().get(77));
-        setBinding(Achievements.WINNER, Language.get().get(67), Language.get().get(78));
-        setBinding(Achievements.BUZZ_KILL, Language.get().get(68), Language.get().get(79));
-        setBinding(Achievements.CLOSE_CALL, Language.get().get(69), Language.get().get(80));
-        setBinding(Achievements.ON_A_ROLL, Language.get().get(70), Language.get().get(81));
-        setBinding(Achievements.HALF_WAY_THROUGH, Language.get().get(71), Language.get().get(82));
+        bindNames();
+        Language.get().addLocaleListener(this::bindNames);
         newInstance();
+    }
+
+    private void bindNames() {
+        var language = Language.get();
+        setBinding(Achievements.UPPER_HAND, language.get(LangKey.ACH_UPPER_HAND), language.get(LangKey.ACH_UPPER_HAND_DESC));
+        setBinding(Achievements.BEAT_THE_ODDS, language.get(LangKey.ACH_BEAT_THE_ODDS), language.get(LangKey.ACH_BEAT_THE_ODDS_DESC));
+        setBinding(Achievements.OWNAGE, language.get(LangKey.ACH_OWNAGE), language.get(LangKey.ACH_OWNAGE_DESC));
+        setBinding(Achievements.HEARTLESS, language.get(LangKey.ACH_HEARTLESS), language.get(LangKey.ACH_HEARTLESS_DESC));
+        setBinding(Achievements.MEANIE, language.get(LangKey.ACH_MEANIE), language.get(LangKey.ACH_MEANIE_DESC));
+        setBinding(Achievements.RAGE, language.get(LangKey.ACH_RAGE), language.get(LangKey.ACH_RAGE_DESC));
+        setBinding(Achievements.WINNER, language.get(LangKey.ACH_WINNER), language.get(LangKey.ACH_WINNER_DESC));
+        setBinding(Achievements.BUZZ_KILL, language.get(LangKey.ACH_BUZZ_KILL), language.get(LangKey.ACH_BUZZ_KILL_DESC));
+        setBinding(Achievements.CLOSE_CALL, language.get(LangKey.ACH_CLOSE_CALL), language.get(LangKey.ACH_CLOSE_CALL_DESC));
+        setBinding(Achievements.ON_A_ROLL, language.get(LangKey.ACH_ON_A_ROLL), language.get(LangKey.ACH_ON_A_ROLL_DESC));
+        setBinding(Achievements.HALF_WAY_THROUGH, language.get(LangKey.ACH_HALF_WAY), language.get(LangKey.ACH_HALF_WAY_DESC));
     }
 
     private void setBinding(final Achievements achievement, final String name, final String description) {

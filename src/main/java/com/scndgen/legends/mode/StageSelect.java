@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.mode;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.*;
@@ -82,24 +83,29 @@ public abstract class StageSelect extends Mode {
         stagePreviews[Stage.RANDOM.index()] = "bgBG12";
         stagePreviews[Stage.HIDDEN_CAVE_NIGHT.index()] = "bgBG15";
         //===============================================================
-        Language language = Language.get();
+        reloadStageNames();
+        Language.get().addLocaleListener(this::reloadStageNames);
+    }
+
+    private void reloadStageNames() {
+        var language = Language.get();
         lookupStageNames.clear();
-        lookupStageNames.put(Stage.IBEX_HILL, language.get(152));
-        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.get(153));
-        lookupStageNames.put(Stage.DESERT_RUINS, language.get(154));
-        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.get(155));
-        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.get(156));
-        lookupStageNames.put(Stage.SCORCHED_RUINS, language.get(157));
-        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.get(158));
-        lookupStageNames.put(Stage.DISTANT_ISLE, language.get(162));
-        lookupStageNames.put(Stage.HIDDEN_CAVE, language.get(159));
-        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.get(160));
-        lookupStageNames.put(Stage.APOCALYPTO, language.get(161));
-        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.get(163));
-        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.get(369));
-        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.get(370));
-        lookupStageNames.put(Stage.RANDOM, language.get(164));
-        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.get(371));
+        lookupStageNames.put(Stage.IBEX_HILL, language.get(LangKey.STAGE_IBEX_HILL));
+        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.get(LangKey.STAGE_CHESTON_DOCKS));
+        lookupStageNames.put(Stage.DESERT_RUINS, language.get(LangKey.STAGE_RUINED_HALL));
+        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.get(LangKey.STAGE_CHESTON_STREETS));
+        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.get(LangKey.STAGE_IBEX_NIGHT));
+        lookupStageNames.put(Stage.SCORCHED_RUINS, language.get(LangKey.STAGE_SCORCHED));
+        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.get(LangKey.STAGE_FROZEN));
+        lookupStageNames.put(Stage.DISTANT_ISLE, language.get(LangKey.STAGE_DISTANT_ISLE));
+        lookupStageNames.put(Stage.HIDDEN_CAVE, language.get(LangKey.STAGE_HIDDEN_CAVE));
+        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.get(LangKey.STAGE_AFRICAN_VILLAGE));
+        lookupStageNames.put(Stage.APOCALYPTO, language.get(LangKey.STAGE_APOCALYPSE));
+        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.get(LangKey.STAGE_MOONLIT_SHORE));
+        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.get(LangKey.STAGE_RUINED_HALL_NIGHT));
+        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.get(LangKey.STAGE_SCORCHED_NIGHT));
+        lookupStageNames.put(Stage.RANDOM, language.get(LangKey.STAGE_RANDOM));
+        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.get(LangKey.STAGE_HIDDEN_CAVE_NIGHT));
     }
 
     public void selectStage(Stage stage) {

@@ -24,6 +24,7 @@ package com.scndgen.legends.render;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
@@ -119,9 +120,9 @@ public class RenderCharacterSelection extends CharacterSelection {
                     } else if (networkManager.isOnline()) {
                         var language = Language.get();
                         ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
-                                language.get(471),
-                                language.get(472),
-                                language.get(473),
+                                language.get(LangKey.YIKES),
+                                language.get(LangKey.CANCEL_NETWORK_SESSION),
+                                language.get(LangKey.NO_GOING_BACK),
                                 answer -> {
                                     switch (answer) {
                                         case YES -> {
@@ -180,6 +181,7 @@ public class RenderCharacterSelection extends CharacterSelection {
             if ((index + columns) < total)
                 uiElements.get(index).setDown(uiElements.get(index + columns));
         }
+        Language.get().addLocaleListener(this::loadDesc);
     }
 
     public static synchronized RenderCharacterSelection get() {
@@ -296,8 +298,8 @@ public class RenderCharacterSelection extends CharacterSelection {
                 draw.drawImage(fight, 0, 0);
                 setFont(draw, UiConstants.EXTRA_LARGE_TXT_SIZE);
                 draw.setFill(1f, 1f, 1f);
-                String line146 = "<< " + Language.get().get(146) + " >>";
-                String line147 = "<< " + Language.get().get(147) + " >>";
+                String line146 = "<< " + Language.get().get(LangKey.PRESS_ENTER_PROCEED) + " >>";
+                String line147 = "<< " + Language.get().get(LangKey.BACKSPACE_CANCEL_SELECTIONS) + " >>";
                 draw.fillText(line146, (852 - draw.measureText(line146)) / 2, 360);
                 draw.fillText(line147, (852 - draw.measureText(line147)) / 2, 390);
             }
@@ -331,7 +333,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         } else if (networkManager.isClient()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
-            draw.fillText(Language.get().get(460), 553 + x, 400);
+            draw.fillText(Language.get().get(LangKey.WAITING_HOST), 553 + x, 400);
         }
     }
 
@@ -387,18 +389,19 @@ public class RenderCharacterSelection extends CharacterSelection {
 
     private void loadDesc() {
         characterDescription = new String[CharacterEnum.values().length];
-        characterDescription[CharacterEnum.RAILA.index()] = Language.get().get(134);
-        characterDescription[CharacterEnum.SUBIYA.index()] = Language.get().get(135);
-        characterDescription[CharacterEnum.LYNX.index()] = Language.get().get(136);
-        characterDescription[CharacterEnum.AISHA.index()] = Language.get().get(137);
-        characterDescription[CharacterEnum.RAVAGE.index()] = Language.get().get(138);
-        characterDescription[CharacterEnum.ADE.index()] = Language.get().get(139);
-        characterDescription[CharacterEnum.JONAH.index()] = Language.get().get(140);
-        characterDescription[CharacterEnum.ADAM.index()] = Language.get().get(141);
-        characterDescription[CharacterEnum.NOVA_ADAM.index()] = Language.get().get(142);
-        characterDescription[CharacterEnum.AZARIA.index()] = Language.get().get(143);
-        characterDescription[CharacterEnum.SORROWE.index()] = Language.get().get(144);
-        characterDescription[CharacterEnum.THING.index()] = Language.get().get(145);
+        var language = Language.get();
+        characterDescription[CharacterEnum.RAILA.index()] = language.get(LangKey.DESC_RAILA);
+        characterDescription[CharacterEnum.SUBIYA.index()] = language.get(LangKey.DESC_SUBIYA);
+        characterDescription[CharacterEnum.LYNX.index()] = language.get(LangKey.DESC_LYNX);
+        characterDescription[CharacterEnum.AISHA.index()] = language.get(LangKey.DESC_AISHA);
+        characterDescription[CharacterEnum.RAVAGE.index()] = language.get(LangKey.DESC_RAVAGE);
+        characterDescription[CharacterEnum.ADE.index()] = language.get(LangKey.DESC_ADE);
+        characterDescription[CharacterEnum.JONAH.index()] = language.get(LangKey.DESC_JONAH);
+        characterDescription[CharacterEnum.ADAM.index()] = language.get(LangKey.DESC_ADAM);
+        characterDescription[CharacterEnum.NOVA_ADAM.index()] = language.get(LangKey.DESC_NOVA_ADAM);
+        characterDescription[CharacterEnum.AZARIA.index()] = language.get(LangKey.DESC_AZARIA);
+        characterDescription[CharacterEnum.SORROWE.index()] = language.get(LangKey.DESC_SORROWE);
+        characterDescription[CharacterEnum.THING.index()] = language.get(LangKey.DESC_THING);
     }
 
     private void bindCharacter(UiItem item, CharacterEnum character, Event commonEvent) {

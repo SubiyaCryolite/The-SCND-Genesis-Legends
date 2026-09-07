@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.command;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -81,26 +82,26 @@ public final class GameCommandApplier {
             case GameCommand.DisconnectFromHost() -> {
                 var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        language.get(475),
-                        language.get(476),
-                        language.get(477)
+                        language.get(LangKey.OUCHIES),
+                        language.get(LangKey.HARSH),
+                        language.get(LangKey.OPPONENT_REFUSED)
                 ));
                 NetworkManager.get().close();
             }
             case GameCommand.CancelConnectivity() -> {
                 var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        language.get(471),
-                        language.get(478),
-                        language.get(479)
+                        language.get(LangKey.YIKES),
+                        language.get(LangKey.SESSION_TERMINATED),
+                        language.get(LangKey.THAT_SUCKS)
                 ));
                 NetworkManager.get().close();
             }
             case GameCommand.SessionError(var detail) -> {
                 var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        language.get(480),
-                        language.get(481),
+                        language.get(LangKey.NETWORK_ERROR),
+                        language.get(LangKey.SESSION_WENT_WRONG),
                         detail == null ? "" : detail
                 ));
                 NetworkManager.get().close();
