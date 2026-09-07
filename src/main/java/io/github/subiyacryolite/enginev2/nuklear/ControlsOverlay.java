@@ -56,14 +56,14 @@ public final class ControlsOverlay implements UiOverlay {
             row(ctx, lang.get(37), "");
             row(ctx, lang.get(38), lang.get(40));
             row(ctx, lang.get(39), lang.get(41));
-            row(ctx, lang.get(42), "F12");
-            row(ctx, lang.get(43), "ESC");
-            row(ctx, lang.get(44), "L");
-            row(ctx, lang.get(45), "Left");
-            row(ctx, lang.get(46), "Right");
-            row(ctx, lang.get(47), "Up");
+            row(ctx, lang.get(42), lang.get(492));
+            row(ctx, lang.get(43), lang.get(493));
+            row(ctx, lang.get(44), lang.get(494));
+            row(ctx, lang.get(45), lang.get(495));
+            row(ctx, lang.get(46), lang.get(496));
+            row(ctx, lang.get(47), lang.get(497));
             row(ctx, lang.get(48), lang.get(49));
-            row(ctx, lang.get(50), "Down / Enter");
+            row(ctx, lang.get(50), lang.get(491));
             nk_layout_row_dynamic(ctx, 32, 1);
             if (nk_button_label(ctx, lang.get(36))) {
                 open = false;

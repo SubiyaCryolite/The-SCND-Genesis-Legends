@@ -117,10 +117,11 @@ public class RenderCharacterSelection extends CharacterSelection {
                             GameCommandBus.get().publish(new GameCommand.DeselectOpponentSlot());
                         }
                     } else if (networkManager.isOnline()) {
+                        var language = Language.get();
                         ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
-                                "Yikes",
-                                "Are you sure you want to cancel this network session?",
-                                "There's no going back!",
+                                language.get(471),
+                                language.get(472),
+                                language.get(473),
                                 answer -> {
                                     switch (answer) {
                                         case YES -> {
@@ -330,7 +331,7 @@ public class RenderCharacterSelection extends CharacterSelection {
         } else if (networkManager.isClient()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
-            draw.fillText("Waiting for host to respond", 553 + x, 400);
+            draw.fillText(Language.get().get(460), 553 + x, 400);
         }
     }
 

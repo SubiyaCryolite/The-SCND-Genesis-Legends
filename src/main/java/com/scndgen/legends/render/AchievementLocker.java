@@ -44,7 +44,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class AchievementLocker {
 
     private int spacer = 14;
-    private String[] style = {"Newbie", "Cool!", "Awesome!!", "EPIC!!!"};
     private int offset = 10, offset2 = 350, offset2x = 40, achPic = 40, achPicSpacer = 60, scroller = 0;
     private String stat1, stat2, stat3,
             stat4, stat5, stat6, stat7, stat13, stat15, stat16, text2 = "", stat17;
@@ -163,14 +162,14 @@ public class AchievementLocker {
                 draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry) + " >>", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
                 draw.fillText(achievement.achievementDescription(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
-                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
+                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + language.get(498), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             } else {
                 draw.drawImage(no, offset2x, scroller + achPic + (entry.id() * achPicSpacer));
                 draw.setFont("menu", spacer + 2);
                 draw.fillText((entry.id() + 1) + ":: " + achievement.achievementName(entry), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 14);
                 draw.setFont("menu", spacer - 1);
-                draw.fillText("?????????????????????", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
-                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + " time(s)", offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
+                draw.fillText(language.get(499), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 28);
+                draw.fillText(language.get(133) + " " + login.getAchievementTriggers(entry) + language.get(498), offset2x + achPicSpacer, scroller + achPic + (entry.id() * achPicSpacer) + 42);
             }
         }
     }
@@ -251,7 +250,7 @@ public class AchievementLocker {
         stat2 = language.get(119) + ": " + shortVer(login.getPoints() + "");
         stat3 = language.get(120) + ": " + timeCal(login.getPlayTime());
         stat4 = language.get(121) + ": " + login.getUnlockedAch();
-        stat5 = language.get(122) + ": " + login.getNumberOfTimesAchivementTriggered() + " time(s)";
+        stat5 = language.get(122) + ": " + login.getNumberOfTimesAchivementTriggered() + language.get(498);
         stat6 = language.get(123) + ": " + login.getNumberOfMatches();
         try {
             stat7 = language.get(124) + ": " + login.getPoints() / login.getNumberOfMatches();
@@ -268,18 +267,21 @@ public class AchievementLocker {
         if (timeInt > -1 && timeInt <= 3600) {
             int minutes = timeInt / 60;
             int seconds = timeInt - (minutes * 60);
-            return minutes + " minutes and " + seconds + " seconds";
+            var language = Language.get();
+            return minutes + language.get(504) + seconds + language.get(505);
         } else if (timeInt > 3600 && timeInt <= 86400) {
             int hours = timeInt / 3600;
             int minutes = (timeInt - (hours * 3600)) / 60;
             int seconds = timeInt - ((minutes * 60) + (hours * 3600));
-            return hours + " hours, " + minutes + " mins and " + seconds + " secs";
+            var language = Language.get();
+            return hours + language.get(506) + minutes + language.get(507) + seconds + language.get(508);
         } else {
             int days = timeInt / 86400;
             int hours = (days * 86400) / 3600;
             int minutes = (timeInt - (hours * 3600) - (days * 86400)) / 60;
             int seconds = timeInt - ((minutes * 60) + (hours * 3600) + (days * 86400));
-            return days + " days " + hours + "hrs, " + minutes + " mins and " + seconds + " secs";
+            var language = Language.get();
+            return days + language.get(509) + hours + language.get(510) + minutes + language.get(507) + seconds + language.get(508);
         }
     }
 

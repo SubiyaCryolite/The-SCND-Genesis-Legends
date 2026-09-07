@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.command;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.enums.CharacterEnum;
 import com.scndgen.legends.enums.ModeEnum;
@@ -78,25 +79,28 @@ public final class GameCommandApplier {
                 }
             }
             case GameCommand.DisconnectFromHost() -> {
+                var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        "Ouchies",
-                        "HARSH!",
-                        "The opponent doesnt want to fight you -_-"
+                        language.get(475),
+                        language.get(476),
+                        language.get(477)
                 ));
                 NetworkManager.get().close();
             }
             case GameCommand.CancelConnectivity() -> {
+                var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        "Yikes",
-                        "Your opponent has terminated this network session",
-                        "Well, that sucks"
+                        language.get(471),
+                        language.get(478),
+                        language.get(479)
                 ));
                 NetworkManager.get().close();
             }
             case GameCommand.SessionError(var detail) -> {
+                var language = Language.get();
                 ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                        "Network Error",
-                        "Something went wrong during the online session",
+                        language.get(480),
+                        language.get(481),
                         detail == null ? "" : detail
                 ));
                 NetworkManager.get().close();

@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.network;
 
+import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.NetworkConstants;
 import com.scndgen.legends.state.State;
@@ -62,10 +63,11 @@ public class NetworkServer extends NetworkBase {
     }
 
     public void playerFound() {
+        var language = Language.get();
         ScndGenLegends.get().engine().ui().push(NkDialogs.yesNo(
-                "Heads Up",
-                "Someone wants to fight you!",
-                "Wanna waste em?",
+                language.get(468),
+                language.get(469),
+                language.get(470),
                 answer -> {
                     var networkManager = NetworkManager.get();
                     switch (answer) {

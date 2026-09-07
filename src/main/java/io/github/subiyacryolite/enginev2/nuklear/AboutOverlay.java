@@ -45,13 +45,15 @@ import static org.lwjgl.nuklear.Nuklear.nk_spacing;
  * About / License / Changelog / Source overlay.
  */
 public final class AboutOverlay implements UiOverlay {
-    private final String[] tabs = {"About", "License", "Changelog", "Source"};
+    private final String[] tabs;
     private final String[] bodies = new String[4];
     private int tab;
     private boolean open = true;
 
     public AboutOverlay() {
-        bodies[0] = "Build: " + readBuildId() + "\n\n" + read("text/txtAbout.txt");
+        var language = Language.get();
+        tabs = new String[]{language.get(314), language.get(486), language.get(487), language.get(488)};
+        bodies[0] = language.get(489) + " " + readBuildId() + "\n\n" + read("text/txtAbout.txt");
         bodies[1] = read("text/txtLicense.txt");
         bodies[2] = read("text/txtChangelog.txt");
         bodies[3] = read("text/txtSourceCode.txt");
