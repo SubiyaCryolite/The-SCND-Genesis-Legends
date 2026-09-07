@@ -22,6 +22,7 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Achievement;
+import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Character;
@@ -1348,10 +1349,11 @@ public abstract class GamePlay extends Mode {
         var scndGenLegends = ScndGenLegends.get();
         var networkManager = NetworkManager.get();
         var gameCommandBus = GameCommandBus.get();
+        var language = Language.get();
         scndGenLegends.engine().ui().push(NkDialogs.yesNo(
-                "Confirmation",
-                "Dude!?",
-                "Are you sure you wanna quit?",
+                language.get(462),
+                language.get(463),
+                language.get(464),
                 answer -> {
                     if (answer != NkDialogs.Answer.YES) {
                         return;
@@ -1372,9 +1374,9 @@ public abstract class GamePlay extends Mode {
                         }
                     } else {
                         scndGenLegends.engine().ui().push(NkDialogs.yesNo(
-                                "Are you sure?",
-                                "This will terminate the current network session",
-                                "Nuke from orbit?",
+                                language.get(465),
+                                language.get(466),
+                                language.get(467),
                                 confirm -> {
                                     if (confirm != NkDialogs.Answer.YES) {
                                         return;

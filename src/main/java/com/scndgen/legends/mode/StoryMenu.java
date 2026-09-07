@@ -72,7 +72,7 @@ public abstract class StoryMenu extends Mode {
 
     protected void showstoryName(int id) {
         if (id != oldId) {
-            primaryNotice("Scene " + (id + 1));
+            primaryNotice(Language.get().get(461) + " " + (id + 1));
             oldId = id;
         }
     }
@@ -98,7 +98,7 @@ public abstract class StoryMenu extends Mode {
             Audio victorySound = new Audio(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
             ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                    "Sweetness!!!",
+                    Language.get().get(474),
                     Language.get().get(115),
                     ""
             ));

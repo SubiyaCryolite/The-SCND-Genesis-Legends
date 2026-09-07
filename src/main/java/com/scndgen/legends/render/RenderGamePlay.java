@@ -286,7 +286,7 @@ public class RenderGamePlay extends GamePlay {
                 draw.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.drawImage(hpHolderOpponent, (55 + 56 + x2) + uiShakeEffectOffsetOpponent, (4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.setFill(1f, 1f, 1f);
-                draw.fillText("HP: " + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.fillText(Language.get().get(459) + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
                 draw.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.setFill(1f, 0.647f, 0f); // orange
@@ -303,7 +303,7 @@ public class RenderGamePlay extends GamePlay {
                 draw.setFill(0f, 0f, 0f);
                 draw.drawImage(characterHpBar, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 draw.setFill(1f, 1f, 1f);
-                draw.fillText("HP: " + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
+                draw.fillText(Language.get().get(459) + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
                 draw.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
             }
 
@@ -969,9 +969,8 @@ public class RenderGamePlay extends GamePlay {
                     } else if (gameOver) {
                         updatePlayerProfile();
                         switch (ScndGenLegends.get().getSubMode()) {
-                            case SINGLE_PLAYER -> closingThread(true);
                             case STORY_MODE -> StoryMode.get().onAccept();
-                            case LAN_HOST -> GameCommandBus.get().dispatch(new GameCommand.GoToCharacterSelect(true));
+                            case SINGLE_PLAYER, LAN_HOST -> closingThread(true);
                             default -> {
                             }
                         }

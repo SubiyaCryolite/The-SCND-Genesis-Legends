@@ -21,6 +21,7 @@
  **************************************************************************/
 package io.github.subiyacryolite.enginev2.nuklear;
 
+import com.scndgen.legends.Language;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.NkRect;
 import org.lwjgl.system.MemoryStack;
@@ -92,7 +93,7 @@ public final class NkDialogs {
                 nk_layout_row_dynamic(ctx, 48, 1);
                 nk_label(ctx, body == null ? "" : body, NK_TEXT_LEFT);
                 nk_layout_row_dynamic(ctx, 30, 1);
-                if (nk_button_label(ctx, "OK")) {
+                if (nk_button_label(ctx, Language.get().get(36))) {
                     open = false;
                 }
             }
@@ -132,15 +133,15 @@ public final class NkDialogs {
                 nk_layout_row_dynamic(ctx, 40, 1);
                 nk_label(ctx, body == null ? "" : body, NK_TEXT_LEFT);
                 nk_layout_row_dynamic(ctx, 30, showCancel ? 3 : 2);
-                if (nk_button_label(ctx, "Yes")) {
+                if (nk_button_label(ctx, Language.get().get(171))) {
                     answer = Answer.YES;
                     open = false;
                 }
-                if (nk_button_label(ctx, "No")) {
+                if (nk_button_label(ctx, Language.get().get(172))) {
                     answer = Answer.NO;
                     open = false;
                 }
-                if (showCancel && nk_button_label(ctx, "Cancel")) {
+                if (showCancel && nk_button_label(ctx, Language.get().get(421))) {
                     answer = Answer.CANCEL;
                     open = false;
                 }
@@ -192,13 +193,13 @@ public final class NkDialogs {
                 nk_layout_row_dynamic(ctx, 30, 1);
                 nk_edit_string(ctx, NK_EDIT_FIELD, textBuffer, length, 255, null);
                 nk_layout_row_dynamic(ctx, 30, 2);
-                if (nk_button_label(ctx, "OK")) {
+                if (nk_button_label(ctx, Language.get().get(36))) {
                     open = false;
                     if (onSubmit != null) {
                         onSubmit.accept(memASCII(textBuffer, length[0]));
                     }
                 }
-                if (nk_button_label(ctx, "Cancel")) {
+                if (nk_button_label(ctx, Language.get().get(421))) {
                     open = false;
                 }
             }

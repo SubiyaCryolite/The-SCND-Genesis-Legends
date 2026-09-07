@@ -438,10 +438,11 @@ public class RenderMainMenu extends MainMenu {
             fillText(draw, strExit, xMenu, yMenu + (fontSize * menuItemIndex), uiExit);
             menuItemIndex++;
         }
-        draw.fillText("The SCND Genesis: Legends RMX | copyright © " + GeneralConstants.years() + " Ifunga Ndana.", 10, DesignViewport.DESIGN_HEIGHT - 10);
-        draw.fillText(mess = "Press 'F' to provide Feedback", 590, 14);
-        draw.fillText(mess = "Press 'B' to visit our Blog", 590, 30);
-        draw.fillText(mess = "Press 'L' to like us on Facebook", 590, 46);
+        var language = Language.get();
+        draw.fillText(language.get(453) + GeneralConstants.years() + language.get(454), 10, DesignViewport.DESIGN_HEIGHT - 10);
+        draw.fillText(mess = language.get(456), 590, 14);
+        draw.fillText(mess = language.get(457), 590, 30);
+        draw.fillText(mess = language.get(458), 590, 46);
         draw.setGlobalAlpha(1.0f);
         draw.setFill(Rgba.WHITE);
         if (mainMenuOverlay == MainMenuOverlay.STATISTICS) {
