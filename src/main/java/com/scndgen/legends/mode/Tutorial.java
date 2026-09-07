@@ -358,7 +358,7 @@ public class Tutorial {
     }
 
     public void onAccept() {
-        onBackCancel();
+        onRight();
     }
 
     public void keyPressed(int glfwKey) {

@@ -85,13 +85,13 @@ public class RenderMainMenu extends MainMenu {
                     tutorial.onBackCancel();
                 }
                 case LEFT -> {
-                    if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
+                    if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
                         return;
                     }
                     tutorial.onLeft();
                 }
                 case RIGHT -> {
-                    if (getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
+                    if (getMainMenuOverlay() != MainMenuOverlay.TUTORIAL) {
                         return;
                     }
                     tutorial.onRight();
