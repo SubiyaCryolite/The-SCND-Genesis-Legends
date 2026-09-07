@@ -1,5 +1,6 @@
 package com.scndgen.legends;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.command.GameCommandBus;
@@ -70,6 +71,7 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
         this.engine = engine;
         this.loader = loader;
         engine.retainFont("menu", "font/Sawasdee.ttf");
+        Language.get().setLanguage(State.get().getLogin().getCurrentLanguage());
         loadMode(ModeEnum.MAIN_MENU);
     }
 
@@ -172,8 +174,8 @@ public final class ScndGenLegends implements GlfwEngine.Scene {
                         case LAN_CLIENT -> {
                             var language = Language.get();
                             engine.ui().push(NkDialogs.input(
-                                    language.get(450),
-                                    language.get(451),
+                                    language.get(LangKey.CONNECT_TO_HOST),
+                                    language.get(LangKey.ENTER_HOST),
                                     targetIp,
                                     value -> {
                                         if (value != null && !value.isBlank()) {

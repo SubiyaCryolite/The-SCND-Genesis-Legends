@@ -100,6 +100,8 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-nuklear::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 application {
@@ -190,5 +192,5 @@ tasks.assemble {
 }
 
 tasks.test {
-    failOnNoDiscoveredTests = false
+    useJUnitPlatform()
 }

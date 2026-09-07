@@ -22,6 +22,7 @@
 package com.scndgen.legends.mode;
 
 import com.scndgen.legends.Achievement;
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
@@ -1351,9 +1352,9 @@ public abstract class GamePlay extends Mode {
         var gameCommandBus = GameCommandBus.get();
         var language = Language.get();
         scndGenLegends.engine().ui().push(NkDialogs.yesNo(
-                language.get(462),
-                language.get(463),
-                language.get(464),
+                language.get(LangKey.CONFIRMATION),
+                language.get(LangKey.DUDE),
+                language.get(LangKey.QUIT_MATCH),
                 answer -> {
                     if (answer != NkDialogs.Answer.YES) {
                         return;
@@ -1374,9 +1375,9 @@ public abstract class GamePlay extends Mode {
                         }
                     } else {
                         scndGenLegends.engine().ui().push(NkDialogs.yesNo(
-                                language.get(465),
-                                language.get(466),
-                                language.get(467),
+                                language.get(LangKey.ARE_YOU_SURE),
+                                language.get(LangKey.TERMINATE_SESSION),
+                                language.get(LangKey.NUKE_FROM_ORBIT),
                                 confirm -> {
                                     if (confirm != NkDialogs.Answer.YES) {
                                         return;

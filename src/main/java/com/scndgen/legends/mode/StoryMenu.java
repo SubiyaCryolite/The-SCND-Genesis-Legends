@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.mode;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
@@ -72,7 +73,7 @@ public abstract class StoryMenu extends Mode {
 
     protected void showstoryName(int id) {
         if (id != oldId) {
-            primaryNotice(Language.get().get(461) + " " + (id + 1));
+            primaryNotice(Language.get().get(LangKey.SCENE, id + 1));
             oldId = id;
         }
     }
@@ -98,8 +99,8 @@ public abstract class StoryMenu extends Mode {
             Audio victorySound = new Audio(AudioConstants.soundGameOver(), AudioType.MUSIC, false);
             victorySound.play();
             ScndGenLegends.get().engine().ui().push(NkDialogs.message(
-                    Language.get().get(474),
-                    Language.get().get(115),
+                    Language.get().get(LangKey.SWEETNESS),
+                    Language.get().get(LangKey.STORY_COMPLETE),
                     ""
             ));
             answer = false;

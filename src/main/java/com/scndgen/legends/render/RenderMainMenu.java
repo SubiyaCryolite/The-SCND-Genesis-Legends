@@ -1,5 +1,6 @@
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.constants.AudioConstants;
@@ -61,17 +62,8 @@ public class RenderMainMenu extends MainMenu {
     }
 
     public RenderMainMenu() {
-        strTutorial = Language.get().get(319).toLowerCase();
-        strStoryMode = Language.get().get(307).toLowerCase();
-        strQuickMatch = Language.get().get(308).toLowerCase();
-        strHostLanMatch = Language.get().get(309).toLowerCase();
-        strJoinLanMatch = Language.get().get(310).toLowerCase();
-        strAchievementLocker = Language.get().get(316).toLowerCase();
-        strYourStats = Language.get().get(311).toLowerCase();
-        strOptions = Language.get().get(312).toLowerCase();
-        strControls = Language.get().get(313).toLowerCase();
-        strAbout = Language.get().get(314).toLowerCase();
-        strExit = Language.get().get(315).toLowerCase();
+        reloadMenuLabels();
+        Language.get().addLocaleListener(this::reloadMenuLabels);
 
 
         (uiTutorial = new UiItem()).addJenesisEvent(Event.of(action -> {
@@ -278,14 +270,14 @@ public class RenderMainMenu extends MainMenu {
         (uiExit = new UiItem()).addJenesisEvent(Event.of(action -> {
             switch (action) {
                 case ACCEPT -> engine().ui().push(NkDialogs.yesNo(
-                        Language.get().get(422),
-                        Language.get().get(110),
+                        Language.get().get(LangKey.EXIT_TITLE),
+                        Language.get().get(LangKey.LEAVE_CONFIRM),
                         "",
                         answer -> {
                             if (answer == NkDialogs.Answer.YES) {
                                 engine().ui().push(NkDialogs.yesNo(
-                                        Language.get().get(423),
-                                        Language.get().get(111),
+                                        Language.get().get(LangKey.SERIOUSLY),
+                                        Language.get().get(LangKey.QUIT_SERIOUSLY_BODY),
                                         "",
                                         confirm -> {
                                             if (confirm == NkDialogs.Answer.YES) {
@@ -439,10 +431,10 @@ public class RenderMainMenu extends MainMenu {
             menuItemIndex++;
         }
         var language = Language.get();
-        draw.fillText(language.get(453) + GeneralConstants.years() + language.get(454), 10, DesignViewport.DESIGN_HEIGHT - 10);
-        draw.fillText(mess = language.get(456), 590, 14);
-        draw.fillText(mess = language.get(457), 590, 30);
-        draw.fillText(mess = language.get(458), 590, 46);
+        draw.fillText(language.get(LangKey.COPYRIGHT_RMX, GeneralConstants.years()), 10, DesignViewport.DESIGN_HEIGHT - 10);
+        draw.fillText(mess = language.get(LangKey.PRESS_FEEDBACK), 590, 14);
+        draw.fillText(mess = language.get(LangKey.PRESS_BLOG), 590, 30);
+        draw.fillText(mess = language.get(LangKey.PRESS_FACEBOOK), 590, 46);
         draw.setGlobalAlpha(1.0f);
         draw.setFill(Rgba.WHITE);
         if (mainMenuOverlay == MainMenuOverlay.STATISTICS) {
@@ -497,6 +489,21 @@ public class RenderMainMenu extends MainMenu {
         if (tutorial != null && getMainMenuOverlay() == MainMenuOverlay.TUTORIAL) {
             tutorial.tick(deltaSeconds);
         }
+    }
+
+    private void reloadMenuLabels() {
+        var language = Language.get();
+        strTutorial = language.get(LangKey.TUTORIAL).toLowerCase();
+        strStoryMode = language.get(LangKey.STORY_MODE).toLowerCase();
+        strQuickMatch = language.get(LangKey.QUICK_MATCH).toLowerCase();
+        strHostLanMatch = language.get(LangKey.HOST_LAN).toLowerCase();
+        strJoinLanMatch = language.get(LangKey.JOIN_LAN).toLowerCase();
+        strAchievementLocker = language.get(LangKey.ACHIEVEMENT_LOCKER).toLowerCase();
+        strYourStats = language.get(LangKey.YOUR_STATS).toLowerCase();
+        strOptions = language.get(LangKey.OPTIONS).toLowerCase();
+        strControls = language.get(LangKey.VIEW_CONTROLS).toLowerCase();
+        strAbout = language.get(LangKey.ABOUT).toLowerCase();
+        strExit = language.get(LangKey.EXIT).toLowerCase();
     }
 
     public NvgImage[] getPics() {

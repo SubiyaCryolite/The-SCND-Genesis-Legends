@@ -21,27 +21,42 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F5;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.command.GameCommand;
-import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.constants.AudioConstants;
-import com.scndgen.legends.enums.*;
+import com.scndgen.legends.enums.AudioType;
+import com.scndgen.legends.enums.CharacterEnum;
+import com.scndgen.legends.enums.PlayerType;
+import com.scndgen.legends.enums.SubMode;
 import com.scndgen.legends.mode.GamePlay;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.state.State;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiAction;
 import com.scndgen.legends.ui.UiItem;
+
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DesignViewport;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author Ifunga Ndana
@@ -286,7 +301,7 @@ public class RenderGamePlay extends GamePlay {
                 draw.drawImage(hpHolder, (45 + 62 + x2) + uiShakeEffectOffsetOpponent, (height + 4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.drawImage(hpHolderOpponent, (55 + 56 + x2) + uiShakeEffectOffsetOpponent, (4 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.setFill(1f, 1f, 1f);
-                draw.fillText(Language.get().get(459) + Math.round(getOpponentHp()) + " : " + opponentHpAsPercent + "%", (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
+                draw.fillText(Language.get().get(LangKey.HP, Math.round(getOpponentHp()), opponentHpAsPercent), (55 + 64 + x2) + uiShakeEffectOffsetOpponent, (18 + y2 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
 
                 draw.drawImage(oppBar, (x2 - 20) + uiShakeEffectOffsetOpponent, (y2 + 18 - oppBarYOffset) - uiShakeEffectOffsetOpponent);
                 draw.setFill(1f, 0.647f, 0f); // orange
@@ -303,7 +318,7 @@ public class RenderGamePlay extends GamePlay {
                 draw.setFill(0f, 0f, 0f);
                 draw.drawImage(characterHpBar, lbx2 - 488 + uiShakeEffectOffsetCharacter, lby2 - 407 - uiShakeEffectOffsetCharacter);
                 draw.setFill(1f, 1f, 1f);
-                draw.fillText(Language.get().get(459) + Math.round(getCharacterHp()) + " : " + characterHpAsPercent + "%", (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
+                draw.fillText(Language.get().get(LangKey.HP, Math.round(getCharacterHp()), characterHpAsPercent), (lbx2 - 416) + uiShakeEffectOffsetCharacter, (lby2 - 398) - uiShakeEffectOffsetCharacter);
                 draw.setGlobalAlpha(1.0f); //op onBackCancel to normal for other drawings
             }
 
@@ -324,9 +339,9 @@ public class RenderGamePlay extends GamePlay {
             draw.fillRect(0, 0, width, height);
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
-            draw.fillText(Language.get().get(148), 400, 240);
-            draw.fillText(Language.get().get(149), 400, 260);
-            draw.fillText(Language.get().get(150), 400, 280);
+            draw.fillText(Language.get().get(LangKey.PAUSED), 400, 240);
+            draw.fillText(Language.get().get(LangKey.F5_CANCEL_MATCH), 400, 260);
+            draw.fillText(Language.get().get(LangKey.ESC_RESUME), 400, 280);
         }
 
         //when gameover
@@ -346,7 +361,7 @@ public class RenderGamePlay extends GamePlay {
                 draw.fillText(achievementClass[unlockedAchievementInstance], 400, 268);
                 draw.fillText(achievementPoints[unlockedAchievementInstance], 400, 282);
             }
-            draw.fillText("<< " + Language.get().get(146) + " >>", 400, 296);
+            draw.fillText("<< " + Language.get().get(LangKey.PRESS_ENTER_PROCEED) + " >>", 400, 296);
         }
         // Overlay is drawn by ScndGenLegends after mode.render
     }
