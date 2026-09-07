@@ -45,6 +45,14 @@ class LanguageTest {
             var value = language.get(key);
             assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
         }
+        for (var key : StoryKey.values()) {
+            var value = language.get(key);
+            assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
+        }
+        for (var key : TutorialKey.values()) {
+            var value = language.get(key);
+            assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
+        }
     }
 
     @Test
@@ -87,6 +95,16 @@ class LanguageTest {
         var pack = Language.get().englishPack();
         var missing = new ArrayList<String>();
         for (var key : LangKey.values()) {
+            if (!pack.containsKey(key.id())) {
+                missing.add(key.name());
+            }
+        }
+        for (var key : StoryKey.values()) {
+            if (!pack.containsKey(key.id())) {
+                missing.add(key.name());
+            }
+        }
+        for (var key : TutorialKey.values()) {
             if (!pack.containsKey(key.id())) {
                 missing.add(key.name());
             }
