@@ -29,7 +29,6 @@ import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.characters.Characters;
-import com.scndgen.legends.characters.Raila;
 import com.scndgen.legends.command.GameCommand;
 import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.AudioType;
@@ -56,7 +55,6 @@ import io.github.subiyacryolite.enginev2.nuklear.NkDialogs;
 public class RenderCharacterSelection extends CharacterSelection {
 
     private static RenderCharacterSelection instance;
-    private final String[] charDesc = new String[numOfCharacters];
     private final NvgImage[] thumbnailNormal = new NvgImage[numOfCharacters];
     private final NvgImage[] thumbnailBlurred = new NvgImage[numOfCharacters];
     private final NvgImage[] portrait = new NvgImage[numOfCharacters];
@@ -375,7 +373,6 @@ public class RenderCharacterSelection extends CharacterSelection {
         p1 = bag().loadImage("images/player1.png");
         p2 = bag().loadImage("images/player2.png");
         fight = bag().loadImage("images/fight.png");
-        charDesc[0] = Raila.class.getName();
     }
 
     public void loadUiContent(CharacterEnum characterEnum) {

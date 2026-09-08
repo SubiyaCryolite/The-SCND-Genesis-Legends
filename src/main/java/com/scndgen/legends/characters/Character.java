@@ -21,6 +21,9 @@
  **************************************************************************/
 package com.scndgen.legends.characters;
 
+import com.scndgen.legends.BragKey;
+import com.scndgen.legends.Language;
+import com.scndgen.legends.MoveKey;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -40,11 +43,13 @@ import java.util.Map;
  *
  * @author ndana
  */
-public abstract class Character {
+public class Character {
 
     public String descSmall, name, attackStr;
     public String[] physical, celestia, status;
     public final Map<Integer, String> bragRights = new HashMap<>();
+    private MoveKey[] physicalKeys, celestiaKeys, statusKeys;
+    private BragKey[] bragKeys;
     public int points, life, damage;
     public float strengthMultiplier;
     public int[] behaviours1, behaviours2, behaviours3, behaviours4, behaviours5, limit;
@@ -52,10 +57,63 @@ public abstract class Character {
     protected CharacterEnum characterEnum = CharacterEnum.SUBIYA;
     private NvgImage[] sprites;
     private boolean isMale;
+    private int damageBonus;
+    private Map<String, CharacterRoster.AttackSpec> attacks = Map.of();
     private static final int NUMBER_OF_SPRITES = 12;
 
     public Character() {
         isMale = true;
+    }
+
+    public Character(CharacterRoster.CharacterDef def) {
+        this();
+        characterEnum = def.id();
+        name = def.name();
+        descSmall = def.descSmall();
+        if (!def.male()) {
+            isNotMale();
+        }
+        points = def.points();
+        life = def.life();
+        atbRecoveryRate = def.atbRecoveryRate();
+        damageBonus = def.damageBonus();
+        physicalKeys = def.physical();
+        celestiaKeys = def.celestia();
+        statusKeys = def.status();
+        bragKeys = def.brags();
+        behaviours1 = def.behaviours1().clone();
+        behaviours2 = def.behaviours2().clone();
+        behaviours3 = def.behaviours3().clone();
+        behaviours4 = def.behaviours4().clone();
+        behaviours5 = def.behaviours5().clone();
+        limit = new int[]{0, 0, 0, 0, 0};
+        attacks = def.attacks();
+        refreshLocalizedStrings();
+    }
+
+    public void refreshLocalizedStrings() {
+        var language = Language.get();
+        physical = resolve(language, physicalKeys);
+        celestia = resolve(language, celestiaKeys);
+        status = resolve(language, statusKeys);
+        bragRights.clear();
+        if (bragKeys == null) {
+            return;
+        }
+        for (int i = 0; i < bragKeys.length; i++) {
+            bragRights.put(i, language.get(bragKeys[i]));
+        }
+    }
+
+    private static String[] resolve(Language language, MoveKey[] keys) {
+        if (keys == null) {
+            return new String[0];
+        }
+        var out = new String[keys.length];
+        for (int i = 0; i < keys.length; i++) {
+            out[i] = language.get(keys[i]);
+        }
+        return out;
     }
 
     public void isNotMale() {
@@ -129,7 +187,29 @@ public abstract class Character {
         return sprites[i];
     }
 
-    public abstract void attack(String attack, PlayerType forWho, GamePlay gamePlay);
+    public void attack(String attack, PlayerType forWho, GamePlay gamePlay) {
+        var spec = attacks.get(attack);
+        if (spec == null) {
+            return;
+        }
+        var amount = spec.damage() + damageBonus;
+        switch (spec.kind()) {
+            case STRIKE -> strike(gamePlay, forWho, label(spec.nameIndex()), amount);
+            case RESTORE -> restore(gamePlay, forWho, label(spec.nameIndex()), amount);
+            case BOOST -> boost(gamePlay, forWho);
+            case WEAKEN -> weaken(gamePlay, forWho);
+        }
+    }
+
+    private String label(int nameIndex) {
+        if (nameIndex < 4) {
+            return physical[nameIndex];
+        }
+        if (nameIndex < 8) {
+            return celestia[nameIndex - 4];
+        }
+        return status[nameIndex - 8];
+    }
 
     /**
      * Gets the move set of the characterEnum

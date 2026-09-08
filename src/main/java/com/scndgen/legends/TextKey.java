@@ -24,6 +24,6 @@ package com.scndgen.legends;
 /**
  * Named handle into {@code translations/*.json}.
  */
-public sealed interface TextKey permits LangKey, StoryKey, TutorialKey {
+public sealed interface TextKey permits LangKey, StoryKey, TutorialKey, BragKey, MoveKey {
     int id();
 }

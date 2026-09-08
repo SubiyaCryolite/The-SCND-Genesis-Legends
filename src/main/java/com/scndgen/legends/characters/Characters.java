@@ -181,44 +181,7 @@ public class Characters {
         currCharLife = 100;
         setDamageCounter(PlayerType.PLAYER1, 12);
 
-        switch (characterEnum) {
-            case SUBIYA:
-                this.character = new Subiya();
-                break;
-            case RAILA:
-                this.character = new Raila();
-                break;
-            case LYNX:
-                this.character = new Lynx();
-                break;
-            case AISHA:
-                this.character = new Aisha();
-                break;
-            case RAVAGE:
-                this.character = new Ravage();
-                break;
-            case ADE:
-                this.character = new Ade();
-                break;
-            case JONAH:
-                this.character = new Jonah();
-                break;
-            case ADAM:
-                this.character = new Adam();
-                break;
-            case NOVA_ADAM:
-                this.character = new NovaAdam();
-                break;
-            case AZARIA:
-                this.character = new Azaria();
-                break;
-            case SORROWE:
-                this.character = new Sorrowe();
-                break;
-            case THING:
-                this.character = new Thing(0);
-                break;
-        }
+        this.character = CharacterRoster.create(characterEnum);
 
         characterName = characterEnum.name();
         RenderCharacterSelection.get().setSelectedCharIndex(characterEnum.index());
@@ -235,44 +198,7 @@ public class Characters {
         minCharlife = 100;
         currCharLife = 100;
         setDamageCounter(PlayerType.PLAYER2, 12);
-        switch (characterEnum) {
-            case SUBIYA:
-                opponent = new Subiya();
-                break;
-            case RAILA:
-                opponent = new Raila();
-                break;
-            case LYNX:
-                opponent = new Lynx();
-                break;
-            case AISHA:
-                opponent = new Aisha();
-                break;
-            case RAVAGE:
-                opponent = new Ravage();
-                break;
-            case ADE:
-                opponent = new Ade();
-                break;
-            case JONAH:
-                opponent = new Jonah();
-                break;
-            case ADAM:
-                opponent = new Adam();
-                break;
-            case NOVA_ADAM:
-                opponent = new NovaAdam();
-                break;
-            case AZARIA:
-                opponent = new Azaria();
-                break;
-            case SORROWE:
-                opponent = new Sorrowe();
-                break;
-            case THING:
-                opponent = new Thing(0);
-                break;
-        }
+        opponent = CharacterRoster.create(characterEnum);
         opponentName = characterEnum.name();
         RenderCharacterSelection.get().setSelectedOppIndex(characterEnum.index());
         activityRecoveryRateOpp = opponent.getAtbRecoveryRate();
