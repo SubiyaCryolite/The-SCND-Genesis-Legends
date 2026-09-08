@@ -41,6 +41,8 @@ import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.characters.Characters;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -993,7 +995,7 @@ public class RenderGamePlay extends GamePlay {
                 }
                 case BACK_CANCEL -> {
                     if (!gameOver && !playingCutscene) {
-                        onTogglePause();
+                        GameCommandBus.get().dispatch(new GameCommand.TogglePause());
                     } else if (playingCutscene) {
                         StoryMode.get().onBackCancel();
                     }

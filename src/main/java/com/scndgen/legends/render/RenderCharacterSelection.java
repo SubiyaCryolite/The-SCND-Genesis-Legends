@@ -324,12 +324,12 @@ public class RenderCharacterSelection extends CharacterSelection {
         } else if (networkManager.isServer()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);
-            draw.fillText(Language.get().get(167), 20, 300);
+            draw.fillText(Language.get().get(LangKey.MACHINE_NAME), 20, 300);
             draw.fillText(networkManager.getHostName(), 20, 314);
-            draw.fillText(Language.get().get(452), 20, 328);
+            draw.fillText(Language.get().get(LangKey.MACHINE_IP), 20, 328);
             draw.fillText(networkManager.getHostAddress(), 20, 346);
-            draw.fillText(Language.get().get(168), 20, 360);
-            draw.fillText(Language.get().get(169), 20, 376);
+            draw.fillText(Language.get().get(LangKey.PARTNER_HINT), 20, 360);
+            draw.fillText(Language.get().get(LangKey.MACHINE_IP_HINT), 20, 376);
         } else if (networkManager.isClient()) {
             draw.setGlobalAlpha(1.0f);
             draw.setFill(1f, 1f, 1f);

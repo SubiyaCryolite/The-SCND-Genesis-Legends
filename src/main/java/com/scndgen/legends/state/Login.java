@@ -23,6 +23,7 @@ package com.scndgen.legends.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.enums.Achievements;
 import com.scndgen.legends.enums.CharacterEnum;
@@ -408,7 +409,7 @@ public class Login {
 
     public String getTimeLimitString() {
         return switch (getTimeLimit()) {
-            case INFINITE_TIME -> Language.get().get(424);
+            case INFINITE_TIME -> Language.get().get(LangKey.INFINITE);
             case 180 -> "180";
             case 150 -> "150";
             case 120 -> "120";
@@ -612,13 +613,13 @@ public class Login {
     public String resolveDifficulty() {
         var language = Language.get();
         return switch (resolveDifficultyInt()) {
-            case 0 -> language.get(26);
-            case 1 -> language.get(27);
-            case 2 -> language.get(28);
-            case 3 -> language.get(29);
-            case 4 -> language.get(30);
-            case 5 -> language.get(31);
-            default -> language.get(26);
+            case 0 -> language.get(LangKey.ARE_YOU_INSANE);
+            case 1 -> language.get(LangKey.HARD);
+            case 2 -> language.get(LangKey.MEDIUM);
+            case 3 -> language.get(LangKey.EASY);
+            case 4 -> language.get(LangKey.YOU_SUCK);
+            case 5 -> language.get(LangKey.RESET);
+            default -> language.get(LangKey.ARE_YOU_INSANE);
         };
     }
 

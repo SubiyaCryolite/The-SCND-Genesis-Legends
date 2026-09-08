@@ -3,6 +3,8 @@ package com.scndgen.legends.render;
 import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.constants.GeneralConstants;
 import com.scndgen.legends.enums.AudioType;
@@ -108,7 +110,7 @@ public class RenderMainMenu extends MainMenu {
                 case ACCEPT -> {
                     var scndGenLegends = ScndGenLegends.get();
                     scndGenLegends.setSubMode(SubMode.STORY_MODE);
-                    scndGenLegends.loadMode(ModeEnum.STORY_SELECT_SCREEN);
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.STORY_SELECT_SCREEN, true));
                 }
                 case DOWN -> setActiveItem(uiStoryMode.getDown());
                 case UP -> setActiveItem(uiStoryMode.getUp());
@@ -124,7 +126,7 @@ public class RenderMainMenu extends MainMenu {
                 case ACCEPT -> {
                     var scndGenLegends = ScndGenLegends.get();
                     scndGenLegends.setSubMode(SubMode.SINGLE_PLAYER);
-                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.CHAR_SELECT_SCREEN, true));
                 }
                 case DOWN -> setActiveItem(uiQuickMatch.getDown());
                 case UP -> setActiveItem(uiQuickMatch.getUp());
@@ -140,7 +142,7 @@ public class RenderMainMenu extends MainMenu {
                 case ACCEPT -> {
                     var scndGenLegends = ScndGenLegends.get();
                     scndGenLegends.setSubMode(SubMode.LAN_HOST);
-                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.CHAR_SELECT_SCREEN, true));
                 }
                 case DOWN -> setActiveItem(uiHostLanMatch.getDown());
                 case UP -> setActiveItem(uiHostLanMatch.getUp());
@@ -156,7 +158,7 @@ public class RenderMainMenu extends MainMenu {
                 case ACCEPT -> {
                     var scndGenLegends = ScndGenLegends.get();
                     scndGenLegends.setSubMode(SubMode.LAN_CLIENT);
-                    scndGenLegends.loadMode(ModeEnum.CHAR_SELECT_SCREEN);
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.CHAR_SELECT_SCREEN, true));
                 }
                 case DOWN -> setActiveItem(uiJoinLanMatch.getDown());
                 case UP -> setActiveItem(uiJoinLanMatch.getUp());

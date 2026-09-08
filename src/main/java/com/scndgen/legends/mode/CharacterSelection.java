@@ -1,5 +1,6 @@
 package com.scndgen.legends.mode;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.characters.Characters;
@@ -145,7 +146,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selRaila(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(84));
+        primaryNotice(Language.get().get(LangKey.BANTER_RAILA));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -169,7 +170,7 @@ public abstract class CharacterSelection extends Mode {
         var characters = Characters.get();
         if (type == PlayerType.PLAYER1) //when selecting char
         {
-            primaryNotice(Language.get().get(85));
+            primaryNotice(Language.get().get(LangKey.BANTER_SUBIYA));
             playSelectSound();
             selectedCharacter = true;
             characters.prepare(characterEnum = CharacterEnum.SUBIYA);
@@ -192,7 +193,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selLynx(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(86));
+        primaryNotice(Language.get().get(LangKey.BANTER_LYNX));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -217,7 +218,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selAisha(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(87));
+        primaryNotice(Language.get().get(LangKey.BANTER_AISHA));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -242,7 +243,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selAde(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(88));
+        primaryNotice(Language.get().get(LangKey.BANTER_ADE));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -267,7 +268,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selRav(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(89));
+        primaryNotice(Language.get().get(LangKey.BANTER_RAVAGE));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -293,7 +294,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selJon(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(90));
+        primaryNotice(Language.get().get(LangKey.BANTER_JONAH));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -319,7 +320,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selAdam(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(91));
+        primaryNotice(Language.get().get(LangKey.BANTER_ADAM));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -344,7 +345,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selNOVAAdam(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(92));
+        primaryNotice(Language.get().get(LangKey.BANTER_NOVA_ADAM));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -370,7 +371,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selAza(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(93));
+        primaryNotice(Language.get().get(LangKey.BANTER_AZARIA));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
@@ -395,7 +396,7 @@ public abstract class CharacterSelection extends Mode {
      */
     public void selSorr(PlayerType type) {
         var characters = Characters.get();
-        primaryNotice(Language.get().get(94));
+        primaryNotice(Language.get().get(LangKey.BANTER_SORROWE));
         if (type == PlayerType.PLAYER1) //when selecting char
         {
             playSelectSound();
