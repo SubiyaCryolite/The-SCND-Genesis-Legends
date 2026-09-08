@@ -22,6 +22,8 @@
 package com.scndgen.legends.network;
 
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.enums.SubMode;
 
@@ -86,7 +88,7 @@ public class NetworkManager {
         setConnectedToPartner(false);
         var scndGenLegends = ScndGenLegends.get();
         scndGenLegends.setSubMode(SubMode.MAIN_MENU);
-        scndGenLegends.loadMode(ModeEnum.MAIN_MENU);
+        GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
     }
 
     public boolean isServer() {

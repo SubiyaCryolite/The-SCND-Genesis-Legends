@@ -1364,7 +1364,8 @@ public abstract class GamePlay extends Mode {
                     }
                     if (networkManager.isOffline()) {
                         if (isPaused()) {
-                            onTogglePause();
+                            gameCommandBus.dispatch(new GameCommand.TogglePause());
+                            gameCommandBus.drainAndApply();
                         }
                         terminateGameplay();
                         RenderStageSelect.get().setStageSelected(false);
@@ -1383,7 +1384,8 @@ public abstract class GamePlay extends Mode {
                                         return;
                                     }
                                     if (isPaused()) {
-                                        onTogglePause();
+                                        gameCommandBus.dispatch(new GameCommand.TogglePause());
+                                        gameCommandBus.drainAndApply();
                                     }
                                     terminateGameplay();
                                     // Wire-only: peer applies CancelConnectivity; local UI already handled quit.

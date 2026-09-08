@@ -24,6 +24,8 @@ package com.scndgen.legends.mode;
 import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.*;
 import com.scndgen.legends.render.RenderGamePlay;
 import io.github.subiyacryolite.enginev2.Mode;
@@ -368,7 +370,7 @@ public abstract class StageSelect extends Mode {
     public void start() {
         if (ScndGenLegends.get().getSubMode() != SubMode.STORY_MODE)
             RenderGamePlay.get().playBGMusic();
-        ScndGenLegends.get().loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
+        GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.STANDARD_GAMEPLAY_START, true));
     }
 
     public String getStageBackground() {

@@ -23,9 +23,11 @@ package com.scndgen.legends.mode;
 
 import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
+import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.StoryKey;
 import com.scndgen.legends.TextKey;
-import com.scndgen.legends.ScndGenLegends;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.characters.Characters;
 import com.scndgen.legends.constants.AudioConstants;
 import com.scndgen.legends.enums.*;
@@ -54,6 +56,7 @@ public class StoryMode {
     public int timeLimit;
     private Audio storyMusic;
     private String text;
+    private TextKey currentLineKey;
     private long textSpeed;
     private int currentScene;
     private boolean active;
@@ -74,7 +77,7 @@ public class StoryMode {
             CharacterEnum portrait, // null = leave as-is; CLEAR sentinel via clearPortrait
             boolean setPortrait,
             boolean clearPortrait,
-            String line,
+            TextKey key,
             double waitSeconds,
             Runnable action
     ) {
@@ -82,20 +85,20 @@ public class StoryMode {
             return new Step(StepKind.WAIT, null, false, false, null, seconds, null);
         }
 
-        static Step line(String text, double waitSeconds) {
-            return new Step(StepKind.LINE, null, false, false, text, waitSeconds, null);
+        static Step line(TextKey key) {
+            return new Step(StepKind.LINE, null, false, false, key, 0, null);
         }
 
-        static Step line(CharacterEnum portrait, String text, double waitSeconds) {
-            return new Step(StepKind.LINE, portrait, true, false, text, waitSeconds, null);
+        static Step line(CharacterEnum portrait, TextKey key) {
+            return new Step(StepKind.LINE, portrait, true, false, key, 0, null);
         }
 
-        static Step lineClearPortrait(String text, double waitSeconds) {
-            return new Step(StepKind.LINE, null, true, true, text, waitSeconds, null);
+        static Step lineClearPortrait(TextKey key) {
+            return new Step(StepKind.LINE, null, true, true, key, 0, null);
         }
 
-        static Step lineNoWait(String text) {
-            return new Step(StepKind.LINE_NO_WAIT, null, false, false, text, 0, null);
+        static Step lineNoWait(TextKey key) {
+            return new Step(StepKind.LINE_NO_WAIT, null, false, false, key, 0, null);
         }
 
         static Step action(Runnable action) {
@@ -111,7 +114,9 @@ public class StoryMode {
         storyProgress = StoryProgress.NORMAL;
         timeLimit = INFINITE_TIME;
         text = "";
+        currentLineKey = null;
         currentScene = 0;
+        Language.get().addLocaleListener(this::refreshDisplayedLine);
     }
 
     public static synchronized StoryMode get() {
@@ -231,7 +236,8 @@ public class StoryMode {
 
         setScene(currentScene);
         var scndGenLegends = ScndGenLegends.get();
-        scndGenLegends.loadMode(ModeEnum.STANDARD_GAMEPLAY_START);
+        GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.STANDARD_GAMEPLAY_START, true));
+        GameCommandBus.get().drainAndApply();
         scndGenLegends.setSubMode(SubMode.STORY_MODE);
         beginCinematic();
         renderGamePlay.storyBoard(currentScene);
@@ -259,8 +265,9 @@ public class StoryMode {
         while (active && stepIndex < steps.size()) {
             Step step = steps.get(stepIndex++);
             executeStep(step);
-            if (step.waitSeconds > 0) {
-                waitAccum.setInterval(step.waitSeconds);
+            var wait = waitFor(step);
+            if (wait > 0) {
+                waitAccum.setInterval(wait);
                 waitAccum.reset();
                 return;
             }
@@ -284,8 +291,7 @@ public class StoryMode {
                         RenderGamePlay.get().characterPortrait(step.portrait);
                     }
                 }
-                text = step.line;
-                RenderGamePlay.get().storyText(text);
+                showLine(step.key);
             }
             case ACTION -> {
                 if (step.action != null) {
@@ -300,42 +306,44 @@ public class StoryMode {
         return (line.length() * textSpeed) / 1000.0;
     }
 
+    private double waitFor(Step step) {
+        if (step.kind == StepKind.LINE && step.key != null) {
+            return textWait(Language.get().get(step.key));
+        }
+        return step.waitSeconds;
+    }
+
+    private void showLine(TextKey key) {
+        currentLineKey = key;
+        text = key == null ? "" : Language.get().get(key);
+        RenderGamePlay.get().storyText(text);
+    }
+
+    private void refreshDisplayedLine() {
+        if (!active || currentLineKey == null) {
+            return;
+        }
+        showLine(currentLineKey);
+    }
+
     private void addWait(double seconds) {
         steps.add(Step.wait(seconds));
     }
 
     private void addLine(TextKey key) {
-        String line = Language.get().get(key);
-        steps.add(Step.line(line, textWait(line)));
+        steps.add(Step.line(key));
     }
 
     private void addLine(CharacterEnum portrait, TextKey key) {
-        String line = Language.get().get(key);
-        steps.add(Step.line(portrait, line, textWait(line)));
+        steps.add(Step.line(portrait, key));
     }
 
     private void addLineClear(TextKey key) {
-        String line = Language.get().get(key);
-        steps.add(Step.lineClearPortrait(line, textWait(line)));
-    }
-
-    private void addLine(TextKey key, String suffix) {
-        String line = Language.get().get(key) + suffix;
-        steps.add(Step.line(line, textWait(line)));
-    }
-
-    private void addLine(CharacterEnum portrait, TextKey key, String suffix) {
-        String line = Language.get().get(key) + suffix;
-        steps.add(Step.line(portrait, line, textWait(line)));
-    }
-
-    private void addLineClear(TextKey key, String suffix) {
-        String line = Language.get().get(key) + suffix;
-        steps.add(Step.lineClearPortrait(line, textWait(line)));
+        steps.add(Step.lineClearPortrait(key));
     }
 
     private void addLineNoWait(TextKey key) {
-        steps.add(Step.lineNoWait(Language.get().get(key)));
+        steps.add(Step.lineNoWait(key));
     }
 
     private void addPortraitThen(CharacterEnum portrait) {
@@ -414,7 +422,7 @@ public class StoryMode {
         addClearPortrait();
         addLine(CharacterEnum.LYNX, StoryKey.S3_01);
         addLine(CharacterEnum.RAILA, StoryKey.S3_02);
-        addLineClear(StoryKey.S3_03, " .......");
+        addLineClear(StoryKey.S3_03);
         addLine(CharacterEnum.AISHA, StoryKey.S3_04);
         addLine(CharacterEnum.LYNX, StoryKey.S3_05);
         addLine(CharacterEnum.AISHA, StoryKey.S3_06);
@@ -585,7 +593,7 @@ public class StoryMode {
         addLine(CharacterEnum.SORROWE, StoryKey.S11_07);
         addLine(CharacterEnum.ADAM, StoryKey.S11_08);
         addLine(CharacterEnum.RAILA, StoryKey.S11_09);
-        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S11_10, " !!!!!!!!!!!!!!");
+        addLine(CharacterEnum.NOVA_ADAM, StoryKey.S11_10);
         addLine(CharacterEnum.RAILA, StoryKey.S11_11);
         addLine(CharacterEnum.LYNX, StoryKey.S11_12);
         addLine(CharacterEnum.RAILA, StoryKey.S11_13);
@@ -666,7 +674,7 @@ public class StoryMode {
                 if (RenderStoryMenu.get().moreStages()) {
                     startStoryMode(currentScene);//play next scene
                 } else {
-                    ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                    GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                 }
             } else {
                 startStoryMode(currentScene);//try again

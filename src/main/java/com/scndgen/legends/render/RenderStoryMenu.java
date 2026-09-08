@@ -21,10 +21,13 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
+import com.scndgen.legends.command.GameCommand;
+import com.scndgen.legends.command.GameCommandBus;
 import com.scndgen.legends.enums.AudioType;
 import com.scndgen.legends.enums.ModeEnum;
 import com.scndgen.legends.mode.StoryMenu;
@@ -97,7 +100,8 @@ public class RenderStoryMenu extends StoryMenu {
                 switch (action) {
                     case HOVER -> animateCaption();
                     case ACCEPT -> selectScene();
-                    case BACK_CANCEL -> ScndGenLegends.get().loadMode(ModeEnum.MAIN_MENU);
+                    case BACK_CANCEL ->
+                            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                     case DOWN -> setActiveItem(source.getDown());
                     case UP -> setActiveItem(source.getUp());
                     case LEFT -> setActiveItem(source.getLeft());
@@ -183,9 +187,9 @@ public class RenderStoryMenu extends StoryMenu {
             }
             draw.setFill(Rgba.WHITE);
             setFont(draw, UiConstants.EXTRA_LARGE_TXT_SIZE);
-            draw.fillText(Language.get().get(307), (852 - Utils.computeStringWidth(Language.get().get(307), draw) / 2), 80);
+            draw.fillText(Language.get().get(LangKey.STORY_MODE), (852 - Utils.computeStringWidth(Language.get().get(LangKey.STORY_MODE), draw) / 2), 80);
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
-            draw.fillText(Language.get().get(368), (852 - Utils.computeStringWidth(Language.get().get(368), draw) / 2), 380);
+            draw.fillText(Language.get().get(LangKey.PRESS_ESC_BACK), (852 - Utils.computeStringWidth(Language.get().get(LangKey.PRESS_ESC_BACK), draw) / 2), 380);
             showstoryName(hoveredScene);
         }
     }

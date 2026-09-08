@@ -21,6 +21,7 @@
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
@@ -213,14 +214,14 @@ public class RenderStageSelect extends StageSelect {
             draw.drawImage(loading, 316, 183); //yCord = 286 - icoHeight
             draw.setFill(Rgba.WHITE);
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
-            var lang165 = Language.get().get(165);
+            var lang165 = Language.get().get(LangKey.LOADING);
             draw.fillText(lang165, (852 - Utils.computeStringWidth(lang165, draw)) / 2, 200);
         } else if (scndGenLegends.getSubMode() == SubMode.LAN_CLIENT && !stageSelected) {
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
             draw.setFill(Rgba.BLACK);
             draw.fillRect(0, 0, 852, 480);
             draw.setFill(Rgba.WHITE);
-            var waiting = ">> " + Language.get().get(166) + " <<";
+            var waiting = ">> " + Language.get().get(LangKey.WAITING_STAGE) + " <<";
             draw.fillText(waiting, (852 - Utils.computeStringWidth(waiting, draw)) / 2, 300);
         } else if (scndGenLegends.getSubMode() != SubMode.LAN_CLIENT) {
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);

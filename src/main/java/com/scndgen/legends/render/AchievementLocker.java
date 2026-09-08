@@ -120,9 +120,9 @@ public class AchievementLocker {
         draw.setFill(Rgba.WHITE);
 
         var language = Language.get();
-        draw.fillText(language.get(129) + " :", offset + 400, (48 - 3) + (spacer * 3));
+        draw.fillText(language.get(LangKey.STAT_STORY_PROGRESS) + " :", offset + 400, (48 - 3) + (spacer * 3));
         draw.fillText(" " + Math.round(100 * (getStoryProgression())) + " %", offset + 500, (48 - 3) + (spacer * 3));
-        draw.fillText(language.get(130) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
+        draw.fillText(language.get(LangKey.STAT_COMPLETION) + ": " + getGameCompletion() + " %", offset + 400, (48 - 3) + (spacer * 6));
         draw.fillRect(offset + 400, (48 - 3) + (spacer * 3) + 2, Math.round(progression), spacer);
         draw.fillRect(offset + 400, (48 - 3) + (spacer * 6) + 2, getGameCompletion() * 2, spacer);
 
@@ -131,7 +131,7 @@ public class AchievementLocker {
         draw.fillText(stat13, offset, (48 - 3) + (spacer * 8));
         draw.fillText(stat17, offset, (48 - 3) + (spacer * 9));
 
-        draw.fillText(language.get(131) + " >>>", offset, 430);
+        draw.fillText(language.get(LangKey.PRESS_ENTER_EXIT) + " >>>", offset, 430);
     }
 
     /**
@@ -151,10 +151,10 @@ public class AchievementLocker {
         var achievement = Achievement.get();
         var login = State.get().getLogin();
 
-        draw.fillText(numberOfTriggeredAchievements + " " + language.get(121), 530, 100);
-        draw.fillText(getAchUnlockedPerc() + " % " + language.get(132), 530, 114);
-        draw.fillText(language.get(130) + " " + getGameCompletion() + " %", 530, 128);
-        draw.fillText(language.get(131) + " >>>", 530, 470);
+        draw.fillText(numberOfTriggeredAchievements + " " + language.get(LangKey.STAT_ACH_UNLOCKED), 530, 100);
+        draw.fillText(getAchUnlockedPerc() + " % " + language.get(LangKey.COMPLETE), 530, 114);
+        draw.fillText(language.get(LangKey.STAT_COMPLETION) + " " + getGameCompletion() + " %", 530, 128);
+        draw.fillText(language.get(LangKey.PRESS_ENTER_EXIT) + " >>>", 530, 470);
 
         //even
         for (Achievements entry : Achievements.values()) {
@@ -248,21 +248,21 @@ public class AchievementLocker {
             }
         }
         percentageOfUnlockedAchievements = (int) ((numberOfTriggeredAchievements / (float) isAchievementActivated.length) * 100);
-        stat1 = language.get(118) + ": " + shortVer(login.getUserName());
-        stat2 = language.get(119) + ": " + shortVer(login.getPoints() + "");
-        stat3 = language.get(120) + ": " + timeCal(login.getPlayTime());
-        stat4 = language.get(121) + ": " + login.getUnlockedAch();
+        stat1 = language.get(LangKey.STAT_NAME) + ": " + shortVer(login.getUserName());
+        stat2 = language.get(LangKey.STAT_POINTS) + ": " + shortVer(login.getPoints() + "");
+        stat3 = language.get(LangKey.STAT_PLAY_TIME) + ": " + timeCal(login.getPlayTime());
+        stat4 = language.get(LangKey.STAT_ACH_UNLOCKED) + ": " + login.getUnlockedAch();
         stat5 = language.get(LangKey.STAT_ACH_TRIGGERED) + ": " + language.get(LangKey.TIMES, login.getNumberOfTimesAchivementTriggered());
-        stat6 = language.get(123) + ": " + login.getNumberOfMatches();
+        stat6 = language.get(LangKey.STAT_MATCH_COUNT) + ": " + login.getNumberOfMatches();
         try {
-            stat7 = language.get(124) + ": " + login.getPoints() / login.getNumberOfMatches();
+            stat7 = language.get(LangKey.STAT_AVG_POINTS) + ": " + login.getPoints() / login.getNumberOfMatches();
         } catch (ArithmeticException ae) {
-            stat7 = language.get(124) + ": 0";
+            stat7 = language.get(LangKey.STAT_AVG_POINTS) + ": 0";
         }
-        stat15 = language.get(125) + ": " + login.getWins();
-        stat16 = language.get(126) + ": " + login.getLosses();
-        stat13 = language.get(127) + ": " + login.userAwesomeness();
-        stat17 = language.get(128) + ": " + login.mostPopularCharEnum() + " " + login.mostPopularCharPercentage() + " %";
+        stat15 = language.get(LangKey.STAT_WINS) + ": " + login.getWins();
+        stat16 = language.get(LangKey.STAT_LOSSES) + ": " + login.getLosses();
+        stat13 = language.get(LangKey.STAT_STYLE) + ": " + login.userAwesomeness();
+        stat17 = language.get(LangKey.STAT_FAVORITE) + ": " + login.mostPopularCharEnum() + " " + login.mostPopularCharPercentage() + " %";
     }
 
     public String timeCal(int timeInt) {

@@ -56,6 +56,13 @@ class LanguageTest {
     }
 
     @Test
+    void storyLinesKeepFoldedSuffixes() {
+        var language = Language.get();
+        assertEquals("*ring* *ring* .......", language.get(StoryKey.S3_03));
+        assertEquals("DIE!!!!! !!!!!!!!!!!!!!", language.get(StoryKey.S11_10));
+    }
+
+    @Test
     void templatesSubstitutePlaceholders() {
         var language = Language.get();
         assertEquals("HP: 80 : 40%", language.get(LangKey.HP, 80, 40));
