@@ -134,6 +134,8 @@ public class RenderGamePlay extends GamePlay {
         attackEleven.addJenesisEvent(new PauseAndNavigate());
         attackTwelve.addJenesisEvent(new PauseAndNavigate());
 
+        Language.get().addLocaleListener(this::refreshHudMoveNames);
+
         fury.setLeft(attackOne);
         fury.setUp(attackOne);
         fury.setDown(attackOne);
@@ -176,6 +178,20 @@ public class RenderGamePlay extends GamePlay {
         if (instance == null)
             instance = new RenderGamePlay();
         return instance;
+    }
+
+    private void refreshHudMoveNames() {
+        var characters = Characters.get();
+        var character = characters.getCharacter();
+        if (character == null) {
+            return;
+        }
+        character.refreshLocalizedStrings();
+        character.setCharacterAttackArrays();
+        var opponent = characters.getOpponent();
+        if (opponent != null) {
+            opponent.refreshLocalizedStrings();
+        }
     }
 
     public void loadAssetsIml() {

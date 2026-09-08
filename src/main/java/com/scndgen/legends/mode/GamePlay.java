@@ -1252,6 +1252,28 @@ public abstract class GamePlay extends Mode {
         oppYcord = value;
     }
 
+    public void applyStagePresentation(float fgX,
+                                       float fgY,
+                                       float fgXInc,
+                                       float fgYInc,
+                                       float loops,
+                                       AnimationDirection ambientDir,
+                                       AnimationDirection fgDir,
+                                       AmbientMode mode,
+                                       int ambientSpeed1,
+                                       int ambientSpeed2) {
+        foreGroundPositionX = fgX;
+        foreGroundPositionY = fgY;
+        foreGroundXIncrement = fgXInc;
+        foreGroundYIncrement = fgYInc;
+        animationLoops = loops;
+        ambientDirection = ambientDir;
+        foregroundDirection = fgDir;
+        ambientMode = mode;
+        ambSpeed1 = ambientSpeed1;
+        ambSpeed2 = ambientSpeed2;
+    }
+
     public float getAnimationLoops() {
         return animationLoops;
     }

@@ -53,6 +53,14 @@ class LanguageTest {
             var value = language.get(key);
             assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
         }
+        for (var key : BragKey.values()) {
+            var value = language.get(key);
+            assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
+        }
+        for (var key : MoveKey.values()) {
+            var value = language.get(key);
+            assertFalse(value.startsWith("No translation ::"), () -> key + " missing");
+        }
     }
 
     @Test
@@ -112,6 +120,16 @@ class LanguageTest {
             }
         }
         for (var key : TutorialKey.values()) {
+            if (!pack.containsKey(key.id())) {
+                missing.add(key.name());
+            }
+        }
+        for (var key : BragKey.values()) {
+            if (!pack.containsKey(key.id())) {
+                missing.add(key.name());
+            }
+        }
+        for (var key : MoveKey.values()) {
             if (!pack.containsKey(key.id())) {
                 missing.add(key.name());
             }

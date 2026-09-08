@@ -21,7 +21,6 @@
  **************************************************************************/
 package com.scndgen.legends.mode;
 
-import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
 import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.command.GameCommand;
@@ -66,25 +65,8 @@ public abstract class StageSelect extends Mode {
         stageLookup.clear();
         for (Stage stage : Stage.values()) {
             stageLookup.put(stage.index(), stage);
+            stagePreviews[stage.index()] = StageCatalog.layout(stage).previewPrefix();
         }
-        //===============================================================
-        stagePreviews[Stage.IBEX_HILL.index()] = "bgBG1";
-        stagePreviews[Stage.CHELSTON_CITY_DOCKS.index()] = "bgBG2";
-        stagePreviews[Stage.DESERT_RUINS.index()] = "bgBG3";
-        stagePreviews[Stage.CHELSTON_CITY_STREETS.index()] = "bgBG4";
-        stagePreviews[Stage.IBEX_HILL_NIGHT.index()] = "bgBG5";
-        stagePreviews[Stage.SCORCHED_RUINS.index()] = "bgBG6";
-        stagePreviews[Stage.FROZEN_WILDERNESS.index()] = "bgBG7";
-        stagePreviews[Stage.DISTANT_ISLE.index()] = "bgBG100";
-        stagePreviews[Stage.HIDDEN_CAVE.index()] = "bgBG8";
-        stagePreviews[Stage.AFRICAN_VILLAGE.index()] = "bgBG9";
-        stagePreviews[Stage.APOCALYPTO.index()] = "bgBG10";
-        stagePreviews[Stage.DISTANT_ISLE_NIGHT.index()] = "bgBG11";
-        stagePreviews[Stage.DESERT_RUINS_NIGHT.index()] = "bgBG13";
-        stagePreviews[Stage.SCORCHED_RUINS_NIGHT.index()] = "bgBG14";
-        stagePreviews[Stage.RANDOM.index()] = "bgBG12";
-        stagePreviews[Stage.HIDDEN_CAVE_NIGHT.index()] = "bgBG15";
-        //===============================================================
         reloadStageNames();
         Language.get().addLocaleListener(this::reloadStageNames);
     }
@@ -92,22 +74,9 @@ public abstract class StageSelect extends Mode {
     private void reloadStageNames() {
         var language = Language.get();
         lookupStageNames.clear();
-        lookupStageNames.put(Stage.IBEX_HILL, language.get(LangKey.STAGE_IBEX_HILL));
-        lookupStageNames.put(Stage.CHELSTON_CITY_DOCKS, language.get(LangKey.STAGE_CHESTON_DOCKS));
-        lookupStageNames.put(Stage.DESERT_RUINS, language.get(LangKey.STAGE_RUINED_HALL));
-        lookupStageNames.put(Stage.CHELSTON_CITY_STREETS, language.get(LangKey.STAGE_CHESTON_STREETS));
-        lookupStageNames.put(Stage.IBEX_HILL_NIGHT, language.get(LangKey.STAGE_IBEX_NIGHT));
-        lookupStageNames.put(Stage.SCORCHED_RUINS, language.get(LangKey.STAGE_SCORCHED));
-        lookupStageNames.put(Stage.FROZEN_WILDERNESS, language.get(LangKey.STAGE_FROZEN));
-        lookupStageNames.put(Stage.DISTANT_ISLE, language.get(LangKey.STAGE_DISTANT_ISLE));
-        lookupStageNames.put(Stage.HIDDEN_CAVE, language.get(LangKey.STAGE_HIDDEN_CAVE));
-        lookupStageNames.put(Stage.AFRICAN_VILLAGE, language.get(LangKey.STAGE_AFRICAN_VILLAGE));
-        lookupStageNames.put(Stage.APOCALYPTO, language.get(LangKey.STAGE_APOCALYPSE));
-        lookupStageNames.put(Stage.DISTANT_ISLE_NIGHT, language.get(LangKey.STAGE_MOONLIT_SHORE));
-        lookupStageNames.put(Stage.DESERT_RUINS_NIGHT, language.get(LangKey.STAGE_RUINED_HALL_NIGHT));
-        lookupStageNames.put(Stage.SCORCHED_RUINS_NIGHT, language.get(LangKey.STAGE_SCORCHED_NIGHT));
-        lookupStageNames.put(Stage.RANDOM, language.get(LangKey.STAGE_RANDOM));
-        lookupStageNames.put(Stage.HIDDEN_CAVE_NIGHT, language.get(LangKey.STAGE_HIDDEN_CAVE_NIGHT));
+        for (var stage : Stage.values()) {
+            lookupStageNames.put(stage, language.get(StageCatalog.layout(stage).name()));
+        }
     }
 
     public void selectStage(Stage stage) {
@@ -121,250 +90,11 @@ public abstract class StageSelect extends Mode {
         stageForeground = "images/bgBG" + stage.filePrefix() + "fg.png";
         stageAmbient1 = "images/bgBG" + stage.filePrefix() + "a.png";
         stageAmbient2 = "images/bgBG" + stage.filePrefix() + "b.png";
-        switch (stage) {
-            case IBEX_HILL -> selectIbexHill();
-            case CHELSTON_CITY_DOCKS -> selectChelsonCityDocks();
-            case DESERT_RUINS -> selectDesertRuins();
-            case CHELSTON_CITY_STREETS -> selectChelstonCityStreets();
-            case IBEX_HILL_NIGHT -> selectIbexHillNight();
-            case SCORCHED_RUINS -> selectScorchedRuins();
-            case FROZEN_WILDERNESS -> selectFrozenWilderness();
-            case DISTANT_ISLE -> selectDistantIsle();
-            case HIDDEN_CAVE -> selectHiddenCave();
-            case HIDDEN_CAVE_NIGHT -> selectHiddenCaveNight();
-            case AFRICAN_VILLAGE -> selectAfricanVillage();
-            case APOCALYPTO -> selectApocalypto();
-            case DISTANT_ISLE_NIGHT -> selectDistantIsleNight();
-            case DESERT_RUINS_NIGHT -> selectDesertRuinsNight();
-            case SCORCHED_RUINS_NIGHT -> selectScorchedRuinsNight();
-            default -> {
-            }
+        var layout = StageCatalog.layout(stage);
+        if (layout != null && stage != Stage.RANDOM) {
+            layout.apply(RenderGamePlay.get());
+            ambientMusicIndex = layout.musicIndex();
         }
-    }
-
-    public void defaultStageValues() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 10;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 10;
-        renderGamePlay.ambientDirection = AnimationDirection.VERTICAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.INDEPENDENT;
-        renderGamePlay.ambSpeed1 = 4;
-        renderGamePlay.ambSpeed2 = 3;
-    }
-
-    protected void selectIbexHill() {
-        defaultStageValues();
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        ambientMusicIndex = 0;
-    }
-
-    protected void selectIbexHillNight() {
-        defaultStageValues();
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        ambientMusicIndex = 4;
-    }
-
-    protected void selectChelsonCityDocks() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.NONE;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.NONE;
-        renderGamePlay.ambSpeed1 = 0;
-        renderGamePlay.ambSpeed2 = 0;
-        ambientMusicIndex = 1;
-    }
-
-    protected void selectDesertRuins() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 2;
-    }
-
-    protected void selectChelstonCityStreets() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.NONE;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.NONE;
-        renderGamePlay.ambSpeed1 = 0;
-        renderGamePlay.ambSpeed2 = 0;
-        ambientMusicIndex = 3;
-    }
-
-    protected void selectScorchedRuins() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.INDEPENDENT;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 5;
-    }
-
-    protected void selectFrozenWilderness() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 10;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.VERTICAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 6;
-    }
-
-    protected void selectDistantIsle() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = -40;
-        renderGamePlay.foreGroundPositionY = 20;
-        renderGamePlay.foreGroundXIncrement = 2;
-        renderGamePlay.foreGroundYIncrement = 0.5f;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.VERTICAL;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        renderGamePlay.ambSpeed1 = 1;
-        renderGamePlay.ambSpeed2 = 2;
-        ambientMusicIndex = 0;
-    }
-
-    protected void selectDistantIsleNight() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = -40;
-        renderGamePlay.foreGroundPositionY = 20;
-        renderGamePlay.foreGroundXIncrement = 2;
-        renderGamePlay.foreGroundYIncrement = 0.5f;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.VERTICAL;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        renderGamePlay.ambSpeed1 = 1;
-        renderGamePlay.ambSpeed2 = 2;
-        ambientMusicIndex = 1;
-    }
-
-    protected void selectHiddenCave() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.NONE;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.NONE;
-        renderGamePlay.ambSpeed1 = 0;
-        renderGamePlay.ambSpeed2 = 0;
-        ambientMusicIndex = 2;
-    }
-
-    protected void selectHiddenCaveNight() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.NONE;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.NONE;
-        renderGamePlay.ambSpeed1 = 0;
-        renderGamePlay.ambSpeed2 = 0;
-        ambientMusicIndex = 2;
-    }
-
-    protected void selectAfricanVillage() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 1;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 20;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_BACKGROUND;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 3;
-    }
-
-    protected void selectApocalypto() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 4;
-    }
-
-    protected void selectDesertRuinsNight() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.BOTH_IN_FOREGROUND;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 1;
-    }
-
-    protected void selectScorchedRuinsNight() {
-        var renderGamePlay = RenderGamePlay.get();
-        renderGamePlay.foreGroundPositionX = 0;
-        renderGamePlay.foreGroundPositionY = 0;
-        renderGamePlay.foreGroundXIncrement = 5;
-        renderGamePlay.foreGroundYIncrement = 1;
-        renderGamePlay.animationLoops = 4;
-        renderGamePlay.ambientDirection = AnimationDirection.HORIZONTAL;
-        renderGamePlay.foregroundDirection = AnimationDirection.NONE;
-        renderGamePlay.ambientMode = AmbientMode.INDEPENDENT;
-        renderGamePlay.ambSpeed1 = 2;
-        renderGamePlay.ambSpeed2 = 1;
-        ambientMusicIndex = 3;
     }
 
     public void start() {
