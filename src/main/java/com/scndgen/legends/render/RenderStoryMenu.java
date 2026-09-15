@@ -17,13 +17,13 @@
 
  You should have received a copy of the GNU General Public License
  along with The SCND Genesis: Legends. If not, see <https://www.gnu.org/licenses/>.
-
  **************************************************************************/
 package com.scndgen.legends.render;
 
+import java.util.HashMap;
+
 import com.scndgen.legends.LangKey;
 import com.scndgen.legends.Language;
-import com.scndgen.legends.ScndGenLegends;
 import com.scndgen.legends.UiConstants;
 import com.scndgen.legends.Utils;
 import com.scndgen.legends.command.GameCommand;
@@ -34,43 +34,31 @@ import com.scndgen.legends.mode.StoryMenu;
 import com.scndgen.legends.mode.StoryMode;
 import com.scndgen.legends.ui.Event;
 import com.scndgen.legends.ui.UiAction;
-import com.scndgen.legends.ui.UiItem;
 
 import static com.scndgen.legends.ui.UiAction.HOVER;
+
+import com.scndgen.legends.ui.UiItem;
 import io.github.subiyacryolite.enginev2.Audio;
 import io.github.subiyacryolite.enginev2.DrawContext;
 import io.github.subiyacryolite.enginev2.NvgImage;
 import io.github.subiyacryolite.enginev2.Rgba;
 
-import java.util.HashMap;
-
-
 /**
  * @author: Ifunga Ndana
  * @class: drawPrevChar
- * This class creates a graphical preview of the characterEnum and opponent
+ *         This class creates a graphical preview of the characterEnum and
+ *         opponent
  */
 public class RenderStoryMenu extends StoryMenu {
 
     private static RenderStoryMenu instance;
     private NvgImage stageHover, loading;
-    private NvgImage[] unlockedScene, unlockedCaptions, lockedScene;
+    private final NvgImage[] unlockedScene;
+    private final NvgImage[] unlockedCaptions;
+    private final NvgImage[] lockedScene;
     private NvgImage storyPrev;
     private int hoveredScene;
     private final HashMap<Integer, UiItem> uiElements = new HashMap<>();
-    private final UiItem scene1;
-    private final UiItem scene2;
-    private final UiItem scene3;
-    private final UiItem scene4;
-    private final UiItem scene5;
-    private final UiItem scene6;
-    private final UiItem scene7;
-    private final UiItem scene8;
-    private final UiItem scene9;
-    private final UiItem scene10;
-    private final UiItem scene11;
-    private final UiItem scene12;
-    private final UiItem scene13;
     private Audio menuMusic;
 
     public void onEnterMode() {
@@ -84,7 +72,6 @@ public class RenderStoryMenu extends StoryMenu {
         super.onLeaveMode();
     }
 
-
     public RenderStoryMenu() {
         lockedScene = new NvgImage[numberOfScenes];
         unlockedScene = new NvgImage[numberOfScenes];
@@ -93,7 +80,7 @@ public class RenderStoryMenu extends StoryMenu {
         for (int u = 0; u < unlockedStage.length; u++) {
             unlockedStage[u] = u <= currentScene;
         }
-        //=======================================
+        // =======================================
         Event commonEvent = new Event() {
             @Override
             public void on(UiAction action) {
@@ -101,7 +88,7 @@ public class RenderStoryMenu extends StoryMenu {
                     case HOVER -> animateCaption();
                     case ACCEPT -> selectScene();
                     case BACK_CANCEL ->
-                            GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
+                        GameCommandBus.get().dispatch(new GameCommand.LoadMode(ModeEnum.MAIN_MENU, true));
                     case DOWN -> setActiveItem(source.getDown());
                     case UP -> setActiveItem(source.getUp());
                     case LEFT -> setActiveItem(source.getLeft());
@@ -111,6 +98,19 @@ public class RenderStoryMenu extends StoryMenu {
                 }
             }
         };
+        UiItem scene1;
+        UiItem scene2;
+        UiItem scene3;
+        UiItem scene4;
+        UiItem scene5;
+        UiItem scene6;
+        UiItem scene7;
+        UiItem scene8;
+        UiItem scene9;
+        UiItem scene10;
+        UiItem scene11;
+        UiItem scene12;
+        UiItem scene13;
         bindScene(scene1 = new UiItem(), 0, commonEvent);
         bindScene(scene2 = new UiItem(), 1, commonEvent);
         bindScene(scene3 = new UiItem(), 2, commonEvent);
@@ -139,7 +139,7 @@ public class RenderStoryMenu extends StoryMenu {
         uiElements.put(12, scene13);
         setActiveItem(scene1);
 
-        //set up down, left right
+        // set up down, left right
         int total = uiElements.size();
         for (int index = 0; index < total; index++) {
             if (index > 0)
@@ -173,23 +173,32 @@ public class RenderStoryMenu extends StoryMenu {
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 int computedPosition = (row * columns) + column;
-                if (computedPosition >= unlockedStage.length) continue;
+                if (computedPosition >= unlockedStage.length)
+                    continue;
                 UiItem currentEl = uiElements.get(computedPosition);
-                drawImage(draw, unlockedStage[computedPosition] ? unlockedScene[computedPosition] : lockedScene[computedPosition], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
-                if (!currentEl.isHovered()) continue;
+                drawImage(draw,
+                        unlockedStage[computedPosition] ? unlockedScene[computedPosition]
+                                : lockedScene[computedPosition],
+                        commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row), currentEl);
+                if (!currentEl.isHovered())
+                    continue;
                 draw.drawImage(stageHover, commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
-                if (!unlockedStage[hoveredScene]) continue;
+                if (!unlockedStage[hoveredScene])
+                    continue;
                 if (opacity < 0.95f)
                     opacity += 0.05f;
                 draw.setGlobalAlpha(opacity);
-                draw.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column), commonYCoord + (vSpacer * row));
+                draw.drawImage(unlockedCaptions[hoveredScene], commonXCoord + (hSpacer * column),
+                        commonYCoord + (vSpacer * row));
                 draw.setGlobalAlpha(1.0f);
             }
             draw.setFill(Rgba.WHITE);
             setFont(draw, UiConstants.EXTRA_LARGE_TXT_SIZE);
-            draw.fillText(Language.get().get(LangKey.STORY_MODE), (852 - Utils.computeStringWidth(Language.get().get(LangKey.STORY_MODE), draw) / 2), 80);
+            draw.fillText(Language.get().get(LangKey.STORY_MODE),
+                    (852 - Utils.computeStringWidth(Language.get().get(LangKey.STORY_MODE), draw) / 2), 80);
             setFont(draw, UiConstants.NORMAL_TXT_SIZE);
-            draw.fillText(Language.get().get(LangKey.PRESS_ESC_BACK), (852 - Utils.computeStringWidth(Language.get().get(LangKey.PRESS_ESC_BACK), draw) / 2), 380);
+            draw.fillText(Language.get().get(LangKey.PRESS_ESC_BACK),
+                    (852 - Utils.computeStringWidth(Language.get().get(LangKey.PRESS_ESC_BACK), draw) / 2), 380);
             showstoryName(hoveredScene);
         }
     }
