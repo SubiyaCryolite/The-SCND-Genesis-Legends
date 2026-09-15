@@ -6,6 +6,7 @@
 /.gradle/
 /build/
 /out/
+/bin/
 /classes/
 /.idea_modules/
 atlassian-ide-plugin.xml

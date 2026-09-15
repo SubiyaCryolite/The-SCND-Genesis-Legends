@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  },
+  "[kotlin]": {
+    "editor.defaultFormatter": "JetBrains.kotlin-server"
+  }
+}
